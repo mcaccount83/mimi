@@ -55,7 +55,7 @@
                                     <label class="custom-control-label" for="AVPVacant">Vacant</label>
                                 </div>
                             </div>
-                            <div class="avp-field ml-auto" style="display: {{ $AVPDetails->avp_fname == '' ? 'none' : 'block' }};">
+                            <div class="avp-field ml-auto" style="display: {{ $AVPDetails->id == '' ? 'none' : 'block' }};">
                                 <span>{{ $AVPDetails->first_name }} {{ $AVPDetails->last_name }}</span>
                             </div>
                           </div>
@@ -226,7 +226,7 @@
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-10 mb-1">
-                                <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" value="{{$MVPDetails->street_address != ''  ? $MVPDetails->mvstreet_addressp_addr : ''}}"  required placeholder="Address">
+                                <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" value="{{$MVPDetails->street_address != ''  ? $MVPDetails->street_address : ''}}"  required placeholder="Address">
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                 <div class="col-sm-5 mb-1">
