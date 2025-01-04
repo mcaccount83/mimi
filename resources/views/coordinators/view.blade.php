@@ -21,51 +21,44 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
-                <h3 class="profile-username text-center">{{ $coordinatorDetails[0]->first_name }}, {{ $coordinatorDetails[0]->last_name }}</h3>
-                <p class="text-center">{{ $coordinatorDetails[0]->confname }} Conference
-                    @if ($coordinatorDetails[0]->regname != "None")
-                    , {{ $coordinatorDetails[0]->regname }} Region
+                <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                <p class="text-center">{{ $conferenceDescription }} Conference
+                    @if ($regionLongName != "None")
+                    , {{ $regionLongName }} Region
                     @else
                     @endif
                 </p>
                 <ul class="list-group list-group-unbordered mb-3">
-                    {{-- <li class="list-group-item text-center">
-                        <b> {{ $coordinatorDetails[0]->position }}</b>
-                        @if ($coordinatorDetails[0]->sec_position != null )
-                        <br>
-                        <b> {{ $coordinatorDetails[0]->sec_position }}</b>
-                        @endif
-                    </li> --}}
                     <li class="list-group-item">
-                        <b>Supervising Coordinator:</b> <span class="float-right">{{ $coordinatorDetails[0]->report_fname }} {{ $coordinatorDetails[0]->report_lname }}</span>
+                        <b>Supervising Coordinator:</b> <span class="float-right">{{ $ReportTo }}</span>
                         <br>
-                        <b>Display Position:</b> <span class="float-right">{{ $coordinatorDetails[0]->display_position }}</span>
+                        <b>Primary/Display Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
                         <br>
-                        <b>Primary Positon for MIMI Purposes:</b> <span class="float-right">{{ $coordinatorDetails[0]->position }}</span>
+                        <b>Primary Positon for MIMI Purposes:</b> <span class="float-right">{{ $mimiPosition?->long_title }}</span>
                         <br>
-                        <b>Secondary Position:</b> <span class="float-right">{{ $coordinatorDetails[0]->sec_position }}</span>
+                        <b>Secondary Position:</b> <span class="float-right">{{ $secondaryPosition?->long_title }}</span>
 
                     </li>
                     <li class="list-group-item">
-                        <b>Start Date:</b> <span class="float-right date-mask">{{ $coordinatorDetails[0]->coordinator_start_date }}</span>
+                        <b>Start Date:</b> <span class="float-right date-mask">{{ $cdDetails->coordinator_start_date }}</span>
                         <br>
-                        <b>Last Promotion Date:</b> <span class="float-right date-mask">{{ $coordinatorDetails[0]->last_promoted }}</span>
+                        <b>Last Promotion Date:</b> <span class="float-right date-mask">{{ $cdDetails->last_promoted }}</span>
                         <br>
-                        <b>Home Chapter:</b> <span class="float-right">{{ $coordinatorDetails[0]->home_chapter }}</span>
+                        <b>Home Chapter:</b> <span class="float-right">{{ $cdDetails->home_chapter }}</span>
                     </li>
                 </ul>
                 <div class="text-center">
-                    @if ($coordinatorDetails[0]->is_active == 1 && $coordinatorDetails[0]->on_leave != 1)
+                    @if ($cdDetails->is_active == 1 && $cdDetails->on_leave != 1)
                         <b><span style="color: #28a745;">Coordinator is ACTIVE</span></b>
-                    @elseif ($coordinatorDetails[0]->is_active == 1 && $coordinatorDetails[0]->on_leave == 1)
+                    @elseif ($cdDetails->is_active == 1 && $cdDetails->on_leave == 1)
                         <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
                         <br>
-                        Leave Date: <span class="date-mask">{{ $coordinatorDetails[0]->leave_date }}</span><br>
+                        Leave Date: <span class="date-mask">{{ $cdDetails->leave_date }}</span><br>
                     @else
                         <b><span style="color: #dc3545;">Coordinator is RETIRED</span></b>
                         <br>
-                        Retired Date: <span class="date-mask">{{ $coordinatorDetails[0]->zapped_date }}</span><br>
-                        {{ $coordinatorDetails[0]->reason_retired }}
+                        Retired Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
+                        {{ $cdDetails->reason_retired }}
                     @endif
                 </div>
               </div>
@@ -94,7 +87,7 @@
                         <div class="row">
                         <div class="col-sm-6">
 							<div class="form-group">
-							    <label class="mrg-b-25">Coordinators Directly Reporting to {{ $coordinatorDetails[0]->first_name }}:</label>
+							    <label class="mrg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
 
                                 <table id="coordinator-list" width="100%">
                                     <thead>
@@ -125,7 +118,7 @@
 
 						<div class="col-sm-6">
 							<div class="form-group">
-                                <label class="mrg-b-25">{{ $coordinatorDetails[0]->first_name }} is Primary Coordinator For:</label>
+                                <label class="mrg-b-25">{{ $cdDetails->first_name }} is Primary Coordinator For:</label>
                                     <table id="coordinator-list" width="100%">
                                         <thead>
                                             @if($directChapterTo->isEmpty())
@@ -159,25 +152,25 @@
                         <h3 class="profile-username">Contact Information</h3>
                         <div class="row">
                             <div class="col-md-6">
-                                <a href="mailto:{{ $coordinatorDetails[0]->email }}">{{ $coordinatorDetails[0]->email }}</a>
-                                @if ($coordinatorDetails[0]->sec_email != null )
+                                <a href="mailto:{{ $cdDetails->email }}">{{ $cdDetails->email }}</a>
+                                @if ($cdDetails->sec_email != null )
                                 <br>
-                                <a href="mailto:{{ $coordinatorDetails[0]->sec_email }}">{{ $coordinatorDetails[0]->sec_email }}</a>
+                                <a href="mailto:{{ $cdDetails->sec_email }}">{{ $cdDetails->sec_email }}</a>
                                 @endif
                                 <br>
-                                <span class="phone-mask">{{$coordinatorDetails[0]->phone }}</span>
-                                @if ($coordinatorDetails[0]->alt_phone != null )
+                                <span class="phone-mask">{{$cdDetails->phone }}</span>
+                                @if ($cdDetails->alt_phone != null )
                                 <br>
-                                <span class="phone-mask">{{$coordinatorDetails[0]->alt_phone }}</span>
+                                <span class="phone-mask">{{$cdDetails->alt_phone }}</span>
                                 @endif
                                 <br>
-                                {{$coordinatorDetails[0]->address}}
+                                {{$cdDetails->address}}
                                 <br>
-                                {{$coordinatorDetails[0]->city}},{{$coordinatorDetails[0]->state}}&nbsp;{{$coordinatorDetails[0]->zip}}
+                                {{$cdDetails->city}},{{$cdDetails->state}}&nbsp;{{$cdDetails->zip}}
                             </div>
                             <div class="col-md-6">
-                                Birthday: {{$coordinatorDetails[0]->birthday_month}} {{$coordinatorDetails[0]->birthday_day}}<br>
-                                Card Sent: <span class="date-mask">{{ $coordinatorDetails[0]->card_sent }}</span><br>
+                                Birthday: {{$cdDetails->birthday_month}} {{$cdDetails->birthday_day}}<br>
+                                Card Sent: <span class="date-mask">{{ $cdDetails->card_sent }}</span><br>
                                 @if ($assistConferenceCoordinatorCondition)
                                     <button class="btn bg-gradient-primary btn-sm" onclick="updateCardSent()">Update Birthday Card Sent</button>
                                 @endif
@@ -187,7 +180,7 @@
                             <br>
                             <p>This will reset password to default "TempPass4You" for this user only.
                             <br>
-                            <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $coordinatorDetails[0]->user_id }}">Reset President Password</button>
+                            <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $cdDetails->user_id }}">Reset President Password</button>
                             </p>
                       </div>
                     </div>
@@ -197,29 +190,29 @@
                         <h3 class="profile-username">Appreciation & Recognitions</h3>
                         <dl class="row">
                             <dt class="col-sm-2">&lt; 1 Year</dt>
-                            <dd class="col-sm-4">{{$coordinatorDetails[0]->recognition_year0}}</dd>
+                            <dd class="col-sm-4">{{$cdDetails->recognition_year0}}</dd>
                             <dt class="col-sm-2">1 Year</dt>
-                            <dd class="col-sm-4">{{$coordinatorDetails[0]->recognition_year1}}</dd>
+                            <dd class="col-sm-4">{{$cdDetails->recognition_year1}}</dd>
                             <dt class="col-sm-2">2 Years</dt>
-                            <dd class="col-sm-4">{{$coordinatorDetails[0]->recognition_year2}}</dd>
+                            <dd class="col-sm-4">{{$cdDetails->recognition_year2}}</dd>
                             <dt class="col-sm-2">3 Years</dt>
-                            <dd class="col-sm-4">{{$coordinatorDetails[0]->recognition_year3}}</dd>
+                            <dd class="col-sm-4">{{$cdDetails->recognition_year3}}</dd>
                             <dt class="col-sm-2">4 Years</dt>
-                            <dd class="col-sm-4">{{$coordinatorDetails[0]->recognition_year4}}</dd>
+                            <dd class="col-sm-4">{{$cdDetails->recognition_year4}}</dd>
                             <dt class="col-sm-2">5 Years</dt>
-                            <dd class="col-sm-4">{{$coordinatorDetails[0]->recognition_year5}}</dd>
+                            <dd class="col-sm-4">{{$cdDetails->recognition_year5}}</dd>
                             <dt class="col-sm-2">6 Years</dt>
-                            <dd class="col-sm-4">{{$coordinatorDetails[0]->recognition_year6}}</dd>
+                            <dd class="col-sm-4">{{$cdDetails->recognition_year6}}</dd>
                             <dt class="col-sm-2">7 Years</dt>
-                            <dd class="col-sm-4">{{$coordinatorDetails[0]->recognition_year7}}</dd>
+                            <dd class="col-sm-4">{{$cdDetails->recognition_year7}}</dd>
                             <dt class="col-sm-2">8 Years</dt>
-                            <dd class="col-sm-4">{{$coordinatorDetails[0]->recognition_year8}}</dd>
+                            <dd class="col-sm-4">{{$cdDetails->recognition_year8}}</dd>
                             <dt class="col-sm-2">9 Years</dt>
-                            <dd class="col-sm-4">{{$coordinatorDetails[0]->recognition_year9}}</dd>
+                            <dd class="col-sm-4">{{$cdDetails->recognition_year9}}</dd>
                             <dt class="col-sm-2">Top Tier</dt>
-                            <dd class="col-sm-10">{{$coordinatorDetails[0]->recognition_toptier}}</dd>
+                            <dd class="col-sm-10">{{$cdDetails->recognition_toptier}}</dd>
                             <dt class="col-sm-2">MC Necklace</dt>
-                            <dd class="col-sm-10">{{$coordinatorDetails[0]->recognition_necklace == 1 ? 'YES' : 'NO' }}</dd>
+                            <dd class="col-sm-10">{{$cdDetails->recognition_necklace == 1 ? 'YES' : 'NO' }}</dd>
                           </dl>
                     </div>
                   </div>
@@ -235,34 +228,32 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($regionalCoordinatorCondition)
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrole', ['id' => $coordinatorDetails[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Role, Chapters & Coordinators</button>
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editdetails', ['id' => $coordinatorDetails[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Contact Information</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrole', ['id' => $cdDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Role, Chapters & Coordinators</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editdetails', ['id' => $cdDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Contact Information</button>
                 @endif
                 @if($assistConferenceCoordinatorCondition)
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrecognition', ['id' => $coordinatorDetails[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Appreciation & Recognition</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrecognition', ['id' => $cdDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Appreciation & Recognition</button>
                     <br>
-                    @if($corIsLeave != 1)
+                    @if($cdLeave != 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="onLeaveCoordinator()"><i class="fas fa-ban mr-2"></i>Put Coordinator On Leave</button>
-                        {{-- <button class="btn bg-gradient-primary mb-3 coordOnLeave" data-onleave="{{ $coordinatorDetails[0]->on_leave }}" data-coordId="{{ $coordinatorDetails[0]->id }}">Put Coordinator On Leave</button> --}}
-                    @elseif($corIsLeave == 1)
+                    @elseif($cdLeave == 1)
                         <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="removeLeaveCoordinator()"><i class="fas fa-undo mr-2"></i>Remove Coordinator From Leave</button>
-                        {{-- <button type="button" class="btn bg-gradient-primary mb-3 coordRemoveLeave" data-onleave="{{ $coordinatorDetails[0]->on_leave }}" data-coordId="{{ $coordinatorDetails[0]->id }}">Remove Coordinator From Leave</button> --}}
                     @endif
-                    @if($corIsActive == 1)
+                    @if($cdIsActive == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="retireCoordinator()"><i class="fas fa-ban mr-2"></i>Retire Coordinator</button>
-                    @elseif($corIsActive != 1)
+                    @elseif($cdIsActive != 1)
                         <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="unRetireCoordinator()"><i class="fas fa-undo mr-2"></i>UnRetire Coordinator</button>
                     @endif
                 @endif
                 <br>
-                @if ($corConfId == $userConfId)
-                    @if ($corIsActive == 1)
+                @if ($cdConfId == $userConfId)
+                    @if ($cdIsActive == 1)
                         <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator List</button>
                     @else
                         <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
                     @endif
-                @elseif ($adminReportCondition  && ($corConfId != $userConfId))
-                    @if ($corIsActive == 1)
+                @elseif ($adminReportCondition  && ($cdConfId != $userConfId))
+                    @if ($cdIsActive == 1)
                         <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-reply mr-2"></i>Back to International Coordinator List</button>
                     @else
                         <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
@@ -279,11 +270,11 @@
 @section('customscript')
 <script>
 
-var $corIsActive = {{ $corIsActive }};
+var $cdIsActive = {{ $cdIsActive }};
 
 $(document).ready(function () {
     // Disable fields for chapters that are not active
-    if ($corIsActive != 1)
+    if ($cdIsActive != 1)
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
@@ -333,7 +324,7 @@ document.querySelectorAll('.reset-password-btn').forEach(button => {
 });
 
 function updateCardSent() {
-    const coordId = '{{ $coordinatorDetails[0]->id ?? '' }}'; // Use a fallback if `id` is null or undefined
+    const coordId = '{{ $cdDetails->id ?? '' }}'; // Use a fallback if `id` is null or undefined
 
     Swal.fire({
         title: 'Enter Date',
@@ -417,7 +408,7 @@ function onLeaveCoordinator(coordId) {
         html: `
             <p>This will mark the coordinator On Leave. Please confirm by pressing OK.</p>
 
-            <input type="hidden" id="coord_id" name="coord_id" value="{{ $coordinatorDetails[0]->id }}">
+            <input type="hidden" id="coord_id" name="coord_id" value="{{ $cdDetails->id }}">
         `,
         showCancelButton: true,
         confirmButtonText: 'OK',
@@ -483,7 +474,7 @@ function removeLeaveCoordinator(coordId) {
         html: `
             <p>This will remove the coordinator from Leave. Please confirm by pressing OK.</p>
 
-            <input type="hidden" id="coord_id" name="coord_id" value="{{ $coordinatorDetails[0]->id }}">
+            <input type="hidden" id="coord_id" name="coord_id" value="{{ $cdDetails->id }}">
         `,
         showCancelButton: true,
         confirmButtonText: 'OK',
@@ -551,7 +542,7 @@ function retireCoordinator(coordId) {
             <div style="display: flex; align-items: center; ">
                 <input type="text" id="reason_retired" name="reason_retired" class="swal2-input" placeholder ="Enter Reason" required style="width: 100%;">
             </div>
-            <input type="hidden" id="coord_id" name="coord_id" value="{{ $coordinatorDetails[0]->id }}">
+            <input type="hidden" id="coord_id" name="coord_id" value="{{ $cdDetails->id }}">
         `,
         showCancelButton: true,
         confirmButtonText: 'OK',
@@ -624,7 +615,7 @@ function unRetireCoordinator(coordId) {
         title: 'Reactivate Coordinator',
         html: `
             <p>Reactivating a coordinator as retired will reset their login. Please verify this is what you want to do by pressing OK.</p>
-            <input type="hidden" id="coord_id" name="coord_id" value="{{ $coordinatorDetails[0]->id }}">
+            <input type="hidden" id="coord_id" name="coord_id" value="{{ $cdDetails->id }}">
         `,
         showCancelButton: true,
         confirmButtonText: 'OK',

@@ -28,22 +28,22 @@ class Coordinators extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,  'user_id', 'id');  // 'user_id' in coordinators BelongsTo 'id' in user
+        return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in coordinators BelongsTo 'id' in user
     }
 
-    public function coorDispPosition(): BelongsTo
+    public function displayPosition(): BelongsTo
     {
-        return $this->belongsTo(CoordinatorPosition::class,  'display_position_id', 'id');  // 'display_position_id' in coordinators BelongsTo 'id' in coordinator_position
+        return $this->belongsTo(CoordinatorPosition::class, 'display_position_id', 'id');  // 'display_position_id' in coordinators BelongsTo 'id' in coordinator_position
     }
 
-    public function coorMIMIPosition(): BelongsTo
+    public function mimiPosition(): BelongsTo
     {
-        return $this->belongsTo(CoordinatorPosition::class,  'position_id ', 'id');  // 'position_id' in coordinators BelongsTo 'id' in coordinator_position
+        return $this->belongsTo(CoordinatorPosition::class, 'position_id', 'id');   // 'position_id' in coordinators BelongsTo 'id' in coordinator_position
     }
 
-    public function coorSecPosition(): BelongsTo
+    public function secondaryPosition(): BelongsTo
     {
-        return $this->belongsTo(CoordinatorPosition::class,  'sec_position_id', 'id');  // 'sec_position_id' in coordinators BelongsTo 'id' in coordinator_position
+        return $this->belongsTo(CoordinatorPosition::class, 'sec_position_id', 'id');  // 'sec_position_id' in coordinators BelongsTo 'id' in coordinator_position
     }
 
     public function state(): BelongsTo
@@ -69,6 +69,11 @@ class Coordinators extends Model
     public function birthdayMonth(): BelongsTo
     {
         return $this->belongsTo(Month::class, 'birthday_month_id', 'id');  // 'birthday_month_id' in coordinators BelongsTo 'id' in month
+    }
+
+    public function reportsTo(): BelongsTo
+    {
+        return $this->belongsTo(Coordinators::class,  'report_id', 'id');  // 'report_id' in coordinators BelongsTo 'id' in coordinators
     }
 
 }

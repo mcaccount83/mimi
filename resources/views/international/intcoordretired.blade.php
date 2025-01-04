@@ -34,8 +34,8 @@
 			    <tr>
 			      <th>Details</th>
 			      <th>Conf/Reg</th>
-				  <th>First Name</th>
-                  <th>Last Name</th>
+				  <th>Name</th>
+                  <th>Position</th>
                   <th>Retired Date</th>
                   <th>Reason</th>
                 </tr>
@@ -45,17 +45,16 @@
                   <tr>
                         <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>
-                            @if ($list->reg != "None")
-                            {{ $list->conf }} / {{ $list->reg }}
+                            @if ($list->region?->short_name != "None")
+                            {{ $list->conference->short_name }} / {{ $list->region?->short_name }}
                         @else
-                            {{ $list->conf }}
+                            {{ $list->conference->short_name }}
                         @endif
                         </td>
-                        <td>{{ $list->cor_fname }}</td>
-                        <td>{{ $list->cor_lname }}</td>
-                        <td><span class="date-mask">{{ $list->zapdate }}</span></td>
-                        <td>{{ $list->reason }}</td>
-
+                        <td>{{ $list->first_name }} {{ $list->last_name }}</td>
+                        <td>{{ $list->displayPosition->long_title }}</td>
+                        <td><span class="date-mask">{{ $list->zapped_date }}</span></td>
+                        <td>{{ $list->reason_retired }}</td>
                   </tr>
                   @endforeach
                   </tbody>

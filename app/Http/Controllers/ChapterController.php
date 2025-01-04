@@ -1652,39 +1652,6 @@ class ChapterController extends Controller
                     ]);
                 }
 
-                // if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
-                //     $PREDetails = DB::table('boards')
-                //         ->select('id', 'user_id')
-                //         ->where('chapter_id', '=', $id)
-                //         ->where('board_position_id', '=', '1')
-                //         ->get();
-                //     if (count($PREDetails) != 0) {
-                //         $userId = $PREDetails[0]->user_id;
-                //         $boardId = $PREDetails[0]->id;
-
-                //         $user = User::find($userId);
-                //         $user->first_name = $request->input('ch_pre_fname');
-                //         $user->last_name = $request->input('ch_pre_lname');
-                //         $user->email = $request->input('ch_pre_email');
-                //         $user->updated_at = date('Y-m-d H:i:s');
-                //         $user->save();
-
-                //         DB::table('boards')
-                //             ->where('id', $boardId)
-                //             ->update(['first_name' => $request->input('ch_pre_fname'),
-                //                 'last_name' => $request->input('ch_pre_lname'),
-                //                 'email' => $request->input('ch_pre_email'),
-                //                 'street_address' => $request->input('ch_pre_street'),
-                //                 'city' => $request->input('ch_pre_city'),
-                //                 'state' => $request->input('ch_pre_state'),
-                //                 'zip' => $request->input('ch_pre_zip'),
-                //                 'country' => 'USA',
-                //                 'phone' => $request->input('ch_pre_phone'),
-                //                 'last_updated_by' => $lastUpdatedBy,
-                //                 'last_updated_date' => date('Y-m-d H:i:s')]);
-                //     }
-                // }
-
                 //AVP Info
                 $chapter = Chapters::with('avp')->find($id);
                 $avp = $chapter->avp;

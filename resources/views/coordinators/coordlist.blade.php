@@ -34,37 +34,33 @@
                   <tr>
                     <th>Details</th>
                     <th>Conf/Reg</th>
-                    <th>First Name</th>
-					<th>Last Name</th>
-					<th>Primary Position</th>
+                    <th>Coordinator Name</th>
+					<th>Primary (Display) Position</th>
                     <th>Primary (MIMI) Position</th>
 					<th>Secondary Position</th>
 					<th>Hire Date</th>
                     <th>Email</th>
                     <th>Reports To</th>
-                    {{-- <th>Home Chapter</th> --}}
                 </tr>
                 </thead>
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
-                        @if ($list->reg != "None")
-                            {{ $list->conf }} / {{ $list->reg }}
+                        @if ($list->region->short_name != "None")
+                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                         @else
-                            {{ $list->conf }}
+                            {{ $list->conference->short_name }}
                         @endif
                     </td>
-                      <td>{{ $list->cor_fname }}</td>
-                      <td>{{ $list->cor_lname }}</td>
-                      <td>{{ $list->display_pos }}</td>
-                      <td>{{ $list->position }}</td>
-                      <td>{{ $list->sec_pos }}</td>
+                        <td>{{ $list->first_name }} {{ $list->last_name }}</td>
+                      <td>{{ $list->displayPosition->long_title }}</td>
+                         <td>{{ $list->mimiPosition->short_title }}</td>
+                      <td>{{ $list->secondaryPosition?->long_title }} </td>
                 	  <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
-                      <td><a href="mailto:{{ $list->cor_email }}">{{ $list->cor_email }}</a></td>
-                      <td>{{$list->report_fname}} {{$list->report_lname}}</td>
-                      {{-- <td>{{ $list->cor_chapter }}</td> --}}
+                      <td><a href="mailto:{{ $list->email }}">{{ $list->email }}</a></td>
+                      <td>{{ $list->reportsTo->first_name }} {{ $list->reportsTo->last_name }}</td>
                     </tr>
                   @endforeach
                 </tbody>
@@ -73,22 +69,21 @@
               <!-- /.card-body -->
               <div class="col-sm-12">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
-                    <label class="custom-control-label" for="showPrimary">Show only my direct reports</label>
+                    <input type="checkbox" name="showDirect" id="showDirect" class="custom-control-input" {{$checkBoxStatus}} onchange="showDirect()" />
+                    <label class="custom-control-label" for="showDirect">Show only my direct reports</label>
                 </div>
             </div>
 
                 <div class="card-body text-center">
-              <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Coordinator</a>
-              <?php
-            if($checkBoxStatus){ ?>
-				 <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button></a>
-			<?php
-			 }
-			 else{ ?>
-				<a href="{{ route('export.coordinator','0') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download mr-2" ></i>Export Coordinator List</button></a>
-			 <?php } ?>
-              <a class="btn bg-gradient-primary" href="mailto:{{ $emailListCord }}"><i class="fas fa-envelope mr-2" ></i>E-mail Listed Coordinators</a>
+                @if($conferenceCoordinatorCondition)
+                    <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Coordinator</a>
+                    @if($checkBoxStatus == null)
+                        <a class="btn bg-gradient-primary" href="{{ route('export.coordinator','0') }}"><i class="fas fa-download mr-2" ></i>Export Coordinator List</a>
+                    @else
+                        <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button></a>
+                    @endif
+                    <a class="btn bg-gradient-primary" href="mailto:{{ $emailListCord }}"><i class="fas fa-envelope mr-2" ></i>E-mail Listed Coordinators</a>
+                @endif
             </div>
          </div>
           <!-- /.box -->
@@ -115,10 +110,10 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function showPrimary() {
+function showDirect() {
     var base_url = '{{ url("/coordinator/coordlist") }}';
 
-    if ($("#showPrimary").prop("checked") == true) {
+    if ($("#showDirect").prop("checked") == true) {
         window.location.href = base_url + '?check=yes';
     } else {
         window.location.href = base_url;
