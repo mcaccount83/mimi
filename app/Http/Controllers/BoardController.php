@@ -110,7 +110,7 @@ class BoardController extends Controller
         $chDocuments = $chDetails->documents;
         $submitted = $chDocuments->financial_report_received;
         $reviewComplete = $chDetails->documents->review_complete;
-        $reviewerEmail = $chDetails->reportReviewer->email;
+        $reviewerEmail = $chDetails->reportReviewer?->email;
         $chFinancialReport = $chDetails->financialReport;
 
         $awards = $chDetails->financialReport;
