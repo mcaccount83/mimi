@@ -27,11 +27,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <form method="POST" action='{{ route("member.update",$borDetails->chapter_id) }}'>
+                    <form method="POST" action='{{ route("member.update",$chDetails->id) }}'>
                         @csrf
 
+                        <input type="hidden" id="ch_name" value="{{$chDetails->name}}">
+                        <input type="hidden" id="ch_state" value="{{$stateShortName}}">
+                        <input type="hidden" name="ch_hid_webstatus" value="{{ $chDetails->website_status }}">
                         <input  type="hidden" id="bor_email_chk" value="{{ $borDetails->email }}">
-                        <input  type="hidden" class="form-control" name="bor_positionid" value="{{$borPositionId}}">
 
                         <div class="col-md-12">
                             <div class="card card-widget widget-user">
@@ -45,8 +47,8 @@
                                         $thisDate = \Illuminate\Support\Carbon::now();
                                     @endphp
                                     <div class="col-md-12"><br><br></div>
-                                    <h2 class="text-center">MOMS Club of {{ $chapterDetails->name }}, {{$chapterState}}</h2>
-                                    <h2 class="text-center">{{$borDetails->first_name}} {{$borDetails->last_name}}, {{$boardPositionAbbreviation}}</h2>
+                                    <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
+                                    <h2 class="text-center">{{$borDetails->first_name}} {{$borDetails->last_name}}, {{$borDetails->position->position}}</h2>
                                     <p class="description text-center">
                                         Welcome to the MOMS information Management Interface, affectionately called MIMI!
                                         <br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
@@ -54,10 +56,10 @@
                                     <div id="readOnlyText" class="description text-center">
                                         @if($thisDate->month >= 5 && $thisDate->month <= 7)
                                             <p><span style="color: red;">All Board Member Information is <strong>READ ONLY</strong> at this time.<br>
-                                                @if($chapterList[0]->new_board_active != '1')
+                                                @if($chDocuments->new_board_active != '1')
                                                     In order to add new board members to MIMI, please complete the Board Election Report.<br>
                                                 @endif
-                                                @if($chapterList[0]->new_board_active == '1')
+                                                @if($chDocuments->new_board_active == '1')
                                                     If you need to make updates to your listed officers, please contact your Primary Coordinator.</span></p>
                                                 <p>Incoming Board Members have been activated and have full MIMI access.<br>
                                                     Outgoing Board Members can still log in and access Financial Reports Only.</p>
@@ -82,7 +84,7 @@
                             <h5>Board Info</h5>
                     <!-- /.form group -->
                         <div class="form-group row">
-                            <label class="col-sm-2 mb-1 col-form-label">{{$boardPositionAbbreviation}}:</label>
+                            <label class="col-sm-2 mb-1 col-form-label">{{$borDetails->position->position}}:</label>
                             <div class="col-sm-5 mb-1">
                             <input type="text" name="bor_fname" id="bor_fname" class="form-control" value="{{ $borDetails->first_name }}" required placeholder="First Name" >
                             </div>
@@ -107,9 +109,15 @@
                             <div class="col-sm-3 mb-1">
                                 <select name="bor_state" id="bor_state" class="form-control select2" style="width: 100%;" required >
                                     <option value="">Select State</option>
-                                        @foreach($stateArr as $state)
+                                    @foreach($allStates as $state)
+                                    <option value="{{$state->state_short_name}}"
+                                        @if($borDetails->state == $state->state_short_name) selected @endif>
+                                        {{$state->state_long_name}}
+                                    </option>
+                                @endforeach
+                                        {{-- @foreach($stateArr as $state)
                                           <option value="{{$state->state_short_name}}" {{$borDetails->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                             </div>
                             <div class="col-sm-2 mb-1">
@@ -122,17 +130,17 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Email:</label>
                             <div class="col-sm-5">
-                            <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chapterDetails->inquiries_contact }}" placeholder="Inquiries Email Address" required>
+                            <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}" placeholder="Inquiries Email Address" required>
                             </div>
                             <div class="col-sm-5">
-                            <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chapterDetails->email }}" placeholder="Chapter Email Address">
+                            <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}" placeholder="Chapter Email Address">
                             </div>
                         </div>
                         <!-- /.form group -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Mailing:</label>
                             <div class="col-sm-10">
-                            <input type="text" name="ch_pobox" id="ch_pobox" class="form-control" value="{{ $chapterDetails->po_box }}" placeholder="Chapter PO Box/Mailing Address" >
+                            <input type="text" name="ch_pobox" id="ch_pobox" class="form-control" value="{{ $chDetails->po_box }}" placeholder="Chapter PO Box/Mailing Address" >
                             </div>
                         </div>
 
@@ -143,9 +151,7 @@
                             <label class="col-sm-2 col-form-label">Website:</label>
                             <div class="col-sm-10">
                                 <input type="text" name="ch_website" id="ch_website" class="form-control"
-                                    {{-- data-inputmask='"mask": "http://*{1,250}"' data-mask --}}
-                                    {{-- value="{{ strpos($chapterList[0]->website_url, 'http://') === 0 ? substr($chapterList[0]->website_url, 7) : $chapterList[0]->website_url }}" --}}
-                                    value="{{$chapterDetails->website_url}}"
+                                    value="{{$chDetails->website_url}}"
                                     placeholder="Chapter Website">
                             </div>
                         </div>
@@ -156,12 +162,12 @@
                             <div class="col-sm-5">
                                 <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;" required>
                                     <option value="">Select Status</option>
-                                    @foreach($webStatusArr as $webstatusKey => $webstatusText)
-                                        <option value="{{ $webstatusKey }}" {{ $chapterDetails->website_status == $webstatusKey ? 'selected' : '' }}
-                                            {{ in_array($webstatusKey, [0, 1]) ? 'disabled' : '' }}>
-                                            {{ $webstatusText }}
-                                        </option>
-                                    @endforeach
+                                    @foreach($allWebLinks as $status)
+                                    <option value="{{$status->id}}"
+                                        @if($chDetails->website_status == $status->id) selected @endif>
+                                        {{$status->link_status}}
+                                    </option>
+                                @endforeach
                                 </select>
                             </div>
                         </div>
@@ -169,19 +175,19 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Social Media:</label>
                             <div class="col-sm-5">
-                            <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chapterDetails->egroup }}"  placeholder="Forum/Group/App" >
+                            <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chDetails->egroup }}"  placeholder="Forum/Group/App" >
                             </div>
                             <div class="col-sm-5">
-                            <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chapterDetails->social1 }}" placeholder="Facebook"  >
+                            <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chDetails->social1 }}" placeholder="Facebook"  >
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-5">
-                                <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chapterDetails->social2 }}"  placeholder="Twitter" >
+                                <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chDetails->social2 }}"  placeholder="Twitter" >
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chapterDetails->social3 }}"  placeholder="Instagram" >
+                                <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
                             </div>
                         </div>
 
@@ -202,21 +208,21 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">EIN:</label>
                             <div class="col-sm-8">
-                                <span class="float-right">{{ $chapterDetails->ein}}</span>
+                                <span class="float-right">{{ $chDetails->ein}}</span>
                             </div>
                         </div>
 
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Founded:</label>
                             <div class="col-sm-8">
-                                <span class="float-right">{{ $startMonth }} {{ $chapterDetails->start_year }}</span>
+                                <span class="float-right">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
                             </div>
                         </div>
 
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Boundaries:</label>
                             <div class="col-sm-8">
-                                <span class="float-right">{{ $chapterDetails->territory}}</span>
+                                <span class="float-right">{{ $chDetails->territory}}</span>
                             </div>
                         </div>
 
@@ -224,8 +230,8 @@
                             <label class="col-sm-4 col-form-label">Dues Paid:</label>
                             <div class="col-sm-8">
                                 <span class="float-right">
-                                    @if ($chapterDetails->members_paid_for)
-                                        <b>{{ $chapterDetails->members_paid_for }} Members</b> on <b><span class="date-mask">{{ $chapterDetails->dues_last_paid }}</span></b>
+                                    @if ($chDetails->members_paid_for)
+                                        <b>{{ $chDetails->members_paid_for }} Members</b> on <b><span class="date-mask">{{ $chDetails->dues_last_paid }}</span></b>
                                     @else
                                         N/A
                                     @endif
@@ -237,8 +243,8 @@
                             <label class="col-sm-4 col-form-label">M2M Donation:</label>
                             <div class="col-sm-8">
                                 <span class="float-right">
-                                    @if ($chapterDetails->m2m_payment)
-                                        <b>${{ $chapterDetails->m2m_payment }}</b> on <b><span class="date-mask">{{ $chapterDetails->m2m_date }}</span></b>
+                                    @if ($chDetails->m2m_payment)
+                                        <b>${{ $chDetails->m2m_payment }}</b> on <b><span class="date-mask">{{ $chDetails->m2m_date }}</span></b>
                                     @else
                                         N/A
                                     @endif
@@ -250,8 +256,8 @@
                             <label class="col-sm-4 col-form-label">Sustaining Donation:</label>
                             <div class="col-sm-8">
                                 <span class="float-right">
-                                    @if ($chapterDetails->sustaining_donation)
-                                        <b>${{ $chapterDetails->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chapterDetails->sustaining_date }}</span></b>
+                                    @if ($chDetails->sustaining_donation)
+                                        <b>${{ $chDetails->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chDetails->sustaining_date }}</span></b>
                                     @else
                                         N/A
                                     @endif
@@ -269,7 +275,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Anniversary Month</label>
                             <div class="col-sm-8">
-                                <span class="float-right">{{ $startMonth }}</span>
+                                <span class="float-right">{{ $startMonthName }}</span>
                             </div>
                         </div>
 
@@ -280,7 +286,7 @@
                                 <span style="color: red;">Your Re-registration payment is now considered overdue.<br>
                             @endif
                             @if($user_type === 'coordinator')
-                                <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('chapter.viewreregpayment', ['id' => $chapterDetails->id]) }}'">PAY HERE</button>
+                                <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('chapter.viewreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
                             @else
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.showreregpayment') }}'">PAY HERE</button>
                             @endif
@@ -291,25 +297,25 @@
 
                       <li class="list-group-item">
                         <h5>Resources</h5>
-                            @if($chapterDetails->ein_letter_path != null)
-                                <button type="button" class="btn bg-primary btn-sm mb-1" onclick="window.open('{{ $chapterDetails->ein_letter_path }}', '_blank')">View/Download EIN Letter</button><br>
+                            @if($chDocuments->ein_letter_path != null)
+                                <button type="button" class="btn bg-primary btn-sm mb-1" onclick="window.open('{{ $chDocuments->ein_letter_path }}', '_blank')">View/Download EIN Letter</button><br>
                             @else
                                 <button type="button" class="btn bg-primary btn-sm mb-1 disabled">No EIN Letter on File</button><br>
                             @endif
-                            <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chapterDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
+                            <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
                             <button id="eLearning" type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn bg-primary mb-1 btn-sm">eLearning Library</button><br>
                             <button id="Resources" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.resources') }}'">Chapter Resources</button>
                       </li>
                       <li class="list-group-item">
                             <h5>End of year Filing</h5>
                             @if($thisDate->month >= 6 && $thisDate->month <= 12 && $boardreport_yes)
-                                @if($chapterDetails->new_board_active!='1')
+                                @if($chDetails->new_board_active!='1')
                                     @if($user_type === 'coordinator')
-                                        <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chapterDetails->id]) }}'">
+                                        <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
                                             {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
                                         </button><br>
                                     @else
-                                        <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chapterDetails->id]) }}'">
+                                        <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chDetails->id]) }}'">
                                             {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
                                         </button><br>
                                     @endif
@@ -322,11 +328,11 @@
                             @endif
                             @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
                                 @if($user_type === 'coordinator')
-                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chapterDetails->id]) }}'">
+                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                                     </button><br>
                                 @else
-                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $chapterDetails->id]) }}'">
+                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                                     </button><br>
                                 @endif
@@ -343,8 +349,8 @@
                   </ul>
 
                   <h5>Coordinators</h5>
-                  <input type="hidden" id="ch_primarycor" value="{{ $chapterDetails->primary_coordinator_id }}">
-                  <input  type="hidden" id="pcid" value="{{ $chapterDetails->primary_coordinator_id}}">
+                  <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                  <input  type="hidden" id="pcid" value="{{ $chDetails->primary_coordinator_id}}">
                   <div id="display_corlist" ></div>
 
                     </div>
@@ -401,43 +407,47 @@ $(document).ready(function () {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    const websiteField = document.getElementById("ch_website");
     const statusField = document.getElementById("ch_webstatus");
+    const hiddenStatus = document.querySelector('input[name="ch_hid_webstatus"]');
 
-    websiteField.addEventListener("input", function() {
-        // Enable options 2 and 3, disable options 1 and 2
-        Array.from(statusField.options).forEach(option => {
-            if (["0", "1"].includes(option.value)) {
-                option.disabled = true;
-            } else if (["2", "3"].includes(option.value)) {
-                option.disabled = false;
-            }
-        });
+    // Get the current saved value
+    const savedValue = hiddenStatus.value;
+
+    // Disable options 0 and 1, but keep them selectable if they were previously selected
+    Array.from(statusField.options).forEach(option => {
+        if (["0", "1"].includes(option.value)) {
+            option.disabled = (option.value !== savedValue);
+        }
     });
+
+    // Ensure the saved value is selected
+    if (["0", "1"].includes(savedValue)) {
+        statusField.value = savedValue;
+    }
 });
 
-    $( document ).ready(function() {
-        var pcid = $("#pcid").val();
-        if (pcid != "") {
-            $.ajax({
-                url: '{{ url("/load-coordinator-list/") }}' + '/' + pcid,
-                type: "GET",
-                success: function (result) {
-                    console.log("AJAX result:", result);
-                    $("#display_corlist").html(result);
-                },
-                error: function (jqXHR, exception) {
-                    console.log("AJAX error:", exception);
-                }
-            });
-        }
-
-        $('.cls-pswd').on('keypress', function(e) {
-        if (e.which == 32)
-            return false;
+$( document ).ready(function() {
+    var pcid = $("#pcid").val();
+    if (pcid != "") {
+        $.ajax({
+            url: '{{ url("/load-coordinator-list/") }}' + '/' + pcid,
+            type: "GET",
+            success: function (result) {
+                console.log("AJAX result:", result);
+                $("#display_corlist").html(result);
+            },
+            error: function (jqXHR, exception) {
+                console.log("AJAX error:", exception);
+            }
         });
+    }
 
+    $('.cls-pswd').on('keypress', function(e) {
+    if (e.which == 32)
+        return false;
     });
+
+});
 
 function PreSaveValidate(){
     var errMessage="";
