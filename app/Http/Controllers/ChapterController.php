@@ -116,8 +116,8 @@ class ChapterController extends Controller
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])->find($id);
         $chId = $chDetails->id;
         $chIsActive = $chDetails->is_active;
-        $stateShortName = $chDetails->state->state_short_name;
-        $regionLongName = $chDetails->region->long_name;
+        $stateShortName = $chDetails->state?->state_short_name;
+        $regionLongName = $chDetails->region?->long_name;
         $conferenceDescription = $chDetails->conference->conference_description;
         $chConfId = $chDetails->conference_id;
         $chRegId = $chDetails->region_id;

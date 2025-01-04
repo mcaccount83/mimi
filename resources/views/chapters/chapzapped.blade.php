@@ -56,7 +56,7 @@
                             {{ $list->conference->short_name }}
                         @endif
                     </td>
-                    <td>{{ $list->state->state_short_name }}</td>
+                    <td>{{ $list->state?->state_short_name }}</td>
                     <td>{{ $list->name }}</td>
                     <td>{{ $list->ein }}</td>
                     <td><span class="date-mask">{{ $list->zap_date }}</span></td>
