@@ -157,6 +157,10 @@ class ChapterController extends Controller
         $emailData = $this->userController->loadConferenceCoord($chPcId);
         $emailCC = $emailData['cc_email'];
 
+        // //Primary Coordinator Notification//
+        $pcDetails = Coordinators::find($chPcId);
+        $emailPC = $pcDetails->email;
+
         // Load Report Reviewer Coordinator Dropdown List
         $pcDetails = $this->userController->loadPrimaryList($chRegId, $chConfId);
 
@@ -165,7 +169,7 @@ class ChapterController extends Controller
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcDetails' => $pcDetails, 'submitted' => $submitted,
-            'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC,
+            'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink
         ];
 
@@ -2693,29 +2697,33 @@ class ChapterController extends Controller
         $cdId = $cdDetails->id;
         $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
 
-        $nextRenewalYear = $request->input('ch_nxt_renewalyear');
-        $primaryCordEmail = $request->input('ch_pc_email');
-        $boardPresEmail = $request->input('ch_pre_email');
+        $baseQuery = $this->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $nextRenewalYear = $baseQuery['chDetails']->next_renewal_year;
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailListCoord = $baseQuery['emailListCoord'];
+        $emailPC = $baseQuery['emailPC'];
 
-        $chapter = Chapters::find($id);
-        $chId = $chapter['id'];
-        $emailData = $this->userController->loadEmailDetails($chId);
-        $emailListChap = $emailData['emailListChap'];
-        $emailListCoord = $emailData['emailListCoord'];
-
-        $chapterEmails = $emailListChap;
-
-        $to_email = $chapterEmails;
-        $cc_email = $primaryCordEmail;
+        $input = $request->all();
+        $reg_notes = $input['ch_regnotes'];
+        $dues_last_paid = $input['PaymentDate'];
+        $members_paid_for = $input['MembersPaidFor'];
+        $m2m_date = $input['M2MPaymentDate'];
+        $m2m_payment = $input['M2MPayment'];
+        $sustaining_date = $input['SustainingPaymentDate'];
+        $sustaining_donation = $input['SustainingPayment'];
 
         $chapter = Chapters::find($id);
 
         DB::beginTransaction();
         try {
-            if ($request->input('PaymentDate') != null) {
-                $chapter->dues_last_paid = $request->input('PaymentDate');
-                $chapter->members_paid_for = $request->input('MembersPaidFor');
-                $chapter->reg_notes = $request->input('ch_regnotes');
+                $chapter->reg_notes = $reg_notes;
+                $chapter->save();
+
+            if ($dues_last_paid != null) {
+                $chapter->dues_last_paid = $dues_last_paid;
+                $chapter->members_paid_for = $members_paid_for;
                 $chapter->next_renewal_year = $nextRenewalYear + 1;
                 $chapter->last_updated_by = $lastUpdatedBy;
                 $chapter->last_updated_date = date('Y-m-d H:i:s');
@@ -2723,69 +2731,57 @@ class ChapterController extends Controller
 
                 if ($request->input('ch_notify') == 'on') {
                     $mailData = [
-                        'chapterName' => $request->input('ch_name'),
-                        'chapterState' => $request->input('ch_state'),
-                        'chapterPreEmail' => $request->input('ch_pre_email'),
-                        'chapterDate' => $request->input('PaymentDate'),
-                        'chapterMembers' => $request->input('MembersPaidFor'),
-                        'cordFname' => $request->input('ch_pc_fname'),
-                        'cordLname' => $request->input('ch_pc_lname'),
-                        'cordConf' => $request->input('ch_pc_confid'),
+                        'chapterName' => $chDetails->name,
+                        'chapterState' => $stateShortName,
+                        'chapterDate' => $dues_last_paid,
+                        'chapterMembers' => $members_paid_for,
                     ];
 
                     // Payment Thank You Email
-                    Mail::to($to_email)
-                        ->cc($cc_email)
+                    Mail::to($emailListChap)
+                        ->cc($emailPC)
                         ->queue(new PaymentsReRegChapterThankYou($mailData));
                 }
             }
 
-            if ($request->input('M2MPaymentDate') != null) {
-                $chapter->m2m_date = $request->input('M2MPaymentDate');
-                $chapter->members_paid_for = $request->input('M2MPayment');
+            if ($m2m_date != null) {
+                $chapter->m2m_date = $m2m_date;
+                $chapter->m2m_payment = $m2m_payment;
                 $chapter->last_updated_by = $lastUpdatedBy;
                 $chapter->last_updated_date = date('Y-m-d H:i:s');
                 $chapter->save();
 
                 if ($request->input('ch_thanks') == 'on') {
                     $mailData = [
-                        'chapterName' => $request->input('ch_name'),
-                        'chapterState' => $request->input('ch_state'),
-                        'chapterPreEmail' => $request->input('ch_pre_email'),
-                        'chapterAmount' => $request->input('M2MPayment'),
-                        'cordFname' => $request->input('ch_pc_fname'),
-                        'cordLname' => $request->input('ch_pc_lname'),
-                        'cordConf' => $request->input('ch_pc_confid'),
+                        'chapterName' => $chDetails->name,
+                        'chapterState' => $stateShortName,
+                        'chapterAmount' => $m2m_payment,
                     ];
 
                     //M2M Donation Thank You Email//
-                    Mail::to($to_email)
-                        ->cc($cc_email)
+                    Mail::to($emailListChap)
+                        ->cc($emailPC)
                         ->queue(new PaymentsM2MChapterThankYou($mailData));
                 }
             }
 
-            if ($request->input('SustainingPaymentDate') != null) {
-                $chapter->sustaining_date = $request->input('SustainingPaymentDate');
-                $chapter->sustaining_donation = $request->input('SustainingPayment');
+            if ($sustaining_date != null) {
+                $chapter->sustaining_date = $sustaining_date;
+                $chapter->sustaining_donation = $sustaining_donation;
                 $chapter->last_updated_by = $lastUpdatedBy;
                 $chapter->last_updated_date = date('Y-m-d H:i:s');
                 $chapter->save();
 
                 if ($request->input('ch_sustaining') == 'on') {
                     $mailData = [
-                        'chapterName' => $request->input('ch_name'),
-                        'chapterState' => $request->input('ch_state'),
-                        'chapterPreEmail' => $request->input('ch_pre_email'),
-                        'chapterTotal' => $request->input('SustainingPayment'),
-                        'cordFname' => $request->input('ch_pc_fname'),
-                        'cordLname' => $request->input('ch_pc_lname'),
-                        'cordConf' => $request->input('ch_pc_confid'),
+                        'chapterName' => $chDetails->name,
+                        'chapterState' => $stateShortName,
+                        'chapterTotal' => $sustaining_donation,
                     ];
 
                     //Sustaining Chapter Thank You Email//
-                    Mail::to($to_email)
-                        ->cc($cc_email)
+                    Mail::to($emailListChap)
+                        ->cc($emailPC)
                         ->queue(new PaymentsSustainingChapterThankYou($mailData));
                 }
             }

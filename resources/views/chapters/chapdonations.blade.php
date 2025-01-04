@@ -32,8 +32,13 @@
               {{-- <table id="chapterlist_donation" class="table table-bordered table-hover"> --}}
               <thead>
 			    <tr>
-					<?php if(Session::get('positionid') >=6 && Session::get('positionid') <=7){ ?><th>Donation</th><?php }?>
-				  <th>Conf/Reg</th><th>State</th>
+                <th>
+                    @if ($conferenceCoordinatorCondition)
+                    Donation
+                    @endif
+                </th>
+				  <th>Conf/Reg</th>
+                  <th>State</th>
                   <th>Name</th>
                     <th>M2M Fund Donation</th>
                     <th>Donation Date</th>

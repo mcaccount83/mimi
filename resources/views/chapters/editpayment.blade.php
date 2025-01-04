@@ -27,22 +27,6 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-4">
-                {{-- <input type="hidden" name="ch_nxt_renewalyear" value="{{ $chDetails->next_renewal_year }}">
-                <input type="hidden" name="ch_pre_email" value="{{ $chDetails->bd_email }}">
-                <input type="hidden" name="ch_pc_fname" value="{{ $chDetails->cor_fname }}">
-                <input type="hidden" name="ch_pc_lname" value="{{ $chDetails->cor_lname }}">
-                <input type="hidden" name="ch_pc_email" value="{{ $chDetails->cor_email }}">
-                <input type="hidden" name="ch_pc_confid" value="{{ $chDetails->cor_confid }}"> --}}
-                {{-- <input type="hidden" name="ch_name" value="{{ $chDetails->name }}">
-                <input type="hidden" name="ch_state" value="{{ $chDetails->statename }}"> --}}
-
-                <input type="hidden" name="PaymentDate" value="{{ $chDetails->dues_last_paid }}">
-                <input type="hidden" name="MembersPaidFor" value="{{ $chDetails->members_paid_for }}">
-                <input type="hidden" name="ch_regnotes" value="{{ $chDetails->reg_notes }}">
-                <input type="hidden" name="M2MPaymentDate" value="{{ $chDetails->m2m_date }}">
-                <input type="hidden" name="M2MPayment" value="{{ $chDetails->m2m_payment }}">
-                <input type="hidden" name="SustainingPaymentDate" value="{{ $chDetails->sustaining_date }}">
-                <input type="hidden" name="SustainingPayment" value="{{ $chDetails->sustaining_donation }}">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
