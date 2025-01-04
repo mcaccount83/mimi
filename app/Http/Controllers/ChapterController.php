@@ -1894,6 +1894,7 @@ class ChapterController extends Controller
                 $stateShortName = $baseQueryUpd['stateShortName'];
                 $chConfId = $baseQueryUpd['chConfId'];
                 $chPcId = $baseQueryUpd['chPcId'];
+                $emailPC = $baseQueryUpd['emailPC'];
                 $PresDetailsUpd = $baseQueryUpd['PresDetails'];
                 $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
                 $MVPDetailsUpd = $baseQueryUpd['MVPDetails'];
@@ -2017,10 +2018,6 @@ class ChapterController extends Controller
                         $mailData = array_merge($mailData, $mailDataSecp);
                     }
 
-                // //Primary Coordinator Notification//
-                $pc_email = Coordinators::find($chPcId);
-                $to_email = $pc_email;
-
                 if ($chDetailsUpd->name != $chDetailsPre->name || $PresDetailsUpd->bor_email != $PresDetailsPre->bor_email || $PresDetailsUpd->street_address != $PresDetailsPre->street_address || $PresDetailsUpd->city != $PresDetailsPre->city ||
                         $PresDetailsUpd->state != $PresDetailsPre->state || $PresDetailsUpd->first_name != $PresDetailsPre->first_name || $PresDetailsUpd->last_name != $PresDetailsPre->last_name ||
                         $PresDetailsUpd->zip != $PresDetailsPre->zip || $PresDetailsUpd->phone != $PresDetailsPre->phone || $PresDetailsUpd->inquiries_contact != $PresDetailsPre->inquiries_contact ||
@@ -2033,7 +2030,7 @@ class ChapterController extends Controller
                         $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
                         $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
-                    Mail::to($to_email)
+                    Mail::to($emailPC)
                         ->queue(new ChaptersUpdatePrimaryCoorBoard($mailData));
                 }
 
@@ -2258,7 +2255,7 @@ class ChapterController extends Controller
             $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
             $emailListCoord = $baseQueryUpd['emailListCoord']; // Full Coord List
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
-            $pc_email = Coordinators::find($chPcId);  //PC Email
+            $emailPC = $baseQueryUpd['emailPC'];
 
             if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
                 $mailData = [
@@ -2293,7 +2290,7 @@ class ChapterController extends Controller
             ];
 
             if ($chDetailsUpd->website_url != $chDetailsPre->website_url || $chDetailsUpd->website_status != $chDetailsPre->website_status) {
-                Mail::to($pc_email)
+                Mail::to($emailPC)
                     ->queue(new WebsiteUpdatePrimaryCoor($mailData));
             }
 
@@ -2382,99 +2379,83 @@ class ChapterController extends Controller
      */
     public function createChapterReRegistrationReminder(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        $month = date('m');
-        $year = date('Y');
-        $monthRangeStart = $month;
-        $monthRangeEnd = $month - 1;
-        $lastYear = $year - 1;
-        $thisyear = $year;
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
 
-        if ($month == 1) {
-            $monthRangeStart = 12;
-            $lastYear = $lastYear - 1;
-        }
-        if ($month == 1) {
-            $monthRangeEnd = 12;
-            $thisyear = $year - 1;
-        }
+        $now = Carbon::now();
+        $month = $now->month;
+        $year = $now->year;
+        $monthInWords = $now->format('F');
+        $rangeEndDate = $now->copy()->subMonth()->endOfMonth();
+        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
 
-        $rangeStartDate = Carbon::create($lastYear, $monthRangeStart, 1);
-        $rangeEndDate = Carbon::create($thisyear, $monthRangeEnd, 1)->endOfMonth();
-
-        // Convert $month to words
-        $monthInWords = Carbon::createFromFormat('m', $month)->format('F');
-
-        // Format dates as "mm-dd-yyyy"
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
-        $chapters = Chapters::select('chapters.*', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state',
-            'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month', )
-            ->join('state', 'chapters.state_id', '=', 'state.id')
-            ->where('chapters.conference_id', $corConfId)
-            ->where('chapters.start_month_id', $month)
-            ->where('chapters.next_renewal_year', $year)
-            ->where('chapters.is_active', 1)
-            ->get();
-
-        if ($chapters->isEmpty()) {
-            return redirect()->back()->with('info', 'There are no Chapters with Registrations Due.');
-        }
-
-        $chapterIds = [];
-        $chapterEmails = [];
-        $coordinatorEmails = [];
-        $mailData = [];
-
-        foreach ($chapters as $chapter) {
-            $chapterIds[] = $chapter->id;
-
-            if ($chapter->name) {
-                $emailData = $this->userController->loadEmailDetails($chapter->id);
-                $emailListChap = $emailData['emailListChap'];
-                $emailListCoord = $emailData['emailListCoord'];
-
-                $chapterEmails[$chapter->name] = $emailListChap;
-                $coordinatorEmails[$chapter->name] = $emailListCoord;
-            }
-
-            $chapterState = $chapter->chapter_state;
-
-            $mailData[$chapter->chapter_name] = [
-                'chapterName' => $chapter->chapter_name,
-                'chapterState' => $chapterState,
-                'startRange' => $rangeStartDateFormatted,
-                'endRange' => $rangeEndDateFormatted,
-                'startMonth' => $monthInWords,
-            ];
-
-        }
-
-        foreach ($mailData as $chapterName => $data) {
-            $to_email = $chapterEmails[$chapterName] ?? [];
-            $cc_email = $coordinatorEmails[$chapterName] ?? [];
-
-            if (! empty($to_email)) {
-                Mail::to($to_email)
-                    ->cc($cc_email)
-                    ->queue(new PaymentsReRegReminder($data));
-            }
-        }
-
         try {
+
+            $chapters = Chapters::with(['state', 'conference', 'region',])
+                ->where('conference_id', $cdConfId)
+                ->where('start_month_id', $month)
+                ->where('next_renewal_year', $year)
+                ->where('is_active', 1)
+                ->get();
+
+            if ($chapters->isEmpty()) {
+                return redirect()->back()->with('info', 'There are no Chapters with Registrations Due.');
+            }
+
+            $chapterIds = [];
+            $chapterEmails = [];
+            $coordinatorEmails = [];
+            $mailData = [];
+
+            foreach ($chapters as $chapter) {
+                $chapterIds[] = $chapter->id;
+
+                $chapterName = $chapter->name;
+                $stateShortName = $chapter->state->state_short_name;
+
+                if ($chapterName) {
+                    $emailData = $this->userController->loadEmailDetails($chapter->id);
+                    $emailListChap = $emailData['emailListChap'];
+                    $emailListCoord = $emailData['emailListCoord'];
+
+                    $chapterEmails[$chapterName] = $emailListChap;
+                    $coordinatorEmails[$chapterName] = $emailListCoord;
+                }
+
+                $mailData[$chapterName] = [
+                    'chapterName' => $chapterName,
+                    'chapterState' => $stateShortName,
+                    'startRange' => $rangeStartDateFormatted,
+                    'endRange' => $rangeEndDateFormatted,
+                    'startMonth' => $monthInWords,
+                ];
+            }
+
+            foreach ($mailData as $chapterName => $data) {
+                $to_email = $chapterEmails[$chapterName] ?? [];
+                $cc_email = $coordinatorEmails[$chapterName] ?? [];
+
+                if (! empty($to_email)) {
+                    Mail::to($to_email)
+                        ->cc($cc_email)
+                        ->queue(new PaymentsReRegReminder($data));
+                }
+            }
+
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
             echo $e->getMessage();
             exit();
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
@@ -2487,121 +2468,89 @@ class ChapterController extends Controller
      */
     public function createChapterReRegistrationLateReminder(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        $month = date('m');
-        $year = date('Y');
-        $lastMonth = $month - 1;
-        $monthRangeStart = $month - 1;
-        $monthRangeEnd = $month - 2;
-        $lastYear = $year - 1;
-        $thisyear = $year;
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
 
-        if ($month == 1) {
-            $monthRangeStart = 11;
-            $lastYear = $lastYear - 1;
-        } elseif ($month == 2) {
-            $monthRangeStart = 12;
-            $lastYear = $lastYear - 1;
+        $now = Carbon::now();
+        $month = $now->month;
+        $lastMonth = $now->copy()->subMonth()->format('m');
+        $year = $now->year;
+        if ($now->format('m') == '01' && $lastMonth == '12') {
+            $year = $now->year - 1;
         }
+        $monthInWords = $now->format('F');
+        $lastMonthInWords = $now->copy()->subMonth()->format('F');
+        $rangeEndDate = $now->copy()->subMonths(2)->endOfMonth();
+        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
 
-        if ($month == 1) {
-            $monthRangeEnd = 11;
-            $thisyear = $year - 1;
-        } elseif ($month == 2) {
-            $monthRangeEnd = 12;
-            $thisyear = $year - 1;
-        }
-
-        $rangeStartDate = Carbon::create($lastYear, $monthRangeStart, 1);
-        $rangeEndDate = Carbon::create($thisyear, $monthRangeEnd, 1)->endOfMonth();
-
-        // Convert $month to words
-        $monthInWords = Carbon::createFromFormat('m', $month)->format('F');
-        $lastMonthInWords = Carbon::createFromFormat('m', $lastMonth)->format('F');
-
-        // Format dates as "mm-dd-yyyy"
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
-        $chapters = Chapters::select('chapters.*', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'boards.email as bor_email',
-            'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
-            'boards.board_position_id')
-            ->join('state', 'chapters.state_id', '=', 'state.id')
-            ->join('boards', 'chapters.id', '=', 'boards.chapter_id')
-            ->whereIn('boards.board_position_id', [1, 2, 3, 4, 5])
-            ->where('chapters.conference_id', $corConfId)
-            ->where(function ($query) use ($month, $year) {
-                if ($month == 1) {
-                    // January, so get chapters with December start_month_id
-                    $query->where('chapters.start_month_id', 12)
-                        ->where('chapters.next_renewal_year', $year - 1);
-                } else {
-                    // Any other month, get chapters with $month - 1 start_month_id
-                    $query->where('chapters.start_month_id', $month - 1)
-                        ->where('chapters.next_renewal_year', $year);
-                }
-            })
-            ->where('chapters.is_active', 1)
-            ->get();
-
-        if ($chapters->isEmpty()) {
-            return redirect()->back()->with('info', 'There are no Chapters with Late Registrations Due.');
-        }
-
-        $chapterIds = [];
-        $chapterEmails = [];
-        $coordinatorEmails = [];
-        $mailData = [];
-
-        foreach ($chapters as $chapter) {
-            $chapterIds[] = $chapter->id;
-
-            if ($chapter->name) {
-                $emailData = $this->userController->loadEmailDetails($chapter->id);
-                $emailListChap = $emailData['emailListChap'];
-                $emailListCoord = $emailData['emailListCoord'];
-
-                $chapterEmails[$chapter->name] = $emailListChap;
-                $coordinatorEmails[$chapter->name] = $emailListCoord;
-            }
-
-            $chapterState = $chapter->chapter_state;
-
-            $mailData[$chapter->chapter_name] = [
-                'chapterName' => $chapter->chapter_name,
-                'chapterState' => $chapterState,
-                'startRange' => $rangeStartDateFormatted,
-                'endRange' => $rangeEndDateFormatted,
-                'startMonth' => $lastMonthInWords,
-                'dueMonth' => $monthInWords,
-            ];
-
-        }
-
-        foreach ($mailData as $chapterName => $data) {
-            $to_email = $chapterEmails[$chapterName] ?? [];
-            $cc_email = $coordinatorEmails[$chapterName] ?? [];
-
-            if (! empty($to_email)) {
-                Mail::to($to_email)
-                    ->cc($cc_email)
-                    ->queue(new PaymentsReRegLate($data));
-            }
-        }
-
         try {
+
+            $chapters = Chapters::with(['state', 'conference', 'region',])
+                ->where('chapters.conference_id', $cdConfId)
+                ->where('chapters.start_month_id', $lastMonth)
+                ->where('chapters.next_renewal_year', $year)
+                ->where('chapters.is_active', 1)
+                ->get();
+
+            if ($chapters->isEmpty()) {
+                return redirect()->back()->with('info', 'There are no Chapters with Late Registrations Due.');
+            }
+
+            $chapterIds = [];
+            $chapterEmails = [];
+            $coordinatorEmails = [];
+            $mailData = [];
+
+            foreach ($chapters as $chapter) {
+                $chapterIds[] = $chapter->id;
+
+                $chapterName = $chapter->name;
+                $stateShortName = $chapter->state->state_short_name;
+
+                if ($chapterName) {
+                    $emailData = $this->userController->loadEmailDetails($chapter->id);
+                    $emailListChap = $emailData['emailListChap'];
+                    $emailListCoord = $emailData['emailListCoord'];
+
+                    $chapterEmails[$chapterName] = $emailListChap;
+                    $coordinatorEmails[$chapterName] = $emailListCoord;
+                }
+
+                $mailData[$chapterName] = [
+                    'chapterName' => $chapterName,
+                    'chapterState' => $stateShortName,
+                    'startRange' => $rangeStartDateFormatted,
+                    'endRange' => $rangeEndDateFormatted,
+                    'startMonth' => $lastMonthInWords,
+                    'dueMonth' => $monthInWords,
+                ];
+            }
+
+            foreach ($mailData as $chapterName => $data) {
+                $to_email = $chapterEmails[$chapterName] ?? [];
+                $cc_email = $coordinatorEmails[$chapterName] ?? [];
+
+                if (! empty($to_email)) {
+                    Mail::to($to_email)
+                        ->cc($cc_email)
+                        ->queue(new PaymentsReRegLate($data));
+                }
+            }
+
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
             echo $e->getMessage();
             exit();
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
