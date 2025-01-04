@@ -1041,7 +1041,7 @@ class ChapterController extends Controller
         $allStatuses = Status::all();  // Full List for Dropdown Menu
         $chConfId = $cdConfId;
 
-        $pcList = Coordinators::with(['coorDispPosition', 'coorSecPosition'])
+        $pcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
                 ->where('conference_id', $chConfId)
                 ->whereBetween('position_id', [1, 7])
                 ->where('is_active', 1)
@@ -1052,7 +1052,7 @@ class ChapterController extends Controller
             return [
                 'cid' => $coordinator->id,
                 'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'cpos' => $coordinator->coorDispPosition->short_title ?? 'No Position',
+                'cpos' => $coordinator->displayPosition->short_title ?? 'No Position',
                 'regid' => $coordinator->region_id,
             ];
         });

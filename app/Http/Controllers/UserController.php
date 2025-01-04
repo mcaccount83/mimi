@@ -140,7 +140,7 @@ class UserController extends Controller
         $str = '';   // Prepare the empty string for coordinator details
         $i = 0;
         if (!empty($coordinatorList)) {
-            $coordinators = Coordinators::with(['coorDispPosition', 'coorSecPosition'])->whereIn('id', $coordinatorList)
+            $coordinators = Coordinators::with(['displayPosition', 'secondaryPosition'])->whereIn('id', $coordinatorList)
                 ->where('is_active', 1)
                 ->orderByRaw('FIELD(id, ' . implode(',', $coordinatorList) . ')') // Ensure order is based on reversed IDs
                 ->get();
@@ -149,8 +149,8 @@ class UserController extends Controller
             foreach ($coordinators as $cor) {
                 $name = $cor->first_name . ' ' . $cor->last_name;
                 $email = $cor->email;
-                $displayPosition = $cor->coorDispPosition ? $cor->coorDispPosition->short_title : '';
-                $secondaryPosition = $cor->coorSecPosition ? $cor->coorSecPosition->short_title : '';
+                $displayPosition = $cor->displayPosition ? $cor->displayPosition->short_title : '';
+                $secondaryPosition = $cor->secondaryPosition ? $cor->secondaryPosition->short_title : '';
                 $position = '';
                     if ($displayPosition || $secondaryPosition) {
                         $position = '(' . $displayPosition;
@@ -183,7 +183,7 @@ class UserController extends Controller
         $layer1 = CoordinatorTree::where('coordinator_id', $chPcid)
             ->value('layer1'); // Fetch only the value of the 'layer1' column
 
-        $ccDetails = Coordinators::with(['coorDispPosition', 'coorSecPosition', 'conference'])
+        $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition', 'conference'])
             ->where('id', $layer1)
             ->where('is_active', 1)
             ->first(); // Fetch only the first record directly
@@ -195,7 +195,7 @@ class UserController extends Controller
         $cc_conf = $ccDetails->conference_id;
         $cc_conf_name = $ccDetails->conference->conference_name;
         $cc_conf_desc = $ccDetails->conference->conference_description;
-        $cc_pos = $ccDetails->coorDispPosition->long_title ?? 'N/A';
+        $cc_pos = $ccDetails->displayPosition->long_title ?? 'N/A';
 
         return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email, 'cc_conf' => $cc_conf,
             'cc_conf_name' =>$cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id,
@@ -209,7 +209,7 @@ class UserController extends Controller
     {
         $chList = Chapters::with([
             'primaryCoordinator' => function ($query) use ($chRegId, $chConfId) {
-                $query->with(['coorDispPosition', 'coorSecPosition'])
+                $query->with(['displayPosition', 'secondaryPosition'])
                     ->where(function ($q) use ($chRegId, $chConfId) {
                         $q->where('region_id', $chRegId)
                         ->orWhere(function ($subQuery) use ($chConfId) {
@@ -228,7 +228,7 @@ class UserController extends Controller
             return [
                 'cid' => $coordinator->id,
                 'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'cpos' => $coordinator->coorDispPosition->short_title ?? 'No Position',
+                'cpos' => $coordinator->displayPosition->short_title ?? 'No Position',
             ];
         });
 
@@ -244,7 +244,7 @@ class UserController extends Controller
     {
         $chList = Chapters::with([
             'reportReviewer' => function ($query) use ($chRegId, $chConfId) {
-                $query->with(['coorDispPosition', 'coorSecPosition'])
+                $query->with(['displayPosition', 'secondaryPosition'])
                     ->where(function ($q) use ($chRegId, $chConfId) {
                         $q->where('region_id', $chRegId)
                         ->orWhere(function ($subQuery) use ($chConfId) {
@@ -263,7 +263,7 @@ class UserController extends Controller
             return [
                 'cid' => $coordinator->id,
                 'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'cpos' => $coordinator->coorDispPosition->short_title ?? 'No Position',
+                'cpos' => $coordinator->displayPosition->short_title ?? 'No Position',
             ];
         });
 
