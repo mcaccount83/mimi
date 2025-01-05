@@ -13,8 +13,6 @@ class Documents extends Model
 
     protected $primaryKey = 'chapter_id';
 
-    protected $table = 'documents';
-
     protected $fillable = [
         'chapter_id',
         'ein_letter_path',

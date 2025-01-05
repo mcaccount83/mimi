@@ -15,8 +15,6 @@ class Coordinators extends Model
 
     public $timestamps = false;
 
-    protected $table = 'coordinators';
-
     protected $fillable = [
         'name', 'email',
     ];

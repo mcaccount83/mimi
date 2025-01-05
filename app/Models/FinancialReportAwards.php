@@ -11,8 +11,6 @@ class FinancialReportAwards extends Model
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'financial_report_awards';
-
     protected $primaryKey = 'id';
 
     protected $fillable = [

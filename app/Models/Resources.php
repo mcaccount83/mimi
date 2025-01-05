@@ -12,8 +12,6 @@ class Resources extends Authenticatable
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'resources';
-
     protected $fillable = [
         'name', 'description', 'version', 'link',
     ];
