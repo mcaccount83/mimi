@@ -30,5 +30,4 @@ class PreventBackHistory
 
         return $response;
     }
-
 }

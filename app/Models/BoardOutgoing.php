@@ -26,7 +26,6 @@ class BoardOutgoing extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,  'user_id', 'id');  // 'user_id' in outgoing_board_members BelongsTo 'id' in user
+        return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in outgoing_board_members BelongsTo 'id' in user
     }
-
 }

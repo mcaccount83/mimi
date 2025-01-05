@@ -26,7 +26,7 @@ class CoordinatorController extends Controller
         $this->userController = $userController;
     }
 
-      /**
+    /**
      * Active Coordinator List Base Query
      */
     public function getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
@@ -37,16 +37,16 @@ class CoordinatorController extends Controller
             $inQryArr = $coordinatorData['inQryArr'];
         }
 
-        $baseQuery = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth', ])
+        $baseQuery = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth'])
             ->where('is_active', 1);
 
         if ($conditions['founderCondition']) {
-            } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-                $baseQuery->where('conference_id', '=', $userConfId);
-            } elseif ($conditions['regionalCoordinatorCondition']) {
-                $baseQuery->where('region_id', '=', $userRegId);
-            } else {
-                $baseQuery->whereIn('report_id', $inQryArr);
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('conference_id', '=', $userConfId);
+        } elseif ($conditions['regionalCoordinatorCondition']) {
+            $baseQuery->where('region_id', '=', $userRegId);
+        } else {
+            $baseQuery->whereIn('report_id', $inQryArr);
         }
 
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
@@ -56,13 +56,13 @@ class CoordinatorController extends Controller
             $checkBoxStatus = '';
         }
 
-        $baseQuery ->orderBy('coordinator_start_date');
+        $baseQuery->orderBy('coordinator_start_date');
 
-        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus,];
+        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus];
 
     }
 
-     /**
+    /**
      * Retired Coordinator List Base Query
      */
     public function getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
@@ -73,24 +73,24 @@ class CoordinatorController extends Controller
             $inQryArr = $coordinatorData['inQryArr'];
         }
 
-        $baseQuery = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth', ])
+        $baseQuery = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth'])
             ->where('is_active', 0);
 
         if ($conditions['founderCondition']) {
-            } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-                $baseQuery->where('conference_id', '=', $userConfId);
-            } elseif ($conditions['regionalCoordinatorCondition']) {
-                $baseQuery->where('region_id', '=', $userRegId);
-            } else {
-                $baseQuery->whereIn('report_id', $inQryArr);
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('conference_id', '=', $userConfId);
+        } elseif ($conditions['regionalCoordinatorCondition']) {
+            $baseQuery->where('region_id', '=', $userRegId);
+        } else {
+            $baseQuery->whereIn('report_id', $inQryArr);
         }
 
-        $baseQuery ->orderBy('zapped_date', 'desc');
+        $baseQuery->orderByDesc('zapped_date');
 
-        return ['query' => $baseQuery, ];
+        return ['query' => $baseQuery];
     }
 
-     /**
+    /**
      * Active Coordinator Details Base Query
      */
     public function getCoordinatorDetails($id)
@@ -113,7 +113,7 @@ class CoordinatorController extends Controller
         return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdIsActive' => $cdIsActive, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId,
             'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition,
-            'secondaryPosition' => $secondaryPosition
+            'secondaryPosition' => $secondaryPosition,
         ];
     }
 
@@ -155,7 +155,7 @@ class CoordinatorController extends Controller
         return view('coordinators.coordlist')->with($data);
     }
 
-     /**
+    /**
      * Retired Coorinators List
      */
     public function showRetiredCoordinator(Request $request): View
@@ -186,7 +186,7 @@ class CoordinatorController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        $intCoordinatorList = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'reportsTo', ])
+        $intCoordinatorList = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'reportsTo'])
             ->where('is_active', 1)
             ->orderBy('coordinator_start_date')
             ->get();
@@ -204,9 +204,9 @@ class CoordinatorController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        $intCoordinatorList = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'reportsTo', ])
+        $intCoordinatorList = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'reportsTo'])
             ->where('is_active', 0)
-            ->orderBy('zapped_date', 'desc')
+            ->orderByDesc('zapped_date')
             ->get();
 
         $data = ['intCoordinatorList' => $intCoordinatorList];
@@ -896,7 +896,7 @@ class CoordinatorController extends Controller
         }
     }
 
-     /**
+    /**
      * View Coordiantor Detais
      */
     public function viewCoordDetails(Request $request, $id): View
@@ -919,7 +919,7 @@ class CoordinatorController extends Controller
         $cdRptId = $baseQuery['cdRptId'];
         $RptFName = $baseQuery['RptFName'];
         $RptLName = $baseQuery['RptLName'];
-        $ReportTo =  $RptFName.' '.$RptLName;
+        $ReportTo = $RptFName.' '.$RptLName;
         $displayPosition = $baseQuery['displayPosition'];
         $mimiPosition = $baseQuery['mimiPosition'];
         $secondaryPosition = $baseQuery['secondaryPosition'];
@@ -948,7 +948,6 @@ class CoordinatorController extends Controller
         return view('coordinators.view')->with($data);
     }
 
-
     public function updateCardSent(Request $request): JsonResponse
     {
         $corDetails = User::find($request->user()->id)->coordinator;
@@ -962,10 +961,10 @@ class CoordinatorController extends Controller
         DB::beginTransaction();
 
         try {
-                $coordinators->card_sent = $cardSent;
-                $coordinators->last_updated_by = $lastUpdatedBy;
-                $coordinators->last_updated_date = date('Y-m-d');
-                $coordinators->save();
+            $coordinators->card_sent = $cardSent;
+            $coordinators->last_updated_by = $lastUpdatedBy;
+            $coordinators->last_updated_date = date('Y-m-d');
+            $coordinators->save();
 
             // DB::beginTransaction();
 
@@ -1009,10 +1008,10 @@ class CoordinatorController extends Controller
 
         DB::beginTransaction();
         try {
-                $coordinators->on_leave = 1;
-                $coordinators->last_updated_by = $lastUpdatedBy;
-                $coordinators->last_updated_date = date('Y-m-d');
-                $coordinators->save();
+            $coordinators->on_leave = 1;
+            $coordinators->last_updated_by = $lastUpdatedBy;
+            $coordinators->last_updated_date = date('Y-m-d');
+            $coordinators->save();
 
             DB::commit();
 
@@ -1045,11 +1044,11 @@ class CoordinatorController extends Controller
 
         DB::beginTransaction();
         try {
-                $coordinators->on_leave = 0;
-                $coordinators->leave_date = null;
-                $coordinators->last_updated_by = $lastUpdatedBy;
-                $coordinators->last_updated_date = date('Y-m-d');
-                $coordinators->save();
+            $coordinators->on_leave = 0;
+            $coordinators->leave_date = null;
+            $coordinators->last_updated_by = $lastUpdatedBy;
+            $coordinators->last_updated_date = date('Y-m-d');
+            $coordinators->save();
 
             DB::commit();
 

@@ -11,13 +11,13 @@ use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
+use App\Models\BoardOutgoing;
 use App\Models\Boards;
 use App\Models\Bugs;
 use App\Models\Chapters;
 use App\Models\FinancialReport;
 use App\Models\GoogleDrive;
 use App\Models\Month;
-use App\Models\BoardOutgoing;
 use App\Models\Resources;
 use App\Models\User;
 use Exception;
@@ -498,7 +498,7 @@ class AdminController extends Controller
         return view('admin.reregdate')->with($data);
     }
 
-    public function editReRegDate(Request $request, $id)
+    public function editReRegDate(Request $request, $id): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;

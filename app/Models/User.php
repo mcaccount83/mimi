@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -13,12 +12,10 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'users';
-
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'user_type', 'is_active'
+        'first_name', 'last_name', 'email', 'password', 'user_type', 'is_active',
 
     ];
 
@@ -40,5 +37,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(BoardOutgoing::class, 'user_id', 'id');  // 'user_id' in outgoing_board_members HasOne 'id' in users
     }
-
 }

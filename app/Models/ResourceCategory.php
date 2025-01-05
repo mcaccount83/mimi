@@ -16,5 +16,4 @@ class ResourceCategory extends Model
     protected $fillable = [
 
     ];
-
 }

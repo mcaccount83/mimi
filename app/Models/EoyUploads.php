@@ -16,5 +16,4 @@ class EoyUploads extends Model
     protected $fillable = [
 
     ];
-
 }

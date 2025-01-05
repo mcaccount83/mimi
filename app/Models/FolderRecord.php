@@ -11,8 +11,6 @@ class FolderRecord extends Model
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'folder_records';
-
     protected $fillable = [
         'year',
         'conf',

@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 class Boards extends Model
@@ -15,8 +14,6 @@ class Boards extends Model
 
     public $timestamps = false;
 
-    protected $table = 'boards';
-
     protected $fillable = [
         'user_id', 'first_name', 'last_name', 'email', 'board_position_id', 'chapter_id', 'street_address', 'city', 'state', 'zip', 'country',
         'phone', 'last_updated_by', 'last_updated_date', 'is_active',
@@ -24,7 +21,7 @@ class Boards extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,  'user_id', 'id');  // 'user_id' in boards BelongsTo 'id' in user
+        return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in boards BelongsTo 'id' in user
     }
 
     public function chapters(): BelongsTo
@@ -39,7 +36,6 @@ class Boards extends Model
 
     public function position(): BelongsTo
     {
-        return $this->belongsTo(BoardPosition::class,  'board_position_id', 'id');  // 'board_position_id' in boards BelongsTo 'id' in board_position
+        return $this->belongsTo(BoardPosition::class, 'board_position_id', 'id');  // 'board_position_id' in boards BelongsTo 'id' in board_position
     }
-
 }

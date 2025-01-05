@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Chapters;
+use App\Models\Resources;
+use App\Models\State;
 use App\Models\User;
 use App\Models\Website;
-use App\Models\State;
-use App\Models\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
@@ -23,7 +23,7 @@ class ViewAsBoardController extends Controller
         $this->userController = $userController;
     }
 
-     /**
+    /**
      * Active Chapter Details Base Query
      */
     public function getChapterDetails($id)
@@ -41,7 +41,7 @@ class ViewAsBoardController extends Controller
 
         $boards = $chDetails->boards()->with(['stateName', 'position'])->get();
         $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object)['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
 
         // Fetch board details or fallback to default
         $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
@@ -50,9 +50,9 @@ class ViewAsBoardController extends Controller
         $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
         $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
 
-        return [ 'chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+        return ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
-            'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'submitted' => $submitted
+            'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'submitted' => $submitted,
         ];
 
     }
@@ -94,7 +94,7 @@ class ViewAsBoardController extends Controller
         $boardreport_yes = ($eoyStatus->eoy_boardreport == 1);
         $financialreport_yes = ($eoyStatus->eoy_financialreport == 1);
 
-        $data = ['chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+        $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
             'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes];
@@ -103,7 +103,7 @@ class ViewAsBoardController extends Controller
 
     }
 
-     /**
+    /**
      * View the Chapter Re-Reg Payment Info Report View
      */
     public function showChapterReregistrationView(Request $request, $id): View
@@ -142,7 +142,7 @@ class ViewAsBoardController extends Controller
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type
+            'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
         ];
 
         return view('boards.payment')->with($data);
@@ -176,7 +176,7 @@ class ViewAsBoardController extends Controller
 
         $data = ['stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'allStates' => $allStates, 'SECDetails' => $SECDetails,
             'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'user_type' => $user_type,
-            'allWebLinks' => $allWebLinks
+            'allWebLinks' => $allWebLinks,
         ];
 
         return view('boards.boardinfo')->with($data);
@@ -205,10 +205,9 @@ class ViewAsBoardController extends Controller
         $resources = Resources::with('categoryName')->get();
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'user_type' => $user_type,
-             'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName
+            'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
         ];
 
         return view('boards.financial')->with($data);
     }
-
 }

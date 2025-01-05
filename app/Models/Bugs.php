@@ -11,10 +11,7 @@ class Bugs extends Model
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'bugs';
-
     protected $fillable = [
         'task', 'details', 'status', 'priority', 'reported_id', 'notes',
     ];
-
 }

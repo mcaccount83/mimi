@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 
 class CoordinatorTree extends Model
@@ -30,5 +29,4 @@ class CoordinatorTree extends Model
     {
         return $this->belongsTo(Chapters::class, 'coordinator_id', 'primary_coordinator_id');  // 'coordinator_id' in coordinator_tree BelongsTo 'id' in chapters
     }
-
 }

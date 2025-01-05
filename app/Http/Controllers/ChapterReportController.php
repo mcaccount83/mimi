@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\PaymentsM2MChapterThankYou;
-use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
 use App\Models\State;
 use App\Models\User;
@@ -13,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class ChapterReportController extends Controller
@@ -27,10 +24,10 @@ class ChapterReportController extends Controller
         $this->userController = $userController;
     }
 
-     /**
+    /**
      * Chpater Reports Base Query
      */
-     public function getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    public function getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     {
         $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
@@ -38,11 +35,11 @@ class ChapterReportController extends Controller
             ->where('is_active', 1);
 
         if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
-            } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
-                $baseQuery->where('conference_id', '=', $cdConfId);
-            } else {
-                $baseQuery->where('region_id', '=', $cdRegId);
-            }
+        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
+            $baseQuery->where('conference_id', '=', $cdConfId);
+        } else {
+            $baseQuery->where('region_id', '=', $cdRegId);
+        }
 
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkBoxStatus = 'checked';
@@ -53,7 +50,7 @@ class ChapterReportController extends Controller
 
         $baseQuery->orderBy(State::select('state_short_name')
             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name', 'asc');
+            ->orderBy('chapters.name');
 
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus];
 
@@ -176,7 +173,7 @@ class ChapterReportController extends Controller
 
         $baseQuery->orderBy(State::select('state_short_name')
             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name', 'asc');
+            ->orderBy('chapters.name');
 
         $chapterList = $baseQuery->get();
 
