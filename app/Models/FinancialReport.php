@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\Belongsto;
-
 
 class FinancialReport extends Model
 {
@@ -25,5 +23,4 @@ class FinancialReport extends Model
         'amount_reserved_from_previous_year',
         'name',
     ];
-
 }

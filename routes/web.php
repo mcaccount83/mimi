@@ -144,7 +144,6 @@ Route::post('/chapter/probationreleaseletter', [PDFController::class, 'saveProba
 
 Route::post('/generate-probation-letter', [PDFController::class, 'saveProbationLetter'])->name('pdf.generateProbationLetter');
 
-
 // Google Controller -- Uploading Files Routes...
 Route::post('/files/storeEIN/{id}', [GoogleController::class, 'storeEIN']);
 Route::post('/files/storeRoster/{id}', [GoogleController::class, 'storeRoster']);

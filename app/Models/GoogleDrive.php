@@ -16,5 +16,4 @@ class GoogleDrive extends Model
     protected $fillable = [
 
     ];
-
 }

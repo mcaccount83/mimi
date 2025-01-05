@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckCurrentPasswordUserRequest;
 use App\Http\Requests\UpdatePasswordUserRequest;
-use App\Models\User;
-use App\Models\Chapters;
 use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -69,7 +67,7 @@ class UserController extends Controller
     {
         $cdDetails = Coordinators::find($corId);
         $cdLayerId = $cdDetails->layer_id;
-        $layerColumn = 'layer' . $cdLayerId; // Dynamic layer column based on the layer ID
+        $layerColumn = 'layer'.$cdLayerId; // Dynamic layer column based on the layer ID
 
         $reportIds = CoordinatorTree::where($layerColumn, '=', $corId)
             ->pluck('id'); // Get only the IDs directly
@@ -93,16 +91,17 @@ class UserController extends Controller
         $coordiantors = $chDetails->coordinatorTree()->get();
 
         $emailListChap = $boards;
-        if (!empty($chEmail)) {
+        if (! empty($chEmail)) {
             $emailListChap[] = $chEmail;
         }
 
         $coordinatorList = collect($coordiantors)
             ->flatMap(function ($value) {
                 $attributes = $value->getAttributes();
+
                 return collect(range(1, 8))
-                    ->map(fn($i) => $attributes['layer' . $i] ?? null)
-                    ->filter(fn($id) => is_numeric($id));
+                    ->map(fn ($i) => $attributes['layer'.$i] ?? null)
+                    ->filter(fn ($id) => is_numeric($id));
             })
             ->unique();
 
@@ -130,8 +129,8 @@ class UserController extends Controller
 
         $coordinatorList = [];
         for ($i = 1; $i <= 8; $i++) {   // Get the list of coordinator IDs from layers 1-8, ignoring layer0
-            $layerKey = 'layer' . $i;
-            if (!empty($attributes[$layerKey]) && is_numeric($attributes[$layerKey])) {
+            $layerKey = 'layer'.$i;
+            if (! empty($attributes[$layerKey]) && is_numeric($attributes[$layerKey])) {
                 $coordinatorList[] = (int) $attributes[$layerKey];
             }
         }
@@ -139,26 +138,26 @@ class UserController extends Controller
 
         $str = '';   // Prepare the empty string for coordinator details
         $i = 0;
-        if (!empty($coordinatorList)) {
+        if (! empty($coordinatorList)) {
             $coordinators = Coordinators::with(['displayPosition', 'secondaryPosition'])->whereIn('id', $coordinatorList)
                 ->where('is_active', 1)
-                ->orderByRaw('FIELD(id, ' . implode(',', $coordinatorList) . ')') // Ensure order is based on reversed IDs
+                ->orderByRaw('FIELD(id, '.implode(',', $coordinatorList).')') // Ensure order is based on reversed IDs
                 ->get();
 
             // Iterate over coordinators in the reversed order
             foreach ($coordinators as $cor) {
-                $name = $cor->first_name . ' ' . $cor->last_name;
+                $name = $cor->first_name.' '.$cor->last_name;
                 $email = $cor->email;
                 $displayPosition = $cor->displayPosition ? $cor->displayPosition->short_title : '';
                 $secondaryPosition = $cor->secondaryPosition ? $cor->secondaryPosition->short_title : '';
                 $position = '';
-                    if ($displayPosition || $secondaryPosition) {
-                        $position = '(' . $displayPosition;
-                        if ($secondaryPosition) {
-                            $position .= '/' . $secondaryPosition;
-                        }
-                        $position .= ')';
+                if ($displayPosition || $secondaryPosition) {
+                    $position = '('.$displayPosition;
+                    if ($secondaryPosition) {
+                        $position .= '/'.$secondaryPosition;
                     }
+                    $position .= ')';
+                }
 
                 $title = match ($i) {
                     0 => 'Primary Coordinator:',
@@ -198,7 +197,7 @@ class UserController extends Controller
         $cc_pos = $ccDetails->displayPosition->long_title ?? 'N/A';
 
         return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email, 'cc_conf' => $cc_conf,
-            'cc_conf_name' =>$cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id,
+            'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id,
         ];
     }
 
@@ -212,14 +211,14 @@ class UserController extends Controller
                 $query->with(['displayPosition', 'secondaryPosition'])
                     ->where(function ($q) use ($chRegId, $chConfId) {
                         $q->where('region_id', $chRegId)
-                        ->orWhere(function ($subQuery) use ($chConfId) {
-                            $subQuery->where('region_id', 0)
+                            ->orWhere(function ($subQuery) use ($chConfId) {
+                                $subQuery->where('region_id', 0)
                                     ->where('conference_id', $chConfId);
-                        });
+                            });
                     })
                     ->whereBetween('position_id', [1, 7])
                     ->where('is_active', 1);
-            }
+            },
         ])->get();
 
         $pcList = $chList->pluck('primaryCoordinator')->filter();
@@ -237,7 +236,7 @@ class UserController extends Controller
         return $pcDetails; // Return all coordinators as a collection
     }
 
-   /**
+    /**
      * Load Reviewer Dropdown List
      */
     public function loadReviewerList($chRegId, $chConfId)
@@ -247,14 +246,14 @@ class UserController extends Controller
                 $query->with(['displayPosition', 'secondaryPosition'])
                     ->where(function ($q) use ($chRegId, $chConfId) {
                         $q->where('region_id', $chRegId)
-                        ->orWhere(function ($subQuery) use ($chConfId) {
-                            $subQuery->where('region_id', 0)
+                            ->orWhere(function ($subQuery) use ($chConfId) {
+                                $subQuery->where('region_id', 0)
                                     ->where('conference_id', $chConfId);
-                        });
+                            });
                     })
                     ->whereBetween('position_id', [1, 7])
                     ->where('is_active', 1);
-            }
+            },
         ])->get();
 
         $rrList = $chList->pluck('reportReviewer')->filter();
@@ -271,5 +270,4 @@ class UserController extends Controller
 
         return $rrDetails; // Return all coordinators as a collection
     }
-
 }

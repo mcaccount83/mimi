@@ -16,5 +16,4 @@ class Bugs extends Model
     protected $fillable = [
         'task', 'details', 'status', 'priority', 'reported_id', 'notes',
     ];
-
 }

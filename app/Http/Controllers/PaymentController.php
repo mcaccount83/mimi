@@ -17,8 +17,6 @@ use Illuminate\Support\Facades\Mail;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
 
-
-
 class PaymentController extends Controller
 {
     protected $userController;
@@ -425,9 +423,9 @@ class PaymentController extends Controller
         // $ConfCoorEmail = $coordinatorData['ConfCoorEmail'];
         // $coordinator_array = $coordinatorData['coordinator_array'];
 
-         // Load Conference Coordinators for Sending Email
-         $ccEmailData = $this->userController->loadConferenceCoord($chPcid);
-         $emailCC = $ccEmailData['cc_email'];
+        // Load Conference Coordinators for Sending Email
+        $ccEmailData = $this->userController->loadConferenceCoord($chPcid);
+        $emailCC = $ccEmailData['cc_email'];
 
         /* Create a merchantAuthenticationType object with authentication details
             retrieved from the constants file */

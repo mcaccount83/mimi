@@ -58,7 +58,7 @@ class Coordinators extends Model
 
     public function conference(): BelongsTo
     {
-        return $this->belongsTo(Conference::class,  'conference_id', 'id');  // 'conference_id' in coordinators BelongsTo 'id' in conference
+        return $this->belongsTo(Conference::class, 'conference_id', 'id');  // 'conference_id' in coordinators BelongsTo 'id' in conference
     }
 
     public function country(): BelongsTo
@@ -73,7 +73,6 @@ class Coordinators extends Model
 
     public function reportsTo(): BelongsTo
     {
-        return $this->belongsTo(Coordinators::class,  'report_id', 'id');  // 'report_id' in coordinators BelongsTo 'id' in coordinators
+        return $this->belongsTo(Coordinators::class, 'report_id', 'id');  // 'report_id' in coordinators BelongsTo 'id' in coordinators
     }
-
 }

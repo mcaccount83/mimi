@@ -17,5 +17,4 @@ class Admin extends Model
         'eoy_testers', 'eoy_coordinators', 'checklist',
 
     ];
-
 }

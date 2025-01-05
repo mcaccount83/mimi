@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Belongsto;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Illuminate\Database\Eloquent\Relations\Belongsto;
 use Illuminate\Notifications\Notifiable;
 
 class Chapters extends Model
@@ -66,7 +66,7 @@ class Chapters extends Model
 
     public function reportReviewer(): HasOneThrough
     {
-        return $this->hasOneThrough(Coordinators::class, FinancialReport::class, 'chapter_id', 'id', 'id', 'reviewer_id' );
+        return $this->hasOneThrough(Coordinators::class, FinancialReport::class, 'chapter_id', 'id', 'id', 'reviewer_id');
         // 'chpter_id' IN financial_reports HASONE 'id' in coordinators THROUGH 'id' in chapters IN 'reviewer_id' for financial_reports
     }
 
@@ -87,7 +87,7 @@ class Chapters extends Model
 
     public function conference(): BelongsTo
     {
-        return $this->belongsTo(Conference::class,  'conference_id', 'id');  // 'conference' in chapters BelongsTo 'id' in conference
+        return $this->belongsTo(Conference::class, 'conference_id', 'id');  // 'conference' in chapters BelongsTo 'id' in conference
     }
 
     public function country(): BelongsTo
@@ -119,5 +119,4 @@ class Chapters extends Model
     {
         return $this->belongsTo(CoordinatorTree::class, 'primary_coordinator_id', 'coordinator_id');  // 'primary_coordinator_id' in chapters BelongsTo 'coorindaotr_id' in coordinator_tree
     }
-
 }

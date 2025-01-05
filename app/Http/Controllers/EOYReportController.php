@@ -7,13 +7,13 @@ use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
 use App\Mail\EOYReviewrAssigned;
 use App\Models\Chapters;
+use App\Models\Coordinators;
 use App\Models\Documents;
-use App\Models\State;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
+use App\Models\State;
 use App\Models\User;
 use App\Models\Website;
-use App\Models\Coordinators;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -52,12 +52,12 @@ class EOYReportController extends Controller
             });
 
         if ($conditions['founderCondition']) {
-            } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-                $baseQuery->where('conference_id', '=', $cdConfId);
-            } elseif ($conditions['regionalCoordinatorCondition']) {
-                $baseQuery->where('region_id', '=', $cdRegId);
-            } else {
-                $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('conference_id', '=', $cdConfId);
+        } elseif ($conditions['regionalCoordinatorCondition']) {
+            $baseQuery->where('region_id', '=', $cdRegId);
+        } else {
+            $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
         }
 
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
@@ -69,7 +69,7 @@ class EOYReportController extends Controller
 
         if (isset($_GET['check2']) && $_GET['check2'] == 'yes') {
             $checkBox2Status = 'checked';
-            $baseQuery->whereHas('financialReport', function($query) use ($cdId) {
+            $baseQuery->whereHas('financialReport', function ($query) use ($cdId) {
                 $query->where('reviewer_id', '=', $cdId);
             });
         } else {
@@ -108,7 +108,7 @@ class EOYReportController extends Controller
 
         $boards = $chDetails->boards()->with('stateName')->get();
         $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object)['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
 
         // Fetch board details or fallback to default
         $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
@@ -129,7 +129,7 @@ class EOYReportController extends Controller
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'rrDetails' => $rrDetails, 'submitted' => $submitted
+            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'rrDetails' => $rrDetails, 'submitted' => $submitted,
         ];
 
     }
@@ -247,8 +247,7 @@ class EOYReportController extends Controller
 
     }
 
-
-     /**
+    /**
      * Edit the EOY Status Details
      */
     public function editEOYDetails(Request $request, $id): View
@@ -285,28 +284,29 @@ class EOYReportController extends Controller
         return view('eoyreports.view')->with($data);
     }
 
-     /**
+    /**
      * Update the EOY Status Details
      */
     public function updateEOYDetails(Request $request, $id): RedirectResponse
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
-        $userName =  $user->first_name.' '.$user->last_name;
+        $userName = $user->first_name.' '.$user->last_name;
 
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
         $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
 
         $input = $request->all();
-        $new_board_submitted = !isset($input['new_board_submitted']) ? null : ($input['new_board_submitted'] === 'on' ? 1 : 0);
-        $new_board_active = !isset($input['new_board_active']) ? null : ($input['new_board_active'] === 'on' ? 1 : 0);
-        $financial_report_received = !isset($input['financial_report_received']) ? null : ($input['financial_report_received'] === 'on' ? 1 : 0);
-        $financial_review_complete = !isset($input['financial_review_complete']) ? null : ($input['financial_review_complete'] === 'on' ? 1 : 0);
-        $report_extension = !isset($input['report_extension']) ? null : ($input['report_extension'] === 'on' ? 1 : 0);
-        $irs_verified = !isset($input['irs_verified']) ? null : ($input['irs_verified'] === 'on' ? 1 : 0);
-        $extension_notes = $input['extension_notes']; $irs_notes = $input['irs_notes'];
-        $reviewer_id = isset($input['ch_reportrev']) && !empty($input['ch_reportrev']) ? $input['ch_reportrev'] : $userId;
+        $new_board_submitted = ! isset($input['new_board_submitted']) ? null : ($input['new_board_submitted'] === 'on' ? 1 : 0);
+        $new_board_active = ! isset($input['new_board_active']) ? null : ($input['new_board_active'] === 'on' ? 1 : 0);
+        $financial_report_received = ! isset($input['financial_report_received']) ? null : ($input['financial_report_received'] === 'on' ? 1 : 0);
+        $financial_review_complete = ! isset($input['financial_review_complete']) ? null : ($input['financial_review_complete'] === 'on' ? 1 : 0);
+        $report_extension = ! isset($input['report_extension']) ? null : ($input['report_extension'] === 'on' ? 1 : 0);
+        $irs_verified = ! isset($input['irs_verified']) ? null : ($input['irs_verified'] === 'on' ? 1 : 0);
+        $extension_notes = $input['extension_notes'];
+        $irs_notes = $input['irs_notes'];
+        $reviewer_id = isset($input['ch_reportrev']) && ! empty($input['ch_reportrev']) ? $input['ch_reportrev'] : $userId;
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
@@ -339,9 +339,9 @@ class EOYReportController extends Controller
             $chapter->save();
 
             DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return to_route('eoyreports.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         }
@@ -425,8 +425,8 @@ class EOYReportController extends Controller
             })
             ->get();
 
-            if ($chapterList->isEmpty()) {
-                return redirect()->back()->with('info', 'There are no Chapters with Board Reports Due.');
+        if ($chapterList->isEmpty()) {
+            return redirect()->back()->with('info', 'There are no Chapters with Board Reports Due.');
         }
 
         $chapterIds = [];
@@ -469,8 +469,8 @@ class EOYReportController extends Controller
         try {
             DB::commit();
         } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
@@ -605,7 +605,7 @@ class EOYReportController extends Controller
      */
     public function editBoardReport(Request $request, $id): View
     {
-        Log::debug('Received ID: ' . $id); // Add this line
+        Log::debug('Received ID: '.$id); // Add this line
 
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -988,8 +988,8 @@ class EOYReportController extends Controller
             })
             ->get();
 
-            if ($chapterList->isEmpty()) {
-                return redirect()->back()->with('info', 'There are no Chapters with Financial Reports Due.');
+        if ($chapterList->isEmpty()) {
+            return redirect()->back()->with('info', 'There are no Chapters with Financial Reports Due.');
         }
 
         $chapterIds = [];
@@ -1065,8 +1065,8 @@ class EOYReportController extends Controller
         $rrDetails = $baseQuery['rrDetails'];
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-           'chFinancialReport' => $chFinancialReport, 'loggedInName'=> $loggedInName, 'rrDetails' => $rrDetails, 'submitted' => $submitted, 'allAwards' => $allAwards,
-           'chDocuments' => $chDocuments
+            'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrDetails' => $rrDetails, 'submitted' => $submitted, 'allAwards' => $allAwards,
+            'chDocuments' => $chDocuments,
         ];
 
         return view('eoyreports.reviewfinancialreport')->with($data);
@@ -1079,7 +1079,7 @@ class EOYReportController extends Controller
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
-        $userName =  $user->first_name.' '.$user->last_name;
+        $userName = $user->first_name.' '.$user->last_name;
 
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
@@ -1422,9 +1422,9 @@ class EOYReportController extends Controller
             $documents->save();
 
             DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->to('/eoy/attachments')->with('fail', 'Something went wrong, Please try again.');
         }
@@ -1432,7 +1432,7 @@ class EOYReportController extends Controller
         return redirect()->to('/eoy/attachments')->with('success', 'Report attachments successfully updated');
     }
 
-     /**
+    /**
      * View EOY Boundary Issues List
      */
     public function showEOYBoundaries(Request $request): View
@@ -1512,9 +1512,9 @@ class EOYReportController extends Controller
             $chapter->save();
 
             DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return to_route('eoyreports.editboundaries', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         }
@@ -1522,7 +1522,7 @@ class EOYReportController extends Controller
         return to_route('eoyreports.editboundaries', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
-     /**
+    /**
      * List of Chapter Awards
      */
     public function showEOYAwards(Request $request): View
@@ -1545,7 +1545,7 @@ class EOYReportController extends Controller
         $allAwards = FinancialReportAwards::all();
 
         $maxAwards = 0;
-        foreach($chapterList as $list) {
+        foreach ($chapterList as $list) {
             if (isset($list->financialReport->chapter_awards)) {
                 $awards = unserialize(base64_decode($list->financialReport->chapter_awards));
                 if ($awards) {
@@ -1609,13 +1609,13 @@ class EOYReportController extends Controller
 
         $input = $request->all();
         $ChapterAwards = null;
-            $FieldCount = $input['ChapterAwardsRowCount'];
-            for ($i = 0; $i < $FieldCount; $i++) {
-                $ChapterAwards[$i]['awards_type'] = $input['ChapterAwardsType'.$i] ?? null;
-                $ChapterAwards[$i]['awards_desc'] = $input['ChapterAwardsDesc'.$i] ?? null;
-                $ChapterAwards[$i]['awards_approved'] = $input['ChapterAwardsApproved'.$i] ?? null;
-            }
-            $chapter_awards = base64_encode(serialize($ChapterAwards));
+        $FieldCount = $input['ChapterAwardsRowCount'];
+        for ($i = 0; $i < $FieldCount; $i++) {
+            $ChapterAwards[$i]['awards_type'] = $input['ChapterAwardsType'.$i] ?? null;
+            $ChapterAwards[$i]['awards_desc'] = $input['ChapterAwardsDesc'.$i] ?? null;
+            $ChapterAwards[$i]['awards_approved'] = $input['ChapterAwardsApproved'.$i] ?? null;
+        }
+        $chapter_awards = base64_encode(serialize($ChapterAwards));
 
         $chapter = Chapters::find($id);
         $financialReport = FinancialReport::find($id);
@@ -1630,9 +1630,9 @@ class EOYReportController extends Controller
             $financialReport->save();
 
             DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return to_route('eoyreports.editawards', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         }

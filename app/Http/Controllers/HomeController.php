@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chapters;
-use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\Resources;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -65,7 +63,7 @@ class HomeController extends Controller
 
             $bdDetails = $user->outgoing;
             $chId = $bdDetails->chapter_id;
-            $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards',])->find($chId);
+            $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($chId);
 
             $stateShortName = $chDetails->state->state_short_name;
             $chDocuments = $chDetails->documents;

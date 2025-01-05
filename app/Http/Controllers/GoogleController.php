@@ -14,9 +14,7 @@ use App\Http\Requests\StoreRosterGoogleRequest;
 use App\Http\Requests\StoreStatement1GoogleRequest;
 use App\Http\Requests\StoreStatement2GoogleRequest;
 use App\Http\Requests\StoreToolkitGoogleRequest;
-use App\Models\Chapters;
 use App\Models\Documents;
-use App\Models\FinancialReport;
 use App\Models\FolderRecord;
 use App\Models\Resources;
 use GuzzleHttp\Client;
@@ -645,7 +643,6 @@ class GoogleController extends Controller
                 $existingDocRecord->update([
                     'statement_1_path' => $file_id,
                 ]);
-
 
                 return response()->json(['message' => 'File uploaded successfully!'], 200);
             } else {

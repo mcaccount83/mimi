@@ -2,24 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ProbationNoRptLetter;
 use App\Mail\ProbationNoPmtLetter;
+use App\Mail\ProbationNoRptLetter;
 use App\Mail\ProbationPartyLetter;
-use App\Mail\WarningPartyLetter;
 use App\Mail\ProbationReleaseLetter;
+use App\Mail\WarningPartyLetter;
+use App\Models\Chapters;
 use App\Models\FinancialReport;
 use App\Models\User;
-use App\Models\Chapters;
-use App\Models\State;
-
-use App\Models\Documents;
-use GuzzleHttp\Client;
 use Barryvdh\DomPDF\Facade\Pdf;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
 
 class PDFController extends Controller
 {
@@ -313,7 +309,7 @@ class PDFController extends Controller
         $pdf = $result['pdf'];
         $filename = $result['filename'];
 
-        $pdfPath = storage_path('app/pdf_reports/' . $filename);
+        $pdfPath = storage_path('app/pdf_reports/'.$filename);
         $pdf->save($pdfPath);
 
         if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId)) {
@@ -330,24 +326,24 @@ class PDFController extends Controller
             $document->save();
 
             $emailData = $this->userController->loadEmailDetails($chapterId, true);
-                $emailListChap = $emailData['emailListChap'];
-                $emailListCoord = $emailData['emailListCoord'];
+            $emailListChap = $emailData['emailListChap'];
+            $emailListCoord = $emailData['emailListCoord'];
 
-        $ccData = $this->userController->loadConferenceCoord(
-            $chDetails->primary_coordinator_id
-        );
+            $ccData = $this->userController->loadConferenceCoord(
+                $chDetails->primary_coordinator_id
+            );
 
-        $mailData = [
-            'chapterName' => $chDetails->name,
-            'chapterEmail' => $chDetails->email,
-            'chapterState' => $stateShortName,
-            'cc_fname' => $ccData['cc_fname'],
-            'cc_lname' => $ccData['cc_lname'],
-            'cc_pos' => $ccData['cc_pos'],
-            'cc_conf_name' => $ccData['cc_conf_name'],
-            'cc_conf_desc' => $ccData['cc_conf_desc'],
-            'cc_email' => $ccData['cc_email'],
-        ];
+            $mailData = [
+                'chapterName' => $chDetails->name,
+                'chapterEmail' => $chDetails->email,
+                'chapterState' => $stateShortName,
+                'cc_fname' => $ccData['cc_fname'],
+                'cc_lname' => $ccData['cc_lname'],
+                'cc_pos' => $ccData['cc_pos'],
+                'cc_conf_name' => $ccData['cc_conf_name'],
+                'cc_conf_desc' => $ccData['cc_conf_desc'],
+                'cc_email' => $ccData['cc_email'],
+            ];
 
             switch ($letterType) {
                 case 'no_report':
@@ -440,7 +436,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView($view, compact('pdfData'));
 
-        $filename = $pdfData['state'] . '_' . $pdfData['ch_name'] . "_{$type}_Letter.pdf";
+        $filename = $pdfData['state'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
 
         if (request()->has('stream')) {
             return $pdf->stream($filename, ['Attachment' => 0]);
@@ -476,7 +472,7 @@ class PDFController extends Controller
 
         $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
+                'Authorization' => 'Bearer '.$accessToken,
                 'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
             ],
             'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
@@ -485,10 +481,10 @@ class PDFController extends Controller
         if ($response->getStatusCode() === 200) {
             $responseData = json_decode($response->getBody()->getContents(), true);
             $pdfFileId = $responseData['id'] ?? null; // Extract file ID
+
             return true;
         }
 
         return false;
     }
-
 }

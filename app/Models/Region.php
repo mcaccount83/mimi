@@ -24,6 +24,4 @@ class Region extends Model
     {
         return $this->belongsTo(Conference::class, 'conference_id', 'id');  // 'conference_id' in region BelongsTo 'id' in conference
     }
-
-
 }
