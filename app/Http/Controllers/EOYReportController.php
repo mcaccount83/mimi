@@ -78,7 +78,7 @@ class EOYReportController extends Controller
 
         $baseQuery->orderBy(State::select('state_short_name')
             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name', 'asc');
+            ->orderBy('chapters.name');
 
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 

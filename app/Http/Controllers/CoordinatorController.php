@@ -85,7 +85,7 @@ class CoordinatorController extends Controller
             $baseQuery->whereIn('report_id', $inQryArr);
         }
 
-        $baseQuery->orderBy('zapped_date', 'desc');
+        $baseQuery->orderByDesc('zapped_date');
 
         return ['query' => $baseQuery];
     }
@@ -206,7 +206,7 @@ class CoordinatorController extends Controller
 
         $intCoordinatorList = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'reportsTo'])
             ->where('is_active', 0)
-            ->orderBy('zapped_date', 'desc')
+            ->orderByDesc('zapped_date')
             ->get();
 
         $data = ['intCoordinatorList' => $intCoordinatorList];

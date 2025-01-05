@@ -50,7 +50,7 @@ class ChapterReportController extends Controller
 
         $baseQuery->orderBy(State::select('state_short_name')
             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name', 'asc');
+            ->orderBy('chapters.name');
 
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus];
 
@@ -173,7 +173,7 @@ class ChapterReportController extends Controller
 
         $baseQuery->orderBy(State::select('state_short_name')
             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name', 'asc');
+            ->orderBy('chapters.name');
 
         $chapterList = $baseQuery->get();
 

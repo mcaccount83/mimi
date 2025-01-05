@@ -100,7 +100,7 @@ class ChapterController extends Controller
 
         $baseQuery->orderBy(State::select('state_short_name')
             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name', 'asc');
+            ->orderBy('chapters.name');
 
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
 
@@ -186,7 +186,7 @@ class ChapterController extends Controller
 
         $baseQuery = Chapters::with(['state', 'conference', 'region', 'president', 'primaryCoordinator'])
             ->where('is_active', 0)
-            ->orderBy('chapters.zap_date', 'desc');
+            ->orderByDesc('chapters.zap_date');
 
         if ($conditions['founderCondition']) {
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
@@ -279,7 +279,7 @@ class ChapterController extends Controller
 
         $baseQuery->orderBy(State::select('state_short_name')
             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name', 'asc');
+            ->orderBy('chapters.name');
 
         $inquiriesList = $baseQuery->get();
 
@@ -317,7 +317,7 @@ class ChapterController extends Controller
 
         $baseQuery->orderBy(State::select('state_short_name')
             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name', 'asc');
+            ->orderBy('chapters.name');
 
         $inquiriesList = $baseQuery->get();
 
@@ -341,7 +341,7 @@ class ChapterController extends Controller
             ->where('is_active', 1)
             ->orderBy(State::select('state_short_name')
                 ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name', 'asc')
+            ->orderBy('chapters.name')
             ->get();
 
         $countList = count($intChapterList);
@@ -363,7 +363,7 @@ class ChapterController extends Controller
 
         $chapterList = Chapters::with(['state', 'conference', 'region'])
             ->where('is_active', 0)
-            ->orderBy('chapters.zap_date', 'desc')
+            ->orderByDesc('chapters.zap_date')
             ->get();
 
         $countList = count($chapterList);
@@ -2360,8 +2360,8 @@ class ChapterController extends Controller
                                 ->where('start_month_id', '<=', $currentMonth);
                         });
                 })
-                ->orderBy('start_month_id', 'desc')
-                ->orderBy('next_renewal_year', 'desc')
+                ->orderByDesc('start_month_id')
+                ->orderByDesc('next_renewal_year')
                 ->get();
         }
 
@@ -2595,7 +2595,7 @@ class ChapterController extends Controller
             ->where('is_active', 1)
             ->orderBy(State::select('state_short_name')
                 ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name', 'asc')
+            ->orderBy('chapters.name')
             ->get();
 
         $data = ['chapterList' => $chapterList];
