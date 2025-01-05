@@ -329,7 +329,7 @@ class ChapterController extends Controller
     /**
      * Display the International chapter list
      */
-    public function showIntChapter(Request $request)
+    public function showIntChapter(Request $request): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -353,7 +353,7 @@ class ChapterController extends Controller
     /**
      * Display the International Zapped chapter list
      */
-    public function showIntZappedChapter(Request $request)
+    public function showIntZappedChapter(Request $request): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Mail\ProbationNoPmtLetter;
 use App\Mail\ProbationNoRptLetter;
 use App\Mail\ProbationPartyLetter;
@@ -280,7 +281,7 @@ class PDFController extends Controller
     /**
      * Save & Send Probation Letter
      */
-    public function saveProbationLetter(Request $request)
+    public function saveProbationLetter(Request $request): JsonResponse
     {
         $chapterId = $request->chapterId;
         $letterType = $request->letterType;

@@ -1050,7 +1050,7 @@ class BoardController extends Controller
     /**
      * Show Re-Registrstion Payment Form All Board Members
      */
-    public function showReregistrationPaymentForm(Request $request)
+    public function showReregistrationPaymentForm(Request $request): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -1135,7 +1135,7 @@ class BoardController extends Controller
     /**
      * Show Chater Resources
      */
-    public function showResources(Request $request)
+    public function showResources(Request $request): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -1158,7 +1158,7 @@ class BoardController extends Controller
     /**
      * Show EOY BoardInfo All Board Members
      */
-    public function showBoardInfo(Request $request)
+    public function showBoardInfo(Request $request): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -1525,7 +1525,7 @@ class BoardController extends Controller
     /**
      * Show EOY Financial Report All Board Members
      */
-    public function showFinancialReport(Request $request, $chapterId)
+    public function showFinancialReport(Request $request, $chapterId): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;

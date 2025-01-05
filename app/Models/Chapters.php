@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Belongsto;
@@ -22,36 +23,36 @@ class Chapters extends Model
         'created_at', 'is_active',
     ];
 
-    public function boards()
+    public function boards(): HasMany
     {
         return $this->hasMany(Boards::class, 'chapter_id', 'id');
     }
 
-    public function president()
+    public function president(): HasOne
     {
         return $this->hasOne(Boards::class, 'chapter_id', 'id')
             ->where('board_position_id', 1);
     }
 
-    public function avp()
+    public function avp(): HasOne
     {
         return $this->hasOne(Boards::class, 'chapter_id', 'id')
             ->where('board_position_id', 2);
     }
 
-    public function mvp()
+    public function mvp(): HasOne
     {
         return $this->hasOne(Boards::class, 'chapter_id', 'id')
             ->where('board_position_id', 3);
     }
 
-    public function treasurer()
+    public function treasurer(): HasOne
     {
         return $this->hasOne(Boards::class, 'chapter_id', 'id')
             ->where('board_position_id', 4);
     }
 
-    public function secretary()
+    public function secretary(): HasOne
     {
         return $this->hasOne(Boards::class, 'chapter_id', 'id')
             ->where('board_position_id', 5);
@@ -73,7 +74,7 @@ class Chapters extends Model
         return $this->hasOne(Documents::class, 'chapter_id', 'id');  // 'chapter_id' in documents HasOne 'id' in chapters
     }
 
-    public function state()
+    public function state(): BelongsTo
     {
         return $this->belongsTo(State::class, 'state_id', 'id');  // 'state' in chapters BelongsTo 'id' in state
     }
@@ -108,12 +109,12 @@ class Chapters extends Model
         return $this->belongsTo(Status::class, 'status_id', 'id');  // 'status_id' in chapters BelongsTo 'id' in status
     }
 
-    public function primaryCoordinator()
+    public function primaryCoordinator(): BelongsTo
     {
         return $this->belongsTo(Coordinators::class, 'primary_coordinator_id', 'id');  // 'primary_coordinator_id' in chapters BelongsTo 'id' in coordinators
     }
 
-    public function coordinatorTree()
+    public function coordinatorTree(): BelongsTo
     {
         return $this->belongsTo(CoordinatorTree::class, 'primary_coordinator_id', 'coordinator_id');  // 'primary_coordinator_id' in chapters BelongsTo 'coorindaotr_id' in coordinator_tree
     }

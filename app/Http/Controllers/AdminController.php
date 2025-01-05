@@ -498,7 +498,7 @@ class AdminController extends Controller
         return view('admin.reregdate')->with($data);
     }
 
-    public function editReRegDate(Request $request, $id)
+    public function editReRegDate(Request $request, $id): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;

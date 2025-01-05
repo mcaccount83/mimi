@@ -1044,7 +1044,7 @@ class EOYReportController extends Controller
     /**
      * Financial Report for Coordinator side for Reviewing of Chapters
      */
-    public function reviewFinancialReport(Request $request, $id)
+    public function reviewFinancialReport(Request $request, $id): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -1367,7 +1367,7 @@ class EOYReportController extends Controller
     /**
      * View the Attachments Details
      */
-    public function editEOYAttachments(Request $request, $id)
+    public function editEOYAttachments(Request $request, $id): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
