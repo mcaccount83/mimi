@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Mail\ProbationNoPmtLetter;
 use App\Mail\ProbationNoRptLetter;
 use App\Mail\ProbationPartyLetter;
@@ -13,6 +12,7 @@ use App\Models\FinancialReport;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
