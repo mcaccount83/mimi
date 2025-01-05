@@ -392,7 +392,7 @@ class PDFController extends Controller
     /**
      * Generate Probation Letter
      */
-    public function generateProbationLetter($chapterId, $type)
+    public function generateProbationLetter(Request $request, $chapterId, $type)
     {
         $chDetails = Chapters::with(['state', 'boards'])->find($chapterId);
         $stateShortName = $chDetails->state->state_short_name;
@@ -438,7 +438,7 @@ class PDFController extends Controller
 
         $filename = $pdfData['state'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
 
-        if (request()->has('stream')) {
+        if ($request->has('stream')) {
             return $pdf->stream($filename, ['Attachment' => 0]);
         }
 
