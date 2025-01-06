@@ -342,163 +342,163 @@ class CoordinatorController extends Controller
     /**
      * Create New Coordiantor (store)
      */
-    public function updateCoordinatorNew(Request $request): RedirectResponse
-    {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $corRegId = $corDetails['region_id'];
-        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
-        $new_layer_id = $corlayerId + 1;
-        $input = $request->all();
+    // public function updateCoordinatorNew(Request $request): RedirectResponse
+    // {
+    //     $corDetails = User::find($request->user()->id)->coordinator;
+    //     $corId = $corDetails['id'];
+    //     $corConfId = $corDetails['conference_id'];
+    //     $corlayerId = $corDetails['layer_id'];
+    //     $corRegId = $corDetails['region_id'];
+    //     $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+    //     $new_layer_id = $corlayerId + 1;
+    //     $input = $request->all();
 
-        DB::beginTransaction();
-        try {
-            $userId = DB::table('users')->insertGetId(
-                ['first_name' => $input['cord_fname'],
-                    'last_name' => $input['cord_lname'],
-                    'email' => $input['cord_email'],
-                    'password' => Hash::make('TempPass4You'),
-                    'user_type' => 'coordinator',
-                    'is_active' => 1]
-            );
+    //     DB::beginTransaction();
+    //     try {
+    //         $userId = DB::table('users')->insertGetId(
+    //             ['first_name' => $input['cord_fname'],
+    //                 'last_name' => $input['cord_lname'],
+    //                 'email' => $input['cord_email'],
+    //                 'password' => Hash::make('TempPass4You'),
+    //                 'user_type' => 'coordinator',
+    //                 'is_active' => 1]
+    //         );
 
-            $cordId = DB::table('coordinators')->insertGetId(
-                ['user_id' => $userId,
-                    'conference_id' => $corConfId,
-                    'region_id' => $corRegId,
-                    'layer_id' => $new_layer_id,
-                    'first_name' => $input['cord_fname'],
-                    'last_name' => $input['cord_lname'],
-                    'position_id' => 1,
-                    'display_position_id' => 1,
-                    'email' => $input['cord_email'],
-                    'sec_email' => $input['sec_email'],
-                    'report_id' => $corId,
-                    'address' => $input['cord_addr'],
-                    'city' => $input['cord_city'],
-                    'state' => $input['cord_state'],
-                    'zip' => $input['cord_zip'],
-                    'country' => 'USA',
-                    'phone' => $input['cord_phone'],
-                    'alt_phone' => $input['cord_altphone'],
-                    'birthday_month_id' => $input['cord_month'],
-                    'birthday_day' => $input['cord_day'],
-                    'home_chapter' => $input['cord_chapter'],
-                    'coordinator_start_date' => date('Y-m-d H:i:s'),
-                    'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => date('Y-m-d H:i:s'),
-                    'is_active' => 1]
-            );
+    //         $cordId = DB::table('coordinators')->insertGetId(
+    //             ['user_id' => $userId,
+    //                 'conference_id' => $corConfId,
+    //                 'region_id' => $corRegId,
+    //                 'layer_id' => $new_layer_id,
+    //                 'first_name' => $input['cord_fname'],
+    //                 'last_name' => $input['cord_lname'],
+    //                 'position_id' => 1,
+    //                 'display_position_id' => 1,
+    //                 'email' => $input['cord_email'],
+    //                 'sec_email' => $input['sec_email'],
+    //                 'report_id' => $corId,
+    //                 'address' => $input['cord_addr'],
+    //                 'city' => $input['cord_city'],
+    //                 'state' => $input['cord_state'],
+    //                 'zip' => $input['cord_zip'],
+    //                 'country' => 'USA',
+    //                 'phone' => $input['cord_phone'],
+    //                 'alt_phone' => $input['cord_altphone'],
+    //                 'birthday_month_id' => $input['cord_month'],
+    //                 'birthday_day' => $input['cord_day'],
+    //                 'home_chapter' => $input['cord_chapter'],
+    //                 'coordinator_start_date' => date('Y-m-d H:i:s'),
+    //                 'last_updated_by' => $lastUpdatedBy,
+    //                 'last_updated_date' => date('Y-m-d H:i:s'),
+    //                 'is_active' => 1]
+    //         );
 
-            $cordReportingTree = DB::table('coordinator_reporting_tree')
-                ->select('layer0', 'layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'layer7', 'layer8')
-                ->where('id', '=', $cordId)
-                ->limit(1)
-                ->get();
-            $layer0 = $cordReportingTree[0]->layer0;
-            $layer1 = $cordReportingTree[0]->layer1;
-            $layer2 = $cordReportingTree[0]->layer2;
-            $layer3 = $cordReportingTree[0]->layer3;
-            $layer4 = $cordReportingTree[0]->layer4;
-            $layer5 = $cordReportingTree[0]->layer5;
-            $layer6 = $cordReportingTree[0]->layer6;
-            $layer7 = $cordReportingTree[0]->layer7;
-            $layer8 = $cordReportingTree[0]->layer8;
-            $coordinator_id = $cordId;
-            switch ($new_layer_id) {
-                case 0:
-                    $layer0 = $coordinator_id;
-                    $layer1 = null;
-                    $layer2 = null;
-                    $layer3 = null;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 1:
-                    $layer1 = $coordinator_id;
-                    $layer2 = null;
-                    $layer3 = null;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 2:
-                    $layer2 = $coordinator_id;
-                    $layer3 = null;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 3:
-                    $layer3 = $coordinator_id;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 4:
-                    $layer4 = $coordinator_id;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 5:
-                    $layer5 = $coordinator_id;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 6:
-                    $layer6 = $coordinator_id;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 7:
-                    $layer7 = $coordinator_id;
-                    $layer8 = null;
-                    break;
-                case 7:
-                    $layer8 = $coordinator_id;
-                    break;
-            }
-            $coord = DB::table('coordinator_reporting_tree')->insert(
-                [
-                    'layer0' => $layer0,
-                    'layer1' => $layer1,
-                    'layer2' => $layer2,
-                    'layer3' => $layer3,
-                    'layer4' => $layer4,
-                    'layer5' => $layer5,
-                    'layer6' => $layer6,
-                    'layer7' => $layer7,
-                    'layer8' => $layer8,
-                ]
-            );
-            DB::commit();
-        } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            echo $e->getMessage();
-            exit;
-            // Log the error
-            Log::error($e);
+    //         $cordReportingTree = DB::table('coordinator_reporting_tree')
+    //             ->select('layer0', 'layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'layer7', 'layer8')
+    //             ->where('id', '=', $cordId)
+    //             ->limit(1)
+    //             ->get();
+    //         $layer0 = $cordReportingTree[0]->layer0;
+    //         $layer1 = $cordReportingTree[0]->layer1;
+    //         $layer2 = $cordReportingTree[0]->layer2;
+    //         $layer3 = $cordReportingTree[0]->layer3;
+    //         $layer4 = $cordReportingTree[0]->layer4;
+    //         $layer5 = $cordReportingTree[0]->layer5;
+    //         $layer6 = $cordReportingTree[0]->layer6;
+    //         $layer7 = $cordReportingTree[0]->layer7;
+    //         $layer8 = $cordReportingTree[0]->layer8;
+    //         $coordinator_id = $cordId;
+    //         switch ($new_layer_id) {
+    //             case 0:
+    //                 $layer0 = $coordinator_id;
+    //                 $layer1 = null;
+    //                 $layer2 = null;
+    //                 $layer3 = null;
+    //                 $layer4 = null;
+    //                 $layer5 = null;
+    //                 $layer6 = null;
+    //                 $layer7 = null;
+    //                 $layer8 = null;
+    //                 break;
+    //             case 1:
+    //                 $layer1 = $coordinator_id;
+    //                 $layer2 = null;
+    //                 $layer3 = null;
+    //                 $layer4 = null;
+    //                 $layer5 = null;
+    //                 $layer6 = null;
+    //                 $layer7 = null;
+    //                 $layer8 = null;
+    //                 break;
+    //             case 2:
+    //                 $layer2 = $coordinator_id;
+    //                 $layer3 = null;
+    //                 $layer4 = null;
+    //                 $layer5 = null;
+    //                 $layer6 = null;
+    //                 $layer7 = null;
+    //                 $layer8 = null;
+    //                 break;
+    //             case 3:
+    //                 $layer3 = $coordinator_id;
+    //                 $layer4 = null;
+    //                 $layer5 = null;
+    //                 $layer6 = null;
+    //                 $layer7 = null;
+    //                 $layer8 = null;
+    //                 break;
+    //             case 4:
+    //                 $layer4 = $coordinator_id;
+    //                 $layer5 = null;
+    //                 $layer6 = null;
+    //                 $layer7 = null;
+    //                 $layer8 = null;
+    //                 break;
+    //             case 5:
+    //                 $layer5 = $coordinator_id;
+    //                 $layer6 = null;
+    //                 $layer7 = null;
+    //                 $layer8 = null;
+    //                 break;
+    //             case 6:
+    //                 $layer6 = $coordinator_id;
+    //                 $layer7 = null;
+    //                 $layer8 = null;
+    //                 break;
+    //             case 7:
+    //                 $layer7 = $coordinator_id;
+    //                 $layer8 = null;
+    //                 break;
+    //             case 7:
+    //                 $layer8 = $coordinator_id;
+    //                 break;
+    //         }
+    //         $coord = DB::table('coordinator_reporting_tree')->insert(
+    //             [
+    //                 'layer0' => $layer0,
+    //                 'layer1' => $layer1,
+    //                 'layer2' => $layer2,
+    //                 'layer3' => $layer3,
+    //                 'layer4' => $layer4,
+    //                 'layer5' => $layer5,
+    //                 'layer6' => $layer6,
+    //                 'layer7' => $layer7,
+    //                 'layer8' => $layer8,
+    //             ]
+    //         );
+    //         DB::commit();
+    //     } catch (\Exception $e) {
+    //         // Rollback Transaction
+    //         DB::rollback();
+    //         echo $e->getMessage();
+    //         exit;
+    //         // Log the error
+    //         Log::error($e);
 
-            return redirect()->to('/')->with('fail', 'Something went wrong, Please try again..');
-        }
+    //         return redirect()->to('/')->with('fail', 'Something went wrong, Please try again..');
+    //     }
 
-        return redirect()->to('/coordinator/coordlist')->with('success', 'Coordinator created successfully.');
-    }
+    //     return redirect()->to('/coordinator/coordlist')->with('success', 'Coordinator created successfully.');
+    // }
 
     /**
      * Get Region List -- auto updates dropdown menu in top section of update role screen when conference changes.
@@ -700,99 +700,28 @@ class CoordinatorController extends Controller
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => date('Y-m-d H:i:s')]);
 
-            //Update the coordinator tree with their new tree relationship
-            //Get the current report array
-            $cordReportingTree = DB::table('coordinator_reporting_tree')
-                ->select('layer0', 'layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'layer7', 'layer8')
-                ->where('id', '=', $new_coordinator_id)
-                ->limit(1)
-                ->get();
-            $layer0 = $cordReportingTree[0]->layer0;
-            $layer1 = $cordReportingTree[0]->layer1;
-            $layer2 = $cordReportingTree[0]->layer2;
-            $layer3 = $cordReportingTree[0]->layer3;
-            $layer4 = $cordReportingTree[0]->layer4;
-            $layer5 = $cordReportingTree[0]->layer5;
-            $layer6 = $cordReportingTree[0]->layer6;
-            $layer7 = $cordReportingTree[0]->layer7;
-            $layer8 = $cordReportingTree[0]->layer8;
-            switch ($new_layer_id) {
-                case 0:
-                    $layer0 = $coordinator_id;
-                    $layer1 = null;
-                    $layer2 = null;
-                    $layer3 = null;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 1:
-                    $layer1 = $coordinator_id;
-                    $layer2 = null;
-                    $layer3 = null;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 2:
-                    $layer2 = $coordinator_id;
-                    $layer3 = null;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 3:
-                    $layer3 = $coordinator_id;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 4:
-                    $layer4 = $coordinator_id;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 5:
-                    $layer5 = $coordinator_id;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 6:
-                    $layer6 = $coordinator_id;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 7:
-                    $layer7 = $coordinator_id;
-                    $layer8 = null;
-                    break;
-                case 7:
-                    $layer8 = $coordinator_id;
-                    break;
+            $reportingUpline = CoordinatorTree::where('coordinator_id', $new_coordinator_id)->first();  // Get reporting coordinator's upline data
+
+            $treeData = [
+                'coordinator_id' => $coordinator_id
+            ];
+
+            // Use the reporting coordinator's upline data
+            for ($i = 0; $i < $new_layer_id; $i++) {
+                $layerKey = "layer$i";
+                $treeData[$layerKey] = $reportingUpline->{$layerKey};
             }
-            DB::table('coordinator_reporting_tree')
-                ->where('id', $coordinator_id)
-                ->update(['layer0' => $layer0,
-                    'layer1' => $layer1,
-                    'layer2' => $layer2,
-                    'layer3' => $layer3,
-                    'layer4' => $layer4,
-                    'layer5' => $layer5,
-                    'layer6' => $layer6,
-                    'layer7' => $layer7,
-                    'layer8' => $layer8,
-                ]);
+
+            $treeData["layer$new_layer_id"] = $coordinator_id;  // Place new coordinator at their layer
+
+            // Set remaining layers to null
+            for ($i = $new_layer_id + 1; $i <= 8; $i++) {
+                $treeData["layer$i"] = null;
+            }
+
+            $coordTree = CoordinatorTree::where('coordinator_id', $coordinator_id)
+                ->update($treeData);
+
             DB::commit();
 
             return true;
