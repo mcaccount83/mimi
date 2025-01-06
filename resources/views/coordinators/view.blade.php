@@ -246,13 +246,13 @@
                     @endif
                 @endif
                 <br>
-                @if ($cdConfId == $userConfId)
+                @if ($cdConfId == $cdConfIdUser)
                     @if ($cdIsActive == 1)
                         <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator List</button>
                     @else
                         <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
                     @endif
-                @elseif ($adminReportCondition  && ($cdConfId != $userConfId))
+                @elseif ($adminReportCondition  && ($cdConfId != $cdConfIdUser))
                     @if ($cdIsActive == 1)
                         <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-reply mr-2"></i>Back to International Coordinator List</button>
                     @else

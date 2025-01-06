@@ -75,4 +75,9 @@ class Coordinators extends Model
     {
         return $this->belongsTo(Coordinators::class, 'report_id', 'id');  // 'report_id' in coordinators BelongsTo 'id' in coordinators
     }
+
+    public function reportCoordinator(): BelongsTo
+    {
+        return $this->belongsTo(Coordinators::class, 'report_id', 'id');  // 'report_id' in coordinators BelongsTo 'id' in coordinators
+    }
 }

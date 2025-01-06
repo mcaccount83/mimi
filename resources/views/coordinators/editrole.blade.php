@@ -13,27 +13,27 @@
 </style>
 @section('content')
     <!-- Main content -->
-    <form class="form-horizontal" method="POST" action='{{ route("coordinators.updaterole",$coordinatorDetails[0]->id) }}'>
+    <form class="form-horizontal" method="POST" action='{{ route("coordinators.updaterole",$cdDetails->id) }}'>
     @csrf
     <section class="content">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-4">
 
-            <input type="hidden" name="coordinator_id" value="{{ $coordinatorDetails[0]->id }}">
-            <input type="hidden" name="OldReportPC" value="{{ $coordinatorDetails[0]->report_id }}">
-            <input type="hidden" name="OldPosition" value="{{ $coordinatorDetails[0]->position_id }}">
-            <input type="hidden" name="OldDisplayPosition" value="{{ $coordinatorDetails[0]->display_position_id }}">
-            <input type="hidden" name="OldSecPosition" value="{{$coordinatorDetails[0]->sec_position_id}}">
-            <input type="hidden" name="CoordinatorPromoteDateNew" id="CoordinatorPromoteDateNew"  value="{{$coordinatorDetails[0]->last_promoted}}"/>
+            <input type="hidden" name="coordinator_id" value="{{ $cdDetails->id }}">
+            <input type="hidden" name="OldReportPC" value="{{ $cdDetails->report_id }}">
+            <input type="hidden" name="OldPosition" value="{{ $cdDetails->position_id }}">
+            <input type="hidden" name="OldDisplayPosition" value="{{ $cdDetails->display_position_id }}">
+            <input type="hidden" name="OldSecPosition" value="{{$cdDetails->sec_position_id}}">
+            <input type="hidden" name="CoordinatorPromoteDateNew" id="CoordinatorPromoteDateNew"  value="{{$cdDetails->last_promoted}}"/>
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
-                <h3 class="profile-username text-center">{{ $coordinatorDetails[0]->first_name }}, {{ $coordinatorDetails[0]->last_name }}</h3>
-                <p class="text-center">{{ $coordinatorDetails[0]->confname }} Conference
-                    @if ($coordinatorDetails[0]->regname != "None")
-                    , {{ $coordinatorDetails[0]->regname }} Region
+                <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                <p class="text-center">{{ $cdDetails->confname }} Conference
+                    @if ($cdDetails->regname != "None")
+                    , {{ $cdDetails->regname }} Region
                     @else
                     @endif
                 </p>
@@ -46,12 +46,18 @@
                             </div>
                             <div class="col-sm-6">
                                 <select name="cord_region" id="cord_region" class="form-control select2-sb4" style="width: 100%;" required>
-                                    <option value="0" {{ $coordinatorDetails[0]->region_id == 0 ? 'selected' : '' }}>None</option>
-                                    @foreach($regionList as $reg)
-                                        <option value="{{ $reg->id }}" {{ $coordinatorDetails[0]->region_id == $reg->id ? 'selected' : '' }}>
+                                    {{-- <option value="0" {{ $cdDetails->region_id == 0 ? 'selected' : '' }}>None</option> --}}
+                                    @foreach($allRegions as $region)
+                                    <option value="{{$region->id}}"  {{ $cdDetails->region_id == $region->id ? 'selected' : '' }}>
+                                        {{$region->long_name}}
+                                    </option>
+                                @endforeach
+
+                                    {{-- @foreach($regionList as $reg)
+                                        <option value="{{ $reg->id }}" {{ $cdDetails->region_id == $reg->id ? 'selected' : '' }}>
                                             {{ $reg->long_name }}
                                         </option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
                         </div>
@@ -62,11 +68,18 @@
                             </div>
                             <div class="col-sm-6">
                                 <select name="cord_report_pc" id="cord_report_pc" class="form-control select2-sb4" style="width: 100%;" required>
-                                    @foreach($primaryCoordinatorList as $pcl)
-                                        <option value="{{ $pcl->cid }}" {{ $coordinatorDetails[0]->report_id == $pcl->cid ? 'selected' : '' }}>
-                                            {{ $pcl->cor_f_name }} {{ $pcl->cor_l_name }} ({{ $pcl->pos }})
+                                    @foreach($rcDetails as $coordinator)
+                                    <option value="{{ $coordinator['cid'] }}" data-region-id="{{ $coordinator['regid'] }}">
+                                        {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
                                         </option>
                                     @endforeach
+
+
+                                    {{-- @foreach($primaryCoordinatorList as $pcl)
+                                        <option value="{{ $pcl->cid }}" {{ $cdDetails->report_id == $pcl->cid ? 'selected' : '' }}>
+                                            {{ $pcl->cor_f_name }} {{ $pcl->cor_l_name }} ({{ $pcl->pos }})
+                                        </option>
+                                    @endforeach --}}
                                 </select>
                             </div>
                         </div>
@@ -77,9 +90,9 @@
                             </div>
                             <div class="col-sm-6">
                                 <select name="cord_disp_pos" id="disp_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
-                                    @foreach($positionList as $pos)
+                                    @foreach($allPositions as $pos)
                                         @if($positionid == 8 || $pos->level_id == 2)
-                                            <option value="{{ $pos->id }}" {{ $coordinatorDetails[0]->display_position_id == $pos->id ? 'selected' : '' }}>
+                                            <option value="{{ $pos->id }}" {{ $cdDetails->display_position_id == $pos->id ? 'selected' : '' }}>
                                                 {{ $pos->long_title }}
                                             </option>
                                         @endif
@@ -94,9 +107,9 @@
                             </div>
                             <div class="col-sm-6">
                                 <select name="cord_pri_pos" id="cord_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
-                                    @foreach($positionList as $pos)
+                                    @foreach($allPositions as $pos)
                                         @if($pos->id >= 1 && $pos->id <= 7)
-                                            <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>
+                                            <option value="{{$pos->id}}" {{$cdDetails->position_id == $pos->id  ? 'selected' : ''}}>
                                                 {{$pos->long_title}}
                                             </option>
                                         @endif
@@ -112,9 +125,9 @@
                             <div class="col-sm-6">
                                 <select name="cord_sec_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" >
                                     <option value=""></option>
-                                    @foreach($positionList as $pos)
+                                    @foreach($allPositions as $pos)
                                     @if($positionid == 8 || $pos->level_id == 2)  <!-- Show all if position_id is 8, otherwise restrict to level_id == 2 -->
-                                    <option value="{{$pos->id}}" {{$coordinatorDetails[0]->sec_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+                                    <option value="{{$pos->id}}" {{$cdDetails->sec_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
                                       @endif
                                     @endforeach
                                 </select>
@@ -126,7 +139,7 @@
                                 <label class="col-form-label">Promoation Date:</label>
                             </div>
                             <div class="col-sm-6">
-                                <input type="date" name="CoordinatorPromoteDate" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $coordinatorDetails[0]->last_promoted }}">
+                                <input type="date" name="CoordinatorPromoteDate" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $cdDetails->last_promoted }}">
                             </div>
                         </div>
 
@@ -134,17 +147,17 @@
 
                 </ul>
                 <div class="text-center">
-                    @if ($coordinatorDetails[0]->is_active == 1 && $coordinatorDetails[0]->on_leave != 1)
+                    @if ($cdDetails->is_active == 1 && $cdDetails->on_leave != 1)
                         <b><span style="color: #28a745;">Coordinator is ACTIVE</span></b>
-                    @elseif ($coordinatorDetails[0]->is_active == 1 && $coordinatorDetails[0]->on_leave == 1)
+                    @elseif ($cdDetails->is_active == 1 && $cdDetails->on_leave == 1)
                         <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
                         <br>
-                        Leave Date: <span class="date-mask">{{ $coordinatorDetails[0]->leave_date }}</span><br>
+                        Leave Date: <span class="date-mask">{{ $cdDetails->leave_date }}</span><br>
                     @else
                         <b><span style="color: #dc3545;">Coordinator is RETIRED</span></b>
                         <br>
-                        Retired Date: <span class="date-mask">{{ $coordinatorDetails[0]->zapped_date }}</span><br>
-                        {{ $coordinatorDetails[0]->reason_retired }}
+                        Retired Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
+                        {{ $cdDetails->reason_retired }}
                     @endif
                 </div>
               </div>
@@ -162,7 +175,7 @@
                         <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label class="mrg-b-25">Coordinators Directly Reporting to {{ $coordinatorDetails[0]->first_name }}:</label>
+                                        <label class="mrg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
                                             <table id="coordinator-list" class="nowraptable" width="100%">
                                                 <thead>
                                                     <tr>
@@ -181,7 +194,7 @@
                                                             <select name="Report{{ $index }}" id="Report{{ $index }}" required>
                                                                 @foreach ($coordinator_options as $option)
                                                                     <option value="{{ $option->cid }}"
-                                                                        {{ $option->cid == $coordinatorDetails[0]->id ? 'selected' : '' }}>
+                                                                        {{ $option->cid == $cdDetails->id ? 'selected' : '' }}>
                                                                         {{ $option->cor_f_name }} {{ $option->cor_l_name }} ({{ $option->pos }})
                                                                     </option>
                                                                 @endforeach
@@ -200,16 +213,22 @@
                                         <label class="mrg-b-25">Select Direct Report To</label>
                                         <select name="SelectCoordinator" id="SelectCoordinator" class="form-control" onChange="ActivateCoordinatorButton(this)">
                                             <option value=""></option>
-                                            @foreach ($directReportTo as $pcl)
+                                            @foreach($allCoordinators as $coordinator)
+                                            <option value="{{$coordinator->id}}" data-region-id="{{ $coordinator->region_id }}">
+                                                {{$coordinator->first_name}} {{$coordinator->last_name}}
+                                            </option>
+                                        @endforeach
+
+                                            {{-- @foreach ($directReportTo as $pcl)
                                                 <option value="{{ $pcl->cid }}">{{ $pcl->cor_f_name }} {{ $pcl->cor_l_name }} ({{ $pcl->pos }})</option>
-                                            @endforeach
+                                            @endforeach --}}
                                         </select>
                                     </div>
                                     <button type="button" class="btn bg-gradient-primary btn-sm" id="AssignCoordinator" disabled onclick="AddCoordinator()">Assign Coordinator</button>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group mrg-b-30">
-                                    <label class="mrg-b-25">{{ $coordinatorDetails[0]->first_name }} is Primary For:</label>
+                                    <label class="mrg-b-25">{{ $cdDetails->first_name }} is Primary For:</label>
                                     <table id="chapter-list" class="nowraptable" width="100%">
                                         <thead>
                                             <tr>
@@ -228,7 +247,7 @@
                                                         <select name="PCID{{ $index }}" id="PCID{{ $index }}" required>
                                                             @foreach ($coordinator_options as $option)
                                                                 <option value="{{ $option->cid }}"
-                                                                    {{ $option->cid == $coordinatorDetails[0]->id ? 'selected' : '' }}>
+                                                                    {{ $option->cid == $cdDetails->id ? 'selected' : '' }}>
                                                                     {{ $option->cor_f_name }} {{ $option->cor_l_name }} ({{ $option->pos }})
                                                                 </option>
                                                             @endforeach
@@ -264,7 +283,7 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 <button type="submit" class="btn bg-gradient-primary mb-3"><i class="fas fa-save mr-2" ></i>Save Changes</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.view', ['id' => $coordinatorDetails[0]->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator Details</button>
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator Details</button>
             </div>
         </div>
         </div>
@@ -277,10 +296,50 @@
 @section('customscript')
 <script>
 
+    // Function to filter the coordinator dropdown
+function filterCoordinators() {
+    const regionDropdown = document.getElementById('cord_region');
+    const selectedRegion = regionDropdown.value; // Get the selected region ID
+    const reportCorDropdown = document.getElementById('cord_report_pc'); // Coordinator dropdown
+    const directReportCorDropdown = document.getElementById('cord_report_pc'); // Coordinator dropdown
+
+    // Filter options based on the selected region
+    Array.from(reportCorDropdown.options && directReportCorDropdown.options).forEach(option => {
+        if (
+            option.value === "" || // Always show the default empty option
+            option.dataset.regionId === selectedRegion || // Match the selected region
+            option.dataset.regionId === "0" // Always include region_id = 0
+        ) {
+            option.style.display = "block";
+        } else {
+            option.style.display = "none";
+        }
+    });
+
+    // Reset the selected value if it's no longer valid
+    if (reportCorDropdown.value !== "" &&
+        reportCorDropdown.querySelector(`option[value="${reportCorDropdown.value}"]`).style.display === "none") {
+        reportCorDropdown.value = "";
+    }
+    if (directReportCorDropdown.value !== "" &&
+        directReportCorDropdown.querySelector(`option[value="${reportCorDropdown.value}"]`).style.display === "none") {
+        directReportCorDropdown.value = "";
+    }
+}
+
+// Attach the event listener to the region dropdown
+document.getElementById('cord_region').addEventListener('change', filterCoordinators);
+
+// Run the filtering logic on page load
+document.addEventListener('DOMContentLoaded', filterCoordinators);
+
+
+
+
  // Functions for Adding Chapers anc Coordinators
     const chapterCount = @json($chapter_count);
     const coordinatorCount = @json($row_count);
-    const conid = @json($conid);
+    const conid = @json($cdId);
     const coordinatorOptions = @json($coordinator_options);
 
     let iCoordinatorCount = coordinatorCount;

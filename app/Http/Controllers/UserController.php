@@ -270,4 +270,78 @@ class UserController extends Controller
 
         return $rrDetails; // Return all coordinators as a collection
     }
+
+     /**
+     * Load Reports To Dropdown List
+     */
+    public function loadReportsToList($cdRegId, $cdConfId)
+    {
+        $rcList = Coordinators::with([
+            'reportCoordinator' => function ($query) use ($cdRegId, $cdConfId) {
+                $query->with(['displayPosition', 'secondaryPosition'])
+                    ->where(function ($q) use ($cdRegId, $cdConfId) {
+                        $q->where('region_id', $cdRegId)
+                            ->orWhere(function ($subQuery) use ($cdConfId) {
+                                $subQuery->where('region_id', 0)
+                                    ->where('conference_id', $cdConfId);
+                            });
+                    })
+                    ->whereBetween('position_id', [1, 7])
+                    ->where('is_active', 1);
+            },
+        ])->get();
+
+        $rcList = $rcList->pluck('reportCoordinator')->filter();
+
+        $rcDetails = $rcList->map(function ($coordinator) {
+            return [
+                'cid' => $coordinator->id,
+                'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
+                'cpos' => $coordinator->displayPosition->short_title ?? 'No Position',
+                'regid' => $coordinator->region_id,
+            ];
+        });
+
+        $rcDetails = $rcDetails->unique('cid');  // Remove duplicates based on the 'cid' field
+
+        return $rcDetails; // Return all coordinators as a collection
+    }
+
+    /**
+     * Load Direct Report Coordinators Dropdown List
+     */
+    public function loadDirectReportsList($cdRegId, $cdConfId)
+    {
+        $drList = Coordinators::with([
+            'directReportCoordinator' => function ($query) use ($cdRegId, $cdConfId) {
+                $query->with(['displayPosition', 'secondaryPosition'])
+                    ->where(function ($q) use ($cdRegId, $cdConfId) {
+                        $q->where('region_id', $cdRegId)
+                            ->orWhere(function ($subQuery) use ($cdConfId) {
+                                $subQuery->where('region_id', 0)
+                                    ->where('conference_id', $cdConfId);
+                            });
+                    })
+                    ->whereBetween('position_id', [1, 7])
+                    ->where('is_active', 1);
+            },
+        ])->get();
+
+        $drList = $drList->pluck('directReportCoordinator')->filter();
+
+        $drDetails = $drList->map(function ($coordinator) {
+            return [
+                'cid' => $coordinator->id,
+                'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
+                'cpos' => $coordinator->displayPosition->short_title ?? 'No Position',
+                'regid' => $coordinator->region_id,
+            ];
+        });
+
+        $drDetails = $drDetails->unique('cid');  // Remove duplicates based on the 'cid' field
+
+        return $drDetails; // Return all coordinators as a collection
+    }
+
+
 }
