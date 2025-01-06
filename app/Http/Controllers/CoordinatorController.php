@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Mail\CoordinatorRetireAdmin;
 use App\Models\CoordinatorPosition;
 use App\Models\Coordinators;
+use App\Models\CoordinatorTree;
 use App\Models\User;
+use App\Models\State;
+use App\Models\Region;
+use App\Models\Month;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -219,53 +223,27 @@ class CoordinatorController extends Controller
      */
     public function editCoordNew(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $userId = $corDetails['id'];
-        $corId = $corDetails['id'];
-        $corReportTo = $corDetails['first_name'].' '.$corDetails['last_name'];
-        $userConfId = $corDetails['conference_id'];
-        $userRegId = $corDetails['region_id'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        $conference = DB::table('conference')
-            ->select('conference.*')
-            ->where('conference.id', '=', $userConfId)
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdName = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $cdConfId = $cdDetails->conference_id;
+        $cdConferenceNum = $cdDetails->conference->short_name;
+        $cdConferenceName = $cdDetails->conference->conference_description;
+        $cdRegId = $cdDetails->region_id;
+        $cdRegionName = $cdDetails->region->long_name;
+
+        $allStates = State::all();  // Full List for Dropdown Menu
+        $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
+            ->where('conference_id', $cdConfId)
             ->get();
+        $allMonths = Month::all();  // Full List for Dropdown Menu
 
-        $stateArr = DB::table('state')
-            ->select('state.*')
-            ->orderBy('id')
-            ->get();
-
-        $monthArr = DB::table('month')
-            ->select('month.*')
-            ->orderBy('id')
-            ->get();
-
-        $regionList = DB::table('region')
-            ->select('id', 'long_name')
-            ->where('conference_id', '=', $userConfId)
-            ->orderBy('long_name')
-            ->get();
-
-        $region = DB::table('region')
-            ->select('id', 'long_name')
-            ->where('region.id', '=', $userRegId)
-            ->get();
-
-        $primaryCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-            ->where('cd.conference_id', $userConfId)
-            ->where('cd.position_id', '<', 8)
-            ->where('cd.position_id', '>', 1)
-            ->where('cd.is_active', 1)
-            ->orderBy('cd.position_id')
-            ->orderBy('cd.first_name')
-            ->orderBy('cd.last_name')
-            ->get();
-
-        $data = ['stateArr' => $stateArr, 'monthArr' => $monthArr, 'regionList' => $regionList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'userConfId' => $userConfId,
-            'conference' => $conference, 'corId' => $corId, 'corReportTo' => $corReportTo, 'region' => $region];
+        $data = ['allStates' => $allStates, 'allMonths' => $allMonths, 'allRegions' => $allRegions, 'cdName' => $cdName, 'cdConferenceNum' => $cdConferenceNum,
+            'cdConfId' => $cdConfId, 'cdId' => $cdId, 'cdRegId' => $cdRegId, 'cdConferenceName' => $cdConferenceName, 'cdRegionName' => $cdRegionName,
+        ];
 
         return view('coordinators.editnew')->with($data);
     }
@@ -275,13 +253,19 @@ class CoordinatorController extends Controller
      */
     public function updateCoordNew(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $corRegId = $corDetails['region_id'];
-        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
-        $new_layer_id = $corlayerId + 1;
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdlayerId = $cdDetails->layer_id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+
+        $reportsTo = $cdId;
+
+        $new_layer_id = $cdlayerId + 1;
         $input = $request->all();
 
         DB::beginTransaction();
@@ -297,7 +281,7 @@ class CoordinatorController extends Controller
 
             $cordId = DB::table('coordinators')->insertGetId(
                 ['user_id' => $userId,
-                    'conference_id' => $corConfId,
+                    'conference_id' => $cdConfId,
                     'region_id' => $input['cord_region'],
                     'layer_id' => $new_layer_id,
                     'first_name' => $input['cord_fname'],
@@ -306,7 +290,7 @@ class CoordinatorController extends Controller
                     'display_position_id' => 1,
                     'email' => $input['cord_email'],
                     'sec_email' => $input['cord_sec_email'],
-                    'report_id' => $corId,
+                    'report_id' => $reportsTo,
                     'address' => $input['cord_addr'],
                     'city' => $input['cord_city'],
                     'state' => $input['cord_state'],
@@ -323,107 +307,31 @@ class CoordinatorController extends Controller
                     'is_active' => 1]
             );
 
-            $cordReportingTree = DB::table('coordinator_reporting_tree')
-                ->select('layer0', 'layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'layer7', 'layer8')
-                ->where('id', '=', $cordId)
-                ->limit(1)
-                ->get();
-            $layer0 = $cordReportingTree[0]->layer0;
-            $layer1 = $cordReportingTree[0]->layer1;
-            $layer2 = $cordReportingTree[0]->layer2;
-            $layer3 = $cordReportingTree[0]->layer3;
-            $layer4 = $cordReportingTree[0]->layer4;
-            $layer5 = $cordReportingTree[0]->layer5;
-            $layer6 = $cordReportingTree[0]->layer6;
-            $layer7 = $cordReportingTree[0]->layer7;
-            $layer8 = $cordReportingTree[0]->layer8;
-            $coordinator_id = $cordId;
-            switch ($new_layer_id) {
-                case 0:
-                    $layer0 = $coordinator_id;
-                    $layer1 = null;
-                    $layer2 = null;
-                    $layer3 = null;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 1:
-                    $layer1 = $coordinator_id;
-                    $layer2 = null;
-                    $layer3 = null;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 2:
-                    $layer2 = $coordinator_id;
-                    $layer3 = null;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 3:
-                    $layer3 = $coordinator_id;
-                    $layer4 = null;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 4:
-                    $layer4 = $coordinator_id;
-                    $layer5 = null;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 5:
-                    $layer5 = $coordinator_id;
-                    $layer6 = null;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 6:
-                    $layer6 = $coordinator_id;
-                    $layer7 = null;
-                    $layer8 = null;
-                    break;
-                case 7:
-                    $layer7 = $coordinator_id;
-                    $layer8 = null;
-                    break;
-                case 7:
-                    $layer8 = $coordinator_id;
-                    break;
+            $reportingUpline = CoordinatorTree::where('coordinator_id', $reportsTo)->first();  // Get reporting coordinator's upline data
+
+            $treeData = [
+                'coordinator_id' => $cordId
+            ];
+
+            // Use the reporting coordinator's upline data
+            for ($i = 0; $i < $new_layer_id; $i++) {
+                $layerKey = "layer$i";
+                $treeData[$layerKey] = $reportingUpline->{$layerKey};
             }
-            $coord = DB::table('coordinator_reporting_tree')->insert(
-                [
-                    'layer0' => $layer0,
-                    'layer1' => $layer1,
-                    'layer2' => $layer2,
-                    'layer3' => $layer3,
-                    'layer4' => $layer4,
-                    'layer5' => $layer5,
-                    'layer6' => $layer6,
-                    'layer7' => $layer7,
-                    'layer8' => $layer8,
-                ]
-            );
+
+            $treeData["layer$new_layer_id"] = $cordId;  // Place new coordinator at their layer
+
+            // Set remaining layers to null
+            for ($i = $new_layer_id + 1; $i <= 8; $i++) {
+                $treeData["layer$i"] = null;
+            }
+
+            $coordTree = CoordinatorTree::insert($treeData);
+
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            echo $e->getMessage();
-            exit;
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->to('/')->with('fail', 'Something went wrong, Please try again..');
         }

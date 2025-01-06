@@ -28,7 +28,7 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Conference:</label>
                             <div class="col-sm-8">
-                                <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $conference[0]->short_name }} - {{ $conference[0]->conference_description }}" readonly>
+                                <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $cdConferenceNum }} - {{ $cdConferenceName }}" readonly>
                             </div>
                         </div>
 
@@ -38,12 +38,17 @@
                                 @if($assistConferenceCoordinatorCondition)
                                     <select id="cord_region" name="cord_region" class="form-control" required>
                                         <option value="">Select Region</option>
-                                        @foreach($regionList as $rl)
+                                        @foreach($allRegions as $region)
+                                        <option value="{{$region->id}}">
+                                            {{$region->long_name}}
+                                        </option>
+                                    @endforeach
+                                        {{-- @foreach($regionList as $rl)
                                             <option value="{{$rl->id}}">{{$rl->long_name}}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                 @else
-                                    <input type="text" name="cord_region" id="cord_region" class="form-control" placeholder="Home Chapter" value="{{ $region[0]->long_name }}" readonly>
+                                    <input type="text" name="cord_region" id="cord_region" class="form-control" placeholder="Home Chapter" value="{{ $cdRegionName }}" readonly>
                                 @endif
                             </div>
                         </div>
@@ -58,7 +63,7 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Reports To:</label>
                             <div class="col-sm-8">
-                                <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $corReportTo }}" readonly>
+                                <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $cdName }}" readonly>
                             </div>
                         </div>
 
@@ -139,9 +144,11 @@
                                     <div class="col-sm-3">
                                         <select id="cord_state" name="cord_state" class="form-control" style="width: 100%;" required>
                                             <option value="">Select State</option>
-                                            @foreach($stateArr as $state)
-                                                <option value="{{$state->id}}">{{$state->state_long_name}}</option>
-                                            @endforeach
+                                            @foreach($allStates as $state)
+                                            <option value="{{$state->id}}">
+                                                {{$state->state_long_name}}
+                                            </option>
+                                        @endforeach
                                         </select>
                                     </div>
                                     <div class="col-sm-2">
@@ -154,9 +161,15 @@
                                     <div class="col-sm-3">
                                         <select name="cord_month" class="form-control" style="width: 100%;" required>
                                             <option value="">Select Month</option>
-                                                @foreach($monthArr as $month)
+                                            @foreach($allMonths as $month)
+                                        <option value="{{$month->id}}">
+                                            {{$month->month_long_name}}
+                                        </option>
+                                    @endforeach
+
+                                                {{-- @foreach($monthArr as $month)
                                                     <option value="{{$month->id}}" >{{$month->month_long_name}}</option>
-                                                @endforeach
+                                                @endforeach --}}
                                         </select>
 
                                     </div>
@@ -174,7 +187,7 @@
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();"><i class="fas fa-save mr-2"></i>Save New Coordinator</button>
+                <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save New Coordinator</button>
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator List</button>
             </div>
         </div>

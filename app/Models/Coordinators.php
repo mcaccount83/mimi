@@ -16,7 +16,9 @@ class Coordinators extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'name', 'email',
+        'user_id', 'conference_id', 'region_id', 'layer_id', 'first_name', 'last_name', 'position_id', 'display_position_id', 'email', 'sec_email', 'report_id',
+        'address', 'city', 'state', 'zip', 'country', 'phone', 'alt_phone', 'birthday_month_id', 'birthday_day', 'home_chapter', 'coordinator_start_date',
+        'last_updated_by', 'last_updated_date', 'is_active',
     ];
 
     public function coordTree(): HasOne

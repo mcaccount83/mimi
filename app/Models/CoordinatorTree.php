@@ -17,7 +17,7 @@ class CoordinatorTree extends Model
     protected $table = 'coordinator_reporting_tree';
 
     protected $fillable = [
-
+            'coordinator_id', 'layer0', 'layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'layer7', 'layer8'
     ];
 
     public function coordinator(): BelongsTo
