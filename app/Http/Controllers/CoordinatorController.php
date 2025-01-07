@@ -102,6 +102,7 @@ class CoordinatorController extends Controller
         $cdDetails = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth',
             'reportsTo'])->find($id);
         $cdId = $cdDetails->id;
+        $cdPositionid = $cdDetails->position_id;
         $cdIsActive = $cdDetails->is_active;
         $regionLongName = $cdDetails->region->long_name;
         $conferenceDescription = $cdDetails->conference->conference_description;
@@ -125,14 +126,19 @@ class CoordinatorController extends Controller
             ->where('is_active', 1)
             ->get();
 
-         // Load Report Reviewer Coordinator Dropdown List
-         $rcDetails = $this->userController->loadReportsToList($cdRegId, $cdConfId);
+         // Load ReportsTo Coordinator Dropdown List
+         $rcDetails = $this->userController->loadReportsToList($cdConfId, $cdPositionid);
+
+          // Load Direct Reports Coordinator Dropdown List
+          $drDetails = $this->userController->loadDirectReportsList($cdConfId, $cdPositionid);
+
 
         return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdIsActive' => $cdIsActive, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId,
             'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition,
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths,
-            'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators
+            'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid,
+            'drDetails' => $drDetails
         ];
     }
 
@@ -934,12 +940,11 @@ class CoordinatorController extends Controller
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
         $cdConfIdUser = $cdDetailsUser->conference_id;
-        $cdRegIdUser = $cdDetailsUser->region_id;
-        $cdPositionidUser = $cdDetailsUser->position_id;
 
         $baseQuery = $this->getCoordinatorDetails($id);
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
+        $cdPositionid = $baseQuery['cdPositionid'];
         $cdIsActive = $baseQuery['cdIsActive'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -959,20 +964,23 @@ class CoordinatorController extends Controller
         $allCoordinators = $baseQuery['allCoordinators'];
 
         $rcDetails = $baseQuery['rcDetails'];  // ReportTo Coordinator List
+        $drDetails = $baseQuery['drDetails'];  // Direct Reports Coordinator List
 
 
-        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $positionid, $secPositionid);
-        $cdList = $baseQuery['query']->get();
+        $drList = Coordinators::where('report_id', $cdId)
+            ->where('is_active', 1)
+            ->get();
+
+        $row_count = count($drList);
+
+        $drOptions = Coordinators::where('conference_id', $cdConfId)
+            ->whereBetween('position_id', [1, 7])
+            ->where('is_active', 1)
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
 
 
-        $cdOptions = $cdList::where('conference_id', $cdConfId)
-                    ->where('position_id', '>=', 1)
-                    ->where('position_id', '<=', 7)
-                    ->where('is_active', 1)
-
-            ->orderBy('cd.first_name')
-            ->orderBy('cd.last_name')
-            ->get($corId);
 
 
 
@@ -980,15 +988,15 @@ class CoordinatorController extends Controller
             ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->join('region', 'cd.region_id', '=', 'region.id')
-            ->where('cd.report_id', $corId)
+            ->where('cd.report_id', $cdDetails->id)
             ->where('cd.is_active', 1)
             ->get();
 
         $coordinator_options = DB::table('coordinators as cd')
             ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-            ->where(function ($query) use ($cdDetails) {
-                $query->where('cd.conference_id', 4)
+            ->where(function ($query) use ($cdConfId) {
+                $query->where('cd.conference_id', $cdConfId)
                     ->where('cd.position_id', '>=', 1)
                     ->where('cd.position_id', '<=', 7)
                     ->where('cd.is_active', 1);
@@ -1008,12 +1016,12 @@ class CoordinatorController extends Controller
             ->orderBy('chapters.name')
             ->get();
 
-        if ($cdDetails->region_id == 0) {
+        if ($cdRegId == 0) {
             $coordinator_options = DB::table('coordinators as cd')
                 ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where(function ($query) use ($cdDetails) {
-                    $query->where('cd.conference_id', 4)
+                ->where(function ($query) use ($cdConfId) {
+                    $query->where('cd.conference_id', $cdConfId)
                         ->where('cd.position_id', '>=', 1)
                         ->where('cd.position_id', '<=', 7)
                         ->where('cd.is_active', 1);
@@ -1025,17 +1033,17 @@ class CoordinatorController extends Controller
             $coordinator_options = DB::table('coordinators as cd')
                 ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where(function ($query) use ($cdDetails) {
-                    $query->where('cd.region_id', 0)
+                ->where(function ($query) use ($cdConfId) {
+                    $query->where('cd.region_id', $cdConfId)
                         ->where(function ($query) {
                             $query->where('cd.position_id', '>=', 1)
                                 ->where('cd.position_id', '<=', 7)
                                 ->where('cd.is_active', 1);
                         });
                 })
-                ->orWhere(function ($query) use ($cdDetails) {
+                ->orWhere(function ($query) use ($cdConfId) {
                     $query->where('cd.position_id', 7)
-                        ->where('cd.conference_id', 4)
+                        ->where('cd.conference_id', $cdConfId)
                         ->where('cd.is_active', 1);
                 })
                 ->orderBy('cd.first_name')
@@ -1046,28 +1054,28 @@ class CoordinatorController extends Controller
         $chapter_count = count($coordinator_options);
 
         /***Query For Report To in Frst Section */
-        // $primaryCoordinatorList = DB::table('coordinators as cd')
-        //     ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-        //     ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-        //     ->where('cd.conference_id', $cdConfId)
-        //     ->where('cd.position_id', '>', $mimiPosition)
-        //     ->where('cd.position_id', '>', 1)
-        //     ->where(function ($query) use ($cdRegId) {
-        //         $query->where('cd.region_id', $cdRegId)
-        //             ->orWhereIn('cd.position_id', [6, 7]);
-        //     })
-        //     ->where('cd.is_active', 1)
-        //     ->orderBy('cd.position_id')
-        //     ->orderBy('cd.first_name')
-        //     ->orderBy('cd.last_name')
-        //     ->get();
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where('cd.conference_id', $cdConfId)
+            ->where('cd.position_id', '>', $cdPositionid)
+            ->where('cd.position_id', '>', 1)
+            ->where(function ($query) use ($cdRegId) {
+                $query->where('cd.region_id', $cdRegId)
+                    ->orWhereIn('cd.position_id', [6, 7]);
+            })
+            ->where('cd.is_active', 1)
+            ->orderBy('cd.position_id')
+            ->orderBy('cd.first_name')
+            ->orderBy('cd.last_name')
+            ->get();
 
         /***Query For Direct Report Dropdown in Bottom Section */
         $directReportTo = DB::table('coordinators as cd')
             ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.conference_id', $cdConfId)
-            ->where('cd.position_id', '<', $mimiPosition)
+            ->where('cd.position_id', '<', $cdPositionid)
             ->where(function ($query) use ($cdRegId) {
                 $query->where('cd.region_id', $cdRegId)
                     ->orWhereIn('cd.position_id', [6, 7]);
@@ -1101,14 +1109,200 @@ class CoordinatorController extends Controller
                 ->get();
         }
 
-        $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'chapter_count' => $chapter_count, 'row_count' => $row_count, 'coordinator_options' => $coordinator_options,
-            'chapter_list' => $chapter_list, 'coordinator_list' => $coordinator_list, 'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
+        $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'chapter_count' => $chapter_count, 'row_count' => $row_count, 'drOptions' => $drOptions,
+            'chapter_list' => $chapter_list, 'drList' => $drList, 'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
             'directReportTo' => $directReportTo, 'primaryChapterList' => $primaryChapterList, 'cdId' => $cdId, 'allPositions' => $allPositions,
-            'rcDetails' => $rcDetails, 'allRegions' => $allRegions, 'allCoordinators' => $allCoordinators
+            'rcDetails' => $rcDetails, 'allRegions' => $allRegions, 'drDetails' => $drDetails
         ];
 
         return view('coordinators.editrole')->with($data);
     }
+
+     /**
+     * Edit Coordiantor Role
+     */
+    // public function editCoordRole(Request $request, $id): View
+    // {
+    //     $corDetails = User::find($request->user()->id)->coordinator;
+    //     $userId = $corDetails['id'];
+    //     $userConfId = $corDetails['conference_id'];
+    //     $coordinatorDetails = DB::table('coordinators as cd')
+    //         ->select('cd.*', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
+    //             'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.email as report_email', 'cd2.last_name as report_lname')
+    //         ->leftJoin('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')  // Primary Position
+    //         ->leftJoin('coordinator_position as cp2', 'cd.sec_position_id', '=', 'cp2.id')  //Secondary Position
+    //         ->leftJoin('coordinator_position as cp3', 'cd.display_position_id', '=', 'cp3.id')  //Display Position
+    //         ->leftJoin('coordinators as cd2', 'cd.report_id', '=', 'cd2.id') //Supervising Coordinator
+    //         ->leftJoin('month as mo', 'cd.birthday_month_id', '=', 'mo.id')
+    //         ->leftJoin('state as st', 'cd.state', '=', 'st.id')
+    //         ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
+    //         ->leftJoin('region as rg', 'cd.region_id', '=', 'rg.id')
+    //         ->where('cd.is_active', '=', '1')
+    //         ->where('cd.id', '=', $id)
+    //         ->get();
+
+    //     $conid = $coordinatorDetails[0]->id;
+    //     $corIsActive = $coordinatorDetails[0]->is_active;
+    //     $corIsLeave = $coordinatorDetails[0]->on_leave;
+    //     $position_id = $coordinatorDetails[0]->position_id;
+    //     $conference_id = $corConfId = $coordinatorDetails[0]->conference_id;
+    //     $region_id = $coordinatorDetails[0]->region_id;
+
+    //     $coordinator_list = DB::table('coordinators as cd')
+    //         ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+    //         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+    //         ->join('region', 'cd.region_id', '=', 'region.id')
+    //         ->where('cd.report_id', $coordinatorDetails[0]->id)
+    //         ->where('cd.is_active', 1)
+    //         ->get();
+
+    //     $coordinator_options = DB::table('coordinators as cd')
+    //         ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+    //         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+    //         ->where(function ($query) use ($coordinatorDetails) {
+    //             $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+    //                 ->where('cd.position_id', '>=', 1)
+    //                 ->where('cd.position_id', '<=', 7)
+    //                 ->where('cd.is_active', 1);
+    //         })
+    //         ->orderBy('cd.first_name')
+    //         ->orderBy('cd.last_name')
+    //         ->get();
+
+    //     $row_count = count($coordinator_list);
+
+    //     $chapter_list = DB::table('chapters')
+    //         ->select('chapters.id', 'state.state_short_name as state', 'chapters.name as name')
+    //         ->join('state', 'chapters.state_id', '=', 'state.id')
+    //         ->where('primary_coordinator_id', $coordinatorDetails[0]->id)
+    //         ->where('chapters.is_active', 1)
+    //         ->orderBy('state.state_short_name')
+    //         ->orderBy('chapters.name')
+    //         ->get();
+
+    //     if ($coordinatorDetails[0]->region_id == 0) {
+    //         $coordinator_options = DB::table('coordinators as cd')
+    //             ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+    //             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+    //             ->where(function ($query) use ($coordinatorDetails) {
+    //                 $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+    //                     ->where('cd.position_id', '>=', 1)
+    //                     ->where('cd.position_id', '<=', 7)
+    //                     ->where('cd.is_active', 1);
+    //             })
+    //             ->orderBy('cd.first_name')
+    //             ->orderBy('cd.last_name')
+    //             ->get();
+    //     } else {
+    //         $coordinator_options = DB::table('coordinators as cd')
+    //             ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+    //             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+    //             ->where(function ($query) use ($coordinatorDetails) {
+    //                 $query->where('cd.region_id', $coordinatorDetails[0]->region_id)
+    //                     ->where(function ($query) {
+    //                         $query->where('cd.position_id', '>=', 1)
+    //                             ->where('cd.position_id', '<=', 7)
+    //                             ->where('cd.is_active', 1);
+    //                     });
+    //             })
+    //             ->orWhere(function ($query) use ($coordinatorDetails) {
+    //                 $query->where('cd.position_id', 7)
+    //                     ->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+    //                     ->where('cd.is_active', 1);
+    //             })
+    //             ->orderBy('cd.first_name')
+    //             ->orderBy('cd.last_name')
+    //             ->get();
+    //     }
+
+    //     $chapter_count = count($coordinator_options);
+
+    //     /***Query For Report To in Frst Section */
+    //     $primaryCoordinatorList = DB::table('coordinators as cd')
+    //         ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+    //         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+    //         ->where('cd.conference_id', $conference_id)
+    //         ->where('cd.position_id', '>', $position_id)
+    //         ->where('cd.position_id', '>', 1)
+    //         ->where(function ($query) use ($region_id) {
+    //             $query->where('cd.region_id', $region_id)
+    //                 ->orWhereIn('cd.position_id', [6, 7]);
+    //         })
+    //         ->where('cd.is_active', 1)
+    //         ->orderBy('cd.position_id')
+    //         ->orderBy('cd.first_name')
+    //         ->orderBy('cd.last_name')
+    //         ->get();
+
+    //     /***Query For Direct Report Dropdown in Bottom Section */
+    //     $directReportTo = DB::table('coordinators as cd')
+    //         ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+    //         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+    //         ->where('cd.conference_id', $conference_id)
+    //         ->where('cd.position_id', '<', $position_id)
+    //         ->where(function ($query) use ($region_id) {
+    //             $query->where('cd.region_id', $region_id)
+    //                 ->orWhereIn('cd.position_id', [6, 7]);
+    //         })
+    //         ->where('cd.report_id', '!=', $coordinatorDetails[0]->id)
+    //         ->where('cd.is_active', 1)
+    //         ->orderBy('cd.position_id')
+    //         ->orderBy('cd.first_name')
+    //         ->orderBy('cd.last_name')
+    //         ->get();
+
+    //     /***Query For Primary For Dropdown in Bottom Section */
+    //     if ($region_id == 0) {
+    //         $primaryChapterList = DB::table('chapters')
+    //             ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state')
+    //             ->join('state as st', 'chapters.state_id', '=', 'st.id')
+    //             ->where('chapters.conference_id', '=', $conference_id)
+    //             ->where('primary_coordinator_id', '!=', $coordinatorDetails[0]->id)
+    //             ->where('chapters.is_active', '=', '1')
+    //             ->orderBy('st.state_short_name')
+    //             ->get();
+    //     } else {
+    //         $primaryChapterList = DB::table('chapters')
+    //             ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state')
+    //             ->join('state as st', 'chapters.state_id', '=', 'st.id')
+    //             ->where('chapters.region_id', '=', $region_id)
+    //             ->where('primary_coordinator_id', '!=', $coordinatorDetails[0]->id)
+    //             ->where('chapters.is_active', '=', '1')
+    //             ->orderBy('st.state_short_name')
+    //             ->orderBy('chapters.name')
+    //             ->get();
+    //     }
+
+    //     $positionList = DB::table('coordinator_position')
+    //         ->select('id', 'long_title', 'level_id')
+    //         ->orderBy('id')
+    //         ->get();
+
+    //     $regionList = DB::table('region')
+    //         ->select('id', 'long_name')
+    //         ->where('conference_id', '=', $conference_id)
+    //         ->orderBy('long_name')
+    //         ->get();
+
+    //     $stateArr = DB::table('state')
+    //         ->select('state.*')
+    //         ->orderBy('id')
+    //         ->get();
+
+    //     $monthArr = DB::table('month')
+    //         ->select('month.*')
+    //         ->orderBy('id')
+    //         ->get();
+
+    //     $data = ['coordinatorDetails' => $coordinatorDetails, 'corConfId' => $corConfId, 'chapter_count' => $chapter_count, 'row_count' => $row_count, 'coordinator_options' => $coordinator_options,
+    //         'chapter_list' => $chapter_list, 'coordinator_list' => $coordinator_list, 'corIsActive' => $corIsActive, 'userConfId' => $userConfId, 'userId' => $userId, 'corIsLeave' => $corIsLeave,
+    //         'directReportTo' => $directReportTo, 'primaryChapterList' => $primaryChapterList, 'stateArr' => $stateArr, 'monthArr' => $monthArr, 'conid' => $conid, 'positionList' => $positionList,
+    //         'primaryCoordinatorList' => $primaryCoordinatorList, 'regionList' => $regionList,
+    //     ];
+
+    //     return view('coordinators.editrole')->with($data);
+    // }
+
 
     /**
      * Update Role, Chapters and Coordinators

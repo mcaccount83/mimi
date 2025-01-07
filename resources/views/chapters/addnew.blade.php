@@ -104,7 +104,7 @@
                             <option value="">Select Primary Coordinator</option>
                             @foreach($pcDetails as $coordinator)
                             <option value="{{ $coordinator['cid'] }}" data-region-id="{{ $coordinator['regid'] }}">
-                                {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
+                                {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
                                 </option>
                             @endforeach
                         </select>

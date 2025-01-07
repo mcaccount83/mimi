@@ -76,7 +76,7 @@
                                 <a href="mailto:{{ $list->president->email }}">{{ $list->president->email }}</a>
                             </td>
                             <td><span class="phone-mask">{{ $list->president->phone }}</span></td>
-                            <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
+                            <td>{{ $list->primaryCoordinator?->first_name }} {{ $list->primaryCoordinator?->last_name }}</td>
                         </tr>
                     @endforeach
                 </tbody>

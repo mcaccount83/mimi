@@ -1051,10 +1051,19 @@ class ChapterController extends Controller
             ->get();
 
         $pcDetails = $pcList->map(function ($coordinator) {
+            $cpos = $coordinator->displayPosition->short_title ?? '';
+            if (isset($coordinator->secondaryPosition->short_title)) {
+                $cpos = "({$cpos}/{$coordinator->secondaryPosition->short_title})";
+            } elseif ($cpos) {
+                $cpos = "({$cpos})";
+            }
+
             return [
                 'cid' => $coordinator->id,
                 'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'cpos' => $coordinator->displayPosition->short_title ?? 'No Position',
+                'dpos' => $coordinator->displayPosition->short_title ?? '',
+                'spos' => $coordinator->secondaryPosition->short_title ?? '',
+                'cpos' => $cpos,
                 'regid' => $coordinator->region_id,
             ];
         });
