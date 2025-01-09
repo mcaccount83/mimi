@@ -45,7 +45,7 @@ class PaymentsReRegChapterThankYou extends Mailable implements ShouldQueue
         return $this
             ->from('support@momsclub.org', 'MOMS Club')
             ->subject('Thank You for Your Re-Registration Payment')
-            ->markdown('emails.payments.reregchapterthankyou')
-            ->with('mailData', $this->mailData);
+            ->markdown('emails.payments.reregchapterthankyou');
+            // ->with('mailData', $this->mailData);
     }
 }

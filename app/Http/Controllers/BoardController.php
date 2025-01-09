@@ -88,7 +88,8 @@ class BoardController extends Controller
      */
     public function getChapterDetails($id)
     {
-        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'president', 'boards', 'reportReviewer'])->find($id);
+        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'president',
+            'boards', 'reportReviewer', 'primaryCoordinator'])->find($id);
         $chId = $chDetails->id;
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
@@ -128,6 +129,9 @@ class BoardController extends Controller
         $emailListChap = $emailData['emailListChap'];
         $emailListCoord = $emailData['emailListCoord'];
 
+        // PC Email for Sending Email
+        $pcEmail = $chDetails->primaryCoordinator->email;
+
         // Load Conference Coordinators for Sending Email
         $ccEmailData = $this->userController->loadConferenceCoord($chPcId);
         $cc_id = $ccEmailData['cc_id'];
@@ -137,7 +141,7 @@ class BoardController extends Controller
             'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'submitted' => $submitted,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,
-            'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards,
+            'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail
         ];
 
     }

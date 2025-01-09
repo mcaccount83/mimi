@@ -20,92 +20,120 @@ use net\authorize\api\controller as AnetController;
 class PaymentController extends Controller
 {
     protected $userController;
+    protected $boardController;
 
-    public function __construct(UserController $userController)
+    public function __construct(UserController $userController, BoardController $boardController)
     {
         $this->middleware('auth')->except('logout');
         $this->userController = $userController;
+        $this->boardController = $boardController;
     }
 
-    public function processPayment(Request $request): RedirectResponse
+    public function reRegistrationPayment(Request $request): RedirectResponse
     {
-        $borDetails = User::find($request->user()->id)->board;
-        $chapterId = $borDetails['chapter_id'];
+        $paymentResponse = $this->processPayment($request);
 
-        $chapterDetails = Chapters::find($chapterId);
-        $chapterState = DB::table('state')
-            ->select('state_short_name')
-            ->where('id', '=', $chapterDetails->state)
-            ->get();
-        $chapterState = $chapterState[0]->state_short_name;
-        $chapterName = $chapterDetails['name'];
-        $chConf = $chapterDetails['conference'];
-        $chPcid = $chapterDetails['primary_coordinator_id'];
+        if ($paymentResponse['success']) {
+            $baseQuery = $this->boardController->getChapterDetails($request->user()->board->chapter_id);
+            $chapterDetails = $baseQuery['chDetails'];
+            $chapterState = $baseQuery['stateShortName'];
+            $presDetails = $baseQuery['PresDetails'];
+            $emailListChap = $baseQuery['emailListChap'];
+            $emailCC = $baseQuery['emailCC'];
+            $pcEmail = $baseQuery['pcEmail'];
+            $AdminEmail = 'dragonmom@msn.com';
 
-        $presDetails = DB::table('boards as bd')
-            ->select('bd.chapter_id as chapter_id', 'bd.board_position_id as board_position_id', 'bd.first_name as first_name', 'bd.last_name as last_name',
-                'bd.street_address as street_address', 'bd.city as city', 'bd.state as state', 'bd.zip as zip')
-            ->where('bd.chapter_id', '=', $chapterId)
-            ->where('bd.board_position_id', '=', 1)
-            ->first();
+            $rereg = $request->input('rereg');
+            $donation = $request->input('sustaining');
+
+            // Update chapter record
+            $existingRecord = Chapters::where('id', $chapterDetails->id)->first();
+            $existingRecord->members_paid_for = $request->input('members');
+            $existingRecord->next_renewal_year = $chapterDetails->next_renewal_year + 1;
+            $existingRecord->dues_last_paid = Carbon::today();
+            $existingRecord->save();
+
+            // Send Chepter email
+            if ($rereg){
+                $mailData = [
+                    'chapterName' => $chapterDetails->name,
+                    'chapterState' => $chapterState,
+                    'chapterMembers' => $request->input('members'),
+                    'chapterDate' => Carbon::today()->format('m-d-Y'),
+                ];
+
+                Mail::to($emailListChap)
+                    ->cc($pcEmail)
+                    ->queue(new PaymentsReRegChapterThankYou($mailData));
+                }
+
+            // Update Record and Send Chepter email
+            if($donation){
+                $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+                $existingRecord->sustaining_donation = $sustaining;
+                $existingRecord->sustaining_date = Carbon::today();
+                $existingRecord->save();
+
+                $mailData = [
+                    'chapterName' => $chapterDetails->name,
+                    'chapterState' => $chapterState,
+                    'chapterTotal' => $sustaining,
+                ];
+
+                Mail::to($emailListChap)
+                    ->cc($pcEmail)
+                    ->queue(new PaymentsSustainingChapterThankYou($mailData));
+            }
+
+            // Send Admin email
+            $mailData = [
+                'chapterName' => $chapterDetails->name,
+                'chapterState' => $chapterState,
+                'pres_fname' => $presDetails->first_name,
+                'pres_lname' => $presDetails->last_name,
+                'pres_street' => $presDetails->street_address,
+                'pres_city' => $presDetails->city,
+                'pres_state' => $presDetails->state,
+                'pres_zip' => $presDetails->zip,
+                'members' => $request->input('members'),
+                'late' => $request->input('late'),
+                'sustaining' => $request->input('sustaining'),
+                'reregTotal' => $request->input('rereg'),
+                'processing' => $request->input('fee'),
+                'totalPaid' => $request->input('total'),
+                'fname' => $request->input('first_name'),
+                'lname' => $request->input('last_name'),
+                'email' => $request->input('email'),
+                'chapterId' => $chapterDetails->id,
+                'invoice' => $paymentResponse['data']['invoiceNumber'],
+                'datePaid' => Carbon::today()->format('m-d-Y'),
+            ];
+
+            Mail::to([$emailCC, $AdminEmail])
+                ->queue(new PaymentsReRegOnline($mailData));
+
+            return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
+        }
+
+        return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
+    }
+
+
+    public function processPayment(Request $request): array
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $bdDetails = $request->user()->board;
+        $bdId = $bdDetails->id;
+        $chapterId = $bdDetails->chapter_id;
+
+        $baseQuery = $this->boardController->getChapterDetails($chapterId);
+        $chapterDetails = $baseQuery['chDetails'];
+        $chapterState = $baseQuery['stateShortName'];
+        $chapterName = $chapterDetails->name;
 
         $company = $chapterName.', '.$chapterState;
-        $next_renewal_year = $chapterDetails['next_renewal_year'];
-
-        $chapterEmailList = DB::table('boards as bd')
-            ->select('bd.email as bor_email')
-            ->where('bd.chapter_id', '=', $chapterId)
-            ->get();
-        $emailListBoard = '';
-        foreach ($chapterEmailList as $val) {
-            $email = $val->bor_email;
-            $escaped_email = str_replace("'", "\\'", $email);
-            if ($emailListBoard == '') {
-                $emailListBoard = $escaped_email;
-            } else {
-                $emailListBoard .= ','.$escaped_email;
-            }
-        }
-
-        $corDetails = DB::table('coordinators')
-            ->select('email')
-            ->where('id', $chapterDetails->primary_coordinator_id)
-            ->first();
-        $cor_pcemail = $corDetails->email;
-
-        $coordinatorEmailList = DB::table('coordinator_reporting_tree')
-            ->select('*')
-            ->where('id', '=', $chPcid)
-            ->get();
-
-        foreach ($coordinatorEmailList as $key => $value) {
-            $coordinatorList[$key] = (array) $value;
-        }
-        $filterCoordinatorList = array_filter($coordinatorList[0]);
-        unset($filterCoordinatorList['id']);
-        unset($filterCoordinatorList['layer0']);
-        $filterCoordinatorList = array_reverse($filterCoordinatorList);
-        $str = '';
-        $array_rows = count($filterCoordinatorList);
-        $i = 0;
-
-        $emailListCoor = '';
-        foreach ($filterCoordinatorList as $key => $val) {
-            if ($val > 1) {
-                $corList = DB::table('coordinators as cd')
-                    ->select('cd.email as cord_email')
-                    ->where('cd.id', '=', $val)
-                    ->where('cd.is_active', '=', 1)
-                    ->get();
-                if (count($corList) > 0) {
-                    if ($emailListCoor == '') {
-                        $emailListCoor = $corList[0]->cord_email;
-                    } else {
-                        $emailListCoor .= ','.$corList[0]->cord_email;
-                    }
-                }
-            }
-        }
 
         $members = $request->input('members');
         $late = $request->input('late');
@@ -126,15 +154,6 @@ class PaymentController extends Controller
         $total = $request->input('total');
         $amount = (float) preg_replace('/[^\d.]/', '', $total);
         $today = Carbon::today()->format('m-d-Y');
-
-        // Call the load_coordinators function
-        // $coordinatorData = $this->load_coordinators($chapterId, $chConf, $chPcid);
-        // $ConfCoorEmail = $coordinatorData['ConfCoorEmail'];
-        // $coordinator_array = $coordinatorData['coordinator_array'];
-
-        // Load Conference Coordinators for Sending Email
-        $ccEmailData = $this->userController->loadConferenceCoord($chPcid);
-        $emailCC = $ccEmailData['cc_email'];
 
         /* Create a merchantAuthenticationType object with authentication details
             retrieved from the constants file */
@@ -185,8 +204,7 @@ class PaymentController extends Controller
         $duplicateWindowSetting->setSettingName('duplicateWindow');
         $duplicateWindowSetting->setSettingValue('60');
 
-        // Add some merchant defined fields. These fields won't be stored with the transaction,
-        // but will be echoed back in the response.
+        // Add some merchant defined fields. These fields won't be stored with the transaction, but will be echoed back in the response.
         $merchantDefinedField1 = new AnetAPI\UserFieldType;
         $merchantDefinedField1->setName('MemberCount');
         $merchantDefinedField1->setValue($members);
@@ -219,187 +237,70 @@ class PaymentController extends Controller
         $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
 
         if ($response != null) {
-            // Check to see if the API request was successfully received and acted upon
             if ($response->getMessages()->getResultCode() == 'Ok') {
-                // Since the API request was successful, look for a transaction response and parse it to display the results of authorizing the card
                 /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
                 $tresponse = $response->getTransactionResponse();
                 if ($tresponse != null && $tresponse->getMessages() != null) {
-
-                    $mailData = [
-                        'chapterName' => $chapterName,
-                        'chapterState' => $chapterState,
-                        'pres_fname' => $presDetails->first_name,
-                        'pres_lname' => $presDetails->last_name,
-                        'pres_street' => $presDetails->street_address,
-                        'pres_city' => $presDetails->city,
-                        'pres_state' => $presDetails->state,
-                        'pres_zip' => $presDetails->zip,
-                        'members' => $members,
-                        'late' => $late,
-                        'sustaining' => $donation,
-                        'reregTotal' => $rereg,
-                        'processing' => $fee,
-                        'totalPaid' => $total,
-                        'fname' => $first,
-                        'lname' => $last,
-                        'email' => $email,
-                        'chapterId' => $chapterId,
-                        'invoice' => $randomInvoiceNumber,
-                        'datePaid' => $today,
-                        'chapterMembers' => $members,
-                        'chapterDate' => Carbon::today()->format('m-d-Y'),
-                        'chapterTotal' => $sustaining,
+                    return [
+                        'success' => true,
+                        'data' => [
+                            'transactionId' => $tresponse->getTransId(),
+                            'invoiceNumber' => $randomInvoiceNumber,
+                        ]
                     ];
-
-                    $to_email = $email;
-                    $to_email2 = explode(',', $emailListBoard);
-                    $to_email3 = $cor_pcemail;
-                    $to_email4 = explode(',', $emailListCoor);
-                    $to_email5 = $emailCC;
-                    $to_email6 = 'dragonmom@msn.com';
-
-                    $existingRecord = Chapters::where('id', $chapterId)->first();
-                    $existingRecord->members_paid_for = $members;
-                    $existingRecord->next_renewal_year = $next_renewal_year + 1;
-                    $existingRecord->dues_last_paid = Carbon::today();
-
-                    Mail::to([$to_email])
-                        ->cc($to_email3)
-                        ->queue(new PaymentsReRegChapterThankYou($mailData));
-
-                    Mail::to([$to_email5, $to_email6])
-                        ->queue(new PaymentsReRegOnline($mailData));
-
-                    if ($sustaining > 0.00) {
-                        $existingRecord->sustaining_donation = $sustaining;
-                        $existingRecord->sustaining_date = Carbon::today();
-
-                        Mail::to([$to_email])
-                            ->cc($to_email3)
-                            ->queue(new PaymentsSustainingChapterThankYou($mailData));
-                    }
-                    $existingRecord->save();
-
-                    // Success notification
-                    return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
-                    // return redirect()->route('home')->with('success', 'Payment successful! Transaction ID: ' . $tresponse->getTransId());
-                } else {
-                    // Transaction failed
-                    $error_message = 'Transaction Failed';
-                    if ($tresponse->getErrors() != null) {
-                        $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
-                        $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
-                    }
-
-                    return redirect()->to('/board/reregpayment')->with('fail', $error_message);
-                }
-
-                // Or, print errors if the API request wasn't successful
-            } else {
-                // Transaction Failed
-                /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
-                $tresponse = $response->getTransactionResponse();
-
-                if ($tresponse != null && $tresponse->getErrors() != null) {
-                    $error_message = 'Transaction Failed';
-                    $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
-                    $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
-
-                    return redirect()->back()->with('fail', $error_message);
-                } else {
-                    $error_message = 'Transaction Failed';
-                    $error_message .= "\n Error Code: ".$response->getMessages()->getMessage()[0]->getCode();
-                    $error_message .= "\n Error Message: ".$response->getMessages()->getMessage()[0]->getText();
-
-                    return redirect()->to('/board/reregpayment')->with('fail', $error_message);
                 }
             }
+
+            // Handle errors
+            /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
+            $tresponse = $response->getTransactionResponse();
+            if ($tresponse != null && $tresponse->getErrors() != null) {
+                $error_message = 'Transaction Failed';
+                $error_message .= "\n Error Code: " . $tresponse->getErrors()[0]->getErrorCode();
+                $error_message .= "\n Error Message: " . $tresponse->getErrors()[0]->getErrorText();
+            } else {
+                $error_message = 'Transaction Failed';
+                $error_message .= "\n Error Code: " . $response->getMessages()->getMessage()[0]->getCode();
+                $error_message .= "\n Error Message: " . $response->getMessages()->getMessage()[0]->getText();
+            }
         } else {
-            // No response returned
-            return redirect()->to('/board/reregpayment')->with('fail', 'No response returned');
+            $error_message = 'No response returned';
         }
+
+        return [
+            'success' => false,
+            'error' => $error_message
+        ];
     }
+
+
 
     public function processDonation(Request $request): RedirectResponse
     {
-        $borDetails = User::find($request->user()->id)->board;
-        $chapterId = $borDetails['chapter_id'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        $chapterDetails = Chapters::find($chapterId);
-        $chapterState = DB::table('state')
-            ->select('state_short_name')
-            ->where('id', '=', $chapterDetails->state)
-            ->get();
-        $chapterState = $chapterState[0]->state_short_name;
-        $chapterName = $chapterDetails['name'];
-        $chConf = $chapterDetails['conference'];
-        $chPcid = $chapterDetails['primary_coordinator_id'];
+        $bdDetails = $request->user()->board;
+        $bdId = $bdDetails->id;
+        $chapterId = $bdDetails->chapter_id;
 
-        $presDetails = DB::table('boards as bd')
-            ->select('bd.chapter_id as chapter_id', 'bd.board_position_id as board_position_id', 'bd.first_name as first_name', 'bd.last_name as last_name',
-                'bd.street_address as street_address', 'bd.city as city', 'bd.state as state', 'bd.zip as zip')
-            ->where('bd.chapter_id', '=', $chapterId)
-            ->where('bd.board_position_id', '=', 1)
-            ->first();
+        $baseQuery = $this->boardController->getChapterDetails($chapterId);
+        $chapterDetails = $baseQuery['chDetails'];
+        $chapterState = $baseQuery['stateShortName'];
+        $chapterName = $chapterDetails->name;
+        $chConf = $chapterDetails->conference_id;
+        $chPcid = $chapterDetails->primary_coordinator_id;
+
+        $presDetails = $baseQuery['PresDetails'];
 
         $company = $chapterName.', '.$chapterState;
-        $next_renewal_year = $chapterDetails['next_renewal_year'];
+        $next_renewal_year = $chapterDetails->next_renewal_year;
 
-        $chapterEmailList = DB::table('boards as bd')
-            ->select('bd.email as bor_email')
-            ->where('bd.chapter_id', '=', $chapterId)
-            ->get();
-        $emailListBoard = '';
-        foreach ($chapterEmailList as $val) {
-            $email = $val->bor_email;
-            $escaped_email = str_replace("'", "\\'", $email);
-            if ($emailListBoard == '') {
-                $emailListBoard = $escaped_email;
-            } else {
-                $emailListBoard .= ','.$escaped_email;
-            }
-        }
-
-        $corDetails = DB::table('coordinators')
-            ->select('email')
-            ->where('id', $chapterDetails->primary_coordinator_id)
-            ->first();
-        $cor_pcemail = $corDetails->email;
-
-        $coordinatorEmailList = DB::table('coordinator_reporting_tree')
-            ->select('*')
-            ->where('id', '=', $chPcid)
-            ->get();
-
-        foreach ($coordinatorEmailList as $key => $value) {
-            $coordinatorList[$key] = (array) $value;
-        }
-        $filterCoordinatorList = array_filter($coordinatorList[0]);
-        unset($filterCoordinatorList['id']);
-        unset($filterCoordinatorList['layer0']);
-        $filterCoordinatorList = array_reverse($filterCoordinatorList);
-        $str = '';
-        $array_rows = count($filterCoordinatorList);
-        $i = 0;
-
-        $emailListCoor = '';
-        foreach ($filterCoordinatorList as $key => $val) {
-            if ($val > 1) {
-                $corList = DB::table('coordinators as cd')
-                    ->select('cd.email as cord_email')
-                    ->where('cd.id', '=', $val)
-                    ->where('cd.is_active', '=', 1)
-                    ->get();
-                if (count($corList) > 0) {
-                    if ($emailListCoor == '') {
-                        $emailListCoor = $corList[0]->cord_email;
-                    } else {
-                        $emailListCoor .= ','.$corList[0]->cord_email;
-                    }
-                }
-            }
-        }
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailListCoord = $baseQuery['emailListCoord'];
+        $emailCC = $baseQuery['emailCC'];
+        $pcEmail = $baseQuery['pcEmail'];
+        $AdminEmail = 'dragonmom@msn.com';
 
         $m2mdonation = $request->input('donation');
         $donation = (float) preg_replace('/[^\d.]/', '', $m2mdonation);
@@ -417,15 +318,6 @@ class PaymentController extends Controller
         $total = $request->input('total');
         $amount = (float) preg_replace('/[^\d.]/', '', $total);
         $today = Carbon::today()->format('m-d-Y');
-
-        // Call the load_coordinators function
-        // $coordinatorData = $this->load_coordinators($chapterId, $chConf, $chPcid);
-        // $ConfCoorEmail = $coordinatorData['ConfCoorEmail'];
-        // $coordinator_array = $coordinatorData['coordinator_array'];
-
-        // Load Conference Coordinators for Sending Email
-        $ccEmailData = $this->userController->loadConferenceCoord($chPcid);
-        $emailCC = $ccEmailData['cc_email'];
 
         /* Create a merchantAuthenticationType object with authentication details
             retrieved from the constants file */
@@ -537,24 +429,24 @@ class PaymentController extends Controller
                         'chapterAmount' => $donation,
                     ];
 
-                    $to_email = $email;
-                    $to_email2 = explode(',', $emailListBoard);
-                    $to_email3 = $cor_pcemail;
-                    $to_email4 = explode(',', $emailListCoor);
-                    $to_email5 = $emailCC;
-                    $to_email6 = 'dragonmom@msn.com';
+                    // $to_email = $email;
+                    // $to_email2 = explode(',', $emailListBoard);
+                    // $to_email3 = $cor_pcemail;
+                    // $to_email4 = explode(',', $emailListCoor);
+                    // $to_email5 = $emailCC;
+                    // $to_email6 = 'dragonmom@msn.com';
 
                     $existingRecord = Chapters::where('id', $chapterId)->first();
 
-                    Mail::to([$to_email5, $to_email6])
+                    Mail::to([$emailCC, $AdminEmail])
                         ->queue(new PaymentsM2MOnline($mailData));
 
                     if ($donation > 0.00) {
                         $existingRecord->m2m_payment = $donation;
                         $existingRecord->m2m_date = Carbon::today();
 
-                        Mail::to([$to_email])
-                            ->cc($to_email3)
+                        Mail::to([$emailListChap])
+                            ->cc($pcEmail)
                             ->queue(new PaymentsM2MChapterThankYou($mailData));
                     }
                     $existingRecord->save();

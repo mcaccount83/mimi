@@ -123,7 +123,7 @@ Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoing
 // Route::post('/adminreports/updateoutgoingboard', [AdminController::class, 'updateOutgoingBoard'])->name('admin.updateoutgoingboard');
 
 // Payment Controller Routes...
-Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('process.payment');
+Route::post('/process-payment', [PaymentController::class, 'reRegistrationPayment'])->name('process.payment');
 Route::post('/process-donation', [PaymentController::class, 'processDonation'])->name('process.donation');
 
 // PDF Controller Routes...
