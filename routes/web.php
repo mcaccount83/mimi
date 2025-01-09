@@ -124,7 +124,7 @@ Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoing
 
 // Payment Controller Routes...
 Route::post('/process-payment', [PaymentController::class, 'reRegistrationPayment'])->name('process.payment');
-Route::post('/process-donation', [PaymentController::class, 'processDonation'])->name('process.donation');
+Route::post('/process-donation', [PaymentController::class, 'm2mPayment'])->name('process.donation');
 
 // PDF Controller Routes...
 Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
