@@ -8,6 +8,7 @@ use App\Mail\ProbationPartyLetter;
 use App\Mail\ProbationReleaseLetter;
 use App\Mail\WarningPartyLetter;
 use App\Models\Chapters;
+use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -224,58 +225,66 @@ class PDFController extends Controller
     }
 
     /**
-     * Generate Disband Letter
+     * Save & Send Disband Letter
      */
-    public function generateDisbandLetter($chapterId)
+    public function generateAndSaveDisbandLetter($chapterId)
     {
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
-                'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
-                'bd.zip as pres_zip', 'chapters.conference_id as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->where('bd.board_position_id', '=', '1')
-            ->where('chapters.id', '=', $chapterId)
-            ->get();
+        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])->find($chapterId);
+        $stateShortName = $chDetails->state->state_short_name;
+        $chPcId = $chDetails->primary_coordinator_id;
 
-        // Load Conference Coordinators for Signing Letter
-        $chName = $chapterDetails[0]->chapter_name;
-        $chState = $chapterDetails[0]->state;
-        $chConf = $chapterDetails[0]->conf;
-        $chPcid = $chapterDetails[0]->pcid;
+        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+        $disbandDrive = DB::table('google_drive')->value('disband_letter');
+        $sharedDriveId = $disbandDrive;
 
-        $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
-        $cc_fname = $coordinatorData['cc_fname'];
-        $cc_lname = $coordinatorData['cc_lname'];
-        $cc_pos = $coordinatorData['cc_pos'];
+        $boards = $chDetails->boards()->get();
+        $borDetails = $boards->groupBy('board_position_id');
+        $presDetails = $borDetails->get(1)->first(); // President
 
-        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chapterDetails[0]->chapter_name);
+        // Load Board and Coordinators for Sending Email
+        $emailData = $this->userController->loadEmailDetails($chapterId);
+        $emailListChap = $emailData['emailListChap'];
+        $emailListCoord = $emailData['emailListCoord'];
+
+        // Load Conference Coordinators for Sending Email
+        $ccData = $this->userController->loadConferenceCoord($chPcId);
+        $emailCC = $ccData['cc_email'];
+        $cc_fname = $ccData['cc_fname'];
+        $cc_lname = $ccData['cc_lname'];
+        $cc_pos = $ccData['cc_pos'];
 
         $pdfData = [
-            'chapter_name' => $chapterDetails[0]->chapter_name,
-            'state' => $chapterDetails[0]->state,
-            'conf_name' => $chapterDetails[0]->conf_name,
-            'conf_desc' => $chapterDetails[0]->conf_desc,
-            'pres_fname' => $chapterDetails[0]->pres_fname,
-            'pres_lname' => $chapterDetails[0]->pres_lname,
-            'pres_addr' => $chapterDetails[0]->pres_addr,
-            'pres_city' => $chapterDetails[0]->pres_city,
-            'pres_state' => $chapterDetails[0]->pres_state,
-            'pres_zip' => $chapterDetails[0]->pres_zip,
-            'cc_fname' => $cc_fname,
-            'cc_lname' => $cc_lname,
-            'cc_pos' => $cc_pos,
+            'chapter_name' => $chDetails->chapter_name,
+            'state' => $stateShortName,
+            'pres_fname' => $presDetails->first_name,
+            'pres_lname' => $presDetails->last_name,
+            'pres_addr' => $presDetails->street_address,
+            'pres_city' => $presDetails->city,
+            'pres_state' => $presDetails->state,
+            'pres_zip' => $presDetails->zip,
+            'cc_fname' => $ccData['cc_fname'],
+            'cc_lname' => $ccData['cc_lname'],
+            'cc_pos' => $ccData['cc_pos'],
+            'conf_name' => $ccData['cc_conf_name'],
+            'conf_desc' => $ccData['cc_conf_desc'],
             'ch_name' => $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
 
-        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['ch_name'].'_Disband_Letter.pdf';
+        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
+        $filename = $pdfData['state'].'_'.$chapterName.'_Disband_Letter.pdf'; // Use sanitized chapter name
 
-        return $pdf->stream($filename, ['Attachment' => 0]); // Stream the PDF
+        $pdfPath = storage_path('app/pdf_reports/'.$filename);
+        $pdf->save($pdfPath);
 
+        if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)){
+            $documents = Documents::find($chapterId);
+            $documents->disband_letter_path = $pdfPath;
+            $documents->save();
+
+            return $pdfPath;  // Return the full local stored path
+        }
     }
 
     /**
@@ -285,6 +294,8 @@ class PDFController extends Controller
     {
         $chapterId = $request->chapterId;
         $letterType = $request->letterType;
+        $probationDrive = DB::table('google_drive')->value('probation_letter');
+        $sharedDriveId = $probationDrive;
 
         switch ($letterType) {
             case 'no_report':
@@ -313,7 +324,7 @@ class PDFController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$filename);
         $pdf->save($pdfPath);
 
-        if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId)) {
+        if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)) {
             $chDetails = Chapters::with(['state', 'documents'])->find($chapterId);
             $document = $chDetails->documents;
             $stateShortName = $chDetails->state->state_short_name;
@@ -393,7 +404,7 @@ class PDFController extends Controller
     /**
      * Generate Probation Letter
      */
-    public function generateProbationLetter(Request $request, $chapterId, $type)
+    public function generateProbationLetter(Request $chapterId, $type)
     {
         $chDetails = Chapters::with(['state', 'boards'])->find($chapterId);
         $stateShortName = $chDetails->state->state_short_name;
@@ -439,9 +450,9 @@ class PDFController extends Controller
 
         $filename = $pdfData['state'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
 
-        if ($request->has('stream')) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
-        }
+        // if ($request->has('stream')) {
+        //     return $pdf->stream($filename, ['Attachment' => 0]);
+        // }
 
         return [
             'pdf' => $pdf,
@@ -452,13 +463,10 @@ class PDFController extends Controller
     /**
      * Upload PDF to Google Drive
      */
-    private function uploadToGoogleDrive($pdfPath, &$pdfFileId)
+    private function uploadToGoogleDrive($pdfPath, &$pdfFileId, $sharedDriveId)
     {
         $googleClient = new Client;
         $accessToken = $this->token();
-
-        $probationDrive = DB::table('google_drive')->value('probation_letter');
-        $sharedDriveId = $probationDrive;
 
         $filename = basename($pdfPath);
         $fileMetadata = [

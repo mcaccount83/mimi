@@ -294,15 +294,26 @@ class UserController extends Controller
      /**
      * Load Reports To Dropdown List
      */
-    public function loadReportsToList($cdConfId, $cdPositionid)
+    public function loadReportsToList($cdId, $cdConfId, $cdPositionid)
     {
-        $rcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
-            ->where('conference_id', $cdConfId)
-            ->whereBetween('position_id', [3, 7])
-            ->where('position_id', '>=', $cdPositionid)
-            ->where('is_active', 1)
-            ->where('on_leave', '!=', '1')
-            ->get();
+        if ($cdConfId == 0 || $cdPositionid == 7){
+            $rcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
+                ->where('position_id', '>', 7)
+                ->where('position_id', '>=', $cdPositionid)
+                ->where('id', '!=', $cdId)
+                ->where('is_active', 1)
+                ->where('on_leave', '!=', '1')
+                ->get();
+        }else{
+            $rcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
+                ->where('conference_id', $cdConfId)
+                ->whereBetween('position_id', [3, 7])
+                ->where('position_id', '>=', $cdPositionid)
+                ->where('id', '!=', $cdId)
+                ->where('is_active', 1)
+                ->where('on_leave', '!=', '1')
+                ->get();
+        }
 
         $rcDetails = $rcList->map(function ($coordinator) {
             $cpos = $coordinator->displayPosition->short_title ?? '';
@@ -317,6 +328,7 @@ class UserController extends Controller
                 'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
                 'dpos' => $coordinator->displayPosition->short_title ?? '',
                 'spos' => $coordinator->secondaryPosition->short_title ?? '',
+                'posid' => $coordinator->position_id,
                 'cpos' => $cpos,
                 'regid' => $coordinator->region_id,
             ];
@@ -330,39 +342,40 @@ class UserController extends Controller
      /**
      * Load Direct Reports To Dropdown List
      */
-    public function loadDirectReportsList($cdConfId, $cdPositionid)
-    {
-        $drList = Coordinators::with(['displayPosition', 'secondaryPosition'])
-            ->where('conference_id', $cdConfId)
-            ->whereBetween('position_id', [1, 6])
-            ->where('position_id', '<=', $cdPositionid)
-            ->where('is_active', 1)
-            ->where('on_leave', '!=', '1')
-            ->get();
+    // public function loadDirectReportsList($cdId, $cdConfId, $cdPositionid)
+    // {
+    //     $drList = Coordinators::with(['displayPosition', 'secondaryPosition'])
+    //         ->where('conference_id', $cdConfId)
+    //         ->whereBetween('position_id', [1, 6])
+    //         ->where('position_id', '<=', $cdPositionid)
+    //         ->where('id', '!=', $cdId)
+    //         ->where('report_id', $cdId)
+    //         ->where('is_active', 1)
+    //         ->where('on_leave', '!=', '1')
+    //         ->get();
 
-        $drDetails = $drList->map(function ($coordinator) {
-            $cpos = $coordinator->displayPosition->short_title ?? '';
-            if (isset($coordinator->secondaryPosition->short_title)) {
-                $cpos = "({$cpos}/{$coordinator->secondaryPosition->short_title})";
-            } elseif ($cpos) {
-                $cpos = "({$cpos})";
-            }
+    //     $drDetails = $drList->map(function ($coordinator) {
+    //         $cpos = $coordinator->displayPosition->short_title ?? '';
+    //         if (isset($coordinator->secondaryPosition->short_title)) {
+    //             $cpos = "({$cpos}/{$coordinator->secondaryPosition->short_title})";
+    //         } elseif ($cpos) {
+    //             $cpos = "({$cpos})";
+    //         }
 
-            return [
-                'cid' => $coordinator->id,
-                'rptid' => $coordinator->report_id,
-                'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'dpos' => $coordinator->displayPosition->short_title ?? '',
-                'spos' => $coordinator->secondaryPosition->short_title ?? '',
-                'cpos' => $cpos,
-                'regid' => $coordinator->region_id,
-            ];
-        });
+    //         return [
+    //             'cid' => $coordinator->id,
+    //             'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
+    //             'dpos' => $coordinator->displayPosition->short_title ?? '',
+    //             'spos' => $coordinator->secondaryPosition->short_title ?? '',
+    //             'cpos' => $cpos,
+    //             'regid' => $coordinator->region_id,
+    //         ];
+    //     });
 
-        $drDetails = $drDetails->unique('cid');  // Remove duplicates based on the 'cid' field
+    //     $drDetails = $drDetails->unique('cid');  // Remove duplicates based on the 'cid' field
 
-        return $drDetails; // Return all coordinators as a collection
-    }
+    //     return $drDetails; // Return all coordinators as a collection
+    // }
 
 
 

@@ -49,7 +49,7 @@ class BoardController extends Controller
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndBoard::class);
         $this->userController = $userController;
-        $this->pdfController = $pdfController;  // Note the consistent naming
+        $this->pdfController = $pdfController;
     }
 
     /**

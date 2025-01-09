@@ -21,48 +21,48 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">{{ $coordinatorDetails[0]->first_name }}, {{ $coordinatorDetails[0]->last_name }}</h3>
-                  <p class="text-center">{{ $coordinatorDetails[0]->confname }} Conference
-                      @if ($coordinatorDetails[0]->regname != "None")
-                      , {{ $coordinatorDetails[0]->regname }} Region
+                  <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                  <p class="text-center">{{ $conferenceDescription }} Conference
+                      @if ($regionLongName != "None")
+                      , {{ $regionLongName }} Region
                       @else
                       @endif
                   </p>
                   <ul class="list-group list-group-unbordered mb-3">
                       <li class="list-group-item">
-                          <b>Supervising Coordinator:</b> <span class="float-right"><a href="mailto:{{ $coordinatorDetails[0]->report_email }}">{{ $coordinatorDetails[0]->report_fname }} {{ $coordinatorDetails[0]->report_lname }}</a></span>
+                          <b>Supervising Coordinator:</b> <span class="float-right"><a href="mailto:{{ $cdDetails->reportsTo->email }}">{{ $ReportTo }} </a></span>
                           <br>
-                          <b>Primary Position:</b> <span class="float-right">{{ $coordinatorDetails[0]->display_position }}</span>
+                          <b>Primary Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
                           <br>
-                          <b>Secondary Position:</b> <span class="float-right">{{ $coordinatorDetails[0]->sec_position }}</span>
+                          <b>Secondary Position:</b> <span class="float-right">{{ $secondaryPosition->long_title }}</span>
 
                       </li>
                       <li class="list-group-item">
-                          <b>Start Date:</b> <span class="float-right date-mask">{{ $coordinatorDetails[0]->coordinator_start_date }}</span>
+                          <b>Start Date:</b> <span class="float-right date-mask">{{ $cdDetails->coordinator_start_date }}</span>
                           <br>
-                          <b>Last Promotion Date:</b> <span class="float-right date-mask">{{ $coordinatorDetails[0]->last_promoted }}</span>
+                          <b>Last Promotion Date:</b> <span class="float-right date-mask">{{ $cdDetails->last_promoted }}</span>
                           <br>
-                          <b>Home Chapter:</b><span class="float-right">{{ $coordinatorDetails[0]->home_chapter }}</span>
+                          <b>Home Chapter:</b><span class="float-right">{{ $cdDetails->home_chapter }}</span>
                           <br>
                       </li>
                       <li class="list-group-item">
-                        <b>Birthday:</b><span class="float-right">{{$coordinatorDetails[0]->birthday_month}} {{$coordinatorDetails[0]->birthday_day}}</span>
+                        <b>Birthday:</b><span class="float-right">{{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}</span>
                         <br>
-                        <b>Email:</b><span class="float-right"><a href="mailto:{{ $coordinatorDetails[0]->email }}">{{ $coordinatorDetails[0]->email }}</a></span>
-                        @if ($coordinatorDetails[0]->sec_email != null )
+                        <b>Email:</b><span class="float-right"><a href="mailto:{{ $cdDetails->email }}">{{ $cdDetails->email }}</a></span>
+                        @if ($cdDetails->sec_email != null )
                         <br>
-                        <b>Secondary Email:</b><span class="float-right"><a href="mailto:{{ $coordinatorDetails[0]->sec_email }}">{{ $coordinatorDetails[0]->sec_email }}</a></span>
+                        <b>Secondary Email:</b><span class="float-right"><a href="mailto:{{ $cdDetails->sec_email }}">{{ $cdDetails->sec_email }}</a></span>
                         @endif
                         <br>
-                        <b>Phone:</b><span class="phone-mask float-right">{{$coordinatorDetails[0]->phone }}</span>
-                        @if ($coordinatorDetails[0]->alt_phone != null )
+                        <b>Phone:</b><span class="phone-mask float-right">{{$cdDetails->phone }}</span>
+                        @if ($cdDetails->alt_phone != null )
                         <br>
-                        <b>Atl Phone:</b><span class="phone-mask float-right">{{$coordinatorDetails[0]->alt_phone }}</span>
+                        <b>Atl Phone:</b><span class="phone-mask float-right">{{$cdDetails->alt_phone }}</span>
                         @endif
                         <br>
-                        <b>Address:</b><span class="float-right">{{$coordinatorDetails[0]->address}}
+                        <b>Address:</b><span class="float-right">{{$cdDetails->address}}
                         <br>
-                        {{$coordinatorDetails[0]->city}},{{$coordinatorDetails[0]->state}}&nbsp;{{$coordinatorDetails[0]->zip}}</span>
+                        {{$cdDetails->city}},{{$cdDetails->state}}&nbsp;{{$cdDetails->zip}}</span>
                       </li>
                     </ul>
                 </div>
@@ -80,11 +80,11 @@
                         <div class="row">
                             <div class="col-sm-6">
 							<div class="form-group">
-							    <label class="mrg-b-25">Coordinators Directly Reporting to {{ $coordinatorDetails[0]->first_name }}:</label>
+							    <label class="mrg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
 
                                 <table id="coordinator-list" width="100%">
                                     <thead>
-                                        @if($directReportTo->isEmpty())
+                                        @if($drList->isEmpty())
                                             <tr>
                                                 <td colspan="3" class="text-center">No Coordinators Found</td>
                                             </tr>
@@ -96,11 +96,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($directReportTo as $coordinator)
+                                        @foreach($drList as $coordinator)
                                             <tr>
-                                                <td>{{ $coordinator->cor_f_name }}</td>
-                                                <td>{{ $coordinator->cor_l_name }}</td>
-                                                <td>{{ $coordinator->pos }}</td>
+                                                <td>{{ $coordinator->first_name }}</td>
+                                                <td>{{ $coordinator->last_name }}</td>
+                                                <td>{{ $coordinator->displayPosition->short_title }}</td>
                                             </tr>
                                         @endforeach
                                         @endif
@@ -111,10 +111,10 @@
 
 						<div class="col-sm-6">
 							<div class="form-group">
-                                <label class="mrg-b-25">{{ $coordinatorDetails[0]->first_name }} is Primary Coordinator For:</label>
+                                <label class="mrg-b-25">{{ $cdDetails->first_name }} is Primary Coordinator For:</label>
                                     <table id="coordinator-list" width="100%">
                                         <thead>
-                                            @if($directChapterTo->isEmpty())
+                                            @if($chList->isEmpty())
                                                 <tr>
                                                     <td colspan="2" class="text-center">No Chapters Found</td>
                                                 </tr>
@@ -125,10 +125,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($directChapterTo as $chapter)
+                                            @foreach($chList as $chapter)
                                                 <tr>
-                                                    <td>{{ $chapter->st_name }}</td>
-                                                    <td>{{ $chapter->ch_name }}</td>
+                                                    <td>{{ $chapter->state->state_short_name }}</td>
+                                                    <td>{{ $chapter->name }}</td>
                                                 </tr>
                                             @endforeach
                                             @endif

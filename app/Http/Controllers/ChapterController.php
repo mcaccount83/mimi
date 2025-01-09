@@ -50,11 +50,15 @@ class ChapterController extends Controller
 {
     protected $userController;
 
-    public function __construct(UserController $userController)
+    protected $pdfController;
+
+
+    public function __construct(UserController $userController, PDFController $pdfController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
+        $this->pdfController = $pdfController;
     }
 
     /**
@@ -431,9 +435,14 @@ class ChapterController extends Controller
 
     public function updateEIN(Request $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+        $userName = $user->first_name.' '.$user->last_name;
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $ein = $request->input('ein');
         $chapterId = $request->input('chapter_id');
@@ -445,7 +454,7 @@ class ChapterController extends Controller
                 ->where('id', $chapterId)
                 ->update(['ein' => $ein,
                     'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => date('Y-m-d'),
+                    'last_updated_date' => $lastupdatedDate,
                 ]);
 
             // Commit the transaction
@@ -481,155 +490,72 @@ class ChapterController extends Controller
      */
     public function updateChapterDisband(Request $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+        $userName = $user->first_name.' '.$user->last_name;
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
         $disbandReason = $input['reason'];
         $disbandLetter = $input['letter'];
 
+        $chapter = Chapters::find($chapterid);
+        $documents = Documents::find($chapterid);
+
         try {
             DB::beginTransaction();
 
-            DB::table('chapters')
-                ->where('id', $chapterid)
-                ->update(['is_active' => 0, 'disband_reason' => $disbandReason, 'disband_letter' => $disbandLetter, 'zap_date' => date('Y-m-d')]);
+            $chapter->is_active = '0';
+            $chapter->disband_reason = $disbandReason;
+            $chapter->zap_date = date('Y-m-d');
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->save();
 
-            $userRelatedChpaterList = DB::table('boards as bd')
-                ->select('bd.user_id')
-                ->where('bd.chapter_id', '=', $chapterid)
-                ->get();
-            if (count($userRelatedChpaterList) > 0) {
-                foreach ($userRelatedChpaterList as $list) {
-                    $userId = $list->user_id;
-                    DB::table('users')
-                        ->where('id', $userId)
-                        ->update(['is_active' => 0]);
-                }
-            }
-            DB::table('boards')
-                ->where('chapter_id', $chapterid)
-                ->update(['is_active' => 0]);
+            $documents->disband_letter = $disbandLetter;
+            $documents->save();
 
-            $chapterList = DB::table('chapters')
-                ->select('chapters.*', 'chapters.primary_coordinator_id as pcid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference_id as conf')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-                ->where('chapters.is_Active', '=', '0')
-                ->where('bd.board_position_id', '=', '1')
-                ->where('chapters.id', $chapterid)
-                ->orderByDesc('chapters.id')
-                ->get();
+            $userRelatedChapterList = Boards::where('chapter_id', $chapterid)->get();
 
-            $chPcid = $chapterList[0]->pcid;
+            if ($userRelatedChapterList->isNotEmpty()) {
+                $userIds = $userRelatedChapterList->pluck('user_id');
+                User::whereIn('id', $userIds)->update([
+                    'is_active' => 0,
+                    'updated_at' => $lastupdatedDate,
+                ]);
+            }
 
-            $chapterName = $chapterList[0]->name;
-            $chapterState = $chapterList[0]->state;
-            $chapterEmail = $chapterList[0]->email;
-            $chapterStatus = $chapterList[0]->status_id;
-            //President Info
-            $preinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '1')
-                ->get();
+            Boards::where('chapter_id', $chapterid)->update([
+                'is_active' => 0,
+                'last_updated_by' => $lastUpdatedBy,
+                'last_updated_date' => $lastupdatedDate,
+            ]);
 
-            if (count($preinfo) > 0) {
-                $prefirst = $preinfo[0]->first_name;
-                $presecond = $preinfo[0]->last_name;
-                $preemail = $preinfo[0]->email;
-            } else {
-                $prefirst = '';
-                $presecond = '';
-                $preemail = '';
-            }
-            //Avp info
-            $avpinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '2')
-                ->get();
-            if (count($avpinfo) > 0) {
-                $avpfirst = $avpinfo[0]->first_name;
-                $avpsecond = $avpinfo[0]->last_name;
-                $avpemail = $avpinfo[0]->email;
-            } else {
-                $avpfirst = '';
-                $avpsecond = '';
-                $avpemail = '';
-            }
-            //Mvp info
-
-            $mvpinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '3')
-                ->get();
-            if (count($mvpinfo) > 0) {
-                $mvpfirst = $mvpinfo[0]->first_name;
-                $mvpsecond = $mvpinfo[0]->last_name;
-                $mvpemail = $mvpinfo[0]->email;
-            } else {
-                $mvpfirst = '';
-                $mvpsecond = '';
-                $mvpemail = '';
-            }
-            //Treasurere info
-            $triinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '4')
-                ->get();
-            if (count($triinfo) > 0) {
-                $trifirst = $triinfo[0]->first_name;
-                $trisecond = $triinfo[0]->last_name;
-                $triemail = $triinfo[0]->email;
-            } else {
-                $trifirst = '';
-                $trisecond = '';
-                $triemail = '';
-            }
-            //secretary info
-            $secinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '5')
-                ->get();
-            if (count($secinfo) > 0) {
-                $secfirst = $secinfo[0]->first_name;
-                $secscond = $secinfo[0]->last_name;
-                $secemail = $secinfo[0]->email;
-            } else {
-                $secfirst = '';
-                $secscond = '';
-                $secemail = '';
-            }
-            //conference info
-            $coninfo = DB::table('chapters')
-                ->select('chapters.*', 'conference')
-                ->where('id', $chapterid)
-                ->get();
-            $conf = $coninfo[0]->conference;
+             //Update Chapter MailData//
+             $baseQuery = $this->getChapterDetails($chapterid);
+             $chDetails = $baseQuery['chDetails'];
+             $stateShortName = $baseQuery['stateShortName'];
+             $chConfId = $baseQuery['chConfId'];
+             $chPcId = $baseQuery['chPcId'];
+             $emailPC = $baseQuery['emailPC'];
+             $PresDetails = $baseQuery['PresDetails'];
+             $AVPDetails = $baseQuery['AVPDetails'];
+             $MVPDetails = $baseQuery['MVPDetails'];
+             $TRSDetails = $baseQuery['TRSDetails'];
+             $SECDetails = $baseQuery['SECDetails'];
 
             // Load Board and Coordinators for Sending Email
-            $chId = $chapterList[0]->id;
-            $emailData = $this->userController->loadEmailDetails($chId);
+            $emailData = $this->userController->loadEmailDetails($chapterid);
             $emailListChap = $emailData['emailListChap'];
             $emailListCoord = $emailData['emailListCoord'];
 
-            $chapterEmails = $emailListChap;
-            $coordEmails = $emailListCoord;
-
             // Load Conference Coordinators information for signing email
-            $chConf = $chapterList[0]->conf;
-            $chPcid = $chapterList[0]->pcid;
-
-            $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
+            $coordinatorData = $this->userController->loadConferenceCoord($chPcId);
             $cc_fname = $coordinatorData['cc_fname'];
             $cc_lname = $coordinatorData['cc_lname'];
             $cc_pos = $coordinatorData['cc_pos'];
@@ -638,25 +564,25 @@ class ChapterController extends Controller
             $cc_email = $coordinatorData['cc_email'];
 
             $mailData = [
-                'chapterName' => $chapterName,
-                'chapterEmail' => $chapterEmail,
-                'chapterState' => $chapterState,
-                'pfirst' => $prefirst,
-                'plast' => $presecond,
-                'pemail' => $preemail,
-                'afirst' => $avpfirst,
-                'alast' => $avpsecond,
-                'aemail' => $avpemail,
-                'mfirst' => $mvpfirst,
-                'mlast' => $mvpsecond,
-                'memail' => $mvpemail,
-                'tfirst' => $trifirst,
-                'tlast' => $trisecond,
-                'temail' => $triemail,
-                'sfirst' => $secfirst,
-                'slast' => $secscond,
-                'semail' => $secemail,
-                'conf' => $conf,
+                'chapterName' => $chDetails->name,
+                'chapterEmail' => $chDetails->email,
+                'chapterState' => $stateShortName,
+                'pfirst' => $PresDetails->first_name,
+                'plast' => $PresDetails->last_name,
+                'pemail' => $PresDetails->email,
+                'afirst' => $AVPDetails->first_name,
+                'alast' => $AVPDetails->last_name,
+                'aemail' => $AVPDetails->email,
+                'mfirst' => $MVPDetails->first_name,
+                'mlast' => $MVPDetails->last_name,
+                'memail' => $MVPDetails->email,
+                'tfirst' => $TRSDetails->first_name,
+                'tlast' => $TRSDetails->last_name,
+                'temail' => $TRSDetails->email,
+                'sfirst' => $SECDetails->first_name,
+                'slast' => $SECDetails->last_name,
+                'semail' => $SECDetails->email,
+                'conf' => $chConfId,
                 'cc_fname' => $cc_fname,
                 'cc_lname' => $cc_lname,
                 'cc_pos' => $cc_pos,
@@ -672,9 +598,9 @@ class ChapterController extends Controller
 
             //Standard Disbanding Letter Send to Board & Coordinators//
             if ($disbandLetter == 1) {
-                $pdfPath = $this->generateAndSaveDisbandLetter($chapterid);   // Generate and save the PDF
-                Mail::to($chapterEmails)
-                    ->cc($coordEmails)
+                $pdfPath =  $this->pdfController->generateAndSaveDisbandLetter($chapterid);   // Generate and save the PDF
+                Mail::to($emailListChap)
+                    ->cc($emailListCoord)
                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
             }
 
@@ -706,280 +632,103 @@ class ChapterController extends Controller
         }
     }
 
-    public function generateAndSaveDisbandLetter($chapterid)
-    {
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
-                'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
-                'bd.zip as pres_zip', 'chapters.conference_id as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            // ->where('chapters.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->where('chapters.id', '=', $chapterid)
-            ->get();
-
-        // Load Conference Coordinators information for signing letter
-        $chName = $chapterDetails[0]->chapter_name;
-        $chState = $chapterDetails[0]->state;
-        $chConf = $chapterDetails[0]->conf;
-        $chPcid = $chapterDetails[0]->pcid;
-
-        $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
-        $cc_fname = $coordinatorData['cc_fname'];
-        $cc_lname = $coordinatorData['cc_lname'];
-        $cc_pos = $coordinatorData['cc_pos'];
-
-        $pdfData = [
-            'chapter_name' => $chapterDetails[0]->chapter_name,
-            'state' => $chapterDetails[0]->state,
-            'conf' => $chapterDetails[0]->conf,
-            'conf_name' => $chapterDetails[0]->conf_name,
-            'conf_desc' => $chapterDetails[0]->conf_desc,
-            'ein' => $chapterDetails[0]->ein,
-            'pres_fname' => $chapterDetails[0]->pres_fname,
-            'pres_lname' => $chapterDetails[0]->pres_lname,
-            'pres_addr' => $chapterDetails[0]->pres_addr,
-            'pres_city' => $chapterDetails[0]->pres_city,
-            'pres_state' => $chapterDetails[0]->pres_state,
-            'pres_zip' => $chapterDetails[0]->pres_zip,
-            'cc_fname' => $cc_fname,
-            'cc_lname' => $cc_lname,
-            'cc_pos' => $cc_pos,
-        ];
-
-        $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
-
-        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
-        $filename = $pdfData['state'].'_'.$chapterName.'_Disband_Letter.pdf'; // Use sanitized chapter name
-
-        $pdfPath = storage_path('app/pdf_reports/'.$filename);
-        $pdf->save($pdfPath);
-
-        $googleClient = new Client;
-        $client_id = \config('services.google.client_id');
-        $client_secret = \config('services.google.client_secret');
-        $refresh_token = \config('services.google.refresh_token');
-        $response = Http::post('https://oauth2.googleapis.com/token', [
-            'client_id' => $client_id,
-            'client_secret' => $client_secret,
-            'refresh_token' => $refresh_token,
-            'grant_type' => 'refresh_token',
-        ]);
-
-        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
-        $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
-
-        $sharedDriveId = '1PlBi8BE2ESqUbLPTkQXzt1dKhwonyU_9';   //Shared Drive -> Disband Letters
-
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => $filename,
-            'mimeType' => 'application/pdf',
-            'parents' => [$sharedDriveId],
-        ];
-
-        // Upload the file
-        $fileContent = file_get_contents($pdfPath);
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
-
-        $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $pdf_file_id = json_decode($response->getBody()->getContents(), true)['id'];
-            $chapter = Chapters::find($chapterid);
-            $chapter->disband_letter_path = $pdf_file_id;
-            $chapter->save();
-
-            return $pdfPath;  // Return the full local stored path
-        }
-    }
-
     /**
      * Function for unZapping a Chapter (store)
      */
     public function updateChapterUnZap(Request $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+        $userName = $user->first_name.' '.$user->last_name;
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
 
+        $chapter = Chapters::find($chapterid);
+        $documents = Documents::find($chapterid);
+
         try {
             DB::beginTransaction();
 
-            DB::table('chapters')
-                ->where('id', $chapterid)
-                ->update(['is_active' => 1, 'disband_reason' => null, 'zap_date' => null]);
+            $chapter->is_active = '1';
+            $chapter->disband_reason = null;
+            $chapter->zap_date = null;
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->save();
 
-            $userRelatedChpaterList = DB::table('boards as bd')
-                ->select('bd.user_id')
-                ->where('bd.chapter_id', '=', $chapterid)
-                ->get();
-            if (count($userRelatedChpaterList) > 0) {
-                foreach ($userRelatedChpaterList as $list) {
-                    $userId = $list->user_id;
-                    DB::table('users')
-                        ->where('id', $userId)
-                        ->update(['is_active' => 1]);
-                }
+            $documents->disband_letter = null;
+            $documents->save();
+
+            $userRelatedChapterList = Boards::where('chapter_id', $chapterid)->get();
+
+            if ($userRelatedChapterList->isNotEmpty()) {
+                $userIds = $userRelatedChapterList->pluck('user_id');
+                User::whereIn('id', $userIds)->update([
+                    'is_active' => 1,
+                    'updated_at' => $lastupdatedDate,
+                ]);
             }
-            DB::table('boards')
-                ->where('chapter_id', $chapterid)
-                ->update(['is_active' => 1]);
 
-            $chapterList = DB::table('chapters')
-                ->select('chapters.*', 'chapters.primary_coordinator_id as pcid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference_id as conf')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-                ->where('chapters.is_Active', '=', '1')
-                ->where('bd.board_position_id', '=', '1')
-                ->where('chapters.id', $chapterid)
-                ->orderByDesc('chapters.id')
-                ->get();
+            Boards::where('chapter_id', $chapterid)->update([
+                'is_active' => 1,
+                'last_updated_by' => $lastUpdatedBy,
+                'last_updated_date' => $lastupdatedDate,
+            ]);
 
-            $chPcid = $chapterList[0]->pcid;
+            //Update Chapter MailData//
+            $baseQuery = $this->getChapterDetails($chapterid);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $chConfId = $baseQuery['chConfId'];
+            $chPcId = $baseQuery['chPcId'];
+            $emailPC = $baseQuery['emailPC'];
+            $PresDetails = $baseQuery['PresDetails'];
+            $AVPDetails = $baseQuery['AVPDetails'];
+            $MVPDetails = $baseQuery['MVPDetails'];
+            $TRSDetails = $baseQuery['TRSDetails'];
+            $SECDetails = $baseQuery['SECDetails'];
 
-            $chapterName = $chapterList[0]->name;
-            $chapterState = $chapterList[0]->state;
-            $chapterEmail = $chapterList[0]->email;
-            $chapterStatus = $chapterList[0]->status_id;
-            //President Info
-            $preinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '1')
-                ->get();
+           // Load Board and Coordinators for Sending Email
+           $emailData = $this->userController->loadEmailDetails($chapterid);
+           $emailListChap = $emailData['emailListChap'];
+           $emailListCoord = $emailData['emailListCoord'];
 
-            if (count($preinfo) > 0) {
-                $prefirst = $preinfo[0]->first_name;
-                $presecond = $preinfo[0]->last_name;
-                $preemail = $preinfo[0]->email;
-            } else {
-                $prefirst = '';
-                $presecond = '';
-                $preemail = '';
-            }
-            //Avp info
-            $avpinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '2')
-                ->get();
-            if (count($avpinfo) > 0) {
-                $avpfirst = $avpinfo[0]->first_name;
-                $avpsecond = $avpinfo[0]->last_name;
-                $avpemail = $avpinfo[0]->email;
-            } else {
-                $avpfirst = '';
-                $avpsecond = '';
-                $avpemail = '';
-            }
-            //Mvp info
+           // Load Conference Coordinators information for signing email
+           $coordinatorData = $this->userController->loadConferenceCoord($chPcId);
+           $cc_fname = $coordinatorData['cc_fname'];
+           $cc_lname = $coordinatorData['cc_lname'];
+           $cc_pos = $coordinatorData['cc_pos'];
+           $cc_conf = $coordinatorData['cc_conf'];
+           $cc_conf_desc = $coordinatorData['cc_conf_desc'];
+           $cc_email = $coordinatorData['cc_email'];
 
-            $mvpinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '3')
-                ->get();
-            if (count($mvpinfo) > 0) {
-                $mvpfirst = $mvpinfo[0]->first_name;
-                $mvpsecond = $mvpinfo[0]->last_name;
-                $mvpemail = $mvpinfo[0]->email;
-            } else {
-                $mvpfirst = '';
-                $mvpsecond = '';
-                $mvpemail = '';
-            }
-            //Treasurere info
-            $triinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '4')
-                ->get();
-            if (count($triinfo) > 0) {
-                $trifirst = $triinfo[0]->first_name;
-                $trisecond = $triinfo[0]->last_name;
-                $triemail = $triinfo[0]->email;
-            } else {
-                $trifirst = '';
-                $trisecond = '';
-                $triemail = '';
-            }
-            //secretary info
-            $secinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '5')
-                ->get();
-            if (count($secinfo) > 0) {
-                $secfirst = $secinfo[0]->first_name;
-                $secscond = $secinfo[0]->last_name;
-                $secemail = $secinfo[0]->email;
-            } else {
-                $secfirst = '';
-                $secscond = '';
-                $secemail = '';
-            }
-            //conference info
-            $coninfo = DB::table('chapters')
-                ->select('chapters.*', 'conference')
-                ->where('id', $chapterid)
-                ->get();
-            $conf = $coninfo[0]->conference;
-
-            // Load Board and Coordinators for Sending Email
-            $chId = $chapterList[0]->id;
-            $emailData = $this->userController->loadEmailDetails($chId);
-            $emailListChap = $emailData['emailListChap'];
-            $emailListCoord = $emailData['emailListCoord'];
-
-            // Load Conference Coordinators information for signing email
-            $chConf = $chapterList[0]->conf;
-            $chPcid = $chapterList[0]->pcid;
-
-            $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
-            $cc_fname = $coordinatorData['cc_fname'];
-            $cc_lname = $coordinatorData['cc_lname'];
-            $cc_pos = $coordinatorData['cc_pos'];
-            $cc_conf = $coordinatorData['cc_conf'];
-            $cc_conf_desc = $coordinatorData['cc_conf_desc'];
-            $cc_email = $coordinatorData['cc_email'];
 
             $mailData = [
-                'chapterName' => $chapterName,
-                'chapterEmail' => $chapterEmail,
-                'chapterState' => $chapterState,
-                'pfirst' => $prefirst,
-                'plast' => $presecond,
-                'pemail' => $preemail,
-                'afirst' => $avpfirst,
-                'alast' => $avpsecond,
-                'aemail' => $avpemail,
-                'mfirst' => $mvpfirst,
-                'mlast' => $mvpsecond,
-                'memail' => $mvpemail,
-                'tfirst' => $trifirst,
-                'tlast' => $trisecond,
-                'temail' => $triemail,
-                'sfirst' => $secfirst,
-                'slast' => $secscond,
-                'semail' => $secemail,
-                'conf' => $conf,
+                'chapterName' => $chDetails->name,
+                'chapterEmail' => $chDetails->email,
+                'chapterState' => $stateShortName,
+                'pfirst' => $PresDetails->first_name,
+                'plast' => $PresDetails->last_name,
+                'pemail' => $PresDetails->email,
+                'afirst' => $AVPDetails->first_name,
+                'alast' => $AVPDetails->last_name,
+                'aemail' => $AVPDetails->email,
+                'mfirst' => $MVPDetails->first_name,
+                'mlast' => $MVPDetails->last_name,
+                'memail' => $MVPDetails->email,
+                'tfirst' => $TRSDetails->first_name,
+                'tlast' => $TRSDetails->last_name,
+                'temail' => $TRSDetails->email,
+                'sfirst' => $SECDetails->first_name,
+                'slast' => $SECDetails->last_name,
+                'semail' => $SECDetails->email,
+                'conf' => $chConfId,
                 'cc_fname' => $cc_fname,
                 'cc_lname' => $cc_lname,
                 'cc_pos' => $cc_pos,
