@@ -91,7 +91,7 @@
 
                                 <table id="coordinator-list" width="100%">
                                     <thead>
-                                        @if($directReportTo->isEmpty())
+                                        @if($drList->isEmpty())
                                             <tr>
                                                 <td colspan="3" class="text-center">No Coordinators Found</td>
                                             </tr>
@@ -103,11 +103,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($directReportTo as $coordinator)
+                                        @foreach($drList as $coordinator)
                                             <tr>
-                                                <td>{{ $coordinator->cor_f_name }}</td>
-                                                <td>{{ $coordinator->cor_l_name }}</td>
-                                                <td>{{ $coordinator->pos }}</td>
+                                                <td>{{ $coordinator->first_name }}</td>
+                                                <td>{{ $coordinator->last_name }}</td>
+                                                <td>{{ $coordinator->displayPosition->short_title }}</td>
                                             </tr>
                                         @endforeach
                                         @endif
@@ -121,7 +121,7 @@
                                 <label class="mrg-b-25">{{ $cdDetails->first_name }} is Primary Coordinator For:</label>
                                     <table id="coordinator-list" width="100%">
                                         <thead>
-                                            @if($directChapterTo->isEmpty())
+                                            @if($chList->isEmpty())
                                                 <tr>
                                                     <td colspan="2" class="text-center">No Chapters Found</td>
                                                 </tr>
@@ -132,10 +132,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($directChapterTo as $chapter)
+                                            @foreach($chList as $chapter)
                                                 <tr>
-                                                    <td>{{ $chapter->st_name }}</td>
-                                                    <td>{{ $chapter->ch_name }}</td>
+                                                    <td>{{ $chapter->state->state_short_name }}</td>
+                                                    <td>{{ $chapter->name }}</td>
                                                 </tr>
                                             @endforeach
                                             @endif

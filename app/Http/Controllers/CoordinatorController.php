@@ -494,23 +494,19 @@ class CoordinatorController extends Controller
         $secondaryPosition = $baseQuery['secondaryPosition'];
         $cdLeave = $baseQuery['cdDetails']->on_leave;
 
-        $directReportTo = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-            ->where('cd.report_id', '=', $id)
-            ->where('cd.is_active', '=', '1')
+        $drList = Coordinators::with('displayPosition')
+            ->where('report_id', $cdId)  // DirectReport Harcoaded List
+            ->where('is_active', 1)
             ->get();
 
-        $directChapterTo = DB::table('chapters as ch')
-            ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
-            ->join('state as st', 'ch.state_id', '=', 'st.id')
-            ->where('ch.primary_coordinator_id', '=', $id)
-            ->where('ch.is_active', '=', '1')
+        $chList = Chapters::with('state')
+            ->where('primary_coordinator_id', $cdId)  // Chapter Harcoaded List
+            ->where('is_active', 1)
             ->get();
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
-            'directReportTo' => $directReportTo, 'directChapterTo' => $directChapterTo, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition,
+            'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition,
             'secondaryPosition' => $secondaryPosition,
         ];
 
@@ -933,42 +929,36 @@ class CoordinatorController extends Controller
      */
     public function editCoordDetails(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $userId = $corDetails['id'];
-        $userConfId = $corDetails['conference_id'];
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
-                'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.email as report_email', 'cd2.last_name as report_lname')
-            ->leftJoin('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')  // Primary Position
-            ->leftJoin('coordinator_position as cp2', 'cd.sec_position_id', '=', 'cp2.id')  //Secondary Position
-            ->leftJoin('coordinator_position as cp3', 'cd.display_position_id', '=', 'cp3.id')  //Display Position
-            ->leftJoin('coordinators as cd2', 'cd.report_id', '=', 'cd2.id') //Supervising Coordinator
-            ->leftJoin('month as mo', 'cd.birthday_month_id', '=', 'mo.id')
-            ->leftJoin('state as st', 'cd.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'cd.region_id', '=', 'rg.id')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $id)
-            ->get();
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        $conid = $coordinatorDetails[0]->id;
-        $corIsActive = $coordinatorDetails[0]->is_active;
-        $corIsLeave = $coordinatorDetails[0]->on_leave;
-        $position_id = $coordinatorDetails[0]->position_id;
-        $conference_id = $corConfId = $coordinatorDetails[0]->conference_id;
-        $region_id = $coordinatorDetails[0]->region_id;
+        $cdDetailsUser = $user->coordinator;
+        $cdIdUser = $cdDetailsUser->id;
 
-        $stateArr = DB::table('state')
-            ->select('state.*')
-            ->orderBy('id')
-            ->get();
+        $baseQuery = $this->getCoordinatorDetails($id);
+        $cdDetails = $baseQuery['cdDetails'];
+        $cdId = $baseQuery['cdId'];
+        $cdIsActive = $baseQuery['cdIsActive'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $cdConfId = $baseQuery['cdConfId'];
+        $cdRptId = $baseQuery['cdRptId'];
+        $RptFName = $baseQuery['RptFName'];
+        $RptLName = $baseQuery['RptLName'];
+        $ReportTo = $RptFName.' '.$RptLName;
+        $displayPosition = $baseQuery['displayPosition'];
+        $mimiPosition = $baseQuery['mimiPosition'];
+        $secondaryPosition = $baseQuery['secondaryPosition'];
+        $cdLeave = $baseQuery['cdDetails']->on_leave;
 
-        $monthArr = DB::table('month')
-            ->select('month.*')
-            ->orderBy('id')
-            ->get();
+        $allStates = $baseQuery['allStates'];
+        $allMonths = $baseQuery['allMonths'];
 
-        $data = ['coordinatorDetails' => $coordinatorDetails, 'stateArr' => $stateArr, 'monthArr' => $monthArr];
+        $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
+            'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
+            'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
+            'allStates' => $allStates, 'allMonths' => $allMonths
+        ];
 
         return view('coordinators.editdetails')->with($data);
     }
@@ -978,59 +968,55 @@ class CoordinatorController extends Controller
      */
     public function updateCoordDetails(Request $request, $id): RedirectResponse
     {
-        $userDetails = User::find($request->user()->id)->coordinator;
-        $userId = $userDetails['id'];
-        $userName = $userDetails['first_name'].' '.$userDetails['last_name'];
-        $userEmail = $userDetails['email'];
-        $userpositionId = $userDetails['position_id'];
-        $userposition = CoordinatorPosition::find($userpositionId);
-        $userpositionTitle = $userposition['long_title'];
-        $lastUpdatedBy = $userName;
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '' && $request->input('cord_email') != '') {
-            $corDetail = DB::table('coordinators')
-                ->select('id', 'user_id')
-                ->where('id', '=', $id)
-                ->first(); // Use first() to get a single result
+        $cdDetailsUser = $user->coordinator;
+        $cdIdUser = $cdDetailsUser->id;
+        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
+        $coordinator = Coordinators::find($id);
+        $cdUserId = $coordinator->user_id;
+        $user = User::find($cdUserId);
+
+        DB::beginTransaction();
             try {
-                $userId = $corDetail->user_id;
+                    $user->first_name = $request->input('cord_fname');
+                    $user->last_name = $request->input('cord_lname');
+                    $user->email = $request->input('cord_email');
+                    $user->updated_at = now();
 
-                $user = User::find($userId);
-                $user->first_name = $request->input('cord_fname');
-                $user->last_name = $request->input('cord_lname');
-                $user->email = $request->input('cord_email');
-                $user->updated_at = now();
-                $user->save();
+                    $user->save();
 
-                DB::table('coordinators')
-                    ->where('id', $id)
-                    ->update([
-                        'first_name' => $request->input('cord_fname'),
-                        'last_name' => $request->input('cord_lname'),
-                        'email' => $request->input('cord_email'),
-                        'sec_email' => $request->input('cord_sec_email'),
-                        'address' => $request->input('cord_addr'),
-                        'city' => $request->input('cord_city'),
-                        'state' => $request->input('cord_state'),
-                        'zip' => $request->input('cord_zip'),
-                        'phone' => $request->input('cord_phone'),
-                        'alt_phone' => $request->input('cord_altphone'),
-                        'birthday_month_id' => $request->input('cord_month'),
-                        'birthday_day' => $request->input('cord_day'),
-                        'home_chapter' => $request->input('cord_chapter'),
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => now(),
-                    ]);
+                    $coordinator->first_name = $request->input('cord_fname');
+                    $coordinator->last_name = $request->input('cord_lname');
+                    $coordinator->email = $request->input('cord_email');
+                    $coordinator->sec_email = $request->input('cord_sec_email');
+                    $coordinator->address = $request->input('cord_addr');
+                    $coordinator->city = $request->input('cord_city');
+                    $coordinator->state = $request->input('cord_state');
+                    $coordinator->zip = $request->input('cord_zip');
+                    $coordinator->phone = $request->input('cord_phone');
+                    $coordinator->alt_phone = $request->input('cord_altphone');
+                    $coordinator->birthday_month_id = $request->input('cord_month');
+                    $coordinator->birthday_day = $request->input('cord_day');
+                    $coordinator->home_chapter = $request->input('cord_chapter');
+                    $coordinator->last_updated_by = $lastUpdatedBy;
+                    $coordinator->last_updated_date = now();
+
+                    $coordinator->save();
 
                 DB::commit();
             } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+                // Rollback Transaction
+                echo $e->getMessage();
+                exit();
+                DB::rollback();
+                // Log the error
+                Log::error($e);
 
                 return to_route('coordinators.editdetails', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
             }
-        }
 
         return to_route('coordinators.editdetails', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
     }
@@ -1040,42 +1026,32 @@ class CoordinatorController extends Controller
      */
     public function editCoordRecognition(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $userId = $corDetails['id'];
-        $userConfId = $corDetails['conference_id'];
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
-                'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.email as report_email', 'cd2.last_name as report_lname')
-            ->leftJoin('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')  // Primary Position
-            ->leftJoin('coordinator_position as cp2', 'cd.sec_position_id', '=', 'cp2.id')  //Secondary Position
-            ->leftJoin('coordinator_position as cp3', 'cd.display_position_id', '=', 'cp3.id')  //Display Position
-            ->leftJoin('coordinators as cd2', 'cd.report_id', '=', 'cd2.id') //Supervising Coordinator
-            ->leftJoin('month as mo', 'cd.birthday_month_id', '=', 'mo.id')
-            ->leftJoin('state as st', 'cd.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'cd.region_id', '=', 'rg.id')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $id)
-            ->get();
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        $conid = $coordinatorDetails[0]->id;
-        $corIsActive = $coordinatorDetails[0]->is_active;
-        $corIsLeave = $coordinatorDetails[0]->on_leave;
-        $position_id = $coordinatorDetails[0]->position_id;
-        $conference_id = $corConfId = $coordinatorDetails[0]->conference_id;
-        $region_id = $coordinatorDetails[0]->region_id;
+        $cdDetailsUser = $user->coordinator;
+        $cdIdUser = $cdDetailsUser->id;
 
-        $stateArr = DB::table('state')
-            ->select('state.*')
-            ->orderBy('id')
-            ->get();
+        $baseQuery = $this->getCoordinatorDetails($id);
+        $cdDetails = $baseQuery['cdDetails'];
+        $cdId = $baseQuery['cdId'];
+        $cdIsActive = $baseQuery['cdIsActive'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $cdConfId = $baseQuery['cdConfId'];
+        $cdRptId = $baseQuery['cdRptId'];
+        $RptFName = $baseQuery['RptFName'];
+        $RptLName = $baseQuery['RptLName'];
+        $ReportTo = $RptFName.' '.$RptLName;
+        $displayPosition = $baseQuery['displayPosition'];
+        $mimiPosition = $baseQuery['mimiPosition'];
+        $secondaryPosition = $baseQuery['secondaryPosition'];
+        $cdLeave = $baseQuery['cdDetails']->on_leave;
 
-        $monthArr = DB::table('month')
-            ->select('month.*')
-            ->orderBy('id')
-            ->get();
-
-        $data = ['coordinatorDetails' => $coordinatorDetails, 'stateArr' => $stateArr, 'monthArr' => $monthArr];
+        $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
+            'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
+            'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
+        ];
 
         return view('coordinators.editrecognition')->with($data);
     }
@@ -1085,34 +1061,38 @@ class CoordinatorController extends Controller
      */
     public function updateCoordRecognition(Request $request, $id): RedirectResponse
     {
-        $userDetails = User::find($request->user()->id)->coordinator;
-        $userId = $userDetails['id'];
-        $userName = $userDetails['first_name'].' '.$userDetails['last_name'];
-        $lastUpdatedBy = $userName;
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        $coorDetails = Coordinators::find($id);
+        $cdDetailsUser = $user->coordinator;
+        $cdIdUser = $cdDetailsUser->id;
+        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+
+        $coordinator = Coordinators::find($id);
+
+        DB::beginTransaction();
         try {
-            $coorDetails->recognition_year0 = $request->input('recognition_year0');
-            $coorDetails->recognition_year1 = $request->input('recognition_year1');
-            $coorDetails->recognition_year2 = $request->input('recognition_year2');
-            $coorDetails->recognition_year3 = $request->input('recognition_year3');
-            $coorDetails->recognition_year4 = $request->input('recognition_year4');
-            $coorDetails->recognition_year5 = $request->input('recognition_year5');
-            $coorDetails->recognition_year6 = $request->input('recognition_year6');
-            $coorDetails->recognition_year7 = $request->input('recognition_year7');
-            $coorDetails->recognition_year8 = $request->input('recognition_year8');
-            $coorDetails->recognition_year9 = $request->input('recognition_year9');
-            $coorDetails->recognition_toptier = $request->input('recognition_toptier');
-            $coorDetails->recognition_necklace = (int) $request->has('recognition_necklace');
-            $coorDetails->last_updated_by = $lastUpdatedBy;
-            $coorDetails->last_updated_date = now();
+                $coordinator->recognition_year0 = $request->input('recognition_year0');
+                $coordinator->recognition_year1 = $request->input('recognition_year1');
+                $coordinator->recognition_year2 = $request->input('recognition_year2');
+                $coordinator->recognition_year3 = $request->input('recognition_year3');
+                $coordinator->recognition_year4 = $request->input('recognition_year4');
+                $coordinator->recognition_year5 = $request->input('recognition_year5');
+                $coordinator->recognition_year6 = $request->input('recognition_year6');
+                $coordinator->recognition_year7 = $request->input('recognition_year7');
+                $coordinator->recognition_year8 = $request->input('recognition_year8');
+                $coordinator->recognition_year9 = $request->input('recognition_year9');
+                $coordinator->recognition_toptier = $request->input('recognition_toptier');
+                $coordinator->recognition_necklace = (int) $request->has('recognition_necklace');
+                $coordinator->last_updated_by = $lastUpdatedBy;
+                $coordinator->last_updated_date = now();
 
-            $coorDetails->save();
+                $coordinator->save();
 
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();  // Rollback Transaction
+                Log::error($e);  // Log the error
 
             return to_route('coordinators.editrecognition', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         }
@@ -1166,7 +1146,7 @@ class CoordinatorController extends Controller
     }
 
     /**
-     * Edit Coordiantor Profile
+     * Edit Coordiantor Profile/Dashboard
      */
     public function editCoordProfile(Request $request): View
     {

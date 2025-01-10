@@ -36,8 +36,8 @@
                     <th>Conf/Reg</th>
                     <th>Coordinator Name</th>
 					<th>Primary (Display) Position</th>
-                    <th>Primary (MIMI) Position</th>
-					<th>Secondary Position</th>
+                    <th>Secondary Position</th>
+                    {{-- <th>Primary (MIMI) Position</th> --}}
 					<th>Hire Date</th>
                     <th>Email</th>
                     <th>Reports To</th>
@@ -46,7 +46,7 @@
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -55,9 +55,13 @@
                         @endif
                     </td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
-                      <td>{{ $list->displayPosition->long_title }}</td>
-                         <td>{{ $list->mimiPosition->short_title }}</td>
-                      <td>{{ $list->secondaryPosition?->long_title }} </td>
+                        @if ( $list->on_leave == 1 )
+                            <td @if ( $list->on_leave == 1 ) style="background-color: #ffc107;" @endif>ON LEAVE</td><td></td>
+                        @else
+                            <td>{{ $list->displayPosition->long_title }}</td>
+                            <td>{{ $list->secondaryPosition?->long_title }} </td>
+                        @endif
+                         {{-- <td>{{ $list->mimiPosition->short_title }}</td> --}}
                 	  <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
                       <td><a href="mailto:{{ $list->email }}">{{ $list->email }}</a></td>
                       <td>{{ $list->reportsTo->first_name }} {{ $list->reportsTo->last_name }}</td>
