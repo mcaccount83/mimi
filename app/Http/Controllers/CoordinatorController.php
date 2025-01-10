@@ -111,8 +111,8 @@ class CoordinatorController extends Controller
         $cdConfId = $cdDetails->conference_id;
         $cdRegId = $cdDetails->region_id;
         $cdRptId = $cdDetails->report_id;
-        $RptFName = $cdDetails->reportsTo->first_name;
-        $RptLName = $cdDetails->reportsTo->last_name;
+        $RptFName = $cdDetails->reportsTo?->first_name;
+        $RptLName = $cdDetails->reportsTo?->last_name;
         $displayPosition = $cdDetails->displayPosition;
         $mimiPosition = $cdDetails->mimiPosition;
         $secondaryPosition = $cdDetails->secondaryPosition;
