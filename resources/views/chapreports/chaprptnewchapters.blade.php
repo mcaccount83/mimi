@@ -15,6 +15,7 @@
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             New Chapter Report
                         </h3>
+                        <span class="ml-2">Includes chapters that are less than one year old</span>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="{{ route('chapreports.chaprptchapterstatus') }}">Chapter Status Report</a>
                             <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus') }}">IRS Status Report</a>
@@ -73,6 +74,13 @@
                   </tbody>
                 </table>
             </div>
+             <!-- /.card-body -->
+             <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                    <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
+                </div>
+            </div>
             <div class="card-body text-center"></div>
             </div>
            </div>
@@ -88,6 +96,16 @@
 
 @section('customscript')
 <script>
+function showPrimary() {
+    var base_url = '{{ url("/chapterreports/newchapters") }}';
+
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const dropdownItems = document.querySelectorAll(".dropdown-item");
     const currentPath = window.location.pathname;

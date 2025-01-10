@@ -88,6 +88,13 @@
                   </tbody>
                 </table>
             </div>
+            <!-- /.card-body -->
+            <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                    <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
+                </div>
+            </div>
                 <div class="card-body text-center">
                     <a href="{{ route('export.einstatus')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button></a>
                 </div>
@@ -105,6 +112,16 @@
 @endsection
 @section('customscript')
 <script>
+function showPrimary() {
+    var base_url = '{{ url("/chapterreports/einstatus") }}';
+
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const dropdownItems = document.querySelectorAll(".dropdown-item");
     const currentPath = window.location.pathname;

@@ -63,10 +63,17 @@
                     @endforeach
                 </tbody>
                 </table>
-			   <div class="col-sm-12">
+                 <!-- /.card-body -->
+            <div class="col-sm-12">
                 <div class="custom-control custom-switch">
                     <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
-                    <label class="custom-control-label" for="showPrimary">Only show chapters 'Not Ok'</label>
+                    <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
+                </div>
+            </div>
+			   <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="showProbation" id="showProbation" class="custom-control-input" {{$checkBox4Status}} onchange="showProbation()" />
+                    <label class="custom-control-label" for="showProbation">Only show chapters 'Not Ok'</label>
                 </div>
             </div>
 
@@ -88,6 +95,16 @@
 
     if ($("#showPrimary").prop("checked") == true) {
         window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
+function showProbation() {
+    var base_url = '{{ url("/chapterreports/chapterstatus") }}';
+
+    if ($("#showProbation").prop("checked") == true) {
+        window.location.href = base_url + '?check4=yes';
     } else {
         window.location.href = base_url;
     }

@@ -37,98 +37,98 @@ class PaymentController extends Controller
     {
         $paymentResponse = $this->processPayment($request);
 
-        if ($paymentResponse['success']) {
-            try {
-                $baseQuery = $this->boardController->getChapterDetails($request->user()->board->chapter_id);
-                $chapterDetails = $baseQuery['chDetails'];
-                $chapterState = $baseQuery['stateShortName'];
-                $presDetails = $baseQuery['PresDetails'];
-                $emailListChap = $baseQuery['emailListChap'];
-                $emailCC = $baseQuery['emailCC'];
-                $pcEmail = $baseQuery['pcEmail'];
-                $AdminEmail = 'dragonmom@msn.com';
+        if (!$paymentResponse['success']) {
+            return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
+        }
 
-                $rereg = $request->input('rereg');
-                $donation = $request->input('sustaining');
+        try {
+            $baseQuery = $this->boardController->getChapterDetails($request->user()->board->chapter_id);
+            $chapterDetails = $baseQuery['chDetails'];
+            $chapterState = $baseQuery['stateShortName'];
+            $presDetails = $baseQuery['PresDetails'];
+            $emailListChap = $baseQuery['emailListChap'];
+            $emailCC = $baseQuery['emailCC'];
+            $pcEmail = $baseQuery['pcEmail'];
+            $AdminEmail = 'dragonmom@msn.com';
 
-                // Update chapter record
-                $existingRecord = Chapters::where('id', $chapterDetails->id)->first();
-                $existingRecord->members_paid_for = $request->input('members');
-                $existingRecord->next_renewal_year = $chapterDetails->next_renewal_year + 1;
-                $existingRecord->dues_last_paid = Carbon::today();
-                $existingRecord->save();
+            $rereg = $request->input('rereg');
+            $donation = $request->input('sustaining');
 
-                // Send Chepter email
-                if ($rereg){
-                    $mailData = [
-                        'chapterName' => $chapterDetails->name,
-                        'chapterState' => $chapterState,
-                        'chapterMembers' => $request->input('members'),
-                        'chapterDate' => Carbon::today()->format('m-d-Y'),
-                    ];
+            // Update chapter record
+            $existingRecord = Chapters::where('id', $chapterDetails->id)->first();
+            $existingRecord->members_paid_for = $request->input('members');
+            $existingRecord->next_renewal_year = $chapterDetails->next_renewal_year + 1;
+            $existingRecord->dues_last_paid = Carbon::today();
+            $existingRecord->save();
 
-                    Mail::to($emailListChap)
-                        ->cc($pcEmail)
-                        ->queue(new PaymentsReRegChapterThankYou($mailData));
-                    }
-
-                // Update Record and Send Chepter email
-                if($donation){
-                    $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
-                    $existingRecord->sustaining_donation = $sustaining;
-                    $existingRecord->sustaining_date = Carbon::today();
-                    $existingRecord->save();
-
-                    $mailData = [
-                        'chapterName' => $chapterDetails->name,
-                        'chapterState' => $chapterState,
-                        'chapterTotal' => $sustaining,
-                    ];
-
-                    Mail::to($emailListChap)
-                        ->cc($pcEmail)
-                        ->queue(new PaymentsSustainingChapterThankYou($mailData));
-                }
-
-                // Send Admin email
+            // Send Chepter email
+            if ($rereg){
                 $mailData = [
                     'chapterName' => $chapterDetails->name,
                     'chapterState' => $chapterState,
-                    'pres_fname' => $presDetails->first_name,
-                    'pres_lname' => $presDetails->last_name,
-                    'pres_street' => $presDetails->street_address,
-                    'pres_city' => $presDetails->city,
-                    'pres_state' => $presDetails->state,
-                    'pres_zip' => $presDetails->zip,
-                    'members' => $request->input('members'),
-                    'late' => $request->input('late'),
-                    'sustaining' => $request->input('sustaining'),
-                    'reregTotal' => $request->input('rereg'),
-                    'processing' => $request->input('fee'),
-                    'totalPaid' => $request->input('total'),
-                    'fname' => $request->input('first_name'),
-                    'lname' => $request->input('last_name'),
-                    'email' => $request->input('email'),
-                    'chapterId' => $chapterDetails->id,
-                    'invoice' => $paymentResponse['data']['invoiceNumber'],
-                    'datePaid' => Carbon::today()->format('m-d-Y'),
+                    'chapterMembers' => $request->input('members'),
+                    'chapterDate' => Carbon::today()->format('m-d-Y'),
                 ];
 
-                Mail::to([$emailCC, $AdminEmail])
-                    ->queue(new PaymentsReRegOnline($mailData));
+                Mail::to($emailListChap)
+                    ->cc($pcEmail)
+                    ->queue(new PaymentsReRegChapterThankYou($mailData));
+                }
 
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+            // Update Record and Send Chepter email
+            if($donation){
+                $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+                $existingRecord->sustaining_donation = $sustaining;
+                $existingRecord->sustaining_date = Carbon::today();
+                $existingRecord->save();
 
-                return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
+                $mailData = [
+                    'chapterName' => $chapterDetails->name,
+                    'chapterState' => $chapterState,
+                    'chapterTotal' => $sustaining,
+                ];
 
+                Mail::to($emailListChap)
+                    ->cc($pcEmail)
+                    ->queue(new PaymentsSustainingChapterThankYou($mailData));
             }
+
+            // Send Admin email
+            $mailData = [
+                'chapterName' => $chapterDetails->name,
+                'chapterState' => $chapterState,
+                'pres_fname' => $presDetails->first_name,
+                'pres_lname' => $presDetails->last_name,
+                'pres_street' => $presDetails->street_address,
+                'pres_city' => $presDetails->city,
+                'pres_state' => $presDetails->state,
+                'pres_zip' => $presDetails->zip,
+                'members' => $request->input('members'),
+                'late' => $request->input('late'),
+                'sustaining' => $request->input('sustaining'),
+                'reregTotal' => $request->input('rereg'),
+                'processing' => $request->input('fee'),
+                'totalPaid' => $request->input('total'),
+                'fname' => $request->input('first_name'),
+                'lname' => $request->input('last_name'),
+                'email' => $request->input('email'),
+                'chapterId' => $chapterDetails->id,
+                'invoice' => $paymentResponse['data']['invoiceNumber'],
+                'datePaid' => Carbon::today()->format('m-d-Y'),
+            ];
+
+            Mail::to([$emailCC, $AdminEmail])
+                ->queue(new PaymentsReRegOnline($mailData));
+
+            DB::commit();
+            return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
         }
-
-        return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
-
     }
 
     /**

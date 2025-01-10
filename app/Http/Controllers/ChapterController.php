@@ -92,22 +92,26 @@ class ChapterController extends Controller
             $checkBoxStatus = '';
         }
 
-        if (isset($_GET['check3']) && $_GET['check3'] == 'yes') {
-            $checkBox3Status = 'checked';
+        $checkBox3Status = '';
 
+        $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';  // Check if we're on the re-registration page
+        if ($isReregPage) {
+            if (isset($_GET['check3']) && $_GET['check3'] == 'yes') {
+                $checkBox3Status = 'checked';
+                $baseQuery->orderBy(State::select('state_short_name')  // All chapter Re-Reg list sort by state and name
+                    ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+                    ->orderBy('chapters.name');
+            } else {
+                $baseQuery->orderByDesc('next_renewal_year')  // Re-Reg sort by next renewal date
+                         ->orderByDesc('start_month_id');
+            }
         } else {
-            $checkBox3Status = '';
-            $baseQuery
-                ->orderByDesc('next_renewal_year')
-                ->orderByDesc('start_month_id');
+            $baseQuery->orderBy(State::select('state_short_name')  // All other pages sort by state and name
+                ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+                ->orderBy('chapters.name');
         }
 
-        $baseQuery->orderBy(State::select('state_short_name')
-            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name');
-
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
-
     }
 
     /**
