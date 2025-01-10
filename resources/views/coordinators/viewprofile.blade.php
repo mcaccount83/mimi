@@ -34,7 +34,7 @@
                           <br>
                           <b>Primary Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
                           <br>
-                          <b>Secondary Position:</b> <span class="float-right">{{ $secondaryPosition->long_title }}</span>
+                          <b>Secondary Position:</b> <span class="float-right">{{ $secondaryPosition?->long_title }}</span>
 
                       </li>
                       <li class="list-group-item">
