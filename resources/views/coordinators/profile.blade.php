@@ -32,7 +32,7 @@
                 </p>
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
-                        <b>Supervising Coordinator:</b> <span class="float-right"><a href="mailto:{{ $cdDetails->reportsTo->email }}">{{ $ReportTo }} </a></span>
+                        <b>Supervising Coordinator:</b> <span class="float-right"><a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a></span>
                         <br>
                         <b>Primary Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
                         <br>
