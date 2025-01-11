@@ -13,6 +13,7 @@ use App\Mail\ChaptersPrimaryCoordinatorChange;
 use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
 use App\Mail\ChaptersUpdatePrimaryCoorBoard;
 use App\Mail\ChaptersUpdatePrimaryCoorChapter;
+use App\Mail\NewChapterWelcome;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
@@ -166,6 +167,7 @@ class ChapterController extends Controller
         // //Primary Coordinator Notification//
         $pcDetails = Coordinators::find($chPcId);
         $emailPC = $pcDetails->email;
+        $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
 
         // Load Report Reviewer Coordinator Dropdown List
         $pcDetails = $this->userController->loadPrimaryList($chRegId, $chConfId);
@@ -176,7 +178,7 @@ class ChapterController extends Controller
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcDetails' => $pcDetails, 'submitted' => $submitted,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
-            'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink,
+            'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName
         ];
 
     }
@@ -417,9 +419,15 @@ class ChapterController extends Controller
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'cdPositionid' => $cdPositionid, 'cdId' => $cdId, 'reviewComplete' => $reviewComplete,
+        $now = Carbon::now();
+        $threeMonthsAgo = $now->copy()->subMonths(3);
+        $startMonthId = $chDetails->start_month_id;
+        $startYear = $chDetails->start_year;
+        $startDate = Carbon::createFromDate($startYear, $startMonthId, 1);
+
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'cdPositionid' => $cdPositionid, 'cdId' => $cdId, 'reviewComplete' => $reviewComplete, 'threeMonthsAgo' => $threeMonthsAgo,
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
-            'startMonthName' => $startMonthName, 'cdConfId' => $cdConfId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
+            'startMonthName' => $startMonthName, 'cdConfId' => $cdConfId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription,
         ];
@@ -487,6 +495,94 @@ class ChapterController extends Controller
                 'redirect' => route('chapters.view', ['id' => $chapterId]),
             ]);
         }
+    }
+
+    /**
+     * Function for sending New Chapter Email with Attachments
+     */
+    public function sendNewChapterEmail(Request $request): JsonResponse
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdName = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $cdEmail = $cdDetails->email;
+        $cdPosition = $cdDetails->displayPosition->long_title;
+        $cdConfId = $cdDetails->conference_id;
+        $cdCoferenceDescription = $cdDetails->conference->conference_description;
+
+        $input = $request->all();
+        $chapterid = $input['chapterid'];
+
+        try {
+            DB::beginTransaction();
+
+         //Load Chapter MailData//
+         $baseQuery = $this->getChapterDetails($chapterid);
+         $chDetails = $baseQuery['chDetails'];
+         $stateShortName = $baseQuery['stateShortName'];
+         $chConfId = $baseQuery['chConfId'];
+         $chPcId = $baseQuery['chPcId'];
+         $emailPC = $baseQuery['emailPC'];
+         $pcName = $baseQuery['pcName'];
+         $PresDetails = $baseQuery['PresDetails'];
+
+        // Load Board and Coordinators for Sending Email
+        $emailData = $this->userController->loadEmailDetails($chapterid);
+        $emailListChap = $emailData['emailListChap'];
+        $emailListCoord = $emailData['emailListCoord'];
+
+        $mailData = [
+            'chapter' => $chDetails->name,
+            'state' => $stateShortName,
+            'ein' => $chDetails->ein,
+            'firstName' => $PresDetails->first_name,
+            'email' => $PresDetails->email,
+            'cor_name' => $pcName,
+            'cor_email' => $emailPC,
+            'conf' => $chConfId,
+            'userName' => $cdName,
+            'userEmail' => $cdEmail,
+            'positionTitle' => $cdPosition,
+            'conf' => $cdConfId,
+            'conf_name' => $cdCoferenceDescription,
+        ];
+
+        $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
+        $pdfPath =  $this->pdfController->generateAndSaveGoodStandingLetter($chapterid);   // Generate and save the PDF
+        Mail::to($emailListChap)
+            ->cc($emailListCoord)
+            ->queue(new NewChapterWelcome($mailData, $pdfPath, $pdfPath2));
+
+             // Commit the transaction
+             DB::commit();
+
+             $message = 'New Chapter email successfully sent';
+
+             // Return JSON response
+             return response()->json([
+                 'status' => 'success',
+                 'message' => $message,
+                 'redirect' => route('chapters.view', ['id' => $chapterid]),
+             ]);
+
+         } catch (\Exception $e) {
+             // Rollback transaction on exception
+             DB::rollback();
+             Log::error($e);
+
+             $message = 'Something went wrong, Please try again.';
+
+             // Return JSON error response
+             return response()->json([
+                 'status' => 'error',
+                 'message' => $message,
+                 'redirect' => route('chapters.view', ['id' => $chapterid]),
+             ]);
+         }
+
     }
 
     /**

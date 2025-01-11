@@ -4,7 +4,7 @@
 </center>
 <br>
 <h1><center>{{ $mailData['conf_name'] }} Conference @if($mailData['reg_name'] != 'None')| {{ $mailData['reg_name'] }} Region @endif</center></h1>
-<h4> {{ $mailData['firstName'] }} {{ $mailData['lastName'] }}, Welcome to Our Team!</h4>
+<h4> {{ $mailData['cdName'] }}, Welcome to Our Team!</h4>
 <p>Congratulations on your appointment to Big Sister! We are looking forward to working with you and hope you find your new role interesting, fulfilling and especially enjoyable!</p>
 <hr>
 <b>Your Mentoring Coordinator and Her Role</b>
@@ -49,7 +49,7 @@
             <tbody>
                 @foreach ($mailData['chapters'] as $chapter)
                     <tr>
-                        <td style="padding: 0px; line-height: 1.5;"><center>{{ $chapter->chapter }}, {{ $chapter->state }}</center></td>
+                        <td style="padding: 0px; line-height: 1.5;"><center>{{ $chapter->name }}, {{ $chapter->state->state_short_name }}</center></td>
                     </tr>
                 @endforeach
             </tbody>

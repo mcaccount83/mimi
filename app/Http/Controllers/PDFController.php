@@ -227,6 +227,71 @@ class PDFController extends Controller
     /**
      * Save & Send Disband Letter
      */
+    public function generateAndSaveGoodStandingLetter($chapterId)
+    {
+        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])->find($chapterId);
+        $stateShortName = $chDetails->state->state_short_name;
+        $chPcId = $chDetails->primary_coordinator_id;
+
+        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+        $goodStandingDrive = DB::table('google_drive')->value('good_standing_letter');
+        $sharedDriveId = $goodStandingDrive;
+
+        $boards = $chDetails->boards()->get();
+        $borDetails = $boards->groupBy('board_position_id');
+        $presDetails = $borDetails->get(1)->first(); // President
+
+        // Load Board and Coordinators for Sending Email
+        $emailData = $this->userController->loadEmailDetails($chapterId);
+        $emailListChap = $emailData['emailListChap'];
+        $emailListCoord = $emailData['emailListCoord'];
+
+        // Load Conference Coordinators for Sending Email
+        $ccData = $this->userController->loadConferenceCoord($chPcId);
+        $emailCC = $ccData['cc_email'];
+        $cc_fname = $ccData['cc_fname'];
+        $cc_lname = $ccData['cc_lname'];
+        $cc_pos = $ccData['cc_pos'];
+
+        $pdfData = [
+            'chapter_name' => $chDetails->chapter_name,
+            'state' => $stateShortName,
+            'ein' => $chDetails->ein,
+            'pres_fname' => $presDetails->first_name,
+            'pres_lname' => $presDetails->last_name,
+            'pres_addr' => $presDetails->street_address,
+            'pres_city' => $presDetails->city,
+            'pres_state' => $presDetails->state,
+            'pres_zip' => $presDetails->zip,
+            'cc_fname' => $ccData['cc_fname'],
+            'cc_lname' => $ccData['cc_lname'],
+            'cc_pos' => $ccData['cc_pos'],
+            'conf_name' => $ccData['cc_conf_name'],
+            'conf_desc' => $ccData['cc_conf_desc'],
+            'ch_name' => $sanitizedChapterName,
+        ];
+
+
+        $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
+
+        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
+        $filename = $pdfData['state'].'_'.$chapterName.'_ChapterInGoodStanding.pdf'; // Use sanitized chapter name
+
+        $pdfPath = storage_path('app/pdf_reports/'.$filename);
+        $pdf->save($pdfPath);
+
+        if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)){
+            $documents = Documents::find($chapterId);
+            $documents->good_standing_letter = $pdfFileId;
+            $documents->save();
+
+            return $pdfPath;  // Return the full local stored path
+        }
+    }
+
+    /**
+     * Save & Send Disband Letter
+     */
     public function generateAndSaveDisbandLetter($chapterId)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])->find($chapterId);
@@ -280,7 +345,7 @@ class PDFController extends Controller
 
         if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)){
             $documents = Documents::find($chapterId);
-            $documents->disband_letter_path = $pdfPath;
+            $documents->disband_letter_path = $pdfFileId;
             $documents->save();
 
             return $pdfPath;  // Return the full local stored path

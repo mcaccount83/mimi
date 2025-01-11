@@ -60,7 +60,6 @@ Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinat
 
 // Error Log Routes...
 Route::get('admin/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
-// Route::get('logs', [LogViewerController::class, 'index'])->name('logs');
 // Queue Jobs Routes...
 Route::get('admin/jobs', [MailController::class, 'index'])->name('queue-monitor::index');
 // Route::get('', \romanzipp\QueueMonitor\Controllers\ShowQueueMonitorController::class)->name('queue-monitor::index');
@@ -130,17 +129,17 @@ Route::post('/process-donation', [PaymentController::class, 'm2mPayment'])->name
 Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
 Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
 Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'generateGoodStanding'])->name('pdf.chapteringoodstanding');
-Route::get('/chapter/disbandletter/pdf/{id}', [PDFController::class, 'generateDisbandLetter'])->name('pdf.disbandletter');
-Route::get('/chapter/probationnopmtletter/pdf/{id}', [PDFController::class, 'generateProbationNoPmtLetter'])->name('pdf.probationpayment');
-Route::post('/chapter/probationnopmtletter', [PDFController::class, 'saveProbationNoPmtLetter'])->name('pdf.saveprobationpayment');
-Route::get('/chapter/probationnorptletter/pdf/{id}', [PDFController::class, 'generateProbationNoRptLetter'])->name('pdf.probationreport');
-Route::post('/chapter/probationnorptletter', [PDFController::class, 'saveProbationNoRptLetter'])->name('pdf.saveprobationreport');
-Route::get('/chapter/probationpartyletter/pdf/{id}', [PDFController::class, 'generateProbationPartyLetter'])->name('pdf.probationparty');
-Route::post('/chapter/probationpartyletter', [PDFController::class, 'saveProbationPartyLetter'])->name('pdf.saveprobationparty');
-Route::get('/chapter/warningpartyletter/pdf/{id}', [PDFController::class, 'generateWarningPartyLetter'])->name('pdf.warningparty');
-Route::post('/chapter/warningpartyletter', [PDFController::class, 'saveWarningPartyLetter'])->name('pdf.savewarningparty');
-Route::get('/chapter/probationreleaseletter/pdf/{id}', [PDFController::class, 'generateProbationReleaseLetter'])->name('pdf.probationrelease');
-Route::post('/chapter/probationreleaseletter', [PDFController::class, 'saveProbationReleaseLetter'])->name('pdf.saveprobationrelease');
+// Route::get('/chapter/disbandletter/pdf/{id}', [PDFController::class, 'generateAndSaveDisbandLetter'])->name('pdf.disbandletter');
+// Route::get('/chapter/probationnopmtletter/pdf/{id}', [PDFController::class, 'generateProbationNoPmtLetter'])->name('pdf.probationpayment');
+// Route::post('/chapter/probationnopmtletter', [PDFController::class, 'saveProbationNoPmtLetter'])->name('pdf.saveprobationpayment');
+// Route::get('/chapter/probationnorptletter/pdf/{id}', [PDFController::class, 'generateProbationNoRptLetter'])->name('pdf.probationreport');
+// Route::post('/chapter/probationnorptletter', [PDFController::class, 'saveProbationNoRptLetter'])->name('pdf.saveprobationreport');
+// Route::get('/chapter/probationpartyletter/pdf/{id}', [PDFController::class, 'generateProbationPartyLetter'])->name('pdf.probationparty');
+// Route::post('/chapter/probationpartyletter', [PDFController::class, 'saveProbationPartyLetter'])->name('pdf.saveprobationparty');
+// Route::get('/chapter/warningpartyletter/pdf/{id}', [PDFController::class, 'generateWarningPartyLetter'])->name('pdf.warningparty');
+// Route::post('/chapter/warningpartyletter', [PDFController::class, 'saveWarningPartyLetter'])->name('pdf.savewarningparty');
+// Route::get('/chapter/probationreleaseletter/pdf/{id}', [PDFController::class, 'generateProbationReleaseLetter'])->name('pdf.probationrelease');
+// Route::post('/chapter/probationreleaseletter', [PDFController::class, 'saveProbationReleaseLetter'])->name('pdf.saveprobationrelease');
 
 Route::post('/generate-probation-letter', [PDFController::class, 'saveProbationLetter'])->name('pdf.generateProbationLetter');
 
@@ -159,7 +158,6 @@ Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResour
 Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
 
 // Mail Controller Routes...
-Route::post('/mail/chapterwelcome/{id}', [MailController::class, 'createNewChapterEmail'])->name('mail.chapterwelcome');
 
 // Chapter Controller Routes...
 Route::get('/chapter/chapterlist', [ChapterController::class, 'showChapters'])->name('chapters.chaplist');
@@ -171,6 +169,7 @@ Route::get('/international/chapterzapped', [ChapterController::class, 'showIntZa
 Route::get('/chapterdetails/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
 Route::get('/chapters/checkein', [ChapterController::class, 'checkEIN'])->name('chapters.checkein');
 Route::post('/chapterdetails/updateein', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
+Route::post('/chapter/sendnewchapter', [ChapterController::class, 'sendNewChapterEmail'])->name('chapters.sendnewchapter');
 Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterDisband'])->name('chapters.updatechapdisband');
 Route::post('/chapter/unzap', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
 Route::get('/chapternew', [ChapterController::class, 'addChapterNew'])->name('chapters.addnew');
@@ -226,35 +225,37 @@ Route::get('/chapterreports/coordinators', [ChapterReportController::class, 'sho
 
 // Coordinator Controller Routes...
 Route::get('/coordinator/coordlist', [CoordinatorController::class, 'showCoordinators'])->name('coordinators.coordlist');
+Route::get('/coordinator/retired', [CoordinatorController::class, 'showRetiredCoordinator'])->name('coordinators.coordretired');
 Route::get('/international/coordinator', [CoordinatorController::class, 'showIntCoordinator'])->name('international.intcoord');
 Route::get('/international/coordinatorretired', [CoordinatorController::class, 'showIntCoordinatorRetired'])->name('international.intcoordretired');
+Route::get('/coordnew', [CoordinatorController::class, 'addCoordNew'])->name('coordinators.editnew');
+Route::post('/coordnewupdate', [CoordinatorController::class, 'updateCoordNew'])->name('coordinators.updatenew');
 Route::get('/coorddetails/{id}', [CoordinatorController::class, 'viewCoordDetails'])->name('coordinators.view');
-Route::get('/getregion/{id}', [CoordinatorController::class, 'getRegionList'])->name('get.region');
-Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])->name('get.reporting');
-Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
-Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
+Route::post('/coorddetails/sendbigsister', [CoordinatorController::class, 'sendBigSisterEmail'])->name('coordinators.sendbigsister');
 Route::post('/coorddetails/updatecardsent', [CoordinatorController::class, 'updateCardSent'])->name('coordinators.updatecardsent');
-Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
 Route::post('/coorddetails/updateonleave', [CoordinatorController::class, 'updateOnLeave'])->name('coordinators.updateonleave');
 Route::post('/coorddetails/updateremoveleave', [CoordinatorController::class, 'updateRemoveLeave'])->name('coordinators.updateremoveleave');
-Route::get('/coordinator/retired', [CoordinatorController::class, 'showRetiredCoordinator'])->name('coordinators.coordretired');
 Route::post('/coorddetails/updateretire', [CoordinatorController::class, 'updateRetire'])->name('coordinators.updateretire');
 Route::post('/coorddetails/updateunretire', [CoordinatorController::class, 'updateUnRetire'])->name('coordinators.updateunretire');
-Route::get('/coordnew', [CoordinatorController::class, 'editCoordNew'])->name('coordinators.editnew');
-Route::post('/coordnewupdate', [CoordinatorController::class, 'updateCoordNew'])->name('coordinators.updatenew');
-Route::get('/coorddetailsedit/{id}', [CoordinatorController::class, 'editCoordDetails'])->name('coordinators.editdetails');
-Route::post('/coorddetailsupdate/{id}', [CoordinatorController::class, 'updateCoordDetails'])->name('coordinators.updatedetails');
-Route::get('/coordreports/volunteerutilization', [CoordinatorReportController::class, 'showRptVolUtilization'])->name('coordreports.coordrptvolutilization');
 Route::get('/coorddetailseditrole/{id}', [CoordinatorController::class, 'editCoordRole'])->name('coordinators.editrole');
 Route::post('/coorddetailsupdaterole/{id}', [CoordinatorController::class, 'updateCoordRole'])->name('coordinators.updaterole');
-Route::get('/coordreports/appreciation', [CoordinatorReportController::class, 'showRptAppreciation'])->name('coordreports.coordrptappreciation');
+Route::get('/coorddetailsedit/{id}', [CoordinatorController::class, 'editCoordDetails'])->name('coordinators.editdetails');
+Route::post('/coorddetailsupdate/{id}', [CoordinatorController::class, 'updateCoordDetails'])->name('coordinators.updatedetails');
 Route::get('/coorddetailseditrecognition/{id}', [CoordinatorController::class, 'editCoordRecognition'])->name('coordinators.editrecognition');
 Route::post('/coorddetailsupdaterecognition/{id}', [CoordinatorController::class, 'updateCoordRecognition'])->name('coordinators.updaterecognition');
-Route::get('/coordreports/reportingtree', [CoordinatorReportController::class, 'showRptReportingTree'])->name('coordreports.coordrptreportingtree');
 Route::get('/coordviewprofile', [CoordinatorController::class, 'viewCoordProfile'])->name('coordinators.viewprofile');
 Route::get('/coordprofile', [CoordinatorController::class, 'editCoordProfile'])->name('coordinators.profile');
 Route::post('/coordprofileupdate', [CoordinatorController::class, 'updateCoordProfile'])->name('coordinators.profileupdate');
 
+Route::get('/coordreports/volunteerutilization', [CoordinatorReportController::class, 'showRptVolUtilization'])->name('coordreports.coordrptvolutilization');
+Route::get('/coordreports/appreciation', [CoordinatorReportController::class, 'showRptAppreciation'])->name('coordreports.coordrptappreciation');
+Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
+Route::get('/coordreports/reportingtree', [CoordinatorReportController::class, 'showRptReportingTree'])->name('coordreports.coordrptreportingtree');
+
+// Route::get('/getregion/{id}', [CoordinatorController::class, 'getRegionList'])->name('get.region');
+// Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])->name('get.reporting');
+// Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
+// Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
 // Route::get('/coordinator/dashboard', [CoordinatorController::class, 'showCoordinatorDashboard'])->name('coordinators.coorddashboard');
 // Route::post('/coordinator/updatedashboard/{id}', [CoordinatorController::class, 'updateCoordinatorDashboard'])->name('coordinators.updatecoorddashboard');
 // Route::get('/coordreports/coordinatortodo', [CoordinatorReportController::class, 'showRptCoordToDo'])->name('coordreports.coordrpttodo');

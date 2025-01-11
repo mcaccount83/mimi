@@ -13,7 +13,7 @@
 <hr>
 <b>Step 1 - Meet your Coordinator</b>
 <p>All MOMS Club chapters have an International Coordinator assigned to help them. She is there for anything that you need! Any questions you have or good news you want to share -- talk to her, she loves to hear from you!</p>
-<p><center>{{ $mailData['cor_fname'] }} {{ $mailData['cor_lname'] }}<br>
+<p><center>{{ $mailData['cor_name'] }}<br>
                 <a href="mailto:{{ $mailData['cor_email'] }}">{{ $mailData['cor_email'] }}</a></center></p>
 <br>
 <hr>

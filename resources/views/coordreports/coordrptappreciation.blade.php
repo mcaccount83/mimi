@@ -36,8 +36,7 @@
 			    <tr>
 			        <th>Details</th>
                     <th>Conf/Reg</th>
-					<th>First Name</th>
-					<th>Last Name</th>
+					<th>Coordinator Name</th>
 					<th>Start Date</th>
 					<th>< 1 Year</th>
 					<th>1 Year</th>
@@ -57,32 +56,31 @@
 
                 @foreach($coordinatorList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coorddetailseditrecognition/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coorddetailseditrecognition/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>
-                            @if ($list->reg != "None")
-                                {{ $list->conf }} / {{ $list->reg }}
+                            @if ($list->region->short_name != "None")
+                                {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                             @else
-                                {{ $list->conf }}
+                                {{ $list->conference->short_name }}
                             @endif
                         </td>
-                        <td>{{ $list->cor_fname }}</td>
-                    <td>{{ $list->cor_lname }}</td>
+                    <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                     <td><span class="date-mask">{{ $list->start_date }}</span></td>
-                    <td>{{ $list->yr_0 }}</td>
-					<td>{{ $list->yr_1 }}</td>
-					<td>{{ $list->yr_2 }}</td>
-					<td>{{ $list->yr_3 }}</td>
-					<td>{{ $list->yr_4 }}</td>
-					<td>{{ $list->yr_5 }}</td>
-					<td>{{ $list->yr_6 }}</td>
-					<td>{{ $list->yr_7 }}</td>
-					<td>{{ $list->yr_8 }}</td>
-					<td>{{ $list->yr_9 }}</td>
-					<td>@if($list->necklace=='1')
+                    <td>{{ $list->recognition_year0 }}</td>
+					<td>{{ $list->recognition_year1 }}</td>
+					<td>{{ $list->recognition_year2 }}</td>
+					<td>{{ $list->recognition_year3 }}</td>
+					<td>{{ $list->recognition_year4 }}</td>
+					<td>{{ $list->recognition_year5 }}</td>
+					<td>{{ $list->recognition_year6 }}</td>
+					<td>{{ $list->recognition_year7 }}</td>
+					<td>{{ $list->recognition_year8 }}</td>
+					<td>{{ $list->recognition_year9 }}</td>
+					<td>@if($list->recognition_necklace=='1')
 							YES
 							@endif
 						</td>
-					<td>{{ $list->toptier }}</td>
+					<td>{{ $list->recognition_toptier }}</td>
                     </tr>
                   @endforeach
                   </tbody>

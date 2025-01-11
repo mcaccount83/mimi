@@ -29,7 +29,7 @@ class NewChapterWelcome extends Mailable implements ShouldQueue
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
-        $this->pdfPath = $pdfPath2;
+        $this->pdfPath2 = $pdfPath2;
     }
 
     /**
@@ -37,6 +37,9 @@ class NewChapterWelcome extends Mailable implements ShouldQueue
      */
     public function build(): static
     {
+        // Download the Google Drive file first
+        $content = file_get_contents($this->pdfPath2);
+
         return $this
             ->subject('Congratulations on your New Chapter!')
             ->replyTo($this->mailData['userEmail'])
@@ -45,8 +48,7 @@ class NewChapterWelcome extends Mailable implements ShouldQueue
                 'as' => $this->mailData['state'].'_'.$this->mailData['chapter'].'_ChapterInGoodStanding.pdf',
                 'mime' => 'application/pdf',
             ])
-            ->attach($this->pdfPath2, [
-                'as' => 'GroupExemptionLetter.pdf',
+            ->attachData($content, 'GroupExemptionLetter.pdf', [
                 'mime' => 'application/pdf',
             ]);
     }

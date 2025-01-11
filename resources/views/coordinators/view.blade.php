@@ -234,6 +234,9 @@
                 @if($assistConferenceCoordinatorCondition)
                     <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrecognition', ['id' => $cdDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Appreciation & Recognition</button>
                     <br>
+                    @if ($cdPositionid == 1 && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
+                        <button id="BigSister" type="button" class="btn bg-gradient-primary mb-3" onclick="showBigSisterEmailModal()"><i class="fas fa-envelope mr-2"></i>Send Big Sister Welcome Email</button>
+                    @endif
                     @if($cdLeave != 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="onLeaveCoordinator()"><i class="fas fa-ban mr-2"></i>Put Coordinator On Leave</button>
                     @elseif($cdLeave == 1)
@@ -667,6 +670,82 @@ function unRetireCoordinator(coordId) {
                         confirmButtonText: 'OK',
                         customClass: {
                             confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showBigSisterEmailModal() {
+    Swal.fire({
+        title: 'Big Sister Welcome Email',
+        html: `
+            <p>This will automatically send the Big Sister Welcome Email to the Big Sister, her Supervising Coordinator and current the user sending the email.</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $cdDetails->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+            return {
+                chapter_id: chapterId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('coordinators.sendbigsister') }}',
+                        type: 'POST',
+                        data: {
+                            chapterid: data.chapter_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
                         }
                     });
                 }

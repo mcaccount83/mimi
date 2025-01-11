@@ -204,7 +204,7 @@
                         @if($chDetails->is_active == '1')
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
-                                    <label>Chaper in Good Standig Letter:</label>
+                                    <label>Chaper in Good Standing Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
@@ -256,6 +256,20 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">Email Board</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>New Chapter Email:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    @if ($chDetails->ein != null && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
+                                        <button id="NewChapter" type="button" class="btn bg-primary mb-1 btn-sm" onclick="showNewChapterEmailModal()">Send New Chapter Email</button>
+                                    @elseif ($chDetails->ein == null && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
+                                        <button type="button" class="btn bg-primary mb-1 btn-sm" disabled>Must have EIN Number</button>
+                                    @else
+                                        <button type="button" class="btn bg-primary mb-1 btn-sm" disabled>Must be Newer than 3 Months</button>
+                                    @endif
                                 </div>
                             </div>
 
@@ -1236,6 +1250,82 @@ function unZapChapter(chapterid) {
                         confirmButtonText: 'OK',
                         customClass: {
                             confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showNewChapterEmailModal() {
+    Swal.fire({
+        title: 'New Chapter Email',
+        html: `
+            <p>This will automatically send the New Chapter Email to the full board and coordinator team. It will include their Letter of Good Standing and Group Exemption Letter.</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+            return {
+                chapter_id: chapterId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('chapters.sendnewchapter') }}',
+                        type: 'POST',
+                        data: {
+                            chapterid: data.chapter_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
                         }
                     });
                 }

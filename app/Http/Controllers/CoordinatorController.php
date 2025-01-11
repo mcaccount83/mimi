@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\CoordinatorRetireAdmin;
+use App\Mail\BigSisterWelcome;
 use App\Models\CoordinatorPosition;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
@@ -13,6 +14,7 @@ use App\Models\Region;
 use App\Models\Month;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -240,7 +242,7 @@ class CoordinatorController extends Controller
     /**
      * Add New Coordiantor
      */
-    public function editCoordNew(Request $request): View
+    public function addCoordNew(Request $request): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -359,112 +361,6 @@ class CoordinatorController extends Controller
     }
 
     /**
-     * Reassign Chapter
-     */
-    public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $check_changed = false)
-    {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetailsUser = $user->coordinator;
-        $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
-
-        if ($check_changed) {
-            $checkPrimaryIdArr = Chapters::find($chapter_id);
-            $current_primary = $checkPrimaryIdArr->primary_coordinator_id;
-            if ($current_primary == $coordinator_id) {
-                return true;
-            }
-        }
-
-        $chapter = Chapters::find($chapter_id);
-
-        DB::beginTransaction();
-        try {
-                $chapter->primary_coordinator_id = $coordinator_id;
-                $chapter->last_updated_by = $lastUpdatedBy;
-                $chapter->last_updated_date = date('Y-m-d H:i:s');
-
-                $chapter->save();
-
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
-
-            return false;
-        }
-
-    }
-
-    /**
-     * Reassign Coordinator
-     */
-    public function ReassignCoordinator(Request $request, $coordinator_id, $new_coordinator_id, $check_changed = false)
-    {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetailsUser = $user->coordinator;
-        $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
-
-        if ($check_changed) {
-            $checkReportIdArr = Coordinators::find($coordinator_id);
-            $current_report = $checkReportIdArr->report_id;
-            if ($current_report == $new_coordinator_id) {
-                return true;
-            }
-        }
-
-        $newCoordinator = Coordinators::find($new_coordinator_id);  //Find new layer
-        $new_layer_id = $newCoordinator->layer_id + 1;
-
-        $coordinator = Coordinators::find($coordinator_id);
-
-        DB::beginTransaction();
-        try {
-            //Update their main report ID & layer
-            $coordinator->report_id = $new_coordinator_id;
-            $coordinator->layer_id = $new_layer_id;
-            $coordinator->last_updated_by = $lastUpdatedBy;
-            $coordinator->last_updated_date = date('Y-m-d H:i:s');
-
-            $coordinator->save();
-
-            $reportingUpline = CoordinatorTree::where('coordinator_id', $new_coordinator_id)->first();  // Get reporting coordinator's upline data
-
-            $treeData = [
-                'coordinator_id' => $coordinator_id
-            ];
-
-            // Use the reporting coordinator's upline data
-            for ($i = 0; $i < $new_layer_id; $i++) {
-                $layerKey = "layer$i";
-                $treeData[$layerKey] = $reportingUpline->{$layerKey};
-            }
-
-            $treeData["layer$new_layer_id"] = $coordinator_id;  // Place new coordinator at their layer
-
-            // Set remaining layers to null
-            for ($i = $new_layer_id + 1; $i <= 8; $i++) {
-                $treeData["layer$i"] = null;
-            }
-
-            $coordTree = CoordinatorTree::where('coordinator_id', $coordinator_id)
-                ->update($treeData);
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
-            return false;
-        }
-    }
-
-    /**
      * View Coordiantor Detais
      */
     public function viewCoordDetails(Request $request, $id): View
@@ -481,6 +377,7 @@ class CoordinatorController extends Controller
         $baseQuery = $this->getCoordinatorDetails($id);
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
+        $cdPositionid = $baseQuery['cdPositionid'];
         $cdIsActive = $baseQuery['cdIsActive'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -494,6 +391,11 @@ class CoordinatorController extends Controller
         $secondaryPosition = $baseQuery['secondaryPosition'];
         $cdLeave = $baseQuery['cdDetails']->on_leave;
 
+        $now = Carbon::now();
+        $threeMonthsAgo = $now->copy()->subMonths(3);
+        $startDate = $cdDetails->coordinator_start_date;
+        $startDate = Carbon::parse($startDate);
+
         $drList = Coordinators::with('displayPosition')
             ->where('report_id', $cdId)  // DirectReport Harcoaded List
             ->where('is_active', 1)
@@ -506,13 +408,110 @@ class CoordinatorController extends Controller
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
-            'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition,
-            'secondaryPosition' => $secondaryPosition,
+            'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
+            'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo'=> $threeMonthsAgo, 'cdPositionid' => $cdPositionid
         ];
 
         return view('coordinators.view')->with($data);
     }
 
+    /**
+     * Function for sending New Chapter Email with Attachments
+     */
+    public function sendBigSisterEmail(Request $request): JsonResponse
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetailsUser = $user->coordinator;
+        $cdIdUser = $cdDetailsUser->id;
+        $cdNameUser = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $cdEmailUser = $cdDetailsUser->email;
+        $cdPositionUser = $cdDetailsUser->displayPosition->long_title;
+        $cdConfIdUser = $cdDetailsUser->conference_id;
+        $cdCoferenceDescriptionUser = $cdDetailsUser->conference->conference_description;
+
+        $input = $request->all();
+        $id = $input['chapterid'];
+
+         //Load Chapter MailData//
+         $baseQuery = $this->getCoordinatorDetails($id);
+         $cdDetails = $baseQuery['cdDetails'];
+         $cdId = $baseQuery['cdId'];
+         $cdName = $cdDetails->first_name.' '.$cdDetails->last_name;
+         $cdEmail = $cdDetails->email;
+         $regionLongName = $baseQuery['regionLongName'];
+         $conferenceDescription = $baseQuery['conferenceDescription'];
+         $cdConfId = $baseQuery['cdConfId'];
+         $cdRptId = $baseQuery['cdRptId'];
+         $RptFName = $baseQuery['RptFName'];
+         $RptLName = $baseQuery['RptLName'];
+         $ReportTo = $baseQuery['RptFName'].' '.$baseQuery['RptLName'];
+         $ReportEmail = $cdDetails->reportsTo?->email;
+         $ReportPhone = $cdDetails->reportsTo?->phone;
+
+        $chList = Chapters::with('state')
+            ->where('primary_coordinator_id', $cdId)  // Chapter Harcoaded List
+            ->where('is_active', 1)
+            ->get();
+
+        try {
+            DB::beginTransaction();
+
+        $mailData = [
+            'conf_name' => $conferenceDescription,
+            'reg_name' => $regionLongName,
+            'cdName' => $cdName,
+            'cor_fname' => $RptFName,
+            'cor_lname' => $RptLName,
+            'cor_name' => $ReportTo,
+            'cor_email' => $ReportEmail,
+            'cor_phone' => $ReportPhone,
+            'email' => $cdEmail,
+            'chapters' => $chList,
+            'userName' => $cdNameUser,
+            'userEmail' => $cdEmailUser,
+            'positionTitle' => $cdPositionUser,
+            'conf' => $cdConfIdUser,
+            'conf_name' => $cdCoferenceDescriptionUser,
+        ];
+
+        Mail::to($cdEmail)
+            ->cc($ReportEmail, $cdEmailUser)
+            ->queue(new BigSisterWelcome($mailData));
+
+             // Commit the transaction
+             DB::commit();
+
+             $message = 'Big Sister Welcome email successfully sent';
+
+             // Return JSON response
+             return response()->json([
+                 'status' => 'success',
+                 'message' => $message,
+                 'redirect' => route('coordinators.view', ['id' => $id]),
+             ]);
+
+         } catch (\Exception $e) {
+             // Rollback transaction on exception
+             DB::rollback();
+             Log::error($e);
+
+             $message = 'Something went wrong, Please try again.';
+
+             // Return JSON error response
+             return response()->json([
+                 'status' => 'error',
+                 'message' => $message,
+                 'redirect' => route('coordinators.view', ['id' => $id]),
+             ]);
+         }
+
+    }
+
+    /**
+     * Change birthday card sent date
+     */
     public function updateCardSent(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
@@ -848,6 +847,112 @@ class CoordinatorController extends Controller
         ];
 
         return view('coordinators.editrole')->with($data);
+    }
+
+    /**
+     * Reassign Chapter
+     */
+    public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $check_changed = false)
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetailsUser = $user->coordinator;
+        $cdIdUser = $cdDetailsUser->id;
+        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+
+        if ($check_changed) {
+            $checkPrimaryIdArr = Chapters::find($chapter_id);
+            $current_primary = $checkPrimaryIdArr->primary_coordinator_id;
+            if ($current_primary == $coordinator_id) {
+                return true;
+            }
+        }
+
+        $chapter = Chapters::find($chapter_id);
+
+        DB::beginTransaction();
+        try {
+                $chapter->primary_coordinator_id = $coordinator_id;
+                $chapter->last_updated_by = $lastUpdatedBy;
+                $chapter->last_updated_date = date('Y-m-d H:i:s');
+
+                $chapter->save();
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();  // Rollback Transaction
+                Log::error($e);  // Log the error
+
+            return false;
+        }
+
+    }
+
+    /**
+     * Reassign Coordinator
+     */
+    public function ReassignCoordinator(Request $request, $coordinator_id, $new_coordinator_id, $check_changed = false)
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetailsUser = $user->coordinator;
+        $cdIdUser = $cdDetailsUser->id;
+        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+
+        if ($check_changed) {
+            $checkReportIdArr = Coordinators::find($coordinator_id);
+            $current_report = $checkReportIdArr->report_id;
+            if ($current_report == $new_coordinator_id) {
+                return true;
+            }
+        }
+
+        $newCoordinator = Coordinators::find($new_coordinator_id);  //Find new layer
+        $new_layer_id = $newCoordinator->layer_id + 1;
+
+        $coordinator = Coordinators::find($coordinator_id);
+
+        DB::beginTransaction();
+        try {
+            //Update their main report ID & layer
+            $coordinator->report_id = $new_coordinator_id;
+            $coordinator->layer_id = $new_layer_id;
+            $coordinator->last_updated_by = $lastUpdatedBy;
+            $coordinator->last_updated_date = date('Y-m-d H:i:s');
+
+            $coordinator->save();
+
+            $reportingUpline = CoordinatorTree::where('coordinator_id', $new_coordinator_id)->first();  // Get reporting coordinator's upline data
+
+            $treeData = [
+                'coordinator_id' => $coordinator_id
+            ];
+
+            // Use the reporting coordinator's upline data
+            for ($i = 0; $i < $new_layer_id; $i++) {
+                $layerKey = "layer$i";
+                $treeData[$layerKey] = $reportingUpline->{$layerKey};
+            }
+
+            $treeData["layer$new_layer_id"] = $coordinator_id;  // Place new coordinator at their layer
+
+            // Set remaining layers to null
+            for ($i = $new_layer_id + 1; $i <= 8; $i++) {
+                $treeData["layer$i"] = null;
+            }
+
+            $coordTree = CoordinatorTree::where('coordinator_id', $coordinator_id)
+                ->update($treeData);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return false;
+        }
     }
 
     /**

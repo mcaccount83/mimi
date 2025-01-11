@@ -36,8 +36,7 @@
 			    <tr>
 			        <th>Details</th>
 			        <th>Conf/Reg</th>
-					<th>First Name</th>
-					<th>Last Name</th>
+					<th>Coordinator Name</th>
 					<th>Birthday</th>
 					<th>Card Sent</th>
                 </tr>
@@ -49,15 +48,14 @@
                       <td class="text-center align-middle">
                         <a href="{{ url("/coorddetails/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>
-                            @if ($list->reg != "None")
-                                {{ $list->conf }} / {{ $list->reg }}
+                            @if ($list->region->short_name != "None")
+                                {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                             @else
-                                {{ $list->conf }}
+                                {{ $list->conference->short_name }}
                             @endif
                         </td>
-                    <td>{{ $list->cor_fname }}</td>
-                    <td>{{ $list->cor_lname }}</td>
-                    <td data-sort="{{str_pad($list->b_month, 2, '0', STR_PAD_LEFT) . '-' .  $list->b_day}}">{{ $list->month }}  {{ $list->b_day }}</td>
+                        <td>{{ $list->first_name }} {{ $list->last_name }}</td>
+                    <td data-sort="{{str_pad($list->birthday_month_id, 2, '0', STR_PAD_LEFT) . '-' .  $list->birthday_day}}">{{ $list->birthdayMonth->month_long_name }}  {{ $list->birthday_day }}</td>
                     <td><span class="date-mask">{{ $list->card_sent }}</span></td>
                     </tr>
                   @endforeach

@@ -36,10 +36,9 @@
 			    <tr>
 			        <th>Details</th>
 			        <th>Conf/Reg</th>
-					<th>First Name</th>
-					<th>Last Name</th>
-					<th>Position</th>
-					<th>Secondary Position</th>
+					<th>Coordinator Name</th>
+					<th>Primary (Display) Position</th>
+                    <th>Secondary Position</th>
 					<th>Direct Report</th>
                     <th>InDirect Report</th>
                     <th>Total Report</th>
@@ -48,18 +47,21 @@
                 <tbody>
                 @foreach($coordinatorList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
-                            @if ($list->reg != "None")
-                                {{ $list->conf }} / {{ $list->reg }}
-                            @else
-                                {{ $list->conf }}
-                            @endif
+                        @if ($list->region->short_name != "None")
+                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                        @else
+                            {{ $list->conference->short_name }}
+                        @endif
                         </td>
-                    <td>{{ $list->cor_fname }}</td>
-                    <td>{{ $list->cor_lname }}</td>
-					<td>{{ $list->position }}</td>
-        			<td>{{ $list->sec_pos }}</td>
+                        <td>{{ $list->first_name }} {{ $list->last_name }}</td>
+                        @if ( $list->on_leave == 1 )
+                        <td @if ( $list->on_leave == 1 ) style="background-color: #ffc107;" @endif>ON LEAVE</td><td></td>
+                    @else
+                        <td>{{ $list->displayPosition->long_title }}</td>
+                        <td>{{ $list->secondaryPosition?->long_title }} </td>
+                    @endif
                     <td>{{ $list->direct_report }}</td>
                     <td>{{ $list->indirect_report }}</td>
                     <td>{{ $list->total_report }}</td>
