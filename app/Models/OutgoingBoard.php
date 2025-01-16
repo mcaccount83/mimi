@@ -23,21 +23,26 @@ class OutgoingBoard extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in boards BelongsTo 'id' in user
+        return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in outgoing BelongsTo 'id' in user
+    }
+
+    public function board(): BelongsTo
+    {
+        return $this->belongsTo(Boards::class, 'board_id', 'id');  // 'board_id' in outgoing BelongsTo 'id' in boards
     }
 
     public function chapters(): BelongsTo
     {
-        return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in boards BelongsTo 'id' in chapters
+        return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in outgoing BelongsTo 'id' in chapters
     }
 
     public function stateName(): BelongsTo
     {
-        return $this->belongsTo(State::class, 'state', 'state_short_name');  // 'state' in boards BelongsTo 'state_short_name' in state
+        return $this->belongsTo(State::class, 'state', 'state_short_name');  // 'state' in outgoing BelongsTo 'state_short_name' in state
     }
 
     public function position(): BelongsTo
     {
-        return $this->belongsTo(BoardPosition::class, 'board_position_id', 'id');  // 'board_position_id' in boards BelongsTo 'id' in board_position
+        return $this->belongsTo(BoardPosition::class, 'board_position_id', 'id');  // 'board_position_id' in outgoing BelongsTo 'id' in board_position
     }
 }

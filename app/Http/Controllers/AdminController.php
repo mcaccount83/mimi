@@ -756,29 +756,30 @@ class AdminController extends Controller
         try {
             $currentYear = Carbon::now()->year;
             $nextYear = $currentYear + 1;
+            $lastyear = $currentYear - 1;
 
             $corDetails = User::find($request->user()->id)->coordinator;
             $corId = $corDetails['id'];
 
             // Fetch all outgoing board members
             // $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
-            $outgoingBoardMembers = OutgoingBoard::get();
+            // $outgoingBoardMembers = OutgoingBoard::get();
 
             // Update the `is_active` column in the `users` table
-            foreach ($outgoingBoardMembers as $outgoingMember) {
-                DB::table('users')->where('id', $outgoingMember->user_id)->update([
-                    'is_active' => 0,
-                    'updated_at' => now(),
-                ]);
-            }
+            // foreach ($outgoingBoardMembers as $outgoingMember) {
+            //     DB::table('users')->where('id', $outgoingMember->user_id)->update([
+            //         'is_active' => 0,
+            //         'updated_at' => now(),
+            //     ]);
+            // }
 
-            // Truncate the `outgoing_board_member` and `incoming_board_member` tables
+            // Remove Data from the `outgoing_board_member` and `incoming_board_member` tables
             // DB::table('outgoing_board_member')->truncate();
             // DB::table('incoming_board_member')->truncate();
             OutgoingBoard::query()->delete();
             IncomingBoard::query()->delete();
 
-            // Fetch all chapters with their financial reports and update the balance
+            // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
             $chapters = Chapters::with('financialReport', 'documents')->get();
             foreach ($chapters as $chapter) {
                 if ($chapter->financialReport) {
@@ -787,20 +788,13 @@ class AdminController extends Controller
                 }
             }
 
-            // Get the current year for table renaming
-            // $currentYear = Carbon::now()->year;
-            $now = Carbon::now();
-            $month = $now->month;
-            $year = $now->year;
-            $lastyear = $now->year - 1;
-
             // Copy and rename the `financial_report` table
             DB::statement("CREATE TABLE financial_report_12_$lastyear LIKE financial_report");
             DB::statement("INSERT INTO financial_report_12_$lastyear SELECT * FROM financial_report");
 
-            // Truncate the `financial_report` table
+            // Remove Data from the `financial_report` table
             // DB::table('financial_report')->truncate();
-            FinancialReport::truncate();
+            FinancialReport::query()->delete();
 
             // Fetch all active chapters
             $activeChapters = Chapters::with('documents')->where('is_active', 1)->get();
@@ -810,7 +804,7 @@ class AdminController extends Controller
                 FinancialReport::create([
                     'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
                     'pre_balance' => $chapter->documents->balance,
-                    'amount_reserved_from_previous_year' => $chapter->balance,
+                    'amount_reserved_from_previous_year' => $chapter->documents->balance,
                 ]);
             }
 

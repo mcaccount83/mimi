@@ -12,6 +12,7 @@ use App\Mail\EOYElectionReportSubmitted;
 use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
+use App\Mail\WebsiteAddNoticeChapter;
 use App\Mail\WebsiteAddNoticeAdmin;
 use App\Mail\WebsiteReviewNotice;
 use App\Models\Admin;
@@ -262,26 +263,26 @@ class BoardController extends Controller
      */
     public function updatePresident(Request $request, $id): RedirectResponse
     {
-        $chapterId = $id;
-        $user = $request->user();
-        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+        $userName = $user->first_name.' '.$user->last_name;
 
-        $chapterInfoPre = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as statename',
-                'chapters.conference_id as conference', 'chapters.primary_coordinator_id as cor_id', 'bd.first_name as ch_pre_fname', 'bd.last_name as ch_pre_lname',
-                'bd.email as ch_pre_email', 'cd.email as cor_email')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            // ->where('chapters.is_Active', '=', '1')
-            ->where('chapters.id', $id)
-            ->orderByDesc('chapters.id')
-            ->get();
+        $bdDetails = $request->user()->board;
+        $bdId = $bdDetails->id;
+        $lastUpdatedBy = $bdDetails->first_name.' '.$bdDetails->last_name;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $chState = $chapterInfoPre[0]->statename;
-        $chConfId = $chapterInfoPre[0]->conference;
-        $chPCId = $chapterInfoPre[0]->cor_id;
-        $pc_email = $chapterInfoPre[0]->cor_email;
+        $baseQueryPre = $this->getChapterDetails($id);
+        $chDetailsPre = $baseQueryPre['chDetails'];
+        $PresDetailsPre = $baseQueryPre['PresDetails'];
+        $AVPDetailsPre = $baseQueryPre['AVPDetails'];
+        $MVPDetailsPre = $baseQueryPre['MVPDetails'];
+        $TRSDetailsPre = $baseQueryPre['TRSDetails'];
+        $SECDetailsPre = $baseQueryPre['SECDetails'];
+
+        $input = $request->all();
+        $webStatusPre = $input['ch_hid_webstatus'];
+        $webStatusUpd = $input['ch_webstatus'];
 
         $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
         if (empty(trim($ch_webstatus))) {
@@ -294,502 +295,345 @@ class BoardController extends Controller
             $website = 'http://'.$website;
         }
 
-        $presInfoPre = DB::table('chapters')
-            ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street',
-                'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'bd.state', '=', 'st.id')
-            ->where('chapters.is_Active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->where('chapters.id', $id)
-            ->get();
+        $chapter = Chapters::find($id);
 
-        $AVPInfoPre = DB::table('chapters')
-            ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->where('chapters.is_Active', '=', '1')
-            ->where('bd.board_position_id', '=', '2')
-            ->where('chapters.id', $id)
-            ->get();
-
-        $MVPInfoPre = DB::table('chapters')
-            ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->where('chapters.is_Active', '=', '1')
-            ->where('bd.board_position_id', '=', '3')
-            ->where('chapters.id', $id)
-            ->get();
-
-        $tresInfoPre = DB::table('chapters')
-            ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->where('chapters.is_Active', '=', '1')
-            ->where('bd.board_position_id', '=', '4')
-            ->where('chapters.id', $id)
-            ->get();
-
-        $secInfoPre = DB::table('chapters')
-            ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->where('chapters.is_Active', '=', '1')
-            ->where('bd.board_position_id', '=', '5')
-            ->where('chapters.id', $id)
-            ->get();
-
-        $chapter = Chapters::find($chapterId);
         DB::beginTransaction();
         try {
+            $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
+            $chapter->email = $request->input('ch_email');
+            $chapter->po_box = $request->input('ch_pobox');
             $chapter->website_url = $website;
             $chapter->website_status = $request->input('ch_webstatus');
-            $chapter->email = $request->input('ch_email');
-            $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
             $chapter->egroup = $request->input('ch_onlinediss');
             $chapter->social1 = $request->input('ch_social1');
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
-            $chapter->po_box = $request->input('ch_pobox');
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = date('Y-m-d H:i:s');
-
             $chapter->save();
 
             //President Info
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
-                $PREDetails = DB::table('boards')
-                    ->select('id as board_id', 'user_id')
-                    ->where('chapter_id', '=', $chapterId)
-                    ->where('board_position_id', '=', '1')
-                    ->get();
-                if (count($PREDetails) != 0) {
-                    $userId = $PREDetails[0]->user_id;
-                    $boardId = $PREDetails[0]->board_id;
+                $chapter = Chapters::with('president')->find($id);
+                $president = $chapter->president;
+                $user = $president->user;
 
-                    $user = User::find($userId);
-                    $user->first_name = $request->input('ch_pre_fname');
-                    $user->last_name = $request->input('ch_pre_lname');
-                    $user->email = $request->input('ch_pre_email');
-                    $user->updated_at = now();
-                    $user->save();
-
-                    $board = Boards::find($boardId);
-                    $board->first_name = $request->input('ch_pre_fname');
-                    $board->last_name = $request->input('ch_pre_lname');
-                    $board->email = $request->input('ch_pre_email');
-                    $board->street_address = $request->input('ch_pre_street');
-                    $board->city = $request->input('ch_pre_city');
-                    $board->state = $request->input('ch_pre_state');
-                    $board->zip = $request->input('ch_pre_zip');
-                    $board->country = 'USA';
-                    $board->phone = $request->input('ch_pre_phone');
-                    $board->last_updated_by = $lastUpdatedBy;
-                    $board->last_updated_date = now();
-                    $board->save();
-                }
+                $user->update([   // Update user details
+                    'first_name' => $request->input('ch_pre_fname'),
+                    'last_name' => $request->input('ch_pre_lname'),
+                    'email' => $request->input('ch_pre_email'),
+                    'updated_at' => now(),
+                ]);
+                $president->update([   // Update board details
+                    'first_name' => $request->input('ch_pre_fname'),
+                    'last_name' => $request->input('ch_pre_lname'),
+                    'email' => $request->input('ch_pre_email'),
+                    'street_address' => $request->input('ch_pre_street'),
+                    'city' => $request->input('ch_pre_city'),
+                    'state' => $request->input('ch_pre_state'),
+                    'zip' => $request->input('ch_pre_zip'),
+                    'country' => 'USA',
+                    'phone' => $request->input('ch_pre_phone'),
+                    'last_updated_by' => $lastUpdatedBy,
+                    'last_updated_date' => now(),
+                ]);
             }
-            //AVP Info
-            $AVPDetails = DB::table('boards')
-                ->select('id as board_id', 'user_id')
-                ->where('chapter_id', '=', $chapterId)
-                ->where('board_position_id', '=', '2')
-                ->get();
-            if (count($AVPDetails) != 0) {
-                $userId = $AVPDetails[0]->user_id;
-                $boardId = $AVPDetails[0]->board_id;
-                if ($request->input('AVPVacant') == 'on') {
-                    //Delete Details of Board memebers
-                    DB::table('boards')
-                        ->where('id', $boardId)
-                        ->delete();
-                    //Delete Details of Board memebers from users table
-                    DB::table('users')
-                        ->where('id', $userId)
-                        ->delete();
-                } else {
-                    $user = User::find($userId);
-                    $user->first_name = $request->input('ch_avp_fname');
-                    $user->last_name = $request->input('ch_avp_lname');
-                    $user->email = $request->input('ch_avp_email');
-                    $user->updated_at = now();
-                    $user->save();
 
-                    $board = Boards::find($boardId);
-                    $board->first_name = $request->input('ch_avp_fname');
-                    $board->last_name = $request->input('ch_avp_lname');
-                    $board->email = $request->input('ch_avp_email');
-                    $board->street_address = $request->input('ch_avp_street');
-                    $board->city = $request->input('ch_avp_city');
-                    $board->state = $request->input('ch_avp_state');
-                    $board->zip = $request->input('ch_avp_zip');
-                    $board->country = 'USA';
-                    $board->phone = $request->input('ch_avp_phone');
-                    $board->last_updated_by = $lastUpdatedBy;
-                    $board->last_updated_date = now();
-                    $board->save();
+            //AVP Info
+            $chapter = Chapters::with('avp')->find($id);
+            $avp = $chapter->avp;
+            if ($avp) {
+                $user = $avp->user;
+                if ($request->input('AVPVacant') == 'on') {
+                    $avp->delete();  // Delete board member and associated user if now Vacant
+                    $user->delete();
+                } else {
+                    $user->update([   // Update user details if alrady exists
+                        'first_name' => $request->input('ch_avp_fname'),
+                        'last_name' => $request->input('ch_avp_lname'),
+                        'email' => $request->input('ch_avp_email'),
+                        'updated_at' => now(),
+                    ]);
+                    $avp->update([   // Update board details if alrady exists
+                        'first_name' => $request->input('ch_avp_fname'),
+                        'last_name' => $request->input('ch_avp_lname'),
+                        'email' => $request->input('ch_avp_email'),
+                        'street_address' => $request->input('ch_avp_street'),
+                        'city' => $request->input('ch_avp_city'),
+                        'state' => $request->input('ch_avp_state'),
+                        'zip' => $request->input('ch_avp_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_avp_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => now(),
+                    ]);
                 }
             } else {
                 if ($request->input('AVPVacant') != 'on') {
-                    $userId = DB::table('users')->insertGetId(
-                        ['first_name' => $request->input('ch_avp_fname'),
-                            'last_name' => $request->input('ch_avp_lname'),
-                            'email' => $request->input('ch_avp_email'),
-                            'password' => Hash::make('TempPass4You'),
-                            'user_type' => 'board',
-                            'is_active' => 1]
-                    );
-
-                    $boardId = DB::table('boards')->insertGetId(
-                        ['user_id' => $userId,
-                            'first_name' => $request->input('ch_avp_fname'),
-                            'last_name' => $request->input('ch_avp_lname'),
-                            'email' => $request->input('ch_avp_email'),
-                            'board_position_id' => 2,
-                            'chapter_id' => $chapterId,
-                            'street_address' => $request->input('ch_avp_street'),
-                            'city' => $request->input('ch_avp_city'),
-                            'state' => $request->input('ch_avp_state'),
-                            'zip' => $request->input('ch_avp_zip'),
-                            'country' => 'USA',
-                            'phone' => $request->input('ch_avp_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s'),
-                            'is_active' => 1]
-                    );
+                    $user = User::create([  // Create user details if new
+                        'first_name' => $request->input('ch_avp_fname'),
+                        'last_name' => $request->input('ch_avp_lname'),
+                        'email' => $request->input('ch_avp_email'),
+                        'password' => Hash::make('TempPass4You'),
+                        'user_type' => 'board',
+                        'is_active' => 1,
+                    ]);
+                    $chapter->avp()->create([  // Create board details if new
+                        'user_id' => $user->id,
+                        'first_name' => $request->input('ch_avp_fname'),
+                        'last_name' => $request->input('ch_avp_lname'),
+                        'email' => $request->input('ch_avp_email'),
+                        'board_position_id' => 2,
+                        'street_address' => $request->input('ch_avp_street'),
+                        'city' => $request->input('ch_avp_city'),
+                        'state' => $request->input('ch_avp_state'),
+                        'zip' => $request->input('ch_avp_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_avp_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => now(),
+                        'is_active' => 1,
+                    ]);
                 }
             }
-            //MVP Info
-            $MVPDetails = DB::table('boards')
-                ->select('id as board_id', 'user_id')
-                ->where('chapter_id', '=', $chapterId)
-                ->where('board_position_id', '=', '3')
-                ->get();
-            if (count($MVPDetails) != 0) {
-                $userId = $MVPDetails[0]->user_id;
-                $boardId = $MVPDetails[0]->board_id;
-                if ($request->input('MVPVacant') == 'on') {
-                    //Delete Details of Board memebers
-                    DB::table('boards')
-                        ->where('id', $boardId)
-                        ->delete();
-                    //Delete Details of Board memebers from users table
-                    DB::table('users')
-                        ->where('id', $userId)
-                        ->delete();
-                } else {
-                    $user = User::find($userId);
-                    $user->first_name = $request->input('ch_mvp_fname');
-                    $user->last_name = $request->input('ch_mvp_lname');
-                    $user->email = $request->input('ch_mvp_email');
-                    $user->updated_at = date('Y-m-d H:i:s');
-                    $user->save();
 
-                    $board = Boards::find($boardId);
-                    $board->first_name = $request->input('ch_mvp_fname');
-                    $board->last_name = $request->input('ch_mvp_lname');
-                    $board->email = $request->input('ch_mvp_email');
-                    $board->street_address = $request->input('ch_mvp_street');
-                    $board->city = $request->input('ch_mvp_city');
-                    $board->state = $request->input('ch_mvp_state');
-                    $board->zip = $request->input('ch_mvp_zip');
-                    $board->country = 'USA';
-                    $board->phone = $request->input('ch_mvp_phone');
-                    $board->last_updated_by = $lastUpdatedBy;
-                    $board->last_updated_date = now();
-                    $board->save();
+            //MVP Info
+            $chapter = Chapters::with('mvp')->find($id);
+            $mvp = $chapter->mvp;
+            if ($mvp) {
+                $user = $mvp->user;
+                if ($request->input('MVPVacant') == 'on') {
+                    $mvp->delete();  // Delete board member and associated user if now Vacant
+                    $user->delete();
+                } else {
+                    $user->update([   // Update user details if alrady exists
+                        'first_name' => $request->input('ch_mvp_fname'),
+                        'last_name' => $request->input('ch_mvp_lname'),
+                        'email' => $request->input('ch_mvp_email'),
+                        'updated_at' => now(),
+                    ]);
+                    $mvp->update([   // Update board details if alrady exists
+                        'first_name' => $request->input('ch_mvp_fname'),
+                        'last_name' => $request->input('ch_mvp_lname'),
+                        'email' => $request->input('ch_mvp_email'),
+                        'street_address' => $request->input('ch_mvp_street'),
+                        'city' => $request->input('ch_mvp_city'),
+                        'state' => $request->input('ch_mvp_state'),
+                        'zip' => $request->input('ch_mvp_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_mvp_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => now(),
+                    ]);
                 }
             } else {
                 if ($request->input('MVPVacant') != 'on') {
-                    $userId = DB::table('users')->insertGetId(
-                        ['first_name' => $request->input('ch_mvp_fname'),
-                            'last_name' => $request->input('ch_mvp_lname'),
-                            'email' => $request->input('ch_mvp_email'),
-                            'password' => Hash::make('TempPass4You'),
-                            'user_type' => 'board',
-                            'is_active' => 1]
-                    );
-
-                    $boardId = DB::table('boards')->insertGetId(
-                        ['user_id' => $userId,
-                            'first_name' => $request->input('ch_mvp_fname'),
-                            'last_name' => $request->input('ch_mvp_lname'),
-                            'email' => $request->input('ch_mvp_email'),
-                            'board_position_id' => 3,
-                            'chapter_id' => $chapterId,
-                            'street_address' => $request->input('ch_mvp_street'),
-                            'city' => $request->input('ch_mvp_city'),
-                            'state' => $request->input('ch_mvp_state'),
-                            'zip' => $request->input('ch_mvp_zip'),
-                            'country' => 'USA',
-                            'phone' => $request->input('ch_mvp_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s'),
-                            'is_active' => 1]
-                    );
+                    $user = User::create([  // Create user details if new
+                        'first_name' => $request->input('ch_mvp_fname'),
+                        'last_name' => $request->input('ch_mvp_lname'),
+                        'email' => $request->input('ch_mvp_email'),
+                        'password' => Hash::make('TempPass4You'),
+                        'user_type' => 'board',
+                        'is_active' => 1,
+                    ]);
+                    $chapter->mvp()->create([  // Create board details if new
+                        'user_id' => $user->id,
+                        'first_name' => $request->input('ch_mvp_fname'),
+                        'last_name' => $request->input('ch_mvp_lname'),
+                        'email' => $request->input('ch_mvp_email'),
+                        'board_position_id' => 3,
+                        'street_address' => $request->input('ch_mvp_street'),
+                        'city' => $request->input('ch_mvp_city'),
+                        'state' => $request->input('ch_mvp_state'),
+                        'zip' => $request->input('ch_mvp_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_mvp_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => now(),
+                        'is_active' => 1,
+                    ]);
                 }
             }
-            //TRS Info
-            $TRSDetails = DB::table('boards')
-                ->select('id as board_id', 'user_id')
-                ->where('chapter_id', '=', $chapterId)
-                ->where('board_position_id', '=', '4')
-                ->get();
-            if (count($TRSDetails) != 0) {
-                $userId = $TRSDetails[0]->user_id;
-                $boardId = $TRSDetails[0]->board_id;
-                if ($request->input('TreasVacant') == 'on') {
-                    //Delete Details of Board memebers
-                    DB::table('boards')
-                        ->where('id', $boardId)
-                        ->delete();
-                    //Delete Details of Board memebers from users table
-                    DB::table('users')
-                        ->where('id', $userId)
-                        ->delete();
-                } else {
-                    $user = User::find($userId);
-                    $user->first_name = $request->input('ch_trs_fname');
-                    $user->last_name = $request->input('ch_trs_lname');
-                    $user->email = $request->input('ch_trs_email');
-                    $user->updated_at = date('Y-m-d H:i:s');
-                    $user->save();
 
-                    $board = Boards::find($boardId);
-                    $board->first_name = $request->input('ch_trs_fname');
-                    $board->last_name = $request->input('ch_trs_lname');
-                    $board->email = $request->input('ch_trs_email');
-                    $board->street_address = $request->input('ch_trs_street');
-                    $board->city = $request->input('ch_trs_city');
-                    $board->state = $request->input('ch_trs_state');
-                    $board->zip = $request->input('ch_trs_zip');
-                    $board->country = 'USA';
-                    $board->phone = $request->input('ch_trs_phone');
-                    $board->last_updated_by = $lastUpdatedBy;
-                    $board->last_updated_date = now();
-                    $board->save();
+            //TRS Info
+            $chapter = Chapters::with('treasurer')->find($id);
+            $treasurer = $chapter->treasurer;
+            if ($treasurer) {
+                $user = $treasurer->user;
+                if ($request->input('TreasVacant') == 'on') {
+                    $treasurer->delete();  // Delete board member and associated user if now Vacant
+                    $user->delete();
+                } else {
+                    $user->update([   // Update user details if alrady exists
+                        'first_name' => $request->input('ch_trs_fname'),
+                        'last_name' => $request->input('ch_trs_lname'),
+                        'email' => $request->input('ch_trs_email'),
+                        'updated_at' => now(),
+                    ]);
+                    $treasurer->update([   // Update board details if alrady exists
+                        'first_name' => $request->input('ch_trs_fname'),
+                        'last_name' => $request->input('ch_trs_lname'),
+                        'email' => $request->input('ch_trs_email'),
+                        'street_address' => $request->input('ch_trs_street'),
+                        'city' => $request->input('ch_trs_city'),
+                        'state' => $request->input('ch_trs_state'),
+                        'zip' => $request->input('ch_trs_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_trs_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => now(),
+                    ]);
                 }
             } else {
                 if ($request->input('TreasVacant') != 'on') {
-                    $userId = DB::table('users')->insertGetId(
-                        ['first_name' => $request->input('ch_trs_fname'),
-                            'last_name' => $request->input('ch_trs_lname'),
-                            'email' => $request->input('ch_trs_email'),
-                            'password' => Hash::make('TempPass4You'),
-                            'user_type' => 'board',
-                            'is_active' => 1]
-                    );
-
-                    $boardId = DB::table('boards')->insertGetId(
-                        ['user_id' => $userId,
-                            'first_name' => $request->input('ch_trs_fname'),
-                            'last_name' => $request->input('ch_trs_lname'),
-                            'email' => $request->input('ch_trs_email'),
-                            'board_position_id' => 4,
-                            'chapter_id' => $chapterId,
-                            'street_address' => $request->input('ch_trs_street'),
-                            'city' => $request->input('ch_trs_city'),
-                            'state' => $request->input('ch_trs_state'),
-                            'zip' => $request->input('ch_trs_zip'),
-                            'country' => 'USA',
-                            'phone' => $request->input('ch_trs_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s'),
-                            'is_active' => 1]
-                    );
+                    $user = User::create([  // Create user details if new
+                        'first_name' => $request->input('ch_trs_fname'),
+                        'last_name' => $request->input('ch_trs_lname'),
+                        'email' => $request->input('ch_trs_email'),
+                        'password' => Hash::make('TempPass4You'),
+                        'user_type' => 'board',
+                        'is_active' => 1,
+                    ]);
+                    $chapter->treasurer()->create([  // Create board details if new
+                        'user_id' => $user->id,
+                        'first_name' => $request->input('ch_trs_fname'),
+                        'last_name' => $request->input('ch_trs_lname'),
+                        'email' => $request->input('ch_trs_email'),
+                        'board_position_id' => 4,
+                        'street_address' => $request->input('ch_trs_street'),
+                        'city' => $request->input('ch_trs_city'),
+                        'state' => $request->input('ch_trs_state'),
+                        'zip' => $request->input('ch_trs_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_trs_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => now(),
+                        'is_active' => 1,
+                    ]);
                 }
             }
-            //SEC Info
-            $SECDetails = DB::table('boards')
-                ->select('id as board_id', 'user_id')
-                ->where('chapter_id', '=', $chapterId)
-                ->where('board_position_id', '=', '5')
-                ->get();
-            if (count($SECDetails) != 0) {
-                $userId = $SECDetails[0]->user_id;
-                $boardId = $SECDetails[0]->board_id;
-                if ($request->input('SecVacant') == 'on') {
-                    //Delete Details of Board memebers
-                    DB::table('boards')
-                        ->where('id', $boardId)
-                        ->delete();
-                    //Delete Details of Board memebers from users table
-                    DB::table('users')
-                        ->where('id', $userId)
-                        ->delete();
-                } else {
-                    $user = User::find($userId);
-                    $user->first_name = $request->input('ch_sec_fname');
-                    $user->last_name = $request->input('ch_sec_lname');
-                    $user->email = $request->input('ch_sec_email');
-                    $user->updated_at = date('Y-m-d H:i:s');
-                    $user->save();
 
-                    $board = Boards::find($boardId);
-                    $board->first_name = $request->input('ch_sec_fname');
-                    $board->last_name = $request->input('ch_sec_lname');
-                    $board->email = $request->input('ch_sec_email');
-                    $board->street_address = $request->input('ch_sec_street');
-                    $board->city = $request->input('ch_sec_city');
-                    $board->state = $request->input('ch_sec_state');
-                    $board->zip = $request->input('ch_sec_zip');
-                    $board->country = 'USA';
-                    $board->phone = $request->input('ch_sec_phone');
-                    $board->last_updated_by = $lastUpdatedBy;
-                    $board->last_updated_date = now();
-                    $board->save();
+            //SEC Info
+            $chapter = Chapters::with('secretary')->find($id);
+            $secretary = $chapter->secretary;
+            if ($secretary) {
+                $user = $secretary->user;
+                if ($request->input('SecVacant') == 'on') {
+                    $secretary->delete();  // Delete board member and associated user if now Vacant
+                    $user->delete();
+                } else {
+                    $user->update([   // Update user details if alrady exists
+                        'first_name' => $request->input('ch_sec_fname'),
+                        'last_name' => $request->input('ch_sec_lname'),
+                        'email' => $request->input('ch_sec_email'),
+                        'updated_at' => now(),
+                    ]);
+                    $secretary->update([   // Update board details if alrady exists
+                        'first_name' => $request->input('ch_sec_fname'),
+                        'last_name' => $request->input('ch_sec_lname'),
+                        'email' => $request->input('ch_sec_email'),
+                        'street_address' => $request->input('ch_sec_street'),
+                        'city' => $request->input('ch_sec_city'),
+                        'state' => $request->input('ch_sec_state'),
+                        'zip' => $request->input('ch_sec_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_sec_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => now(),
+                    ]);
                 }
             } else {
                 if ($request->input('SecVacant') != 'on') {
-                    $userId = DB::table('users')->insertGetId(
-                        ['first_name' => $request->input('ch_sec_fname'),
-                            'last_name' => $request->input('ch_sec_lname'),
-                            'email' => $request->input('ch_sec_email'),
-                            'password' => Hash::make('TempPass4You'),
-                            'user_type' => 'board',
-                            'is_active' => 1]
-                    );
-
-                    $boardId = DB::table('boards')->insertGetId(
-                        ['user_id' => $userId,
-                            'first_name' => $request->input('ch_sec_fname'),
-                            'last_name' => $request->input('ch_sec_lname'),
-                            'email' => $request->input('ch_sec_email'),
-                            'board_position_id' => 5,
-                            'chapter_id' => $chapterId,
-                            'street_address' => $request->input('ch_sec_street'),
-                            'city' => $request->input('ch_sec_city'),
-                            'state' => $request->input('ch_sec_state'),
-                            'zip' => $request->input('ch_sec_zip'),
-                            'country' => 'USA',
-                            'phone' => $request->input('ch_sec_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s'),
-                            'is_active' => 1]
-                    );
-                }
-            }
-
-            //Website Notifications//
-            $chId = $chapter['id'];
-            $chPcid = $chPCId;
-            $chConf = $chConfId;
-
-            $emailData = $this->userController->loadConferenceCoord($chPcid);
-            $to_CCemail = $emailData['cc_email'];
-
-            if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
-
-                $mailData = [
-                    'chapter_name' => $request->input('ch_name'),
-                    'chapter_state' => $request->input('ch_state'),
-                    'ch_website_url' => $website,
-                ];
-
-                if ($request->input('ch_webstatus') == 1) {
-                    Mail::to($to_CCemail)
-                        ->queue(new WebsiteAddNoticeAdmin($mailData));
-                }
-
-                if ($request->input('ch_webstatus') == 2) {
-                    Mail::to($to_CCemail)
-                        ->queue(new WebsiteReviewNotice($mailData));
+                    $user = User::create([  // Create user details if new
+                        'first_name' => $request->input('ch_sec_fname'),
+                        'last_name' => $request->input('ch_sec_lname'),
+                        'email' => $request->input('ch_sec_email'),
+                        'password' => Hash::make('TempPass4You'),
+                        'user_type' => 'board',
+                        'is_active' => 1,
+                    ]);
+                    $chapter->secretary()->create([  // Create board details if new
+                        'user_id' => $user->id,
+                        'first_name' => $request->input('ch_sec_fname'),
+                        'last_name' => $request->input('ch_sec_lname'),
+                        'email' => $request->input('ch_sec_email'),
+                        'board_position_id' => 5,
+                        'street_address' => $request->input('ch_sec_street'),
+                        'city' => $request->input('ch_sec_city'),
+                        'state' => $request->input('ch_sec_state'),
+                        'zip' => $request->input('ch_sec_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_sec_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => now(),
+                        'is_active' => 1,
+                    ]);
                 }
             }
 
             //Update Chapter MailData//
-            $chapterInfoUpd = DB::table('chapters')
-                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as state',
-                    'chapters.conference_id as conference', 'chapters.primary_coordinator_id as cor_id')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-                ->where('chapters.is_Active', '=', '1')
-                ->where('chapters.id', $chapterId)
-                ->orderByDesc('chapters.id')
-                ->get();
-
-            $presInfoUpd = DB::table('chapters')
-                ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street',
-                    'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'bd.state', '=', 'st.id')
-                ->where('chapters.is_Active', '=', '1')
-                ->where('bd.board_position_id', '=', '1')
-                ->where('chapters.id', $chapterId)
-                ->orderByDesc('chapters.id')
-                ->get();
-
-            $AVPInfoUpd = DB::table('chapters')
-                ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->where('chapters.is_Active', '=', '1')
-                ->where('bd.board_position_id', '=', '2')
-                ->where('chapters.id', $chapterId)
-                ->get();
-
-            $MVPInfoUpd = DB::table('chapters')
-                ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->where('chapters.is_Active', '=', '1')
-                ->where('bd.board_position_id', '=', '3')
-                ->where('chapters.id', $chapterId)
-                ->get();
-
-            $tresInfoUpd = DB::table('chapters')
-                ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->where('chapters.is_Active', '=', '1')
-                ->where('bd.board_position_id', '=', '4')
-                ->where('chapters.id', $chapterId)
-                ->get();
-
-            $secInfoUpd = DB::table('chapters')
-                ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->where('chapters.is_Active', '=', '1')
-                ->where('bd.board_position_id', '=', '5')
-                ->where('chapters.id', $chapterId)
-                ->get();
+            $baseQueryUpd = $this->getChapterDetails($id);
+            $chDetailsUpd = $baseQueryUpd['chDetails'];
+            $stateShortName = $baseQueryUpd['stateShortName'];
+            $chConfId = $baseQueryUpd['chConfId'];
+            $chPcId = $baseQueryUpd['chPcId'];
+            $PresDetailsUpd = $baseQueryUpd['PresDetails'];
+            $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
+            $MVPDetailsUpd = $baseQueryUpd['MVPDetails'];
+            $TRSDetailsUpd = $baseQueryUpd['TRSDetails'];
+            $SECDetailsUpd = $baseQueryUpd['SECDetails'];
+            $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
+            $emailListCoord = $baseQueryUpd['emailListCoord'];  // Full Coordinaor List
+            $emailCC = $baseQueryUpd['emailCC'];  // CC Email
+            $pcDetails = $baseQueryUpd['chDetails']->primaryCoordinator;
+            $pcEmail = $pcDetails->email;  // PC Email
+            $EINCordEmail = 'jackie.mchenry@momsclub.org';  // EIN Coor Email
 
             $mailDataPres = [
-                'chapter_name' => $request->input('ch_name'),
-                'chapter_state' => $request->input('ch_state'),
-                'chapterNameUpd' => $chapterInfoUpd[0]->name,
-                'chapterStateUpd' => $chapterInfoUpd[0]->state,
-                'cor_fnameUpd' => $chapterInfoUpd[0]->cor_f_name,
-                'cor_lnameUpd' => $chapterInfoUpd[0]->cor_l_name,
-                'updated_byUpd' => $chapterInfoUpd[0]->last_updated_date,
-                'chapfnameUpd' => $presInfoUpd[0]->bor_f_name,
-                'chaplnameUpd' => $presInfoUpd[0]->bor_l_name,
-                'chapteremailUpd' => $presInfoUpd[0]->bor_email,
-                'streetUpd' => $presInfoUpd[0]->street,
-                'cityUpd' => $presInfoUpd[0]->city,
-                'stateUpd' => $presInfoUpd[0]->state,
-                'zipUpd' => $presInfoUpd[0]->zip,
-                'phoneUpd' => $presInfoUpd[0]->phone,
-                'inConUpd' => $chapterInfoUpd[0]->inquiries_contact,
-                'chapemailUpd' => $chapterInfoUpd[0]->email,
-                'poBoxUpd' => $chapterInfoUpd[0]->po_box,
-                'webUrlUpd' => $chapterInfoUpd[0]->website_url,
-                'webStatusUpd' => $chapterInfoUpd[0]->website_status,
-                'egroupUpd' => $chapterInfoUpd[0]->egroup,
-                'chapfnamePre' => $presInfoPre[0]->bor_f_name,
-                'chaplnamePre' => $presInfoPre[0]->bor_l_name,
-                'chapteremailPre' => $presInfoPre[0]->bor_email,
-                'streetPre' => $presInfoPre[0]->street,
-                'cityPre' => $presInfoPre[0]->city,
-                'statePre' => $presInfoPre[0]->state,
-                'zipPre' => $presInfoPre[0]->zip,
-                'phonePre' => $presInfoPre[0]->phone,
-                'inConPre' => $chapterInfoPre[0]->inquiries_contact,
-                'chapemailPre' => $chapterInfoPre[0]->email,
-                'poBoxPre' => $chapterInfoPre[0]->po_box,
-                'webUrlPre' => $chapterInfoPre[0]->website_url,
-                'webStatusPre' => $chapterInfoPre[0]->website_status,
-                'egroupPre' => $chapterInfoPre[0]->egroup,
+                'chapter_name' => $chDetailsUpd->name,
+                'chapter_state' => $stateShortName,
+                'conference' => $chConfId,
+                'updated_byUpd' => $lastUpdatedBy,
+                'updated_byPre' => $lastupdatedDate,
+
+                'inConPre' => $chDetailsPre->inquiries_contact,
+                'chapemailPre' => $chDetailsPre->email,
+                'poBoxPre' => $chDetailsPre->po_box,
+                'webUrlPre' => $chDetailsPre->website_url,
+                'webStatusPre' => $chDetailsPre->website_status,
+                'egroupPre' => $chDetailsPre->egroup,
+                'chapfnamePre' => $PresDetailsPre->first_name,
+                'chaplnamePre' => $PresDetailsPre->last_name,
+                'chapteremailPre' => $PresDetailsPre->email,
+                'phonePre' => $PresDetailsPre->phone,
+                'streetPre' => $PresDetailsPre->street,
+                'cityPre' => $PresDetailsPre->city,
+                'statePre' => $PresDetailsPre->state,
+                'zipPre' => $PresDetailsPre->zip,
+
+                'inConUpd' => $chDetailsUpd->inquiries_contact,
+                'chapemailUpd' => $chDetailsUpd->email,
+                'poBoxUpd' => $chDetailsUpd->po_box,
+                'webUrlUpd' => $chDetailsUpd->website_url,
+                'webStatusUpd' => $chDetailsUpd->website_status,
+                'egroupUpd' => $chDetailsUpd->egroup,
+                'chapfnameUpd' => $PresDetailsUpd->first_name,
+                'chaplnameUpd' => $PresDetailsUpd->last_name,
+                'chapteremailUpd' => $PresDetailsUpd->email,
+                'phoneUpd' => $PresDetailsUpd->phone,
+                'streetUpd' => $PresDetailsUpd->street,
+                'cityUpd' => $PresDetailsUpd->city,
+                'stateUpd' => $PresDetailsUpd->state,
+                'zipUpd' => $PresDetailsUpd->zip,
+
+                'ch_website_url' => $website,
             ];
+
             $mailData = array_merge($mailDataPres);
-            if ($AVPInfoUpd !== null && count($AVPInfoUpd) > 0) {
-                $mailDataAvp = ['avpfnameUpd' => $AVPInfoUpd[0]->bor_f_name,
-                    'avplnameUpd' => $AVPInfoUpd[0]->bor_l_name,
-                    'avpemailUpd' => $AVPInfoUpd[0]->bor_email, ];
+            if ($AVPDetailsUpd !== null) {
+                $mailDataAvp = ['avpfnameUpd' => $AVPDetailsUpd->first_name,
+                    'avplnameUpd' => $AVPDetailsUpd->last_name,
+                    'avpemailUpd' => $AVPDetailsUpd->email, ];
                 $mailData = array_merge($mailData, $mailDataAvp);
             } else {
                 $mailDataAvp = ['avpfnameUpd' => '',
@@ -797,10 +641,10 @@ class BoardController extends Controller
                     'avpemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataAvp);
             }
-            if ($MVPInfoUpd !== null && count($MVPInfoUpd) > 0) {
-                $mailDataMvp = ['mvpfnameUpd' => $MVPInfoUpd[0]->bor_f_name,
-                    'mvplnameUpd' => $MVPInfoUpd[0]->bor_l_name,
-                    'mvpemailUpd' => $MVPInfoUpd[0]->bor_email, ];
+            if ($MVPDetailsUpd !== null) {
+                $mailDataMvp = ['mvpfnameUpd' => $MVPDetailsUpd->first_name,
+                    'mvplnameUpd' => $MVPDetailsUpd->last_name,
+                    'mvpemailUpd' => $MVPDetailsUpd->email, ];
                 $mailData = array_merge($mailData, $mailDataMvp);
             } else {
                 $mailDataMvp = ['mvpfnameUpd' => '',
@@ -808,10 +652,10 @@ class BoardController extends Controller
                     'mvpemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataMvp);
             }
-            if ($tresInfoUpd !== null && count($tresInfoUpd) > 0) {
-                $mailDatatres = ['tresfnameUpd' => $tresInfoUpd[0]->bor_f_name,
-                    'treslnameUpd' => $tresInfoUpd[0]->bor_l_name,
-                    'tresemailUpd' => $tresInfoUpd[0]->bor_email, ];
+            if ($TRSDetailsUpd !== null) {
+                $mailDatatres = ['tresfnameUpd' => $TRSDetailsUpd->first_name,
+                    'treslnameUpd' => $TRSDetailsUpd->last_name,
+                    'tresemailUpd' => $TRSDetailsUpd->email, ];
                 $mailData = array_merge($mailData, $mailDatatres);
             } else {
                 $mailDatatres = ['tresfnameUpd' => '',
@@ -819,10 +663,10 @@ class BoardController extends Controller
                     'tresemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDatatres);
             }
-            if ($secInfoUpd !== null && count($secInfoUpd) > 0) {
-                $mailDataSec = ['secfnameUpd' => $secInfoUpd[0]->bor_f_name,
-                    'seclnameUpd' => $secInfoUpd[0]->bor_l_name,
-                    'secemailUpd' => $secInfoUpd[0]->bor_email, ];
+            if ($SECDetailsUpd !== null) {
+                $mailDataSec = ['secfnameUpd' => $SECDetailsUpd->first_name,
+                    'seclnameUpd' => $SECDetailsUpd->last_name,
+                    'secemailUpd' => $SECDetailsUpd->email, ];
                 $mailData = array_merge($mailData, $mailDataSec);
             } else {
                 $mailDataSec = ['secfnameUpd' => '',
@@ -830,10 +674,11 @@ class BoardController extends Controller
                     'secemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataSec);
             }
-            if ($AVPInfoPre !== null && count($AVPInfoPre) > 0) {
-                $mailDataAvpp = ['avpfnamePre' => $AVPInfoPre[0]->bor_f_name,
-                    'avplnamePre' => $AVPInfoPre[0]->bor_l_name,
-                    'avpemailPre' => $AVPInfoPre[0]->bor_email, ];
+
+            if ($AVPDetailsPre !== null) {
+                $mailDataAvpp = ['avpfnamePre' => $AVPDetailsPre->first_name,
+                    'avplnamePre' => $AVPDetailsPre->last_name,
+                    'avpemailPre' => $AVPDetailsPre->email, ];
                 $mailData = array_merge($mailData, $mailDataAvpp);
             } else {
                 $mailDataAvpp = ['avpfnamePre' => '',
@@ -841,10 +686,10 @@ class BoardController extends Controller
                     'avpemailPre' => '', ];
                 $mailData = array_merge($mailData, $mailDataAvpp);
             }
-            if ($MVPInfoPre !== null && count($MVPInfoPre) > 0) {
-                $mailDataMvpp = ['mvpfnamePre' => $MVPInfoPre[0]->bor_f_name,
-                    'mvplnamePre' => $MVPInfoPre[0]->bor_l_name,
-                    'mvpemailPre' => $MVPInfoPre[0]->bor_email, ];
+            if ($MVPDetailsPre !== null) {
+                $mailDataMvpp = ['mvpfnamePre' => $MVPDetailsPre->first_name,
+                    'mvplnamePre' => $MVPDetailsPre->last_name,
+                    'mvpemailPre' => $MVPDetailsPre->email, ];
                 $mailData = array_merge($mailData, $mailDataMvpp);
             } else {
                 $mailDataMvpp = ['mvpfnamePre' => '',
@@ -852,10 +697,10 @@ class BoardController extends Controller
                     'mvpemailPre' => '', ];
                 $mailData = array_merge($mailData, $mailDataMvpp);
             }
-            if ($tresInfoPre !== null && count($tresInfoPre) > 0) {
-                $mailDatatresp = ['tresfnamePre' => $tresInfoPre[0]->bor_f_name,
-                    'treslnamePre' => $tresInfoPre[0]->bor_l_name,
-                    'tresemailPre' => $tresInfoPre[0]->bor_email, ];
+            if ($TRSDetailsPre !== null) {
+                $mailDatatresp = ['tresfnamePre' => $TRSDetailsPre->first_name,
+                    'treslnamePre' => $TRSDetailsPre->last_name,
+                    'tresemailPre' => $TRSDetailsPre->email, ];
                 $mailData = array_merge($mailData, $mailDatatresp);
             } else {
                 $mailDatatresp = ['tresfnamePre' => '',
@@ -863,10 +708,10 @@ class BoardController extends Controller
                     'tresemailPre' => '', ];
                 $mailData = array_merge($mailData, $mailDatatresp);
             }
-            if ($secInfoPre !== null && count($secInfoPre) > 0) {
-                $mailDataSecp = ['secfnamePre' => $secInfoPre[0]->bor_f_name,
-                    'seclnamePre' => $secInfoPre[0]->bor_l_name,
-                    'secemailPre' => $secInfoPre[0]->bor_email, ];
+            if ($SECDetailsPre !== null) {
+                $mailDataSecp = ['secfnamePre' => $SECDetailsPre->first_name,
+                    'seclnamePre' => $SECDetailsPre->last_name,
+                    'secemailPre' => $SECDetailsPre->email, ];
                 $mailData = array_merge($mailData, $mailDataSecp);
             } else {
                 $mailDataSecp = ['secfnamePre' => '',
@@ -875,47 +720,705 @@ class BoardController extends Controller
                 $mailData = array_merge($mailData, $mailDataSecp);
             }
 
-            //Primary Coordinator Notification//
-            $to_email = $chapterInfoUpd[0]->cor_email;
-
-            if ($presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $presInfoUpd[0]->street != $presInfoPre[0]->street || $presInfoUpd[0]->city != $presInfoPre[0]->city ||
-                $presInfoUpd[0]->state != $presInfoPre[0]->state || $presInfoUpd[0]->bor_f_name != $presInfoPre[0]->bor_f_name || $presInfoUpd[0]->bor_l_name != $presInfoPre[0]->bor_l_name ||
-                    $presInfoUpd[0]->zip != $presInfoPre[0]->zip || $presInfoUpd[0]->phone != $presInfoPre[0]->phone || $chapterInfoUpd[0]->inquiries_contact != $chapterInfoPre[0]->inquiries_contact ||
-                    $chapterInfoUpd[0]->email != $chapterInfoPre[0]->email || $chapterInfoUpd[0]->po_box != $chapterInfoPre[0]->po_box || $chapterInfoUpd[0]->website_url != $chapterInfoPre[0]->website_url ||
-                    $chapterInfoUpd[0]->website_status != $chapterInfoPre[0]->website_status || $chapterInfoUpd[0]->egroup != $chapterInfoPre[0]->egroup ||
+            if ($chDetailsUpd->name != $chDetailsPre->name || $PresDetailsUpd->bor_email != $PresDetailsPre->bor_email || $PresDetailsUpd->street_address != $PresDetailsPre->street_address || $PresDetailsUpd->city != $PresDetailsPre->city ||
+                    $PresDetailsUpd->state != $PresDetailsPre->state || $PresDetailsUpd->first_name != $PresDetailsPre->first_name || $PresDetailsUpd->last_name != $PresDetailsPre->last_name ||
+                    $PresDetailsUpd->zip != $PresDetailsPre->zip || $PresDetailsUpd->phone != $PresDetailsPre->phone || $PresDetailsUpd->inquiries_contact != $PresDetailsPre->inquiries_contact ||
+                    $chDetailsUpd->email != $chDetailsPre->email || $chDetailsUpd->po_box != $chDetailsPre->po_box || $chDetailsUpd->website_url != $chDetailsPre->website_url ||
+                    $chDetailsUpd->website_status != $chDetailsPre->website_status || $chDetailsUpd->egroup != $chDetailsPre->egroup ||
                     $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
                     $mailDataMvpp['mvpfnamePre'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplnamePre'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
                     $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
                     $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
-                Mail::to($to_email)
+                Mail::to($pcEmail)
                     ->queue(new ChaptersUpdatePrimaryCoorPresident($mailData));
             }
 
-            //List Admin Notification//
+            // //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
-            if ($chapterInfoUpd[0]->email != $chapterInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email ||
-            $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
-            $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+            if ($PresDetailsUpd->email != $PresDetailsPre->email || $PresDetailsUpd->email != $PresDetailsPre->email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
+                        $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
+                        $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+
                 Mail::to($to_email2)
                     ->queue(new ChapersUpdateListAdmin($mailData));
             }
 
+            //Website URL Change Notification//
+            if ($webStatusUpd != $webStatusPre) {
+                if ($webStatusUpd == 2) {
+                    Mail::to($emailCC)
+                        ->queue(new WebsiteReviewNotice($mailData));
+                }
+            }
+
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
-            echo $e->getMessage();
-            exit();
-            DB::rollback();
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
 
         return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
+
+
+        // $chapterId = $id;
+        // $user = $request->user();
+        // $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+
+        // $chapterInfoPre = DB::table('chapters')
+        //     ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as statename',
+        //         'chapters.conference_id as conference', 'chapters.primary_coordinator_id as cor_id', 'bd.first_name as ch_pre_fname', 'bd.last_name as ch_pre_lname',
+        //         'bd.email as ch_pre_email', 'cd.email as cor_email')
+        //     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //     ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+        //     ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+        //     // ->where('chapters.is_Active', '=', '1')
+        //     ->where('chapters.id', $id)
+        //     ->orderByDesc('chapters.id')
+        //     ->get();
+
+        // $chState = $chapterInfoPre[0]->statename;
+        // $chConfId = $chapterInfoPre[0]->conference;
+        // $chPCId = $chapterInfoPre[0]->cor_id;
+        // $pc_email = $chapterInfoPre[0]->cor_email;
+
+        // $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+        // if (empty(trim($ch_webstatus))) {
+        //     $ch_webstatus = 0; // Set it to 0 if it's blank
+        // }
+
+        // $website = $request->input('ch_website');
+        // // Ensure it starts with "http://" or "https://"
+        // if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+        //     $website = 'http://'.$website;
+        // }
+
+        // $presInfoPre = DB::table('chapters')
+        //     ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street',
+        //         'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
+        //     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //     ->leftJoin('state as st', 'bd.state', '=', 'st.id')
+        //     ->where('chapters.is_Active', '=', '1')
+        //     ->where('bd.board_position_id', '=', '1')
+        //     ->where('chapters.id', $id)
+        //     ->get();
+
+        // $AVPInfoPre = DB::table('chapters')
+        //     ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
+        //     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //     ->where('chapters.is_Active', '=', '1')
+        //     ->where('bd.board_position_id', '=', '2')
+        //     ->where('chapters.id', $id)
+        //     ->get();
+
+        // $MVPInfoPre = DB::table('chapters')
+        //     ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
+        //     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //     ->where('chapters.is_Active', '=', '1')
+        //     ->where('bd.board_position_id', '=', '3')
+        //     ->where('chapters.id', $id)
+        //     ->get();
+
+        // $tresInfoPre = DB::table('chapters')
+        //     ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
+        //     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //     ->where('chapters.is_Active', '=', '1')
+        //     ->where('bd.board_position_id', '=', '4')
+        //     ->where('chapters.id', $id)
+        //     ->get();
+
+        // $secInfoPre = DB::table('chapters')
+        //     ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
+        //     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //     ->where('chapters.is_Active', '=', '1')
+        //     ->where('bd.board_position_id', '=', '5')
+        //     ->where('chapters.id', $id)
+        //     ->get();
+
+        // $chapter = Chapters::find($chapterId);
+        // DB::beginTransaction();
+        // try {
+        //     $chapter->website_url = $website;
+        //     $chapter->website_status = $request->input('ch_webstatus');
+        //     $chapter->email = $request->input('ch_email');
+        //     $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
+        //     $chapter->egroup = $request->input('ch_onlinediss');
+        //     $chapter->social1 = $request->input('ch_social1');
+        //     $chapter->social2 = $request->input('ch_social2');
+        //     $chapter->social3 = $request->input('ch_social3');
+        //     $chapter->po_box = $request->input('ch_pobox');
+        //     $chapter->last_updated_by = $lastUpdatedBy;
+        //     $chapter->last_updated_date = date('Y-m-d H:i:s');
+
+        //     $chapter->save();
+
+        //     //President Info
+        //     if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
+        //         $PREDetails = DB::table('boards')
+        //             ->select('id as board_id', 'user_id')
+        //             ->where('chapter_id', '=', $chapterId)
+        //             ->where('board_position_id', '=', '1')
+        //             ->get();
+        //         if (count($PREDetails) != 0) {
+        //             $userId = $PREDetails[0]->user_id;
+        //             $boardId = $PREDetails[0]->board_id;
+
+        //             $user = User::find($userId);
+        //             $user->first_name = $request->input('ch_pre_fname');
+        //             $user->last_name = $request->input('ch_pre_lname');
+        //             $user->email = $request->input('ch_pre_email');
+        //             $user->updated_at = now();
+        //             $user->save();
+
+        //             $board = Boards::find($boardId);
+        //             $board->first_name = $request->input('ch_pre_fname');
+        //             $board->last_name = $request->input('ch_pre_lname');
+        //             $board->email = $request->input('ch_pre_email');
+        //             $board->street_address = $request->input('ch_pre_street');
+        //             $board->city = $request->input('ch_pre_city');
+        //             $board->state = $request->input('ch_pre_state');
+        //             $board->zip = $request->input('ch_pre_zip');
+        //             $board->country = 'USA';
+        //             $board->phone = $request->input('ch_pre_phone');
+        //             $board->last_updated_by = $lastUpdatedBy;
+        //             $board->last_updated_date = now();
+        //             $board->save();
+        //         }
+        //     }
+        //     //AVP Info
+        //     $AVPDetails = DB::table('boards')
+        //         ->select('id as board_id', 'user_id')
+        //         ->where('chapter_id', '=', $chapterId)
+        //         ->where('board_position_id', '=', '2')
+        //         ->get();
+        //     if (count($AVPDetails) != 0) {
+        //         $userId = $AVPDetails[0]->user_id;
+        //         $boardId = $AVPDetails[0]->board_id;
+        //         if ($request->input('AVPVacant') == 'on') {
+        //             //Delete Details of Board memebers
+        //             DB::table('boards')
+        //                 ->where('id', $boardId)
+        //                 ->delete();
+        //             //Delete Details of Board memebers from users table
+        //             DB::table('users')
+        //                 ->where('id', $userId)
+        //                 ->delete();
+        //         } else {
+        //             $user = User::find($userId);
+        //             $user->first_name = $request->input('ch_avp_fname');
+        //             $user->last_name = $request->input('ch_avp_lname');
+        //             $user->email = $request->input('ch_avp_email');
+        //             $user->updated_at = now();
+        //             $user->save();
+
+        //             $board = Boards::find($boardId);
+        //             $board->first_name = $request->input('ch_avp_fname');
+        //             $board->last_name = $request->input('ch_avp_lname');
+        //             $board->email = $request->input('ch_avp_email');
+        //             $board->street_address = $request->input('ch_avp_street');
+        //             $board->city = $request->input('ch_avp_city');
+        //             $board->state = $request->input('ch_avp_state');
+        //             $board->zip = $request->input('ch_avp_zip');
+        //             $board->country = 'USA';
+        //             $board->phone = $request->input('ch_avp_phone');
+        //             $board->last_updated_by = $lastUpdatedBy;
+        //             $board->last_updated_date = now();
+        //             $board->save();
+        //         }
+        //     } else {
+        //         if ($request->input('AVPVacant') != 'on') {
+        //             $userId = DB::table('users')->insertGetId(
+        //                 ['first_name' => $request->input('ch_avp_fname'),
+        //                     'last_name' => $request->input('ch_avp_lname'),
+        //                     'email' => $request->input('ch_avp_email'),
+        //                     'password' => Hash::make('TempPass4You'),
+        //                     'user_type' => 'board',
+        //                     'is_active' => 1]
+        //             );
+
+        //             $boardId = DB::table('boards')->insertGetId(
+        //                 ['user_id' => $userId,
+        //                     'first_name' => $request->input('ch_avp_fname'),
+        //                     'last_name' => $request->input('ch_avp_lname'),
+        //                     'email' => $request->input('ch_avp_email'),
+        //                     'board_position_id' => 2,
+        //                     'chapter_id' => $chapterId,
+        //                     'street_address' => $request->input('ch_avp_street'),
+        //                     'city' => $request->input('ch_avp_city'),
+        //                     'state' => $request->input('ch_avp_state'),
+        //                     'zip' => $request->input('ch_avp_zip'),
+        //                     'country' => 'USA',
+        //                     'phone' => $request->input('ch_avp_phone'),
+        //                     'last_updated_by' => $lastUpdatedBy,
+        //                     'last_updated_date' => date('Y-m-d H:i:s'),
+        //                     'is_active' => 1]
+        //             );
+        //         }
+        //     }
+        //     //MVP Info
+        //     $MVPDetails = DB::table('boards')
+        //         ->select('id as board_id', 'user_id')
+        //         ->where('chapter_id', '=', $chapterId)
+        //         ->where('board_position_id', '=', '3')
+        //         ->get();
+        //     if (count($MVPDetails) != 0) {
+        //         $userId = $MVPDetails[0]->user_id;
+        //         $boardId = $MVPDetails[0]->board_id;
+        //         if ($request->input('MVPVacant') == 'on') {
+        //             //Delete Details of Board memebers
+        //             DB::table('boards')
+        //                 ->where('id', $boardId)
+        //                 ->delete();
+        //             //Delete Details of Board memebers from users table
+        //             DB::table('users')
+        //                 ->where('id', $userId)
+        //                 ->delete();
+        //         } else {
+        //             $user = User::find($userId);
+        //             $user->first_name = $request->input('ch_mvp_fname');
+        //             $user->last_name = $request->input('ch_mvp_lname');
+        //             $user->email = $request->input('ch_mvp_email');
+        //             $user->updated_at = date('Y-m-d H:i:s');
+        //             $user->save();
+
+        //             $board = Boards::find($boardId);
+        //             $board->first_name = $request->input('ch_mvp_fname');
+        //             $board->last_name = $request->input('ch_mvp_lname');
+        //             $board->email = $request->input('ch_mvp_email');
+        //             $board->street_address = $request->input('ch_mvp_street');
+        //             $board->city = $request->input('ch_mvp_city');
+        //             $board->state = $request->input('ch_mvp_state');
+        //             $board->zip = $request->input('ch_mvp_zip');
+        //             $board->country = 'USA';
+        //             $board->phone = $request->input('ch_mvp_phone');
+        //             $board->last_updated_by = $lastUpdatedBy;
+        //             $board->last_updated_date = now();
+        //             $board->save();
+        //         }
+        //     } else {
+        //         if ($request->input('MVPVacant') != 'on') {
+        //             $userId = DB::table('users')->insertGetId(
+        //                 ['first_name' => $request->input('ch_mvp_fname'),
+        //                     'last_name' => $request->input('ch_mvp_lname'),
+        //                     'email' => $request->input('ch_mvp_email'),
+        //                     'password' => Hash::make('TempPass4You'),
+        //                     'user_type' => 'board',
+        //                     'is_active' => 1]
+        //             );
+
+        //             $boardId = DB::table('boards')->insertGetId(
+        //                 ['user_id' => $userId,
+        //                     'first_name' => $request->input('ch_mvp_fname'),
+        //                     'last_name' => $request->input('ch_mvp_lname'),
+        //                     'email' => $request->input('ch_mvp_email'),
+        //                     'board_position_id' => 3,
+        //                     'chapter_id' => $chapterId,
+        //                     'street_address' => $request->input('ch_mvp_street'),
+        //                     'city' => $request->input('ch_mvp_city'),
+        //                     'state' => $request->input('ch_mvp_state'),
+        //                     'zip' => $request->input('ch_mvp_zip'),
+        //                     'country' => 'USA',
+        //                     'phone' => $request->input('ch_mvp_phone'),
+        //                     'last_updated_by' => $lastUpdatedBy,
+        //                     'last_updated_date' => date('Y-m-d H:i:s'),
+        //                     'is_active' => 1]
+        //             );
+        //         }
+        //     }
+        //     //TRS Info
+        //     $TRSDetails = DB::table('boards')
+        //         ->select('id as board_id', 'user_id')
+        //         ->where('chapter_id', '=', $chapterId)
+        //         ->where('board_position_id', '=', '4')
+        //         ->get();
+        //     if (count($TRSDetails) != 0) {
+        //         $userId = $TRSDetails[0]->user_id;
+        //         $boardId = $TRSDetails[0]->board_id;
+        //         if ($request->input('TreasVacant') == 'on') {
+        //             //Delete Details of Board memebers
+        //             DB::table('boards')
+        //                 ->where('id', $boardId)
+        //                 ->delete();
+        //             //Delete Details of Board memebers from users table
+        //             DB::table('users')
+        //                 ->where('id', $userId)
+        //                 ->delete();
+        //         } else {
+        //             $user = User::find($userId);
+        //             $user->first_name = $request->input('ch_trs_fname');
+        //             $user->last_name = $request->input('ch_trs_lname');
+        //             $user->email = $request->input('ch_trs_email');
+        //             $user->updated_at = date('Y-m-d H:i:s');
+        //             $user->save();
+
+        //             $board = Boards::find($boardId);
+        //             $board->first_name = $request->input('ch_trs_fname');
+        //             $board->last_name = $request->input('ch_trs_lname');
+        //             $board->email = $request->input('ch_trs_email');
+        //             $board->street_address = $request->input('ch_trs_street');
+        //             $board->city = $request->input('ch_trs_city');
+        //             $board->state = $request->input('ch_trs_state');
+        //             $board->zip = $request->input('ch_trs_zip');
+        //             $board->country = 'USA';
+        //             $board->phone = $request->input('ch_trs_phone');
+        //             $board->last_updated_by = $lastUpdatedBy;
+        //             $board->last_updated_date = now();
+        //             $board->save();
+        //         }
+        //     } else {
+        //         if ($request->input('TreasVacant') != 'on') {
+        //             $userId = DB::table('users')->insertGetId(
+        //                 ['first_name' => $request->input('ch_trs_fname'),
+        //                     'last_name' => $request->input('ch_trs_lname'),
+        //                     'email' => $request->input('ch_trs_email'),
+        //                     'password' => Hash::make('TempPass4You'),
+        //                     'user_type' => 'board',
+        //                     'is_active' => 1]
+        //             );
+
+        //             $boardId = DB::table('boards')->insertGetId(
+        //                 ['user_id' => $userId,
+        //                     'first_name' => $request->input('ch_trs_fname'),
+        //                     'last_name' => $request->input('ch_trs_lname'),
+        //                     'email' => $request->input('ch_trs_email'),
+        //                     'board_position_id' => 4,
+        //                     'chapter_id' => $chapterId,
+        //                     'street_address' => $request->input('ch_trs_street'),
+        //                     'city' => $request->input('ch_trs_city'),
+        //                     'state' => $request->input('ch_trs_state'),
+        //                     'zip' => $request->input('ch_trs_zip'),
+        //                     'country' => 'USA',
+        //                     'phone' => $request->input('ch_trs_phone'),
+        //                     'last_updated_by' => $lastUpdatedBy,
+        //                     'last_updated_date' => date('Y-m-d H:i:s'),
+        //                     'is_active' => 1]
+        //             );
+        //         }
+        //     }
+        //     //SEC Info
+        //     $SECDetails = DB::table('boards')
+        //         ->select('id as board_id', 'user_id')
+        //         ->where('chapter_id', '=', $chapterId)
+        //         ->where('board_position_id', '=', '5')
+        //         ->get();
+        //     if (count($SECDetails) != 0) {
+        //         $userId = $SECDetails[0]->user_id;
+        //         $boardId = $SECDetails[0]->board_id;
+        //         if ($request->input('SecVacant') == 'on') {
+        //             //Delete Details of Board memebers
+        //             DB::table('boards')
+        //                 ->where('id', $boardId)
+        //                 ->delete();
+        //             //Delete Details of Board memebers from users table
+        //             DB::table('users')
+        //                 ->where('id', $userId)
+        //                 ->delete();
+        //         } else {
+        //             $user = User::find($userId);
+        //             $user->first_name = $request->input('ch_sec_fname');
+        //             $user->last_name = $request->input('ch_sec_lname');
+        //             $user->email = $request->input('ch_sec_email');
+        //             $user->updated_at = date('Y-m-d H:i:s');
+        //             $user->save();
+
+        //             $board = Boards::find($boardId);
+        //             $board->first_name = $request->input('ch_sec_fname');
+        //             $board->last_name = $request->input('ch_sec_lname');
+        //             $board->email = $request->input('ch_sec_email');
+        //             $board->street_address = $request->input('ch_sec_street');
+        //             $board->city = $request->input('ch_sec_city');
+        //             $board->state = $request->input('ch_sec_state');
+        //             $board->zip = $request->input('ch_sec_zip');
+        //             $board->country = 'USA';
+        //             $board->phone = $request->input('ch_sec_phone');
+        //             $board->last_updated_by = $lastUpdatedBy;
+        //             $board->last_updated_date = now();
+        //             $board->save();
+        //         }
+        //     } else {
+        //         if ($request->input('SecVacant') != 'on') {
+        //             $userId = DB::table('users')->insertGetId(
+        //                 ['first_name' => $request->input('ch_sec_fname'),
+        //                     'last_name' => $request->input('ch_sec_lname'),
+        //                     'email' => $request->input('ch_sec_email'),
+        //                     'password' => Hash::make('TempPass4You'),
+        //                     'user_type' => 'board',
+        //                     'is_active' => 1]
+        //             );
+
+        //             $boardId = DB::table('boards')->insertGetId(
+        //                 ['user_id' => $userId,
+        //                     'first_name' => $request->input('ch_sec_fname'),
+        //                     'last_name' => $request->input('ch_sec_lname'),
+        //                     'email' => $request->input('ch_sec_email'),
+        //                     'board_position_id' => 5,
+        //                     'chapter_id' => $chapterId,
+        //                     'street_address' => $request->input('ch_sec_street'),
+        //                     'city' => $request->input('ch_sec_city'),
+        //                     'state' => $request->input('ch_sec_state'),
+        //                     'zip' => $request->input('ch_sec_zip'),
+        //                     'country' => 'USA',
+        //                     'phone' => $request->input('ch_sec_phone'),
+        //                     'last_updated_by' => $lastUpdatedBy,
+        //                     'last_updated_date' => date('Y-m-d H:i:s'),
+        //                     'is_active' => 1]
+        //             );
+        //         }
+        //     }
+
+        //     //Website Notifications//
+        //     $chId = $chapter['id'];
+        //     $chPcid = $chPCId;
+        //     $chConf = $chConfId;
+
+        //     $emailData = $this->userController->loadConferenceCoord($chPcid);
+        //     $to_CCemail = $emailData['cc_email'];
+
+        //     if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
+
+        //         $mailData = [
+        //             'chapter_name' => $request->input('ch_name'),
+        //             'chapter_state' => $request->input('ch_state'),
+        //             'ch_website_url' => $website,
+        //         ];
+
+        //         if ($request->input('ch_webstatus') == 1) {
+        //             Mail::to($to_CCemail)
+        //                 ->queue(new WebsiteAddNoticeAdmin($mailData));
+        //         }
+
+        //         if ($request->input('ch_webstatus') == 2) {
+        //             Mail::to($to_CCemail)
+        //                 ->queue(new WebsiteReviewNotice($mailData));
+        //         }
+        //     }
+
+        //     //Update Chapter MailData//
+        //     $chapterInfoUpd = DB::table('chapters')
+        //         ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as state',
+        //             'chapters.conference_id as conference', 'chapters.primary_coordinator_id as cor_id')
+        //         ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+        //         ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+        //         ->where('chapters.is_Active', '=', '1')
+        //         ->where('chapters.id', $chapterId)
+        //         ->orderByDesc('chapters.id')
+        //         ->get();
+
+        //     $presInfoUpd = DB::table('chapters')
+        //         ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street',
+        //             'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
+        //         ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //         ->leftJoin('state as st', 'bd.state', '=', 'st.id')
+        //         ->where('chapters.is_Active', '=', '1')
+        //         ->where('bd.board_position_id', '=', '1')
+        //         ->where('chapters.id', $chapterId)
+        //         ->orderByDesc('chapters.id')
+        //         ->get();
+
+        //     $AVPInfoUpd = DB::table('chapters')
+        //         ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
+        //         ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //         ->where('chapters.is_Active', '=', '1')
+        //         ->where('bd.board_position_id', '=', '2')
+        //         ->where('chapters.id', $chapterId)
+        //         ->get();
+
+        //     $MVPInfoUpd = DB::table('chapters')
+        //         ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
+        //         ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //         ->where('chapters.is_Active', '=', '1')
+        //         ->where('bd.board_position_id', '=', '3')
+        //         ->where('chapters.id', $chapterId)
+        //         ->get();
+
+        //     $tresInfoUpd = DB::table('chapters')
+        //         ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
+        //         ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //         ->where('chapters.is_Active', '=', '1')
+        //         ->where('bd.board_position_id', '=', '4')
+        //         ->where('chapters.id', $chapterId)
+        //         ->get();
+
+        //     $secInfoUpd = DB::table('chapters')
+        //         ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
+        //         ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //         ->where('chapters.is_Active', '=', '1')
+        //         ->where('bd.board_position_id', '=', '5')
+        //         ->where('chapters.id', $chapterId)
+        //         ->get();
+
+        //     $mailDataPres = [
+        //         'chapter_name' => $request->input('ch_name'),
+        //         'chapter_state' => $request->input('ch_state'),
+        //         'chapterNameUpd' => $chapterInfoUpd[0]->name,
+        //         'chapterStateUpd' => $chapterInfoUpd[0]->state,
+        //         'cor_fnameUpd' => $chapterInfoUpd[0]->cor_f_name,
+        //         'cor_lnameUpd' => $chapterInfoUpd[0]->cor_l_name,
+        //         'updated_byUpd' => $chapterInfoUpd[0]->last_updated_date,
+        //         'chapfnameUpd' => $presInfoUpd[0]->bor_f_name,
+        //         'chaplnameUpd' => $presInfoUpd[0]->bor_l_name,
+        //         'chapteremailUpd' => $presInfoUpd[0]->bor_email,
+        //         'streetUpd' => $presInfoUpd[0]->street,
+        //         'cityUpd' => $presInfoUpd[0]->city,
+        //         'stateUpd' => $presInfoUpd[0]->state,
+        //         'zipUpd' => $presInfoUpd[0]->zip,
+        //         'phoneUpd' => $presInfoUpd[0]->phone,
+        //         'inConUpd' => $chapterInfoUpd[0]->inquiries_contact,
+        //         'chapemailUpd' => $chapterInfoUpd[0]->email,
+        //         'poBoxUpd' => $chapterInfoUpd[0]->po_box,
+        //         'webUrlUpd' => $chapterInfoUpd[0]->website_url,
+        //         'webStatusUpd' => $chapterInfoUpd[0]->website_status,
+        //         'egroupUpd' => $chapterInfoUpd[0]->egroup,
+        //         'chapfnamePre' => $presInfoPre[0]->bor_f_name,
+        //         'chaplnamePre' => $presInfoPre[0]->bor_l_name,
+        //         'chapteremailPre' => $presInfoPre[0]->bor_email,
+        //         'streetPre' => $presInfoPre[0]->street,
+        //         'cityPre' => $presInfoPre[0]->city,
+        //         'statePre' => $presInfoPre[0]->state,
+        //         'zipPre' => $presInfoPre[0]->zip,
+        //         'phonePre' => $presInfoPre[0]->phone,
+        //         'inConPre' => $chapterInfoPre[0]->inquiries_contact,
+        //         'chapemailPre' => $chapterInfoPre[0]->email,
+        //         'poBoxPre' => $chapterInfoPre[0]->po_box,
+        //         'webUrlPre' => $chapterInfoPre[0]->website_url,
+        //         'webStatusPre' => $chapterInfoPre[0]->website_status,
+        //         'egroupPre' => $chapterInfoPre[0]->egroup,
+        //     ];
+        //     $mailData = array_merge($mailDataPres);
+        //     if ($AVPInfoUpd !== null && count($AVPInfoUpd) > 0) {
+        //         $mailDataAvp = ['avpfnameUpd' => $AVPInfoUpd[0]->bor_f_name,
+        //             'avplnameUpd' => $AVPInfoUpd[0]->bor_l_name,
+        //             'avpemailUpd' => $AVPInfoUpd[0]->bor_email, ];
+        //         $mailData = array_merge($mailData, $mailDataAvp);
+        //     } else {
+        //         $mailDataAvp = ['avpfnameUpd' => '',
+        //             'avplnameUpd' => '',
+        //             'avpemailUpd' => '', ];
+        //         $mailData = array_merge($mailData, $mailDataAvp);
+        //     }
+        //     if ($MVPInfoUpd !== null && count($MVPInfoUpd) > 0) {
+        //         $mailDataMvp = ['mvpfnameUpd' => $MVPInfoUpd[0]->bor_f_name,
+        //             'mvplnameUpd' => $MVPInfoUpd[0]->bor_l_name,
+        //             'mvpemailUpd' => $MVPInfoUpd[0]->bor_email, ];
+        //         $mailData = array_merge($mailData, $mailDataMvp);
+        //     } else {
+        //         $mailDataMvp = ['mvpfnameUpd' => '',
+        //             'mvplnameUpd' => '',
+        //             'mvpemailUpd' => '', ];
+        //         $mailData = array_merge($mailData, $mailDataMvp);
+        //     }
+        //     if ($tresInfoUpd !== null && count($tresInfoUpd) > 0) {
+        //         $mailDatatres = ['tresfnameUpd' => $tresInfoUpd[0]->bor_f_name,
+        //             'treslnameUpd' => $tresInfoUpd[0]->bor_l_name,
+        //             'tresemailUpd' => $tresInfoUpd[0]->bor_email, ];
+        //         $mailData = array_merge($mailData, $mailDatatres);
+        //     } else {
+        //         $mailDatatres = ['tresfnameUpd' => '',
+        //             'treslnameUpd' => '',
+        //             'tresemailUpd' => '', ];
+        //         $mailData = array_merge($mailData, $mailDatatres);
+        //     }
+        //     if ($secInfoUpd !== null && count($secInfoUpd) > 0) {
+        //         $mailDataSec = ['secfnameUpd' => $secInfoUpd[0]->bor_f_name,
+        //             'seclnameUpd' => $secInfoUpd[0]->bor_l_name,
+        //             'secemailUpd' => $secInfoUpd[0]->bor_email, ];
+        //         $mailData = array_merge($mailData, $mailDataSec);
+        //     } else {
+        //         $mailDataSec = ['secfnameUpd' => '',
+        //             'seclnameUpd' => '',
+        //             'secemailUpd' => '', ];
+        //         $mailData = array_merge($mailData, $mailDataSec);
+        //     }
+        //     if ($AVPInfoPre !== null && count($AVPInfoPre) > 0) {
+        //         $mailDataAvpp = ['avpfnamePre' => $AVPInfoPre[0]->bor_f_name,
+        //             'avplnamePre' => $AVPInfoPre[0]->bor_l_name,
+        //             'avpemailPre' => $AVPInfoPre[0]->bor_email, ];
+        //         $mailData = array_merge($mailData, $mailDataAvpp);
+        //     } else {
+        //         $mailDataAvpp = ['avpfnamePre' => '',
+        //             'avplnamePre' => '',
+        //             'avpemailPre' => '', ];
+        //         $mailData = array_merge($mailData, $mailDataAvpp);
+        //     }
+        //     if ($MVPInfoPre !== null && count($MVPInfoPre) > 0) {
+        //         $mailDataMvpp = ['mvpfnamePre' => $MVPInfoPre[0]->bor_f_name,
+        //             'mvplnamePre' => $MVPInfoPre[0]->bor_l_name,
+        //             'mvpemailPre' => $MVPInfoPre[0]->bor_email, ];
+        //         $mailData = array_merge($mailData, $mailDataMvpp);
+        //     } else {
+        //         $mailDataMvpp = ['mvpfnamePre' => '',
+        //             'mvplnamePre' => '',
+        //             'mvpemailPre' => '', ];
+        //         $mailData = array_merge($mailData, $mailDataMvpp);
+        //     }
+        //     if ($tresInfoPre !== null && count($tresInfoPre) > 0) {
+        //         $mailDatatresp = ['tresfnamePre' => $tresInfoPre[0]->bor_f_name,
+        //             'treslnamePre' => $tresInfoPre[0]->bor_l_name,
+        //             'tresemailPre' => $tresInfoPre[0]->bor_email, ];
+        //         $mailData = array_merge($mailData, $mailDatatresp);
+        //     } else {
+        //         $mailDatatresp = ['tresfnamePre' => '',
+        //             'treslnamePre' => '',
+        //             'tresemailPre' => '', ];
+        //         $mailData = array_merge($mailData, $mailDatatresp);
+        //     }
+        //     if ($secInfoPre !== null && count($secInfoPre) > 0) {
+        //         $mailDataSecp = ['secfnamePre' => $secInfoPre[0]->bor_f_name,
+        //             'seclnamePre' => $secInfoPre[0]->bor_l_name,
+        //             'secemailPre' => $secInfoPre[0]->bor_email, ];
+        //         $mailData = array_merge($mailData, $mailDataSecp);
+        //     } else {
+        //         $mailDataSecp = ['secfnamePre' => '',
+        //             'seclnamePre' => '',
+        //             'secemailPre' => '', ];
+        //         $mailData = array_merge($mailData, $mailDataSecp);
+        //     }
+
+        //     //Primary Coordinator Notification//
+        //     $to_email = $chapterInfoUpd[0]->cor_email;
+
+        //     if ($presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $presInfoUpd[0]->street != $presInfoPre[0]->street || $presInfoUpd[0]->city != $presInfoPre[0]->city ||
+        //         $presInfoUpd[0]->state != $presInfoPre[0]->state || $presInfoUpd[0]->bor_f_name != $presInfoPre[0]->bor_f_name || $presInfoUpd[0]->bor_l_name != $presInfoPre[0]->bor_l_name ||
+        //             $presInfoUpd[0]->zip != $presInfoPre[0]->zip || $presInfoUpd[0]->phone != $presInfoPre[0]->phone || $chapterInfoUpd[0]->inquiries_contact != $chapterInfoPre[0]->inquiries_contact ||
+        //             $chapterInfoUpd[0]->email != $chapterInfoPre[0]->email || $chapterInfoUpd[0]->po_box != $chapterInfoPre[0]->po_box || $chapterInfoUpd[0]->website_url != $chapterInfoPre[0]->website_url ||
+        //             $chapterInfoUpd[0]->website_status != $chapterInfoPre[0]->website_status || $chapterInfoUpd[0]->egroup != $chapterInfoPre[0]->egroup ||
+        //             $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
+        //             $mailDataMvpp['mvpfnamePre'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplnamePre'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
+        //             $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
+        //             $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+
+        //         Mail::to($to_email)
+        //             ->queue(new ChaptersUpdatePrimaryCoorPresident($mailData));
+        //     }
+
+        //     //List Admin Notification//
+        //     $to_email2 = 'listadmin@momsclub.org';
+
+        //     if ($chapterInfoUpd[0]->email != $chapterInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email ||
+        //     $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
+        //     $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+        //         Mail::to($to_email2)
+        //             ->queue(new ChapersUpdateListAdmin($mailData));
+        //     }
+
+        //     DB::commit();
+        // } catch (\Exception $e) {
+        //     // Rollback Transaction
+        //     echo $e->getMessage();
+        //     exit();
+        //     DB::rollback();
+        //     // Log the error
+        //     Log::error($e);
+
+    //         return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
+    //     }
+
+    //     return redirect()->back()->with('success', 'Chapter has successfully updated');
+    // }
 
     /**
      * Update Board Details Board Member Login
