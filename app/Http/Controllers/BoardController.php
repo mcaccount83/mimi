@@ -722,7 +722,7 @@ class BoardController extends Controller
 
             if ($chDetailsUpd->name != $chDetailsPre->name || $PresDetailsUpd->bor_email != $PresDetailsPre->bor_email || $PresDetailsUpd->street_address != $PresDetailsPre->street_address || $PresDetailsUpd->city != $PresDetailsPre->city ||
                     $PresDetailsUpd->state != $PresDetailsPre->state || $PresDetailsUpd->first_name != $PresDetailsPre->first_name || $PresDetailsUpd->last_name != $PresDetailsPre->last_name ||
-                    $PresDetailsUpd->zip != $PresDetailsPre->zip || $PresDetailsUpd->phone != $PresDetailsPre->phone || $PresDetailsUpd->inquiries_contact != $PresDetailsPre->inquiries_contact ||
+                    $PresDetailsUpd->zip != $PresDetailsPre->zip || $PresDetailsUpd->phone != $PresDetailsPre->phone || $chDetailsUpd->inquiries_contact != $chDetailsPre->inquiries_contact ||
                     $chDetailsUpd->email != $chDetailsPre->email || $chDetailsUpd->po_box != $chDetailsPre->po_box || $chDetailsUpd->website_url != $chDetailsPre->website_url ||
                     $chDetailsUpd->website_status != $chDetailsPre->website_status || $chDetailsUpd->egroup != $chDetailsPre->egroup ||
                     $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
@@ -1425,134 +1425,311 @@ class BoardController extends Controller
      */
     public function updateMember(Request $request, $id): RedirectResponse
     {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+        $userName = $user->first_name.' '.$user->last_name;
+
+        $bdDetails = $request->user()->board;
+        $bdId = $bdDetails->id;
+        $bdPositionid = $bdDetails->board_position_id;
+        $lastUpdatedBy = $bdDetails->first_name.' '.$bdDetails->last_name;
+        $lastupdatedDate = date('Y-m-d H:i:s');
+
+        $baseQueryPre = $this->getChapterDetails($id);
+        $chDetailsPre = $baseQueryPre['chDetails'];
+        // $PresDetailsPre = $baseQueryPre['PresDetails'];
+        $AVPDetailsPre = $baseQueryPre['AVPDetails'];
+        $MVPDetailsPre = $baseQueryPre['MVPDetails'];
+        $TRSDetailsPre = $baseQueryPre['TRSDetails'];
+        $SECDetailsPre = $baseQueryPre['SECDetails'];
+
+        if ($bdPositionid == 2) {
+            $borDetailsPre = $AVPDetailsPre;
+        } elseif ($bdPositionid == 3) {
+            $borDetailsPre = $MVPDetailsPre;
+        } elseif ($bdPositionid == 4) {
+            $borDetailsPre = $TRSDetailsPre;
+        } elseif ($bdPositionid == 5) {
+            $borDetailsPre = $SECDetailsPre;
+        }
+
+        $input = $request->all();
+        $webStatusPre = $input['ch_hid_webstatus'];
+        $webStatusUpd = $input['ch_webstatus'];
+
+        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+        if (empty(trim($ch_webstatus))) {
+            $ch_webstatus = 0; // Set it to 0 if it's blank
+        }
+
+        $website = $request->input('ch_website');
+        // Ensure it starts with "http://" or "https://"
+        if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+            $website = 'http://'.$website;
+        }
+
+        $chapter = Chapters::find($id);
+        $user = User::find($userId);
+        $board = Boards::find($bdId);
+
         DB::beginTransaction();
         try {
-            $chapterId = $id;
-            $posId = $request->input('bor_positionid');
+            $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
+            $chapter->email = $request->input('ch_email');
+            $chapter->po_box = $request->input('ch_pobox');
+            $chapter->website_url = $website;
+            $chapter->website_status = $request->input('ch_webstatus');
+            $chapter->egroup = $request->input('ch_onlinediss');
+            $chapter->social1 = $request->input('ch_social1');
+            $chapter->social2 = $request->input('ch_social2');
+            $chapter->social3 = $request->input('ch_social3');
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->save();
 
-            // Fetch User Details
-            $user = $request->user();
-            $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+            // Update User Details
+            $user->first_name = $request->input('bor_fname');
+            $user->last_name = $request->input('bor_lname');
+            $user->email = $request->input('bor_email');
+            $user->updated_at = now();
+            $user->save();
 
-            // Fetch Board Details
-            $boardDetails = DB::table('boards')
-                ->select('boards.id as board_id', 'boards.user_id', 'boards.first_name as bor_fname', 'boards.last_name as bor_lname', 'boards.email as bor_email', 'bp.position as bor_position')
-                ->leftJoin('board_position as bp', 'boards.board_position_id', '=', 'bp.id')
-                ->where('boards.chapter_id', '=', $chapterId)
-                ->where('boards.board_position_id', '=', $posId)
-                ->get();
+            // Update Board Details
+            $board->first_name = $request->input('bor_fname');
+            $board->last_name = $request->input('bor_lname');
+            $board->email = $request->input('bor_email');
+            $board->phone = $request->input('bor_phone');
+            $board->street_address = $request->input('bor_addr');
+            $board->city = $request->input('bor_city');
+            $board->state = $request->input('bor_state');
+            $board->zip = $request->input('bor_zip');
+            $board->country = 'USA';
+            $board->last_updated_by = $lastUpdatedBy;
+            $board->last_updated_date = now();
+            $board->save();
 
-            // Fetch Chapter Info
-            $chapterInfo = DB::table('chapters')
-                ->select('chapters.id as chapter_id', 'chapters.name', 'chapters.state_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'st.state_short_name as state')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-                ->where('chapters.id', '=', $chapterId)
-                ->get();
+            //Update Chapter MailData//
+            $baseQueryUpd = $this->getChapterDetails($id);
+            $chDetailsUpd = $baseQueryUpd['chDetails'];
+            $stateShortName = $baseQueryUpd['stateShortName'];
+            $chConfId = $baseQueryUpd['chConfId'];
+            $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
+            $MVPDetailsUpd = $baseQueryUpd['MVPDetails'];
+            $TRSDetailsUpd = $baseQueryUpd['TRSDetails'];
+            $SECDetailsUpd = $baseQueryUpd['SECDetails'];
+            $emailCC = $baseQueryUpd['emailCC'];  // CC Email
+            $pcDetails = $baseQueryUpd['chDetails']->primaryCoordinator;
+            $pcEmail = $pcDetails->email;  // PC Email
 
-            $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
-            if (empty(trim($ch_webstatus))) {
-                $ch_webstatus = 0; // Set it to 0 if it's blank
+            if ($bdPositionid == 2) {
+                $borDetailsUpd = $AVPDetailsUpd;
+            } elseif ($bdPositionid == 3) {
+                $borDetailsUpd = $MVPDetailsUpd;
+            } elseif ($bdPositionid == 4) {
+                $borDetailsUpd = $TRSDetailsUpd;
+            } elseif ($bdPositionid == 5) {
+                $borDetailsUpd = $SECDetailsUpd;
             }
-
-            $website = $request->input('ch_website');
-            // Ensure it starts with "http://" or "https://"
-            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
-                $website = 'http://'.$website;
-            }
-
-            if (count($boardDetails) != 0) {
-                $userId = $boardDetails[0]->user_id;
-                $boardId = $boardDetails[0]->board_id;
-
-                // Update User Details
-                $user = User::find($userId);
-                $user->first_name = $request->input('bor_fname');
-                $user->last_name = $request->input('bor_lname');
-                $user->email = $request->input('bor_email');
-                $user->updated_at = now();
-                $user->save();
-
-                // Update Board Details
-                $board = Boards::find($boardId);
-                $board->first_name = $request->input('bor_fname');
-                $board->last_name = $request->input('bor_lname');
-                $board->email = $request->input('bor_email');
-                $board->phone = $request->input('bor_phone');
-                $board->street_address = $request->input('bor_addr');
-                $board->city = $request->input('bor_city');
-                $board->state = $request->input('bor_state');
-                $board->zip = $request->input('bor_zip');
-                $board->country = 'USA';
-                $board->last_updated_by = $lastUpdatedBy;
-                $board->last_updated_date = now();
-                $board->save();
-
-                // Update Chapter Details
-                $chapter = Chapters::find($chapterId);
-                $chapter->website_url = $website;
-                $chapter->website_status = $request->input('ch_webstatus');
-                $chapter->email = $request->input('ch_email');
-                $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
-                $chapter->egroup = $request->input('ch_onlinediss');
-                $chapter->social1 = $request->input('ch_social1');
-                $chapter->social2 = $request->input('ch_social2');
-                $chapter->social3 = $request->input('ch_social3');
-                $chapter->po_box = $request->input('ch_pobox');
-                $chapter->last_updated_by = $lastUpdatedBy;
-                $chapter->last_updated_date = date('Y-m-d H:i:s');
-
-                $chapter->save();
-            }
-
-            // Fetch Updated Board Details
-            $boardDetailsUpd = DB::table('boards')
-                ->select('boards.id as board_id', 'boards.user_id', 'boards.first_name as bor_fname', 'boards.last_name as bor_lname', 'boards.email as bor_email')
-                ->where('boards.chapter_id', '=', $chapterId)
-                ->where('boards.board_position_id', '=', $posId)
-                ->get();
 
             $mailData = [
-                'cor_fname' => $chapterInfo[0]->cor_fname,
-                'chapter_name' => $chapterInfo[0]->name,
-                'chapter_state' => $chapterInfo[0]->state,
-                'borposition' => $boardDetails[0]->bor_position,
-                'borfnameUpd' => $boardDetailsUpd[0]->bor_fname,
-                'borlnameUpd' => $boardDetailsUpd[0]->bor_lname,
-                'boremailUpd' => $boardDetailsUpd[0]->bor_email,
-                'borfname' => $boardDetails[0]->bor_fname,
-                'borlname' => $boardDetails[0]->bor_lname,
-                'boremail' => $boardDetails[0]->bor_email,
+                'chapter_name' => $chDetailsUpd->name,
+                'chapter_state' => $stateShortName,
+                'conference' => $chConfId,
+                'borposition' => $borDetailsPre->position->position,
+                'updated_byUpd' => $lastUpdatedBy,
+                'updated_byPre' => $lastupdatedDate,
+
+                'inConPre' => $chDetailsPre->inquiries_contact,
+                'chapemailPre' => $chDetailsPre->email,
+                'poBoxPre' => $chDetailsPre->po_box,
+                'webUrlPre' => $chDetailsPre->website_url,
+                'webStatusPre' => $chDetailsPre->website_status,
+                'egroupPre' => $chDetailsPre->egroup,
+                'borfname' => $borDetailsPre->first_name,
+                'borlname' => $borDetailsPre->last_name,
+                'boremail' => $borDetailsPre->email,
+
+                'inConUpd' => $chDetailsUpd->inquiries_contact,
+                'chapemailUpd' => $chDetailsUpd->email,
+                'poBoxUpd' => $chDetailsUpd->po_box,
+                'webUrlUpd' => $chDetailsUpd->website_url,
+                'webStatusUpd' => $chDetailsUpd->website_status,
+                'egroupUpd' => $chDetailsUpd->egroup,
+                'borfnameUpd' => $borDetailsUpd->first_name,
+                'borlnameUpd' => $borDetailsUpd->last_name,
+                'boremailUpd' => $borDetailsUpd->email,
+
+                'ch_website_url' => $website,
             ];
 
-            // PC Admin Notification
-            $to_email = $chapterInfo[0]->cor_email;
-            if ($boardDetailsUpd[0]->bor_email != $boardDetails[0]->bor_email || $boardDetailsUpd[0]->bor_fname != $boardDetails[0]->bor_fname ||
-                $boardDetailsUpd[0]->bor_lname != $boardDetails[0]->bor_lname) {
+            if ($chDetailsUpd->name != $chDetailsPre->name || $borDetailsUpd->bor_email != $borDetailsPre->bor_email || $borDetailsUpd->street_address != $borDetailsPre->street_address || $borDetailsUpd->city != $borDetailsPre->city ||
+                    $borDetailsUpd->state != $borDetailsPre->state || $borDetailsUpd->first_name != $borDetailsPre->first_name || $borDetailsUpd->last_name != $borDetailsPre->last_name ||
+                    $borDetailsUpd->zip != $borDetailsPre->zip || $borDetailsUpd->phone != $borDetailsPre->phone || $chDetailsUpd->inquiries_contact != $chDetailsPre->inquiries_contact ||
+                    $chDetailsUpd->email != $chDetailsPre->email || $chDetailsUpd->po_box != $chDetailsPre->po_box || $chDetailsUpd->website_url != $chDetailsPre->website_url ||
+                    $chDetailsUpd->website_status != $chDetailsPre->website_status || $chDetailsUpd->egroup != $chDetailsPre->egroup) {
 
-                Mail::to($to_email)
+                Mail::to($pcEmail)
                     ->queue(new ChapersUpdatePrimaryCoorMember($mailData));
             }
 
-            // List Admin Notification
+            // //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
-            if ($boardDetailsUpd[0]->bor_email != $boardDetails[0]->bor_email) {
+
+            if ($borDetailsUpd->email != $borDetailsPre->email ) {
+
                 Mail::to($to_email2)
-                    ->queue(new ChapersUpdateListAdminMember($mailData));
+                    ->queue(new ChapersUpdateListAdmin($mailData));
+            }
+
+            //Website URL Change Notification//
+            if ($webStatusUpd != $webStatusPre) {
+                if ($webStatusUpd == 2) {
+                    Mail::to($emailCC)
+                        ->queue(new WebsiteReviewNotice($mailData));
+                }
             }
 
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
 
         return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
+
+
+
+        // DB::beginTransaction();
+        // try {
+        //     $chapterId = $id;
+        //     $posId = $request->input('bor_positionid');
+
+        //     // Fetch User Details
+        //     $user = $request->user();
+        //     $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+
+        //     // Fetch Board Details
+        //     $boardDetails = DB::table('boards')
+        //         ->select('boards.id as board_id', 'boards.user_id', 'boards.first_name as bor_fname', 'boards.last_name as bor_lname', 'boards.email as bor_email', 'bp.position as bor_position')
+        //         ->leftJoin('board_position as bp', 'boards.board_position_id', '=', 'bp.id')
+        //         ->where('boards.chapter_id', '=', $chapterId)
+        //         ->where('boards.board_position_id', '=', $posId)
+        //         ->get();
+
+        //     // Fetch Chapter Info
+        //     $chapterInfo = DB::table('chapters')
+        //         ->select('chapters.id as chapter_id', 'chapters.name', 'chapters.state_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'st.state_short_name as state')
+        //         ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+        //         ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+        //         ->where('chapters.id', '=', $chapterId)
+        //         ->get();
+
+        //     $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+        //     if (empty(trim($ch_webstatus))) {
+        //         $ch_webstatus = 0; // Set it to 0 if it's blank
+        //     }
+
+        //     $website = $request->input('ch_website');
+        //     // Ensure it starts with "http://" or "https://"
+        //     if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+        //         $website = 'http://'.$website;
+        //     }
+
+        //     if (count($boardDetails) != 0) {
+        //         $userId = $boardDetails[0]->user_id;
+        //         $boardId = $boardDetails[0]->board_id;
+
+        //         // Update User Details
+        //         $user = User::find($userId);
+        //         $user->first_name = $request->input('bor_fname');
+        //         $user->last_name = $request->input('bor_lname');
+        //         $user->email = $request->input('bor_email');
+        //         $user->updated_at = now();
+        //         $user->save();
+
+        //         // Update Board Details
+        //         $board = Boards::find($boardId);
+        //         $board->first_name = $request->input('bor_fname');
+        //         $board->last_name = $request->input('bor_lname');
+        //         $board->email = $request->input('bor_email');
+        //         $board->phone = $request->input('bor_phone');
+        //         $board->street_address = $request->input('bor_addr');
+        //         $board->city = $request->input('bor_city');
+        //         $board->state = $request->input('bor_state');
+        //         $board->zip = $request->input('bor_zip');
+        //         $board->country = 'USA';
+        //         $board->last_updated_by = $lastUpdatedBy;
+        //         $board->last_updated_date = now();
+        //         $board->save();
+
+        //         // Update Chapter Details
+        //         $chapter = Chapters::find($chapterId);
+        //         $chapter->website_url = $website;
+        //         $chapter->website_status = $request->input('ch_webstatus');
+        //         $chapter->email = $request->input('ch_email');
+        //         $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
+        //         $chapter->egroup = $request->input('ch_onlinediss');
+        //         $chapter->social1 = $request->input('ch_social1');
+        //         $chapter->social2 = $request->input('ch_social2');
+        //         $chapter->social3 = $request->input('ch_social3');
+        //         $chapter->po_box = $request->input('ch_pobox');
+        //         $chapter->last_updated_by = $lastUpdatedBy;
+        //         $chapter->last_updated_date = date('Y-m-d H:i:s');
+
+        //         $chapter->save();
+        //     }
+
+        //     // Fetch Updated Board Details
+        //     $boardDetailsUpd = DB::table('boards')
+        //         ->select('boards.id as board_id', 'boards.user_id', 'boards.first_name as bor_fname', 'boards.last_name as bor_lname', 'boards.email as bor_email')
+        //         ->where('boards.chapter_id', '=', $chapterId)
+        //         ->where('boards.board_position_id', '=', $posId)
+        //         ->get();
+
+        //     $mailData = [
+        //         'cor_fname' => $chapterInfo[0]->cor_fname,
+        //         'chapter_name' => $chapterInfo[0]->name,
+        //         'chapter_state' => $chapterInfo[0]->state,
+        //         'borposition' => $boardDetails[0]->bor_position,
+        //         'borfnameUpd' => $boardDetailsUpd[0]->bor_fname,
+        //         'borlnameUpd' => $boardDetailsUpd[0]->bor_lname,
+        //         'boremailUpd' => $boardDetailsUpd[0]->bor_email,
+        //         'borfname' => $boardDetails[0]->bor_fname,
+        //         'borlname' => $boardDetails[0]->bor_lname,
+        //         'boremail' => $boardDetails[0]->bor_email,
+        //     ];
+
+        //     // PC Admin Notification
+        //     $to_email = $chapterInfo[0]->cor_email;
+        //     if ($boardDetailsUpd[0]->bor_email != $boardDetails[0]->bor_email || $boardDetailsUpd[0]->bor_fname != $boardDetails[0]->bor_fname ||
+        //         $boardDetailsUpd[0]->bor_lname != $boardDetails[0]->bor_lname) {
+
+        //         Mail::to($to_email)
+        //             ->queue(new ChapersUpdatePrimaryCoorMember($mailData));
+        //     }
+
+        //     // List Admin Notification
+        //     $to_email2 = 'listadmin@momsclub.org';
+        //     if ($boardDetailsUpd[0]->bor_email != $boardDetails[0]->bor_email) {
+        //         Mail::to($to_email2)
+        //             ->queue(new ChapersUpdateListAdminMember($mailData));
+        //     }
+
+        //     DB::commit();
+        // } catch (\Exception $e) {
+        //     // Rollback Transaction
+        //     DB::rollback();
+        //     // Log the error
+        //     Log::error($e);
+
+    //         return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
+    //     }
+
+    //     return redirect()->back()->with('success', 'Chapter has successfully updated');
+    // }
 
     /**
      * Show Re-Registrstion Payment Form All Board Members

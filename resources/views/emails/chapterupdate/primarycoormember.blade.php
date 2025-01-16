@@ -34,6 +34,55 @@ MIMI Database Administrator
                     <td>{{$mailData['boremail']}}</td>
                     <td>{{$mailData['boremailUpd']}}</td>
                 </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2" style="background-color: #D0D0D0; text-align: center;"><strong>Chapter Fields</strong></td>
+                </tr>
+                <tr style="{{$mailData['inConPre'] != $mailData['inConUpd'] ? 'background-color: yellow;' : ''}}">
+                    <td>Inquiries Contact</td>
+                    <td>{{$mailData['inConPre']}}</td>
+                    <td>{{$mailData['inConUpd']}}</td>
+                </tr>
+                <tr style="{{$mailData['chapemailPre'] != $mailData['chapemailUpd'] ? 'background-color: yellow;' : ''}}">
+                    <td>Chapter E-mail</td>
+                    <td>{{$mailData['chapemailPre']}}</td>
+                    <td>{{$mailData['chapemailUpd']}}</td>
+                </tr>
+                <tr style="{{$mailData['poBoxPre'] != $mailData['poBoxUpd'] ? 'background-color: yellow;' : ''}}">
+                    <td>PO Box</td>
+                    <td>{{$mailData['poBoxPre']}}</td>
+                    <td>{{$mailData['poBoxUpd']}}</td>
+                </tr>
+                <tr style="{{$mailData['webUrlPre'] != $mailData['webUrlUpd'] ? 'background-color: yellow;' : ''}}">
+                    <td>Website URL</td>
+                    <td>{{$mailData['webUrlPre']}}</td>
+                    <td>{{$mailData['webUrlUpd']}}</td>
+                </tr>
+                <tr style="{{$mailData['webStatusPre'] != $mailData['webStatusUpd'] ? 'background-color: yellow;' : ''}}">
+                    <td>Website Link Status</td>
+                    <td>
+                        @if($mailData['webStatusPre']==1)
+                            Linked
+                        @elseif($mailData['webStatusPre']==2)
+                            Link Requested
+                        @elseif($mailData['webStatusPre']==3)
+                            Do Not Link
+                        @else
+                            Not Linked
+                        @endif
+                    </td>
+                    <td>
+                        @if($mailData['webStatusUpd']==1)
+                            Linked
+                        @elseif($mailData['webStatusUpd']==2)
+                            Link Requested
+                        @elseif($mailData['webStatusUpd']==3)
+                            Do Not Link
+                        @else
+                            Not Linked
+                        @endif
+                    </td>
+                </tr>
             </tbody>
         </table>
 @endcomponent

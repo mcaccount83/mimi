@@ -407,23 +407,41 @@ $(document).ready(function () {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
+    const websiteField = document.getElementById("ch_website");
     const statusField = document.getElementById("ch_webstatus");
     const hiddenStatus = document.querySelector('input[name="ch_hid_webstatus"]');
 
     // Get the current saved value
     const savedValue = hiddenStatus.value;
+    const originalUrl = websiteField.value;
 
-    // Disable options 0 and 1, but keep them selectable if they were previously selected
-    Array.from(statusField.options).forEach(option => {
-        if (["0", "1"].includes(option.value)) {
-            option.disabled = (option.value !== savedValue);
-        }
-    });
+    // Function to disable options 0 and 1
+    const disableRestrictedOptions = () => {
+        Array.from(statusField.options).forEach(option => {
+            if (option.value === "0" || option.value === "1") {
+                option.disabled = true;
+            }
+        });
+    };
+
+    // Initial disable of restricted options
+    disableRestrictedOptions();
 
     // Ensure the saved value is selected
-    if (["0", "1"].includes(savedValue)) {
+    if (statusField.value) {
         statusField.value = savedValue;
     }
+
+    // Add event listener for website URL changes
+    websiteField.addEventListener("input", function() {
+        if (this.value !== originalUrl) {
+            // Reset status to empty/default when URL changes
+            statusField.value = "";
+
+            // Re-disable options 0 and 1
+            disableRestrictedOptions();
+        }
+    });
 });
 
 $( document ).ready(function() {
