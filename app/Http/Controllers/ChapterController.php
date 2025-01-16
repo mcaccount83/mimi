@@ -551,7 +551,7 @@ class ChapterController extends Controller
         ];
 
         $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
-        $pdfPath =  $this->pdfController->generateAndSaveGoodStandingLetter($chapterid);   // Generate and save the PDF
+        $pdfPath =  $this->pdfController->saveGoodStandingLetter($chapterid);   // Generate and save the PDF
         Mail::to($emailListChap)
             ->cc($emailListCoord)
             ->queue(new NewChapterWelcome($mailData, $pdfPath, $pdfPath2));
@@ -603,6 +603,7 @@ class ChapterController extends Controller
         $chapterid = $input['chapterid'];
         $disbandReason = $input['reason'];
         $disbandLetter = $input['letter'];
+        $letterType = $input['letterType'];
 
         $chapter = Chapters::find($chapterid);
         $documents = Documents::find($chapterid);
@@ -703,6 +704,17 @@ class ChapterController extends Controller
                     ->cc($emailListCoord)
                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
             }
+
+            //Standard Disbanding Letter Send to Board & Coordinators//
+            if ($disbandLetter == 1) {
+                $pdfPath =  $this->pdfController->saveDisbandLetter($chapterid, $letterType);   // Generate and save the PDF
+                // Mail::to($emailListChap)
+                //     ->cc($emailListCoord)
+                //     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+            }
+
+
+
 
             // Commit the transaction
             DB::commit();

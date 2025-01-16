@@ -181,7 +181,7 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chDocuments->ein_letter_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.open('{{ $chDocuments->ein_letter_path }}', '_blank')">EIN Letter from IRS</button>
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->ein_letter_path }}'">EIN Letter from IRS</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
                                 @endif
@@ -1097,7 +1097,124 @@ function showProbationReleaseModal() {
     });
 }
 
+
 function showDisbandChapterModal() {
+    Swal.fire({
+        title: 'Chapter Disband Reason',
+        html: `
+            <p>Marking a chapter as disbanded will remove the logins for all board members and remove the chapter. Please enter the reason for disbanding and press OK.</p>
+            <div style="display: flex; align-items: center; ">
+                <input type="text" id="disband_reason" name="disband_reason" class="swal2-input" placeholder ="Enter Reason" required style="width: 100%;">
+            </div>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
+            <br>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" id="disband_letter" class="custom-control-input">
+                <label class="custom-control-label" for="disband_letter">Send Disband Letter to Chapter</label>
+            </div>
+            <br>
+            <div id="letterTypeContainer" style="display: none;">
+                <p>Select the type of letter to generate and send:</p>
+                <select id="letterType" class="form-control">
+                    <option value="general">Disband Letter - General</option>
+                    <option value="did_not_start">Disband Letter - Did Not Start</option>
+                    <option value="no_report">Disband Letter - No EOY Reports</option>
+                    <option value="no_payment">Disband Letter - No Re-Reg Payment</option>
+                    <option value="no_communication">Disband Letter - No Communication</option>
+                </select>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        didOpen: () => {
+            // Add event listener to checkbox
+            document.getElementById('disband_letter').addEventListener('change', function() {
+                const letterTypeContainer = document.getElementById('letterTypeContainer');
+                letterTypeContainer.style.display = this.checked ? 'block' : 'none';
+            });
+        },
+        preConfirm: () => {
+            const disbandReason = Swal.getPopup().querySelector('#disband_reason').value;
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            const disbandLetter = Swal.getPopup().querySelector('#disband_letter').checked;
+            const letterType = Swal.getPopup().querySelector('#letterType').value;
+
+            if (!disbandReason) {
+                Swal.showValidationMessage('Please enter the reason for disbanding.');
+                return false;
+            }
+
+            return {
+                disband_reason: disbandReason,
+                chapter_id: chapterId,
+                disband_letter: disbandLetter,
+                letterType
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('chapters.updatechapdisband') }}',
+                        type: 'POST',
+                        data: {
+                            reason: data.disband_reason,
+                            letter: data.disband_letter ? '1' : '0',
+                            chapterid: data.chapter_id,
+                            letterType: data.letterType,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showDisbandChapter2Modal() {
     Swal.fire({
         title: 'Chapter Disband Reason',
         html: `

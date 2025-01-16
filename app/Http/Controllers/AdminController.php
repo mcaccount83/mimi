@@ -11,7 +11,8 @@ use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
-use App\Models\BoardOutgoing;
+use App\Models\OutgoingBoard;
+use App\Models\IncomingBoard;
 use App\Models\Boards;
 use App\Models\Bugs;
 use App\Models\Chapters;
@@ -26,6 +27,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
@@ -508,16 +510,6 @@ class AdminController extends Controller
 
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($id);
 
-        // $chDetails = DB::table('chapters as ch')
-        //     ->select('ch.*', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
-        //     ->join('state as st', 'ch.stat_ide', '=', 'st.id')
-        //     ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
-        //     ->join('region as rg', 'ch.region_id', '=', 'rg.id')
-        //     ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
-        //     ->where('ch.is_active', '=', '1')
-        //     ->where('ch.id', '=', $id)
-        //     ->get();
-
         $allMonths = Month::all();
 
         $stateArr = DB::table('state')
@@ -686,27 +678,6 @@ class AdminController extends Controller
     }
 
     /**
-     * Clear Outgoing Board Member Table (Truncate)
-     */
-    // public function updateOutgoingBoard()
-    // {
-    //     // Fetch all outgoing board members
-    //     $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
-
-    //     // Update the `is_active` column in the `users` table
-    //     foreach ($outgoingBoardMembers as $outgoingMember) {
-    //         // Ensure to update the `is_active` column for users in the `users` table
-    //         DB::table('users')->where('id', $outgoingMember->user_id)->update([
-    //             'is_active' => 0,
-    //             'last_updated_date' => now(),
-    //         ]);
-    //     }
-
-    //     // Truncate the `outgoing_board_member` table
-    //     DB::table('outgoing_board_member')->truncate();
-    // }
-
-    /**
      * Show EOY Procedures
      */
     public function showEOY(Request $request): View
@@ -746,45 +717,6 @@ class AdminController extends Controller
 
         return view('admin.eoy')->with($data);
     }
-
-    // public function updateEOY(UpdateEOYRequest $request, $id): RedirectResponse
-    // {
-    //     try {
-    //         $admin = Admin::findOrFail($id);
-    //         $validatedData = $request->validated();
-
-    //         $corDetails = User::find($request->user()->id)->coordinator;
-    //         $corId = $corDetails['id'];
-
-    //         // Convert checkbox values to 1 or null
-    //         $admin->eoy_testers = isset($validatedData['eoy_testers']) ? 1 : null;
-    //         $admin->eoy_coordinators = isset($validatedData['eoy_coordinators']) ? 1 : null;
-    //         $admin->eoy_boardreport = isset($validatedData['eoy_boardreport']) ? 1 : null;
-    //         $admin->eoy_financialreport = isset($validatedData['eoy_financialreport']) ? 1 : null;
-    //         $admin->truncate_incoming = isset($validatedData['truncate_incoming']) ? 1 : null;
-    //         $admin->truncate_outgoing = isset($validatedData['truncate_outgoing']) ? 1 : null;
-    //         $admin->copy_FRtoCH = isset($validatedData['copy_FRtoCH']) ? 1 : null;
-    //         $admin->copy_CHtoFR = isset($validatedData['copy_CHtoFR']) ? 1 : null;
-    //         $admin->copy_financial = isset($validatedData['copy_financial']) ? 1 : null;
-    //         $admin->copy_chapters = isset($validatedData['copy_chapters']) ? 1 : null;
-    //         $admin->copy_users = isset($validatedData['copy_users']) ? 1 : null;
-    //         $admin->copy_boarddetails = isset($validatedData['copy_boarddetails']) ? 1 : null;
-    //         $admin->copy_Coordinators = isset($validatedData['copy_Coordinators']) ? 1 : null;
-    //         $admin->updated_id = $corId;
-    //         $admin->updated_at = Carbon::today();
-
-    //         $admin->save();
-
-    //         // Return a success response to the client
-    //         return redirect()->to('/admin/eoy')->with('success', 'Admin data updated successfully.');
-
-    //     } catch (Exception $e) {
-    //         // Log the error message
-    //         Log::error('Failed to update admin data: '.$e->getMessage());
-
-    //         return redirect()->to('/admin/eoy')->with('success', 'Admin data failed to update.');
-    //     }
-    // }
 
     /**
      * Reset EOY Procedurles for New year
@@ -829,59 +761,83 @@ class AdminController extends Controller
             $corId = $corDetails['id'];
 
             // Fetch all outgoing board members
-            $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+            // $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+            $outgoingBoardMembers = OutgoingBoard::get();
 
             // Update the `is_active` column in the `users` table
             foreach ($outgoingBoardMembers as $outgoingMember) {
                 DB::table('users')->where('id', $outgoingMember->user_id)->update([
                     'is_active' => 0,
-                    'last_updated_date' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
             // Truncate the `outgoing_board_member` and `incoming_board_member` tables
-            DB::table('outgoing_board_member')->truncate();
-            DB::table('incoming_board_member')->truncate();
+            // DB::table('outgoing_board_member')->truncate();
+            // DB::table('incoming_board_member')->truncate();
+            OutgoingBoard::query()->delete();
+            IncomingBoard::query()->delete();
 
             // Fetch all chapters with their financial reports and update the balance
-            $chapters = Chapters::with('financialReport')->get();
+            $chapters = Chapters::with('financialReport', 'documents')->get();
             foreach ($chapters as $chapter) {
                 if ($chapter->financialReport) {
-                    $chapter->balance = $chapter->financialReport->post_balance;
+                    $chapter->documents->balance = $chapter->financialReport->post_balance;
                     $chapter->save();
                 }
             }
 
             // Get the current year for table renaming
-            $currentYear = Carbon::now()->year;
+            // $currentYear = Carbon::now()->year;
+            $now = Carbon::now();
+            $month = $now->month;
+            $year = $now->year;
+            $lastyear = $now->year - 1;
 
             // Copy and rename the `financial_report` table
-            DB::statement("CREATE TABLE financial_report_12_$currentYear LIKE financial_report");
-            DB::statement("INSERT INTO financial_report_12_$currentYear SELECT * FROM financial_report");
+            DB::statement("CREATE TABLE financial_report_12_$lastyear LIKE financial_report");
+            DB::statement("INSERT INTO financial_report_12_$lastyear SELECT * FROM financial_report");
 
             // Truncate the `financial_report` table
-            DB::table('financial_report')->truncate();
+            // DB::table('financial_report')->truncate();
+            FinancialReport::truncate();
 
             // Fetch all active chapters
-            $activeChapters = Chapters::where('is_active', 1)->get();
+            $activeChapters = Chapters::with('documents')->where('is_active', 1)->get();
 
             // Insert each chapter's balance into financial_report
             foreach ($activeChapters as $chapter) {
                 FinancialReport::create([
                     'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
-                    'pre_balance' => $chapter->balance,
+                    'pre_balance' => $chapter->documents->balance,
                     'amount_reserved_from_previous_year' => $chapter->balance,
                 ]);
             }
 
             // Update chapters table: Set specified columns to NULL
             DB::table('chapters')->update([
+                'boundary_issues' => null,
+                'boundary_issue_notes' => null,
+                'boundary_issue_resolved' => null,
+            ]);
+
+            // Update documents table: Set specified columns to NULL
+            DB::table('documents')->update([
                 'new_board_submitted' => null,
                 'new_board_active' => null,
                 'financial_report_received' => null,
-                'financial_report_complete' => null,
-                'boundary_issues' => null,
-                'boundary_issue_notes' => null,
+                'report_received' => null,
+                'financial_review_complete' => null,
+                'review_complete' => null,
+                'report_notes' => null,
+                'report_extension' => null,
+                'extension_notes' => null,
+                'financial_pdf_path' => null,
+                'roster_path' => null,
+                'irs_path' => null,
+                'statement_1_path' => null,
+                'statement_2_path' => null,
+                'award_path' => null,
             ]);
 
             // Get board details where board members are active
@@ -889,7 +845,7 @@ class AdminController extends Controller
 
             // Loop through each board detail and insert into outgoing_boards
             foreach ($boardDetails as $boardDetail) {
-                BoardOutgoing::create([
+                OutgoingBoard::create([
                     'board_id' => $boardDetail->id,
                     'user_id' => $boardDetail->user_id,
                     'chapter_id' => $boardDetail->chapter_id,
@@ -1055,9 +1011,7 @@ class AdminController extends Controller
      */
     public function showGoogleDrive(): View
     {
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.*')
-            ->get();
+        $googleDrive = GoogleDrive::get();
 
         $data = ['googleDrive' => $googleDrive];
 
@@ -1069,25 +1023,39 @@ class AdminController extends Controller
      */
     public function updateGoogleDrive(Request $request): JsonResponse
     {
-        $einLetterDrive = $request->input('einLetterDrive');
-        $eoyDrive = $request->input('eoyDrive');
-        $eoyDriveYear = $request->input('eoyDriveYear');
-        $resourcesDrive = $request->input('resourcesDrive');
-        $disbandDrive = $request->input('disbandDrive');
-        $goodStandingDrive = $request->input('goodStandingDrive');
-        $probationDrive = $request->input('probationDrive');
+        // $einLetterDrive = $request->input('einLetterDrive');
+        // $eoyDrive = $request->input('eoyDrive');
+        // $eoyDriveYear = $request->input('eoyDriveYear');
+        // $resourcesDrive = $request->input('resourcesDrive');
+        // $disbandDrive = $request->input('disbandDrive');
+        // $goodStandingDrive = $request->input('goodStandingDrive');
+        // $probationDrive = $request->input('probationDrive');
+        try {
+            $drive = GoogleDrive::firstOrFail();
+            $drive->ein_letter_uploads = $request->input('einLetterDrive');
+            $drive->eoy_uploads = $request->input('eoyDrive');
+            $drive->eoy_uploads_year = $request->input('eoyDriveYear');
+            $drive->resources_uploads = $request->input('resourcesDrive');
+            $drive->disband_letter = $request->input('disbandDrive');
+            $drive->good_standing_letter = $$request->input('goodStandingDrive');
+            $drive->probation_letter = $request->input('probationDrive');
 
-        $drive = GoogleDrive::firstOrFail();
-        $drive->ein_letter_uploads = $einLetterDrive;
-        $drive->eoy_uploads = $eoyDrive;
-        $drive->eoy_uploads_year = $eoyDriveYear;
-        $drive->resources_uploads = $resourcesDrive;
-        $drive->disband_letter = $disbandDrive;
-        $drive->good_standing_letter = $goodStandingDrive;
-        $drive->probation_letter = $probationDrive;
+            $drive->save();
 
-        $drive->save();
+            DB::commit();
 
-        return response()->json(['success' => true]);
+            $message = 'Google Drive ID updated successfully';
+
+            return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('admin.googledrive'),]);
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback transaction on exception
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('admin.googledrive'),]);
+        }
     }
+
 }

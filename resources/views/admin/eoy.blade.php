@@ -4,26 +4,8 @@
 @section('breadcrumb', 'EOY Procedures')
 
 @section('content')
-<!-- Content Wrapper. Contains page content -->
-
-{{--
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        <p>{{ $message }}</p>
-        </div>
-    @endif
-    @if ($message = Session::get('fail'))
-        <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        <p>{{ $message }}</p>
-        </div>
-    @endif --}}
-
 <!-- Main content -->
 <section class="content">
-        {{-- <form method="POST" action='{{ route("admin.eoyupdate",$admin->id) }}'>
-        @csrf --}}
         <section class="content">
             <div class="container-fluid">
                 <div class="col-12">
@@ -66,7 +48,6 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Remove/Copy/Reset SQL Database Tables</h3><br>
-                        {{-- <p style="color: #007bff">Check when complete.</p> --}}
                         <p style="color: #007bff; font-weight: bold;">Complete in Feb/March to prepare for Testing.</p>
                         <h5>This CANNOT be undone!</h5>
                         <button type="button" id="update-eoy-database" class="btn bg-gradient-primary"><i class="fas fa-undo" ></i>&nbsp;&nbsp;&nbsp;Reset Financial Data Tables</button>
@@ -90,7 +71,7 @@
                             <div class="col-sm-12">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="copy_FRtoCH" id="copy_FRtoCH" class="custom-control-input" {{$admin->copy_FRtoCH ? 'checked' : '' }} disabled />
-                                <label class="custom-control-label" for="copy_FRtoCH">Copy ending balance from financial_repot table to chapters table</label>
+                                <label class="custom-control-label" for="copy_FRtoCH">Copy ending balance from financial_repot table to documents table</label>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -102,9 +83,15 @@
                         <div class="col-sm-12">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="copy_CHtoFR" id="copy_CHtoFR" class="custom-control-input" {{$admin->copy_CHtoFR ? 'checked' : '' }} disabled />
-                                <label class="custom-control-label" for="copy_CHtoFR">Insert chapter list and starting balance from chapters table to financial_repot table</label>
+                                <label class="custom-control-label" for="copy_CHtoFR">Insert chapter list and starting balance from documents table to financial_repot table</label>
                                 </div>
                             </div>
+                            <div class="col-sm-12">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="copy_BDtoOUT" id="copy_BDtoOUT" class="custom-control-input" {{$admin->copy_BDtoOUT ? 'checked' : '' }} disabled />
+                                    <label class="custom-control-label" for="copy_BDtoOUT">Reset EOY fields in chapters & documents tables</label>
+                                    </div>
+                                </div>
                             <div class="col-sm-12">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="copy_BDtoOUT" id="copy_BDtoOUT" class="custom-control-input" {{$admin->copy_BDtoOUT ? 'checked' : '' }} disabled />

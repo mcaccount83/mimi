@@ -5,6 +5,7 @@
 <br>
 <h1><center>MOMS Club of {{$mailData['chapter']}}, {{$mailData['state']}}</center></h1>
 <b><strong>{{ $mailData['firstName'] }},</b>
+<br>
 <p>CONGRATULATIONS on getting your chapter officially started!  I've really enjoyed getting to know you and going through the startup process with you.  I'm excited to see what your new chapter will be able to accomplish!</p>
 <hr>
 <b>Your Primary Coordinator and Her Role</b>

@@ -126,21 +126,12 @@ Route::post('/process-payment', [PaymentController::class, 'reRegistrationPaymen
 Route::post('/process-donation', [PaymentController::class, 'm2mPayment'])->name('process.donation');
 
 // PDF Controller Routes...
-Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
-Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
-Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'generateGoodStanding'])->name('pdf.chapteringoodstanding');
-// Route::get('/chapter/disbandletter/pdf/{id}', [PDFController::class, 'generateAndSaveDisbandLetter'])->name('pdf.disbandletter');
-// Route::get('/chapter/probationnopmtletter/pdf/{id}', [PDFController::class, 'generateProbationNoPmtLetter'])->name('pdf.probationpayment');
-// Route::post('/chapter/probationnopmtletter', [PDFController::class, 'saveProbationNoPmtLetter'])->name('pdf.saveprobationpayment');
-// Route::get('/chapter/probationnorptletter/pdf/{id}', [PDFController::class, 'generateProbationNoRptLetter'])->name('pdf.probationreport');
-// Route::post('/chapter/probationnorptletter', [PDFController::class, 'saveProbationNoRptLetter'])->name('pdf.saveprobationreport');
-// Route::get('/chapter/probationpartyletter/pdf/{id}', [PDFController::class, 'generateProbationPartyLetter'])->name('pdf.probationparty');
-// Route::post('/chapter/probationpartyletter', [PDFController::class, 'saveProbationPartyLetter'])->name('pdf.saveprobationparty');
-// Route::get('/chapter/warningpartyletter/pdf/{id}', [PDFController::class, 'generateWarningPartyLetter'])->name('pdf.warningparty');
-// Route::post('/chapter/warningpartyletter', [PDFController::class, 'saveWarningPartyLetter'])->name('pdf.savewarningparty');
-// Route::get('/chapter/probationreleaseletter/pdf/{id}', [PDFController::class, 'generateProbationReleaseLetter'])->name('pdf.probationrelease');
-// Route::post('/chapter/probationreleaseletter', [PDFController::class, 'saveProbationReleaseLetter'])->name('pdf.saveprobationrelease');
+// Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
+// Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
 
+Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'generateGoodStanding'])->name('pdf.chapteringoodstanding');
+Route::get('/board/financialreport/pdf/{id}', [PDFController::class, 'generateFinancialReport'])->name('pdf.financialreport');
+Route::get('/financial-report-pdf', [PDFController::class, 'saveFinancialReport'])->name('pdf.financialreport');
 Route::post('/generate-probation-letter', [PDFController::class, 'saveProbationLetter'])->name('pdf.generateProbationLetter');
 
 // Google Controller -- Uploading Files Routes...
@@ -149,11 +140,7 @@ Route::post('/files/storeRoster/{id}', [GoogleController::class, 'storeRoster'])
 Route::post('/files/store990n/{id}', [GoogleController::class, 'store990N']);
 Route::post('/files/storeStatement1/{id}', [GoogleController::class, 'storeStatement1']);
 Route::post('/files/storeStatement2/{id}', [GoogleController::class, 'storeStatement2']);
-Route::post('/files/storeAward1/{id}', [GoogleController::class, 'storeAward1']);
-Route::post('/files/storeAward2/{id}', [GoogleController::class, 'storeAward2']);
-Route::post('/files/storeAward3/{id}', [GoogleController::class, 'storeAward3']);
-Route::post('/files/storeAward4/{id}', [GoogleController::class, 'storeAward4']);
-Route::post('/files/storeAward5/{id}', [GoogleController::class, 'storeAward5']);
+Route::post('/files/storeAward/{id}', [GoogleController::class, 'storeAward']);
 Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
 Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
 

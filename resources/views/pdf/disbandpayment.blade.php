@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }} | Disband Letter</title>
-        {{-- @php
+        @php
         $todayDate = date('F j, Y'); // e.g., July 9, 2024
         $date = new DateTime();
         $date->modify('+1 month');
         $nextMonthDate = $date->format('F j, Y'); // e.g., August 9, 2024
-        @endphp --}}
+        @endphp
 </head>
 <body>
     <center>
@@ -17,7 +17,7 @@
     </center>
 <br>
 {{-- <div class="keep-together" style="page-break-inside: avoid;"> --}}
-    <p>{{ $pdfData['today'] }}</p>
+    <p>{{ $todayDate }}</p>
     <br>
     <p>MOMS Club of {{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }}<br>
         {{ $pdfData['pres_fname'] }} {{ $pdfData['pres_lname'] }}<br>
@@ -27,12 +27,12 @@
     <p>Dear {{ $pdfData['pres_fname'] }}:</p>
     <p>This is to inform you that the MOMS Club of {{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }} has disbanded.  If you believe this information is incorrect,
         then please contact me immediately.</p>
-    <p>To be disbanded, all members of the chapter must have been polled and have unanimously decided that they did not, individually, wish to continue with the chapter.
-        If that decision was unanimous, then the chapter is disbanded and its affiliation with the MOMS Club is terminated and all benefits of its association
-        with the MOMS Club are revoked.  If the vote was not unanimous, then the chapter may still be continuing and you need to forward to me the names and
-        contact information of those who wish to continue the chapter.</p>
-    <p>If the chapter has disbanded, as its last president, there are certain things that must be handled to fulfill the responsibilities you took on as an officer.
-        If you have not already taken care of the items below, these items must be taken care of by {{ $pdfData['nextMonth'] }}.</p>
+    <p>Your chapters Annual Re-Registration dues to International MOMS Club were due to be paid in {{ $pdfData['month'] }} {{ $pdfData['year'] }}.  Payment of these dues are
+        required to remain a chapter of the International MOMS Club.  We have made multiple attempts to contact the chapter in reference to the payment, and have been unsuccessful
+        in getting a response. As a result, your chapter is disbanded, and its affiliation with the International MOMS Club is terminated and all benefits of its association with
+        the International MOMS Club are revoked.  </p>
+    <p>As its last president, there are certain things that must be handled to fulfill the responsibilities you took on as an officer.
+        If you have not already taken care of the items below, these items must be taken care of by {{ $nextMonthDate }}.</p>
         <ol>
             <li>Because your chapter has been disbanded, it is no longer covered under our IRS group exemption. Any money or assets not properly donated may be considered
                 by the IRS as having been used personally by the former officers or members, and taxed accordingly. If the chapters’ funds are donated to the
