@@ -134,9 +134,6 @@
                             </div>
                 </div>
                 </div>
-            </div>
-
-            <div class="col-md-3">
 
                 <div class="card card-outline card-primary">
                     <div class="card-header">
@@ -164,6 +161,60 @@
                 </div>
                 </div>
             </div>
+
+            <div class="col-md-3">
+
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Reset Tables AFTER testing for LIVE</h3><br>
+                        {{-- <p style="color: #007bff">Check to activate the buttons/links for Board Members.</p> --}}
+                        <p style="color: #007bff; font-weight: bold;">Complete in May, after testubg is complete.</p>
+                        <button type="button" id="reset-database-after" class="btn bg-gradient-primary"><i class="fas fa-undo" ></i>&nbsp;&nbsp;&nbsp;Reset Database AFTER Testing</button>
+
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="col-sm-12">
+                            <p style="font-weight: bold;">The following functions will be performed:</p>
+                        </div>
+                    </div>
+                            <ul>
+                                @foreach($resetAFTERtestingItems as $item)
+                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                        @if($admin->reset_AFTER_testing == 1)
+                                            <i class="fas fa-check mr-2"></i>{{ $item }}
+                                        @else
+                                            <i class="far fa-square mr-2"></i>{{ $item }}
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                            {{--<div class="custom-control custom-switch">
+                                <input type="checkbox" name="eoy_boardreport" id="eoy_boardreport" class="custom-control-input" {{$admin->eoy_boardreport ? 'checked' : '' }} disabled />
+                                <label class="custom-control-label" for="eoy_boardreport">Board Election Report for Chapters - button will be available after May 1st.</label>
+                                </div> --}}
+                            {{-- </div> --}}
+                        {{-- <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="eoy_financialreport" id="eoy_financialreport" class="custom-control-input" {{$admin->eoy_financialreport ? 'checked' : '' }} disabled />
+                                <label class="custom-control-label" for="eoy_financialreport">Financial Report for Chapters - button will be available after June 1st.</label>
+                                </div>
+                            </div> --}}
+
 
             <div class="col-md-3">
                 <div class="card card-outline card-primary">
@@ -202,12 +253,12 @@
                                 <label class="custom-control-label" for="copy_coordinators">Copy/Rename Coordinator Details Table</label>
                                 </div>
                             </div>
-                        <div class="col-sm-12">
+                        {{-- <div class="col-sm-12">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="delete_outgoing" id="delete_outgoing" class="custom-control-input" {{$admin->delete_outgoing ? 'checked' : '' }} disabled />
                                 <label class="custom-control-label" for="delete_outgoing">Delete Outgoing Board Member Table</label>
                                 </div>
-                            </div>
+                            </div> --}}
                         <div class="col-sm-12">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="outgoing_inactive" id="outgoing_inactive" class="custom-control-input" {{$admin->outgoing_inactive ? 'checked' : '' }} disabled />
@@ -272,6 +323,8 @@ $(document).ready(function() {
     var dataBaseUrl = '{{ url("/admin/updatedatadatabase") }}';
     // URL for  displaying coordinator menu
     var coordinatorBaseUrl = '{{ url("/admin/updateeoycoordinator") }}';
+    // URL for  resting database AFTER testing to go LIVE
+    var afterTestingBaseUrl = '{{ url("/admin/updateeoydatabaseafter") }}';
     // URL for  displaying chapter buttons
     var chapterBaseUrl = '{{ url("/admin/updateeoychapter") }}';
      // URL for reseting New Year
@@ -301,6 +354,25 @@ $(document).ready(function() {
     $("#update-data-database").click(function() {
         $.ajax({
             url: dataBaseUrl,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}', // Include CSRF token for security
+            },
+            success: function(response) {
+                // Reload the page to show the session flash message (success or error)
+                location.reload();
+            },
+            error: function(response) {
+                // Reload the page even on error to display session flash message
+                location.reload();
+            }
+        });
+    });
+
+    // Handle click event for the 'Reset Database After Testing' button
+    $("#reset-database-after").click(function() {
+        $.ajax({
+            url: afterTestingBaseUrl,
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}', // Include CSRF token for security

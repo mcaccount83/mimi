@@ -70,17 +70,17 @@
                   <tr>
                         <td class="text-center align-middle"><a href="{{ url("/admin/reregdate/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>
-                            @if ($list->reg != "None")
-                                {{ $list->conf }} / {{ $list->reg }}
+                            @if ($list->region?->short_name != "None" )
+                                {{ $list->conference->short_name }} / {{ $list->region?->short_name }}
                             @else
-                                {{ $list->conf }}
+                                {{ $list->conference->short_name }}
                             @endif
                         </td>
-                        <td>{{ $list->state_short_name }}</td>
+                        <td>{{ $list->state->state_short_name }}</td>
                         <td>{{ $list->name }}</td>
 						<td style="
                                     @php
-                                        $due = $list->month_short_name . ' ' . $list->next_renewal_year;
+                                        $due = $list->startMonth->month_long_name . ' ' . $list->next_renewal_year;
                                         $overdue = (date('Y') * 12 + date('m')) - ($list->next_renewal_year * 12 + $list->start_month_id);
                                         if ($overdue > 1) {
                                             echo 'background-color: #dc3545; color: #ffffff;';

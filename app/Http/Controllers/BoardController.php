@@ -282,18 +282,33 @@ class BoardController extends Controller
 
         $input = $request->all();
         $webStatusPre = $input['ch_hid_webstatus'];
-        $webStatusUpd = $input['ch_webstatus'];
 
-        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
-        if (empty(trim($ch_webstatus))) {
-            $ch_webstatus = 0; // Set it to 0 if it's blank
-        }
+        // $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+        // if (empty(trim($ch_webstatus))) {
+        //     $ch_webstatus = 0; // Set it to 0 if it's blank
+        // }
 
-        $website = $request->input('ch_website');
-        // Ensure it starts with "http://" or "https://"
-        if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
-            $website = 'http://'.$website;
-        }
+        // $website = $request->input('ch_website');
+        // // Ensure it starts with "http://" or "https://"
+        // if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+        //     $website = 'http://'.$website;
+        // }
+
+        // Handle web status - allow null values
+$ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+// Only convert to 0 if the website is not null but status is empty
+if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+    $ch_webstatus = 0;
+}
+
+// Handle website URL
+$website = $request->input('ch_website');
+// Only add http:// if the website field is not null or empty
+if (!is_null($website) && !empty(trim($website))) {
+    if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+        $website = 'http://' . $website;
+    }
+}
 
         $chapter = Chapters::find($id);
 
@@ -577,6 +592,7 @@ class BoardController extends Controller
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chConfId = $baseQueryUpd['chConfId'];
             $chPcId = $baseQueryUpd['chPcId'];
+            $webStatusUpd = $ch_webstatus;
             $PresDetailsUpd = $baseQueryUpd['PresDetails'];
             $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
             $MVPDetailsUpd = $baseQueryUpd['MVPDetails'];
@@ -1455,18 +1471,33 @@ class BoardController extends Controller
 
         $input = $request->all();
         $webStatusPre = $input['ch_hid_webstatus'];
-        $webStatusUpd = $input['ch_webstatus'];
 
-        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
-        if (empty(trim($ch_webstatus))) {
-            $ch_webstatus = 0; // Set it to 0 if it's blank
-        }
+        // $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+        // if (empty(trim($ch_webstatus))) {
+        //     $ch_webstatus = 0; // Set it to 0 if it's blank
+        // }
 
-        $website = $request->input('ch_website');
-        // Ensure it starts with "http://" or "https://"
-        if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
-            $website = 'http://'.$website;
-        }
+        // $website = $request->input('ch_website');
+        // // Ensure it starts with "http://" or "https://"
+        // if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+        //     $website = 'http://'.$website;
+        // }
+
+                // Handle web status - allow null values
+$ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+// Only convert to 0 if the website is not null but status is empty
+if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+    $ch_webstatus = 0;
+}
+
+// Handle website URL
+$website = $request->input('ch_website');
+// Only add http:// if the website field is not null or empty
+if (!is_null($website) && !empty(trim($website))) {
+    if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+        $website = 'http://' . $website;
+    }
+}
 
         $chapter = Chapters::find($id);
         $user = User::find($userId);
@@ -1513,6 +1544,7 @@ class BoardController extends Controller
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chConfId = $baseQueryUpd['chConfId'];
+            $webStatusUpd = $ch_webstatus;
             $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
             $MVPDetailsUpd = $baseQueryUpd['MVPDetails'];
             $TRSDetailsUpd = $baseQueryUpd['TRSDetails'];

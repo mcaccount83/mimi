@@ -7,21 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
 
-class FinancialReport extends Model
+class FinancialReportLastYear extends Model
 {
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'financial_report';
-
     protected $primaryKey = 'chapter_id';
-
     public $timestamps = false;
 
     protected $fillable = [
-        'chapter_id',  // Add this if not already present
+        'chapter_id',
         'pre_balance',
         'amount_reserved_from_previous_year',
         'name',
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $currentYear = Carbon::now()->year;
+        $lastYear = $currentYear - 1;
+        $this->table = 'financial_report_12_' . $lastYear;
+    }
 }

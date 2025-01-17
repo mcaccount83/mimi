@@ -16,6 +16,7 @@ use App\Models\IncomingBoard;
 use App\Models\Boards;
 use App\Models\Bugs;
 use App\Models\Chapters;
+use App\Models\State;
 use App\Models\FinancialReport;
 use App\Models\GoogleDrive;
 use App\Models\Month;
@@ -471,28 +472,11 @@ class AdminController extends Controller
 
     public function showReRegDate(Request $request)
     {
-        $user = User::find($request->user()->id);
-
-        $corDetails = $user->coordinator;
-        // Check if CordDetails is not found for the user
-        if (! $corDetails) {
-            return to_route('home');
-        }
-
-        $reChapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.members_paid_for', 'ch.notes', 'ch.name', 'ch.state_id', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
-                'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name', 'cf.short_name as conf', 'rg.short_name as reg')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'ch.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'ch.region_id', '=', 'rg.id')
-            ->leftJoin('month as db', 'ch.start_month_id', '=', 'db.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name')
-            ->orderBy('ch.name')
+        $reChapterList = Chapters::with(['state', 'conference', 'region', 'startMonth', 'president', ])
+            ->where('is_active', 1)
+            ->orderBy(State::select('state_short_name')
+            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+            ->orderBy('chapters.name')
             ->get();
 
         $data = ['reChapterList' => $reChapterList];
@@ -511,16 +495,6 @@ class AdminController extends Controller
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($id);
 
         $allMonths = Month::all();
-
-        $stateArr = DB::table('state')
-            ->select('state.*')
-            ->orderBy('id')
-            ->get();
-
-        $monthArr = DB::table('month')
-            ->select('month.*')
-            ->orderBy('id')
-            ->get();
 
         $data = ['id' => $id, 'chDetails' => $chDetails, 'allMonths' => $allMonths];
 
@@ -545,44 +519,42 @@ class AdminController extends Controller
             $chapter->save();
 
             DB::commit();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit();
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
-            // Return a success response to the client
             return redirect()->to('/admin/reregdate')->with('success', 'Re-Reg Date updated successfully.');
-        } catch (Exception $e) {
-            // Log the error message
-            Log::error('Failed to reset fiscal year: '.$e->getMessage());
+            }
 
-            return redirect()->to('/admin/reregdate')->with('error', 'Failed to update Re-Reg Date.');
-        }
+        return redirect()->to('/admin/reregdate')->with('error', 'Failed to update Re-Reg Date.');
     }
 
-    /**
-     * error logs
-     */
-    public function showMailQueue(): View
-    {
-        $Queue = DB::table('jobs')
-            ->get();
+    // /**
+    //  * error logs
+    //  */
+    // public function showMailQueue(): View
+    // {
+    //     $Queue = DB::table('jobs')
+    //         ->get();
 
-        $data = ['Queue' => $Queue];
+    //     $data = ['Queue' => $Queue];
 
-        return view('admin.mailqueue')->with($data);
-    }
+    //     return view('admin.mailqueue')->with($data);
+    // }
 
     /**
      * List of Duplicate Users
      */
     public function showDuplicate(): View
     {
-
-        $userData = DB::table('users')
-            ->where('is_active', '=', '1')
+        $userData = User::where('is_active', '=', '1')
             ->groupBy('email')
             ->having(DB::raw('count(email)'), '>', 1)
             ->pluck('email');
 
-        $userList = DB::table('users')
-            ->where('is_active', '=', '1')
+        $userList = User::where('is_active', '=', '1')
             ->whereIn('email', $userData)
             ->get();
 
@@ -596,17 +568,15 @@ class AdminController extends Controller
      */
     public function showDuplicateId(): View
     {
-
-        $userData = DB::table('boards')
-            ->where('is_active', '=', '1')
+        $userData = Boards::where('is_active', '=', '1')
             ->groupBy('email')
             ->having(DB::raw('count(email)'), '>', 1)
             ->pluck('email');
 
-        $userList = DB::table('boards')
-            ->where('is_active', '=', '1')
+        $userList = Boards::where('is_active', '=', '1')
             ->whereIn('email', $userData)
             ->get();
+
         $data = ['userList' => $userList];
 
         return view('admin.duplicateboardid')->with($data);
@@ -615,24 +585,24 @@ class AdminController extends Controller
     /**
      * List of users on multiple boards
      */
-    public function showMultiple(): View
-    {
+    // public function showMultiple(): View
+    // {
 
-        $userData = DB::table('boards')
-            ->where('is_active', '=', '1')
-            ->groupBy('email')
-            ->having(DB::raw('count(email)'), '>', 1)
-            ->pluck('email');
+    //     $userData = DB::table('boards')
+    //         ->where('is_active', '=', '1')
+    //         ->groupBy('email')
+    //         ->having(DB::raw('count(email)'), '>', 1)
+    //         ->pluck('email');
 
-        $userList = DB::table('boards')
-            ->where('is_active', '=', '1')
-            ->whereIn('email', $userData)
-            ->get();
+    //     $userList = DB::table('boards')
+    //         ->where('is_active', '=', '1')
+    //         ->whereIn('email', $userData)
+    //         ->get();
 
-        $data = ['userList' => $userList];
+    //     $data = ['userList' => $userList];
 
-        return view('admin.multipleboard')->with($data);
-    }
+    //     return view('admin.multipleboard')->with($data);
+    // }
 
     /**
      * boards with no president
@@ -708,12 +678,21 @@ class AdminController extends Controller
         // Fetch distinct fiscal years
         $fiscalYears = DB::table('admin')->distinct()->pluck('fiscal_year');
 
+        $resetAFTERtestingItems = [
+            'Outgoing Board Member Database Reset',
+            'Incoming Board Member Database Reset',
+            'Financial Report Database Reset',
+            'Pre-Balance Added to Financial Report Database'
+        ];
+
         // Determine if the user is allowed to edit notes and status
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
 
-        $data = ['admin' => $admin, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails, 'fiscalYears' => $fiscalYears];
+        $data = ['admin' => $admin, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails, 'fiscalYears' => $fiscalYears,
+            'resetAFTERtestingItems' => $resetAFTERtestingItems
+        ];
 
         return view('admin.eoy')->with($data);
     }
@@ -738,14 +717,17 @@ class AdminController extends Controller
             // Save the new entry
             $admin->save();
 
-            // Return a success response to the client
-            return redirect()->to('/admin')->with('success', 'Fiscal year reset successfully.');
-        } catch (Exception $e) {
-            // Log the error message
-            Log::error('An error occurred when restting the fiscal year: '.$e->getMessage());
+            DB::commit();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit();
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
-            return redirect()->to('/admin')->with('fail', 'An error occurred when restting the fiscal year.');
-        }
+            return redirect()->to('/admin')->with('success', 'Fiscal year reset successfully.');
+         }
+
+        return redirect()->to('/admin')->with('fail', 'An error occurred when restting the fiscal year.');
     }
 
     /**
@@ -754,12 +736,13 @@ class AdminController extends Controller
     public function updateEOYDatabase(Request $request): RedirectResponse
     {
         try {
+            $corDetails = User::find($request->user()->id)->coordinator;
+            $corId = $corDetails['id'];
+
+            // Get the current year +/- 1 for table renaming
             $currentYear = Carbon::now()->year;
             $nextYear = $currentYear + 1;
             $lastyear = $currentYear - 1;
-
-            $corDetails = User::find($request->user()->id)->coordinator;
-            $corId = $corDetails['id'];
 
             // Fetch all outgoing board members
             // $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
@@ -857,7 +840,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')->update([
-                'truncate_incoming' => '1',
+                'reset_AFTER_testing' => '1',
                 'truncate_outgoing' => '1',
                 'copy_FRtoCH' => '1',
                 'copy_financial' => '1',
@@ -868,16 +851,115 @@ class AdminController extends Controller
                 'updated_at' => Carbon::today(),
             ]);
 
-            // Return success message
-            return redirect()->to('/admin')->with('success', 'Financial data tables successfully updated, copied, and renamed.');
-        } catch (Exception $e) {
-            // Log the error message
-            Log::error('An error occurred while updating the financial data tables: '.$e->getMessage());
+            DB::commit();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit();
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
-            // Return error message, this is where the error should be flashed
-            return redirect()->to('/admin')->with('fail', 'An error occurred while updating the financial data tables.');
-        }
+            return redirect()->to('/admin')->with('success', 'Financial data tables successfully updated, copied, and renamed.');
+           }
+
+        return redirect()->to('/admin')->with('fail', 'An error occurred while updating the financial data tables.');
     }
+
+    /**
+     * Udate EOY Database Tables AFTER Testing
+     */
+    public function updateEOYDatabaseAFTERTesting(Request $request): RedirectResponse
+    {
+        try {
+            $corDetails = User::find($request->user()->id)->coordinator;
+            $corId = $corDetails['id'];
+
+             // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
+             $chapters = Chapters::with('financialReportLastYear', 'documents')->get();
+             foreach ($chapters as $chapter) {
+                 if ($chapter->financialReportLastYear) {
+                     $chapter->documents->balance = $chapter->financialReportLastYear->post_balance;
+                     $chapter->save();
+                 }
+             }
+
+            OutgoingBoard::query()->delete();
+            IncomingBoard::query()->delete();
+            FinancialReport::query()->delete();
+
+            // Fetch all active chapters
+            $activeChapters = Chapters::with('documents')->where('is_active', 1)->get();
+
+            // Insert each chapter's balance into financial_report
+            foreach ($activeChapters as $chapter) {
+                FinancialReport::create([
+                    'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
+                    'pre_balance' => $chapter->documents->balance,
+                    'amount_reserved_from_previous_year' => $chapter->documents->balance,
+                ]);
+            }
+
+             // Update chapters table: Set specified columns to NULL
+             DB::table('chapters')->update([
+                'boundary_issues' => null,
+                'boundary_issue_notes' => null,
+                'boundary_issue_resolved' => null,
+            ]);
+
+            // Update documents table: Set specified columns to NULL
+            DB::table('documents')->update([
+                'new_board_submitted' => null,
+                'new_board_active' => null,
+                'financial_report_received' => null,
+                'report_received' => null,
+                'financial_review_complete' => null,
+                'review_complete' => null,
+                'report_notes' => null,
+                'report_extension' => null,
+                'extension_notes' => null,
+                'financial_pdf_path' => null,
+                'roster_path' => null,
+                'irs_path' => null,
+                'statement_1_path' => null,
+                'statement_2_path' => null,
+                'award_path' => null,
+            ]);
+
+            // Get board details where board members are active
+            $boardDetails = Boards::where('is_active', 1)->get();
+
+            // Loop through each board detail and insert into outgoing_boards
+            foreach ($boardDetails as $boardDetail) {
+                OutgoingBoard::create([
+                    'board_id' => $boardDetail->id,
+                    'user_id' => $boardDetail->user_id,
+                    'chapter_id' => $boardDetail->chapter_id,
+                    'board_position_id' => $boardDetail->board_position_id,
+                    'first_name' => $boardDetail->first_name,
+                    'last_name' => $boardDetail->last_name,
+                    'email' => $boardDetail->email,
+                ]);
+            }
+
+            // Update admin table: Set specified columns to 1
+            DB::table('admin')->update([
+                'reset_AFTER_testing' => '1',
+                'updated_id' => $corId,
+                'updated_at' => Carbon::today(),
+            ]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit();
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->to('/admin')->with('success', 'Data sucessfully reset.');
+          }
+
+        return redirect()->to('/admin')->with('fail', 'An error occurred while updating the data.');
+    }
+
 
     /**
      * Udate User Database Tables
@@ -909,8 +991,9 @@ class AdminController extends Controller
             DB::statement("INSERT INTO users_{$currentMonth}_{$currentYear} SELECT * FROM users");
 
             // Delete all board members from 'outgoing_boards' table
-            DB::table('boards')
-                ->truncate();
+            // OutgoingBoard::query()->delete();
+            // DB::table('boards')
+            //     ->truncate();
 
             // Update all outgoing board members in 'users' table to be inactive
             DB::table('users')
@@ -927,21 +1010,23 @@ class AdminController extends Controller
                 'copy_users' => '1',
                 'copy_boarddetails' => '1',
                 'copy_Coordinators' => '1',
-                'delete_outgoing' => '1',
-                'outgoing_inactive' => '1',
+                // 'delete_outgoing' => '1',
+                // 'outgoing_inactive' => '1',
                 'updated_id' => $corId,
                 'updated_at' => Carbon::today(),
             ]);
 
-            // Return success message
-            return redirect()->to('/admin')->with('success', 'User data tables successfully updated, copied, and renamed..');
-        } catch (Exception $e) {
-            // Log the error message
-            Log::error('An error occurred while updating the user data tables: '.$e->getMessage());
+            DB::commit();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit();
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
-            // Return error message, this is where the error should be flashed
-            return redirect()->to('/admin')->with('fail', 'An error occurred while updating the user data tables.');
-        }
+            return redirect()->to('/admin')->with('success', 'User data tables successfully updated, copied, and renamed..');
+            }
+
+        return redirect()->to('/admin')->with('fail', 'An error occurred while updating the user data tables.');
     }
 
     /**
@@ -989,15 +1074,17 @@ class AdminController extends Controller
                 'updated_at' => Carbon::today(),
             ]);
 
-            // Return success message
-            return redirect()->to('/admin')->with('success', 'Chapter Buttons have been activated.');
-        } catch (Exception $e) {
-            // Log the error message
-            Log::error('An error occurred while activating chapter buttons: '.$e->getMessage());
+            DB::commit();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit();
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
-            // Return error message, this is where the error should be flashed
-            return redirect()->to('/admin')->with('fail', 'An error occurred while activating chapter buttons.');
-        }
+            return redirect()->to('/admin')->with('success', 'Chapter Buttons have been activated.');
+            }
+
+        return redirect()->to('/admin')->with('fail', 'An error occurred while activating chapter buttons.');
     }
 
     /**

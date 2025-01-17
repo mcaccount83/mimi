@@ -358,7 +358,8 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Web Status</label>
                             <div class="col-sm-5">
-                                <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;" required>
+                                <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;"
+                                    @if($chDetails->website_url) required @endif>
                                     <option value="">Select Status</option>
                                         @foreach($allWebLinks as $status)
                                             <option value="{{$status->id}}"
@@ -624,23 +625,32 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     };
 
-    // Initial disable of restricted options
-    disableRestrictedOptions();
+    // Function to update status field requirements
+    const updateStatusRequirement = () => {
+        if (websiteField.value.trim() === '') {
+            statusField.removeAttribute('required');
+            statusField.value = ''; // Optionally clear the status
+        } else {
+            statusField.setAttribute('required', 'required');
+        }
+    };
 
-    // Ensure the saved value is selected
-    if (statusField.value) {
+    // Initial setup
+    disableRestrictedOptions();
+    updateStatusRequirement();
+
+    // Ensure the saved value is selected if URL exists
+    if (originalUrl && statusField.value) {
         statusField.value = savedValue;
     }
 
     // Add event listener for website URL changes
     websiteField.addEventListener("input", function() {
         if (this.value !== originalUrl) {
-            // Reset status to empty/default when URL changes
             statusField.value = "";
-
-            // Re-disable options 0 and 1
             disableRestrictedOptions();
         }
+        updateStatusRequirement();
     });
 });
 
