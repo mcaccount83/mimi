@@ -107,7 +107,14 @@
                                             <tr>
                                                 <td>{{ $coordinator->first_name }}</td>
                                                 <td>{{ $coordinator->last_name }}</td>
-                                                <td>{{ $coordinator->displayPosition->short_title }}</td>
+                                                {{-- <td>{{ $coordinator->displayPosition->short_title }}</td> --}}
+                                                @if ( $coordinator->on_leave == 1 )
+                                                    <td style="background-color: #ffc107;">ON LEAVE</td>
+                                                @elseif ( $coordinator->sec_position_id != null )
+                                                    <td>{{ $coordinator->displayPosition->short_title }}/{{ $coordinator->secondaryPosition?->short_title }}</td>
+                                                @else
+                                                    <td>{{ $coordinator->displayPosition->short_title }}</td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                         @endif
