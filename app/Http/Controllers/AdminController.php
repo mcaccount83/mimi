@@ -744,21 +744,7 @@ class AdminController extends Controller
             $nextYear = $currentYear + 1;
             $lastyear = $currentYear - 1;
 
-            // Fetch all outgoing board members
-            // $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
-            // $outgoingBoardMembers = OutgoingBoard::get();
-
-            // Update the `is_active` column in the `users` table
-            // foreach ($outgoingBoardMembers as $outgoingMember) {
-            //     DB::table('users')->where('id', $outgoingMember->user_id)->update([
-            //         'is_active' => 0,
-            //         'updated_at' => now(),
-            //     ]);
-            // }
-
             // Remove Data from the `outgoing_board_member` and `incoming_board_member` tables
-            // DB::table('outgoing_board_member')->truncate();
-            // DB::table('incoming_board_member')->truncate();
             OutgoingBoard::query()->delete();
             IncomingBoard::query()->delete();
 
@@ -776,7 +762,6 @@ class AdminController extends Controller
             DB::statement("INSERT INTO financial_report_12_$lastyear SELECT * FROM financial_report");
 
             // Remove Data from the `financial_report` table
-            // DB::table('financial_report')->truncate();
             FinancialReport::query()->delete();
 
             // Fetch all active chapters
@@ -841,12 +826,6 @@ class AdminController extends Controller
             // Update admin table: Set specified columns to 1
             DB::table('admin')->update([
                 'reset_AFTER_testing' => '1',
-                'truncate_outgoing' => '1',
-                'copy_FRtoCH' => '1',
-                'copy_financial' => '1',
-                'copy_CHtoFR' => '1',
-                'copy_BDtoOUT' => '1',
-                'update_googleID' => '1',
                 'updated_id' => $corId,
                 'updated_at' => Carbon::today(),
             ]);
