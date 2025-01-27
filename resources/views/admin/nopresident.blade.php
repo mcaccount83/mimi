@@ -45,7 +45,7 @@
                   <tr>
                         <td>{{ $list->id }}</td>
                         <td>{{ $list->name }}</td>
-                        <td>{{ $list->conference }}</td>
+                        <td>{{ $list->conference_id }}</td>
 			        </tr>
                   @endforeach
                   </tbody>

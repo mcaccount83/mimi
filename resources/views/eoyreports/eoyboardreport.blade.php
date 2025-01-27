@@ -81,11 +81,11 @@
                             <td>{{ $list->state->state_short_name }}</td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
-                            <td @if($list->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->new_board_submitted == '1') YES @else NO @endif
+                            <td @if($list->documents->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documents->new_board_submitted == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->new_board_active == '1') YES @else NO @endif
+                            <td @if($list->documents->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documents->new_board_active == '1') YES @else NO @endif
                             </td>
                         </tr>
                     @endforeach
