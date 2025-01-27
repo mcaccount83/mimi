@@ -751,9 +751,10 @@ class AdminController extends Controller
             // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
             $chapters = Chapters::with('financialReport', 'documents')->get();
             foreach ($chapters as $chapter) {
-                if ($chapter->financialReport) {
-                    $chapter->documents->balance = $chapter->financialReport->post_balance;
-                    $chapter->save();
+                if ($chapter->financialReport && $chapter->documents) {
+                    $document = $chapter->documents;
+                    $document->balance = $chapter->financialReport->post_balance;
+                    $document->save();
                 }
             }
 
@@ -855,10 +856,11 @@ class AdminController extends Controller
              // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
              $chapters = Chapters::with('financialReportLastYear', 'documents')->get();
              foreach ($chapters as $chapter) {
-                 if ($chapter->financialReportLastYear) {
-                     $chapter->documents->balance = $chapter->financialReportLastYear->post_balance;
-                     $chapter->save();
-                 }
+                if ($chapter->financialReportLastYear && $chapter->documents) {
+                    $document = $chapter->documents;
+                    $document->balance = $chapter->financialReportLastYear->post_balance;
+                    $document->save();
+                }
              }
 
             OutgoingBoard::query()->delete();
