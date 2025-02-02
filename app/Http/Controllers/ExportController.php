@@ -28,7 +28,7 @@ class ExportController extends Controller
     public function getBaseChapterQuery()
     {
         return DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname',
+            ->select('chapters.*', 'chapters.conference_id as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname',
                 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip',
                 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state',
                 'chapters.new_board_submitted as new_board_submitted', 'chapters.new_board_active as new_board_active', 'chapters.financial_report_received as financial_report_received',

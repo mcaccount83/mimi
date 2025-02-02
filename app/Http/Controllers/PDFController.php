@@ -666,71 +666,71 @@ class PDFController extends Controller
     /**
      * Save & Send Disband Letter
      */
-    // public function generateAndSaveDisbandLetter($id)
-    // {
-    //     $baseQuery = $this->getChapterDetails($id);
-    //     $chDetails = $baseQuery['chDetails'];
-    //     $chId = $baseQuery['chId'];
-    //     $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
-    //     $stateShortName = $baseQuery['stateShortName'];
-    //     $reRegMonth = $chDetails->start_month_id;
-    //     $reRegYear = $chDetails->next_renewal_year;
-    //     $PresDetails = $baseQuery['PresDetails'];
+    public function generateAndSaveDisbandLetter($id)
+    {
+        $baseQuery = $this->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $chId = $baseQuery['chId'];
+        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+        $stateShortName = $baseQuery['stateShortName'];
+        $reRegMonth = $chDetails->start_month_id;
+        $reRegYear = $chDetails->next_renewal_year;
+        $PresDetails = $baseQuery['PresDetails'];
 
-    //     $emailListChap = $baseQuery['emailListChap'];
-    //     $emailListCoord = $baseQuery['emailListCoord'];
-    //     $emailCC = $baseQuery['emailCC'];
-    //     $cc_fname = $baseQuery['cc_fname'];
-    //     $cc_lname = $baseQuery['cc_lname'];
-    //     $cc_pos = $baseQuery['cc_pos'];
-    //     $cc_conf_name = $baseQuery['cc_conf_name'];
-    //     $cc_conf_desc = $baseQuery['cc_conf_desc'];
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailListCoord = $baseQuery['emailListCoord'];
+        $emailCC = $baseQuery['emailCC'];
+        $cc_fname = $baseQuery['cc_fname'];
+        $cc_lname = $baseQuery['cc_lname'];
+        $cc_pos = $baseQuery['cc_pos'];
+        $cc_conf_name = $baseQuery['cc_conf_name'];
+        $cc_conf_desc = $baseQuery['cc_conf_desc'];
 
-    //     $disbandDrive = GoogleDrive::value('disband_letter');
-    //     $sharedDriveId = $disbandDrive;
+        $disbandDrive = GoogleDrive::value('disband_letter');
+        $sharedDriveId = $disbandDrive;
 
-    //     $date = Carbon::now();
-    //     $dateFormatted = $date->format('m-d-Y');
-    //     $nextMonth = $date->copy()->addMonth()->endOfMonth();
-    //     $nextMonthFormatted = $nextMonth->format('m-d-Y');
+        $date = Carbon::now();
+        $dateFormatted = $date->format('m-d-Y');
+        $nextMonth = $date->copy()->addMonth()->endOfMonth();
+        $nextMonthFormatted = $nextMonth->format('m-d-Y');
 
-    //     $pdfData = [
-    //         'ch_name' => $sanitizedChapterName,
-    //         'today' => $dateFormatted,
-    //         'nextMonth' => $nextMonthFormatted,
-    //         'chapter_name' => $chDetails->name,
-    //         'state' => $stateShortName,
-    //         'pres_fname' => $PresDetails->first_name,
-    //         'pres_lname' => $PresDetails->last_name,
-    //         'pres_addr' => $PresDetails->street_address,
-    //         'pres_city' => $PresDetails->city,
-    //         'pres_state' => $PresDetails->state,
-    //         'pres_zip' => $PresDetails->zip,
-    //         're_reg_month' => $reRegMonth,
-    //         're_reg_year' => $reRegYear,
-    //         'cc_fname' => $cc_fname,
-    //         'cc_lname' => $cc_lname,
-    //         'cc_pos' => $cc_pos,
-    //         'conf_name' => $cc_conf_name,
-    //         'conf_desc' => $cc_conf_desc,
-    //     ];
+        $pdfData = [
+            'ch_name' => $sanitizedChapterName,
+            'today' => $dateFormatted,
+            'nextMonth' => $nextMonthFormatted,
+            'chapter_name' => $chDetails->name,
+            'state' => $stateShortName,
+            'pres_fname' => $PresDetails->first_name,
+            'pres_lname' => $PresDetails->last_name,
+            'pres_addr' => $PresDetails->street_address,
+            'pres_city' => $PresDetails->city,
+            'pres_state' => $PresDetails->state,
+            'pres_zip' => $PresDetails->zip,
+            're_reg_month' => $reRegMonth,
+            're_reg_year' => $reRegYear,
+            'cc_fname' => $cc_fname,
+            'cc_lname' => $cc_lname,
+            'cc_pos' => $cc_pos,
+            'conf_name' => $cc_conf_name,
+            'conf_desc' => $cc_conf_desc,
+        ];
 
-    //     $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
+        $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
 
-    //     $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
-    //     $filename = $pdfData['state'].'_'.$chapterName.'_Disband_Letter.pdf'; // Use sanitized chapter name
+        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
+        $filename = $pdfData['state'].'_'.$chapterName.'_Disband_Letter.pdf'; // Use sanitized chapter name
 
-    //     $pdfPath = storage_path('app/pdf_reports/'.$filename);
-    //     $pdf->save($pdfPath);
+        $pdfPath = storage_path('app/pdf_reports/'.$filename);
+        $pdf->save($pdfPath);
 
-    //     if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)){
-    //         $documents = Documents::find($id);
-    //         $documents->disband_letter_path = $pdfFileId;
-    //         $documents->save();
+        if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)){
+            $documents = Documents::find($id);
+            $documents->disband_letter_path = $pdfFileId;
+            $documents->save();
 
-    //         return $pdfPath;  // Return the full local stored path
-    //     }
-    // }
+            return $pdfPath;  // Return the full local stored path
+        }
+    }
 
     /**
      * Save & Send Probation Letter
