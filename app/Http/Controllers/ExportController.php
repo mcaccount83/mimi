@@ -71,7 +71,7 @@ class ExportController extends Controller
     public function getBaseIncomingChapterQuery()
     {
         return DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname',
+            ->select('chapters.*', 'chapters.conference_id as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname',
                 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip',
                 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state',
                 'avp.first_name as avp_fname', 'avp.last_name as avp_lname', 'avp.email as avp_email', 'avp.phone as avp_phone',
@@ -651,7 +651,7 @@ class ExportController extends Controller
                         $list->egroup,
                         $list->territory,
                         $list->inquiries_note,
-                        $list->status,
+                        $list->status_id,
                         $list->start_month_id,
                         $list->start_year,
                         $list->dues_last_paid,
@@ -758,7 +758,7 @@ class ExportController extends Controller
                         $list->egroup,
                         $list->territory,
                         $list->inquiries_note,
-                        $list->status,
+                        $list->status_id,
                         $list->start_month_id,
                         $list->start_year,
                         $list->dues_last_paid,
