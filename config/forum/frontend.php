@@ -23,7 +23,8 @@ return [
     |
     */
 
-    'preset' => 'livewire-tailwind',
+    'preset' => 'blade-bootstrap',
+    // 'preset' => 'livewire-tailwind',
 
     /*
     |--------------------------------------------------------------------------

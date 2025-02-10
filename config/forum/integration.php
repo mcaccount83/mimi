@@ -13,11 +13,11 @@ return [
     */
 
     'policies' => [
-        'forum' => TeamTeaTime\Forum\Policies\ForumPolicy::class,
+        'forum' => App\Policies\Forum\ForumPolicy::class,
         'model' => [
-            TeamTeaTime\Forum\Models\Category::class => TeamTeaTime\Forum\Policies\CategoryPolicy::class,
-            TeamTeaTime\Forum\Models\Thread::class => TeamTeaTime\Forum\Policies\ThreadPolicy::class,
-            TeamTeaTime\Forum\Models\Post::class => TeamTeaTime\Forum\Policies\PostPolicy::class,
+            TeamTeaTime\Forum\Models\Category::class => App\Policies\Forum\CategoryPolicy::class,
+            TeamTeaTime\Forum\Models\Thread::class => App\Policies\Forum\ThreadPolicy::class,
+            TeamTeaTime\Forum\Models\Post::class => App\Policies\Forum\PostPolicy::class,
         ],
     ],
 
@@ -41,6 +41,6 @@ return [
     |
     */
 
-    'user_name' => 'name',
+    'user_name' => 'first_name',
 
 ];

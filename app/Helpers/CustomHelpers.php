@@ -31,6 +31,17 @@ if (! function_exists('getPositionConditions')) {
     }
 }
 
+if (! function_exists('getUserType')) {
+    function getUserType($userType)
+    {
+        return [
+            'coordinator' => ($userType == 'coordinator'),  // Coordinator
+            'board' => ($userType == 'board' ),  // Current Board Member
+            'outgoing' => $userType == 'outgoing',  // Outgoing Board Member
+        ];
+    }
+}
+
 if (! function_exists('isActiveRoute')) {
     function isActiveRoute(array $routes)
     {

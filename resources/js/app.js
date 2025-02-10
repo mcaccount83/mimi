@@ -6,9 +6,7 @@
  */
 
 import './bootstrap';
-
-import Vue from 'vue';
-window.Vue = Vue;
+import { createApp } from 'vue'; // Import Vue 3's createApp function
 
 /**
  * The following block of code may be used to automatically register your
@@ -18,17 +16,11 @@ window.Vue = Vue;
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+// You don't need to use Vue.component here, just use app.component
+const app = createApp({}); // Create a new Vue app instance
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Register components globally if needed
+app.component('example-component', require('./components/ExampleComponent.vue').default);
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-const app = new Vue({
-    el: '#app'
-});
+// Mount Vue to a DOM element (e.g., #app)
+app.mount('#app'); // Mount the app to the element with id="app"

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\HandlePageExpired;
+use App\Http\Middleware\VollistAccessMiddleware;
+use App\Http\Middleware\VollistAccess2Middleware;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -22,6 +24,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
         $middleware->append(HandlePageExpired::class);
         $middleware->throttleApi();
+        $middleware->alias([
+            'vollist.access' => VollistAccessMiddleware::class,
+            'vollist2.access' => VollistAccessMiddleware::class,
+
+        ]);
+
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
