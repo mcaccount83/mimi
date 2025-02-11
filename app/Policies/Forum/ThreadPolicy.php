@@ -5,27 +5,12 @@ namespace App\Policies\Forum;
 use TeamTeaTime\Forum\Policies\ThreadPolicy as ForumThreadPolicy;
 use TeamTeaTime\Forum\Models\Thread;
 
-use Illuminate\Foundation\Auth\User;
-
 class ThreadPolicy extends ForumThreadPolicy
 
 {
-    public function canAccessVollist(User $user, Thread $thread): bool
-    {
-        if ($user->user_type === 'outgoing'){
-            return false; // Hide ALL from outgoing
-        }
-
-        if ($thread->category === 'Vollist' && $user->user_type !== 'coordinator') {
-            return false; // Hide from everyone except coordinators
-        }
-
-        return true; // Default: allow access
-    }
-
     public function view($user, Thread $thread): bool
     {
-        return $this->canAccessVollist($user, $thread);
+        return true;
     }
 
     public function rename($user, Thread $thread): bool

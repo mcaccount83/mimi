@@ -100,11 +100,51 @@
             <a href="{{ route('home') }}" class="band-link">
                 <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" style="width: 75px; height: 75px;">
             </a>
-            @if (request()->url() === url(config('forum.frontend.router.prefix')))
+            @php
+                $currentUrl = request()->url();
+                $validUrls = [
+                    url(config('forum.frontend.router.prefix')),
+                    url(route('forum.category.manage'))
+                ];
+            @endphp
+
+            @if (in_array($currentUrl, $validUrls))
                 <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix')) }}">MOMS Club Forums</a>
             @elseif (!isset($category))
-                <a class="navbar-brand" href="{{ Forum::route('category.show', $thread->category) }}" ><h2>{{ $thread->category->title }}</h2></a>
+                @if (isset($thread))
+                    <a class="navbar-brand" href="{{ Forum::route('category.show', $thread->category) }}">
+                        <h2>{{ $thread->category->title }}</h2>
+                    </a>
+                @elseif (isset($threads))
+                    @if($userTypes['coordinator'])
+                        <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.vollistLink')) }}">
+                            Vollist
+                        </a>
+                        <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.boardlistLink')) }}">
+                            | {{ config('forum.frontend.router.boardlistYear') }} BoardList
+                        </a>
+                    @else
+                        <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.boardlistLink')) }}">
+                            <h2>{{ config('forum.frontend.router.boardlistYear') }} BoardList</h2>
+                        </a>
+                    @endif
+                @endif
+                {{-- @elseif (isset($post))
+                    @if($userTypes['coordinator'])
+                        <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.vollistLink')) }}">
+                            Vollist
+                        </a>
+                        <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.boardlistLink')) }}">
+                            | {{ config('forum.frontend.router.boardlistYear') }} BoardList
+                        </a>
+                    @else
+                        <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.boardlistLink')) }}">
+                            <h2>{{ config('forum.frontend.router.boardlistYear') }} BoardList</h2>
+                        </a>
+                    @endif
+                @endif --}}
             @else
+
                 <a class="navbar-brand" href="{{ Forum::route('category.show', $category) }}"><h2>{{ $category->title }}</h2></a>
             @endif
             {{-- <button class="navbar-toggler" type="button" :class="{ collapsed: isCollapsed }" @click="isCollapsed = !isCollapsed">
@@ -115,7 +155,7 @@
                     {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ url(config('forum.frontend.router.prefix')) }}">{{ trans('forum::general.index') }}</a>
                     </li> --}}
-                    {{-- <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('forum.recent') }}">{{ trans('forum::threads.recent') }}</a>
                     </li>
                     @auth
@@ -127,7 +167,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('forum.category.manage') }}">{{ trans('forum::general.manage') }}</a>
                         </li>
-                    @endcan --}}
+                    @endcan
                 </ul>
                 {{-- <ul class="navbar-nav">
                     @if (Auth::check())

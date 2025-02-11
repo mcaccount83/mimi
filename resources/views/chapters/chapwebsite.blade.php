@@ -15,10 +15,7 @@
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Website List
                     </h3>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="{{ route('chapters.chapwebsite') }}">Website List</a>
-                        <a class="dropdown-item" href="{{ route('chapreports.chaprptsocialmedia') }}">Social Media List</a>
-                    </div>
+                    @include('layouts.dropdown_menus.menu_website')
                 </div>
             </div>
             <!-- /.card-header -->

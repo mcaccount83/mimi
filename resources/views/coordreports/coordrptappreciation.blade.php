@@ -15,18 +15,7 @@
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Coordinator Appreciation Report
                         </h3>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if ($supervisingCoordinatorCondition)
-
-                            <a class="dropdown-item" href="{{ route('coordreports.coordrptvolutilization') }}">Coordinator Utilization Report</a>
-                            @endif
-                            @if ($assistConferenceCoordinatorCondition)
-
-                            <a class="dropdown-item" href="{{ route('coordreports.coordrptappreciation') }}">Coordinator Appreciation Report</a>
-                            <a class="dropdown-item" href="{{ route('coordreports.coordrptbirthdays') }}">Coordinator Birthday Report</a>
-                            @endif
-                            <a class="dropdown-item" href="{{ route('coordreports.coordrptreportingtree') }}">Coordinator Reporting Tree</a>
-                        </div>
+                        @include('layouts.dropdown_menus.menu_reports_coor')
                     </div>
                 </div>
                 <!-- /.card-header -->
