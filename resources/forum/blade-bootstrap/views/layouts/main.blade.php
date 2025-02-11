@@ -14,7 +14,14 @@
         {{ trans('forum::general.home_title') }}
     </title>
 
+    @if (app()->environment('local'))
     @vite(['resources/forum/blade-bootstrap/css/forum.css', 'resources/forum/blade-bootstrap/js/forum.js'])
+@else
+    <link rel="stylesheet" href="{{ asset('public/build/assets/forum-BWCxAm8t.css') }}">
+    <script src="{{ asset('public/build/assets/forum-0-39qVx8.js') }}" defer></script>
+@endif
+
+
 </head>
 <body>
     {{-- <body style="background-color: #f0f0f0 !important;" class="hold-transition layout-top-nav"> --}}
