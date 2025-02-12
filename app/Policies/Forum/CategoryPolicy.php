@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Log;
 
 class CategoryPolicy extends ForumCategoryPolicy
 {
-    public function canAccessVollist(User $user, Category $category): bool
+    public function canAccessCoordinatorList(User $user, Category $category): bool
     {
         if ($user->user_type === 'outgoing'){
             return false; // Hide ALL from outgoing
         }
 
-        if ($category->title === 'Vollist' && $user->user_type !== 'coordinator') {
+        if ($category->title === 'CoordinatorList' && $user->user_type !== 'coordinator') {
             return false; // Hide from everyone except coordinators
         }
 
@@ -71,7 +71,7 @@ class CategoryPolicy extends ForumCategoryPolicy
 
     public function view(User $user, Category $category): bool
     {
-        return $this->canAccessVollist($user, $category);
+        return $this->canAccessCoordinatorList($user, $category);
     }
 
     public function edit(User $user, Category $category): bool
@@ -86,7 +86,7 @@ class CategoryPolicy extends ForumCategoryPolicy
 
     public function createThreads(User $user, Category $category): bool
     {
-        return $this->canAccessVollist($user, $category);
+        return $this->canAccessCoordinatorList($user, $category);
     }
 
     public function manageThreads(User $user, Category $category): bool

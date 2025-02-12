@@ -40,7 +40,7 @@ return [
         'as' => 'forum.',
         'middleware' => ['web'],
         'auth_middleware' => ['auth'],
-        'vollistLink' =>  '/c/2-vollist',
+        'coordinatorlistLink' =>  '/c/2-coordinatorlist',
         'boardlistLink' =>  '/c/3-2024-25-boardlist',
         'boardlistYear' => '2024-25',
     ],

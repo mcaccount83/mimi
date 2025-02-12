@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Middleware\HandlePageExpired;
-use App\Http\Middleware\VollistAccessTMiddleware;
-use App\Http\Middleware\VollistAccessCMiddleware;
-use App\Http\Middleware\VollistAccessPMiddleware;
+use App\Http\Middleware\CoordinatorListAccessTMiddleware;
+use App\Http\Middleware\CoordinatorListAccessCMiddleware;
+use App\Http\Middleware\CoordinatorListAccessPMiddleware;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -26,9 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(HandlePageExpired::class);
         $middleware->throttleApi();
         $middleware->alias([
-            'vollistC.access' => VollistAccessCMiddleware::class,
-            'vollistT.access' => VollistAccessTMiddleware::class,
-            'vollistP.access' => VollistAccessPMiddleware::class,
+            'coordinatorlistC.access' => CoordinatorListAccessCMiddleware::class,
+            'coordinatorlistT.access' => CoordinatorListAccessTMiddleware::class,
+            'coordinatorlistP.access' => CoordinatorListAccessPMiddleware::class,
         ]);
 
 

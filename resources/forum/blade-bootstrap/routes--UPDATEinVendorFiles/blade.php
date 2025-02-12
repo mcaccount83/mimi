@@ -25,7 +25,7 @@ Route::get('manage', [CategoryController::class, 'manage'])->name('category.mana
 
 // Categories
 Route::post($prefix['category'] . '/create', [CategoryController::class, 'store'])->name('category.store');
-Route::middleware(['auth', 'vollistC.access'])->group(function () use ($prefix, $authMiddleware) {
+Route::middleware(['auth', 'coordinatorlistC.access'])->group(function () use ($prefix, $authMiddleware) {
     Route::prefix($prefix['category'] . '/{category_id}-{category_slug}')->group(function () use ($prefix, $authMiddleware) {
         Route::get('/', [CategoryController::class, 'show'])->name('category.show');
         Route::patch('/', [CategoryController::class, 'update'])->name('category.update')->middleware($authMiddleware);
@@ -37,7 +37,7 @@ Route::middleware(['auth', 'vollistC.access'])->group(function () use ($prefix, 
 });
 
 // Threads
-Route::middleware(['auth', 'vollistT.access'])->group(function () use ($prefix, $authMiddleware) {
+Route::middleware(['auth', 'coordinatorlistT.access'])->group(function () use ($prefix, $authMiddleware) {
     Route::prefix($prefix['thread'] . '/{thread_id}-{thread_slug}')->group(function () use ($prefix, $authMiddleware) {
         Route::get('/', [ThreadController::class, 'show'])->name('thread.show');
         Route::middleware($authMiddleware)->group(function () use ($prefix) {
@@ -55,7 +55,7 @@ Route::middleware(['auth', 'vollistT.access'])->group(function () use ($prefix, 
 });
 
 // Posts
-Route::middleware(['auth', 'vollistP.access'])->group(function () use ($prefix, $authMiddleware) {
+Route::middleware(['auth', 'coordinatorlistP.access'])->group(function () use ($prefix, $authMiddleware) {
     Route::prefix($prefix['thread'] . '/{thread_id}-{thread_slug}')->group(function () use ($prefix, $authMiddleware) {
         Route::get($prefix['post'] . '/{post_id}', [PostController::class, 'show'])->name('post.show');
         Route::middleware($authMiddleware)->group(function () use ($prefix) {

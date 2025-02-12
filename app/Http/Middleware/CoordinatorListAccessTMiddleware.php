@@ -6,12 +6,11 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use TeamTeaTime\Forum\Models\Post;
 use TeamTeaTime\Forum\Models\Thread;
 use App\Policies\Forum\ThreadPolicy;
 use App\Policies\Forum\CategoryPolicy;
 
-class VollistAccessPMiddleware
+class CoordinatorListAccessTMiddleware
 {
     /**
      * Handle an incoming request.
@@ -28,7 +27,7 @@ class VollistAccessPMiddleware
         }
 
         // Get the category from the thead route
-        $thread = $post->thread ?? Thread::find($request->route('thread_id'));
+        $thread = Thread::find($request->route('thread_id'));
         $category = $thread->category ?? abort(404, 'Category not found');
 
         // Ensure thread exists
@@ -37,7 +36,7 @@ class VollistAccessPMiddleware
         }
 
         // Check access using the ThreadPolicy
-        if (!(new CategoryPolicy)->canAccessVollist($user, $category)) {
+        if (!(new CategoryPolicy)->canAccessCoordinatorList($user, $category)) {
             Auth::logout();
             $request->session()->flush();
             return redirect()->to('/login')->with('error', 'You do not have permission to access this category.');

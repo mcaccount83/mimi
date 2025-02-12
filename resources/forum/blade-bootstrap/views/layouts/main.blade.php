@@ -123,8 +123,8 @@
                     </a>
                 @elseif (isset($threads))
                     @if($userTypes['coordinator'])
-                        <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.vollistLink')) }}">
-                            Vollist
+                        <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.coordinatorlistLink')) }}">
+                            CoordinatorList
                         </a>
                         <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.boardlistLink')) }}">
                             | {{ config('forum.frontend.router.boardlistYear') }} BoardList
