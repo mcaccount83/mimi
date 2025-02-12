@@ -3,7 +3,6 @@
 namespace App\Policies\Forum;
 
 use TeamTeaTime\Forum\Policies\PostPolicy as ForumPostPolicy;
-
 use TeamTeaTime\Forum\Models\Post;
 
 class PostPolicy extends ForumPostPolicy

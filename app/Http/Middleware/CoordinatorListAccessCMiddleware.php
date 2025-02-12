@@ -7,13 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use TeamTeaTime\Forum\Models\Category;
-use App\Policies\Forum\CategoryPolicy;
+use App\Policies\Forum\ForumConditions;
 
 class CoordinatorListAccessCMiddleware
 {
-    /**
-     * Handle an incoming request.
-     */
+    protected $forumConditions;
+
+    public function __construct(ForumConditions $forumConditions)
+    {
+        $this->forumConditions = $forumConditions;
+    }
+
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user(); // Same as in your other middleware
@@ -34,7 +38,7 @@ class CoordinatorListAccessCMiddleware
         }
 
         // Check access using the CategoryPolicy
-        if (!(new CategoryPolicy)->canAccessCoordinatorList($user, $category)) {
+        if (!$this->forumConditions->canAccessCoordinatorList($user, $category)) {
             Auth::logout();
             $request->session()->flush();
             return redirect()->to('/login')->with('error', 'You do not have permission to access this category.');

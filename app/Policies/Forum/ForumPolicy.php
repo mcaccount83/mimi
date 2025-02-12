@@ -9,82 +9,89 @@ use Illuminate\Support\Facades\Log;
 
 class ForumPolicy extends BaseForumPolicy
 {
-    private function canManageLists($user): bool
-    {
-        $userType = $this->checkUserType($user);
-        $position = $this->checkPosition($user, $userType);
+    protected $forumConditions;
 
-        return $userType['isCoordinator'] && ($position['isITCondition'] || $position['isListAdminCondition']);
-        // return $userType['isCoordinator'] && $position['isFounderCondition']; //use this line for TESTING a false return
+    public function __construct()
+    {
+        $this->forumConditions = app(ForumConditions::class);
     }
 
-    protected function checkUserType($user): array
-    {
-        $userTypes = getUserType($user->user_type);
+    // private function canManageLists($user): bool
+    // {
+    //     $userType = $this->checkUserType($user);
+    //     $position = $this->checkPosition($user, $userType);
 
-        return [
-            'isCoordinator' => $userTypes['coordinator'],
-            'isBoard' => $userTypes['board'],
-            'isOutgoing' => $userTypes['outgoing'],
-        ];
-    }
+    //     return $userType['isCoordinator'] && ($position['isITCondition'] || $position['isListAdminCondition']);
+    //     // return $userType['isCoordinator'] && $position['isFounderCondition']; //use this line for TESTING a false return
+    // }
 
-    protected function checkPosition($user, $userType): array
-    {
-        $cdPositionid = null;
-        $cdSecPositionid = null;
+    // protected function checkUserType($user): array
+    // {
+    //     $userTypes = getUserType($user->user_type);
 
-        if ($userType['isCoordinator']) {
-            $userId = $user->id;
-            $cdDetails = Coordinators::where('user_id', '=', $userId)->first();
+    //     return [
+    //         'isCoordinator' => $userTypes['coordinator'],
+    //         'isBoard' => $userTypes['board'],
+    //         'isOutgoing' => $userTypes['outgoing'],
+    //     ];
+    // }
 
-            if ($cdDetails) {
-                $cdPositionid = $cdDetails->position_id;
-                $cdSecPositionid = $cdDetails->sec_position_id;
-            }
-        }
+    // protected function checkPosition($user, $userType): array
+    // {
+    //     $cdPositionid = null;
+    //     $cdSecPositionid = null;
 
-        $positions = getPositionConditions($cdPositionid, $cdSecPositionid);
+    //     if ($userType['isCoordinator']) {
+    //         $userId = $user->id;
+    //         $cdDetails = Coordinators::where('user_id', '=', $userId)->first();
 
-        return [
-            'isITCondition' => $positions['ITCondition'],
-            'isListAdminCondition' => $positions['listAdminCondition'],
-            'isFounderCondition' => $positions['founderCondition'],
-        ];
-    }
+    //         if ($cdDetails) {
+    //             $cdPositionid = $cdDetails->position_id;
+    //             $cdSecPositionid = $cdDetails->sec_position_id;
+    //         }
+    //     }
+
+    //     $positions = getPositionConditions($cdPositionid, $cdSecPositionid);
+
+    //     return [
+    //         'isITCondition' => $positions['ITCondition'],
+    //         'isListAdminCondition' => $positions['listAdminCondition'],
+    //         'isFounderCondition' => $positions['founderCondition'],
+    //     ];
+    // }
 
     public function createCategories($user): bool
     {
-        return $this->canManageLists($user);
+        return $this->forumConditions->canManageLists($user);
     }
 
     public function moveCategories($user): bool
     {
-        return $this->canManageLists($user);
+        return $this->forumConditions->canManageLists($user);
     }
 
     public function editCategories($user): bool
     {
-        return $this->canManageLists($user);
+        return $this->forumConditions->canManageLists($user);
     }
 
     public function deleteCategories($user): bool
     {
-        return $this->canManageLists($user);
+        return $this->forumConditions->canManageLists($user);
     }
 
     public function markThreadsAsRead($user): bool
     {
-        return $this->canManageLists($user);
+        return $this->forumConditions->canManageLists($user);
     }
 
     public function viewTrashedThreads($user): bool
     {
-        return $this->canManageLists($user);
+        return $this->forumConditions->canManageLists($user);
     }
 
     public function viewTrashedPosts($user): bool
     {
-        return $this->canManageLists($user);
+        return $this->forumConditions->canManageLists($user);
     }
 }
