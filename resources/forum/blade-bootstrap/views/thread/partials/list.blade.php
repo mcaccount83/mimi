@@ -45,9 +45,10 @@
                 <br>
                 @php
                     $authorFullName = $thread->lastPost->author ? $thread->lastPost->author->authorFullName() : 'Unknown Author';
+                    $authorNameWithPosition = $thread->lastPost->author ? $thread->lastPost->author->authorNameWithPosition() : 'Unknown Author';
                 @endphp
 
-                {!! $authorFullName !!}
+                {!! $authorNameWithPosition !!}
                 <br>
                 {{-- {{ $thread->lastPost->authorName }} --}}
                 <span class="text-muted">@include ('forum::partials.timestamp', ['carbon' => $thread->lastPost->created_at])</span>
