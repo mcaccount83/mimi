@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Request;
+use TeamTeaTime\Forum\Models\Thread;
+use TeamTeaTime\Forum\Support\Access\CategoryAccess;
+use Illuminate\Support\Facades\Auth;
 
 if (! function_exists('getPositionConditions')) {
     function getPositionConditions($positionId, $secPositionId)
@@ -52,5 +55,29 @@ if (! function_exists('isActiveRoute')) {
         }
 
         return '';
+    }
+}
+
+if (! function_exists('getUnreadForumCount')) {
+    function getUnreadForumCount()
+    {
+        $threads = Thread::recent()
+            ->with('category')
+            ->get()
+            ->filter(function ($thread) {
+                $accessibleCategoryIds = CategoryAccess::getFilteredIdsFor(Auth::user());
+
+                // If the category isn't private, allow access
+                if (!$thread->category->is_private) {
+                    return $thread->userReadStatus !== null;
+                }
+
+                // For private categories, check if user has access via CategoryAccess
+                return $thread->userReadStatus !== null &&
+                       Auth::user() &&
+                       $accessibleCategoryIds->contains($thread->category_id);
+            });
+
+        return $threads->whereNull('read_at')->count();
     }
 }

@@ -114,6 +114,35 @@ window.onload = function () {
         margin-right: 5px;
     }
 
+
+    .notification-badge {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        font-size: 12px;
+        line-height: 18px;
+        /* background-color: #dc3545; */
+        background-color: #28a745;
+        color: #ffffff;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-item.position-relative {
+        position: relative;
+    }
+
+    /* Optional: Add hover effect */
+    .notification-badge:hover {
+        /* background-color: #c82333; */
+        background-color: #28a745;
+    }
+
 </style>
 </head>
 
@@ -365,6 +394,39 @@ window.onload = function () {
                                 </a>
                             </li>
                         @endif
+
+                         <!-- Lists Menu Item -->
+                         {{-- @php
+                            $resourcesRoute = route('admin.toolkit');
+                            $activeResourcesRoutes = [
+                                'resources/*'
+                            ];
+                        @endphp
+                        @if (isset($resourcesRoute))
+                            <li class="nav-item">
+                                <a href="{{ $resourcesRoute }}" class="nav-link {{ isActiveRoute($activeResourcesRoutes) }}">
+                                    <i class="nav-icon fas fa-briefcase"></i>
+                                    <p>Resources</p>
+                                </a>
+                            </li>
+                        @endif --}}
+
+                         <!-- CoordinatorList Menu Item -->
+                         <li class="nav-item position-relative">
+                            {{-- <a href="{{ url(config('forum.frontend.router.prefix') . '/c/2-coordinatorlist') }}" target="_blank" class="nav-link"> --}}
+                            <a href="{{ url(config('forum.frontend.router.prefix') . '/unread') }}" target="_blank" class="nav-link">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>
+                                    CoordinatorList
+                                    @if(getUnreadForumCount() > 0)
+                                        <span class="badge badge-danger badge-pill notification-badge">
+                                            {{-- {{ getUnreadForumCount() }} UNREAD --}}
+                                            UNREAD
+                                        </span>
+                                    @endif
+                                </p>
+                            </a>
+                        </li>
 
                         <li class="nav-item">
                             <a href="{{ route('coordinators.profile') }}" class="nav-link {{ Request::is('coordprofile') ? 'active' : '' }}">

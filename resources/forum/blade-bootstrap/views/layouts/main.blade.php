@@ -40,37 +40,51 @@
 
             <!-- Left navbar links -->
             <div class="collapse navbar-collapse order-3" id="navbarCollapse">
-                @if($userTypes['board'])
                 <ul class="navbar-nav">
+                    @if($userTypes['board'])
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('home')}}" >
+                                <span class="no-icon">MIMI Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.boardlistLink')) }}">
+                                <span class="no-icon">BoardList</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('board.resources')}}" >
+                                <span class="no-icon">Chapter Resources</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://momsclub.org/elearning/" target="_blank">
+                                <span class="no-icon">eLearning Library</span>
+                            </a>
+                        </li>
+                    @elseif($userTypes['coordinator'])
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('home')}}" >
+                                <span class="no-icon">Coordinator Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.coordinatorlistLink')) }}">
+                                <span class="no-icon">CoordinatorList</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.boardlistLink')) }}">
+                                <span class="no-icon">BoardList</span>
+                            </a>
+                        </li>
+                    @endif
                     <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home')}}" >
-                        <span class="no-icon">MIMI Profile</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="{{ route('board.resources')}}" >
-                        <span class="no-icon">Chapter Resources</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="https://momsclub.org/elearning/" target="_blank">
-                        <span class="no-icon">eLearning Library</span>
-                    </a>
+                        <a class="nav-link" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.publicannouncementslink')) }}">
+                            <span class="no-icon">Public Announcements</span>
+                        </a>
                     </li>
                 </ul>
-                {{-- @endif --}}
-                @elseif($userTypes['coordinator'])
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home')}}" >
-                        <span class="no-icon">Coordinator Dashboard</span>
-                    </a>
-                    </li>
-                </ul>
-                @else
-                <ul class="navbar-nav">
-                </ul>
-                @endif
             </div>
 
             <!-- Right navbar links -->
@@ -104,7 +118,7 @@
     <nav class="v-navbar navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a href="{{ route('home') }}" class="band-link">
-                <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" style="width: 75px; height: 75px;">
+                <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" style="width: 75px; height: 75px; margin-right: 10px">
             </a>
             @php
                 $currentUrl = request()->url();
@@ -115,7 +129,7 @@
             @endphp
 
             @if (in_array($currentUrl, $validUrls))
-                <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix')) }}">MOMS Club Forums</a>
+                <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix')) }}"><h2>List Index</h2></a>
             @elseif (!isset($category))
                 @if (isset($thread))
                     <a class="navbar-brand" href="{{ Forum::route('category.show', $thread->category) }}">
@@ -124,11 +138,11 @@
                 @elseif (isset($threads))
                     @if($userTypes['coordinator'])
                         <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.coordinatorlistLink')) }}">
-                            CoordinatorList
+                            <h2>CoordinatorList</h2>
                         </a>
-                        <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.boardlistLink')) }}">
+                        {{-- <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.boardlistLink')) }}">
                             | {{ config('forum.frontend.router.boardlistYear') }} BoardList
-                        </a>
+                        </a> --}}
                     @else
                         <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.boardlistLink')) }}">
                             <h2>{{ config('forum.frontend.router.boardlistYear') }} BoardList</h2>
@@ -141,12 +155,17 @@
             @endif
             <div class="collapse navbar-collapse" :class="{ show: !isCollapsed }">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('forum.recent') }}">{{ trans('forum::threads.recent') }}</a>
-                    </li>
-                    @auth
+                    </li> --}}
+                    {{-- @auth
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('forum.unread') }}">{{ trans('forum::threads.unread_updated') }}</a>
+                        </li>
+                    @endauth --}}
+                    @auth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('forum.unread') }}">Unread Threads</a>
                         </li>
                     @endauth
                     @can ('moveCategories')
