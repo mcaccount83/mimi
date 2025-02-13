@@ -48,7 +48,7 @@ class User extends Authenticatable
         if ($this->user_type == 'coordinator') {
             $regionText = ($this->coordinator->region && $this->coordinator->region->long_name !== 'None')
                 ? ', ' . $this->coordinator->region->long_name . ' Region'
-                : '';
+                : ', ' . $this->coordinator->conference->conference_description;
 
             return $this->first_name . ' ' . $this->last_name . ', ' .
                    $this->coordinator->displayPosition->long_title . ' <br> ' .
