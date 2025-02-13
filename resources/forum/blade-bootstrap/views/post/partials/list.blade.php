@@ -15,7 +15,13 @@
             </span>
         @endif
 
-        {{ $post->authorName }}
+        @php
+            $authorNameWithDetails = $post->author ? $post->author->authorNameWithPosition() : 'Unknown Author';
+        @endphp
+
+        {!! $authorNameWithDetails !!}
+        <br>
+        {{-- {{ $post->authorName }} --}}
 
         <span class="text-muted">
             @include ('forum::partials.timestamp', ['carbon' => $post->created_at])
