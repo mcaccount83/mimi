@@ -19,7 +19,7 @@
             @endif
 
             <div class="mb-3">
-                <textarea name="content" class="form-control">{{ old('content') }}</textarea>
+                <textarea name="content" class="form-control" rows="10">{{ old('content') }}</textarea>
             </div>
 
             <div class="text-end">
