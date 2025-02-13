@@ -161,24 +161,31 @@ class CoordinatorController extends Controller
         $coordinatorList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $emailListCord = '';
-        $row_count = count($coordinatorList);
-        for ($row = 0; $row < $row_count; $row++) {
-            $email = $coordinatorList[$row]->cor_email;
-            $escaped_email = str_replace("'", "\\'", $email);
-
-            if ($emailListCord == '') {
-                $emailListCord = $escaped_email;
-            } else {
-                $emailListCord .= ';'.$escaped_email;
-            }
-        }
+        $emailListCord = $coordinatorList->pluck('email')->filter()->implode(';');
 
         $countList = count($coordinatorList);
-        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord];
+        $pageTitle = 'Coordinatorsxxx';
+        $breadcrumb = 'Active Coordinator List';
+        $data = [$pageTitle => 'pageTitle', $breadcrumb => 'breadcrumb', 'countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord];
 
         return view('coordinators.coordlist')->with($data);
     }
+
+
+        // $emailListCord = '';
+        // $row_count = count($coordinatorList);
+        // for ($row = 0; $row < $row_count; $row++) {
+        //     $email = $coordinatorList[$row]->email;
+        //     $escaped_email = str_replace("'", "\\'", $email);
+
+        //     if ($emailListCord == '') {
+        //         $emailListCord = $escaped_email;
+        //     } else {
+        //         $emailListCord .= ';'.$escaped_email;
+        //     }
+        // }
+
+
 
     /**
      * Retired Coorinators List
