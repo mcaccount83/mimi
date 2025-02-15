@@ -8,7 +8,8 @@
 <b>Posted by:</b><br>
 {!! $authorNameWithPosition !!}
 
-@component('mail::button', ['url' => url("/t/{$thread->id}-" . Str::slug($thread->title))])
+@component('mail::button', ['url' => route('forum.thread.show', [$thread->id, Str::slug($thread->title)])])
+
 View Full Thread
 @endcomponent
 

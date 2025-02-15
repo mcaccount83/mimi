@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ForumSubscriptionController;
 use TeamTeaTime\Forum\Http\Controllers\Blade\{
     Bulk\CategoryController as BulkCategoryController,
     Bulk\PostController as BulkPostController,
@@ -33,6 +34,9 @@ Route::middleware(['auth', 'coordinatorlistC.access'])->group(function () use ($
 
         Route::get($prefix['thread'] . '/create', [ThreadController::class, 'create'])->name('thread.create');
         Route::post($prefix['thread'] . '/create', [ThreadController::class, 'store'])->name('thread.store')->middleware($authMiddleware);
+
+        Route::post('/subscribe', [ForumSubscriptionController::class, 'subscribe'])->name('category.subscribe');
+        Route::delete('/unsubscribe', [ForumSubscriptionController::class, 'unsubscribe'])->name('category.unsubscribe');
     });
 });
 
