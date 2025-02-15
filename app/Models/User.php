@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -26,6 +27,11 @@ class User extends Authenticatable
     public function coordinator(): HasOne
     {
         return $this->hasOne(Coordinators::class, 'user_id', 'id');  // 'user_id' in coordinators HasOne 'id' in users
+    }
+
+    public function coordinators(): HasMany
+    {
+        return $this->hasMany(Coordinators::class, 'user_id', 'id');
     }
 
     public function board(): HasOne
@@ -61,6 +67,13 @@ class User extends Authenticatable
         }
         return $this->first_name . ' ' . $this->last_name;
     }
+
+
+    public function categorySubscriptions()
+    {
+        return $this->hasMany(ForumCategorySubscription::class);
+    }
+
 
 
 

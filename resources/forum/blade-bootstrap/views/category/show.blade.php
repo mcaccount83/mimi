@@ -2,18 +2,9 @@
 @extends('forum::layouts.main', ['thread' => null])
 
 @section('content')
-    {{-- <div class="d-flex flex-row justify-content-between mb-2">
-        <h2 style="color: {{ $category->color_light_mode }};">
-            {{ $category->title }} &nbsp;
-            @if ($category->description)
-                <small>{{ $category->description }}</small>
-            @endif
-        </h2>
-    </div> --}}
-            @if ($category->description)
-                <p>{{ $category->description }}</p>
-            @endif
-
+    @if ($category->description)
+        <p>{{ $category->description }}</p>
+    @endif
 
     <div id="category">
         <div class="clearfix">
@@ -31,8 +22,24 @@
                         </button>
                     @endcan
                 @endcan
-            </div>
+
+                @if(auth()->check())
+                @if(auth()->user()->categorySubscriptions()->where('category_id', $category->id)->exists())
+                    <form action="{{ Forum::route('category.unsubscribe', $category) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Unsubscribe from Category</button>
+                    </form>
+                @else
+                    <form action="{{ Forum::route('category.subscribe', $category) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Subscribe to Category</button>
+                    </form>
+                @endif
+            @endif
+
         </div>
+    </div>
 
         @if (!$category->children->isEmpty())
             @foreach ($category->children as $subcategory)

@@ -13,8 +13,7 @@ use App\Http\Controllers\EOYReportController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\InternationalController;
-use App\Http\Controllers\LogViewerController;
+use App\Http\Controllers\ForumSubscriptionController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PDFController;
@@ -352,3 +351,4 @@ Route::get('/board/resources', [BoardController::class, 'showResources'])->name(
 // Route::get('/boardlist', [BoardListController::class, 'index'])->name('boardlist.index');
 // Route::get('/boardlist/{id}', [BoardListController::class, 'show'])->name('boardlist.show');
 // Add routes for other methods as needed
+
