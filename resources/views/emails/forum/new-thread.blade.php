@@ -1,5 +1,5 @@
 @component('mail::message')
-# New Topic Created
+# {{ $category->title }} New Topic Created
 
 ## {{ $thread->title }}
 

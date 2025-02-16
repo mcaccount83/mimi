@@ -20,6 +20,7 @@ class ForumEventSubscriber
         // Get post data
         $post = $event->post;
         $thread = $post->thread;
+        $category = $thread->category;
         $author = $post->author;
         $authorNameWithPosition = $author ? $author->authorNameWithPosition() : 'Unknown Author';
 
@@ -28,7 +29,7 @@ class ForumEventSubscriber
 
         // Send email to each user
         foreach ($usersToNotify as $user) {
-            Mail::to($user->email)->queue(new NewForumPost($post, $thread, $authorNameWithPosition));
+            Mail::to($user->email)->queue(new NewForumPost($post, $thread, $category, $authorNameWithPosition));
         }
     }
 
@@ -40,6 +41,7 @@ class ForumEventSubscriber
         // Get thread data
         $thread = $event->thread;
         $post = $thread->firstPost;
+        $category = $thread->category;
         $author = $thread->author;
         $authorNameWithPosition = $author ? $author->authorNameWithPosition() : 'Unknown Author';
 
@@ -48,7 +50,7 @@ class ForumEventSubscriber
 
         // Send email to each user
         foreach ($usersToNotify as $user) {
-            Mail::to($user->email)->queue(new NewForumThread($post, $thread, $authorNameWithPosition));
+            Mail::to($user->email)->queue(new NewForumThread($post, $thread, $category, $authorNameWithPosition));
         }
     }
 

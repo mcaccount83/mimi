@@ -1,5 +1,5 @@
 @component('mail::message')
-# New Reply Posted
+# {{ $category->title }} New Reply Posted
 
 ## {{ $thread->title }}
 
