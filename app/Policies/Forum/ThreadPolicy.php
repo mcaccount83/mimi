@@ -21,47 +21,41 @@ class ThreadPolicy extends ForumThreadPolicy
 
     public function rename($user, Thread $thread): bool
     {
-        if (!$this->forumConditions->checkPublicAnnouncements($user, $thread)) {
-            return false;
-        }
-
-        return $user->getKey() === $thread->author_id;
+        return $this->forumConditions->canManageLists($user)
+            || $this->forumConditions->checkPublicAnnouncements($user, $thread)
+            || $user->getKey() === $thread->author_id;
     }
 
     public function reply($user, Thread $thread): bool
     {
-        if (!$this->forumConditions->checkPublicAnnouncements($user, $thread)) {
-            return false;
-        }
-
-        return !$thread->locked;
+        return $this->forumConditions->canManageLists($user)
+            || $this->forumConditions->checkPublicAnnouncements($user, $thread)
+            || !$thread->locked;
     }
 
     public function delete($user, Thread $thread): bool
     {
-        if (!$this->forumConditions->checkPublicAnnouncements($user, $thread)) {
-            return false;
-        }
-
-        return $user->getKey() === $thread->author_id;
+        return $this->forumConditions->canManageLists($user)
+            || $this->forumConditions->checkPublicAnnouncements($user, $thread)
+            || $user->getKey() === $thread->author_id;
     }
 
     public function restore($user, Thread $thread): bool
     {
-        if (!$this->forumConditions->checkPublicAnnouncements($user, $thread)) {
-            return false;
-        }
-
-        return $user->getKey() === $thread->author_id;
+        return $this->forumConditions->canManageLists($user)
+            || $this->forumConditions->checkPublicAnnouncements($user, $thread)
+            || $user->getKey() === $thread->author_id;
     }
 
     public function deletePosts($user, Thread $thread): bool
     {
-        return $this->forumConditions->checkPublicAnnouncements($user, $thread);
+        return $this->forumConditions->canManageLists($user)
+            || $this->forumConditions->checkPublicAnnouncements($user, $thread);
     }
 
     public function restorePosts($user, Thread $thread): bool
     {
-        return $this->forumConditions->checkPublicAnnouncements($user, $thread);
+        return $this->forumConditions->canManageLists($user)
+            || $this->forumConditions->checkPublicAnnouncements($user, $thread);
     }
 }

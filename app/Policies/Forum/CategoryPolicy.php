@@ -50,42 +50,35 @@ class CategoryPolicy extends ForumCategoryPolicy
     public function deleteThreads(User $user, Category $category): bool
     {
         return $this->forumConditions->canManageLists($user);
-
     }
 
     public function restoreThreads(User $user, Category $category): bool
     {
         return $this->forumConditions->canManageLists($user);
-
     }
 
     public function moveThreadsFrom(User $user, Category $category): bool
     {
         return $this->forumConditions->canManageLists($user);
-
     }
 
     public function moveThreadsTo(User $user, Category $category): bool
     {
         return $this->forumConditions->canManageLists($user);
-
     }
 
     public function lockThreads(User $user, Category $category): bool
     {
         return $this->forumConditions->canManageLists($user);
-
     }
 
     public function pinThreads(User $user, Category $category): bool
     {
         return $this->forumConditions->canManageLists($user);
-
     }
 
     public function markThreadsAsRead(User $user, Category $category): bool
     {
         return $this->forumConditions->canManageLists($user);
-
     }
 }
