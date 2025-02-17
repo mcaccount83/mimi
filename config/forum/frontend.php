@@ -42,7 +42,7 @@ return [
         'auth_middleware' => ['auth'],
         'publicannouncementslink' => '/c/1-public-announcements',
         'coordinatorlistLink' =>  '/c/2-coordinatorlist',
-        'boardlistLink' =>  '/c/3-2024-25-boardlist',
+        'boardlistLink' =>  '/c/3-boardlist',
         'boardlistYear' => '2024-25',
     ],
 

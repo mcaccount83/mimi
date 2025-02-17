@@ -29,11 +29,13 @@ use App\Models\Coordinators;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
+use App\Models\Conference;
 use App\Models\Region;
 use App\Models\State;
 use App\Models\Status;
 use App\Models\User;
 use App\Models\Website;
+use App\Models\ForumCategorySubscription;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -50,9 +52,7 @@ use Illuminate\View\View;
 class ChapterController extends Controller
 {
     protected $userController;
-
     protected $pdfController;
-
 
     public function __construct(UserController $userController, PDFController $pdfController)
     {
@@ -60,6 +60,21 @@ class ChapterController extends Controller
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
         $this->pdfController = $pdfController;
+    }
+
+    public function defaultCategories()
+    {
+        // Public Annnouncemenets = 1
+        // CoordinatorList = 2
+        // BoardList =3
+
+        $coordinatorCategories = [1, 2, 3];
+        $boardCategories = [1, 3];
+
+        return [
+            'coordinatorCategories' => $coordinatorCategories,
+            'boardCategories' => $boardCategories,
+        ];
     }
 
     /**
@@ -106,11 +121,23 @@ class ChapterController extends Controller
                 $baseQuery->orderByDesc('next_renewal_year')  // Re-Reg sort by next renewal date
                          ->orderByDesc('start_month_id');
             }
-        } else {
-            $baseQuery->orderBy(State::select('state_short_name')  // All other pages sort by state and name
-                ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-                ->orderBy('chapters.name');
-        }
+            } else {
+                $baseQuery->orderBy(Conference::select('short_name')
+                    ->whereColumn('conference.id', 'chapters.conference_id')
+                )
+                    ->orderBy(
+                        Region::select('short_name')
+                                ->whereColumn('region.id', 'chapters.region_id')
+                    )
+                    ->orderBy(State::select('state_short_name')
+                            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+
+                    ->orderBy('chapters.name');
+
+            // $baseQuery->orderBy(State::select('state_short_name')  // All other pages sort by state and name
+            //     ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+            //     ->orderBy('chapters.name');
+            }
 
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
     }
@@ -287,9 +314,17 @@ class ChapterController extends Controller
             $baseQuery->where('region_id', '=', $cdRegId);
         }
 
-        $baseQuery->orderBy(State::select('state_short_name')
-            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name');
+        $baseQuery->orderBy(Conference::select('short_name')
+                    ->whereColumn('conference.id', 'chapters.conference_id')
+                )
+                    ->orderBy(
+                        Region::select('short_name')
+                                ->whereColumn('region.id', 'chapters.region_id')
+                    )
+                    ->orderBy(State::select('state_short_name')
+                            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+
+                    ->orderBy('chapters.name');
 
         $inquiriesList = $baseQuery->get();
 
@@ -349,8 +384,21 @@ class ChapterController extends Controller
 
         $intChapterList = Chapters::with(['state', 'conference', 'region', 'president', 'primaryCoordinator'])
             ->where('is_active', 1)
+            // ->orderBy(State::select('state_short_name')
+            //     ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+            // ->orderBy('chapters.name')
+            // ->get();
+
+            ->orderBy(Conference::select('short_name')
+            ->whereColumn('conference.id', 'chapters.conference_id')
+            )
+            ->orderBy(
+                Region::select('short_name')
+                        ->whereColumn('region.id', 'chapters.region_id')
+            )
             ->orderBy(State::select('state_short_name')
-                ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+                    ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+
             ->orderBy('chapters.name')
             ->get();
 
@@ -637,6 +685,8 @@ class ChapterController extends Controller
                 'last_updated_date' => $lastupdatedDate,
             ]);
 
+            ForumCategorySubscription::where('user_id', $userIds)->delete();
+
              //Update Chapter MailData//
              $baseQuery = $this->getChapterDetails($chapterid);
              $chDetails = $baseQuery['chDetails'];
@@ -713,9 +763,6 @@ class ChapterController extends Controller
                 //     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
             }
 
-
-
-
             // Commit the transaction
             DB::commit();
 
@@ -764,6 +811,11 @@ class ChapterController extends Controller
         $chapter = Chapters::find($chapterid);
         $documents = Documents::find($chapterid);
 
+        $defaultCategories = $this->defaultCategories();
+        $defaultBoardCategories = $defaultCategories['boardCategories'];
+
+        $coordinatorData = $this->userController->loadReportingTree($cdId);
+
         try {
             DB::beginTransaction();
 
@@ -793,6 +845,15 @@ class ChapterController extends Controller
                 'last_updated_date' => $lastupdatedDate,
             ]);
 
+            foreach ($userIds as $userId) {
+                foreach ($defaultBoardCategories as $categoryId) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $userId,  // Now passing a single ID instead of collection
+                        'category_id' => $categoryId,
+                    ]);
+                }
+            }
+
             //Update Chapter MailData//
             $baseQuery = $this->getChapterDetails($chapterid);
             $chDetails = $baseQuery['chDetails'];
@@ -819,7 +880,6 @@ class ChapterController extends Controller
            $cc_conf = $coordinatorData['cc_conf'];
            $cc_conf_desc = $coordinatorData['cc_conf_desc'];
            $cc_email = $coordinatorData['cc_email'];
-
 
             $mailData = [
                 'chapterName' => $chDetails->name,
@@ -959,6 +1019,9 @@ class ChapterController extends Controller
 
         $input = $request->all();
 
+        $defaultCategories = $this->defaultCategories();
+        $defaultBoardCategories = $defaultCategories['boardCategories'];
+
         DB::beginTransaction();
         try {
             $chapterId = Chapters::create([
@@ -1018,6 +1081,13 @@ class ChapterController extends Controller
                     'last_updated_date' => date('Y-m-d H:i:s'),
                     'is_active' => 1,
                 ])->id;
+
+                foreach ($defaultBoardCategories as $categoryId) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $userId,
+                        'category_id' => $categoryId,
+                    ]);
+                }
             }
 
             //AVP Info
@@ -1048,6 +1118,13 @@ class ChapterController extends Controller
                     'last_updated_date' => date('Y-m-d H:i:s'),
                     'is_active' => 1,
                 ])->id;
+
+                foreach ($defaultBoardCategories as $categoryId) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $userId,
+                        'category_id' => $categoryId,
+                    ]);
+                }
             }
 
             //MVP Info
@@ -1078,6 +1155,13 @@ class ChapterController extends Controller
                     'last_updated_date' => date('Y-m-d H:i:s'),
                     'is_active' => 1,
                 ])->id;
+
+                foreach ($defaultBoardCategories as $categoryId) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $userId,
+                        'category_id' => $categoryId,
+                    ]);
+                }
             }
 
             //TREASURER Info
@@ -1108,6 +1192,13 @@ class ChapterController extends Controller
                     'last_updated_date' => date('Y-m-d H:i:s'),
                     'is_active' => 1,
                 ])->id;
+
+                foreach ($defaultBoardCategories as $categoryId) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $userId,
+                        'category_id' => $categoryId,
+                    ]);
+                }
             }
 
             //Secretary Info
@@ -1138,6 +1229,13 @@ class ChapterController extends Controller
                     'last_updated_date' => date('Y-m-d H:i:s'),
                     'is_active' => 1,
                 ])->id;
+
+                foreach ($defaultBoardCategories as $categoryId) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $userId,
+                        'category_id' => $categoryId,
+                    ]);
+                }
             }
 
             $chDetails = Chapters::with(['state', 'primaryCoordinator'])->find($chapterId);
@@ -1491,6 +1589,9 @@ class ChapterController extends Controller
 
         $chapter = Chapters::find($id);
 
+        $defaultCategories = $this->defaultCategories();
+        $defaultBoardCategories = $defaultCategories['boardCategories'];
+
         DB::beginTransaction();
         try {
             $chapter->last_updated_by = $lastUpdatedBy;
@@ -1522,6 +1623,18 @@ class ChapterController extends Controller
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => now(),
                 ]);
+                // Check if subscription already exists
+                foreach ($defaultBoardCategories as $categoryId) {
+                    $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                        ->where('category_id', $categoryId)
+                        ->first();
+                    if (!$existingSubscription) {
+                        ForumCategorySubscription::create([
+                            'user_id' => $user->id,
+                            'category_id' => $categoryId,
+                        ]);
+                    }
+                }
             }
 
             //AVP Info
@@ -1532,6 +1645,7 @@ class ChapterController extends Controller
                 if ($request->input('AVPVacant') == 'on') {
                     $avp->delete();  // Delete board member and associated user if now Vacant
                     $user->delete();
+                    ForumCategorySubscription::where('user_id', $user)->delete();
                 } else {
                     $user->update([   // Update user details if alrady exists
                         'first_name' => $request->input('ch_avp_fname'),
@@ -1552,7 +1666,19 @@ class ChapterController extends Controller
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
                     ]);
-                }
+                        // Check if subscription already exists
+                        foreach ($defaultBoardCategories as $categoryId) {
+                            $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                                ->where('category_id', $categoryId)
+                                ->first();
+                            if (!$existingSubscription) {
+                                ForumCategorySubscription::create([
+                                    'user_id' => $user->id,
+                                    'category_id' => $categoryId,
+                                ]);
+                            }
+                        }
+                    }
             } else {
                 if ($request->input('AVPVacant') != 'on') {
                     $user = User::create([  // Create user details if new
@@ -1579,6 +1705,12 @@ class ChapterController extends Controller
                         'last_updated_date' => now(),
                         'is_active' => 1,
                     ]);
+                    foreach ($defaultBoardCategories as $categoryId) {
+                        ForumCategorySubscription::create([
+                            'user_id' => $user->id,
+                            'category_id' => $categoryId,
+                        ]);
+                    }
                 }
             }
 
@@ -1590,6 +1722,7 @@ class ChapterController extends Controller
                 if ($request->input('MVPVacant') == 'on') {
                     $mvp->delete();  // Delete board member and associated user if now Vacant
                     $user->delete();
+                    ForumCategorySubscription::where('user_id', $user)->delete();
                 } else {
                     $user->update([   // Update user details if alrady exists
                         'first_name' => $request->input('ch_mvp_fname'),
@@ -1610,6 +1743,18 @@ class ChapterController extends Controller
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
                     ]);
+                    // Check if subscription already exists
+                    foreach ($defaultBoardCategories as $categoryId) {
+                        $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                            ->where('category_id', $categoryId)
+                            ->first();
+                        if (!$existingSubscription) {
+                            ForumCategorySubscription::create([
+                                'user_id' => $user->id,
+                                'category_id' => $categoryId,
+                            ]);
+                        }
+                    }
                 }
             } else {
                 if ($request->input('MVPVacant') != 'on') {
@@ -1637,6 +1782,13 @@ class ChapterController extends Controller
                         'last_updated_date' => now(),
                         'is_active' => 1,
                     ]);
+
+                    foreach ($defaultBoardCategories as $categoryId) {
+                        ForumCategorySubscription::create([
+                            'user_id' => $user->id,
+                            'category_id' => $categoryId,
+                        ]);
+                    }
                 }
             }
 
@@ -1648,6 +1800,7 @@ class ChapterController extends Controller
                 if ($request->input('TreasVacant') == 'on') {
                     $treasurer->delete();  // Delete board member and associated user if now Vacant
                     $user->delete();
+                    ForumCategorySubscription::where('user_id', $user)->delete();
                 } else {
                     $user->update([   // Update user details if alrady exists
                         'first_name' => $request->input('ch_trs_fname'),
@@ -1668,6 +1821,18 @@ class ChapterController extends Controller
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
                     ]);
+                    // Check if subscription already exists
+                    foreach ($defaultBoardCategories as $categoryId) {
+                        $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                            ->where('category_id', $categoryId)
+                            ->first();
+                        if (!$existingSubscription) {
+                            ForumCategorySubscription::create([
+                                'user_id' => $user->id,
+                                'category_id' => $categoryId,
+                            ]);
+                        }
+                    }
                 }
             } else {
                 if ($request->input('TreasVacant') != 'on') {
@@ -1695,12 +1860,20 @@ class ChapterController extends Controller
                         'last_updated_date' => now(),
                         'is_active' => 1,
                     ]);
+
+                    foreach ($defaultBoardCategories as $categoryId) {
+                        ForumCategorySubscription::create([
+                            'user_id' => $user->id,
+                            'category_id' => $categoryId,
+                        ]);
+                    }
                 }
             }
 
             //SEC Info
             $chapter = Chapters::with('secretary')->find($id);
             $secretary = $chapter->secretary;
+            ForumCategorySubscription::where('user_id', $user)->delete();
             if ($secretary) {
                 $user = $secretary->user;
                 if ($request->input('SecVacant') == 'on') {
@@ -1726,6 +1899,18 @@ class ChapterController extends Controller
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
                     ]);
+                    // Check if subscription already exists
+                    foreach ($defaultBoardCategories as $categoryId) {
+                        $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                            ->where('category_id', $categoryId)
+                            ->first();
+                        if (!$existingSubscription) {
+                            ForumCategorySubscription::create([
+                                'user_id' => $user->id,
+                                'category_id' => $categoryId,
+                            ]);
+                        }
+                    }
                 }
             } else {
                 if ($request->input('SecVacant') != 'on') {
@@ -1753,6 +1938,13 @@ class ChapterController extends Controller
                         'last_updated_date' => now(),
                         'is_active' => 1,
                     ]);
+
+                    foreach ($defaultBoardCategories as $categoryId) {
+                        ForumCategorySubscription::create([
+                            'user_id' => $user->id,
+                            'category_id' => $categoryId,
+                        ]);
+                    }
                 }
             }
 

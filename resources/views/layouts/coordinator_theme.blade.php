@@ -9,7 +9,10 @@
 <!-- Bootstrap CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <!-- Font Awesome -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css">
+{{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/all.min.css"> --}}
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/brands.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/css/v5-font-face.css" rel="stylesheet" />
 <!-- overlayScrollbars -->
 <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
 <!-- Theme style -->
@@ -278,6 +281,27 @@ window.onload = function () {
                             </li>
                         @endif
 
+                        <!-- List Subscription Menu Item -->
+                        @php
+                            if ($adminReportCondition) {
+                                $chaptersRoute = route('forum.chaptersubscriptionlist');
+                            } elseif ($listAdminCondition || $adminReportCondition) {
+                                $chaptersRoute = route('forum.internationalchaptersubscriptionlist');
+                            }
+                            $activeChpaterRoutes = [
+                                'forum/chaptersubscriptionlist', 'forum/coordinatorsubscriptionlist',
+                                'forum/internationalchaptersubscriptionlist', 'forum/internationalcoordinatorsubscriptionlist'
+                            ];
+                        @endphp
+                        @if (isset($chaptersRoute))
+                            <li class="nav-item">
+                                <a href="{{ $chaptersRoute }}" class="nav-link {{ isActiveRoute($activeChpaterRoutes) }}">
+                                    <i class="nav-icon fas fa-list-check"></i>
+                                    <p>List Subscriptions</p>
+                                </a>
+                            </li>
+                        @endif
+
                         <!-- BoardList Email Menu Item -->
                         @php
                             if ($listAdminCondition || $adminReportCondition) {
@@ -290,7 +314,7 @@ window.onload = function () {
                         @if (isset($boardlistRoute))
                             <li class="nav-item">
                                 <a href="{{ $boardlistRoute }}" class="nav-link {{ isActiveRoute($activeBoardlistRoutes) }}">
-                                    <i class="nav-icon fas fa-dollar-sign"></i>
+                                    <i class="nav-icon fas fa-list-check"></i>
                                     <p>BoardList Emails</p>
                                 </a>
                             </li>
@@ -317,7 +341,7 @@ window.onload = function () {
                         @if (isset($chapterReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $chapterReportsRoute }}" class="nav-link {{ isActiveRoute($activeChapterReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-clipboard"></i>
+                                    <i class="nav-icon fas fa-clipboard-list"></i>
                                     <p>Chapter Reports</p>
                                 </a>
                             </li>
@@ -337,7 +361,7 @@ window.onload = function () {
                         @if (isset($coordReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $coordReportsRoute }}" class="nav-link {{ isActiveRoute($activeCoordReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-id-card-alt"></i>
+                                    <i class="nav-icon fas fa-clipboard-user"></i>
                                     <p>Coordinator Reports</p>
                                 </a>
                             </li>
@@ -373,7 +397,7 @@ window.onload = function () {
                         @if (isset($adminReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $adminReportsRoute }}" class="nav-link {{ isActiveRoute($activeAdminReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-unlock"></i>
+                                    <i class="nav-icon fas fa-unlock-keyhole"></i>
                                     <p>Admin Tasks/Reports</p>
                                 </a>
                             </li>
@@ -389,27 +413,11 @@ window.onload = function () {
                         @if (isset($resourcesRoute))
                             <li class="nav-item">
                                 <a href="{{ $resourcesRoute }}" class="nav-link {{ isActiveRoute($activeResourcesRoutes) }}">
-                                    <i class="nav-icon fas fa-briefcase"></i>
+                                    <i class="nav-icon fas fa-toolbox"></i>
                                     <p>Resources</p>
                                 </a>
                             </li>
                         @endif
-
-                         <!-- Lists Menu Item -->
-                         {{-- @php
-                            $resourcesRoute = route('admin.toolkit');
-                            $activeResourcesRoutes = [
-                                'resources/*'
-                            ];
-                        @endphp
-                        @if (isset($resourcesRoute))
-                            <li class="nav-item">
-                                <a href="{{ $resourcesRoute }}" class="nav-link {{ isActiveRoute($activeResourcesRoutes) }}">
-                                    <i class="nav-icon fas fa-briefcase"></i>
-                                    <p>Resources</p>
-                                </a>
-                            </li>
-                        @endif --}}
 
                          <!-- CoordinatorList Menu Item -->
                          <li class="nav-item position-relative">
@@ -570,6 +578,8 @@ window.onload = function () {
 <script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="{{ config('settings.base_url') }}theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- FontAwesome -->
+<script defer src="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/js/all.js"></script>
 <!-- overlayScrollbars -->
 <script src="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->

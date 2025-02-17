@@ -11,7 +11,9 @@ use App\Models\Chapters;
 use App\Models\User;
 use App\Models\State;
 use App\Models\Region;
+use App\Models\Conference;
 use App\Models\Month;
+use App\Models\ForumCategorySubscription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
@@ -31,6 +33,21 @@ class CoordinatorController extends Controller
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
+    }
+
+    public function defaultCategories()
+    {
+        // Public Annnouncemenets = 1
+        // CoordinatorList = 2
+        // BoardList =3
+
+        $coordinatorCategories = [1, 2, 3];
+        $boardCategories = [1, 3];
+
+        return [
+            'coordinatorCategories' => $coordinatorCategories,
+            'boardCategories' => $boardCategories,
+        ];
     }
 
     /**
@@ -64,10 +81,18 @@ class CoordinatorController extends Controller
             $checkBoxStatus = '';
         }
 
-        $baseQuery->orderBy('coordinator_start_date');
+        $baseQuery->orderBy(Conference::select('short_name')
+                    ->whereColumn('conference.id', 'coordinators.conference_id')
+                    ->limit(1)
+          )
+          ->orderBy(
+              Region::select(DB::raw("CASE WHEN short_name = 'None' THEN '' ELSE short_name END"))
+                    ->whereColumn('region.id', 'coordinators.region_id')
+                    ->limit(1)
+          )
+          ->orderBy('coordinator_start_date');
 
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus];
-
     }
 
     /**
@@ -202,7 +227,19 @@ class CoordinatorController extends Controller
 
         $intCoordinatorList = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'reportsTo'])
             ->where('is_active', 1)
+            // ->orderBy('coordinator_start_date')
+            // ->get();
+            ->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
+                    ->whereColumn('conference.id', 'coordinators.conference_id')
+                    ->limit(1)
+            )
+            ->orderBy(
+                Region::select(DB::raw("CASE WHEN short_name = 'None' THEN '' ELSE short_name END"))
+                        ->whereColumn('region.id', 'coordinators.region_id')
+                        ->limit(1)
+            )
             ->orderBy('coordinator_start_date')
+
             ->get();
 
         $data = ['intCoordinatorList' => $intCoordinatorList];
@@ -278,6 +315,9 @@ class CoordinatorController extends Controller
         $new_layer_id = $cdlayerId + 1;
         $input = $request->all();
 
+        $defaultCategories = $this->defaultCategories();
+        $defaultCoordinatorCategories = $defaultCategories['coordinatorCategories'];
+
         DB::beginTransaction();
         try {
             $userId = DB::table('users')->insertGetId(
@@ -337,6 +377,13 @@ class CoordinatorController extends Controller
             }
 
             $coordTree = CoordinatorTree::insert($treeData);
+
+            foreach ($defaultCoordinatorCategories as $categoryId) {
+                ForumCategorySubscription::create([
+                    'user_id' => $userId,
+                    'category_id' => $categoryId,
+                ]);
+            }
 
             DB::commit();
         } catch (\Exception $e) {
@@ -555,6 +602,7 @@ class CoordinatorController extends Controller
         $coordId = $input['coord_id'];
 
         $coordinators = Coordinators::find($coordId);
+        $coordUserId = $coordinators->user_id;
 
         DB::beginTransaction();
         try {
@@ -563,9 +611,11 @@ class CoordinatorController extends Controller
             $coordinators->last_updated_date = date('Y-m-d');
             $coordinators->save();
 
+            ForumCategorySubscription::where('user_id', $coordUserId)->delete();
+
             DB::commit();
 
-            $message = 'Coordinator successfully on leave';
+            $message = 'Coordinator successfully put on leave and removed from all subscriptions';
 
             return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
 
@@ -595,6 +645,10 @@ class CoordinatorController extends Controller
         $coordId = $input['coord_id'];
 
         $coordinators = Coordinators::find($coordId);
+        $coordUserId = $coordinators->user_id;
+
+        $defaultCategories = $this->defaultCategories();
+        $defaultCoordinatorCategories = $defaultCategories['coordinatorCategories'];
 
         DB::beginTransaction();
         try {
@@ -603,6 +657,13 @@ class CoordinatorController extends Controller
             $coordinators->last_updated_by = $lastUpdatedBy;
             $coordinators->last_updated_date = date('Y-m-d');
             $coordinators->save();
+
+            foreach ($defaultCoordinatorCategories as $categoryId) {
+                ForumCategorySubscription::create([
+                    'user_id' => $coordUserId,
+                    'category_id' => $categoryId,
+                ]);
+            }
 
             DB::commit();
 
@@ -655,6 +716,8 @@ class CoordinatorController extends Controller
 
             $user->save();
 
+            ForumCategorySubscription::where('user_id', $cdUserId)->delete();
+
             // Get Mail Data
             $coordName = $coordinator->fisrt_name.' '.$coordinator->last_name;
             $coordConf = $coordinator->conference_id;
@@ -706,6 +769,9 @@ class CoordinatorController extends Controller
         $cdUserId = $coordinator->user_id;
         $user = User::find($cdUserId);
 
+        $defaultCategories = $this->defaultCategories();
+        $defaultCoordinatorCategories = $defaultCategories['coordinatorCategories'];
+
         DB::beginTransaction();
         try {
             $coordinator->is_active = 1;
@@ -720,6 +786,13 @@ class CoordinatorController extends Controller
             $user->updated_at = date('Y-m-d');
 
             $user->save();
+
+            foreach ($defaultCoordinatorCategories as $categoryId) {
+                ForumCategorySubscription::create([
+                    'user_id' => $cdUserId,
+                    'category_id' => $categoryId,
+                ]);
+            }
 
             // Get Mail Data
             $coordName = $coordinator->fisrt_name.' '.$coordinator->last_name;

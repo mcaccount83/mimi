@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 class Boards extends Model
@@ -38,4 +39,10 @@ class Boards extends Model
     {
         return $this->belongsTo(BoardPosition::class, 'board_position_id', 'id');  // 'board_position_id' in boards BelongsTo 'id' in board_position
     }
+
+    public function categorySubscriptions()
+    {
+        return $this->hasMany(ForumCategorySubscription::class);
+    }
+
 }
