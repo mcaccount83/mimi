@@ -68,8 +68,8 @@ class ChapterController extends Controller
         // CoordinatorList = 2
         // BoardList =3
 
-        $coordinatorCategories = [1, 2, 3];
-        $boardCategories = [1, 3];
+        $coordinatorCategories = [1, 2];
+        $boardCategories = [1];
 
         return [
             'coordinatorCategories' => $coordinatorCategories,

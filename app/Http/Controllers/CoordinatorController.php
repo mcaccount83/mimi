@@ -41,8 +41,8 @@ class CoordinatorController extends Controller
         // CoordinatorList = 2
         // BoardList =3
 
-        $coordinatorCategories = [1, 2, 3];
-        $boardCategories = [1, 3];
+        $coordinatorCategories = [1, 2];
+        $boardCategories = [1];
 
         return [
             'coordinatorCategories' => $coordinatorCategories,
@@ -227,8 +227,6 @@ class CoordinatorController extends Controller
 
         $intCoordinatorList = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'reportsTo'])
             ->where('is_active', 1)
-            // ->orderBy('coordinator_start_date')
-            // ->get();
             ->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
                     ->whereColumn('conference.id', 'coordinators.conference_id')
                     ->limit(1)
