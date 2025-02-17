@@ -17,7 +17,7 @@ class ForumSubscriptionController extends Controller
     protected $chapterController;
     protected $coordinatorController;
 
-    public function __construct(UserController $userController, chapterController $chapterController, coordinatorController $coordinatorController)
+    public function __construct(UserController $userController, ChapterController $chapterController, CoordinatorController $coordinatorController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
