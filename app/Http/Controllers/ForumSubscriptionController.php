@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\State;
+use App\Models\Region;
+use App\Models\Conference;
+use Illuminate\Support\Facades\DB;
 use App\Models\ForumCategorySubscription;
 use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
@@ -131,8 +134,16 @@ class ForumSubscriptionController extends Controller
 
         $intChapterList = Chapters::with(['state', 'conference', 'region', 'president', 'primaryCoordinator'])
             ->where('is_active', 1)
+            ->orderBy(Conference::select('short_name')
+            ->whereColumn('conference.id', 'chapters.conference_id')
+            )
+            ->orderBy(
+                Region::select('short_name')
+                        ->whereColumn('region.id', 'chapters.region_id')
+            )
             ->orderBy(State::select('state_short_name')
-                ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+                    ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+
             ->orderBy('chapters.name')
             ->get();
 
@@ -140,26 +151,6 @@ class ForumSubscriptionController extends Controller
         $data = ['countList' => $countList, 'intChapterList' => $intChapterList];
 
         return view('forum.internationalchaptersubscriptionlist', compact('intChapterList'));
-
-
-        // $user = User::find($request->user()->id);
-        // $userId = $user->id;
-
-        // $intChapterList = Chapters::with([
-        //     'president.user.categorySubscriptions',
-        //     'avp.user.categorySubscriptions',
-        //     'mvp.user.categorySubscriptions',
-        //     'secretary.user.categorySubscriptions',
-        //     'treasurer.user.categorySubscriptions'
-        // ])
-        // ->where('is_active', 1)
-        // ->join('state', 'chapters.state_id', '=', 'state.id')
-        // ->select('chapters.*') // Add this to ensure we're getting all chapter fields
-        // ->orderBy('state.state_short_name')
-        // ->orderBy('chapters.name')
-        // ->get();
-
-        // return view('forum.internationalchaptersubscriptionlist', compact('intChapterList'));
     }
 
     /**
@@ -172,24 +163,22 @@ class ForumSubscriptionController extends Controller
 
         $intCoordinatorList = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'reportsTo'])
             ->where('is_active', 1)
+            ->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
+                    ->whereColumn('conference.id', 'coordinators.conference_id')
+                    ->limit(1)
+            )
+            ->orderBy(
+                Region::select(DB::raw("CASE WHEN short_name = 'None' THEN '' ELSE short_name END"))
+                        ->whereColumn('region.id', 'coordinators.region_id')
+                        ->limit(1)
+            )
             ->orderBy('coordinator_start_date')
+
             ->get();
 
         $data = ['intCoordinatorList' => $intCoordinatorList];
 
         return view('forum.internationalcoordinatorsubscriptionlist')->with($data);
-
-        // $user = User::find($request->user()->id);
-        // $userId = $user->id;
-
-        // $intCoordinatorList = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'user.categorySubscriptions'])
-        //     ->where('is_active', 1)
-        //     ->orderBy('coordinator_start_date')
-        //     ->get();
-
-        // $data = ['intCoordinatorList' => $intCoordinatorList];
-
-        // return view('forum.internationalcoordinatorsubscriptionlist', compact('intCoordinatorList'));
     }
 
     /**
