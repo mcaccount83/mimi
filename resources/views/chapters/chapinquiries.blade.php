@@ -46,11 +46,11 @@
 				<?php $row = 0;?>
                 @foreach($inquiriesList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
-                        <td class="text-center align-middle"><button type="button" class="btn btn-xs" onclick="return CopyEmail(<?php echo $row?>);" style="background-color: transparent; border: none;">
+                    <td class="text-center "><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                        <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyEmail(<?php echo $row?>);" style="background-color: transparent; border: none;">
                             <i class="far fa-copy fa-lg text-primary" ></i></button></td>
 
-                            <td class="text-center align-middle"><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp(<?php echo $row?>);" style="background-color: transparent; border: none;">
+                            <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp(<?php echo $row?>);" style="background-color: transparent; border: none;">
                             <i class="far fa-copy fa-lg text-primary" ></i></button></td>
                             @switch($list->status_id)
                                 @case(1)

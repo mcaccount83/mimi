@@ -10,6 +10,7 @@ use App\Models\Chapters;
 use App\Models\User;
 use App\Models\State;
 use App\Models\Region;
+use App\Models\Conference;
 use App\Models\Month;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -60,60 +61,35 @@ class CoordinatorReportController extends Controller
         }
 
         $isBirthdayPage = request()->route()->getName() === 'coordreports.coordrptbirthdays';
-        if ($isBirthdayPage) {
-            $baseQuery->orderBy('birthday_month_id')
+        $isUtilizationPage = request()->route()->getName() === 'coordreports.coordrptvolutilization';
+        if ($isUtilizationPage){
+            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
+                ->whereColumn('conference.id', 'coordinators.conference_id')
+                ->limit(1)
+            )
+            ->orderBy(
+                Region::select(DB::raw("CASE WHEN short_name = 'None' THEN '' ELSE short_name END"))
+                        ->whereColumn('region.id', 'coordinators.region_id')
+                        ->limit(1)
+            )
+            ->orderBy('coordinator_start_date');
+        } elseif ($isBirthdayPage) {
+            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
+            ->whereColumn('conference.id', 'coordinators.conference_id')
+            ->limit(1)
+            )
+            ->orderBy('birthday_month_id')
                 ->orderBy('birthday_day');
         } else{
-            $baseQuery->orderBy('coordinator_start_date');
-        }
+            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
+            ->whereColumn('conference.id', 'coordinators.conference_id')
+            ->limit(1)
+            )
+            ->orderBy('coordinator_start_date');        }
 
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'inQryArr' => $inQryArr];
 
     }
-
-    /**
-     * Active Coordinator Details Base Query
-     */
-    // public function getCoordinatorDetails($id)
-    // {
-    //     $cdDetails = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth',
-    //         'reportsTo'])->find($id);
-    //     $cdId = $cdDetails->id;
-    //     $cdPositionid = $cdDetails->position_id;
-    //     $cdIsActive = $cdDetails->is_active;
-    //     $regionLongName = $cdDetails->region->long_name;
-    //     $conferenceDescription = $cdDetails->conference->conference_description;
-    //     $cdConfId = $cdDetails->conference_id;
-    //     $cdRegId = $cdDetails->region_id;
-    //     $cdRptId = $cdDetails->report_id;
-    //     $RptFName = $cdDetails->reportsTo?->first_name;
-    //     $RptLName = $cdDetails->reportsTo?->last_name;
-    //     $displayPosition = $cdDetails->displayPosition;
-    //     $mimiPosition = $cdDetails->mimiPosition;
-    //     $secondaryPosition = $cdDetails->secondaryPosition;
-
-    //     $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
-    //         ->where('conference_id', $cdConfId)
-    //         ->orwhere('id', '0')
-    //         ->get();
-    //     $allStates = State::all();  // Full List for Dropdown Menu
-    //     $allMonths = Month::all();  // Full List for Dropdown Menu
-    //     $allPositions = CoordinatorPosition::all();  // Full List for Dropdown Menu
-    //     $allCoordinators = Coordinators::with('conference')  // Full List for Dropdown Menu based on Conference
-    //         ->where('conference_id', $cdConfId)
-    //         ->where('is_active', 1)
-    //         ->get();
-
-    //      // Load ReportsTo Coordinator Dropdown List
-    //      $rcDetails = $this->userController->loadReportsToList($cdId, $cdConfId, $cdPositionid);
-
-    //     return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdIsActive' => $cdIsActive, 'regionLongName' => $regionLongName,
-    //         'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId,
-    //         'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition,
-    //         'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths,
-    //         'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid,
-    //     ];
-    // }
 
     /**
      * View the Volunteer Utilization list
@@ -226,192 +202,6 @@ class CoordinatorReportController extends Controller
 
         return view('coordreports.coordrptbirthdays')->with($data);
     }
-
-
-    // /**
-    //  * Coordiantor Appreciation Details
-    //  */
-    // public function showRptAppreciationView(Request $request, $id): View
-    // {
-    //     $user = User::find($request->user()->id);
-    //     $userId = $user->id;
-
-    //     $cdDetailsUser = $user->coordinator;
-    //     $cdIdUser = $cdDetailsUser->id;
-    //     $cdConfIdUser = $cdDetailsUser->conference_id;
-    //     $cdRegIdUser = $cdDetailsUser->region_id;
-    //     $cdPositionidUser = $cdDetailsUser->position_id;
-
-    //     $baseQuery = $this->getCoordinatorDetails($id);
-    //     $cdDetails = $baseQuery['cdDetails'];
-    //     $cdId = $baseQuery['cdId'];
-    //     $cdIsActive = $baseQuery['cdIsActive'];
-    //     $regionLongName = $baseQuery['regionLongName'];
-    //     $conferenceDescription = $baseQuery['conferenceDescription'];
-    //     $cdConfId = $baseQuery['cdConfId'];
-    //     $cdRptId = $baseQuery['cdRptId'];
-    //     $RptFName = $baseQuery['RptFName'];
-    //     $RptLName = $baseQuery['RptLName'];
-    //     $ReportTo = $RptFName.' '.$RptLName;
-    //     $displayPosition = $baseQuery['displayPosition'];
-    //     $mimiPosition = $baseQuery['mimiPosition'];
-    //     $secondaryPosition = $baseQuery['secondaryPosition'];
-    //     $cdLeave = $baseQuery['cdDetails']->on_leave;
-
-    //     $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-    //         'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
-    //         'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition,
-    //         'secondaryPosition' => $secondaryPosition,
-    //     ];
-
-    //     return view('coordreports.coordrptappreciationview')->with($data);
-    // }
-
-    // /**
-    //  * Update Coordiantor Appreciation Gifts (store)
-    //  */
-    // public function updateRptAppreciation(Request $request, $id): RedirectResponse
-    // {
-    //     $user = User::find($request->user()->id);
-    //     $userId = $user->id;
-
-    //     $cdDetailsUser = $user->coordinator;
-    //     $cdIdUser = $cdDetailsUser->id;
-    //     $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
-
-    //     $coordinator = Coordinators::find($id);
-
-    //     DB::beginTransaction();
-    //     try {
-    //             $coordinator->recognition_toptier = $request->input('cord_toptier');
-    //             $coordinator->recognition_year0 = $request->input('cord_year0');
-    //             $coordinator->recognition_year1 = $request->input('cord_year1');
-    //             $coordinator->recognition_year2 = $request->input('cord_year2');
-    //             $coordinator->recognition_year3 = $request->input('cord_year3');
-    //             $coordinator->recognition_year4 = $request->input('cord_year4');
-    //             $coordinator->recognition_year5 = $request->input('cord_year5');
-    //             $coordinator->recognition_year6 = $request->input('cord_year6');
-    //             $coordinator->recognition_year7 = $request->input('cord_year7');
-    //             $coordinator->recognition_year8 = $request->input('cord_year8');
-    //             $coordinator->recognition_year9 = $request->input('cord_year9');
-    //             $coordinator->recognition_necklace = (int) $request->has('cord_necklace');
-    //             $coordinator->last_updated_by = $lastUpdatedBy;
-    //             $coordinator->last_updated_date = date('Y-m-d H:i:s');
-
-    //             $coordinator->save();
-
-    //         DB::commit();
-
-    //         } catch (\Exception $e) {
-    //             DB::rollback();
-    //             Log::error($e);
-
-    //             return redirect()->to('/coordreports/appreciation')->with('fail', 'Something went wrong, Please try again.');
-    //         }
-
-    //     return redirect()->to('/coordreports/appreciation')->with('success', 'Appreciation gifts updated successfully');
-
-    // }
-
-
-    /**
-     * Coordiantor Birthdays Details
-     */
-    // public function showRptBirthdaysView(Request $request, $id): View
-    // {
-    //     $corDetails = User::find($request->user()->id)->coordinator;
-    //     $corId = $corDetails['id'];
-    //     $corConfId = $corDetails['conference_id'];
-    //     $coordinatorDetails = DB::table('coordinators as cd')
-    //         ->select('cd.id', 'cd.position_id', 'cd.birthday_month_id', 'cd.birthday_day', 'cd.card_sent', 'cd.first_name', 'cd.last_name', 'cd.address', 'cd.city', 'cd.state', 'cd.zip')
-    //         ->where('cd.is_active', '=', '1')
-    //         ->where('cd.id', '=', $id)
-    //         ->get();
-    //     $stateArr = DB::table('state')
-    //         ->select('state.*')
-    //         ->orderBy('id')
-    //         ->get();
-    //     $countryArr = DB::table('country')
-    //         ->select('country.*')
-    //         ->orderBy('id')
-    //         ->get();
-    //     $regionList = DB::table('region')
-    //         ->select('id', 'long_name')
-    //         ->orderBy('long_name')
-    //         ->get();
-    //     $confList = DB::table('conference')
-    //         ->select('id', 'conference_name')
-    //         ->orderBy('conference_name')
-    //         ->get();
-    //     $positionList = DB::table('coordinator_position')
-    //         ->select('id', 'long_title')
-    //         ->orderBy('long_title')
-    //         ->get();
-
-    //     $primaryCoordinatorList = DB::table('coordinators as cd')
-    //         ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-    //         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-    //         ->where('cd.is_active', '=', '1')
-    //         ->orderBy('cd.first_name')
-    //         ->get();
-    //     $directReportTo = DB::table('coordinators as cd')
-    //         ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-    //         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-    //         ->where('cd.report_id', '=', $id)
-    //         ->where('cd.is_active', '=', '1')
-    //         ->get();
-
-    //     $data = ['directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr];
-
-    //     return view('coordreports.coordrptbirthdaysview')->with($data);
-    // }
-
-    /**
-     * Update Coordiantor Birthdays (store)
-     */
-    // public function updateRptBirthdays(Request $request, $id): RedirectResponse
-    // {
-    //     $corDetails = User::find($request->user()->id)->coordinator;
-    //     $corId = $corDetails['id'];
-    //     $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
-    //     $cordinatorId = $id;
-
-    //     if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '') {
-    //         $corDetails = DB::table('coordinators')
-    //             ->select('id', 'user_id')
-    //             ->where('id', '=', $cordinatorId)
-    //             ->get();
-    //         if (count($corDetails) != 0) {
-    //             try {
-    //                 $userId = $corDetails[0]->user_id;
-    //                 $cordId = $corDetails[0]->id;
-
-    //                 $user = User::find($userId);
-    //                 $user->first_name = $request->input('cord_fname');
-    //                 $user->last_name = $request->input('cord_lname');
-    //                 $user->updated_at = date('Y-m-d H:i:s');
-    //                 $user->save();
-
-    //                 DB::table('coordinators')
-    //                     ->where('id', $cordinatorId)
-    //                     ->update(['card_sent' => $request->input('card_sent'),
-    //                         'last_updated_by' => $lastUpdatedBy,
-    //                         'last_updated_date' => date('Y-m-d H:i:s')]);
-    //                 DB::commit();
-    //             } catch (\Exception $e) {
-    //                 // Rollback Transaction
-    //                 DB::rollback();
-    //                 // Log the error
-    //                 Log::error($e);
-
-    //                 return redirect()->to('/coordreports/birthdays')->with('fail', 'Something went wrong, Please try again.');
-    //             }
-    //         }
-    //     }
-
-    //     return redirect()->to('/coordreports/birthdays')->with('success', 'Appreciation gifts updated successfully');
-
-    // }
 
     /**
      * View the Reporting Tree

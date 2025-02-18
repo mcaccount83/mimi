@@ -45,7 +45,7 @@
 
                 @foreach($coordinatorList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coorddetailseditrecognition/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center"><a href="{{ url("/coorddetailseditrecognition/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>
                             @if ($list->region->short_name != "None")
                                 {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -54,7 +54,7 @@
                             @endif
                         </td>
                     <td>{{ $list->first_name }} {{ $list->last_name }}</td>
-                    <td><span class="date-mask">{{ $list->start_date }}</span></td>
+                    <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
                     <td>{{ $list->recognition_year0 }}</td>
 					<td>{{ $list->recognition_year1 }}</td>
 					<td>{{ $list->recognition_year2 }}</td>

@@ -102,7 +102,7 @@
                 <td class="nowrap text-{{{$log['level_class']}}}">
                   <span class="fa fa-{{{$log['level_img']}}}" aria-hidden="true"></span>&nbsp;&nbsp;{{$log['level']}}
                 </td>
-                <td class="text">{{$log['context']}}</td>
+                <td class="nowrap text">{{$log['context']}}</td>
               @endif
               <td class="date">{{{$log['date']}}}</td>
               <td class="text">
