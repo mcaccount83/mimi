@@ -1,30 +1,6 @@
-{{-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOMS Club: Chapter Resources</title> --}}
-    {{-- <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' /> --}}
-    <!-- Google Font: Source Sans Pro -->
-    {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> --}}
-    <!-- Bootstrap CSS -->
-    {{-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> --}}
-    <!-- Font Awesome -->
-    {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css"> --}}
-    <!-- Theme style -->
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css"> --}}
-
-{{-- </head>
-<body> --}}
-    @extends('layouts.public_theme')
+@extends('layouts.public_theme')
 
 @section('content')
-
-{{-- <section id="content">
-    <div class="container_24">
-        <div class="wrapper p10"> --}}
-
 
         @php
             $thisDate = \Illuminate\Support\Carbon::now();
@@ -312,19 +288,6 @@
 
     </div>
 </div>
-{{-- </section>
-<!-- REQUIRED SCRIPTS -->
-
-<!-- jQuery -->
-<script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="{{ config('settings.base_url') }}theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- overlayScrollbars -->
-<script src="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<!-- AdminLTE App -->
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-
-</script> --}}
 @endsection
 
 @section('customscript')

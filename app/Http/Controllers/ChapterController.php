@@ -384,11 +384,6 @@ class ChapterController extends Controller
 
         $intChapterList = Chapters::with(['state', 'conference', 'region', 'president', 'primaryCoordinator'])
             ->where('is_active', 1)
-            // ->orderBy(State::select('state_short_name')
-            //     ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            // ->orderBy('chapters.name')
-            // ->get();
-
             ->orderBy(Conference::select('short_name')
             ->whereColumn('conference.id', 'chapters.conference_id')
             )

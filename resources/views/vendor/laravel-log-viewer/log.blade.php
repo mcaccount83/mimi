@@ -1,37 +1,26 @@
 @extends('layouts.coordinator_theme')
 
-@section('content')
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Laravel log viewer</title>
-  <link rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+@section('page_title', 'Admin Tasks/Reports')
+@section('breadcrumb', 'System Error Logs')
   <style>
-    body {
+    /* body {
       padding: 25px;
-    }
+    } */
 
-    h1 {
+    /* h1 {
       font-size: 1.5em;
       margin-top: 0;
-    }
+    } */
 
-    #table-log {
+    /* #table-log {
         font-size: 0.85rem;
+    } */
+    .stack {
+      font-size: 0.85em;
     }
 
     .btn {
         font-size: 0.7rem;
-    }
-
-    .stack {
-      font-size: 0.85em;
     }
 
     .date {
@@ -60,26 +49,40 @@
       height: 80vh;
       overflow: hidden auto;
     }
+
     .nowrap {
       white-space: nowrap;
     }
+
     .list-group {
-            padding: 5px;
-        }
+      padding: 5px;
+    }
 
   </style>
 
-</head>
-<body>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12 table-container">
-        <h1> Laravel Log Viewer</h1>
+@section('content')
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid table-container">
+            <div class="row">
+            <div class="col-12">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <div class="dropdown">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                System Error Logs
+                            </h3>
+                            @include('layouts.dropdown_menus.menu_admin')
+                        </div>
+                    </div>
+            <!-- /.card-header -->
+    <!-- /.card-header -->
+    <div class="card-body">
 
       @if ($logs === null)
       @else
 
-        <table id="table-log" class="table table-striped" data-ordering-index="{{ $standardFormat ? 2 : 0 }}">
+        <table id="table-log" class="table table-sm table-striped" data-ordering-index="{{ $standardFormat ? 2 : 0 }}">
           <thead>
           <tr>
             @if ($standardFormat)
@@ -93,7 +96,6 @@
           </tr>
           </thead>
           <tbody>
-
           @foreach($logs as $key => $log)
             <tr data-display="stack{{{$key}}}">
               @if ($standardFormat)
@@ -104,13 +106,6 @@
               @endif
               <td class="date">{{{$log['date']}}}</td>
               <td class="text">
-                @if ($log['stack'])
-                  <button type="button"
-                          class="float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
-                          data-display="stack{{{$key}}}">
-                    <span class="fa fa-search"></span>
-                  </button>
-                @endif
                 {{{$log['text']}}}
                 @if (isset($log['in_file']))
                   <br/>{{{$log['in_file']}}}
@@ -123,10 +118,10 @@
               </td>
             </tr>
           @endforeach
-
           </tbody>
         </table>
       @endif
+
       <div class="p-3">
         @if($current_file)
           <a href="?dl={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
@@ -149,45 +144,51 @@
         @endif
       </div>
     </div>
-  </div>
+
+    </div>
 </div>
-<!-- jQuery for Bootstrap -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-<!-- FontAwesome -->
-<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
-<!-- Datatables -->
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<!-- /.box -->
+</div>
+</div>
+</section>
+<!-- Main content -->
 
+<!-- /.content -->
+@endsection
+@section('customscript')
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
 
+    dropdownItems.forEach(item => {
+        const itemPath = new URL(item.href).pathname;
 
-  $(document).ready(function () {
+        if (itemPath === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
+$(document).ready(function () {
     $('.table-container tr').on('click', function () {
-      $('#' + $(this).data('display')).toggle();
+        $('#' + $(this).data('display')).toggle();
+        });
+            $('#table-log').DataTable({
+                "order": [$('#table-log').data('orderingIndex'), 'desc'],
+                "stateSave": true,
+                "stateSaveCallback": function (settings, data) {
+                    window.localStorage.setItem("datatable", JSON.stringify(data));
+                    },
+                    "stateLoadCallback": function (settings) {
+                        var data = JSON.parse(window.localStorage.getItem("datatable"));
+                        if (data) data.start = 0;
+                    return data;
+                    }
+                });
+            $('#delete-log, #clean-log, #delete-all-log').click(function () {
+        return confirm('Are you sure?');
     });
-    $('#table-log').DataTable({
-      "order": [$('#table-log').data('orderingIndex'), 'desc'],
-      "stateSave": true,
-      "stateSaveCallback": function (settings, data) {
-        window.localStorage.setItem("datatable", JSON.stringify(data));
-      },
-      "stateLoadCallback": function (settings) {
-        var data = JSON.parse(window.localStorage.getItem("datatable"));
-        if (data) data.start = 0;
-        return data;
-      }
-    });
-    $('#delete-log, #clean-log, #delete-all-log').click(function () {
-      return confirm('Are you sure?');
-    });
-  });
+});
 </script>
-</body>
-
 @endsection
