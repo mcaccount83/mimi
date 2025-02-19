@@ -1,7 +1,7 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'EOY Details')
-@section('breadcrumb', 'EOY Details')
+@section('page_title', $title)
+@section('breadcrumb', $breadcrumb)
 
 <style>
 .disabled-link {
@@ -97,10 +97,6 @@
                                     {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
                                 </option>
                             @endforeach
-
-                            {{-- @foreach($reportReviewerList as $revl)
-                                <option value="{{$revl->cid}}" {{$chFinancialReport->reviewer_id == $revl->cid ? 'selected' : ''}}>{{$revl->rfname}} {{$revl->rlname}} ({{$revl->pos}})</option>
-                            @endforeach --}}
                         </select>
                 </li>
 
@@ -186,7 +182,6 @@
                 @else
                     Chapter has not been given an extension.
                 @endif
-                            {{-- <input type="text" name="extension_notes" id="extension_notes" class="form-control" value="{{ $chDetails->extension_notes }}" placeholder="Extension Notes"> --}}
                         </div>
                     </div>
 
@@ -244,7 +239,6 @@
                      @else
                          Chapter has no 990 filing notes.
                     @endif
-                           {{-- <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chFinancialReport->check_current_990N_notes }}" placeholder="990N Filing Notes"> --}}
                         </div>
                     </div>
 
@@ -313,67 +307,6 @@
                             </table>
                     </div>
                     </div>
-
-
-                    {{-- <div class="row mt-2">
-                        <div class="col-sm-3">
-                            <label>Award #1 Status:</label>
-                        </div>
-                        <div class="col-sm-9">
-                            {{ is_null($chFinancialReport['check_award_1_approved']) ? 'N/A' : ($chFinancialReport['check_award_1_approved'] == 0 ? 'NO' : ($chFinancialReport['check_award_1_approved'] == 1 ? 'YES' : 'N/A')) }}
-                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($chFinancialReport['award_1_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                : ($chFinancialReport['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                : ($chFinancialReport['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label>Award #2 Status:</label>
-                        </div>
-                        <div class="col-sm-9">
-                            {{ is_null($chFinancialReport['check_award_2_approved']) ? 'N/A' : ($chFinancialReport['check_award_2_approved'] == 0 ? 'NO' : ($chFinancialReport['check_award_2_approved'] == 1 ? 'YES' : 'N/A')) }}
-                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($chFinancialReport['award_2_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                : ($chFinancialReport['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                : ($chFinancialReport['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label>Award #3 Status:</label>
-                        </div>
-                        <div class="col-sm-9">
-                            {{ is_null($chFinancialReport['check_award_3_approved']) ? 'N/A' : ($chFinancialReport['check_award_3_approved'] == 0 ? 'NO' : ($chFinancialReport['check_award_3_approved'] == 1 ? 'YES' : 'N/A')) }}
-                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($chFinancialReport['award_3_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                : ($chFinancialReport['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                : ($chFinancialReport['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label>Award #4 Status:</label>
-                        </div>
-                        <div class="col-sm-9">
-                            {{ is_null($chFinancialReport['check_award_4_approved']) ? 'N/A' : ($chFinancialReport['check_award_4_approved'] == 0 ? 'NO' : ($chFinancialReport['check_award_4_approved'] == 1 ? 'YES' : 'N/A')) }}
-                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($chFinancialReport['award_4_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                : ($chFinancialReport['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                : ($chFinancialReport['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                         </div>
-                        </div>
-
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label> Award #5 Status:</label>
-                        </div>
-                        <div class="col-sm-9">
-                            {{ is_null($chFinancialReport['check_award_5_approved']) ? 'N/A' : ($chFinancialReport['check_award_5_approved'] == 0 ? 'NO' : ($chFinancialReport['check_award_5_approved'] == 1 ? 'YES' : 'N/A')) }}
-                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($chFinancialReport['award_5_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                : ($chFinancialReport['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                : ($chFinancialReport['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                         </div>
-                        </div> --}}
 
                   </div>
               <!-- /.card-body -->

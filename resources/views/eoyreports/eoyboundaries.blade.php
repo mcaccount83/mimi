@@ -1,7 +1,7 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'End of Year Reports')
-@section('breadcrumb', 'Boundary Issues Report')
+@section('page_title', $title)
+@section('breadcrumb', $breadcrumb)
 
 @section('content')
     <!-- Main content -->

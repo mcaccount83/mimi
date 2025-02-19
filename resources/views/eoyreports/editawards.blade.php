@@ -1,7 +1,7 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'EOY Details')
-@section('breadcrumb', 'EOY Chapter Awards')
+@section('page_title', $title)
+@section('breadcrumb', $breadcrumb)
 
 <style>
 
@@ -116,7 +116,6 @@
                 <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} Chapter Awards</h3>
                     <!-- /.card-header -->
 
-
                     <!-- Awards Table -->
                     <table id="awards" width="100%" class="table table-bordered">
                         <thead>
@@ -194,199 +193,7 @@
                             <i class="fas fa-minus"></i>&nbsp; Remove Row
                         </button>
                     </div>
-
                     <input type="hidden" name="ChapterAwardsRowCount" id="ChapterAwardsRowCount" value="{{ $ChapterAwardsRowCount }}" />
-
-
-
-                    {{-- <div class="form-group row">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">Award #1:</label>
-                            <div class="col-sm-4">
-                                <select class="form-control" id="checkNominationType1" name="checkNominationType1">
-                                    <option value="" style="display:none" disabled selected>Select an award type</option>
-                                    <option value="1" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-                                    <option value="2" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-                                    <option value="3" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-                                    <option value="4" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-                                    <option value="5" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, <?php echo date('Y')-1;?>)</option>
-                                    <option value="6" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, <?php echo date('Y')-1;?>)</option>
-                                    <option value="7" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-                                </select>
-                            </div>
-
-                            <label class="col-sm-2 col-form-label ml-5">Approved:</label>
-                            <div class="col-sm-4 d-flex align-items-center">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="checkAward1Approved" id="checkAward1Approved" class="custom-control-input"
-                                    {{$chFinancialReport->check_award_1_approved == 1 ? 'checked' : ''}}>
-                                    <label class="custom-control-label" for="checkAward1Approved"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.form group -->
-                    <div class="form-group row">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">Description:</label>
-                            <div class="col-sm-10">
-                            <textarea class="form-control" rows="3" id="AwardDesc1" name="AwardDesc1"><?php if (!empty($chFinancialReport)) {echo $chFinancialReport['award_1_outstanding_project_desc'];}?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.form group -->
-                    <hr>
-
-                    <div class="form-group row">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">Award #2:</label>
-                            <div class="col-sm-4">
-                                <select class="form-control" id="checkNominationType2" name="checkNominationType2" >
-                                    <option value="" style="display:none" disabled selected>Select an award type</option>
-                                    <option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-                                    <option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-                                    <option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-                                    <option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-                                    <option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, <?php echo date('Y')-1;?>)</option>
-                                    <option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, <?php echo date('Y')-1;?>)</option>
-                                    <option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-                                </select>
-                            </div>
-
-                            <label class="col-sm-2 col-form-label ml-5">Approved:</label>
-                            <div class="col-sm-4 d-flex align-items-center">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="checkAward2Approved" id="checkAward2Approved" class="custom-control-input"
-                                    {{$chFinancialReport->check_award_2_approved == 1 ? 'checked' : ''}}>
-                                    <label class="custom-control-label" for="checkAward2Approved"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.form group -->
-                    <div class="form-group row">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">Description:</label>
-                            <div class="col-sm-10">
-                            <textarea class="form-control" rows="3" id="AwardDesc2" name="AwardDesc2">{{$chFinancialReport['award_2_outstanding_project_desc']}}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.form group -->
-                    <hr>
-
-                    <div class="form-group row">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">Award #3:</label>
-                            <div class="col-sm-4">
-                                <select class="form-control" id="checkNominationType3" name="checkNominationType3"  >
-                                    <option value="" style="display:none" disabled selected>Select an award type</option>
-                                    <option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-                                    <option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-                                    <option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-                                    <option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-                                    <option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, <?php echo date('Y')-1;?>)</option>
-                                    <option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, <?php echo date('Y')-1;?>)</option>
-                                    <option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-                                </select>
-                            </div>
-
-                            <label class="col-sm-2 col-form-label ml-5">Approved:</label>
-                            <div class="col-sm-4 d-flex align-items-center">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="checkAward3Approved" id="checkAward3Approved" class="custom-control-input"
-                                    {{$chFinancialReport->check_award_3_approved == 1 ? 'checked' : ''}}>
-                                    <label class="custom-control-label" for="checkAward3Approved"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.form group -->
-                    <div class="form-group row">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">Description:</label>
-                            <div class="col-sm-10">
-                            <textarea class="form-control" rows="3" id="AwardDesc3" name="AwardDesc3">{{$chFinancialReport['award_3_outstanding_project_desc']}}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.form group -->
-                    <hr>
-
-                    <div class="form-group row">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">Award #4:</label>
-                            <div class="col-sm-4">
-                                <select class="form-control" id="checkNominationType4" name="checkNominationType4"  >
-                                    <option value="" style="display:none" disabled selected>Select an award type</option>
-                                    <option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-                                    <option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-                                    <option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-                                    <option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-                                    <option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, <?php echo date('Y')-1;?>)</option>
-                                    <option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, <?php echo date('Y')-1;?>)</option>
-                                    <option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-                                </select>
-                            </div>
-
-                            <label class="col-sm-2 col-form-label ml-5">Approved:</label>
-                            <div class="col-sm-4 d-flex align-items-center">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="checkAward4Approved" id="checkAward4Approved" class="custom-control-input"
-                                    {{$chFinancialReport->check_award_4_approved == 1 ? 'checked' : ''}}>
-                                    <label class="custom-control-label" for="checkAward4Approved"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.form group -->
-                    <div class="form-group row">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">Description:</label>
-                            <div class="col-sm-10">
-                            <textarea class="form-control" rows="3" id="AwardDesc4" name="AwardDesc4">{{$chFinancialReport['award_4_outstanding_project_desc']}}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.form group -->
-                    <hr>
-
-                    <div class="form-group row">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">Award #5:</label>
-                            <div class="col-sm-4">
-                                <select class="form-control" id="checkNominationType5" name="checkNominationType5"  >
-                                    <option value="" style="display:none" disabled selected>Select an award type</option>
-                                    <option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-                                    <option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-                                    <option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-                                    <option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-                                    <option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, <?php echo date('Y')-1;?>)</option>
-                                    <option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, <?php echo date('Y')-1;?>)</option>
-                                    <option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-                                </select>
-                            </div>
-
-                            <label class="col-sm-2 col-form-label ml-5">Approved:</label>
-                            <div class="col-sm-4 d-flex align-items-center">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="checkAward5Approved" id="checkAward5Approved" class="custom-control-input"
-                                    {{$chFinancialReport->check_award_5_approved == 1 ? 'checked' : ''}}>
-                                    <label class="custom-control-label" for="checkAward5Approved"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-                    <!-- /.form group -->
-                    {{-- <div class="form-group row">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">Description:</label>
-                            <div class="col-sm-10">
-                            <textarea class="form-control" rows="3" id="AwardDesc5" name="AwardDesc5">{{$chFinancialReport['award_5_outstanding_project_desc']}}</textarea>
-                            </div>
-                        </div>
-                    </div> --}}
-                    <!-- /.form group -->
 
                   </div>
               <!-- /.card-body -->
@@ -402,7 +209,6 @@
                     @endif
                     <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyawards') }}'"><i class="fas fa-reply mr-2"></i>Back to Awards Report</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
-
             </div>
         </div>
         </div>

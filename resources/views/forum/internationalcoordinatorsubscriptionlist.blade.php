@@ -95,8 +95,8 @@
             </div>
 
             <div class="col-md-12">
-                <div class="card-body text-center">
                     @if ($ITCondition || $listAdminCondition)
+                    <div class="card-body text-center">
                         <form action="{{ route('forum.coordinatorlist.bulk-subscribe') }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-primary">
@@ -115,8 +115,16 @@
                                 Subscribe All to BoardList
                             </button>
                         </form>
+                    </div>
+                    <div class="card-body text-center">
+                        <form action="{{ route('forum.coordinatorboardlist.bulk-unsubscribe') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">
+                                Unsubscribe All from BoardList
+                            </button>
+                        </form>
+                    </div>
                     @endif
-                </div>
             </div>
 
         </div>

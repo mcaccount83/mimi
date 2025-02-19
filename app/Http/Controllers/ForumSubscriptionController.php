@@ -11,6 +11,7 @@ use App\Models\Conference;
 use Illuminate\Support\Facades\DB;
 use App\Models\ForumCategorySubscription;
 use TeamTeaTime\Forum\Models\Category as ForumCategory;
+use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
 
@@ -29,31 +30,6 @@ class ForumSubscriptionController extends Controller
         $this->coordinatorController = $coordinatorController;
     }
 
-    public function subscribe(Request $request, $categoryId)
-    {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        ForumCategorySubscription::create([
-            'user_id' => $userId,
-            'category_id' => $categoryId,
-        ]);
-
-        return back()->with('success', 'Successfully subscribed to category');
-    }
-
-    public function unsubscribe(Request $request, $categoryId)
-    {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        ForumCategorySubscription::where('user_id', $userId)
-            ->where('category_id', $categoryId)
-            ->delete();
-
-        return back()->with('success', 'Successfully unsubscribed from category');
-    }
-
     public function defaultCategories()
     {
         // Public Annnouncemenets = 1
@@ -67,6 +43,36 @@ class ForumSubscriptionController extends Controller
             'coordinatorCategories' => $coordinatorCategories,
             'boardCategories' => $boardCategories,
         ];
+    }
+
+    /**
+     *  Coordinator Subscribe FOR the Board Member or Coordinator on Details Page
+     */
+    public function subscribeCategory(Request $request)
+    {
+        ForumCategorySubscription::create([
+            'user_id' => $request->user_id,
+            'category_id' => $request->category_id,
+        ]);
+
+        return response()->json([
+            'message' => 'Successfully subscribed to category',
+            'redirect' => back()->getTargetUrl()
+        ]);
+    }
+
+    public function unsubscribeCategory(Request $request)
+    {
+        ForumCategorySubscription::where([
+            'user_id' => $request->user_id,
+            'category_id' => $request->category_id,
+        ])
+        ->delete();
+
+        return response()->json([
+            'message' => 'Successfully unsubscribed from category',
+            'redirect' => back()->getTargetUrl()
+        ]);
     }
 
     /**
@@ -552,5 +558,113 @@ class ForumSubscriptionController extends Controller
         }
     }
 
+    /**
+     * Remove all coordinaors and board members from BoardList Subscription
+     */
+    public function bulkRemoveBoardList()
+    {
+        try {
+            // Get category
+            $category = ForumCategory::where('title', 'BoardList')
+                ->first();
+
+            // Delete all subscriptions for this category
+            $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
+                ->delete();
+
+            return back()->with('success', "Successfully unsubscribed {$deletedCount} members from BoardList");
+
+        } catch (\Exception $e) {
+            Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+            return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
+        }
+    }
+
+    /**
+     * Remove all coordinators from BoardList Subscription
+     */
+    public function bulkRemoveCoordinatorsBoardList()
+    {
+        try {
+            // Get category
+            $category = ForumCategory::where('title', 'BoardList')
+                ->first();
+
+            if (!$category) {
+                return back()->with('error', 'BoardList category not found');
+            }
+
+            // Delete subscriptions only for users who are coordinators
+            $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
+                ->whereHas('user', function($query) {
+                    $query->where('user_type', 'coordinator');
+                })
+                ->delete();
+
+            return back()->with('success', "Successfully unsubscribed {$deletedCount} coordinators from BoardList");
+
+        } catch (\Exception $e) {
+            Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+            return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
+        }
+    }
+
+    /**
+     * Remove all board members from BoardList Subscription
+     */
+    public function bulkRemoveBoardBoardList()
+    {
+        try {
+            // Get category
+            $category = ForumCategory::where('title', 'BoardList')
+                ->first();
+
+            if (!$category) {
+                return back()->with('error', 'BoardList category not found');
+            }
+
+            // Delete subscriptions only for users who are board members
+            $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
+                ->whereHas('user', function($query) {
+                    $query->where('user_type', 'board');
+                })
+                ->delete();
+
+            return back()->with('success', "Successfully unsubscribed {$deletedCount} board members from BoardList");
+
+        } catch (\Exception $e) {
+            Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+            return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
+        }
+    }
+
+    /**
+     * Remove all board members from BoardList Subscription
+     */
+    public function bulkRemoveBoardPublicAnnouncements()
+    {
+        try {
+            // Get category
+            $category = ForumCategory::where('title', 'Public Announcements')
+                ->first();
+
+            if (!$category) {
+                return back()->with('error', 'Public Announcements category not found');
+            }
+
+            // Delete subscriptions only for users who are board members
+            $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
+                ->whereHas('user', function($query) {
+                    $query->where('user_type', 'board');
+                })
+                ->delete();
+
+            return back()->with('success', "Successfully unsubscribed {$deletedCount} board members from Public Announcements");
+
+        } catch (\Exception $e) {
+            Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+            return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
+        }
+    }
 
 }

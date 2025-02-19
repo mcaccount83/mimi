@@ -12,47 +12,25 @@ class UpdateEOYRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'fiscal_year' => [
-            //     'required',
-            //     'string',
-            // ],
-            'eoy_testers' => [
+            'reset_eoy_tables' => [
                 'nullable',
             ],
-            'eoy_coordinators' => [
+            'display_testing' => [
                 'nullable',
             ],
-            'eoy_boardreport' => [
+            'display_live' => [
                 'nullable',
             ],
-            'eoy_financialreport' => [
+            'update_user_tables' => [
                 'nullable',
             ],
-            'truncate_incoming' => [
+            'subscribe_list' => [
                 'nullable',
             ],
-            'truncate_outgoing' => [
+            'unsubscribe_list' => [
                 'nullable',
             ],
-            'copy_FRtoCH' => [
-                'nullable',
-            ],
-            'copy_CHtoFR' => [
-                'nullable',
-            ],
-            'copy_financial' => [
-                'nullable',
-            ],
-            'copy_chapters' => [
-                'nullable',
-            ],
-            'copy_users' => [
-                'nullable',
-            ],
-            'copy_boarddetails' => [
-                'nullable',
-            ],
-            'copy_coordinators' => [
+            'reset_AFTER_testing' => [
                 'nullable',
             ],
             // Add validation rules for other fields here

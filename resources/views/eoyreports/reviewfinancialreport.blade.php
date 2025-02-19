@@ -290,12 +290,6 @@
                                 {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
                             </option>
                         @endforeach
-                    {{-- @foreach($reviewerList as $coordinator)
-                        <option value="{{ $coordinator['cid'] }}"
-                            {{ isset($chFinancialReport->reviewer_id) && $chFinancialReport->reviewer_id == $coordinator['cid'] ? 'selected' : '' }}>
-                            {{ $coordinator['cname'] }}
-                        </option>
-                    @endforeach --}}
                 </select>
             </div>
             <div class="form-group" id="emailMessageGroup" style="display: none;">
@@ -337,16 +331,6 @@
             <!-- /.card-header -->
             <div class="row">
                 <div class="col-md-12">
-                    {{-- @php
-                        $selectedReviewer = null;
-                        foreach ($reviewerList as $pcl) {
-                            if ($chFinancialReport['reviewer_id'] == $pcl['cid']) {
-                                $selectedReviewer = $pcl['cname'];
-                                break;
-                            }
-                        }
-                    @endphp --}}
-
                     @if($submitted)
                         @if ($chFinancialReport->reviewer_id != null)
                             <label>Assigned Reviewer:</label>&nbsp;&nbsp;{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}
@@ -1035,9 +1019,6 @@
                                         foreach ($other_office_expenses as $row) {
                                             // Sanitize inputs
                                             $expense = is_numeric(str_replace(',', '', $row['office_other_expense'])) ? floatval(str_replace(',', '', $row['office_other_expense'])) : 0;
-
-                                            // $expense = is_numeric($row['office_other_expense']) ? floatval($row['office_other_expense']) : 0;
-
                                             echo "<tr>";
                                             echo "<td>" . htmlspecialchars($row['office_other_desc']) . "</td>";
                                             echo "<td>$" . number_format($expense, 2) . "</td>";
@@ -1145,10 +1126,6 @@
                                                 // Sanitize and validate inputs
                                                 $income = is_numeric(str_replace(',', '', $row['intl_event_income'])) ? floatval(str_replace(',', '', $row['intl_event_income'])) : 0;
                                                 $expense = is_numeric(str_replace(',', '', $row['intl_event_expenses'])) ? floatval(str_replace(',', '', $row['intl_event_expenses'])) : 0;
-
-                                                // $income = is_numeric($row['intl_event_income']) ? floatval($row['intl_event_income']) : 0;
-                                                // $expense = is_numeric($row['intl_event_expenses']) ? floatval($row['intl_event_expenses']) : 0;
-
                                                 echo "<tr>";
                                                 echo "<td>" . htmlspecialchars($row['intl_event_desc']) . "</td>";
                                                 echo "<td>$" . number_format($income, 2) . "</td>";
@@ -1263,9 +1240,6 @@
                                             $donationDate = $row['mon_donation_date'] ? date('m/d/Y', strtotime($row['mon_donation_date'])) : '';
 
                                             $donationAmount = is_numeric(str_replace(',', '', $row['mon_donation_amount'])) ? floatval(str_replace(',', '', $row['mon_donation_amount'])) : 0;
-
-                                            // $donationAmount = is_numeric($row['mon_donation_amount']) ? floatval($row['mon_donation_amount']) : 0;
-
                                             echo "<tr>";
                                             echo "<td>" . htmlspecialchars($row['mon_donation_desc']) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['mon_donation_info']) . "</td>";
@@ -1421,10 +1395,6 @@
                                                 // Sanitize and validate inputs
                                                 $otherIncome = is_numeric(str_replace(',', '', $row['other_income'])) ? floatval(str_replace(',', '', $row['other_income'])) : 0;
                                                 $otherExpenses = is_numeric(str_replace(',', '', $row['other_expenses'])) ? floatval(str_replace(',', '', $row['other_expenses'])) : 0;
-
-                                                // $otherIncome = is_numeric($row['other_income']) ? floatval($row['other_income']) : 0;
-                                                // $otherExpenses = is_numeric($row['other_expenses']) ? floatval($row['other_expenses']) : 0;
-
                                                 echo "<tr>";
                                                 echo "<td>" . htmlspecialchars($row['other_desc']) . "</td>";
                                                 echo "<td>$" . number_format($otherIncome, 2) . "</td>";
@@ -1718,9 +1688,6 @@
                                                 // Sanitize and validate inputs
                                                 $paymentAmount = is_numeric(str_replace(',', '', $row['bank_rec_payment_amount'])) ? floatval(str_replace(',', '', $row['bank_rec_payment_amount'])) : 0;
                                                 $depositAmount = is_numeric(str_replace(',', '', $row['bank_rec_desposit_amount'])) ? floatval(str_replace(',', '', $row['bank_rec_desposit_amount'])) : 0;
-
-                                                // $paymentAmount = is_numeric($row['bank_rec_payment_amount']) ? floatval($row['bank_rec_payment_amount']) : 0;
-                                                // $depositAmount = is_numeric($row['bank_rec_desposit_amount']) ? floatval($row['bank_rec_desposit_amount']) : 0;
                                                 $checkNo = htmlspecialchars($row['bank_rec_check_no']);
                                                 $desc = htmlspecialchars($row['bank_rec_desc']);
                                                 $date = $row['bank_rec_date'] ? date('m/d/Y', strtotime($row['bank_rec_date'])) : '';
@@ -2287,163 +2254,6 @@
 		  </div>
         </div>
 			<!------End Step 12 ------>
-
-			<!------Start Step 13 ------>
-            {{-- <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='13') echo "active";?>">
-                <div class="card-header" id="accordion-header-members">
-                    <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseThirteen" style="width: 100%;">AWARD NOMINATIONS</a>
-                    </h4>
-                </div>
-                <div id="collapseThirteen" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='13') echo 'show'; ?>" data-parent="#accordion">
-                    <div class="card-body">
-					<section>
-                        <table id="awards" width="100%" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td width="25%">Award Category</td>
-                                    <td width="60%">Description/Information</td>
-                                    <td width="15%">Approval</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $chapter_awards = null;
-                                    if (isset($chFinancialReport['chapter_awards'])) {
-                                        $chapter_awards = unserialize(base64_decode($chFinancialReport['chapter_awards']));
-                                        $ChapterAwardsRowCount = is_array($chapter_awards) ? count($chapter_awards) : 0;
-                                    } else {
-                                        $ChapterAwardsRowCount = 1;
-                                    }
-                                @endphp
-
-                                @for ($row = 0; $row < $ChapterAwardsRowCount; $row++)
-                                <tr>
-                                    <td>
-                                        <div class="form-group">
-                                            <select class="form-control" name="ChapterAwardsType{{ $row }}"
-                                                id="ChapterAwardsType{{ $row }}">
-                                                <option value="">Select an Award Type</option>
-                                                @foreach($allAwards as $award)
-                                                    <option value="{{ $award->id }}"
-                                                        {{ isset($chapter_awards[$row]['awards_type']) &&
-                                                        $chapter_awards[$row]['awards_type'] == $award->id ? 'selected' : '' }}>
-                                                        {{ $award->award_type }} {{ $award->extra }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <textarea class="form-control" rows="2" name="ChapterAwardsDesc{{ $row }}"
-                                                    id="ChapterAwardsDesc{{ $row }}">{{ $chapter_awards[$row]['awards_desc'] ?? '' }}</textarea>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio"
-                                                id="ChapterAwardsApprovedYes{{ $row }}"
-                                                name="ChapterAwardsApproved{{ $row }}"
-                                                value="1"
-                                                {{ isset($chapter_awards[$row]['awards_approved']) &&
-                                                    $chapter_awards[$row]['awards_approved'] == 1 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="ChapterAwardsApprovedYes{{ $row }}">Yes</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio"
-                                                id="ChapterAwardsApprovedNo{{ $row }}"
-                                                name="ChapterAwardsApproved{{ $row }}"
-                                                value="0"
-                                                {{ isset($chapter_awards[$row]['awards_approved']) &&
-                                                    $chapter_awards[$row]['awards_approved'] == 0 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="ChapterAwardsApprovedNo{{ $row }}">No</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endfor
-                            </tbody>
-                        </table>
-
-                    <!-- Add/Remove Row Buttons -->
-                    <div class="col-md-12 float-left">
-                        <button type="button" class="btn btn-sm btn-success" onclick="AddChapterAwardsRow()">
-                            <i class="fas fa-plus"></i>&nbsp; Add Row
-                        </button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteChapterAwardsRow()">
-                            <i class="fas fa-minus"></i>&nbsp; Remove Row
-                        </button>
-                    </div>
-
-                    <div class="col-12"><br></div>
-
-                    <input type="hidden" name="ChapterAwardsRowCount" id="ChapterAwardsRowCount" value="{{ $ChapterAwardsRowCount }}" />
-
-                    <div class="box_brd_contentpad" id="AwardSignatureBlock" style="display: {{ (isset($chapter_awards) &&
-                    collect($chapter_awards)->contains('awards_type', '!=', null)) ? 'block' : 'none' }}">
-                    <div class="box_brd_title_box">
-
-                        @if ($chDocuments->award_path != null)
-                        <div class="col-md-12" id="AwardBlock">
-                                <label>Award Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['award_path'] }}">&nbsp; View Award Files</a><br>
-                                <strong style="color:red">Please Note</strong><br>
-                                    This will refresh the screen - be sure to save all work before clicking button to Replace Award Files.<br>
-                                <button type="button" class="btn btn-sm btn-primary" onclick="showAwardploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award Files</button>
-                        </div>
-                    @else
-                        <div class="col-md-12" id="AwardBlock">
-                                <strong style="color:red">Please Note</strong><br>
-                                    This will refresh the screen - be sure to save all work before clicking button to Upload Award Files.<br>
-                                <button type="button" class="btn btn-sm btn-primary" onclick="showAwardUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Award Files</button>
-                        </div>
-                    @endif
-                        <input type="hidden" name="AwardPath" id="AwardPath" value="{{ $chDocuments->award_path }}">
-
-                        <div class="col-sm-12"><br></div>
-
-
-                    <hr style="border-bottom: 2px solid #007bff">
-
-					<div  class="award_acc_con">
-                            <!-- start:report_review -->
-							<div class="form-row report_review">
-								<div class="card-header col-md-12">
-                                    <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
-                                </div>
-                                <div class="card-body form-row">
-                                    <div class="col-12">
-
-
-                                    <div class="col-12">
-                                        <div class="form-group row">
-											<label for="Step13_Note">Add New Note:</label>
-											<textarea class="form-control" style="width:100%" oninput="EnableNoteLogButton(13)" rows="3" name="Step13_Note" id="Step13_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
-                                            <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-											<button type="button" id="AddNote13" class="btn btn-sm bg-gradient-success" onclick="AddNote(13)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
-										</div>
-                                    </div>
-                                </div>
-                                </div>
-
-                            <div class="col-md-12">
-                                <label for="Step13_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-                            </div>
-                            <div class="col-12">
-                                <textarea class="form-control" style="width:100%" rows="8" name="Step13_Log" id="Step13_Log" readonly><?php echo $chFinancialReport['step_13_notes_log']; ?></textarea>
-                            </div>
-                            <div class="col-12"><br></div>
-
-							<!-- end:report_review -->
-                        <div class="col-12 text-center">
-							 <button type="submit" id="btn-step-13" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
-						</div>
-                    </div>
-                </div>
-					</section>
-				</div>
-            </div>
-        </div> --}}
-            <!------End Step 13 ------>
     </div>
                  <!-- end of accordion -->
     </div>
@@ -2942,7 +2752,6 @@ function show990NUploadModal() {
             10: 'Reconciliation',
             11: '990N',
             12: 'Questions',
-            13: 'Awards',
         }
 
         var noteTextValue = noteText[NoteNumber] || NoteNumber;

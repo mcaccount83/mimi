@@ -324,7 +324,7 @@
                   <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
                         <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information</h3>
-                        @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
+                        @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $live_yes))
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label>Boundary Issues:</label>
@@ -475,25 +475,49 @@
                         <br><br>
                     </div>
                 </div>
-
                   <!-- /.tab-pane -->
+
                   <div class="tab-pane" id="pre">
                       <div class="pre-field">
-                          <h3 class="profile-username">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
-                          <a href="mailto:{{ $PresDetails->email }}">{{ $PresDetails->email }}</a>
-                          <br>
-                          <span class="phone-mask">{{$PresDetails->phone }}</span>
-                          <br><br>
-                          {{$PresDetails->street_address}}
-                          <br>
-                          {{$PresDetails->city}},{{$PresDetails->state}}&nbsp;{{$PresDetails->zip}}
-                          <br><br>
-                          <p>This will reset password to default "TempPass4You" for this user only.
-                          <br>
-                          <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
-                          </p>
+                        <h3 class="profile-username">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="mailto:{{ $PresDetails->email }}">{{ $PresDetails->email }}</a>
+                                <br>
+                                <span class="phone-mask">{{$PresDetails->phone }}</span>
+                                <br>
+                                {{$PresDetails->street_address}}
+                                <br>
+                                {{$PresDetails->city}},{{$PresDetails->state}}&nbsp;{{$PresDetails->zip}}
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                            <div class="row mt-3">
+                                @php
+                                    $Subscriptions = $PresDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                @endphp
+                                <dt class="col-sm-3">Public Announcements</dt>
+                                <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                                {{-- @if ($assistConferenceCoordinatorCondition) --}}
+                                    <dd class="col-sm-6">
+                                        @if (in_array(1, $Subscriptions))
+                                            <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $PresDetails->user_id }})">Unsubscribe</button>
+                                        @else
+                                            <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $PresDetails->user_id }})">Subscribe</button>
+                                        @endif
+                                    </dd>
+                                {{-- @endif --}}
+                                <div class="col-md-12">
+                            <p>This will reset password to default "TempPass4You" for this user only.
+                            <br>
+                            <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
+                            </p>
+                        </div>
                       </div>
                     </div>
+                </div>
+
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="avp">
                     @if ($AVPDetails->user_id == '')
@@ -504,18 +528,41 @@
                     @else
                       <div class="avp-field">
                           <h3 class="profile-username">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
-                          <a href="mailto:{{ $AVPDetails->email }}">{{ $AVPDetails->email }}</a>
-                          <br>
-                          <span class="phone-mask">{{$AVPDetails->phone}}</span>
-                          <br><br>
-                          {{$AVPDetails->street_address}}
-                          <br>
-                          {{$AVPDetails->city}},{{$AVPDetails->state}}&nbsp;{{$AVPDetails->zip}}
-                          <br><br>
-                          <p>This will reset password to default "TempPass4You" for this user only.
-                          <br>
-                          <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $AVPDetails->user_id }}">Reset AVP Password</button>
+                          <div class="row">
+                            <div class="col-md-6">
+                                <a href="mailto:{{ $AVPDetails->email }}">{{ $AVPDetails->email }}</a>
+                                <br>
+                                <span class="phone-mask">{{$AVPDetails->phone}}</span>
+                                <br>
+                                {{$AVPDetails->street_address}}
+                                <br>
+                                {{$AVPDetails->city}},{{$AVPDetails->state}}&nbsp;{{$AVPDetails->zip}}
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                                @php
+                                $Subscriptions = $AVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                            @endphp
+                            <dt class="col-sm-3">Public Announcements</dt>
+                            <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                            {{-- @if ($assistConferenceCoordinatorCondition) --}}
+                                <dd class="col-sm-6">
+                                    @if (in_array(1, $Subscriptions))
+                                        <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $AVPDetails->user_id }})">Unsubscribe</button>
+                                    @else
+                                        <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $AVPDetails->user_id }})">Subscribe</button>
+                                    @endif
+                                </dd>
+                            {{-- @endif --}}
+                        <div class="col-md-12">
+                        <p>This will reset password to default "TempPass4You" for this user only.
+                        <br>
+                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $AVPDetails->user_id }}">Reset AVP Password</button>
                         </p>
+                    </div>
+                        </div>
                     </div>
                     @endif
                     </div>
@@ -529,19 +576,42 @@
                     @else
                       <div class="mvp-field">
                           <h3 class="profile-username">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</h3>
-                          <a href="mailto:{{ $MVPDetails->email }}">{{ $MVPDetails->email }}</a>
-                          <br>
-                          <span class="phone-mask">{{$MVPDetails->phone}}</span>
-                          <br><br>
-                          {{$MVPDetails->street_address}}
-                          <br>
-                          {{$MVPDetails->city}},{{$MVPDetails->state}}&nbsp;{{$MVPDetails->zip}}
-                          <br><br>
+                          <div class="row">
+                            <div class="col-md-6">
+                                <a href="mailto:{{ $MVPDetails->email }}">{{ $MVPDetails->email }}</a>
+                                <br>
+                                <span class="phone-mask">{{$MVPDetails->phone}}</span>
+                                <br>
+                                {{$MVPDetails->street_address}}
+                                <br>
+                                {{$MVPDetails->city}},{{$MVPDetails->state}}&nbsp;{{$MVPDetails->zip}}
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                                @php
+                                    $Subscriptions = $MVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                @endphp
+                                <dt class="col-sm-3">Public Announcements</dt>
+                                <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                                {{-- @if ($assistConferenceCoordinatorCondition) --}}
+                                    <dd class="col-sm-6">
+                                        @if (in_array(1, $Subscriptions))
+                                            <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $MVPDetails->user_id }})">Unsubscribe</button>
+                                        @else
+                                            <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $MVPDetails->user_id }})">Subscribe</button>
+                                        @endif
+                                    </dd>
+                                {{-- @endif --}}
+                                <div class="col-md-12">
                           <p>This will reset password to default "TempPass4You" for this user only.
                           <br>
                           <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $MVPDetails->user_id }}">Reset MVP Password</button>
                         </p>
                     </div>
+                </div>
+            </div>
                     @endif
                     </div>
                   <!-- /.tab-pane -->
@@ -554,19 +624,42 @@
                         @else
                           <div class="trs-field">
                               <h3 class="profile-username">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}</h3>
-                              <a href="mailto:{{ $TRSDetails->email }}">{{ $TRSDetails->email }}</a>
-                              <br>
-                              <span class="phone-mask">{{$TRSDetails->phone}}</span>
-                              <br><br>
-                              {{$TRSDetails->street_address}}
-                              <br>
-                              {{$TRSDetails->city}},{{$TRSDetails->state}}&nbsp;{{$TRSDetails->zip}}
-                              <br><br>
-                              <p>This will reset password to default "TempPass4You" for this user only.
+                              <div class="row">
+                                <div class="col-md-6">
+                                    <a href="mailto:{{ $TRSDetails->email }}">{{ $TRSDetails->email }}</a>
+                                    <br>
+                                    <span class="phone-mask">{{$TRSDetails->phone}}</span>
+                                    <br>
+                                    {{$TRSDetails->street_address}}
+                                    <br>
+                                    {{$TRSDetails->city}},{{$TRSDetails->state}}&nbsp;{{$TRSDetails->zip}}
+                                </div>
+                                <div class="col-md-6">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                    @php
+                                        $Subscriptions = $TRSDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                    @endphp
+                                    <dt class="col-sm-3">Public Announcements</dt>
+                                    <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                                    {{-- @if ($assistConferenceCoordinatorCondition) --}}
+                                        <dd class="col-sm-6">
+                                            @if (in_array(1, $Subscriptions))
+                                                <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $TRSDetails->user_id }})">Unsubscribe</button>
+                                            @else
+                                                <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $TRSDetails->user_id }})">Subscribe</button>
+                                            @endif
+                                        </dd>
+                                    {{-- @endif --}}
+                                    <div class="col-md-12">
+                               <p>This will reset password to default "TempPass4You" for this user only.
                               <br>
                               <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $TRSDetails->user_id }}">Reset Treasurer Password</button>
                             </p>
                         </div>
+                    </div>
+                </div>
                         @endif
                         </div>
                   <!-- /.tab-pane -->
@@ -579,19 +672,42 @@
                   @else
                     <div class="sec-field">
                         <h3 class="profile-username">{{$SECDetails->first_name}} {{$SECDetails->last_name}}</h3>
-                        <a href="mailto:{{ $SECDetails->email }}">{{ $SECDetails->email }}</a>
-                        <br>
-                        <span class="phone-mask">{{$SECDetails->phone}}</span>
-                        <br><br>
-                        {{$SECDetails->street_address}}
-                        <br>
-                        {{$SECDetails->city}},{{$SECDetails->state}}&nbsp;{{$SECDetails->zip}}
-                        <br><br>
+                        <div class="row">
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                                <a href="mailto:{{ $SECDetails->email }}">{{ $SECDetails->email }}</a>
+                                <br>
+                                <span class="phone-mask">{{$SECDetails->phone}}</span>
+                                <br>
+                                {{$SECDetails->street_address}}
+                                <br>
+                                {{$SECDetails->city}},{{$SECDetails->state}}&nbsp;{{$SECDetails->zip}}
+                            </div>
+                            <div class="col-md-6">
+                                @php
+                                    $Subscriptions = $SECDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                @endphp
+                                <dt class="col-sm-3">Public Announcements</dt>
+                                <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                                {{-- @if ($assistConferenceCoordinatorCondition) --}}
+                                    <dd class="col-sm-6">
+                                        @if (in_array(1, $Subscriptions))
+                                            <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $SECDetails->user_id }})">Unsubscribe</button>
+                                        @else
+                                            <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $SECDetails->user_id }})">Subscribe</button>
+                                        @endif
+                                    </dd>
+                                {{-- @endif --}}
+                                <div class="col-md-12">
                         <p>This will reset password to default "TempPass4You" for this user only.
                         <br>
                         <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $SECDetails->user_id }}">Reset Secretary Password</button>
                         </p>
                     </div>
+                </div>
+            </div>
                   @endif
                   </div>
                   <!-- /.tab-pane -->
@@ -618,7 +734,7 @@
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
                 @endif
                 @if($regionalCoordinatorCondition)
-                    @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
+                    @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $live_yes))
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information</button>
                     @endif
                 @endif
@@ -760,6 +876,145 @@ document.querySelectorAll('.reset-password-btn').forEach(button => {
         });
     });
 });
+
+function subscribe(categoryId, userId) {
+    Swal.fire({
+        title: 'Subscribe to List',
+        html: `
+            <p>User will be subscribed to the selected list. Please confirm by pressing OK.</p>
+            <input type="hidden" id="user_id" name="user_id" value="${userId}">
+            <input type="hidden" id="category_id" name="category_id" value="${categoryId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const userId = Swal.getPopup().querySelector('#user_id').value;
+            const categoryId = Swal.getPopup().querySelector('#category_id').value;
+
+            return {
+                user_id: userId,
+                category_id: categoryId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Perform the AJAX request
+            $.ajax({
+                url: '{{ route('forum.subscribecategory') }}',
+                type: 'POST',
+                data: {
+                    user_id: data.user_id,
+                        category_id: data.category_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        showConfirmButton: false,  // Automatically close without "OK" button
+                        timer: 1500,
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    }).then(() => {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    });
+                },
+                error: function(jqXHR, exception) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong, Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function unsubscribe(categoryId, userId) {
+    Swal.fire({
+        title: 'Subscribe to List',
+        html: `
+            <p>Coordinator will be subscribed to the selected list. Please confirm by pressing OK.</p>
+
+            <input type="hidden" id="user_id" name="user_id" value="${userId}">
+            <input type="hidden" id="category_id" name="category_id" value="${categoryId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const userId = Swal.getPopup().querySelector('#user_id').value;
+            const categoryId = Swal.getPopup().querySelector('#category_id').value;
+
+            return {
+                user_id: userId,
+                category_id: categoryId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Perform the AJAX request
+            $.ajax({
+                url: '{{ route('forum.unsubscribecategory') }}',
+                type: 'POST',
+                data: {
+                        user_id: data.user_id,
+                        category_id: data.category_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        showConfirmButton: false,  // Automatically close without "OK" button
+                        timer: 1500,
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    }).then(() => {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    });
+                },
+                error: function(jqXHR, exception) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong, Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
 
 function updateEIN() {
     const chapterId = '{{ $chDetails->id }}'; // Get the chapter ID from the Blade variable

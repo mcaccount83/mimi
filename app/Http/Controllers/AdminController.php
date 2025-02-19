@@ -16,8 +16,11 @@ use App\Models\IncomingBoard;
 use App\Models\Boards;
 use App\Models\Bugs;
 use App\Models\Chapters;
+use App\Models\Coordinators;
 use App\Models\State;
 use App\Models\FinancialReport;
+use App\Models\ForumCategorySubscription;
+use TeamTeaTime\Forum\Models\Category as ForumCategory;
 use App\Models\GoogleDrive;
 use App\Models\Month;
 use App\Models\Resources;
@@ -45,10 +48,29 @@ class AdminController extends Controller
     }
 
     /**
+     * View the EOY Report Title
+     */
+    public function getPageTitle(Request $request)
+    {
+        $titles = [
+            'admin_reports' => 'Admin Tasks/Reports',
+            'admin_details' => 'Chapter Details',
+            'resource_reports' => 'Resources',
+            'resource_details' => 'Resource Details',
+        ];
+
+        return $titles;
+    }
+
+    /**
      * View Tasks on Bugs & Enhancements List
      */
     public function showBugs(Request $request): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['resource_reports'];
+        $breadcrumb = 'MIMI Bugs & Wishes';
+
         $user = User::find($request->user()->id);
 
         $corDetails = $user->coordinator;
@@ -83,7 +105,7 @@ class AdminController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
         $canEditDetails = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
 
-        $data = ['admin' => $admin, 'canEditDetails' => $canEditDetails, 'coordinatorDetails' => $coordinatorDetails];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'admin' => $admin, 'canEditDetails' => $canEditDetails, 'coordinatorDetails' => $coordinatorDetails];
 
         return view('admin.bugs')->with($data);
     }
@@ -156,6 +178,10 @@ class AdminController extends Controller
      */
     public function showDownloads(Request $request): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['resource_reports'];
+        $breadcrumb = 'Download Reports';
+
         //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
@@ -205,7 +231,7 @@ class AdminController extends Controller
         }
         $chapterList = $baseQuery->get();
 
-        $data = ['chapterList' => $chapterList, 'corId' => $corId, 'positionId' => $positionId, 'secPositionId' => $secPositionId];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'corId' => $corId, 'positionId' => $positionId, 'secPositionId' => $secPositionId];
 
         return view('admin.downloads')->with($data);
     }
@@ -531,19 +557,6 @@ class AdminController extends Controller
         return redirect()->to('/admin/reregdate')->with('error', 'Failed to update Re-Reg Date.');
     }
 
-    // /**
-    //  * error logs
-    //  */
-    // public function showMailQueue(): View
-    // {
-    //     $Queue = DB::table('jobs')
-    //         ->get();
-
-    //     $data = ['Queue' => $Queue];
-
-    //     return view('admin.mailqueue')->with($data);
-    // }
-
     /**
      * List of Duplicate Users
      */
@@ -581,28 +594,6 @@ class AdminController extends Controller
 
         return view('admin.duplicateboardid')->with($data);
     }
-
-    /**
-     * List of users on multiple boards
-     */
-    // public function showMultiple(): View
-    // {
-
-    //     $userData = DB::table('boards')
-    //         ->where('is_active', '=', '1')
-    //         ->groupBy('email')
-    //         ->having(DB::raw('count(email)'), '>', 1)
-    //         ->pluck('email');
-
-    //     $userList = DB::table('boards')
-    //         ->where('is_active', '=', '1')
-    //         ->whereIn('email', $userData)
-    //         ->get();
-
-    //     $data = ['userList' => $userList];
-
-    //     return view('admin.multipleboard')->with($data);
-    // }
 
     /**
      * boards with no president
@@ -678,11 +669,80 @@ class AdminController extends Controller
         // Fetch distinct fiscal years
         $fiscalYears = DB::table('admin')->distinct()->pluck('fiscal_year');
 
+        $resetEOYTableItems = [
+            'Clear Outgoing Board Member Table',
+            'Clear Incoming Board Member Table',
+            'Ending Balance Added to Documents from Financial Reports',
+            'Copy/Rename Financial Reports Table',
+            'Clear Financial Reports Table',
+            'Pre-Balance Added to Financial Report from Documents',
+            'EOY Fields Reset in Chapters Table',
+            'EOY Fields Reset in Documents Table',
+            'Upate Outgoing Board Members from Board Details',
+            'Update Google Shared Drive to new year for Attachmnet Uploads',
+        ];
+
+        $displayTestingItemsItems = [
+            'Display EOY Dashboard Menu Items for testers',
+            'Display Board Election Report Button  for testers',
+            'Display Financal Report Button  for testers',
+        ];
+
+        $displayLiveItemsItems = [
+            'Display EOY Dashboard Menu Items for all Coordinators',
+            'Display Board Election Report Button for Board Members after May 1st',
+            'Display Financal Report Button for Board Members after June 1st',
+        ];
+
+
+        $displayCoorindatorMenuItems = [
+            'Display EOY Dashboard Menu Items for testers',
+            'Display EOY Chapter Profile Buttons for testers',
+
+            'Financial Report for Chapters - button will be available after June 1st.',
+        ];
+
+        $displayCoorindatorMenuItems = [
+            'Display EOY Dashboard Menu Items for testers',
+            'Display EOY Chapter Profile Buttons for testers',
+
+            'Financial Report for Chapters - button will be available after June 1st.',
+        ];
+
+        $displayChapterButtonItems = [
+            'Board Election Report for Chapters - button will be available after May 1st.',
+            'Report Menu for Coordinators - menu will be available after May 1st.',
+        ];
+
         $resetAFTERtestingItems = [
-            'Outgoing Board Member Database Reset',
-            'Incoming Board Member Database Reset',
-            'Financial Report Database Reset',
-            'Pre-Balance Added to Financial Report Database'
+            'Ending Balance Added to Documents from Last Year Financial Reports',
+            'Clear Outgoing Board Member Table',
+            'Clear Incoming Board Member Table',
+            'Clear Financial Reports Table',
+            'Pre-Balance Added to Financial Report from Documents',
+            'EOY Fields Reset in Chapters Table',
+            'EOY Fields Reset in Documents Table',
+            'Update Outgoing Board Members from Board Details',
+        ];
+
+        $updateUserTablesItems = [
+            'Copy/Rename Chapters Table',
+            'Copy/Rename Boards Table',
+            'Copy/Rename Coordinators Table',
+            'Copy/Rename Users Table',
+        ];
+
+        $unSubscribeListItems = [
+            'Remove Board Members from BoardList',
+            'Remove Board Members from Publc Announcements',
+            'Remove Coordinators from BoardList',
+        ];
+
+
+        $subscribeListItems = [
+            'Subscribe Coordinators to BoardList',
+            'Subscribe Board Members to BoardList',
+            'Subscribe Board Members to Public Announcements',
         ];
 
         // Determine if the user is allowed to edit notes and status
@@ -691,7 +751,9 @@ class AdminController extends Controller
         $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
 
         $data = ['admin' => $admin, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails, 'fiscalYears' => $fiscalYears,
-            'resetAFTERtestingItems' => $resetAFTERtestingItems
+            'resetEOYTableItems' => $resetEOYTableItems, 'displayCoorindatorMenuItems' => $displayCoorindatorMenuItems, 'displayChapterButtonItems' => $displayChapterButtonItems,
+            'displayTestingItemsItems' => $displayTestingItemsItems, 'displayLiveItemsItems' => $displayLiveItemsItems, 'unSubscribeListItems' => $unSubscribeListItems,
+            'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems
         ];
 
         return view('admin.eoy')->with($data);
@@ -700,7 +762,7 @@ class AdminController extends Controller
     /**
      * Reset EOY Procedurles for New year
      */
-    public function resetYear(): RedirectResponse
+    public function resetYear(): JsonResponse
     {
         try {
             // Create a new Admin instance
@@ -717,23 +779,21 @@ class AdminController extends Controller
             // Save the new entry
             $admin->save();
 
-            DB::commit();
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            DB::commit(); // Commit transaction
 
-            return redirect()->to('/admin')->with('success', 'Fiscal year reset successfully.');
-         }
+                return response()->json(['success' => 'Fiscal year reset successfully.']);
+            } catch (\Exception $e) {
+                DB::rollback(); // Rollback Transaction
+                Log::error($e); // Log the error
 
-        return redirect()->to('/admin')->with('fail', 'An error occurred when restting the fiscal year.');
-    }
+                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+            }
+        }
 
     /**
      * Udate EOY Database Tables
      */
-    public function updateEOYDatabase(Request $request): RedirectResponse
+    public function updateEOYDatabase(Request $request): JsonResponse
     {
         try {
             $corDetails = User::find($request->user()->id)->coordinator;
@@ -765,10 +825,8 @@ class AdminController extends Controller
             // Remove Data from the `financial_report` table
             FinancialReport::query()->delete();
 
-            // Fetch all active chapters
+            // Fetch all active chapters and insert each chapter's balance into financial_report
             $activeChapters = Chapters::with('documents')->where('is_active', 1)->get();
-
-            // Insert each chapter's balance into financial_report
             foreach ($activeChapters as $chapter) {
                 FinancialReport::create([
                     'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
@@ -803,10 +861,8 @@ class AdminController extends Controller
                 'award_path' => null,
             ]);
 
-            // Get board details where board members are active
+            // Get board details where board members are active and insert into outgoing_boards
             $boardDetails = Boards::where('is_active', 1)->get();
-
-            // Loop through each board detail and insert into outgoing_boards
             foreach ($boardDetails as $boardDetail) {
                 OutgoingBoard::create([
                     'board_id' => $boardDetail->id,
@@ -825,29 +881,30 @@ class AdminController extends Controller
             ]);
 
             // Update admin table: Set specified columns to 1
-            DB::table('admin')->update([
-                'reset_AFTER_testing' => '1',
-                'updated_id' => $corId,
-                'updated_at' => Carbon::today(),
-            ]);
+            DB::table('admin')
+                ->orderBy('id', 'desc')
+                ->limit(1)
+                ->update([
+                    'reset_eoy_testing' => '1',
+                    'updated_id' => $corId,
+                    'updated_at' => Carbon::today(),
+                ]);
 
-            DB::commit();
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+                DB::commit(); // Commit transaction
 
-            return redirect()->to('/admin')->with('success', 'Financial data tables successfully updated, copied, and renamed.');
-           }
+                return response()->json(['success' => 'Data tables successfully updated, copied, and renamed.']);
+            } catch (\Exception $e) {
+                DB::rollback(); // Rollback Transaction
+                Log::error($e); // Log the error
 
-        return redirect()->to('/admin')->with('fail', 'An error occurred while updating the financial data tables.');
-    }
+                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+            }
+        }
 
     /**
      * Udate EOY Database Tables AFTER Testing
      */
-    public function updateEOYDatabaseAFTERTesting(Request $request): RedirectResponse
+    public function updateEOYDatabaseAFTERTesting(Request $request): JsonResponse
     {
         try {
             $corDetails = User::find($request->user()->id)->coordinator;
@@ -867,10 +924,8 @@ class AdminController extends Controller
             IncomingBoard::query()->delete();
             FinancialReport::query()->delete();
 
-            // Fetch all active chapters
+            // Fetch all active chapters and add balance into financial_report
             $activeChapters = Chapters::with('documents')->where('is_active', 1)->get();
-
-            // Insert each chapter's balance into financial_report
             foreach ($activeChapters as $chapter) {
                 FinancialReport::create([
                     'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
@@ -905,10 +960,8 @@ class AdminController extends Controller
                 'award_path' => null,
             ]);
 
-            // Get board details where board members are active
+            // Get board details where board members are active and insert into outgoing_boards
             $boardDetails = Boards::where('is_active', 1)->get();
-
-            // Loop through each board detail and insert into outgoing_boards
             foreach ($boardDetails as $boardDetail) {
                 OutgoingBoard::create([
                     'board_id' => $boardDetail->id,
@@ -922,30 +975,30 @@ class AdminController extends Controller
             }
 
             // Update admin table: Set specified columns to 1
-            DB::table('admin')->update([
-                'reset_AFTER_testing' => '1',
-                'updated_id' => $corId,
-                'updated_at' => Carbon::today(),
-            ]);
+            DB::table('admin')
+                ->orderBy('id', 'desc')
+                ->limit(1)
+                ->update([
+                    'reset_AFTER_testing' => '1',
+                    'updated_id' => $corId,
+                    'updated_at' => Carbon::today(),
+                ]);
 
-            DB::commit();
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+                DB::commit(); // Commit transaction
 
-            return redirect()->to('/admin')->with('success', 'Data sucessfully reset.');
-          }
+                return response()->json(['success' => 'Data sucessfully reset.']);
+            } catch (\Exception $e) {
+                DB::rollback(); // Rollback Transaction
+                Log::error($e); // Log the error
 
-        return redirect()->to('/admin')->with('fail', 'An error occurred while updating the data.');
-    }
-
+                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+            }
+        }
 
     /**
      * Udate User Database Tables
      */
-    public function updateDataDatabase(Request $request): RedirectResponse
+    public function updateDataDatabase(Request $request): JsonResponse
     {
         try {
             $corDetails = User::find($request->user()->id)->coordinator;
@@ -971,104 +1024,221 @@ class AdminController extends Controller
             DB::statement("CREATE TABLE users_{$currentMonth}_{$currentYear} LIKE users");
             DB::statement("INSERT INTO users_{$currentMonth}_{$currentYear} SELECT * FROM users");
 
-            // Delete all board members from 'outgoing_boards' table
-            // OutgoingBoard::query()->delete();
-            // DB::table('boards')
-            //     ->truncate();
-
-            // Update all outgoing board members in 'users' table to be inactive
-            DB::table('users')
-                ->where(function ($query) {
-                    $query->where('user_type', 'outgoing');
-                })
+            // Update admin table: Set specified columns to 1
+            DB::table('admin')
+                ->orderBy('id', 'desc')
+                ->limit(1)
                 ->update([
-                    'is_active' => '0',
+                    'update_user_tables' => '1',
+                    'updated_id' => $corId,
+                    'updated_at' => Carbon::today(),
                 ]);
 
-            // Update admin table: Set specified columns to 1
-            DB::table('admin')->update([
-                'copy_chapters' => '1',
-                'copy_users' => '1',
-                'copy_boarddetails' => '1',
-                'copy_Coordinators' => '1',
-                // 'delete_outgoing' => '1',
-                // 'outgoing_inactive' => '1',
-                'updated_id' => $corId,
-                'updated_at' => Carbon::today(),
-            ]);
+                DB::commit(); // Commit transaction
 
-            DB::commit();
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+                return response()->json(['success' => 'User data tables successfully updated, copied, and renamed.']);
+            } catch (\Exception $e) {
+                DB::rollback(); // Rollback Transaction
+                Log::error($e); // Log the error
 
-            return redirect()->to('/admin')->with('success', 'User data tables successfully updated, copied, and renamed..');
+                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
             }
-
-        return redirect()->to('/admin')->with('fail', 'An error occurred while updating the user data tables.');
-    }
-
-    /**
-     * Udate Coordinator EOY Menu Items
-     */
-    public function updateEOYCoordinator(Request $request): RedirectResponse
-    {
-        try {
-            $corDetails = User::find($request->user()->id)->coordinator;
-            $corId = $corDetails['id'];
-
-            // Update admin table: Set specified columns to 1
-            DB::table('admin')->update([
-                'eoy_testers' => '1',
-                'eoy_coordinators' => '1',
-                'updated_id' => $corId,
-                'updated_at' => Carbon::today(),
-            ]);
-
-            // Return success message
-            return redirect()->to('/admin')->with('success', 'Coordinator Menus have been activated.');
-        } catch (Exception $e) {
-            // Log the error message
-            Log::error('An error occurred while activating coordinator menus: '.$e->getMessage());
-
-            // Return error message, this is where the error should be flashed
-            return redirect()->to('/admin')->with('fail', 'An error occurred while activating coordinator menus.');
         }
-    }
 
     /**
-     * Udate Chapter EOY Buttons
+     * View EOY Teating Items
      */
-    public function updateEOYChapter(Request $request): RedirectResponse
+    public function updateEOYTesting(Request $request): JsonResponse
     {
         try {
             $corDetails = User::find($request->user()->id)->coordinator;
             $corId = $corDetails['id'];
 
             // Update admin table: Set specified columns to 1
-            DB::table('admin')->update([
-                'eoy_boardreport' => '1',
-                'eoy_financialreport' => '1',
-                'updated_id' => $corId,
-                'updated_at' => Carbon::today(),
-            ]);
+            DB::table('admin')
+                ->orderBy('id', 'desc')
+                ->limit(1)
+                ->update([
+                    'display_testing' => '1',
+                    'updated_id' => $corId,
+                    'updated_at' => Carbon::today(),
+                ]);
 
-            DB::commit();
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+                DB::commit(); // Commit transaction
 
-            return redirect()->to('/admin')->with('success', 'Chapter Buttons have been activated.');
+                return response()->json(['success' => 'Testing items successfully set to view.']);
+            } catch (\Exception $e) {
+                DB::rollback(); // Rollback Transaction
+                Log::error($e); // Log the error
+
+                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
             }
-
-        return redirect()->to('/admin')->with('fail', 'An error occurred while activating chapter buttons.');
-    }
+        }
 
     /**
+     * View EOY Live Items
+     */
+    public function updateEOYLive(Request $request): JsonResponse
+    {
+        try {
+            $corDetails = User::find($request->user()->id)->coordinator;
+            $corId = $corDetails['id'];
+
+            // Update admin table: Set specified columns to 1
+            DB::table('admin')
+                ->orderBy('id', 'desc')
+                ->limit(1)
+                ->update([
+                    'display_live' => '1',
+                    'updated_id' => $corId,
+                    'updated_at' => Carbon::today(),
+                ]);
+
+                DB::commit(); // Commit transaction
+
+                return response()->json(['success' => 'Live items successfully set to view.']);
+            } catch (\Exception $e) {
+                DB::rollback(); // Rollback Transaction
+                Log::error($e); // Log the error
+
+                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+            }
+        }
+
+    public function updateSubscribeLists(Request $request): JsonResponse
+    {
+        try {
+            $corDetails = User::find($request->user()->id)->coordinator;
+            $corId = $corDetails['id'];
+
+            // Get BoardList category
+            $categoryBoardList = ForumCategory::where('title', 'BoardList')
+                ->first();
+            $categoryIdBoardList = $categoryBoardList->id;
+
+            // Get Public Announcement category
+            $categoryPublic = ForumCategory::where('title', 'Public Announcements')
+                ->first();
+            $categoryIdPublic = $categoryPublic->id;
+
+             // Get active coordinators
+            $coordinatorUserIds = Coordinators::where('is_active', '1')
+                ->where('on_leave', '0')
+                ->get()
+                ->pluck('user_id')
+                ->unique();
+            $activeCoordinators = User::whereIn('id', $coordinatorUserIds)->get();
+
+            // Get board members from active chapters using with()
+            $boardUserIds = Chapters::with('boards')
+                ->where('is_active', true)
+                ->get()
+                ->pluck('boards')
+                ->flatten()
+                ->pluck('user_id')
+                ->unique();
+            $activeBoards = User::whereIn('id', $boardUserIds)->get();
+
+            // Combine the collections
+            $allUsers = $activeCoordinators->concat($activeBoards);
+
+            // Remove duplicates if a user is both coordinator and board member
+            $uniqueUsers = $allUsers->unique('id');
+
+            foreach ($uniqueUsers as $user) {
+                // Check if subscription already exists
+                $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                    ->where('category_id', $categoryIdBoardList)
+                    ->first();
+
+                if (!$existingSubscription) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $user->id,
+                        'category_id' => $categoryIdBoardList,
+                    ]);
+                }
+            }
+
+            foreach ($activeBoards as $user) {
+                // Check if subscription already exists
+                $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                    ->where('category_id', $categoryIdPublic)
+                    ->first();
+
+                if (!$existingSubscription) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $user->id,
+                        'category_id' => $categoryIdPublic,
+                    ]);
+                }
+            }
+
+            // Update admin table: Set specified columns to 1
+            DB::table('admin')
+                ->orderBy('id', 'desc')
+                ->limit(1)
+                ->update([
+                    'subscribe_list' => '1',
+                    'updated_id' => $corId,
+                    'updated_at' => Carbon::today(),
+                ]);
+
+                DB::commit(); // Commit transaction
+
+                return response()->json(['success' => 'Successfully subscribed to lists.']);
+            } catch (\Exception $e) {
+                DB::rollback(); // Rollback Transaction
+                Log::error($e); // Log the error
+
+                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+            }
+        }
+
+    public function updateUnsubscribeLists(Request $request): JsonResponse
+    {
+        try {
+            $corDetails = User::find($request->user()->id)->coordinator;
+            $corId = $corDetails['id'];
+
+            $categoryBoardList = ForumCategory::where('title', 'BoardList')
+                ->first();
+
+            $categoryPublic = ForumCategory::where('title', 'Public Announcements')
+                ->first();
+
+            // Delete all subscriptions for this category
+            $unsubscribeBoardList = ForumCategorySubscription::where('category_id', $categoryBoardList->id)
+                ->delete();
+
+            // Delete board members for this category
+            $unsubscribePublic = ForumCategorySubscription::where('category_id', $categoryPublic->id)
+                ->whereHas('user', function($query) {
+                    $query->where('user_type', 'board');
+                })
+                ->delete();
+
+            // Update admin table: Set specified columns to 1
+            DB::table('admin')
+                ->orderBy('id', 'desc')
+                ->limit(1)
+                ->update([
+                    'unsubscribe_list' => '1',
+                    'updated_id' => $corId,
+                    'updated_at' => Carbon::today(),
+                ]);
+
+                DB::commit(); // Commit transaction
+
+                return response()->json(['success' => 'Successfully unsubscribed to lists.']);
+            } catch (\Exception $e) {
+                DB::rollback(); // Rollback Transaction
+                Log::error($e); // Log the error
+
+                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+            }
+        }
+
+     /**
      * view Google Drive Shared Folder Ids
      */
     public function showGoogleDrive(): View
@@ -1085,13 +1255,6 @@ class AdminController extends Controller
      */
     public function updateGoogleDrive(Request $request): JsonResponse
     {
-        // $einLetterDrive = $request->input('einLetterDrive');
-        // $eoyDrive = $request->input('eoyDrive');
-        // $eoyDriveYear = $request->input('eoyDriveYear');
-        // $resourcesDrive = $request->input('resourcesDrive');
-        // $disbandDrive = $request->input('disbandDrive');
-        // $goodStandingDrive = $request->input('goodStandingDrive');
-        // $probationDrive = $request->input('probationDrive');
         try {
             $drive = GoogleDrive::firstOrFail();
             $drive->ein_letter_uploads = $request->input('einLetterDrive');

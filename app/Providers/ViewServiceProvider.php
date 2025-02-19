@@ -61,11 +61,13 @@ class ViewServiceProvider extends ServiceProvider
                 ->orderByDesc('admin.id')
                 ->first();
 
-            $eoy_testers = $admin->eoy_testers ?? 0; // Handle null cases
-            $eoy_coordinators = $admin->eoy_coordinators ?? 0; // Handle null cases
+            $display_testing = $admin->display_testing ?? 0; // Handle null cases
+            $display_live = $admin->display_live ?? 0; // Handle null cases
+            // $eoy_coordinators = $admin->eoy_coordinators ?? 0; // Handle null cases
             // Define testers and coordinators conditions
-            $testers_yes = ($eoy_testers == 1);
-            $coordinators_yes = ($eoy_coordinators == 1);
+            $testers_yes = ($display_testing == 1);
+            $live_yes = ($display_live == 1);
+            // $coordinators_yes = ($eoy_coordinators == 1);
 
             // Pass conditions and other variables to views
             $view->with(compact(
@@ -93,7 +95,7 @@ class ViewServiceProvider extends ServiceProvider
                 'm2mCondition',
                 'listAdminCondition',
                 'testers_yes',
-                'coordinators_yes'
+                'live_yes'
             ));
         });
     }

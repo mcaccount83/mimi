@@ -1,7 +1,7 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'EOY Details')
-@section('breadcrumb', 'EOY Boundary Issues')
+@section('page_title', $title)
+@section('breadcrumb', $breadcrumb)
 
 <style>
 .disabled-link {

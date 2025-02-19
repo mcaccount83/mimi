@@ -37,6 +37,43 @@ class EOYReportController extends Controller
     }
 
     /**
+     * View the EOY Report Title
+     */
+    public function getPageTitle(Request $request)
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetails = $user->coordinator;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
+
+        // Fetch the 'admin' record
+        $admin = DB::table('admin')
+            ->select('admin.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+            ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
+            ->orderByDesc('admin.id')
+            ->first();
+
+        $display_testing = $admin->display_testing ?? 0;
+        $testers_yes = ($display_testing == 1);
+
+        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+
+        $titles = [
+            'eoy_reports' => 'End of Year Reports',
+            'eoy_details' => 'EOY Details'
+        ];
+
+        if ($conditions['eoyReportCondition'] && $conditions['eoyTestCondition'] && $testers_yes) {
+            $titles['eoy_reports'] .= ' *TESTING*';
+            $titles['eoy_details'] .= ' *TESTING*';
+        }
+
+        return $titles;
+    }
+
+    /**
      * Active Chapter List Base Query
      */
     public function getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
@@ -142,6 +179,10 @@ class EOYReportController extends Controller
      */
     public function showEOYStatus(Request $request): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_reports'];
+        $breadcrumb = 'EOY Status Report';
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
@@ -158,7 +199,9 @@ class EOYReportController extends Controller
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
+            'title' => $title, 'breadcrumb' => $breadcrumb
+        ];
 
         return view('eoyreports.eoystatus')->with($data);
     }
@@ -255,6 +298,10 @@ class EOYReportController extends Controller
      */
     public function editEOYDetails(Request $request, $id): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_details'];
+        $breadcrumb = 'EOY Details';
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
@@ -278,7 +325,8 @@ class EOYReportController extends Controller
         $reviewComplete = $baseQuery['reviewComplete'];
         $rrDetails = $baseQuery['rrDetails'];
 
-        $data = ['cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb,
+            'cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
             'reviewComplete' => $reviewComplete,  'rrDetails' => $rrDetails,
@@ -357,6 +405,10 @@ class EOYReportController extends Controller
      */
     public function showEOYBoardReport(Request $request)
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_reports'];
+        $breadcrumb = 'Board Election Report';
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
@@ -400,7 +452,7 @@ class EOYReportController extends Controller
         }
 
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyboardreport')->with($data);
     }
@@ -636,7 +688,8 @@ class EOYReportController extends Controller
         }
     }
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+        $data = [
+            'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates,
         ];
@@ -937,6 +990,10 @@ class EOYReportController extends Controller
      */
     public function showEOYFinancialReport(Request $request): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_reports'];
+        $breadcrumb = 'Financial Reports';
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
@@ -952,7 +1009,7 @@ class EOYReportController extends Controller
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyfinancialreport')->with($data);
     }
@@ -1192,11 +1249,6 @@ class EOYReportController extends Controller
             $financialReport->check_current_990N_included = $check_current_990N_included;
             $financialReport->check_total_income_less = $check_total_income_less;
             $financialReport->check_sistered_another_chapter = $check_sistered_another_chapter;
-            // $financialReport->check_award_1_approved = $check_award_1_approved;
-            // $financialReport->check_award_2_approved = $check_award_2_approved;
-            // $financialReport->check_award_3_approved = $check_award_3_approved;
-            // $financialReport->check_award_4_approved = $check_award_4_approved;
-            // $financialReport->check_award_5_approved = $check_award_5_approved;
             $financialReport->farthest_step_visited_coord = $farthest_step_visited_coord;
             if ($submitType == 'review_complete') {
                 $financialReport->review_complete = date('Y-m-d H:i:s');
@@ -1339,6 +1391,10 @@ class EOYReportController extends Controller
      */
     public function showEOYAttachments(Request $request): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_reports'];
+        $breadcrumb = 'Financial Report Attacchments';
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
@@ -1355,7 +1411,7 @@ class EOYReportController extends Controller
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyattachments')->with($data);
     }
@@ -1365,6 +1421,10 @@ class EOYReportController extends Controller
      */
     public function editEOYAttachments(Request $request, $id): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_details'];
+        $breadcrumb = 'EOY Attachments';
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
@@ -1384,7 +1444,7 @@ class EOYReportController extends Controller
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $data = ['cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
         ];
@@ -1433,6 +1493,10 @@ class EOYReportController extends Controller
      */
     public function showEOYBoundaries(Request $request): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_reports'];
+        $breadcrumb = 'Boundray Issues Report';
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
@@ -1448,7 +1512,7 @@ class EOYReportController extends Controller
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyboundaries')->with($data);
     }
@@ -1458,6 +1522,10 @@ class EOYReportController extends Controller
      */
     public function editEOYBoundaries(Request $request, $id): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_details'];
+        $breadcrumb = 'EOY Boundaries';
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
@@ -1477,7 +1545,7 @@ class EOYReportController extends Controller
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $data = ['cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
         ];
@@ -1523,6 +1591,10 @@ class EOYReportController extends Controller
      */
     public function showEOYAwards(Request $request): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_reports'];
+        $breadcrumb = 'Chapter Awards Report';
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
@@ -1551,7 +1623,7 @@ class EOYReportController extends Controller
         }
 
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
             'allAwards' => $allAwards, 'maxAwards' => $maxAwards,
         ];
 
@@ -1563,6 +1635,10 @@ class EOYReportController extends Controller
      */
     public function editEOYAwards(Request $request, $id): View
     {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_details'];
+        $breadcrumb = 'EOY Awards';
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
@@ -1583,7 +1659,7 @@ class EOYReportController extends Controller
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $allAwards = $baseQuery['allAwards'];
 
-        $data = ['cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
+        $data = ['title' => $title, 'breadcrumb'=> $breadcrumb, 'cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
         ];

@@ -74,6 +74,7 @@
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">Chapters & Coordinators</a></li>
                   <li class="nav-item"><a class="nav-link" href="#contact" data-toggle="tab">Contact Information</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#subscriptions" data-toggle="tab">Subscriptions</a></li>
                   <li class="nav-item"><a class="nav-link" href="#recog" data-toggle="tab">Appreciation & Recognitions</a></li>
                 </ul>
               </div><!-- /.card-header -->
@@ -189,6 +190,43 @@
                             <br>
                             <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $cdDetails->user_id }}">Reset President Password</button>
                             </p>
+                      </div>
+                    </div>
+                     <!-- /.tab-pane -->
+                <div class="tab-pane" id="subscriptions">
+                    <div class="subscriptions-field">
+                        <h3 class="profile-username">Subscriptions</h3>
+                        <div class="row">
+                            @php
+                                $Subscriptions = $cdDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                            @endphp
+                            <dt class="col-sm-3">Public Announcements</dt>
+                            <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                            @if ($assistConferenceCoordinatorCondition)
+                                <dd class="col-sm-6">
+                                    @if (in_array(1, $Subscriptions))
+                                        <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1)">Unsubscribe</button>
+                                    @else
+                                        <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1)">Subscribe</button>
+                                    @endif
+                                </dd>
+                            @endif
+                            @php
+                                $Subscriptions = $cdDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                            @endphp
+                            <dt class="col-sm-3">CoordinatorList</dt>
+                            <dd class="col-sm-2">{{ in_array(2, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                            @if ($assistConferenceCoordinatorCondition)
+                                <dd class="col-sm-6">
+                                    @if (in_array(2, $Subscriptions))
+                                        <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(2)">Unsubscribe</button>
+                                    @else
+                                        <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(2)">Subscribe</button>
+                                    @endif
+                                </dd>
+                            @endif
+
+                        </div>
                       </div>
                     </div>
                 <!-- /.tab-pane -->
@@ -411,6 +449,149 @@ function updateCardSent() {
     });
 }
 
+function subscribe(categoryId) {
+    const userId = '{{ $cdDetails->user_id ?? '' }}';
+
+    Swal.fire({
+        title: 'Subscribe to List',
+        html: `
+            <p>Coordinator will be subscribed to the selected list. Please confirm by pressing OK.</p>
+
+            <input type="hidden" id="user_id" name="user_id" value="${userId}">
+            <input type="hidden" id="category_id" name="category_id" value="${categoryId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const userId = Swal.getPopup().querySelector('#user_id').value;
+            const categoryId = Swal.getPopup().querySelector('#category_id').value;
+
+            return {
+                user_id: userId,
+                category_id: categoryId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Perform the AJAX request
+            $.ajax({
+                url: '{{ route('forum.subscribecategory') }}',
+                type: 'POST',
+                data: {
+                    user_id: data.user_id,
+                        category_id: data.category_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        showConfirmButton: false,  // Automatically close without "OK" button
+                        timer: 1500,
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    }).then(() => {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    });
+                },
+                error: function(jqXHR, exception) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong, Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function unsubscribe(categoryId) {
+    const userId = '{{ $cdDetails->user_id ?? '' }}';
+
+    Swal.fire({
+        title: 'Subscribe to List',
+        html: `
+            <p>Coordinator will be subscribed to the selected list. Please confirm by pressing OK.</p>
+
+            <input type="hidden" id="user_id" name="user_id" value="${userId}">
+            <input type="hidden" id="category_id" name="category_id" value="${categoryId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const userId = Swal.getPopup().querySelector('#user_id').value;
+            const categoryId = Swal.getPopup().querySelector('#category_id').value;
+
+            return {
+                user_id: userId,
+                category_id: categoryId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Perform the AJAX request
+            $.ajax({
+                url: '{{ route('forum.unsubscribecategory') }}',
+                type: 'POST',
+                data: {
+                        user_id: data.user_id,
+                        category_id: data.category_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        showConfirmButton: false,  // Automatically close without "OK" button
+                        timer: 1500,
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    }).then(() => {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    });
+                },
+                error: function(jqXHR, exception) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong, Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
 
 function onLeaveCoordinator(coordId) {
     Swal.fire({

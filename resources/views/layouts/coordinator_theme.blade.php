@@ -367,22 +367,42 @@ window.onload = function () {
                             </li>
                         @endif
 
-                        <!-- End of Year Reports Menu Item -->
-                        @php
-                            if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes)) {
-                                $eoyReportsRoute = route('eoyreports.eoystatus');
-                            }
-                            $activeEOYReportsRoutes = [
-                                'eoy/*', 'eoydetails/*', 'eoydetailseditboundaries/*', 'eoydetailseditawards/*'
-                            ];
-                        @endphp
-                        @if (isset($eoyReportsRoute))
-                            <li class="nav-item">
-                                <a href="{{ $eoyReportsRoute }}" class="nav-link {{ isActiveRoute($activeEOYReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-chart-line"></i>
-                                    <p>EOY Reports</p>
-                                </a>
-                            </li>
+                        <!-- End of Year Reports Menu Item TESTING-->
+                        @if($eoyReportCondition && $live_yes)
+                            <!-- End of Year Reports Menu Item LIVE-->
+                            @php
+                                if ($eoyReportConditionDISABLED || ($eoyReportCondition && $live_yes)) {
+                                    $eoyReportsRoute = route('eoyreports.eoystatus');
+                                }
+                                $activeEOYReportsRoutes = [
+                                    'eoy/*', 'eoydetails/*', 'eoydetailseditboundaries/*', 'eoydetailseditawards/*'
+                                ];
+                                @endphp
+                                @if (isset($eoyReportsRoute))
+                                <li class="nav-item">
+                                    <a href="{{ $eoyReportsRoute }}" class="nav-link {{ isActiveRoute($activeEOYReportsRoutes) }}">
+                                        <i class="nav-icon fas fa-chart-line"></i>
+                                        <p>EOY Reports</p>
+                                    </a>
+                                </li>
+                            @endif
+                        @elseif ($eoyReportCondition && $eoyTestCondition && $testers_yes)
+                            @php
+                                if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes)) {
+                                    $eoyReportsRoute = route('eoyreports.eoystatus');
+                                }
+                                $activeEOYReportsRoutes = [
+                                    'eoy/*', 'eoydetails/*', 'eoydetailseditboundaries/*', 'eoydetailseditawards/*'
+                                ];
+                            @endphp
+                            @if (isset($eoyReportsRoute))
+                                <li class="nav-item">
+                                    <a href="{{ $eoyReportsRoute }}" class="nav-link {{ isActiveRoute($activeEOYReportsRoutes) }}">
+                                        <i class="nav-icon fas fa-chart-line"></i>
+                                        <p>EOY Reports *TESTING*</p>
+                                    </a>
+                                </li>
+                            @endif
                         @endif
 
                         <!-- Admin Reports Menu Item -->
