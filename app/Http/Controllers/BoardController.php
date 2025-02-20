@@ -167,6 +167,7 @@ class BoardController extends Controller
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chDocuments = $baseQuery['chDocuments'];
 
         $allWebLinks = $baseQuery['allWebLinks'];
         $allStates = $baseQuery['allStates'];
@@ -185,14 +186,17 @@ class BoardController extends Controller
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
         // $due_date = Carbon::create($next_renewal_year, $start_month, 1)->endOfMonth();
 
-        $eoyStatus = Admin::first();
-        $boardreport_yes = ($eoyStatus->eoy_boardreport == 1);
-        $financialreport_yes = ($eoyStatus->eoy_financialreport == 1);
+        $admin = Admin::orderBy('id', 'desc')
+        ->limit(1)
+        ->first();
+        $display_testing = ($admin->display_testing == 1);
+        $display_live = ($admin->display_live == 1);
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
-            'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes];
+            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments
+        ];
 
         return view('boards.president')->with($data);
     }
@@ -246,13 +250,15 @@ class BoardController extends Controller
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
         // $due_date = Carbon::create($next_renewal_year, $start_month, 1)->endOfMonth();
 
-        $eoyStatus = Admin::first();
-        $boardreport_yes = ($eoyStatus->eoy_boardreport == 1);
-        $financialreport_yes = ($eoyStatus->eoy_financialreport == 1);
+        $admin = Admin::orderBy('id', 'desc')
+        ->limit(1)
+        ->first();
+        $display_testing = ($admin->display_testing == 1);
+        $display_live = ($admin->display_live == 1);
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'borDetails' => $borDetails, 'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
-            'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes, 'chDocuments' => $chDocuments,
+            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments
         ];
 
         return view('boards.member')->with($data);

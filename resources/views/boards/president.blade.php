@@ -510,37 +510,54 @@
                       </li>
                       <li class="list-group-item">
                             <h5>End of year Filing</h5>
-                            @if($thisDate->month >= 6 && $thisDate->month <= 12 && ($boardreport_yes))
-                                @if($chDetails->new_board_active!='1')
-                                    @if($user_type === 'coordinator')
-                                        <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
-                                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
-                                        </button><br>
-                                    @else
-                                        <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chDetails->id]) }}'">
-                                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
-                                        </button><br>
-                                    @endif
 
+                            @if($user_type === 'coordinator' && $chDocuments->new_board_active!='1')
+                                @if($display_testing)
+                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
+                                        {{ date('Y') . '-' . (date('Y') + 1) }} Board Report *TESTING*
+                                    </button><br>
+                                @elseif ($display_live)
+                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
+                                        {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
+                                    </button><br>
+                                @endif
+                            @elseif($user_type === 'coordinator' && $chDocuments->new_board_active =='1')
+                                @if($display_testing)
+                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated *TESTING*</button><br>
+                                @elseif ($display_live)
+                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated</button><br>
+                                @endif
+
+                            @elseif ($thisDate->month >= 6 && $thisDate->month <= 12 && $display_live)
+                                @if($chDocuments->new_board_active!='1')
+                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chDetails->id]) }}'">
+                                        {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
+                                    </button><br>
                                 @else
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated</button><br>
                                 @endif
                             @else
                                 <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                             @endif
-                            @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
-                                @if($user_type === 'coordinator')
+
+                            @if($user_type === 'coordinator')
+                                @if($display_testing)
+                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
+                                        {{ date('Y')-1 .'-'.date('Y') }} Financial Report *TESTING*
+                                    </button><br>
+                                @elseif (($display_live))
                                     <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                                     </button><br>
-                                @else
-                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $chDetails->id]) }}'">
-                                        {{ date('Y')-1 .'-'.date('Y') }} Financial Report
-                                    </button><br>
                                 @endif
+                            @elseif($thisDate->month >= 6 && $thisDate->month <= 12 && $display_live)
+                                <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $chDetails->id]) }}'">
+                                    {{ date('Y')-1 .'-'.date('Y') }} Financial Report
+                                </button><br>
                             @else
                                 <button id="FinancialReport" class="btn btn-primary btn-sm mb-1 disabled">Financial Report Not Available</button><br>
                             @endif
+
                             @if($thisDate->month >= 7 && $thisDate->month <= 12)
                                 <a href="https://sa.www4.irs.gov/sso/ial1?resumePath=%2Fas%2F5Ad0mGlkzW%2Fresume%2Fas%2Fauthorization.ping&allowInteraction=true&reauth=false&connectionId=SADIPACLIENT&REF=3C53421849B7D5B806E50960DF0AC7530889D9ADE9238D5D3B8B00000069&vnd_pi_requested_resource=https%3A%2F%2Fsa.www4.irs.gov%2Fepostcard%2F&vnd_pi_application_name=EPOSTCARD"
                                     class="btn btn-primary btn-sm mb-1" target="_blank" >{{ date('Y')-1 }} 990N IRS Online Filing</a>

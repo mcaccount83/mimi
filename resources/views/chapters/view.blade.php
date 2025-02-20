@@ -347,12 +347,12 @@
                                 <div class="col-sm-3">
                                     <label>Board Report:</label>
                                 </div>
-                                @if ($chDetails->new_board_submitted == 1)
+                                @if ($chDocuments->new_board_submitted == 1)
                                     <div class="col-sm-5">
                                         Board Election Report has been received.
                                     </div>
                                     <div class="col-sm-4">
-                                        <label class="mr-2">Activated:</label>{{ $chDetails->new_board_active == 1 ? 'YES' : 'NO' }}
+                                        <label class="mr-2">Activated:</label>{{ $chDocuments->new_board_active == 1 ? 'YES' : 'NO' }}
                                     </div>
                                 @else
                                     <div class="col-sm-9">
@@ -365,12 +365,12 @@
                                 <div class="col-sm-3">
                                     <label>Financial Report:</label>
                                 </div>
-                                @if ($chDetails->financial_report_received == 1)
+                                @if ($chDocuments->financial_report_received == 1)
                                     <div class="col-sm-5">
                                         Financial Report has been received.
                                     </div>
                                     <div class="col-sm-4">
-                                        <label class="mr-2">Review Complete:</label>{{ $chDetails->financial_report_complete == 1 ? 'YES' : 'NO' }}
+                                        <label class="mr-2">Review Complete:</label>{{ $chDocuments->financial_review_complete == 1 ? 'YES' : 'NO' }}
                                     </div>
                                 @else
                                     <div class="col-sm-9">

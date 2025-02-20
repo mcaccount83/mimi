@@ -8,6 +8,7 @@ use App\Models\Resources;
 use App\Models\State;
 use App\Models\User;
 use App\Models\Website;
+use App\Models\FinancialReportAwards;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
@@ -15,47 +16,18 @@ use Illuminate\View\View;
 class ViewAsBoardController extends Controller
 {
     protected $userController;
+    protected $boardController;
 
-    public function __construct(UserController $userController)
+    public function __construct(UserController $userController, BoardController $boardController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
+        $this->boardController = $boardController;
     }
 
-    /**
-     * Active Chapter Details Base Query
-     */
-    public function getChapterDetails($id)
-    {
-        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'reportReviewer', 'boards'])->find($id);
-        $stateShortName = $chDetails->state->state_short_name;
-        $startMonthName = $chDetails->startMonth->month_long_name;
-
-        $allWebLinks = Website::all(); // Full List for Dropdown Menu
-        $allStates = State::all();  // Full List for Dropdown Menu
-
-        $chDocuments = $chDetails->documents;
-        $submitted = $chDetails->documents->financial_report_received;
-        $chFinancialReport = $chDetails->financialReport;
-
-        $boards = $chDetails->boards()->with(['stateName', 'position'])->get();
-        $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
-
-        // Fetch board details or fallback to default
-        $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
-        $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
-        $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
-        $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
-        $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
-
-        return ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
-            'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
-            'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'submitted' => $submitted,
-        ];
-
-    }
+    /*/ Active Chapter Details Base Query
+    //  $this->boardController->getChapterDetails($id)
 
     /**
      * View the President Profile View
@@ -69,11 +41,12 @@ class ViewAsBoardController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->boardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chDocuments = $baseQuery['chDocuments'];
 
         $allWebLinks = $baseQuery['allWebLinks'];
         $allStates = $baseQuery['allStates'];
@@ -90,14 +63,18 @@ class ViewAsBoardController extends Controller
         $next_renewal_year = $chDetails->next_renewal_year;
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
 
-        $eoyStatus = Admin::first();
-        $boardreport_yes = ($eoyStatus->eoy_boardreport == 1);
-        $financialreport_yes = ($eoyStatus->eoy_financialreport == 1);
+        $admin = Admin::orderBy('id', 'desc')
+            ->limit(1)
+            ->first();
+
+        $display_testing = ($admin->display_testing == 1);
+        $display_live = ($admin->display_live == 1);
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
-            'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes];
+            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments
+        ];
 
         return view('boards.president')->with($data);
 
@@ -115,7 +92,7 @@ class ViewAsBoardController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->boardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
@@ -160,7 +137,7 @@ class ViewAsBoardController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->boardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
@@ -195,17 +172,19 @@ class ViewAsBoardController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->boardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         $submitted = $baseQuery['submitted'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
+        $allAwards = $baseQuery['allAwards'];
+
         $resources = Resources::with('categoryName')->get();
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'user_type' => $user_type,
-            'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+            'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'allAwards' => $allAwards,
         ];
 
         return view('boards.financial')->with($data);

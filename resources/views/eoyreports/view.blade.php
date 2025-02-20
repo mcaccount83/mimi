@@ -147,7 +147,7 @@
                             <label>Board Report:</label>
                         </div>
                         <div class="col-sm-9">
-                            @if($chDetails->new_board_active != '1')
+                            @if($chDocuments->new_board_active != '1')
                                 <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
                                     @if($chDetails->new_board_submitted == '1')
                                         <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="return PreSaveValidate(false)" >Activate Board</button>
