@@ -319,6 +319,8 @@
                                     <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
                                     </button><br>
+                                @else
+                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                                 @endif
                             @elseif($user_type === 'coordinator' && $chDocuments->new_board_active =='1')
                                 @if($display_testing)
@@ -326,8 +328,7 @@
                                 @elseif ($display_live)
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated</button><br>
                                 @endif
-
-                            @elseif ($thisDate->month >= 6 && $thisDate->month <= 12 && $display_live)
+                            @elseif ($thisDate->month >= 5 && $thisDate->month <= 12 && $display_live)
                                 @if($chDocuments->new_board_active!='1')
                                     <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
@@ -348,6 +349,8 @@
                                     <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                                     </button><br>
+                                @else
+                                    <button id="990NLink" class="btn btn-primary btn-sm mb-1 disabled">Financial Report Not Available</button>
                                 @endif
                             @elseif($thisDate->month >= 6 && $thisDate->month <= 12 && $display_live)
                                 <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $chDetails->id]) }}'">
