@@ -737,11 +737,11 @@
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
                 @endif
 
-                @if ($eoyTestCondition && $displayTESTING)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information *TESTING*</button>
-                @endif
-                @if($regionalCoordinatorCondition && $displayLIVE)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information</button>
+                @if ( $adminReportCondition || $eoyTestCondition && $displayTESTING || $regionalCoordinatorCondition && $displayLIVE )
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information
+                        @if ($adminReportCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
+                        @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                    </button>
                 @endif
                 @if($conferenceCoordinatorCondition)
                     <br>
