@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Admin;
 use Illuminate\Support\Facades\Request;
 use TeamTeaTime\Forum\Models\Thread;
 use TeamTeaTime\Forum\Support\Access\CategoryAccess;
@@ -41,6 +42,28 @@ if (! function_exists('getUserType')) {
             'coordinator' => ($userType == 'coordinator'),  // Coordinator
             'board' => ($userType == 'board' ),  // Current Board Member
             'outgoing' => $userType == 'outgoing',  // Outgoing Board Member
+        ];
+    }
+}
+
+if (! function_exists('getEOYDisplay')) {
+    function getEOYDisplay()
+    {
+        $admin = Admin::orderBy('id', 'desc')
+            ->limit(1)
+            ->first();
+        $display_testing = ($admin->display_testing == 1);
+        $display_live = ($admin->display_live == 1);
+
+        // Add your new conditions
+        $displayTESTING = ($display_testing == true && $display_live != true);
+        $displayLIVE = ($display_live == true);
+
+        return [
+            'display_testing' => $display_testing,
+            'display_live' => $display_live,
+            'displayTESTING' => $displayTESTING,
+            'displayLIVE' => $displayLIVE
         ];
     }
 }

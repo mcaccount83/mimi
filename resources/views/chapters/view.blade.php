@@ -323,8 +323,10 @@
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
-                        <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information</h3>
-                        @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $live_yes))
+                        <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information
+                            @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                        </h3>
+                        @if($eoyTestCondition && $displayTESTING || $displayLIVE)
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label>Boundary Issues:</label>
@@ -733,10 +735,12 @@
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Chapter Information</button>
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
                 @endif
-                @if($regionalCoordinatorCondition)
-                    @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $live_yes))
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information</button>
-                    @endif
+
+                @if ($eoyTestCondition && $displayTESTING)
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information *TESTING*</button>
+                @endif
+                @if($regionalCoordinatorCondition && $displayLIVE)
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information</button>
                 @endif
                 @if($conferenceCoordinatorCondition)
                     <br>

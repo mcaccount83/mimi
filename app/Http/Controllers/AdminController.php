@@ -885,7 +885,7 @@ class AdminController extends Controller
                 ->orderBy('id', 'desc')
                 ->limit(1)
                 ->update([
-                    'reset_eoy_testing' => '1',
+                    'reset_eoy_tables' => '1',
                     'updated_id' => $corId,
                     'updated_at' => Carbon::today(),
                 ]);

@@ -62,6 +62,17 @@ class ChapterController extends Controller
         $this->pdfController = $pdfController;
     }
 
+    /*/Custom Helpers/*/
+    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+    // $displayEOY = getEOYDisplay();
+
+    /*/User Controller/*/
+    // $this->userController->loadReportingTree($cdId);
+    // $this->userController->loadEmailDetails($chId);
+    // $this->userController->loadConferenceCoord($chPcId);
+    // $this->userController->loadPrimaryList($chRegId, $chConfId);
+
+
     public function defaultCategories()
     {
         // Public Annnouncemenets = 1
@@ -133,10 +144,6 @@ class ChapterController extends Controller
                             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
 
                     ->orderBy('chapters.name');
-
-            // $baseQuery->orderBy(State::select('state_short_name')  // All other pages sort by state and name
-            //     ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            //     ->orderBy('chapters.name');
             }
 
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
@@ -165,6 +172,7 @@ class ChapterController extends Controller
         $submitted = $chDetails->documents->financial_report_received ?? null;
         $reviewComplete = $chDetails->documents->review_complete ?? null;
         $chFinancialReport = $chDetails->financialReport;
+        $displayEOY = getEOYDisplay();
 
         $allStatuses = Status::all();  // Full List for Dropdown Menu
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
@@ -205,7 +213,7 @@ class ChapterController extends Controller
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcDetails' => $pcDetails, 'submitted' => $submitted,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
-            'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName
+            'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY
         ];
 
     }
@@ -451,6 +459,9 @@ class ChapterController extends Controller
         $chDocuments = $baseQuery['chDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $reviewComplete = $baseQuery['reviewComplete'];
+        $displayEOY = $baseQuery['displayEOY'];
+        $displayTESTING = $displayEOY['displayTESTING'];
+        $displayLIVE = $displayEOY['displayLIVE'];
 
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $baseQuery['chapterStatus'];
@@ -472,7 +483,7 @@ class ChapterController extends Controller
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
             'startMonthName' => $startMonthName, 'cdConfId' => $cdConfId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
-            'conferenceDescription' => $conferenceDescription,
+            'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE
         ];
 
         return view('chapters.view')->with($data);

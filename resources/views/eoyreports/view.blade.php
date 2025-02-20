@@ -124,41 +124,54 @@
                 <div class="card-body box-profile">
                 <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information</h3>
                     <!-- /.card-header -->
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label>Boundary Issues:</label>
-                        </div>
-                        @if ($chDetails->boundary_issues != null)
-                            <div class="col-sm-6">
-                                Chapter has reported boundary issues.
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="mr-2">Resolved:</label>{{ $chDetails->boundary_issue_resolved == 1 ? 'YES' : 'NO' }}
-                            </div>
-                        @else
-                            <div class="col-sm-9">
-                                Chpater has not reported any boundary issues.
-                            </div>
-                        @endif
-                        </div>
 
-                        <div class="row mt-2">
-                        <div class="col-sm-3">
-                            <label>Board Report:</label>
-                        </div>
-                        <div class="col-sm-9">
-                            @if($chDocuments->new_board_active != '1')
-                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
-                                    @if($chDetails->new_board_submitted == '1')
-                                        <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="return PreSaveValidate(false)" >Activate Board</button>
-                                    @else
-                                        <button type="button" class="btn bg-gradient-primary btn-sm mr-2" disabled >Report Not Submitted</button>
-                                    @endif
-                                @else
-                                Board Report is no longer available after activation.
+                    @php
+    dd('In blade:', $eoyTESTING, $eoyLIVE);
+@endphp
+
+
+                    @if ($eoyTESTING == '1')
+                    *TESTING*
+                    @endif
+                    @if ($eoyTESTING == '1' || $eoyLIVE == '1')
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Boundary Issues:</label>
+                            </div>
+                            @if ($chDetails->boundary_issues != null)
+                                <div class="col-sm-6">
+                                    Chapter has reported boundary issues.
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="mr-2">Resolved:</label>{{ $chDetails->boundary_issue_resolved == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            @else
+                                <div class="col-sm-9">
+                                    Chpater has not reported any boundary issues.
+                                </div>
                             @endif
+                            </div>
+
+                            <div class="row mt-2">
+                            <div class="col-sm-3">
+                                <label>Board Report:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                @if($chDocuments->new_board_active != '1')
+                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
+                                        @if($chDetails->new_board_submitted == '1')
+                                            <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="return PreSaveValidate(false)" >Activate Board</button>
+                                        @else
+                                            <button type="button" class="btn bg-gradient-primary btn-sm mr-2" disabled >Report Not Submitted</button>
+                                        @endif
+                                    @else
+                                    Board Report is no longer available after activation.
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    @else
+                        Report information is not available at this time.
+                    @endif
 
                     <div class="row mt-2">
                         <div class="col-sm-3">

@@ -26,7 +26,10 @@ class ViewAsBoardController extends Controller
         $this->boardController = $boardController;
     }
 
-    /*/ Active Chapter Details Base Query
+    /*/Custom Helpers/*/
+    // $displayEOY = getEOYDisplay();
+
+    /*/ Board Controller /*/
     //  $this->boardController->getChapterDetails($id)
 
     /**
@@ -63,6 +66,10 @@ class ViewAsBoardController extends Controller
         $next_renewal_year = $chDetails->next_renewal_year;
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
 
+        $displayEOY = $baseQuery['displayEOY'];
+        $displayTESTING = $displayEOY['displayTESTING'];
+        $displayLIVE = $displayEOY['displayLIVE'];
+
         $admin = Admin::orderBy('id', 'desc')
             ->limit(1)
             ->first();
@@ -73,7 +80,7 @@ class ViewAsBoardController extends Controller
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
-            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments
+            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments
         ];
 
         return view('boards.president')->with($data);

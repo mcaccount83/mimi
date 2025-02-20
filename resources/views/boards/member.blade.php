@@ -325,7 +325,7 @@
                             @elseif($user_type === 'coordinator' && $chDocuments->new_board_active =='1')
                                 @if($display_testing)
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated *TESTING*</button><br>
-                                @elseif ($display_live)
+                                @else
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated</button><br>
                                 @endif
                             @elseif ($thisDate->month >= 5 && $thisDate->month <= 12 && $display_live)

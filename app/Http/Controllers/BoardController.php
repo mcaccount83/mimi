@@ -53,6 +53,9 @@ class BoardController extends Controller
         $this->pdfController = $pdfController;
     }
 
+    /*/Custom Helpers/*/
+    // $displayEOY = getEOYDisplay();
+
     /**
      * Reset Password
      */
@@ -111,6 +114,7 @@ class BoardController extends Controller
         $reviewComplete = $chDetails->documents->review_complete;
         $reviewerEmail = $chDetails->reportReviewer?->email;  // Could be null -- no reviewer assigned
         $chFinancialReport = $chDetails->financialReport;
+        $displayEOY = getEOYDisplay();
 
         $awards = $chDetails->financialReport;
 
@@ -142,7 +146,7 @@ class BoardController extends Controller
             'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'submitted' => $submitted,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,
-            'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail
+            'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail, 'displayEOY' => $displayEOY,
         ];
 
     }
@@ -186,16 +190,20 @@ class BoardController extends Controller
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
         // $due_date = Carbon::create($next_renewal_year, $start_month, 1)->endOfMonth();
 
+        $displayEOY = $baseQuery['displayEOY'];
+        $displayTESTING = $displayEOY['displayTESTING'];
+        $displayLIVE = $displayEOY['displayLIVE'];
+
         $admin = Admin::orderBy('id', 'desc')
-        ->limit(1)
-        ->first();
+            ->limit(1)
+            ->first();
         $display_testing = ($admin->display_testing == 1);
         $display_live = ($admin->display_live == 1);
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
-            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments
+            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments
         ];
 
         return view('boards.president')->with($data);
@@ -251,8 +259,8 @@ class BoardController extends Controller
         // $due_date = Carbon::create($next_renewal_year, $start_month, 1)->endOfMonth();
 
         $admin = Admin::orderBy('id', 'desc')
-        ->limit(1)
-        ->first();
+            ->limit(1)
+            ->first();
         $display_testing = ($admin->display_testing == 1);
         $display_live = ($admin->display_live == 1);
 
