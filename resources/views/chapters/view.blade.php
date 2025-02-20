@@ -324,9 +324,10 @@
                   <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
                         <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information
+                            @if ($adminReportCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                             @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
                         </h3>
-                        @if($eoyTestCondition && $displayTESTING || $displayLIVE)
+                        @if($adminReportCondition || $eoyTestCondition && $displayTESTING || $displayLIVE)
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label>Boundary Issues:</label>

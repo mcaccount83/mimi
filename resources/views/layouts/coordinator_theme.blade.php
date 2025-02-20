@@ -367,28 +367,9 @@ window.onload = function () {
                             </li>
                         @endif
 
-                        <!-- End of Year Reports Menu Item TESTING-->
-                        @if($eoyReportCondition && $live_yes)
-                            <!-- End of Year Reports Menu Item LIVE-->
+                        <!-- End of Year Reports Menu Item-->
                             @php
-                                if ($eoyReportConditionDISABLED || ($eoyReportCondition && $live_yes)) {
-                                    $eoyReportsRoute = route('eoyreports.eoystatus');
-                                }
-                                $activeEOYReportsRoutes = [
-                                    'eoy/*', 'eoydetails/*', 'eoydetailseditboundaries/*', 'eoydetailseditawards/*'
-                                ];
-                                @endphp
-                                @if (isset($eoyReportsRoute))
-                                <li class="nav-item">
-                                    <a href="{{ $eoyReportsRoute }}" class="nav-link {{ isActiveRoute($activeEOYReportsRoutes) }}">
-                                        <i class="nav-icon fas fa-chart-line"></i>
-                                        <p>EOY Reports</p>
-                                    </a>
-                                </li>
-                            @endif
-                        @elseif ($eoyReportCondition && $eoyTestCondition && $testers_yes)
-                            @php
-                                if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes)) {
+                                if ($adminReportCondition || ($eoyTestCondition && $displayTESTING) || ($eoyReportCondition && $displayLIVE)) {
                                     $eoyReportsRoute = route('eoyreports.eoystatus');
                                 }
                                 $activeEOYReportsRoutes = [
@@ -399,11 +380,13 @@ window.onload = function () {
                                 <li class="nav-item">
                                     <a href="{{ $eoyReportsRoute }}" class="nav-link {{ isActiveRoute($activeEOYReportsRoutes) }}">
                                         <i class="nav-icon fas fa-chart-line"></i>
-                                        <p>EOY Reports *TESTING*</p>
+                                        <p>EOY Reports
+                                            @if ($adminReportCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
+                                            @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                                        </p>
                                     </a>
                                 </li>
                             @endif
-                        @endif
 
                         <!-- Admin Reports Menu Item -->
                         @php

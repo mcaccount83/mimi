@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\DB;
+use App\Models\Admin;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,8 +17,8 @@ class ViewServiceProvider extends ServiceProvider
             $secpositionid = null;
             $loggedIn = null;
 
-            if (auth()->check()) {
-                $user = auth()->user();
+            if (Auth::check()) {
+                $user = Auth::user();
 
                 if ($user->user_type === 'coordinator' && $user->coordinator) {
                     $corDetails = $user->coordinator;
@@ -55,18 +56,20 @@ class ViewServiceProvider extends ServiceProvider
             $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  //*ListAdmin
 
             // Fetch the 'admin' record
-            $admin = DB::table('admin')
-                ->select('admin.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-                ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-                ->orderByDesc('admin.id')
+            $admin = Admin::orderBy('id', 'desc')
+                ->limit(1)
                 ->first();
+            $display_testing = ($admin->display_testing == 1);
+            $display_live = ($admin->display_live == 1);
+            $displayTESTING = ($display_testing == true && $display_live != true);
+            $displayLIVE = ($display_live == true);
 
-            $display_testing = $admin->display_testing ?? 0; // Handle null cases
-            $display_live = $admin->display_live ?? 0; // Handle null cases
+            // $display_testing = $admin->display_testing ?? 0; // Handle null cases
+            // $display_live = $admin->display_live ?? 0; // Handle null cases
             // $eoy_coordinators = $admin->eoy_coordinators ?? 0; // Handle null cases
             // Define testers and coordinators conditions
-            $testers_yes = ($display_testing == 1);
-            $live_yes = ($display_live == 1);
+            // $displayTESTING = ($display_testing == 1);
+            // $displayLIVE = ($display_live == 1);
             // $coordinators_yes = ($eoy_coordinators == 1);
 
             // Pass conditions and other variables to views
@@ -94,8 +97,8 @@ class ViewServiceProvider extends ServiceProvider
                 'adminReportCondition',
                 'm2mCondition',
                 'listAdminCondition',
-                'testers_yes',
-                'live_yes'
+                'displayTESTING',
+                'displayLIVE'
             ));
         });
     }

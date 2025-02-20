@@ -48,24 +48,25 @@ class EOYReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        // Fetch the 'admin' record
-        $admin = DB::table('admin')
-            ->select('admin.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-            ->orderByDesc('admin.id')
-            ->first();
-
-        $display_testing = $admin->display_testing ?? 0;
-        $testers_yes = ($display_testing == 1);
-
         $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+        $adminReportCondition = $conditions['adminReportCondition'];
+        $eoyTestCondition = $conditions['eoyTestCondition'];
+
+        $displayEOY = getEOYDisplay();
+        $displayTESTING = $displayEOY['displayTESTING'];
+        $displayLIVE = $displayEOY['displayLIVE'];
 
         $titles = [
             'eoy_reports' => 'End of Year Reports',
             'eoy_details' => 'EOY Details'
         ];
 
-        if ($conditions['eoyReportCondition'] && $conditions['eoyTestCondition'] && $testers_yes) {
+        if ($adminReportCondition && !$displayTESTING && !$displayLIVE){
+            $titles['eoy_reports'] .= ' *ADMIN*';
+            $titles['eoy_details'] .= ' *ADMIN*';
+        }
+
+        if ($eoyTestCondition && $displayTESTING){
             $titles['eoy_reports'] .= ' *TESTING*';
             $titles['eoy_details'] .= ' *TESTING*';
         }
