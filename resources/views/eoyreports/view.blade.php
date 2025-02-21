@@ -124,16 +124,10 @@
                 <div class="card-body box-profile">
                 <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information</h3>
                     <!-- /.card-header -->
-
-                    @php
-    dd('In blade:', $eoyTESTING, $eoyLIVE);
-@endphp
-
-
-                    @if ($eoyTESTING == '1')
+                    @if ($displayTESTING == '1')
                     *TESTING*
                     @endif
-                    @if ($eoyTESTING == '1' || $eoyLIVE == '1')
+                    @if ($displayTESTING == '1' || $displayLIVE == '1')
                         <div class="row">
                             <div class="col-sm-3">
                                 <label>Boundary Issues:</label>

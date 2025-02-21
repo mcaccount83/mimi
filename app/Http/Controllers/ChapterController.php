@@ -53,13 +53,15 @@ class ChapterController extends Controller
 {
     protected $userController;
     protected $pdfController;
+    protected $baseChapterController;
 
-    public function __construct(UserController $userController, PDFController $pdfController)
+    public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
         $this->pdfController = $pdfController;
+        $this->baseChapterController = $baseChapterController;
     }
 
     /*/Custom Helpers/*/
@@ -72,6 +74,10 @@ class ChapterController extends Controller
     // $this->userController->loadConferenceCoord($chPcId);
     // $this->userController->loadPrimaryList($chRegId, $chConfId);
 
+    /*/ Base Chapter Controller /*/
+    //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    //  $this->baseChapterController->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    //  $this->baseChapterController->getChapterDetails($chId)
 
     public function defaultCategories()
     {
@@ -91,160 +97,160 @@ class ChapterController extends Controller
     /**
      * Active Chapter List Base Query
      */
-    public function getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    {
-        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
-        if ($conditions['coordinatorCondition']) {
-            $coordinatorData = $this->userController->loadReportingTree($cdId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
+    // public function getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    // {
+    //     $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+    //     if ($conditions['coordinatorCondition']) {
+    //         $coordinatorData = $this->userController->loadReportingTree($cdId);
+    //         $inQryArr = $coordinatorData['inQryArr'];
+    //     }
 
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth',
-            'state', 'primaryCoordinator'])
-            ->where('is_active', 1);
+    //     $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth',
+    //         'state', 'primaryCoordinator'])
+    //         ->where('is_active', 1);
 
-        if ($conditions['founderCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        } else {
-            $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
-        }
+    //     if ($conditions['founderCondition']) {
+    //     } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+    //         $baseQuery->where('conference_id', '=', $cdConfId);
+    //     } elseif ($conditions['regionalCoordinatorCondition']) {
+    //         $baseQuery->where('region_id', '=', $cdRegId);
+    //     } else {
+    //         $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
+    //     }
 
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery->where('primary_coordinator_id', '=', $cdId);
-        } else {
-            $checkBoxStatus = '';
-        }
+    //     if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+    //         $checkBoxStatus = 'checked';
+    //         $baseQuery->where('primary_coordinator_id', '=', $cdId);
+    //     } else {
+    //         $checkBoxStatus = '';
+    //     }
 
-        $checkBox3Status = '';
+    //     $checkBox3Status = '';
 
-        $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';  // Check if we're on the re-registration page
-        if ($isReregPage) {
-            if (isset($_GET['check3']) && $_GET['check3'] == 'yes') {
-                $checkBox3Status = 'checked';
-                $baseQuery->orderBy(State::select('state_short_name')  // All chapter Re-Reg list sort by state and name
-                    ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-                    ->orderBy('chapters.name');
-            } else {
-                $baseQuery->orderByDesc('next_renewal_year')  // Re-Reg sort by next renewal date
-                         ->orderByDesc('start_month_id');
-            }
-            } else {
-                $baseQuery->orderBy(Conference::select('short_name')
-                    ->whereColumn('conference.id', 'chapters.conference_id')
-                )
-                    ->orderBy(
-                        Region::select('short_name')
-                                ->whereColumn('region.id', 'chapters.region_id')
-                    )
-                    ->orderBy(State::select('state_short_name')
-                            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+    //     $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';  // Check if we're on the re-registration page
+    //     if ($isReregPage) {
+    //         if (isset($_GET['check3']) && $_GET['check3'] == 'yes') {
+    //             $checkBox3Status = 'checked';
+    //             $baseQuery->orderBy(State::select('state_short_name')  // All chapter Re-Reg list sort by state and name
+    //                 ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+    //                 ->orderBy('chapters.name');
+    //         } else {
+    //             $baseQuery->orderByDesc('next_renewal_year')  // Re-Reg sort by next renewal date
+    //                      ->orderByDesc('start_month_id');
+    //         }
+    //         } else {
+    //             $baseQuery->orderBy(Conference::select('short_name')
+    //                 ->whereColumn('conference.id', 'chapters.conference_id')
+    //             )
+    //                 ->orderBy(
+    //                     Region::select('short_name')
+    //                             ->whereColumn('region.id', 'chapters.region_id')
+    //                 )
+    //                 ->orderBy(State::select('state_short_name')
+    //                         ->whereColumn('state.id', 'chapters.state_id'), 'asc')
 
-                    ->orderBy('chapters.name');
-            }
+    //                 ->orderBy('chapters.name');
+    //         }
 
-        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
-    }
+    //     return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
+    // }
 
     /**
      * Active Chapter Details Base Query
      */
-    public function getChapterDetails($id)
-    {
-        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])->find($id);
-        $chId = $chDetails->id;
-        $chIsActive = $chDetails->is_active;
-        $stateShortName = $chDetails->state->state_short_name;
-        $regionLongName = $chDetails->region->long_name;
-        $conferenceDescription = $chDetails->conference->conference_description;
-        $chConfId = $chDetails->conference_id;
-        $chRegId = $chDetails->region_id;
-        $chPcId = $chDetails->primary_coordinator_id;
+    // public function getChapterDetails($id)
+    // {
+    //     $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])->find($id);
+    //     $chId = $chDetails->id;
+    //     $chIsActive = $chDetails->is_active;
+    //     $stateShortName = $chDetails->state->state_short_name;
+    //     $regionLongName = $chDetails->region->long_name;
+    //     $conferenceDescription = $chDetails->conference->conference_description;
+    //     $chConfId = $chDetails->conference_id;
+    //     $chRegId = $chDetails->region_id;
+    //     $chPcId = $chDetails->primary_coordinator_id;
 
-        $startMonthName = $chDetails->startMonth->month_long_name;
-        $chapterStatus = $chDetails->status->chapter_status;
-        $websiteLink = $chDetails->webLink->link_status ?? null;
+    //     $startMonthName = $chDetails->startMonth->month_long_name;
+    //     $chapterStatus = $chDetails->status->chapter_status;
+    //     $websiteLink = $chDetails->webLink->link_status ?? null;
 
-        $chDocuments = $chDetails->documents;
-        $submitted = $chDetails->documents->financial_report_received ?? null;
-        $reviewComplete = $chDetails->documents->review_complete ?? null;
-        $chFinancialReport = $chDetails->financialReport;
-        $displayEOY = getEOYDisplay();
+    //     $chDocuments = $chDetails->documents;
+    //     $submitted = $chDetails->documents->financial_report_received ?? null;
+    //     $reviewComplete = $chDetails->documents->review_complete ?? null;
+    //     $chFinancialReport = $chDetails->financialReport;
+    //     $displayEOY = getEOYDisplay();
 
-        $allStatuses = Status::all();  // Full List for Dropdown Menu
-        $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
-        $allWebLinks = Website::all();  // Full List for Dropdown Menu
-        $allStates = State::all();  // Full List for Dropdown Menu
+    //     $allStatuses = Status::all();  // Full List for Dropdown Menu
+    //     $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
+    //     $allWebLinks = Website::all();  // Full List for Dropdown Menu
+    //     $allStates = State::all();  // Full List for Dropdown Menu
 
-        $boards = $chDetails->boards()->with('stateName')->get();
-        $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+    //     $boards = $chDetails->boards()->with('stateName')->get();
+    //     $bdDetails = $boards->groupBy('board_position_id');
+    //     $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
 
-        // Fetch board details or fallback to default
-        $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
-        $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
-        $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
-        $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
-        $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
+    //     // Fetch board details or fallback to default
+    //     $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
+    //     $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
+    //     $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
+    //     $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
+    //     $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
 
-        // Load Board and Coordinators for Sending Email
-        $emailData = $this->userController->loadEmailDetails($chId);
-        $emailListChap = $emailData['emailListChap'];
-        $emailListCoord = $emailData['emailListCoord'];
+    //     // Load Board and Coordinators for Sending Email
+    //     $emailData = $this->userController->loadEmailDetails($chId);
+    //     $emailListChap = $emailData['emailListChap'];
+    //     $emailListCoord = $emailData['emailListCoord'];
 
-        // Load Conference Coordinators for Sending Email
-        $emailData = $this->userController->loadConferenceCoord($chPcId);
-        $emailCC = $emailData['cc_email'];
+    //     // Load Conference Coordinators for Sending Email
+    //     $emailData = $this->userController->loadConferenceCoord($chPcId);
+    //     $emailCC = $emailData['cc_email'];
 
-        // //Primary Coordinator Notification//
-        $pcDetails = Coordinators::find($chPcId);
-        $emailPC = $pcDetails->email;
-        $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
+    //     // //Primary Coordinator Notification//
+    //     $pcDetails = Coordinators::find($chPcId);
+    //     $emailPC = $pcDetails->email;
+    //     $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
 
-        // Load Report Reviewer Coordinator Dropdown List
-        $pcDetails = $this->userController->loadPrimaryList($chRegId, $chConfId);
+    //     // Load Report Reviewer Coordinator Dropdown List
+    //     $pcDetails = $this->userController->loadPrimaryList($chRegId, $chConfId);
 
-        return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
-            'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
-            'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
-            'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcDetails' => $pcDetails, 'submitted' => $submitted,
-            'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
-            'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY
-        ];
+    //     return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+    //         'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
+    //         'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
+    //         'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
+    //         'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcDetails' => $pcDetails, 'submitted' => $submitted,
+    //         'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
+    //         'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY
+    //     ];
 
-    }
+    // }
 
     /**
      * Zapped Chapter List Base Query
      */
-    public function getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    {
-        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
-        if ($conditions['coordinatorCondition']) {
-            $coordinatorData = $this->userController->loadReportingTree($cdId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
+    // public function getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    // {
+    //     $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+    //     if ($conditions['coordinatorCondition']) {
+    //         $coordinatorData = $this->userController->loadReportingTree($cdId);
+    //         $inQryArr = $coordinatorData['inQryArr'];
+    //     }
 
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'president', 'primaryCoordinator'])
-            ->where('is_active', 0)
-            ->orderByDesc('chapters.zap_date');
+    //     $baseQuery = Chapters::with(['state', 'conference', 'region', 'president', 'primaryCoordinator'])
+    //         ->where('is_active', 0)
+    //         ->orderByDesc('chapters.zap_date');
 
-        if ($conditions['founderCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        } else {
-            $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
-        }
+    //     if ($conditions['founderCondition']) {
+    //     } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+    //         $baseQuery->where('conference_id', '=', $cdConfId);
+    //     } elseif ($conditions['regionalCoordinatorCondition']) {
+    //         $baseQuery->where('region_id', '=', $cdRegId);
+    //     } else {
+    //         $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
+    //     }
 
-        return ['query' => $baseQuery];
+    //     return ['query' => $baseQuery];
 
-    }
+    // }
 
     /**
      * Display the Active chapter list mapped with login coordinator
@@ -261,7 +267,7 @@ class ChapterController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
@@ -286,7 +292,7 @@ class ChapterController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
 
         $countList = count($chapterList);
@@ -447,7 +453,7 @@ class ChapterController extends Controller
         $cdRegId = $cdDetails->region_id;
         $cdPositionid = $cdDetails->position_id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
         $chIsActive = $baseQuery['chIsActive'];
@@ -574,7 +580,7 @@ class ChapterController extends Controller
             DB::beginTransaction();
 
          //Load Chapter MailData//
-         $baseQuery = $this->getChapterDetails($chapterid);
+         $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
          $chDetails = $baseQuery['chDetails'];
          $stateShortName = $baseQuery['stateShortName'];
          $chConfId = $baseQuery['chConfId'];
@@ -696,7 +702,7 @@ class ChapterController extends Controller
             }
 
              //Update Chapter MailData//
-             $baseQuery = $this->getChapterDetails($chapterid);
+             $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
              $chDetails = $baseQuery['chDetails'];
              $stateShortName = $baseQuery['stateShortName'];
              $chConfId = $baseQuery['chConfId'];
@@ -854,7 +860,7 @@ class ChapterController extends Controller
             }
 
             //Update Chapter MailData//
-            $baseQuery = $this->getChapterDetails($chapterid);
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chConfId = $baseQuery['chConfId'];
@@ -1302,7 +1308,7 @@ class ChapterController extends Controller
         $cdRegId = $cdDetails->region_id;
         $cdPositionid = $cdDetails->position_id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
         $chIsActive = $baseQuery['chIsActive'];
@@ -1353,7 +1359,7 @@ class ChapterController extends Controller
         $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
         $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $baseQueryPre = $this->getChapterDetails($id);
+        $baseQueryPre = $this->baseChapterController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
         $PresDetailsPre = $baseQueryPre['PresDetails'];
 
@@ -1404,7 +1410,7 @@ class ChapterController extends Controller
             $chapter->save();
 
             //Update Chapter MailData//
-            $baseQueryUpd = $this->getChapterDetails($id);
+            $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chConfId = $baseQueryUpd['chConfId'];
@@ -1529,7 +1535,7 @@ class ChapterController extends Controller
         $cdRegId = $cdDetails->region_id;
         $cdPositionid = $cdDetails->position_id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
         $chIsActive = $baseQuery['chIsActive'];
@@ -1578,7 +1584,7 @@ class ChapterController extends Controller
         $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
         $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $baseQueryPre = $this->getChapterDetails($id);
+        $baseQueryPre = $this->baseChapterController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
         $PresDetailsPre = $baseQueryPre['PresDetails'];
         $AVPDetailsPre = $baseQueryPre['AVPDetails'];
@@ -1948,7 +1954,7 @@ class ChapterController extends Controller
             }
 
             //Update Chapter MailData//
-            $baseQueryUpd = $this->getChapterDetails($id);
+            $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chConfId = $baseQueryUpd['chConfId'];
@@ -2127,7 +2133,7 @@ class ChapterController extends Controller
         $cdId = $cdDetails->id;
         $cdConfId = $cdDetails->conference_id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -2198,7 +2204,7 @@ class ChapterController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $websiteList = $baseQuery['query']->get();
 
         $data = ['websiteList' => $websiteList];
@@ -2221,7 +2227,7 @@ class ChapterController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
 
         $data = ['chapterList' => $chapterList, 'corId' => $cdId];
@@ -2243,7 +2249,7 @@ class ChapterController extends Controller
         $cdRegId = $cdDetails->region_id;
         $cdPositionid = $cdDetails->position_id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
         $chIsActive = $baseQuery['chIsActive'];
@@ -2275,7 +2281,7 @@ class ChapterController extends Controller
         $cdId = $cdDetails->id;
         $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
 
-        $baseQueryPre = $this->getChapterDetails($id);
+        $baseQueryPre = $this->baseChapterController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
 
         $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
@@ -2306,7 +2312,7 @@ class ChapterController extends Controller
             $chapter->save();
 
             //Update Chapter MailData//
-            $baseQueryUpd = $this->getChapterDetails($id);
+            $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chPcId = $baseQueryUpd['chPcId'];
@@ -2378,7 +2384,7 @@ class ChapterController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $activeChapterList = $baseQuery['query']->get();
 
         $countList = count($activeChapterList);
@@ -2405,7 +2411,7 @@ class ChapterController extends Controller
         $currentYear = date('Y');
         $currentMonth = date('m');
 
-        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox3Status = $baseQuery['checkBox3Status'];
 
@@ -2631,7 +2637,7 @@ class ChapterController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
@@ -2675,7 +2681,7 @@ class ChapterController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -2704,7 +2710,7 @@ class ChapterController extends Controller
         $cdId = $cdDetails->id;
         $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $nextRenewalYear = $baseQuery['chDetails']->next_renewal_year;

@@ -28,13 +28,19 @@ use Illuminate\View\View;
 class EOYReportController extends Controller
 {
     protected $userController;
+    protected $baseChapterController;
 
-    public function __construct(UserController $userController)
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
+        $this->baseChapterController = $baseChapterController;
     }
+
+    /*/ Base Chapter Controller /*/
+    //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    //  $this->baseChapterController->getChapterDetails($chId)
 
     /**
      * View the EOY Report Title
@@ -77,103 +83,103 @@ class EOYReportController extends Controller
     /**
      * Active Chapter List Base Query
      */
-    public function getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    {
-        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
-        if ($conditions['coordinatorCondition']) {
-            $coordinatorData = $this->userController->loadReportingTree($cdId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
+    // public function getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    // {
+    //     $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+    //     if ($conditions['coordinatorCondition']) {
+    //         $coordinatorData = $this->userController->loadReportingTree($cdId);
+    //         $inQryArr = $coordinatorData['inQryArr'];
+    //     }
 
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'president', 'documents', 'financialReport', 'reportReviewer', 'primaryCoordinator'])
-            ->where('is_active', 1)
-            ->where(function ($query) {
-                $query->where('created_at', '<=', date('Y-06-30'))
-                    ->orWhereNull('created_at');
-            });
+    //     $baseQuery = Chapters::with(['state', 'conference', 'region', 'president', 'documents', 'financialReport', 'reportReviewer', 'primaryCoordinator'])
+    //         ->where('is_active', 1)
+    //         ->where(function ($query) {
+    //             $query->where('created_at', '<=', date('Y-06-30'))
+    //                 ->orWhereNull('created_at');
+    //         });
 
-        if ($conditions['founderCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        } else {
-            $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
-        }
+    //     if ($conditions['founderCondition']) {
+    //     } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+    //         $baseQuery->where('conference_id', '=', $cdConfId);
+    //     } elseif ($conditions['regionalCoordinatorCondition']) {
+    //         $baseQuery->where('region_id', '=', $cdRegId);
+    //     } else {
+    //         $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
+    //     }
 
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery->where('primary_coordinator_id', '=', $cdId);
-        } else {
-            $checkBoxStatus = '';
-        }
+    //     if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+    //         $checkBoxStatus = 'checked';
+    //         $baseQuery->where('primary_coordinator_id', '=', $cdId);
+    //     } else {
+    //         $checkBoxStatus = '';
+    //     }
 
-        if (isset($_GET['check2']) && $_GET['check2'] == 'yes') {
-            $checkBox2Status = 'checked';
-            $baseQuery->whereHas('financialReport', function ($query) use ($cdId) {
-                $query->where('reviewer_id', '=', $cdId);
-            });
-        } else {
-            $checkBox2Status = '';
-        }
+    //     if (isset($_GET['check2']) && $_GET['check2'] == 'yes') {
+    //         $checkBox2Status = 'checked';
+    //         $baseQuery->whereHas('financialReport', function ($query) use ($cdId) {
+    //             $query->where('reviewer_id', '=', $cdId);
+    //         });
+    //     } else {
+    //         $checkBox2Status = '';
+    //     }
 
-        $baseQuery->orderBy(State::select('state_short_name')
-            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name');
+    //     $baseQuery->orderBy(State::select('state_short_name')
+    //         ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+    //         ->orderBy('chapters.name');
 
-        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+    //     return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 
-    }
+    // }
 
     /**
      * Active Chapter Details Base Query
      */
-    public function getChapterDetails($id)
-    {
-        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'reportReviewer', 'boards'])->find($id);
-        $chId = $chDetails->id;
-        $chIsActive = $chDetails->is_active;
-        $stateShortName = $chDetails->state->state_short_name;
-        $regionLongName = $chDetails->region->long_name;
-        $conferenceDescription = $chDetails->conference->conference_description;
-        $chConfId = $chDetails->conference_id;
-        $chRegId = $chDetails->region_id;
-        $chPcId = $chDetails->primary_coordinator_id;
+    // public function getChapterDetails($id)
+    // {
+    //     $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'reportReviewer', 'boards'])->find($id);
+    //     $chId = $chDetails->id;
+    //     $chIsActive = $chDetails->is_active;
+    //     $stateShortName = $chDetails->state->state_short_name;
+    //     $regionLongName = $chDetails->region->long_name;
+    //     $conferenceDescription = $chDetails->conference->conference_description;
+    //     $chConfId = $chDetails->conference_id;
+    //     $chRegId = $chDetails->region_id;
+    //     $chPcId = $chDetails->primary_coordinator_id;
 
-        $chDocuments = $chDetails->documents;
-        $submitted = $chDetails->documents->financial_report_received;
-        $reviewComplete = $chDetails->documents->review_complete;
-        $chFinancialReport = $chDetails->financialReport;
+    //     $chDocuments = $chDetails->documents;
+    //     $submitted = $chDetails->documents->financial_report_received;
+    //     $reviewComplete = $chDetails->documents->review_complete;
+    //     $chFinancialReport = $chDetails->financialReport;
 
-        $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
+    //     $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
-        $boards = $chDetails->boards()->with('stateName')->get();
-        $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+    //     $boards = $chDetails->boards()->with('stateName')->get();
+    //     $bdDetails = $boards->groupBy('board_position_id');
+    //     $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
 
-        // Fetch board details or fallback to default
-        $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
-        $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
-        $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
-        $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
-        $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
+    //     // Fetch board details or fallback to default
+    //     $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
+    //     $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
+    //     $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
+    //     $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
+    //     $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
 
-        // Load Board and Coordinators for Sending Email
-        $emailData = $this->userController->loadEmailDetails($chId);
-        $emailListChap = $emailData['emailListChap'];
-        $emailListCoord = $emailData['emailListCoord'];
+    //     // Load Board and Coordinators for Sending Email
+    //     $emailData = $this->userController->loadEmailDetails($chId);
+    //     $emailListChap = $emailData['emailListChap'];
+    //     $emailListCoord = $emailData['emailListCoord'];
 
-        // Load Report Reviewer Coordinator Dropdown List
-        $rrDetails = $this->userController->loadReviewerList($chRegId, $chConfId);
+    //     // Load Report Reviewer Coordinator Dropdown List
+    //     $rrDetails = $this->userController->loadReviewerList($chRegId, $chConfId);
 
-        return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
-            'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId,
-            'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
-            'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'rrDetails' => $rrDetails, 'submitted' => $submitted,
-        ];
+    //     return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+    //         'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId,
+    //         'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
+    //         'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
+    //         'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'rrDetails' => $rrDetails, 'submitted' => $submitted,
+    //     ];
 
-    }
+    // }
 
     /**
      * View the EOY Status list
@@ -194,7 +200,7 @@ class EOYReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -222,7 +228,7 @@ class EOYReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']
             ->whereHas('documents', function ($query) {
                 $query->where('report_extension', '0')
@@ -312,7 +318,7 @@ class EOYReportController extends Controller
         $cdRegId = $cdDetails->region_id;
         $cdPositionid = $cdDetails->position_id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -421,7 +427,7 @@ class EOYReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -473,7 +479,7 @@ class EOYReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']
             ->whereHas('documents', function ($query) {
                 $query->where('report_extension', '0')
@@ -642,7 +648,7 @@ class EOYReportController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -1005,7 +1011,7 @@ class EOYReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1030,7 +1036,7 @@ class EOYReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']
             ->whereHas('documents', function ($query) {
                 $query->where('report_extension', '0')
@@ -1107,7 +1113,7 @@ class EOYReportController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -1199,7 +1205,7 @@ class EOYReportController extends Controller
         $check_award_4_approved = isset($input['checkAward4Approved']) ? $input['checkAward4Approved'] : null;
         $check_award_5_approved = isset($input['checkAward5Approved']) ? $input['checkAward5Approved'] : null;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
@@ -1406,7 +1412,7 @@ class EOYReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1435,7 +1441,7 @@ class EOYReportController extends Controller
         $cdRegId = $cdDetails->region_id;
         $cdPositionid = $cdDetails->position_id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -1508,7 +1514,7 @@ class EOYReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1536,7 +1542,7 @@ class EOYReportController extends Controller
         $cdRegId = $cdDetails->region_id;
         $cdPositionid = $cdDetails->position_id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -1606,7 +1612,7 @@ class EOYReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1649,7 +1655,7 @@ class EOYReportController extends Controller
         $cdRegId = $cdDetails->region_id;
         $cdPositionid = $cdDetails->position_id;
 
-        $baseQuery = $this->getChapterDetails($id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];

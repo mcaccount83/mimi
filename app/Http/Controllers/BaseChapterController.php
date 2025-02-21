@@ -49,6 +49,15 @@ class BaseChapterController extends Controller
             $checkBoxStatus = '';
         }
 
+        if (isset($_GET['check2']) && $_GET['check2'] == 'yes') {
+            $checkBox2Status = 'checked';
+            $baseQuery->whereHas('financialReport', function ($query) use ($cdId) {
+                $query->where('reviewer_id', '=', $cdId);
+            });
+        } else {
+            $checkBox2Status = '';
+        }
+
         $checkBox3Status = '';
 
         if (isset($_GET['check4']) && $_GET['check4'] == 'yes') {
@@ -83,7 +92,7 @@ class BaseChapterController extends Controller
                     ->orderBy('chapters.name');
             }
 
-        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status, 'checkBox4Status' => $checkBox4Status];
+        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status, 'checkBox3Status' => $checkBox3Status, 'checkBox4Status' => $checkBox4Status];
     }
 
     /*/ Zapped Chapter List Base Query /*/
@@ -172,11 +181,14 @@ class BaseChapterController extends Controller
         // Load Report Reviewer Coordinator Dropdown List
         $pcDetails = $this->userController->loadPrimaryList($chRegId, $chConfId);
 
+        // Load Report Reviewer Coordinator Dropdown List
+        $rrDetails = $this->userController->loadReviewerList($chRegId, $chConfId);
+
         return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcDetails' => $pcDetails, 'submitted' => $submitted,
+            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcDetails' => $pcDetails, 'submitted' => $submitted, 'rrDetails' => $rrDetails,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY,
             'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_conf_desc' => $cc_conf_desc, 'cc_conf_name' => $cc_conf_name
