@@ -24,7 +24,7 @@
         {{ $pdfData['pres_city'] }},  {{ $pdfData['pres_state'] }}  {{ $pdfData['pres_zip'] }}</p>
     <br>
     <p>Dear {{ $pdfData['pres_fname'] }}:</p>
-    <p>As your chapter has previously been made aware, your Re-Registration renewal date was {{ $pdfData['month'] }} {{ $pdfData['year'] }} and if not received in a timely manner the chapter would be put on
+    <p>As your chapter has previously been made aware, your Re-Registration renewal date was {{ $pdfData['month'] }} and if not received in a timely manner the chapter would be put on
         probation.  Any chapter that is on probation is at risk for having their MOMS Club affiliation revoked and not being covered by our nonprofit status. </p>
     <p>Chapters on probation may not attend multi-chapter events, such as luncheons or training sessions, or participate in the Board/Member on-line discussion groups.  In
         addition, the International MOMS Club may not direct any inquiries to your chapter from the MOMSClub.org website, and if your chapter has a site linked to MOMSClub.org

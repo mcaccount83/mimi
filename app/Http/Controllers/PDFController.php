@@ -31,14 +31,15 @@ use Illuminate\Support\Facades\Mail;
 class PDFController extends Controller
 {
     protected $userController;
-
+    protected $baseChapterController;
     protected $googleController;
 
-    public function __construct(UserController $userController, GoogleController $googleController)
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, GoogleController $googleController)
     {
         $this->middleware('auth')->except('logout');
         $this->userController = $userController;
         $this->googleController = $googleController;
+        $this->baseChapterController = $baseChapterController;
     }
 
     public $pdfData = [];
@@ -61,75 +62,79 @@ class PDFController extends Controller
         return $accessToken;
     }
 
+    /*/ Base Chapter Controller /*/
+    //  $this->baseChapterController->getChapterDetails($chId)
+
+
     /**
      * Active Chapter Details Base Query
      */
-    public function getChapterDetails($id)
-    {
-        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])->find($id);
-        $chId = $chDetails->id;
-        $chIsActive = $chDetails->is_active;
-        $stateShortName = $chDetails->state->state_short_name;
-        $regionLongName = $chDetails->region->long_name;
-        $conferenceDescription = $chDetails->conference->conference_description;
-        $chConfId = $chDetails->conference_id;
-        $chRegId = $chDetails->region_id;
-        $chPcId = $chDetails->primary_coordinator_id;
+    // public function getChapterDetails($id)
+    // {
+    //     $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])->find($id);
+    //     $chId = $chDetails->id;
+    //     $chIsActive = $chDetails->is_active;
+    //     $stateShortName = $chDetails->state->state_short_name;
+    //     $regionLongName = $chDetails->region->long_name;
+    //     $conferenceDescription = $chDetails->conference->conference_description;
+    //     $chConfId = $chDetails->conference_id;
+    //     $chRegId = $chDetails->region_id;
+    //     $chPcId = $chDetails->primary_coordinator_id;
 
-        $startMonthName = $chDetails->startMonth->month_long_name;
-        $chapterStatus = $chDetails->status->chapter_status;
-        $websiteLink = $chDetails->webLink->link_status ?? null;
+    //     $startMonthName = $chDetails->startMonth->month_long_name;
+    //     $chapterStatus = $chDetails->status->chapter_status;
+    //     $websiteLink = $chDetails->webLink->link_status ?? null;
 
-        $chDocuments = $chDetails->documents;
-        $submitted = $chDetails->documents->financial_report_received ?? null;
-        $reviewComplete = $chDetails->documents->review_complete ?? null;
-        $chFinancialReport = $chDetails->financialReport;
+    //     $chDocuments = $chDetails->documents;
+    //     $submitted = $chDetails->documents->financial_report_received ?? null;
+    //     $reviewComplete = $chDetails->documents->review_complete ?? null;
+    //     $chFinancialReport = $chDetails->financialReport;
 
-        $allStatuses = Status::all();  // Full List for Dropdown Menu
-        $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
-        $allWebLinks = Website::all();  // Full List for Dropdown Menu
-        $allStates = State::all();  // Full List for Dropdown Menu
+    //     $allStatuses = Status::all();  // Full List for Dropdown Menu
+    //     $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
+    //     $allWebLinks = Website::all();  // Full List for Dropdown Menu
+    //     $allStates = State::all();  // Full List for Dropdown Menu
 
-        $boards = $chDetails->boards()->with('stateName')->get();
-        $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+    //     $boards = $chDetails->boards()->with('stateName')->get();
+    //     $bdDetails = $boards->groupBy('board_position_id');
+    //     $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
 
-        // Fetch board details or fallback to default
-        $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
+    //     // Fetch board details or fallback to default
+    //     $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
 
-        // Load Board and Coordinators for Sending Email
-        $emailData = $this->userController->loadEmailDetails($chId);
-        $emailListChap = $emailData['emailListChap'];
-        $emailListCoord = $emailData['emailListCoord'];
+    //     // Load Board and Coordinators for Sending Email
+    //     $emailData = $this->userController->loadEmailDetails($chId);
+    //     $emailListChap = $emailData['emailListChap'];
+    //     $emailListCoord = $emailData['emailListCoord'];
 
-        // Load Conference Coordinators for Sending Email
-        $emailData = $this->userController->loadConferenceCoord($chPcId);
-        $emailCC = $emailData['cc_email'];
-        $cc_fname = $emailData['cc_fname'];
-        $cc_lname = $emailData['cc_lname'];
-        $cc_pos = $emailData['cc_pos'];
-        $cc_conf_name = $emailData['cc_conf_name'];
-        $cc_conf_desc = $emailData['cc_conf_desc'];
+    //     // Load Conference Coordinators for Sending Email
+    //     $emailData = $this->userController->loadConferenceCoord($chPcId);
+    //     $emailCC = $emailData['cc_email'];
+    //     $cc_fname = $emailData['cc_fname'];
+    //     $cc_lname = $emailData['cc_lname'];
+    //     $cc_pos = $emailData['cc_pos'];
+    //     $cc_conf_name = $emailData['cc_conf_name'];
+    //     $cc_conf_desc = $emailData['cc_conf_desc'];
 
-        // //Primary Coordinator Notification//
-        $pcDetails = Coordinators::find($chPcId);
-        $emailPC = $pcDetails->email;
-        $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
+    //     // //Primary Coordinator Notification//
+    //     $pcDetails = Coordinators::find($chPcId);
+    //     $emailPC = $pcDetails->email;
+    //     $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
 
-        // Load Report Reviewer Coordinator Dropdown List
-        $pcDetails = $this->userController->loadPrimaryList($chRegId, $chConfId);
+    //     // Load Report Reviewer Coordinator Dropdown List
+    //     $pcDetails = $this->userController->loadPrimaryList($chRegId, $chConfId);
 
-        return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
-            'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
-            'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
-            'PresDetails' => $PresDetails,
-            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcDetails' => $pcDetails, 'submitted' => $submitted,
-            'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
-            'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName,
-            'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_conf_desc' => $cc_conf_desc, 'cc_conf_name' => $cc_conf_name
-        ];
+    //     return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+    //         'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
+    //         'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
+    //         'PresDetails' => $PresDetails,
+    //         'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcDetails' => $pcDetails, 'submitted' => $submitted,
+    //         'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
+    //         'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName,
+    //         'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_conf_desc' => $cc_conf_desc, 'cc_conf_name' => $cc_conf_name
+    //     ];
 
-    }
+    // }
 
     /**
      * Save & Send Fianncial Reprot
@@ -174,7 +179,8 @@ class PDFController extends Controller
         $userName = $user->first_name.' '.$user->last_name;
         $userEmail = $user->email;
 
-        $baseQuery = $this->getChapterDetails($chapterId);
+        // $baseQuery = $this->getChapterDetails($chapterId);
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
         $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
@@ -419,7 +425,7 @@ class PDFController extends Controller
         $pdf->save($pdfPath);
 
         if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)) {
-            $baseQuery = $this->getChapterDetails($chapterId);
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
             $chDetails = $baseQuery['chDetails'];
             $chDocuments = $baseQuery['chDocuments'];
 
@@ -435,7 +441,7 @@ class PDFController extends Controller
      */
     public function generateGoodStanding($chapterId, $streamResponse = true)
     {
-        $baseQuery = $this->getChapterDetails($chapterId);
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
         $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
@@ -480,187 +486,6 @@ class PDFController extends Controller
             'filename' => $filename,
         ];
     }
-
-    // /**
-    //  * Save & Send Disband Letter
-    //  */
-    // public function saveDisbandLetter($chapterId, $letterType): JsonResponse
-    // {
-    //     // $chapterId = $request->chapterId;
-    //     // $letterType = $request->letterType;
-    //     $disbandDrive = GoogleDrive::value('disband_letter');
-    //     $sharedDriveId = $disbandDrive;
-
-    //     switch ($letterType) {
-    //         case 'general':
-    //             $type = 'general';
-    //             break;
-    //         case 'did_not_start':
-    //             $type = 'did_not_start';
-    //             break;
-    //         case 'no_report':
-    //             $type = 'no_report';
-    //             break;
-    //         case 'no_payment':
-    //             $type = 'no_payment';
-    //             break;
-    //         case 'no_communication':
-    //             $type = 'no_communication';
-    //             break;
-    //         default:
-    //             return response()->json(['message' => 'Invalid letter type selected'], 400);
-    //     }
-
-    //     $result = $this->generateDisbandLetter($chapterId, $type);
-    //     $pdf = $result['pdf'];
-    //     $filename = $result['filename'];
-
-    //     $pdfPath = storage_path('app/pdf_reports/'.$filename);
-    //     $pdf->save($pdfPath);
-
-    //     if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)) {
-    //         $baseQuery = $this->getChapterDetails($chapterId);
-    //         $chDetails = $baseQuery['chDetails'];
-    //         $chDocuments = $baseQuery['chDocuments'];
-    //         $stateShortName = $baseQuery['stateShortName'];
-
-    //         $chDocuments->disband_letter_path = $pdfFileId;
-    //         $chDocuments->save();
-
-    //         $emailListChap = $baseQuery['emailListChap'];
-    //         $emailListCoord = $baseQuery['emailListCoord'];
-    //         $emailPC = $baseQuery['emailPC'];
-    //         $emailCC = $baseQuery['emailCC'];
-    //         $cc_fname = $baseQuery['cc_fname'];
-    //         $cc_lname = $baseQuery['cc_lname'];
-    //         $cc_pos = $baseQuery['cc_pos'];
-    //         $cc_conf_name = $baseQuery['cc_conf_name'];
-    //         $cc_conf_desc = $baseQuery['cc_conf_desc'];
-
-    //         $mailData = [
-    //             'chapterName' => $chDetails->name,
-    //             'chapterEmail' => $chDetails->email,
-    //             'chapterState' => $stateShortName,
-    //             'cc_fname' => $cc_fname,
-    //             'cc_lname' => $cc_lname,
-    //             'cc_pos' => $cc_pos,
-    //             'cc_conf_name' => $cc_conf_name,
-    //             'cc_conf_desc' => $cc_conf_desc,
-    //             'cc_email' => $emailCC,
-    //         ];
-
-    //         switch ($letterType) {
-    //             case 'general':
-    //                 Mail::to($emailListChap)
-    //                     ->cc($emailListCoord)
-    //                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
-    //                 break;
-    //             case 'did_not_start':
-    //                 Mail::to($emailListChap)
-    //                     ->cc($emailListCoord)
-    //                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
-    //                 break;
-    //             case 'no_report':
-    //                 Mail::to($emailListChap)
-    //                     ->cc($emailListCoord)
-    //                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
-    //                 break;
-    //             case 'no_payment':
-    //                 Mail::to($emailListChap)
-    //                     ->cc($emailListCoord)
-    //                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
-    //                 break;
-    //             case 'no_communication':
-    //                 Mail::to($emailListChap)
-    //                     ->cc($emailListCoord)
-    //                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
-    //                 break;
-    //             default:
-    //                 return response()->json(['message' => 'Invalid letter type selected'], 400);
-    //         }
-
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => 'Letter emailed successfully.',
-    //             'pdf_path' => $pdfPath,
-    //             'google_drive_id' => $pdfFileId,
-    //         ]);
-    //     }
-
-    //     return response()->json([
-    //         'status' => 'error',
-    //         'message' => 'Failed to successfully generate letter.',
-    //     ], 500);
-    // }
-
-
-    // /**
-    //  * Save & Send Disband Letter
-    //  */
-    // public function generateDisbandLetter($chapterId, $type)
-    // {
-    //     $baseQuery = $this->getChapterDetails($chapterId);
-    //     $chDetails = $baseQuery['chDetails'];
-    //     $chId = $baseQuery['chId'];
-    //     $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
-    //     $stateShortName = $baseQuery['stateShortName'];
-    //     $reRegMonth = $chDetails->start_month_id;
-    //     $reRegYear = $chDetails->next_renewal_year;
-    //     $PresDetails = $baseQuery['PresDetails'];
-    //     $cc_fname = $baseQuery['cc_fname'];
-    //     $cc_lname = $baseQuery['cc_lname'];
-    //     $cc_pos = $baseQuery['cc_pos'];
-    //     $cc_conf_name = $baseQuery['cc_conf_name'];
-    //     $cc_conf_desc = $baseQuery['cc_conf_desc'];
-
-    //     $date = Carbon::now();
-    //     $dateFormatted = $date->format('m-d-Y');
-    //     $nextMonth = $date->copy()->addMonth()->endOfMonth();
-    //     $nextMonthFormatted = $nextMonth->format('m-d-Y');
-
-    //     $pdfData = [
-    //         'ch_name' => $sanitizedChapterName,
-    //         'today' => $dateFormatted,
-    //         'nextMonth' => $nextMonthFormatted,
-    //         'chapter_name' => $chDetails->name,
-    //         'state' => $stateShortName,
-    //         'pres_fname' => $PresDetails->first_name,
-    //         'pres_lname' => $PresDetails->last_name,
-    //         'pres_addr' => $PresDetails->street_address,
-    //         'pres_city' => $PresDetails->city,
-    //         'pres_state' => $PresDetails->state,
-    //         'pres_zip' => $PresDetails->zip,
-    //         're_reg_month' => $reRegMonth,
-    //         're_reg_year' => $reRegYear,
-    //         'cc_fname' => $cc_fname,
-    //         'cc_lname' => $cc_lname,
-    //         'cc_pos' => $cc_pos,
-    //         'conf_name' => $cc_conf_name,
-    //         'conf_desc' => $cc_conf_desc,
-    //     ];
-
-    //     $type = strtolower($type);
-    //     $view = match ($type) {
-    //         'general' => 'pdf.disbandgeneral',
-    //         'did_not_start' => 'pdf.disbandnotstarted',
-    //         'no_report' => 'pdf.disbandreport',
-    //         'no_payment' => 'pdf.disbandpayment',
-    //         'no_communication' => 'pdf.disbandcommunication',
-    //     };
-
-    //     $pdf = Pdf::loadView($view, compact('pdfData'));
-
-    //     $filename = $pdfData['state'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
-
-    //     // if ($request->has('stream')) {
-    //     //     return $pdf->stream($filename, ['Attachment' => 0]);
-    //     // }
-
-    //     return [
-    //         'pdf' => $pdf,
-    //         'filename' => $filename,
-    //     ];
-    // }
 
     /**
      * Save & Send Disband Letter
@@ -919,7 +744,7 @@ class PDFController extends Controller
     {
         $chapterId = $request->chapterId;
         $letterType = $request->letterType;
-        $probationDrive = DB::table('google_drive')->value('probation_letter');
+        $probationDrive = GoogleDrive::value('probation_letter');
         $sharedDriveId = $probationDrive;
 
         switch ($letterType) {
@@ -950,36 +775,71 @@ class PDFController extends Controller
         $pdf->save($pdfPath);
 
         if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)) {
-            $chDetails = Chapters::with(['state', 'documents'])->find($chapterId);
-            $document = $chDetails->documents;
-            $stateShortName = $chDetails->state->state_short_name;
+
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+            $chDetails = $baseQuery['chDetails'];
+            $chDocuments = $baseQuery['chDocuments'];
+            $stateShortName = $baseQuery['stateShortName'];
 
             if ($letterType === 'probation_release') {
-                $document->probation_release_path = $pdfFileId;
+                $chDocuments->probation_release_path = $pdfFileId;
             } else {
-                $document->probation_path = $pdfFileId;
+                $chDocuments->probation_path = $pdfFileId;
             }
 
-            $document->save();
+            $chDocuments->save();
 
-            $emailData = $this->userController->loadEmailDetails($chapterId, true);
-            $emailListChap = $emailData['emailListChap'];
-            $emailListCoord = $emailData['emailListCoord'];
+            // $chDetails = Chapters::with(['state', 'documents'])->find($chapterId);
+            // $document = $chDetails->documents;
+            // $stateShortName = $chDetails->state->state_short_name;
 
-            $ccData = $this->userController->loadConferenceCoord(
-                $chDetails->primary_coordinator_id
-            );
+            // if ($letterType === 'probation_release') {
+            //     $document->probation_release_path = $pdfFileId;
+            // } else {
+            //     $document->probation_path = $pdfFileId;
+            // }
+
+            // $document->save();
+
+            // $emailData = $this->userController->loadEmailDetails($chapterId, true);
+            // $emailListChap = $emailData['emailListChap'];
+            // $emailListCoord = $emailData['emailListCoord'];
+
+            // $ccData = $this->userController->loadConferenceCoord(
+            //     $chDetails->primary_coordinator_id
+            // );
+
+            // $mailData = [
+            //     'chapterName' => $chDetails->name,
+            //     'chapterEmail' => $chDetails->email,
+            //     'chapterState' => $stateShortName,
+            //     'cc_fname' => $ccData['cc_fname'],
+            //     'cc_lname' => $ccData['cc_lname'],
+            //     'cc_pos' => $ccData['cc_pos'],
+            //     'cc_conf_name' => $ccData['cc_conf_name'],
+            //     'cc_conf_desc' => $ccData['cc_conf_desc'],
+            //     'cc_email' => $ccData['cc_email'],
+            // ];
+
+            $emailListChap = $baseQuery['emailListChap'];
+            $emailListCoord = $baseQuery['emailListCoord'];
+            $cc_email = $baseQuery['emailCC'];
+            $cc_fname = $baseQuery['cc_fname'];
+            $cc_lname = $baseQuery['cc_lname'];
+            $cc_pos = $baseQuery['cc_pos'];
+            $cc_conf_name = $baseQuery['cc_conf_name'];
+            $cc_conf_desc = $baseQuery['cc_conf_desc'];
 
             $mailData = [
                 'chapterName' => $chDetails->name,
                 'chapterEmail' => $chDetails->email,
                 'chapterState' => $stateShortName,
-                'cc_fname' => $ccData['cc_fname'],
-                'cc_lname' => $ccData['cc_lname'],
-                'cc_pos' => $ccData['cc_pos'],
-                'cc_conf_name' => $ccData['cc_conf_name'],
-                'cc_conf_desc' => $ccData['cc_conf_desc'],
-                'cc_email' => $ccData['cc_email'],
+                'cc_email' => $cc_email,
+                'cc_fname' => $cc_fname,
+                'cc_lname' => $cc_lname,
+                'cc_pos' => $cc_pos,
+                'cc_conf_name' => $cc_conf_name,
+                'cc_conf_desc' => $cc_conf_desc,
             ];
 
             switch ($letterType) {
@@ -1031,36 +891,73 @@ class PDFController extends Controller
      */
     public function generateProbationLetter($chapterId, $type)
     {
-        $chDetails = Chapters::with(['state', 'boards'])->find($chapterId);
-        $stateShortName = $chDetails->state->state_short_name;
-
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $chId = $baseQuery['chId'];
         $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+        $stateShortName = $baseQuery['stateShortName'];
+        $startMonthName = $baseQuery['startMonthName'];
+        $PresDetails = $baseQuery['PresDetails'];
+        $cc_fname = $baseQuery['cc_fname'];
+        $cc_lname = $baseQuery['cc_lname'];
+        $cc_pos = $baseQuery['cc_pos'];
+        $cc_conf_name = $baseQuery['cc_conf_name'];
+        $cc_conf_desc = $baseQuery['cc_conf_desc'];
 
-        $chConfId = $chDetails->conference;
-        $chPcId = $chDetails->primary_coordinator_id;
-
-        $ccData = $this->userController->loadConferenceCoord($chPcId);
-
-        $boards = $chDetails->boards()->get();
-        $borDetails = $boards->groupBy('board_position_id');
-        $presDetails = $borDetails->get(1)->first(); // President
+        $date = Carbon::now();
+        $dateFormatted = $date->format('m-d-Y');
+        $nextMonth = $date->copy()->addMonth()->endOfMonth();
+        $nextMonthFormatted = $nextMonth->format('m-d-Y');
 
         $pdfData = [
             'chapter_name' => $chDetails->name,
             'state' => $stateShortName,
-            'pres_fname' => $presDetails->first_name,
-            'pres_lname' => $presDetails->last_name,
-            'pres_addr' => $presDetails->street_address,
-            'pres_city' => $presDetails->city,
-            'pres_state' => $presDetails->state,
-            'pres_zip' => $presDetails->zip,
-            'cc_fname' => $ccData['cc_fname'],
-            'cc_lname' => $ccData['cc_lname'],
-            'cc_pos' => $ccData['cc_pos'],
-            'cc_conf_name' => $ccData['cc_conf_name'],
-            'cc_conf_desc' => $ccData['cc_conf_desc'],
+            'month' => $startMonthName,
+            'pres_fname' => $PresDetails->first_name,
+            'pres_lname' => $PresDetails->last_name,
+            'pres_addr' => $PresDetails->street_address,
+            'pres_city' => $PresDetails->city,
+            'pres_state' => $PresDetails->state,
+            'pres_zip' => $PresDetails->zip,
+            'cc_fname' => $cc_fname,
+            'cc_lname' => $cc_lname,
+            'cc_pos' => $cc_pos,
+            'cc_conf_name' => $cc_conf_name,
+            'cc_conf_desc' => $cc_conf_desc,
             'ch_name' => $sanitizedChapterName,
+            'nextMonthDate' => $nextMonthFormatted,
         ];
+
+        // $chDetails = Chapters::with(['state', 'boards'])->find($chapterId);
+        // $stateShortName = $chDetails->state->state_short_name;
+
+        // $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+
+        // $chConfId = $chDetails->conference;
+        // $chPcId = $chDetails->primary_coordinator_id;
+
+        // $ccData = $this->userController->loadConferenceCoord($chPcId);
+
+        // $boards = $chDetails->boards()->get();
+        // $borDetails = $boards->groupBy('board_position_id');
+        // $presDetails = $borDetails->get(1)->first(); // President
+
+        // $pdfData = [
+        //     'chapter_name' => $chDetails->name,
+        //     'state' => $stateShortName,
+        //     'pres_fname' => $presDetails->first_name,
+        //     'pres_lname' => $presDetails->last_name,
+        //     'pres_addr' => $presDetails->street_address,
+        //     'pres_city' => $presDetails->city,
+        //     'pres_state' => $presDetails->state,
+        //     'pres_zip' => $presDetails->zip,
+        //     'cc_fname' => $ccData['cc_fname'],
+        //     'cc_lname' => $ccData['cc_lname'],
+        //     'cc_pos' => $ccData['cc_pos'],
+        //     'cc_conf_name' => $ccData['cc_conf_name'],
+        //     'cc_conf_desc' => $ccData['cc_conf_desc'],
+        //     'ch_name' => $sanitizedChapterName,
+        // ];
 
         $type = strtolower($type);
         $view = match ($type) {
