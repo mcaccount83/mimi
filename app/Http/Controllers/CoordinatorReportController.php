@@ -2,94 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\CoordinatorRetireAdmin;
-use App\Models\CoordinatorPosition;
-use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\Chapters;
 use App\Models\User;
-use App\Models\State;
-use App\Models\Region;
-use App\Models\Conference;
-use App\Models\Month;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class CoordinatorReportController extends Controller
 {
     protected $userController;
+    protected $baseCoordinatorController;
 
-    public function __construct(UserController $userController)
+    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
+        $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
-    /**
-     *  Coordinator List Base Query
-     */
-    public function getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
-    {
-        $conditions = getPositionConditions($userPositionid, $userSecPositionid);
-        if ($conditions['coordinatorCondition']) {
-            $coordinatorData = $this->userController->loadReportingTree($userCdId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
-        $baseQuery = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth'])
-            // ->where('id', '!=', $userCdId)
-            ->where('is_active', 1);
-
-        if ($conditions['founderCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $userConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $userRegId);
-        } else {
-            $baseQuery->whereIn('report_id', $inQryArr);
-        }
-
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery->where('report_id', '=', $userCdId);
-        } else {
-            $checkBoxStatus = '';
-        }
-
-        $isBirthdayPage = request()->route()->getName() === 'coordreports.coordrptbirthdays';
-        $isUtilizationPage = request()->route()->getName() === 'coordreports.coordrptvolutilization';
-        if ($isUtilizationPage){
-            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
-                ->whereColumn('conference.id', 'coordinators.conference_id')
-                ->limit(1)
-            )
-            ->orderBy(
-                Region::select(DB::raw("CASE WHEN short_name = 'None' THEN '' ELSE short_name END"))
-                        ->whereColumn('region.id', 'coordinators.region_id')
-                        ->limit(1)
-            )
-            ->orderBy('coordinator_start_date');
-        } elseif ($isBirthdayPage) {
-            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
-            ->whereColumn('conference.id', 'coordinators.conference_id')
-            ->limit(1)
-            )
-            ->orderBy('birthday_month_id')
-                ->orderBy('birthday_day');
-        } else{
-            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
-            ->whereColumn('conference.id', 'coordinators.conference_id')
-            ->limit(1)
-            )
-            ->orderBy('coordinator_start_date');        }
-
-        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'inQryArr' => $inQryArr];
-
-    }
+    /*/ Base Coordinator Controller /*/
+    //  $this->baseCoordinatorController->getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
+    //  $this->baseCoordinatorController->getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
+    //  $this->baseCoordinatorController->getCoordinatorDetails($id)
 
     /**
      * View the Volunteer Utilization list
@@ -106,7 +42,7 @@ class CoordinatorReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $coordinatorList = $baseQuery['query']->get();
         $inQryArr = $baseQuery['inQryArr'];
 
@@ -172,7 +108,7 @@ class CoordinatorReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $coordinatorList = $baseQuery['query']->get();
 
         $data = ['coordinatorList' => $coordinatorList];
@@ -195,7 +131,7 @@ class CoordinatorReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $coordinatorList = $baseQuery['query']->get();
 
         $data = ['coordinatorList' => $coordinatorList];

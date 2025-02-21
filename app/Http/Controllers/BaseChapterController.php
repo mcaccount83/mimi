@@ -20,7 +20,7 @@ class BaseChapterController extends Controller
         $this->userController = $userController;
     }
 
-/*/ Active Chapter List Base Query /*/
+    /*/ Active Chapter List Base Query /*/
     public function getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     {
         $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
@@ -79,7 +79,7 @@ class BaseChapterController extends Controller
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
     }
 
-/*/ Zapped Chapter List Base Query /*/
+    /*/ Zapped Chapter List Base Query /*/
     public function getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     {
         $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
@@ -104,7 +104,7 @@ class BaseChapterController extends Controller
         return ['query' => $baseQuery];
     }
 
-/*/ Active Chapter Details Base Query /*/
+    /*/ Active Chapter Details Base Query /*/
     public function getChapterDetails($chId)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])->find($chId);
