@@ -691,7 +691,9 @@ class ChapterController extends Controller
                 'last_updated_date' => $lastupdatedDate,
             ]);
 
-            ForumCategorySubscription::where('user_id', $userIds)->delete();
+            if ($userRelatedChapterList->isNotEmpty()) {
+                ForumCategorySubscription::whereIn('user_id', $userIds)->delete();
+            }
 
              //Update Chapter MailData//
              $baseQuery = $this->getChapterDetails($chapterid);
