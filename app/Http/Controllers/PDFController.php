@@ -781,7 +781,7 @@ class PDFController extends Controller
     {
         $chDetails = Chapters::with(['state', 'boards', 'startMonth'])->find($chapterId);
         $stateShortName = $chDetails->state->state_short_name;
-        $startMonth = $chDetails->startMonth;
+        $startMonth = $chDetails->startMonth->month_long_name;
 
         $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
 
