@@ -16,52 +16,19 @@ use Illuminate\View\View;
 class ChapterReportController extends Controller
 {
     protected $userController;
+    protected $baseChapterController;
 
-    public function __construct(UserController $userController)
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
+        $this->baseChapterController = $baseChapterController;
     }
 
-    /**
-     * Chpater Reports Base Query
-     */
-    public function getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    {
-        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
-
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'status', 'startMonth', 'documents', 'primaryCoordinator'])
-            ->where('is_active', 1);
-
-        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } else {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        }
-
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery->where('primary_coordinator_id', '=', $cdId);
-        } else {
-            $checkBoxStatus = '';
-        }
-
-        if (isset($_GET['check4']) && $_GET['check4'] == 'yes') {
-            $checkBox4Status = 'checked';
-            $baseQuery->where('status_id', '!=', '1');
-        } else {
-            $checkBox4Status = '';
-        }
-
-        $baseQuery->orderBy(State::select('state_short_name')
-            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name');
-
-        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox4Status' => $checkBox4Status];
-
-    }
+    /*/ Base Chapter Controller /*/
+    //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    //  $this->baseChapterController->getChapterDetails($chId)
 
     /**
      * Chpater Status Report
@@ -78,7 +45,7 @@ class ChapterReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox4Status = $baseQuery['checkBox4Status'];
@@ -86,60 +53,6 @@ class ChapterReportController extends Controller
         $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox4Status' => $checkBox4Status,'corId' => $cdId];
 
         return view('chapreports.chaprptchapterstatus')->with($data);
-    }
-
-    /**
-     * View the Chapter Status Details
-     */
-    public function showChapterStatusView(Request $request, $id): View
-    {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $request->session()->put('positionid', $positionId);
-        $request->session()->put('secpositionid', $secPositionId);
-
-        $chapterList = DB::table('chapters as ch')
-            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone',
-                'bd.state as bd_state')
-            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->get();
-
-        $stateArr = DB::table('state')
-            ->select('state.*')
-            ->orderBy('id')
-            ->get();
-        $countryArr = DB::table('country')
-            ->select('country.*')
-            ->orderBy('id')
-            ->get();
-        $regionList = DB::table('region')
-            ->select('id', 'long_name')
-            ->where('conference_id', '=', '5')
-            ->orderBy('long_name')
-            ->get();
-
-        $primaryCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-            // ->where('cd.conference_id', '=', '5')
-            ->where('cd.position_id', '<=', '7')
-            ->where('cd.position_id', '>=', '1')
-            ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name')
-            ->get();
-
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG',
-            '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
-        $data = ['chapterList' => $chapterList, 'regionList' => $regionList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr,
-            'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
-
-        return view('chapters.chapterview')->with($data);
     }
 
     /**
@@ -157,7 +70,7 @@ class ChapterReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
@@ -189,38 +102,6 @@ class ChapterReportController extends Controller
         $data = ['chapterList' => $chapterList, 'corId' => $cdId];
 
         return view('international.inteinstatus')->with($data);
-    }
-
-    /**
-     * View EIN Status Details
-     */
-    public function showRptEINstatusView(Request $request, $id): View
-    {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-
-        $chapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.name', 'ch.ein', 'ch.ein_notes',
-                'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->where('ch.id', $id)
-            ->get();
-
-        $maxDateLimit = Carbon::now()->format('Y-m-d');
-        $minDateLimit = Carbon::now()->subYear()->format('Y-m-d');
-        // $minDateLimit = '';
-
-        $data = ['chapterList' => $chapterList, 'maxDateLimit' => $maxDateLimit, 'minDateLimit' => $minDateLimit];
-
-        return view('chapreports.chaprpteinstatusview')->with($data);
     }
 
     /**
@@ -281,7 +162,7 @@ class ChapterReportController extends Controller
         $now = Carbon::now();
         $oneYearAgo = $now->copy()->subYear();
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']
             ->where(function ($query) use ($oneYearAgo) {
                 $query->where(function ($q) use ($oneYearAgo) {
@@ -315,7 +196,7 @@ class ChapterReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']
             ->where('members_paid_for', '>=', '75')
             ->get();
@@ -341,7 +222,7 @@ class ChapterReportController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']
             ->where('status_id', '!=', 1)
             ->get();
@@ -368,7 +249,7 @@ class ChapterReportController extends Controller
             $cdPositionid = $cdDetails->position_id;
             $cdSecPositionid = $cdDetails->sec_position_id;
 
-            $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+            $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
             $chapterList = $baseQuery['query']->get();
             $checkBoxStatus = $baseQuery['checkBoxStatus'];
 

@@ -51,6 +51,13 @@ class BaseChapterController extends Controller
 
         $checkBox3Status = '';
 
+        if (isset($_GET['check4']) && $_GET['check4'] == 'yes') {
+            $checkBox4Status = 'checked';
+            $baseQuery->where('status_id', '!=', '1');
+        } else {
+            $checkBox4Status = '';
+        }
+
         $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';  // Check if we're on the re-registration page
         if ($isReregPage) {
             if (isset($_GET['check3']) && $_GET['check3'] == 'yes') {
@@ -76,7 +83,7 @@ class BaseChapterController extends Controller
                     ->orderBy('chapters.name');
             }
 
-        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
+        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status, 'checkBox4Status' => $checkBox4Status];
     }
 
     /*/ Zapped Chapter List Base Query /*/
