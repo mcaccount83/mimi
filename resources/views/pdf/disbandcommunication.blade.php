@@ -69,7 +69,7 @@
     <br>
     <p>{{ $pdfData['cc_fname'] }} {{ $pdfData['cc_lname'] }}<br>
     {{ $pdfData['cc_pos'] }}<br>
-    {{ $pdfData['conf_name'] }}, {{ $pdfData['conf_desc'] }}<br>
+    {{ $pdfData['cc_conf_name'] }}, {{ $pdfData['cc_conf_desc'] }}<br>
     International MOMS Club<sub>&reg;</sub></p>
 </div>
 </body>

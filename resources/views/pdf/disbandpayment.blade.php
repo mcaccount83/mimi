@@ -27,7 +27,7 @@
     <p>Dear {{ $pdfData['pres_fname'] }}:</p>
     <p>This is to inform you that the MOMS Club of {{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }} has disbanded.  If you believe this information is incorrect,
         then please contact me immediately.</p>
-    <p>Your chapters Annual Re-Registration dues to International MOMS Club were due to be paid in {{ $pdfData['month'] }} {{ $pdfData['year'] }}.  Payment of these dues are
+    <p>Your chapters Annual Re-Registration dues to International MOMS Club were due to be paid in {{ $pdfData['startMonth'] }}.  Payment of these dues are
         required to remain a chapter of the International MOMS Club.  We have made multiple attempts to contact the chapter in reference to the payment, and have been unsuccessful
         in getting a response. As a result, your chapter is disbanded, and its affiliation with the International MOMS Club is terminated and all benefits of its association with
         the International MOMS Club are revoked.  </p>
@@ -71,7 +71,7 @@
     <br>
     <p>{{ $pdfData['cc_fname'] }} {{ $pdfData['cc_lname'] }}<br>
     {{ $pdfData['cc_pos'] }}<br>
-    {{ $pdfData['conf_name'] }}, {{ $pdfData['conf_desc'] }}<br>
+    {{ $pdfData['cc_conf_name'] }}, {{ $pdfData['cc_conf_desc'] }}<br>
     International MOMS Club<sub>&reg;</sub></p>
 </div>
 </body>

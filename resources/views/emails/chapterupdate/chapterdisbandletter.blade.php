@@ -7,6 +7,6 @@
 <p><strong>MCL</strong>,<br>
     {{ $mailData['cc_fname'] }} {{ $mailData['cc_lname'] }}<br>
     {{ $mailData['cc_pos'] }}<br>
-    Conference {{ $mailData['cc_conf'] }}, {{ $mailData['cc_conf_desc'] }}<br>
+    {{ $mailData['cc_conf_name'] }}, {{ $mailData['cc_conf_desc'] }}<br>
     International MOMS Club</p>
 @endcomponent

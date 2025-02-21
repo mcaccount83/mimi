@@ -719,6 +719,7 @@ class ChapterController extends Controller
             $cc_lname = $coordinatorData['cc_lname'];
             $cc_pos = $coordinatorData['cc_pos'];
             $cc_conf = $coordinatorData['cc_conf'];
+            $cc_conf_name = $coordinatorData['cc_conf_name'];
             $cc_conf_desc = $coordinatorData['cc_conf_desc'];
             $cc_email = $coordinatorData['cc_email'];
 
@@ -746,6 +747,7 @@ class ChapterController extends Controller
                 'cc_lname' => $cc_lname,
                 'cc_pos' => $cc_pos,
                 'cc_conf' => $cc_conf,
+                'cc_conf_name' => $cc_conf_name,
                 'cc_conf_desc' => $cc_conf_desc,
                 'cc_email' => $cc_email,
             ];
@@ -757,18 +759,7 @@ class ChapterController extends Controller
 
             //Standard Disbanding Letter Send to Board & Coordinators//
             if ($disbandLetter == 1) {
-                $pdfPath =  $this->pdfController->generateAndSaveDisbandLetter($chapterid);   // Generate and save the PDF
-                Mail::to($emailListChap)
-                    ->cc($emailListCoord)
-                    ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
-            }
-
-            //Standard Disbanding Letter Send to Board & Coordinators//
-            if ($disbandLetter == 1) {
-                $pdfPath =  $this->pdfController->saveDisbandLetter($chapterid, $letterType);   // Generate and save the PDF
-                // Mail::to($emailListChap)
-                //     ->cc($emailListCoord)
-                //     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+                $pdfPath =  $this->pdfController->saveDisbandLetter($chapterid, $letterType);   // Generate and Send the PDF
             }
 
             // Commit the transaction

@@ -134,7 +134,7 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-    public function saveFinancialReport($request, $chapterId)
+    public function saveFinancialReport(Request $request, $chapterId)
     {
         $eoyDrive = GoogleDrive::value('eoy_uploads');
         $sharedDriveId = $eoyDrive;
@@ -481,32 +481,214 @@ class PDFController extends Controller
         ];
     }
 
+    // /**
+    //  * Save & Send Disband Letter
+    //  */
+    // public function saveDisbandLetter($chapterId, $letterType): JsonResponse
+    // {
+    //     // $chapterId = $request->chapterId;
+    //     // $letterType = $request->letterType;
+    //     $disbandDrive = GoogleDrive::value('disband_letter');
+    //     $sharedDriveId = $disbandDrive;
+
+    //     switch ($letterType) {
+    //         case 'general':
+    //             $type = 'general';
+    //             break;
+    //         case 'did_not_start':
+    //             $type = 'did_not_start';
+    //             break;
+    //         case 'no_report':
+    //             $type = 'no_report';
+    //             break;
+    //         case 'no_payment':
+    //             $type = 'no_payment';
+    //             break;
+    //         case 'no_communication':
+    //             $type = 'no_communication';
+    //             break;
+    //         default:
+    //             return response()->json(['message' => 'Invalid letter type selected'], 400);
+    //     }
+
+    //     $result = $this->generateDisbandLetter($chapterId, $type);
+    //     $pdf = $result['pdf'];
+    //     $filename = $result['filename'];
+
+    //     $pdfPath = storage_path('app/pdf_reports/'.$filename);
+    //     $pdf->save($pdfPath);
+
+    //     if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)) {
+    //         $baseQuery = $this->getChapterDetails($chapterId);
+    //         $chDetails = $baseQuery['chDetails'];
+    //         $chDocuments = $baseQuery['chDocuments'];
+    //         $stateShortName = $baseQuery['stateShortName'];
+
+    //         $chDocuments->disband_letter_path = $pdfFileId;
+    //         $chDocuments->save();
+
+    //         $emailListChap = $baseQuery['emailListChap'];
+    //         $emailListCoord = $baseQuery['emailListCoord'];
+    //         $emailPC = $baseQuery['emailPC'];
+    //         $emailCC = $baseQuery['emailCC'];
+    //         $cc_fname = $baseQuery['cc_fname'];
+    //         $cc_lname = $baseQuery['cc_lname'];
+    //         $cc_pos = $baseQuery['cc_pos'];
+    //         $cc_conf_name = $baseQuery['cc_conf_name'];
+    //         $cc_conf_desc = $baseQuery['cc_conf_desc'];
+
+    //         $mailData = [
+    //             'chapterName' => $chDetails->name,
+    //             'chapterEmail' => $chDetails->email,
+    //             'chapterState' => $stateShortName,
+    //             'cc_fname' => $cc_fname,
+    //             'cc_lname' => $cc_lname,
+    //             'cc_pos' => $cc_pos,
+    //             'cc_conf_name' => $cc_conf_name,
+    //             'cc_conf_desc' => $cc_conf_desc,
+    //             'cc_email' => $emailCC,
+    //         ];
+
+    //         switch ($letterType) {
+    //             case 'general':
+    //                 Mail::to($emailListChap)
+    //                     ->cc($emailListCoord)
+    //                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+    //                 break;
+    //             case 'did_not_start':
+    //                 Mail::to($emailListChap)
+    //                     ->cc($emailListCoord)
+    //                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+    //                 break;
+    //             case 'no_report':
+    //                 Mail::to($emailListChap)
+    //                     ->cc($emailListCoord)
+    //                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+    //                 break;
+    //             case 'no_payment':
+    //                 Mail::to($emailListChap)
+    //                     ->cc($emailListCoord)
+    //                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+    //                 break;
+    //             case 'no_communication':
+    //                 Mail::to($emailListChap)
+    //                     ->cc($emailListCoord)
+    //                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+    //                 break;
+    //             default:
+    //                 return response()->json(['message' => 'Invalid letter type selected'], 400);
+    //         }
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'Letter emailed successfully.',
+    //             'pdf_path' => $pdfPath,
+    //             'google_drive_id' => $pdfFileId,
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'error',
+    //         'message' => 'Failed to successfully generate letter.',
+    //     ], 500);
+    // }
+
+
+    // /**
+    //  * Save & Send Disband Letter
+    //  */
+    // public function generateDisbandLetter($chapterId, $type)
+    // {
+    //     $baseQuery = $this->getChapterDetails($chapterId);
+    //     $chDetails = $baseQuery['chDetails'];
+    //     $chId = $baseQuery['chId'];
+    //     $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+    //     $stateShortName = $baseQuery['stateShortName'];
+    //     $reRegMonth = $chDetails->start_month_id;
+    //     $reRegYear = $chDetails->next_renewal_year;
+    //     $PresDetails = $baseQuery['PresDetails'];
+    //     $cc_fname = $baseQuery['cc_fname'];
+    //     $cc_lname = $baseQuery['cc_lname'];
+    //     $cc_pos = $baseQuery['cc_pos'];
+    //     $cc_conf_name = $baseQuery['cc_conf_name'];
+    //     $cc_conf_desc = $baseQuery['cc_conf_desc'];
+
+    //     $date = Carbon::now();
+    //     $dateFormatted = $date->format('m-d-Y');
+    //     $nextMonth = $date->copy()->addMonth()->endOfMonth();
+    //     $nextMonthFormatted = $nextMonth->format('m-d-Y');
+
+    //     $pdfData = [
+    //         'ch_name' => $sanitizedChapterName,
+    //         'today' => $dateFormatted,
+    //         'nextMonth' => $nextMonthFormatted,
+    //         'chapter_name' => $chDetails->name,
+    //         'state' => $stateShortName,
+    //         'pres_fname' => $PresDetails->first_name,
+    //         'pres_lname' => $PresDetails->last_name,
+    //         'pres_addr' => $PresDetails->street_address,
+    //         'pres_city' => $PresDetails->city,
+    //         'pres_state' => $PresDetails->state,
+    //         'pres_zip' => $PresDetails->zip,
+    //         're_reg_month' => $reRegMonth,
+    //         're_reg_year' => $reRegYear,
+    //         'cc_fname' => $cc_fname,
+    //         'cc_lname' => $cc_lname,
+    //         'cc_pos' => $cc_pos,
+    //         'conf_name' => $cc_conf_name,
+    //         'conf_desc' => $cc_conf_desc,
+    //     ];
+
+    //     $type = strtolower($type);
+    //     $view = match ($type) {
+    //         'general' => 'pdf.disbandgeneral',
+    //         'did_not_start' => 'pdf.disbandnotstarted',
+    //         'no_report' => 'pdf.disbandreport',
+    //         'no_payment' => 'pdf.disbandpayment',
+    //         'no_communication' => 'pdf.disbandcommunication',
+    //     };
+
+    //     $pdf = Pdf::loadView($view, compact('pdfData'));
+
+    //     $filename = $pdfData['state'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
+
+    //     // if ($request->has('stream')) {
+    //     //     return $pdf->stream($filename, ['Attachment' => 0]);
+    //     // }
+
+    //     return [
+    //         'pdf' => $pdf,
+    //         'filename' => $filename,
+    //     ];
+    // }
+
     /**
      * Save & Send Disband Letter
      */
-    public function saveDisbandLetter($chapterId, $letterType): JsonResponse
+    public function saveDisbandLetter($chapterId, $type): JsonResponse
     {
         // $chapterId = $request->chapterId;
         // $letterType = $request->letterType;
-        $disbandDrive = GoogleDrive::value('disband_letter');
+        $letterType = $type;
+        $disbandDrive = DB::table('google_drive')->value('disband_letter');
         $sharedDriveId = $disbandDrive;
 
         switch ($letterType) {
-            case 'general':
-                $type = 'general';
-                break;
-            case 'did_not_start':
-                $type = 'did_not_start';
-                break;
-            case 'no_report':
-                $type = 'no_report';
-                break;
-            case 'no_payment':
-                $type = 'no_payment';
-                break;
-            case 'no_communication':
-                $type = 'no_communication';
-                break;
+                    case 'general':
+                        $type = 'general';
+                        break;
+                    case 'did_not_start':
+                        $type = 'did_not_start';
+                        break;
+                    case 'no_report':
+                        $type = 'no_report';
+                        break;
+                    case 'no_payment':
+                        $type = 'no_payment';
+                        break;
+                    case 'no_communication':
+                        $type = 'no_communication';
+                        break;
             default:
                 return response()->json(['message' => 'Invalid letter type selected'], 400);
         }
@@ -519,34 +701,33 @@ class PDFController extends Controller
         $pdf->save($pdfPath);
 
         if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)) {
-            $baseQuery = $this->getChapterDetails($chapterId);
-            $chDetails = $baseQuery['chDetails'];
-            $chDocuments = $baseQuery['chDocuments'];
-            $stateShortName = $baseQuery['stateShortName'];
+            $chDetails = Chapters::with(['state', 'documents'])->find($chapterId);
+            $document = $chDetails->documents;
+            $stateShortName = $chDetails->state->state_short_name;
 
-            $chDocuments->disband_letter_path = $pdfFileId;
-            $chDocuments->save();
+            $document->disband_letter_path = $pdfFileId;
+            $document->probation_path = $pdfFileId;
 
-            $emailListChap = $baseQuery['emailListChap'];
-            $emailListCoord = $baseQuery['emailListCoord'];
-            $emailPC = $baseQuery['emailPC'];
-            $emailCC = $baseQuery['emailCC'];
-            $cc_fname = $baseQuery['cc_fname'];
-            $cc_lname = $baseQuery['cc_lname'];
-            $cc_pos = $baseQuery['cc_pos'];
-            $cc_conf_name = $baseQuery['cc_conf_name'];
-            $cc_conf_desc = $baseQuery['cc_conf_desc'];
+            $document->save();
+
+            $emailData = $this->userController->loadEmailDetails($chapterId, true);
+            $emailListChap = $emailData['emailListChap'];
+            $emailListCoord = $emailData['emailListCoord'];
+
+            $ccData = $this->userController->loadConferenceCoord(
+                $chDetails->primary_coordinator_id
+            );
 
             $mailData = [
                 'chapterName' => $chDetails->name,
                 'chapterEmail' => $chDetails->email,
                 'chapterState' => $stateShortName,
-                'cc_fname' => $cc_fname,
-                'cc_lname' => $cc_lname,
-                'cc_pos' => $cc_pos,
-                'cc_conf_name' => $cc_conf_name,
-                'cc_conf_desc' => $cc_conf_desc,
-                'cc_email' => $emailCC,
+                'cc_fname' => $ccData['cc_fname'],
+                'cc_lname' => $ccData['cc_lname'],
+                'cc_pos' => $ccData['cc_pos'],
+                'cc_conf_name' => $ccData['cc_conf_name'],
+                'cc_conf_desc' => $ccData['cc_conf_desc'],
+                'cc_email' => $ccData['cc_email'],
             ];
 
             switch ($letterType) {
@@ -593,25 +774,25 @@ class PDFController extends Controller
         ], 500);
     }
 
-
     /**
-     * Save & Send Disband Letter
+     * Generate Disband Letter
      */
     public function generateDisbandLetter($chapterId, $type)
     {
-        $baseQuery = $this->getChapterDetails($chapterId);
-        $chDetails = $baseQuery['chDetails'];
-        $chId = $baseQuery['chId'];
+        $chDetails = Chapters::with(['state', 'boards', 'startMonth'])->find($chapterId);
+        $stateShortName = $chDetails->state->state_short_name;
+        $startMonth = $chDetails->startMonth;
+
         $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
-        $stateShortName = $baseQuery['stateShortName'];
-        $reRegMonth = $chDetails->start_month_id;
-        $reRegYear = $chDetails->next_renewal_year;
-        $PresDetails = $baseQuery['PresDetails'];
-        $cc_fname = $baseQuery['cc_fname'];
-        $cc_lname = $baseQuery['cc_lname'];
-        $cc_pos = $baseQuery['cc_pos'];
-        $cc_conf_name = $baseQuery['cc_conf_name'];
-        $cc_conf_desc = $baseQuery['cc_conf_desc'];
+
+        $chConfId = $chDetails->conference;
+        $chPcId = $chDetails->primary_coordinator_id;
+
+        $ccData = $this->userController->loadConferenceCoord($chPcId);
+
+        $boards = $chDetails->boards()->get();
+        $borDetails = $boards->groupBy('board_position_id');
+        $presDetails = $borDetails->get(1)->first(); // President
 
         $date = Carbon::now();
         $dateFormatted = $date->format('m-d-Y');
@@ -619,24 +800,23 @@ class PDFController extends Controller
         $nextMonthFormatted = $nextMonth->format('m-d-Y');
 
         $pdfData = [
+            'chapter_name' => $chDetails->name,
+            'state' => $stateShortName,
+            'pres_fname' => $presDetails->first_name,
+            'pres_lname' => $presDetails->last_name,
+            'pres_addr' => $presDetails->street_address,
+            'pres_city' => $presDetails->city,
+            'pres_state' => $presDetails->state,
+            'pres_zip' => $presDetails->zip,
+            'cc_fname' => $ccData['cc_fname'],
+            'cc_lname' => $ccData['cc_lname'],
+            'cc_pos' => $ccData['cc_pos'],
+            'cc_conf_name' => $ccData['cc_conf_name'],
+            'cc_conf_desc' => $ccData['cc_conf_desc'],
             'ch_name' => $sanitizedChapterName,
             'today' => $dateFormatted,
             'nextMonth' => $nextMonthFormatted,
-            'chapter_name' => $chDetails->name,
-            'state' => $stateShortName,
-            'pres_fname' => $PresDetails->first_name,
-            'pres_lname' => $PresDetails->last_name,
-            'pres_addr' => $PresDetails->street_address,
-            'pres_city' => $PresDetails->city,
-            'pres_state' => $PresDetails->state,
-            'pres_zip' => $PresDetails->zip,
-            're_reg_month' => $reRegMonth,
-            're_reg_year' => $reRegYear,
-            'cc_fname' => $cc_fname,
-            'cc_lname' => $cc_lname,
-            'cc_pos' => $cc_pos,
-            'conf_name' => $cc_conf_name,
-            'conf_desc' => $cc_conf_desc,
+            'startMonth' => $startMonth,
         ];
 
         $type = strtolower($type);
@@ -664,73 +844,73 @@ class PDFController extends Controller
 
 
     /**
-     * Save & Send Disband Letter
+     * Save & Send Disband Letter  -------  OLD DISBAND LETTER
      */
-    public function generateAndSaveDisbandLetter($id)
-    {
-        $baseQuery = $this->getChapterDetails($id);
-        $chDetails = $baseQuery['chDetails'];
-        $chId = $baseQuery['chId'];
-        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
-        $stateShortName = $baseQuery['stateShortName'];
-        $reRegMonth = $chDetails->start_month_id;
-        $reRegYear = $chDetails->next_renewal_year;
-        $PresDetails = $baseQuery['PresDetails'];
+    // public function generateAndSaveDisbandLetter($id)
+    // {
+    //     $baseQuery = $this->getChapterDetails($id);
+    //     $chDetails = $baseQuery['chDetails'];
+    //     $chId = $baseQuery['chId'];
+    //     $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+    //     $stateShortName = $baseQuery['stateShortName'];
+    //     $reRegMonth = $chDetails->start_month_id;
+    //     $reRegYear = $chDetails->next_renewal_year;
+    //     $PresDetails = $baseQuery['PresDetails'];
 
-        $emailListChap = $baseQuery['emailListChap'];
-        $emailListCoord = $baseQuery['emailListCoord'];
-        $emailCC = $baseQuery['emailCC'];
-        $cc_fname = $baseQuery['cc_fname'];
-        $cc_lname = $baseQuery['cc_lname'];
-        $cc_pos = $baseQuery['cc_pos'];
-        $cc_conf_name = $baseQuery['cc_conf_name'];
-        $cc_conf_desc = $baseQuery['cc_conf_desc'];
+    //     $emailListChap = $baseQuery['emailListChap'];
+    //     $emailListCoord = $baseQuery['emailListCoord'];
+    //     $emailCC = $baseQuery['emailCC'];
+    //     $cc_fname = $baseQuery['cc_fname'];
+    //     $cc_lname = $baseQuery['cc_lname'];
+    //     $cc_pos = $baseQuery['cc_pos'];
+    //     $cc_conf_name = $baseQuery['cc_conf_name'];
+    //     $cc_conf_desc = $baseQuery['cc_conf_desc'];
 
-        $disbandDrive = GoogleDrive::value('disband_letter');
-        $sharedDriveId = $disbandDrive;
+    //     $disbandDrive = GoogleDrive::value('disband_letter');
+    //     $sharedDriveId = $disbandDrive;
 
-        $date = Carbon::now();
-        $dateFormatted = $date->format('m-d-Y');
-        $nextMonth = $date->copy()->addMonth()->endOfMonth();
-        $nextMonthFormatted = $nextMonth->format('m-d-Y');
+    //     $date = Carbon::now();
+    //     $dateFormatted = $date->format('m-d-Y');
+    //     $nextMonth = $date->copy()->addMonth()->endOfMonth();
+    //     $nextMonthFormatted = $nextMonth->format('m-d-Y');
 
-        $pdfData = [
-            'ch_name' => $sanitizedChapterName,
-            'today' => $dateFormatted,
-            'nextMonth' => $nextMonthFormatted,
-            'chapter_name' => $chDetails->name,
-            'state' => $stateShortName,
-            'pres_fname' => $PresDetails->first_name,
-            'pres_lname' => $PresDetails->last_name,
-            'pres_addr' => $PresDetails->street_address,
-            'pres_city' => $PresDetails->city,
-            'pres_state' => $PresDetails->state,
-            'pres_zip' => $PresDetails->zip,
-            're_reg_month' => $reRegMonth,
-            're_reg_year' => $reRegYear,
-            'cc_fname' => $cc_fname,
-            'cc_lname' => $cc_lname,
-            'cc_pos' => $cc_pos,
-            'conf_name' => $cc_conf_name,
-            'conf_desc' => $cc_conf_desc,
-        ];
+    //     $pdfData = [
+    //         'ch_name' => $sanitizedChapterName,
+    //         'today' => $dateFormatted,
+    //         'nextMonth' => $nextMonthFormatted,
+    //         'chapter_name' => $chDetails->name,
+    //         'state' => $stateShortName,
+    //         'pres_fname' => $PresDetails->first_name,
+    //         'pres_lname' => $PresDetails->last_name,
+    //         'pres_addr' => $PresDetails->street_address,
+    //         'pres_city' => $PresDetails->city,
+    //         'pres_state' => $PresDetails->state,
+    //         'pres_zip' => $PresDetails->zip,
+    //         're_reg_month' => $reRegMonth,
+    //         're_reg_year' => $reRegYear,
+    //         'cc_fname' => $cc_fname,
+    //         'cc_lname' => $cc_lname,
+    //         'cc_pos' => $cc_pos,
+    //         'conf_name' => $cc_conf_name,
+    //         'conf_desc' => $cc_conf_desc,
+    //     ];
 
-        $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
+    //     $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
 
-        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
-        $filename = $pdfData['state'].'_'.$chapterName.'_Disband_Letter.pdf'; // Use sanitized chapter name
+    //     $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
+    //     $filename = $pdfData['state'].'_'.$chapterName.'_Disband_Letter.pdf'; // Use sanitized chapter name
 
-        $pdfPath = storage_path('app/pdf_reports/'.$filename);
-        $pdf->save($pdfPath);
+    //     $pdfPath = storage_path('app/pdf_reports/'.$filename);
+    //     $pdf->save($pdfPath);
 
-        if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)){
-            $documents = Documents::find($id);
-            $documents->disband_letter_path = $pdfFileId;
-            $documents->save();
+    //     if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)){
+    //         $documents = Documents::find($id);
+    //         $documents->disband_letter_path = $pdfFileId;
+    //         $documents->save();
 
-            return $pdfPath;  // Return the full local stored path
-        }
-    }
+    //         return $pdfPath;  // Return the full local stored path
+    //     }
+    // }
 
     /**
      * Save & Send Probation Letter
@@ -849,7 +1029,7 @@ class PDFController extends Controller
     /**
      * Generate Probation Letter
      */
-    public function generateProbationLetter(Request $chapterId, $type)
+    public function generateProbationLetter($chapterId, $type)
     {
         $chDetails = Chapters::with(['state', 'boards'])->find($chapterId);
         $stateShortName = $chDetails->state->state_short_name;
