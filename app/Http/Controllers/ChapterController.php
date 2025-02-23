@@ -68,7 +68,9 @@ class ChapterController extends Controller
     /*/ Base Chapter Controller /*/
     //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     //  $this->baseChapterController->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-        //  $this->baseChapterController->getActiveInternationalBaseQuery($cdId)
+    //  $this->baseChapterController->getActiveInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    //  $this->baseChapterController->getZappedInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    //  $this->baseChapterController->getActiveInternationalBaseQuery($cdId)
     //  $this->baseChapterController->getZappedBaseInternationalQuery($cdId)
     //  $this->baseChapterController->getChapterDetails($chId)
 
@@ -139,33 +141,12 @@ class ChapterController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $baseQuery = Chapters::with(['state', 'conference', 'region'])
-            ->where('is_active', 1);
-
-        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } else {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        }
-
-        $baseQuery->orderBy(Conference::select('short_name')
-                    ->whereColumn('conference.id', 'chapters.conference_id')
-                )
-                    ->orderBy(
-                        Region::select('short_name')
-                                ->whereColumn('region.id', 'chapters.region_id')
-                    )
-                    ->orderBy(State::select('state_short_name')
-                            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-
-                    ->orderBy('chapters.name');
-
-        $inquiriesList = $baseQuery->get();
-
-        $data = ['inquiriesList' => $inquiriesList];
+        $countList = $chapterList->count();
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
 
         return view('chapters.chapinquiries')->with($data);
     }
@@ -185,25 +166,11 @@ class ChapterController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getZappedInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']->get();
 
-        $baseQuery = Chapters::with(['state', 'conference', 'region'])
-            ->where('is_active', 0);
-
-        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } else {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        }
-
-        $baseQuery->orderBy(State::select('state_short_name')
-            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name');
-
-        $inquiriesList = $baseQuery->get();
-
-        $data = ['inquiriesList' => $inquiriesList];
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList];
 
         return view('chapters.chapinquirieszapped')->with($data);
     }

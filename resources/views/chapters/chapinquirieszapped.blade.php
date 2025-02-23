@@ -40,7 +40,7 @@
                 </thead>
                 <tbody>
 				<?php $row = 0;?>
-                @foreach($inquiriesList as $list)
+                @foreach($chapterList as $list)
                   <tr>
                     <td class="text-center "><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
