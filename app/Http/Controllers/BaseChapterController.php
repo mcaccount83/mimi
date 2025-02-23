@@ -15,10 +15,12 @@ use Illuminate\Support\Facades\Log;
 class BaseChapterController extends Controller
 {
     protected $userController;
+    protected $baseConditionsController;
 
-    public function __construct(UserController $userController )
+    public function __construct(UserController $userController, BaseConditionsController $baseConditionsController)
     {
         $this->userController = $userController;
+        $this->baseConditionsController = $baseConditionsController;
     }
 
     /*/Custom Helpers/*/
@@ -31,54 +33,10 @@ class BaseChapterController extends Controller
     // $this->userController->loadConferenceCoord($chPcId);
     // $this->userController->loadPrimaryList($chRegId, $chConfId);
 
-    /**
-     * Get conditions and reporting tree data based on coordinator position
-     */
-    public function getConditions($cdId, $cdPositionid, $cdSecPositionid)
-    {
-        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
-        $inQryArr = [];
-
-        if ($conditions['coordinatorCondition']) {
-            $coordinatorData = $this->userController->loadReportingTree($cdId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
-        return ['conditions' => $conditions, 'inQryArr' => $inQryArr];
-    }
-
-    /**
-     * Apply position-based conditions to the query
-     */
-    public function applyPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
-    {
-        if ($conditions['founderCondition']) {
-            // No restrictions for founder
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        } else {
-            $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
-        }
-
-        return $baseQuery;
-    }
-
-    /**
-     * Apply position-based inquiries conditions to the query
-     */
-    public function applyInquiriesPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
-    {
-        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } else {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        }
-
-        return $baseQuery;
-    }
+    /*/Base Coditions Controller/*/
+    // $this->baseConditionsController->getConditions($cdId, $cdPositionid, $cdSecPositionid);
+    // $this->baseConditionsController->applyPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
+    // $this->baseConditionsController->applyInquiriesPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArrrr)
 
     /**
      * Apply checkbox filters to the query
@@ -108,24 +66,37 @@ class BaseChapterController extends Controller
     }
 
     /**
-     * Apply sorting based on page type
+     * Get base query with common relations
      */
-    private function applySorting($baseQuery, $isReregPage)
+    private function getBaseQueryWithRelations($isActive = 1)
     {
+        return Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth', 'primaryCoordinator'])
+            ->where('is_active', $isActive);
+    }
+
+    /**
+     * Apply sorting based on query type and page
+     */
+    private function applySorting($baseQuery, $queryType) {
+        $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';
+
+        if ($queryType === 'zapped') {
+            return ['query' => $baseQuery->orderByDesc('chapters.zap_date'), 'checkBox3Status' => ''];
+        }
+
         if ($isReregPage) {
             if (isset($_GET['check3']) && $_GET['check3'] == 'yes') {
                 $baseQuery->orderBy(State::select('state_short_name')
                     ->whereColumn('state.id', 'chapters.state_id'), 'asc')
                     ->orderBy('chapters.name');
                 return ['query' => $baseQuery, 'checkBox3Status' => 'checked'];
-            } else {
-                $baseQuery->orderByDesc('next_renewal_year')
-                         ->orderByDesc('start_month_id');
-                return ['query' => $baseQuery, 'checkBox3Status' => ''];
             }
+
+            $baseQuery->orderByDesc('next_renewal_year')
+                     ->orderByDesc('start_month_id');
+            return ['query' => $baseQuery, 'checkBox3Status' => ''];
         }
 
-        // Default sorting for non-rereg pages
         return ['query' => $baseQuery->orderBy(Conference::select('short_name')
             ->whereColumn('conference.id', 'chapters.conference_id'))
             ->orderBy(Region::select('short_name')
@@ -137,153 +108,122 @@ class BaseChapterController extends Controller
     }
 
     /**
-     * Apply sorting for zapped chapters
+     * Build chapter query based on type and parameters
      */
-    private function applyZappedSorting($baseQuery) {
-        return ['query' => $baseQuery->orderByDesc('chapters.zap_date'), 'checkBox3Status' => ''];
+    private function buildChapterQuery($params)
+    {
+        $baseQuery = $this->getBaseQueryWithRelations($params['isActive']);
+
+        if (isset($params['cdId'])) {
+            // Only apply position conditions if this is not an international query
+            if (isset($params['conditions']) && $params['conditions']) {
+                $conditionsData = $this->baseConditionsController->getConditions(
+                    $params['cdId'],
+                    $params['cdPositionid'],
+                    $params['cdSecPositionid']
+                );
+
+                $positionMethod = $params['queryType'] === 'inquiries'
+                    ? 'applyInquiriesPositionConditions'
+                    : 'applyPositionConditions';
+
+                $baseQuery = $this->baseConditionsController->$positionMethod(
+                    $baseQuery,
+                    $conditionsData['conditions'],
+                    $params['cdConfId'] ?? null,
+                    $params['cdRegId'] ?? null,
+                    $conditionsData['inQryArr']
+                );
+            }
+
+            $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['cdId']);
+            $baseQuery = $checkboxResults['query'];
+            $checkboxStatus = $checkboxResults['status'];
+        }
+
+        $sortingResults = $this->applySorting($baseQuery, $params['isActive'] ? 'active' : 'zapped');
+
+        return ['query' => $sortingResults['query'], 'checkBoxStatus' => $checkboxStatus['checkBoxStatus'] ?? '', 'checkBox2Status' => $checkboxStatus['checkBox2Status'] ?? '',
+            'checkBox3Status' => $sortingResults['checkBox3Status'], 'checkBox4Status' => $checkboxStatus['checkBox4Status'] ?? ''
+        ];
     }
 
     /**
-     * Get the base query for active chapters with all necessary relations and filters
+     * Public methods for different query types
      */
     public function getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     {
-        $conditionsData = $this->getConditions($cdId, $cdPositionid, $cdSecPositionid);
-
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink','president', 'avp', 'mvp', 'treasurer', 'secretary','startMonth', 'primaryCoordinator'])
-            ->where('is_active', 1);
-
-        $baseQuery = $this->applyPositionConditions($baseQuery, $conditionsData['conditions'], $cdConfId, $cdRegId, $conditionsData['inQryArr']);
-
-        $checkboxResults = $this->applyCheckboxFilters($baseQuery, $cdId);
-        $baseQuery = $checkboxResults['query'];
-        $checkboxStatus = $checkboxResults['status'];
-
-        // Apply sorting based on page type
-        $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';
-        $sortingResults = $this->applySorting($baseQuery, $isReregPage);
-
-        return [
-            'query' => $sortingResults['query'], 'checkBoxStatus' => $checkboxStatus['checkBoxStatus'], 'checkBox2Status' => $checkboxStatus['checkBox2Status'],
-            'checkBox3Status' => $sortingResults['checkBox3Status'], 'checkBox4Status' => $checkboxStatus['checkBox4Status']
-        ];
+        return $this->buildChapterQuery([
+            'isActive' => 1,
+            'cdId' => $cdId,
+            'cdConfId' => $cdConfId,
+            'cdRegId' => $cdRegId,
+            'cdPositionid' => $cdPositionid,
+            'cdSecPositionid' => $cdSecPositionid,
+            'conditions' => true,
+            'queryType' => 'regular'
+        ]);
     }
 
-    /**
-     * Get the base query for zapped chapters with all necessary relations and filters
-     */
     public function getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     {
-        $conditionsData = $this->getConditions($cdId, $cdPositionid, $cdSecPositionid);
-
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth', 'primaryCoordinator'])
-            ->where('is_active', 0);
-
-        $baseQuery = $this->applyPositionConditions($baseQuery, $conditionsData['conditions'], $cdConfId, $cdRegId, $conditionsData['inQryArr']);
-
-        $checkboxResults = $this->applyCheckboxFilters($baseQuery, $cdId);
-        $baseQuery = $checkboxResults['query'];
-        $checkboxStatus = $checkboxResults['status'];
-
-        // Apply zapped sorting
-        $sortingResults = $this->applyZappedSorting($baseQuery);
-
-        return ['query' => $sortingResults['query'], 'checkBoxStatus' => $checkboxStatus['checkBoxStatus'], 'checkBox2Status' => $checkboxStatus['checkBox2Status'],
-            'checkBox3Status' => $sortingResults['checkBox3Status'], 'checkBox4Status' => $checkboxStatus['checkBox4Status']
-        ];
+        return $this->buildChapterQuery([
+            'isActive' => 0,
+            'cdId' => $cdId,
+            'cdConfId' => $cdConfId,
+            'cdRegId' => $cdRegId,
+            'cdPositionid' => $cdPositionid,
+            'cdSecPositionid' => $cdSecPositionid,
+            'conditions' => true,
+            'queryType' => 'regular'
+        ]);
     }
 
-    /**
-     * Get the base query for active inquiries chapters with all necessary relations and filters
-     */
     public function getActiveInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     {
-        $conditionsData = $this->getConditions($cdId, $cdPositionid, $cdSecPositionid);
-
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink','president', 'avp', 'mvp', 'treasurer', 'secretary','startMonth', 'primaryCoordinator'])
-            ->where('is_active', 1);
-
-        $baseQuery = $this->applyInquiriesPositionConditions($baseQuery, $conditionsData['conditions'], $cdConfId, $cdRegId, $conditionsData['inQryArr']);
-
-        $checkboxResults = $this->applyCheckboxFilters($baseQuery, $cdId);
-        $baseQuery = $checkboxResults['query'];
-        $checkboxStatus = $checkboxResults['status'];
-
-        // Apply sorting based on page type
-        $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';
-        $sortingResults = $this->applySorting($baseQuery, $isReregPage);
-
-        return [
-            'query' => $sortingResults['query'], 'checkBoxStatus' => $checkboxStatus['checkBoxStatus'], 'checkBox2Status' => $checkboxStatus['checkBox2Status'],
-            'checkBox3Status' => $sortingResults['checkBox3Status'], 'checkBox4Status' => $checkboxStatus['checkBox4Status']
-        ];
+        return $this->buildChapterQuery([
+            'isActive' => 1,
+            'cdId' => $cdId,
+            'cdConfId' => $cdConfId,
+            'cdRegId' => $cdRegId,
+            'cdPositionid' => $cdPositionid,
+            'cdSecPositionid' => $cdSecPositionid,
+            'conditions' => true,
+            'queryType' => 'inquiries'
+        ]);
     }
 
-    /**
-     * Get the base query for zapped inquiries chapters with all necessary relations and filters
-     */
     public function getZappedInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     {
-        $conditionsData = $this->getConditions($cdId, $cdPositionid, $cdSecPositionid);
-
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth', 'primaryCoordinator'])
-            ->where('is_active', 0);
-
-        $baseQuery = $this->applyInquiriesPositionConditions($baseQuery, $conditionsData['conditions'], $cdConfId, $cdRegId, $conditionsData['inQryArr']);
-
-        $checkboxResults = $this->applyCheckboxFilters($baseQuery, $cdId);
-        $baseQuery = $checkboxResults['query'];
-        $checkboxStatus = $checkboxResults['status'];
-
-        // Apply zapped sorting
-        $sortingResults = $this->applyZappedSorting($baseQuery);
-
-        return ['query' => $sortingResults['query'], 'checkBoxStatus' => $checkboxStatus['checkBoxStatus'], 'checkBox2Status' => $checkboxStatus['checkBox2Status'],
-            'checkBox3Status' => $sortingResults['checkBox3Status'], 'checkBox4Status' => $checkboxStatus['checkBox4Status']
-        ];
+        return $this->buildChapterQuery([
+            'isActive' => 0,
+            'cdId' => $cdId,
+            'cdConfId' => $cdConfId,
+            'cdRegId' => $cdRegId,
+            'cdPositionid' => $cdPositionid,
+            'cdSecPositionid' => $cdSecPositionid,
+            'conditions' => true,
+            'queryType' => 'inquiries'
+        ]);
     }
 
-
-    /**
-     * Get the base query for active international chapters with all necessary relations and filters
-     */
     public function getActiveInternationalBaseQuery($cdId)
     {
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink','president', 'avp', 'mvp', 'treasurer', 'secretary','startMonth', 'primaryCoordinator'])
-            ->where('is_active', 1);
-
-        $checkboxResults = $this->applyCheckboxFilters($baseQuery, $cdId);
-        $baseQuery = $checkboxResults['query'];
-        $checkboxStatus = $checkboxResults['status'];
-
-        // Apply sorting based on page type
-        $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';
-        $sortingResults = $this->applySorting($baseQuery, $isReregPage);
-
-        return [
-            'query' => $sortingResults['query'], 'checkBoxStatus' => $checkboxStatus['checkBoxStatus'], 'checkBox2Status' => $checkboxStatus['checkBox2Status'],
-            'checkBox3Status' => $sortingResults['checkBox3Status'], 'checkBox4Status' => $checkboxStatus['checkBox4Status']
-        ];
+        return $this->buildChapterQuery([
+            'isActive' => 1,
+            'cdId' => $cdId,
+            'conditions' => false,
+            'queryType' => 'international'
+        ]);
     }
 
-    /**
-     * Get the base query for zapped international chapters with all necessary relations and filters
-     */
-    public function getZappedInternationalBaseQuery($cdId)
-    {
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth', 'primaryCoordinator'])
-            ->where('is_active', 0);
-
-        $checkboxResults = $this->applyCheckboxFilters($baseQuery, $cdId);
-        $baseQuery = $checkboxResults['query'];
-        $checkboxStatus = $checkboxResults['status'];
-
-        // Apply zapped sorting
-        $sortingResults = $this->applyZappedSorting($baseQuery);
-
-        return ['query' => $sortingResults['query'], 'checkBoxStatus' => $checkboxStatus['checkBoxStatus'], 'checkBox2Status' => $checkboxStatus['checkBox2Status'],
-            'checkBox3Status' => $sortingResults['checkBox3Status'], 'checkBox4Status' => $checkboxStatus['checkBox4Status']
-        ];
+    public function getZappedInternationalBaseQuery($cdId) {
+        return $this->buildChapterQuery([
+            'isActive' => 0,
+            'cdId' => $cdId,
+            'conditions' => false,
+            'queryType' => 'international'
+        ]);
     }
 
     /**

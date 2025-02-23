@@ -47,10 +47,9 @@ class CoordinatorReportController extends Controller
 
         $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $coordinatorList = $baseQuery['query']->get();
-        $inQryArr = $baseQuery['inQryArr'];
 
         foreach ($coordinatorList as $list) {
-            $reportingData = $this->calculateReporting($list->id, $list->layer_id, $inQryArr);
+            $reportingData = $this->calculateReporting($list->id, $list->layer_id, $coordinatorList);
 
             $list->direct_report = $reportingData['direct_report'];
             $list->indirect_report = $reportingData['indirect_report'];

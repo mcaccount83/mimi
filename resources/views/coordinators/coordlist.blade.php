@@ -55,7 +55,7 @@
                          {{-- <td>{{ $list->mimiPosition->short_title }}</td> --}}
                 	  <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
                       <td><a href="mailto:{{ $list->email }}">{{ $list->email }}</a></td>
-                      <td>{{ $list->reportsTo->first_name }} {{ $list->reportsTo->last_name }}</td>
+                      <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
                     </tr>
                   @endforeach
                 </tbody>

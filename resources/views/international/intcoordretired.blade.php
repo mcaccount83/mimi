@@ -32,7 +32,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($intCoordinatorList as $list)
+                @foreach($coordinatorList as $list)
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>

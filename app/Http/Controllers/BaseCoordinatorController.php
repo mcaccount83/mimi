@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\DB;
 class BaseCoordinatorController extends Controller
 {
     protected $userController;
+    protected $baseConditionsController;
 
-    public function __construct(UserController $userController)
+    public function __construct(UserController $userController, BaseConditionsController $baseConditionsController)
     {
         $this->userController = $userController;
+        $this->baseConditionsController = $baseConditionsController;
     }
 
     /*/Custom Helpers/*/
@@ -25,91 +27,159 @@ class BaseCoordinatorController extends Controller
     /*/User Controller/*/
     // $this->userController->loadReportingTree($cdId);
 
+    /*/Base Coditions Controller/*/
+    // $this->baseConditionsController->getConditions($cdId, $cdPositionid, $cdSecPositionid);
+    // $this->baseConditionsController->applyPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
 
-    /*/ Active Coordinator List Base Query /*/
-    public function getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
+    /**
+     * Apply checkbox filters to the query
+     */
+    private function applyCheckboxFilters($baseQuery, $userCdId)
     {
-        $conditions = getPositionConditions($userPositionid, $userSecPositionid);
-        if ($conditions['coordinatorCondition']) {
-            $coordinatorData = $this->userController->loadReportingTree($userCdId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
-        $baseQuery = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth'])
-            ->where('id', '!=', $userCdId)
-            ->where('is_active', 1);
-
-        if ($conditions['founderCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $userConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $userRegId);
-        } else {
-            $baseQuery->whereIn('report_id', $inQryArr);
-        }
+        $checkboxStatus = ['checkBoxStatus' => ''];
 
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
+            $checkboxStatus['checkBoxStatus'] = 'checked';
             $baseQuery->where('report_id', '=', $userCdId);
-        } else {
-            $checkBoxStatus = '';
         }
 
-        $isBirthdayPage = request()->route()->getName() === 'coordreports.coordrptbirthdays';
-        $isUtilizationPage = request()->route()->getName() === 'coordreports.coordrptvolutilization';
-        if ($isUtilizationPage){
-            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
-                ->whereColumn('conference.id', 'coordinators.conference_id')
-                ->limit(1)
-            )
-            ->orderBy(
-                Region::select(DB::raw("CASE WHEN short_name = 'None' THEN '' ELSE short_name END"))
-                        ->whereColumn('region.id', 'coordinators.region_id')
-                        ->limit(1)
-            )
-            ->orderBy('coordinator_start_date');
-        } elseif ($isBirthdayPage) {
-            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
-            ->whereColumn('conference.id', 'coordinators.conference_id')
-            ->limit(1)
-            )
-            ->orderBy('birthday_month_id')
-                ->orderBy('birthday_day');
-        } else{
-            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
-            ->whereColumn('conference.id', 'coordinators.conference_id')
-            ->limit(1)
-            )
-            ->orderBy('coordinator_start_date');
-        }
-
-        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'inQryArr' => $inQryArr];
+        return ['query' => $baseQuery, 'status' => $checkboxStatus];
     }
 
-    /*/ Retired Coordinator List Base Query /*/
-    public function getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
+    /**
+     * Get base query with common relations
+     */
+    private function getBaseQueryWithRelations($cdIsActive = 1)
     {
-        $conditions = getPositionConditions($userPositionid, $userSecPositionid);
-        if ($conditions['coordinatorCondition']) {
-            $coordinatorData = $this->userController->loadReportingTree($userCdId);
-            $inQryArr = $coordinatorData['inQryArr'];
+        return Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth'])
+        ->where('is_active', $cdIsActive)
+        // ->where('display_position_id', '!=', 8)
+        ;
+    }
+
+     /**
+     * Apply sorting based on query type and page
+     */
+    private function applySorting($baseQuery, $queryType) {
+        $isBirthdayPage = request()->route()->getName() === 'coordreports.coordrptbirthdays';
+        $isUtilizationPage = request()->route()->getName() === 'coordreports.coordrptvolutilization';
+
+        if ($queryType === 'retired') {
+            return ['query' => $baseQuery->orderByDesc('coordinators.zapped_date'), 'checkBoxStatus' => ''];
+            }
+
+        if ($isBirthdayPage) {
+            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
+                ->whereColumn('conference.id', 'coordinators.conference_id')
+                ->limit(1))
+                ->orderBy('birthday_month_id')
+                ->orderBy('birthday_day');
+                return ['query' => $baseQuery, 'checkBoxStatus' => ''];
+            }
+
+        if ($isUtilizationPage) {
+            $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
+                ->whereColumn('conference.id', 'coordinators.conference_id')
+                ->limit(1))
+                ->orderBy(Region::select(DB::raw("CASE WHEN short_name = 'None' THEN '' ELSE short_name END"))
+                    ->whereColumn('region.id', 'coordinators.region_id')
+                    ->limit(1))
+                ->orderBy('coordinator_start_date');
+                return ['query' => $baseQuery, 'checkBoxStatus' => ''];
+            }
+
+        return ['query' => $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
+            ->whereColumn('conference.id', 'coordinators.conference_id')
+            ->limit(1))
+            ->orderBy('coordinator_start_date'), 'checkBoxStatus' => ''];
+    }
+
+    /**
+     * Build coordinator query based on type and parameters
+     */
+    private function buildCoordinatorQuery($params)
+    {
+        $baseQuery = $this->getBaseQueryWithRelations($params['cdIsActive']);
+
+        if (isset($params['cdId'])) {
+            // Only apply position conditions if this is not an international query
+            if (isset($params['conditions']) && $params['conditions']) {
+                $conditionsData = $this->baseConditionsController->getConditions(
+                    $params['cdId'],
+                    $params['cdPositionid'],
+                    $params['cdSecPositionid']
+                );
+
+                $baseQuery = $this->baseConditionsController->applyPositionConditions(
+                    $baseQuery,
+                    $conditionsData['conditions'],
+                    $params['cdConfId'] ?? null,
+                    $params['cdRegId'] ?? null,
+                    $conditionsData['inQryArr']
+                );
+            }
+
+            $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['cdId']);
+            $baseQuery = $checkboxResults['query'];
+            $checkboxStatus = $checkboxResults['status'];
         }
 
-        $baseQuery = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth'])
-            ->where('is_active', 0);
+        $sortingResults = $this->applySorting($baseQuery, $params['cdIsActive'] ? 'active' : 'retired');
 
-        if ($conditions['founderCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $userConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $userRegId);
-        } else {
-            $baseQuery->whereIn('report_id', $inQryArr);
-        }
+        return [
+            'query' => $sortingResults['query'],
+            'checkBoxStatus' => $checkboxStatus['checkBoxStatus'] ?? ''
+        ];
+    }
 
-        $baseQuery->orderByDesc('zapped_date');
+     /**
+     * Public methods for different query types
+     */
+    public function getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    {
+        return $this->buildCoordinatorQuery([
+            'cdIsActive' => 1,
+            'cdId' => $cdId,
+            'cdConfId' => $cdConfId,
+            'cdRegId' => $cdRegId,
+            'cdPositionid' => $cdPositionid,
+            'cdSecPositionid' => $cdSecPositionid,
+            'conditions' => true,
+            'queryType' => 'regular'
+        ]);
+    }
 
-        return ['query' => $baseQuery];
+    public function getRetiredBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    {
+        return $this->buildCoordinatorQuery([
+            'cdIsActive' => 0,
+            'cdId' => $cdId,
+            'cdConfId' => $cdConfId,
+            'cdRegId' => $cdRegId,
+            'cdPositionid' => $cdPositionid,
+            'cdSecPositionid' => $cdSecPositionid,
+            'conditions' => true,
+            'queryType' => 'regular'
+        ]);
+    }
+
+    public function getActiveInternationalBaseQuery($cdId)
+    {
+        return $this->buildCoordinatorQuery([
+            'cdIsActive' => 1,
+            'cdId' => $cdId,
+            'conditions' => false,
+            'queryType' => 'international'
+        ]);
+    }
+
+    public function getRetiredInternationalBaseQuery($cdId) {
+        return $this->buildCoordinatorQuery([
+            'cdIsActive' => 0,
+            'cdId' => $cdId,
+            'conditions' => false,
+            'queryType' => 'international'
+        ]);
     }
 
     /*/ Active Coordinator Details Base Query /*/
@@ -154,10 +224,6 @@ class BaseCoordinatorController extends Controller
         ];
     }
 
-     /*/ Active International Coordinator List Base Query /*/
-     public function getActiveInternationalBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
-     {
-     }
 
 
 }
