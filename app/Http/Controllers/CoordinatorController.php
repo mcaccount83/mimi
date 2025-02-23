@@ -28,13 +28,15 @@ class CoordinatorController extends Controller
 {
     protected $userController;
     protected $baseCoordinatorController;
+    protected $forumSubscriptionController;
 
-    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController)
+    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
         $this->baseCoordinatorController = $baseCoordinatorController;
+        $this->forumSubscriptionController = $forumSubscriptionController;
     }
 
     /*/ Base Coordinator Controller /*/
@@ -42,20 +44,8 @@ class CoordinatorController extends Controller
     //  $this->baseCoordinatorController->getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
     //  $this->baseCoordinatorController->getCoordinatorDetails($id)
 
-    public function defaultCategories()
-    {
-        // Public Annnouncemenets = 1
-        // CoordinatorList = 2
-        // BoardList =3
-
-        $coordinatorCategories = [1, 2];
-        $boardCategories = [1];
-
-        return [
-            'coordinatorCategories' => $coordinatorCategories,
-            'boardCategories' => $boardCategories,
-        ];
-    }
+    /*/ Forum Subscription Controller /*/
+    //  $this->forumSubscriptionController->defaultCategories()
 
     /**
      * Active Coordiantor List
@@ -203,7 +193,7 @@ class CoordinatorController extends Controller
         $new_layer_id = $cdlayerId + 1;
         $input = $request->all();
 
-        $defaultCategories = $this->defaultCategories();
+        $defaultCategories = $this->forumSubscriptionController->defaultCategories();
         $defaultCoordinatorCategories = $defaultCategories['coordinatorCategories'];
 
         DB::beginTransaction();
@@ -535,7 +525,7 @@ class CoordinatorController extends Controller
         $coordinators = Coordinators::find($coordId);
         $coordUserId = $coordinators->user_id;
 
-        $defaultCategories = $this->defaultCategories();
+        $defaultCategories = $this->forumSubscriptionController->defaultCategories();
         $defaultCoordinatorCategories = $defaultCategories['coordinatorCategories'];
 
         DB::beginTransaction();
@@ -657,7 +647,7 @@ class CoordinatorController extends Controller
         $cdUserId = $coordinator->user_id;
         $user = User::find($cdUserId);
 
-        $defaultCategories = $this->defaultCategories();
+        $defaultCategories = $this->forumSubscriptionController->defaultCategories();
         $defaultCoordinatorCategories = $defaultCategories['coordinatorCategories'];
 
         DB::beginTransaction();

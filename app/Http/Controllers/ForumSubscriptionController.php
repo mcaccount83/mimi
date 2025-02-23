@@ -18,16 +18,16 @@ use Illuminate\Http\Request;
 class ForumSubscriptionController extends Controller
 {
     protected $userController;
-    protected $chapterController;
-    protected $coordinatorController;
+    protected $baseChapterController;
+    protected $baseCoordinatorController;
 
-    public function __construct(UserController $userController, ChapterController $chapterController, CoordinatorController $coordinatorController)
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
-        $this->chapterController = $chapterController;
-        $this->coordinatorController = $coordinatorController;
+        $this->baseChapterController = $baseChapterController;
+        $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
     public function defaultCategories()
@@ -90,7 +90,7 @@ class ForumSubscriptionController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->chapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
@@ -115,7 +115,7 @@ class ForumSubscriptionController extends Controller
         $cdPositionid = $cdDetails->position_id;
         $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $baseQuery = $this->coordinatorController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $coordinatorList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 

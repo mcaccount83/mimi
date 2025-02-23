@@ -9,6 +9,9 @@ use App\Models\Coordinators;
 
 class ForumConditions
 {
+    /*/Custom Helpers/*/
+    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+
     public function canAccessCoordinatorList(User $user, Category $category): bool
     {
         if ($user->user_type === 'outgoing'){

@@ -16,6 +16,13 @@ class BaseBoardController extends Controller
         $this->userController = $userController;
     }
 
+    /*/Custom Helpers/*/
+    // $displayEOY = getEOYDisplay();
+
+    /*/User Controller/*/
+    // $this->userController->loadEmailDetails($chId);
+    // $this->userController->loadConferenceCoord($chPcId);
+
     /*/ Active Chapter Details Base Query /*/
     public function getChapterDetails($id)
     {

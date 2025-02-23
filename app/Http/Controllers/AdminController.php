@@ -47,6 +47,9 @@ class AdminController extends Controller
         $this->userController = $userController;
     }
 
+    /*/Custom Helpers/*/
+    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+
     /**
      * View the EOY Report Title
      */

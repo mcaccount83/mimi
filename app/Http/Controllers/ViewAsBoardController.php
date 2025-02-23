@@ -16,18 +16,17 @@ use Illuminate\View\View;
 class ViewAsBoardController extends Controller
 {
     protected $userController;
-    protected $boardController;
+    protected $baseBoardController;
 
-    public function __construct(UserController $userController, BoardController $boardController)
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
-        $this->boardController = $boardController;
+        $this->baseBoardController = $baseBoardController;
     }
 
     /*/Custom Helpers/*/
-    // $displayEOY = getEOYDisplay();
 
     /*/ Board Controller /*/
     //  $this->boardController->getChapterDetails($id)
@@ -44,7 +43,7 @@ class ViewAsBoardController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->boardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
@@ -99,7 +98,7 @@ class ViewAsBoardController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->boardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
@@ -144,7 +143,7 @@ class ViewAsBoardController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->boardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
@@ -179,7 +178,7 @@ class ViewAsBoardController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
 
-        $baseQuery = $this->boardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];

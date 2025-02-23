@@ -22,6 +22,9 @@ class CoordinatorReportController extends Controller
         $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
+    /*/Custom Helpers/*/
+    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+
     /*/ Base Coordinator Controller /*/
     //  $this->baseCoordinatorController->getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
     //  $this->baseCoordinatorController->getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)

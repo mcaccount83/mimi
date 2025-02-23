@@ -21,13 +21,13 @@ use net\authorize\api\controller as AnetController;
 class PaymentController extends Controller
 {
     protected $userController;
-    protected $boardController;
+    protected $baseBoardController;
 
-    public function __construct(UserController $userController, BoardController $boardController)
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController)
     {
         $this->middleware('auth')->except('logout');
         $this->userController = $userController;
-        $this->boardController = $boardController;
+        $this->baseBoardController = $baseBoardController;
     }
 
     /**
@@ -42,7 +42,7 @@ class PaymentController extends Controller
         }
 
         try {
-            $baseQuery = $this->boardController->getChapterDetails($request->user()->board->chapter_id);
+            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
             $chapterDetails = $baseQuery['chDetails'];
             $chapterState = $baseQuery['stateShortName'];
             $presDetails = $baseQuery['PresDetails'];
@@ -139,7 +139,7 @@ class PaymentController extends Controller
         $paymentResponse = $this->processPayment($request);
 
         if ($paymentResponse['success']) {
-            $baseQuery = $this->boardController->getChapterDetails($request->user()->board->chapter_id);
+            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
             $chapterDetails = $baseQuery['chDetails'];
             $chapterState = $baseQuery['stateShortName'];
             $presDetails = $baseQuery['PresDetails'];
@@ -232,7 +232,7 @@ class PaymentController extends Controller
         $bdId = $bdDetails->id;
         $chapterId = $bdDetails->chapter_id;
 
-        $baseQuery = $this->boardController->getChapterDetails($chapterId);
+        $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
         $chapterDetails = $baseQuery['chDetails'];
         $chapterState = $baseQuery['stateShortName'];
         $chapterName = $chapterDetails->name;

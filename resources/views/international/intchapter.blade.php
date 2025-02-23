@@ -35,7 +35,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($intChapterList as $list)
+                @foreach($chapterList as $list)
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fa fa-eye"></i></a></td>
                     <td>

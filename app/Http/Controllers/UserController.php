@@ -182,7 +182,7 @@ class UserController extends Controller
         $layer1 = CoordinatorTree::where('coordinator_id', $chPcid)
             ->value('layer1'); // Fetch only the value of the 'layer1' column
 
-        $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition', 'conference'])
+        $ccDetails = Coordinators::with(['displayPosition', 'conference'])
             ->where('id', $layer1)
             ->where('is_active', 1)
             ->first(); // Fetch only the first record directly
@@ -194,7 +194,7 @@ class UserController extends Controller
         $cc_conf = $ccDetails->conference_id;
         $cc_conf_name = $ccDetails->conference->conference_name;
         $cc_conf_desc = $ccDetails->conference->conference_description;
-        $cc_pos = $ccDetails->displayPosition->long_title ?? 'N/A';
+        $cc_pos = $ccDetails->displayPosition->long_title;
 
         return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email, 'cc_conf' => $cc_conf,
             'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id,

@@ -19,6 +19,12 @@ class BaseCoordinatorController extends Controller
         $this->userController = $userController;
     }
 
+    /*/Custom Helpers/*/
+    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+
+    /*/User Controller/*/
+    // $this->userController->loadReportingTree($cdId);
+
 
     /*/ Active Coordinator List Base Query /*/
     public function getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
@@ -74,24 +80,8 @@ class BaseCoordinatorController extends Controller
             ->whereColumn('conference.id', 'coordinators.conference_id')
             ->limit(1)
             )
-            // ->orderBy(
-            //           Region::select(DB::raw("CASE WHEN short_name = 'None' THEN '' ELSE short_name END"))
-            //                 ->whereColumn('region.id', 'coordinators.region_id')
-            //                 ->limit(1)
-            //       )
             ->orderBy('coordinator_start_date');
         }
-
-        // $baseQuery->orderBy(Conference::select('short_name')
-        //             ->whereColumn('conference.id', 'coordinators.conference_id')
-        //             ->limit(1)
-        //   )
-        //   ->orderBy(
-        //       Region::select(DB::raw("CASE WHEN short_name = 'None' THEN '' ELSE short_name END"))
-        //             ->whereColumn('region.id', 'coordinators.region_id')
-        //             ->limit(1)
-        //   )
-        //   ->orderBy('coordinator_start_date');
 
         return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'inQryArr' => $inQryArr];
     }
@@ -163,4 +153,11 @@ class BaseCoordinatorController extends Controller
             'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid,
         ];
     }
+
+     /*/ Active International Coordinator List Base Query /*/
+     public function getActiveInternationalBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
+     {
+     }
+
+
 }
