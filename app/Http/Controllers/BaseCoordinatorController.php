@@ -52,9 +52,7 @@ class BaseCoordinatorController extends Controller
     private function getBaseQueryWithRelations($cdIsActive = 1)
     {
         return Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth'])
-        ->where('is_active', $cdIsActive)
-        // ->where('display_position_id', '!=', 8)
-        ;
+        ->where('is_active', $cdIsActive);
     }
 
      /**
@@ -182,7 +180,9 @@ class BaseCoordinatorController extends Controller
         ]);
     }
 
-    /*/ Active Coordinator Details Base Query /*/
+    /**
+     * Active Coordinator Details Base Query
+     */
     public function getCoordinatorDetails($id)
     {
         $cdDetails = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth',
@@ -223,7 +223,4 @@ class BaseCoordinatorController extends Controller
             'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid,
         ];
     }
-
-
-
 }

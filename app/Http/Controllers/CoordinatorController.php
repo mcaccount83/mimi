@@ -114,12 +114,8 @@ class CoordinatorController extends Controller
 
         $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $emailListCord = $coordinatorList->pluck('email')->filter()->implode(';');
-
-        $countList = count($coordinatorList);
-        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord];
+        $data = ['coordinatorList' => $coordinatorList];
 
         return view('international.intcoord')->with($data);
     }

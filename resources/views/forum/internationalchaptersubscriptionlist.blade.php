@@ -43,7 +43,6 @@
                  <!-- /.card-header -->
     <div class="card-body">
         <table id="chapterlist" class="table table-sm table-hover" >
-              {{-- <table id="chapterlist_reRegDate" class="table table-bordered table-hover"> --}}
               <thead>
       			    <tr>
                     <th>Conf/Reg</th>
@@ -62,7 +61,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @foreach($intChapterList as $list)
+                    @foreach($chapterList as $list)
                   <tr>
                         <td>
                             @if ($list->region?->short_name != "None" )

@@ -137,26 +137,18 @@ class ForumSubscriptionController extends Controller
 
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
 
-        $intChapterList = Chapters::with(['state', 'conference', 'region', 'president', 'primaryCoordinator'])
-            ->where('is_active', 1)
-            ->orderBy(Conference::select('short_name')
-            ->whereColumn('conference.id', 'chapters.conference_id')
-            )
-            ->orderBy(
-                Region::select('short_name')
-                        ->whereColumn('region.id', 'chapters.region_id')
-            )
-            ->orderBy(State::select('state_short_name')
-                    ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']->get();
 
-            ->orderBy('chapters.name')
-            ->get();
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList];
 
-        $countList = count($intChapterList);
-        $data = ['countList' => $countList, 'intChapterList' => $intChapterList];
-
-        return view('forum.internationalchaptersubscriptionlist', compact('intChapterList'));
+        return view('forum.internationalchaptersubscriptionlist')->with($data);
     }
 
     /**
@@ -167,23 +159,17 @@ class ForumSubscriptionController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        $intCoordinatorList = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'reportsTo'])
-            ->where('is_active', 1)
-            ->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
-                    ->whereColumn('conference.id', 'coordinators.conference_id')
-                    ->limit(1)
-            )
-            ->orderBy(
-                Region::select(DB::raw("CASE WHEN short_name = 'None' THEN '' ELSE short_name END"))
-                        ->whereColumn('region.id', 'coordinators.region_id')
-                        ->limit(1)
-            )
-            ->orderBy('coordinator_start_date')
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
 
-            ->get();
+        $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $coordinatorList = $baseQuery['query']->get();
 
-        $data = ['intCoordinatorList' => $intCoordinatorList];
-
+        $data = ['coordinatorList' => $coordinatorList];
         return view('forum.internationalcoordinatorsubscriptionlist')->with($data);
     }
 
