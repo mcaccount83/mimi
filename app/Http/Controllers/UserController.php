@@ -191,12 +191,11 @@ class UserController extends Controller
         $cc_fname = $ccDetails->first_name;
         $cc_lname = $ccDetails->last_name;
         $cc_email = $ccDetails->email;
-        $cc_conf = $ccDetails->conference_id;
         $cc_conf_name = $ccDetails->conference->conference_name;
         $cc_conf_desc = $ccDetails->conference->conference_description;
         $cc_pos = $ccDetails->displayPosition->long_title;
 
-        return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email, 'cc_conf' => $cc_conf,
+        return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email,
             'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id,
         ];
     }

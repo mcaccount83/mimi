@@ -494,7 +494,6 @@ class ChapterController extends Controller
             $cc_fname = $baseQuery['cc_fname'];
             $cc_lname = $baseQuery['cc_lname'];
             $cc_pos = $baseQuery['cc_pos'];
-            $cc_conf = $baseQuery['cc_conf'];
             $cc_conf_name = $baseQuery['cc_conf_name'];
             $cc_conf_desc = $baseQuery['cc_conf_desc'];
 
@@ -521,7 +520,6 @@ class ChapterController extends Controller
                 'cc_fname' => $cc_fname,
                 'cc_lname' => $cc_lname,
                 'cc_pos' => $cc_pos,
-                'cc_conf' => $cc_conf,
                 'cc_conf_name' => $cc_conf_name,
                 'cc_conf_desc' => $cc_conf_desc,
                 'cc_email' => $cc_email,
@@ -647,7 +645,6 @@ class ChapterController extends Controller
             $cc_fname = $baseQuery['cc_fname'];
             $cc_lname = $baseQuery['cc_lname'];
             $cc_pos = $baseQuery['cc_pos'];
-            $cc_conf = $baseQuery['cc_conf'];
             $cc_conf_name = $baseQuery['cc_conf_name'];
             $cc_conf_desc = $baseQuery['cc_conf_desc'];
 
@@ -674,7 +671,6 @@ class ChapterController extends Controller
                 'cc_fname' => $cc_fname,
                 'cc_lname' => $cc_lname,
                 'cc_pos' => $cc_pos,
-                'cc_conf' => $cc_conf,
                 'cc_conf_desc' => $cc_conf_desc,
                 'cc_email' => $cc_email,
             ];
