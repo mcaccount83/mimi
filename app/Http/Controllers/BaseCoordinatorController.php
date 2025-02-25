@@ -34,13 +34,13 @@ class BaseCoordinatorController extends Controller
     /**
      * Apply checkbox filters to the query
      */
-    private function applyCheckboxFilters($baseQuery, $userCdId)
+    private function applyCheckboxFilters($baseQuery, $coorId)
     {
         $checkboxStatus = ['checkBoxStatus' => ''];
 
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkboxStatus['checkBoxStatus'] = 'checked';
-            $baseQuery->where('report_id', '=', $userCdId);
+            $baseQuery->where('report_id', '=', $coorId);
         }
 
         return ['query' => $baseQuery, 'status' => $checkboxStatus];
@@ -52,7 +52,7 @@ class BaseCoordinatorController extends Controller
     private function getBaseQueryWithRelations($cdIsActive = 1)
     {
         return Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth'])
-        ->where('is_active', $cdIsActive);
+            ->where('is_active', $cdIsActive);
     }
 
      /**
@@ -99,25 +99,25 @@ class BaseCoordinatorController extends Controller
     {
         $baseQuery = $this->getBaseQueryWithRelations($params['cdIsActive']);
 
-        if (isset($params['cdId'])) {
+        if (isset($params['coorId'])) {
             // Only apply position conditions if this is not an international query
             if (isset($params['conditions']) && $params['conditions']) {
                 $conditionsData = $this->baseConditionsController->getConditions(
-                    $params['cdId'],
-                    $params['cdPositionid'],
-                    $params['cdSecPositionid']
+                    $params['coorId'],
+                    $params['positionId'],
+                    $params['secPositionId']
                 );
 
                 $baseQuery = $this->baseConditionsController->applyPositionConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
-                    $params['cdConfId'] ?? null,
-                    $params['cdRegId'] ?? null,
+                    $params['confId'] ?? null,
+                    $params['regId'] ?? null,
                     $conditionsData['inQryArr']
                 );
             }
 
-            $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['cdId']);
+            $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
             $baseQuery = $checkboxResults['query'];
             $checkboxStatus = $checkboxResults['status'];
         }
@@ -133,48 +133,48 @@ class BaseCoordinatorController extends Controller
      /**
      * Public methods for different query types
      */
-    public function getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    public function getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildCoordinatorQuery([
             'cdIsActive' => 1,
-            'cdId' => $cdId,
-            'cdConfId' => $cdConfId,
-            'cdRegId' => $cdRegId,
-            'cdPositionid' => $cdPositionid,
-            'cdSecPositionid' => $cdSecPositionid,
+            'coorId' => $coorId,
+            'confId' => $confId,
+            'regId' => $regId,
+            'positionId' => $positionId,
+            'secPositionId' => $secPositionId,
             'conditions' => true,
             'queryType' => 'regular'
         ]);
     }
 
-    public function getRetiredBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    public function getRetiredBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildCoordinatorQuery([
             'cdIsActive' => 0,
-            'cdId' => $cdId,
-            'cdConfId' => $cdConfId,
-            'cdRegId' => $cdRegId,
-            'cdPositionid' => $cdPositionid,
-            'cdSecPositionid' => $cdSecPositionid,
+            'coorId' => $coorId,
+            'confId' => $confId,
+            'regId' => $regId,
+            'positionId' => $positionId,
+            'secPositionId' => $secPositionId,
             'conditions' => true,
             'queryType' => 'regular'
         ]);
     }
 
-    public function getActiveInternationalBaseQuery($cdId)
+    public function getActiveInternationalBaseQuery($coorId)
     {
         return $this->buildCoordinatorQuery([
             'cdIsActive' => 1,
-            'cdId' => $cdId,
+            'coorId' => $coorId,
             'conditions' => false,
             'queryType' => 'international'
         ]);
     }
 
-    public function getRetiredInternationalBaseQuery($cdId) {
+    public function getRetiredInternationalBaseQuery($coorId) {
         return $this->buildCoordinatorQuery([
             'cdIsActive' => 0,
-            'cdId' => $cdId,
+            'coorId' => $coorId,
             'conditions' => false,
             'queryType' => 'international'
         ]);
@@ -183,13 +183,12 @@ class BaseCoordinatorController extends Controller
     /**
      * Active Coordinator Details Base Query
      */
-    public function getCoordinatorDetails($id)
+    public function getCoordinatorDetails($cdId)
     {
         $cdDetails = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth',
-            'reportsTo'])->find($id);
-        $cdId = $cdDetails->id;
-        $cdPositionid = $cdDetails->position_id;
+            'reportsTo'])->find($cdId);
         $cdIsActive = $cdDetails->is_active;
+        $cdPositionid = $cdDetails->position_id;
         $regionLongName = $cdDetails->region->long_name;
         $conferenceDescription = $cdDetails->conference->conference_description;
         $cdConfId = $cdDetails->conference_id;

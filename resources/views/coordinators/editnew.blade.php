@@ -28,7 +28,7 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Conference:</label>
                             <div class="col-sm-8">
-                                <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $cdConferenceNum }} - {{ $cdConferenceName }}" readonly>
+                                <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $confLongName }} - {{ $confDescription }}" readonly>
                             </div>
                         </div>
 
@@ -43,12 +43,9 @@
                                             {{$region->long_name}}
                                         </option>
                                     @endforeach
-                                        {{-- @foreach($regionList as $rl)
-                                            <option value="{{$rl->id}}">{{$rl->long_name}}</option>
-                                        @endforeach --}}
                                     </select>
                                 @else
-                                    <input type="text" name="cord_region" id="cord_region" class="form-control" placeholder="Home Chapter" value="{{ $cdRegionName }}" readonly>
+                                    <input type="text" name="cord_region" id="cord_region" class="form-control" placeholder="Home Chapter" value="{{ $regLongName }}" readonly>
                                 @endif
                             </div>
                         </div>
@@ -63,21 +60,9 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Reports To:</label>
                             <div class="col-sm-8">
-                                <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $cdName }}" readonly>
+                                <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $userName }}" readonly>
                             </div>
                         </div>
-
-                        {{-- <div class="form-group row mt-1">
-                            <label class="col-sm-4 col-form-label">Reports To:</label>
-                            <div class="col-sm-8">
-                                <select name="cord_report_pc" id="cord_report_pc" class="form-control" required>
-                                    @foreach($primaryCoordinatorList as $pcl)
-                                        <option value="{{ $pcl->cid }}" >{{ $pcl->cor_f_name }} {{ $pcl->cor_l_name }} ({{ $pcl->pos }})</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div> --}}
-
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Home Chapter:</label>
                             <div class="col-sm-8">
@@ -166,10 +151,6 @@
                                             {{$month->month_long_name}}
                                         </option>
                                     @endforeach
-
-                                                {{-- @foreach($monthArr as $month)
-                                                    <option value="{{$month->id}}" >{{$month->month_long_name}}</option>
-                                                @endforeach --}}
                                         </select>
 
                                     </div>

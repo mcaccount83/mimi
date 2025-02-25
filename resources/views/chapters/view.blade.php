@@ -758,21 +758,21 @@
                 @endif
                 <br>
                 @if($coordinatorCondition)
-                    @if ($cdConfId == $chConfId)
+                    @if ($confId == $chConfId)
                         @if ($chIsActive == 1)
-                            @if ($inquiriesCondition  && ($cdId != $chPcId))
+                            @if ($inquiriesCondition  && ($coorId != $chPcId))
                                 <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Chapter List</button>
                             @else
                                 <button type="button" id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter List</button>
                             @endif
                         @else
-                            @if ($inquiriesCondition  && ($cdId != $chPcId))
+                            @if ($inquiriesCondition  && ($coorId != $chPcId))
                                 <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Zapped Chapter List</button>
                             @else
                                 <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
                             @endif
                         @endif
-                    @elseif ($einCondition && ($cdConfId != $chConfId) || $inquiriesCondition  && ($cdConfId != $chConfId) || $adminReportCondition  && ($cdConfId != $chConfId))
+                    @elseif ($einCondition && ($confId != $chConfId) || $inquiriesCondition  && ($cdConfId != $chConfId) || $adminReportCondition  && ($cdConfId != $chConfId))
                         @if ($chIsActive == 1)
                             <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-reply mr-2"></i>Back to International Chapter List</button>
                         @else
@@ -794,12 +794,12 @@
     var $einCondition = @json($einCondition);
     var $inquiriesCondition = @json($inquiriesCondition);
     var $chPcId = @json($chPcId);
-    var $cdId = @json($cdId);
-    var $cdConfId = @json($cdConfId);
+    var $coorId = @json($coorId);
+    var $confId = @json($confId);
 
 $(document).ready(function () {
     // Disable fields for chapters that are not active or EIN & Inquiries Coordinators who are not PC for the Chapter
-    if (($chIsActive != 1) || ($inquiriesCondition && ($coordId != $chPCid)) || ($einCondition && ($coordId != $chPCid))) {
+    if (($chIsActive != 1) || ($inquiriesCondition && ($coorId != $chPCid)) || ($einCondition && ($coorId != $chPCid))) {
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
@@ -825,10 +825,10 @@ $(document).ready(function () {
 });
 
 $(document).ready(function() {
-    function loadCoordinatorList(corId) {
-        if (corId != "") {
+    function loadCoordinatorList(coorId) {
+        if (coorId != "") {
             $.ajax({
-                url: '{{ url("/load-coordinator-list") }}' + '/' + corId,
+                url: '{{ url("/load-coordinator-list") }}' + '/' + coorId,
                 type: "GET",
                 success: function(result) {
                     $("#display_corlist").html(result);

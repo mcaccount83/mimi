@@ -69,9 +69,9 @@
     <p>Sincerely,</p>
     <br>
     <br>
-    <p>{{ $pdfData['cc_fname'] }} {{ $pdfData['cc_lname'] }}<br>
-    {{ $pdfData['cc_pos'] }}<br>
-    {{ $pdfData['cc_conf_name'] }}, {{ $pdfData['cc_conf_desc'] }}<br>
+    <p>{{ $pdfData['user_name'] }}<br>
+        {{ $pdfData['user_position'] }}<br>
+        {{ $pdfData['user_conf_name'] }}, {{ $pdfData['user_conf_desc'] }}<br>
     International MOMS Club<sub>&reg;</sub></p>
 </div>
 </body>

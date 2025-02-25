@@ -27,54 +27,49 @@ class ChapterReportController extends Controller
     }
 
     /*/ Base Chapter Controller /*/
-    //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    //  $this->baseChapterController->getChapterDetails($chId)
+    //  $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+    //  $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //  $this->baseChapterController->getChapterDetails($chId);
 
     /**
      * Chpater Status Report
      */
     public function showRptChapterStatus(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox4Status = $baseQuery['checkBox4Status'];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox4Status' => $checkBox4Status,'corId' => $cdId];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox4Status' => $checkBox4Status];
 
         return view('chapreports.chaprptchapterstatus')->with($data);
     }
 
     /**
-     * View the EIN Status
+     * View the EIN Status -- Edit/Details and Update/Store are in ChapterController
      */
     public function showRptEINstatus(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $cdId];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
 
         return view('chapreports.chaprpteinstatus')->with($data);
     }
@@ -84,64 +79,15 @@ class ChapterReportController extends Controller
      */
     public function showIntEINstatus(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $chapterList = $baseQuery['query']->get();
 
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'status', 'startMonth', 'documents', 'primaryCoordinator'])
-            ->where('is_active', 1);
-
-        $baseQuery->orderBy(State::select('state_short_name')
-            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name');
-
-        $chapterList = $baseQuery->get();
-
-        $data = ['chapterList' => $chapterList, 'corId' => $cdId];
+        $data = ['chapterList' => $chapterList];
 
         return view('international.inteinstatus')->with($data);
-    }
-
-    /**
-     * Update EIN Status Notes (store)
-     */
-    public function updateRptEINstatus(Request $request, $id): RedirectResponse
-    {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
-
-        $nextRenewalYear = $request->input('ch_nxt_renewalyear');
-
-        //$nextRenewalYear = date('Y');
-        $primaryCordEmail = $request->input('ch_pc_email');
-        $boardPresEmail = $request->input('ch_pre_email');
-
-        $chapter = Chapters::find($id);
-        DB::beginTransaction();
-        try {
-
-            $chapter->ein_notes = $request->input('ch_einnotes');
-
-            $chapter->save();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            // Log the error
-            Log::error($e);
-
-            return redirect()->to('/chapterreports/einstatus')->with('fail', 'Something went wrong, Please try again.');
-        }
-
-        return redirect()->to('/chapterreports/einstatus')->with('success', 'Your EIN/IRS Notes have been saved');
     }
 
     /**
@@ -149,20 +95,17 @@ class ChapterReportController extends Controller
      */
     public function showRptNewChapters(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
         $now = Carbon::now();
         $oneYearAgo = $now->copy()->subYear();
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where(function ($query) use ($oneYearAgo) {
                 $query->where(function ($q) use ($oneYearAgo) {
@@ -176,7 +119,7 @@ class ChapterReportController extends Controller
             ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $cdId];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
 
         return view('chapreports.chaprptnewchapters')->with($data);
     }
@@ -186,23 +129,20 @@ class ChapterReportController extends Controller
      */
     public function showRptLargeChapters(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where('members_paid_for', '>=', '75')
             ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $cdId];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
 
         return view('chapreports.chaprptlargechapters')->with($data);
     }
@@ -212,23 +152,20 @@ class ChapterReportController extends Controller
      */
     public function showRptProbation(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where('status_id', '!=', 1)
             ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $cdId];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
 
         return view('chapreports.chaprptprobation')->with($data);
     }
@@ -238,54 +175,47 @@ class ChapterReportController extends Controller
      */
     public function showRptChapterCoordinators(Request $request): View
     {
-        try {
-            $user = User::find($request->user()->id);
-            $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-            $cdDetails = $user->coordinator;
-            $cdId = $cdDetails->id;
-            $cdConfId = $cdDetails->conference_id;
-            $cdRegId = $cdDetails->region_id;
-            $cdPositionid = $cdDetails->position_id;
-            $cdSecPositionid = $cdDetails->sec_position_id;
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-            $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
-            $chapterList = $baseQuery['query']->get();
-            $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $chaptersData = $chapterList->map(function ($chapter) {
+            $id = $chapter->primary_coordinator_id;
+            $reportingList = DB::table('coordinator_reporting_tree')
+                ->select('*')
+                ->where('id', $id)
+                ->first();
 
-            $chaptersData = $chapterList->map(function ($chapter) {
-                $id = $chapter->primary_coordinator_id;
-                $reportingList = DB::table('coordinator_reporting_tree')
-                    ->select('*')
-                    ->where('id', $id)
+            $filterReportingList = collect((array) $reportingList)
+                ->except(['id', 'layer0'])
+                ->reverse();
+
+            $coordinatorArray = $filterReportingList->map(function ($val) {
+                return DB::table('coordinators as cd')
+                    ->select('cd.first_name', 'cd.last_name', 'cp.short_title as position')
+                    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                    ->where('cd.id', $val)
                     ->first();
-
-                $filterReportingList = collect((array) $reportingList)
-                    ->except(['id', 'layer0'])
-                    ->reverse();
-
-                $coordinatorArray = $filterReportingList->map(function ($val) {
-                    return DB::table('coordinators as cd')
-                        ->select('cd.first_name', 'cd.last_name', 'cp.short_title as position')
-                        ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                        ->where('cd.id', $val)
-                        ->first();
-                });
-
-                return [
-                    'chapter' => $chapter,
-                    'coordinatorArray' => $coordinatorArray->toArray(),
-                ];
             });
 
-            $countList = count($chapterList);
-            $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $cdId, 'chaptersData' => $chaptersData,
-                'positionCodes' => ['BS', 'AC', 'SC', 'ARC', 'RC', 'ACC', 'CC'], ];
+            return [
+                'chapter' => $chapter,
+                'coordinatorArray' => $coordinatorArray->toArray(),
+            ];
+        });
 
-            return view('chapreports.chaprptcoordinators')->with($data);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'chaptersData' => $chaptersData,
+            'positionCodes' => ['BS', 'AC', 'SC', 'ARC', 'RC', 'ACC', 'CC'], ];
+
+        return view('chapreports.chaprptcoordinators')->with($data);
     }
 
 }

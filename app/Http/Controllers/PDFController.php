@@ -60,12 +60,15 @@ class PDFController extends Controller
      */
     public function saveFinancialReport(Request $request, $chapterId)
     {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
         $eoyDrive = GoogleDrive::value('eoy_uploads');
         $sharedDriveId = $eoyDrive;
         $year = GoogleDrive::value('eoy_uploads_year');
 
         // $baseQuery = $this->getChapterDetails($chapterId);
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
         $chDetails = $baseQuery['chDetails'];
         $chDocuments = $baseQuery['chDocuments'];
         $chapterName = $chDetails->name;
@@ -96,11 +99,12 @@ class PDFController extends Controller
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
+
         $userName = $user->first_name.' '.$user->last_name;
         $userEmail = $user->email;
 
         // $baseQuery = $this->getChapterDetails($chapterId);
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
         $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
@@ -296,7 +300,7 @@ class PDFController extends Controller
     /**
      * Save & Send Disband Letter
      */
-    public function saveDisbandLetter($chapterId, $type): JsonResponse
+    public function saveDisbandLetter(Request $request, $chapterId, $type): JsonResponse
     {
         // $chapterId = $request->chapterId;
         // $letterType = $request->letterType;
@@ -324,7 +328,7 @@ class PDFController extends Controller
                 return response()->json(['message' => 'Invalid letter type selected'], 400);
         }
 
-        $result = $this->generateDisbandLetter($chapterId, $type);
+        $result = $this->generateDisbandLetter($request, $chapterId, $type);
         $pdf = $result['pdf'];
         $filename = $result['filename'];
 
@@ -332,7 +336,7 @@ class PDFController extends Controller
         $pdf->save($pdfPath);
 
         if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)) {
-            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $request);
             $chDetails = $baseQuery['chDetails'];
             $chDocuments = $baseQuery['chDocuments'];
             $stateShortName = $baseQuery['stateShortName'];
@@ -342,23 +346,30 @@ class PDFController extends Controller
 
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
-            $cc_email = $baseQuery['emailCC'];
-            $cc_fname = $baseQuery['cc_fname'];
-            $cc_lname = $baseQuery['cc_lname'];
-            $cc_pos = $baseQuery['cc_pos'];
-            $cc_conf_name = $baseQuery['cc_conf_name'];
-            $cc_conf_desc = $baseQuery['cc_conf_desc'];
+
+            //  Load User Information for Signing Email & PDFs
+            $userData = $this->userController->loadUserInformation($request);
+            $user_name = $userData['user_name'];
+            $user_email = $userData['user_email'];
+            $user_conf_name = $userData['user_conf_name'];
+            $user_conf_desc = $userData['user_conf_desc'];
+            $user_position = $userData['user_position'];
 
             $mailData = [
                 'chapterName' => $chDetails->name,
                 'chapterEmail' => $chDetails->email,
                 'chapterState' => $stateShortName,
-                'cc_email' => $cc_email,
-                'cc_fname' => $cc_fname,
-                'cc_lname' => $cc_lname,
-                'cc_pos' => $cc_pos,
-                'cc_conf_name' => $cc_conf_name,
-                'cc_conf_desc' => $cc_conf_desc,
+                'user_name' => $user_name,
+                'user_email' => $user_email,
+                'user_conf_name' => $user_conf_name,
+                'user_conf_desc' => $user_conf_desc,
+                'user_position' => $user_position,
+                // 'cc_email' => $cc_email,
+                // 'cc_fname' => $cc_fname,
+                // 'cc_lname' => $cc_lname,
+                // 'cc_pos' => $cc_pos,
+                // 'cc_conf_name' => $cc_conf_name,
+                // 'cc_conf_desc' => $cc_conf_desc,
             ];
 
             switch ($letterType) {
@@ -408,20 +419,23 @@ class PDFController extends Controller
     /**
      * Generate Disband Letter
      */
-    public function generateDisbandLetter($chapterId, $type)
+    public function generateDisbandLetter(Request $request, $chapterId, $type)
     {
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $request);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
         $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $PresDetails = $baseQuery['PresDetails'];
-        $cc_fname = $baseQuery['cc_fname'];
-        $cc_lname = $baseQuery['cc_lname'];
-        $cc_pos = $baseQuery['cc_pos'];
-        $cc_conf_name = $baseQuery['cc_conf_name'];
-        $cc_conf_desc = $baseQuery['cc_conf_desc'];
+
+        //  Load User Information for Signing Email & PDFs
+        $userData = $this->userController->loadUserInformation($request);
+        $user_name = $userData['user_name'];
+        $user_email = $userData['user_email'];
+        $user_conf_name = $userData['user_conf_name'];
+        $user_conf_desc = $userData['user_conf_desc'];
+        $user_position = $userData['user_position'];
 
         $date = Carbon::now();
         $dateFormatted = $date->format('m-d-Y');
@@ -437,11 +451,16 @@ class PDFController extends Controller
             'pres_city' => $PresDetails->city,
             'pres_state' => $PresDetails->state,
             'pres_zip' => $PresDetails->zip,
-            'cc_fname' => $cc_fname,
-            'cc_lname' => $cc_lname,
-            'cc_pos' => $cc_pos,
-            'cc_conf_name' => $cc_conf_name,
-            'cc_conf_desc' => $cc_conf_desc,
+            'user_name' => $user_name,
+            'user_email' => $user_email,
+            'user_conf_name' => $user_conf_name,
+            'user_conf_desc' => $user_conf_desc,
+            'user_position' => $user_position,
+            // 'cc_fname' => $cc_fname,
+            // 'cc_lname' => $cc_lname,
+            // 'cc_pos' => $cc_pos,
+            // 'cc_conf_name' => $cc_conf_name,
+            // 'cc_conf_desc' => $cc_conf_desc,
             'ch_name' => $sanitizedChapterName,
             'today' => $dateFormatted,
             'nextMonth' => $nextMonthFormatted,
@@ -527,23 +546,35 @@ class PDFController extends Controller
 
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
-            $cc_email = $baseQuery['emailCC'];
-            $cc_fname = $baseQuery['cc_fname'];
-            $cc_lname = $baseQuery['cc_lname'];
-            $cc_pos = $baseQuery['cc_pos'];
-            $cc_conf_name = $baseQuery['cc_conf_name'];
-            $cc_conf_desc = $baseQuery['cc_conf_desc'];
+            $user_name = $baseQuery['user_name'];
+            $user_email = $baseQuery['user_email'];
+            $user_conf_name = $baseQuery['user_conf_name'];
+            $user_conf_desc = $baseQuery['user_conf_desc'];
+            $user_position = $baseQuery['user_position'];
+
+            //  Load User Information for Signing Email & PDFs
+        $userData = $this->userController->loadUserInformation($request);
+        $user_name = $userData['user_name'];
+        $user_email = $userData['user_email'];
+        $user_conf_name = $userData['user_conf_name'];
+        $user_conf_desc = $userData['user_conf_desc'];
+        $user_position = $userData['user_position'];
 
             $mailData = [
                 'chapterName' => $chDetails->name,
                 'chapterEmail' => $chDetails->email,
                 'chapterState' => $stateShortName,
-                'cc_email' => $cc_email,
-                'cc_fname' => $cc_fname,
-                'cc_lname' => $cc_lname,
-                'cc_pos' => $cc_pos,
-                'cc_conf_name' => $cc_conf_name,
-                'cc_conf_desc' => $cc_conf_desc,
+                'user_name' => $user_name,
+                'user_email' => $user_email,
+                'user_conf_name' => $user_conf_name,
+                'user_conf_desc' => $user_conf_desc,
+                'user_position' => $user_position,
+                // 'cc_email' => $cc_email,
+                // 'cc_fname' => $cc_fname,
+                // 'cc_lname' => $cc_lname,
+                // 'cc_pos' => $cc_pos,
+                // 'cc_conf_name' => $cc_conf_name,
+                // 'cc_conf_desc' => $cc_conf_desc,
             ];
 
             switch ($letterType) {
@@ -602,6 +633,11 @@ class PDFController extends Controller
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $PresDetails = $baseQuery['PresDetails'];
+        $user_name = $baseQuery['user_name'];
+        $user_email = $baseQuery['user_email'];
+        $user_conf_name = $baseQuery['user_conf_name'];
+        $user_conf_desc = $baseQuery['user_conf_desc'];
+        $user_position = $baseQuery['user_position'];
         $cc_fname = $baseQuery['cc_fname'];
         $cc_lname = $baseQuery['cc_lname'];
         $cc_pos = $baseQuery['cc_pos'];
@@ -623,11 +659,16 @@ class PDFController extends Controller
             'pres_city' => $PresDetails->city,
             'pres_state' => $PresDetails->state,
             'pres_zip' => $PresDetails->zip,
-            'cc_fname' => $cc_fname,
-            'cc_lname' => $cc_lname,
-            'cc_pos' => $cc_pos,
-            'cc_conf_name' => $cc_conf_name,
-            'cc_conf_desc' => $cc_conf_desc,
+            'user_name' => $user_name,
+            'user_email' => $user_email,
+            'user_conf_name' => $user_conf_name,
+            'user_conf_desc' => $user_conf_desc,
+            'user_position' => $user_position,
+            // 'cc_fname' => $cc_fname,
+            // 'cc_lname' => $cc_lname,
+            // 'cc_pos' => $cc_pos,
+            // 'cc_conf_name' => $cc_conf_name,
+            // 'cc_conf_desc' => $cc_conf_desc,
             'ch_name' => $sanitizedChapterName,
             'nextMonthDate' => $nextMonthFormatted,
         ];

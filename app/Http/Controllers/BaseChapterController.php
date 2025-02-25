@@ -10,6 +10,7 @@ use App\Models\Region;
 use App\Models\State;
 use App\Models\Status;
 use App\Models\Website;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Log;
 
 class BaseChapterController extends Controller
@@ -28,6 +29,7 @@ class BaseChapterController extends Controller
     // $displayEOY = getEOYDisplay();
 
     /*/User Controller/*/
+    // $this->userController->loadUserInformation($request);
     // $this->userController->loadReportingTree($cdId);
     // $this->userController->loadEmailDetails($chId);
     // $this->userController->loadConferenceCoord($chPcId);
@@ -41,19 +43,19 @@ class BaseChapterController extends Controller
     /**
      * Apply checkbox filters to the query
      */
-    private function applyCheckboxFilters($baseQuery, $cdId)
+    private function applyCheckboxFilters($baseQuery, $coorId)
     {
         $checkboxStatus = ['checkBoxStatus' => '', 'checkBox2Status' => '', 'checkBox3Status' => '', 'checkBox4Status' => ''];
 
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkboxStatus['checkBoxStatus'] = 'checked';
-            $baseQuery->where('primary_coordinator_id', '=', $cdId);
+            $baseQuery->where('primary_coordinator_id', '=', $coorId);
         }
 
         if (isset($_GET['check2']) && $_GET['check2'] == 'yes') {
             $checkboxStatus['checkBox2Status'] = 'checked';
-            $baseQuery->whereHas('financialReport', function ($query) use ($cdId) {
-                $query->where('reviewer_id', '=', $cdId);
+            $baseQuery->whereHas('financialReport', function ($query) use ($coorId) {
+                $query->where('reviewer_id', '=', $coorId);
             });
         }
 
@@ -114,13 +116,13 @@ class BaseChapterController extends Controller
     {
         $baseQuery = $this->getBaseQueryWithRelations($params['isActive']);
 
-        if (isset($params['cdId'])) {
+        if (isset($params['coorId'])) {
             // Only apply position conditions if this is not an international query
             if (isset($params['conditions']) && $params['conditions']) {
                 $conditionsData = $this->baseConditionsController->getConditions(
-                    $params['cdId'],
-                    $params['cdPositionid'],
-                    $params['cdSecPositionid']
+                    $params['coorId'],
+                    $params['positionId'],
+                    $params['secPositionId']
                 );
 
                 $positionMethod = $params['queryType'] === 'inquiries'
@@ -130,13 +132,13 @@ class BaseChapterController extends Controller
                 $baseQuery = $this->baseConditionsController->$positionMethod(
                     $baseQuery,
                     $conditionsData['conditions'],
-                    $params['cdConfId'] ?? null,
-                    $params['cdRegId'] ?? null,
+                    $params['confId'] ?? null,
+                    $params['regId'] ?? null,
                     $conditionsData['inQryArr']
                 );
             }
 
-            $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['cdId']);
+            $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
             $baseQuery = $checkboxResults['query'];
             $checkboxStatus = $checkboxResults['status'];
         }
@@ -151,76 +153,76 @@ class BaseChapterController extends Controller
     /**
      * Public methods for different query types
      */
-    public function getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    public function getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildChapterQuery([
             'isActive' => 1,
-            'cdId' => $cdId,
-            'cdConfId' => $cdConfId,
-            'cdRegId' => $cdRegId,
-            'cdPositionid' => $cdPositionid,
-            'cdSecPositionid' => $cdSecPositionid,
+            'coorId' => $coorId,
+            'confId' => $confId,
+            'regId' => $regId,
+            'positionId' => $positionId,
+            'secPositionId' => $secPositionId,
             'conditions' => true,
             'queryType' => 'regular'
         ]);
     }
 
-    public function getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    public function getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildChapterQuery([
             'isActive' => 0,
-            'cdId' => $cdId,
-            'cdConfId' => $cdConfId,
-            'cdRegId' => $cdRegId,
-            'cdPositionid' => $cdPositionid,
-            'cdSecPositionid' => $cdSecPositionid,
+            'coorId' => $coorId,
+            'confId' => $confId,
+            'regId' => $regId,
+            'positionId' => $positionId,
+            'secPositionId' => $secPositionId,
             'conditions' => true,
             'queryType' => 'regular'
         ]);
     }
 
-    public function getActiveInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    public function getActiveInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildChapterQuery([
             'isActive' => 1,
-            'cdId' => $cdId,
-            'cdConfId' => $cdConfId,
-            'cdRegId' => $cdRegId,
-            'cdPositionid' => $cdPositionid,
-            'cdSecPositionid' => $cdSecPositionid,
+            'coorId' => $coorId,
+            'confId' => $confId,
+            'regId' => $regId,
+            'positionId' => $positionId,
+            'secPositionId' => $secPositionId,
             'conditions' => true,
             'queryType' => 'inquiries'
         ]);
     }
 
-    public function getZappedInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    public function getZappedInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildChapterQuery([
             'isActive' => 0,
-            'cdId' => $cdId,
-            'cdConfId' => $cdConfId,
-            'cdRegId' => $cdRegId,
-            'cdPositionid' => $cdPositionid,
-            'cdSecPositionid' => $cdSecPositionid,
+            'coorId' => $coorId,
+            'confId' => $confId,
+            'regId' => $regId,
+            'positionId' => $positionId,
+            'secPositionId' => $secPositionId,
             'conditions' => true,
             'queryType' => 'inquiries'
         ]);
     }
 
-    public function getActiveInternationalBaseQuery($cdId)
+    public function getActiveInternationalBaseQuery($coorId)
     {
         return $this->buildChapterQuery([
             'isActive' => 1,
-            'cdId' => $cdId,
+            'coorId' => $coorId,
             'conditions' => false,
             'queryType' => 'international'
         ]);
     }
 
-    public function getZappedInternationalBaseQuery($cdId) {
+    public function getZappedInternationalBaseQuery($coorId) {
         return $this->buildChapterQuery([
             'isActive' => 0,
-            'cdId' => $cdId,
+            'coorId' => $coorId,
             'conditions' => false,
             'queryType' => 'international'
         ]);
@@ -231,7 +233,8 @@ class BaseChapterController extends Controller
     */
     public function getChapterDetails($chId)
     {
-        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])->find($chId);
+        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])
+            ->find($chId);
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
         $regionLongName = $chDetails->region->long_name;
@@ -303,7 +306,8 @@ class BaseChapterController extends Controller
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcDetails' => $pcDetails, 'submitted' => $submitted, 'rrDetails' => $rrDetails,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY,
-            'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_conf_desc' => $cc_conf_desc, 'cc_conf_name' => $cc_conf_name
+            'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_conf_desc' => $cc_conf_desc, 'cc_conf_name' => $cc_conf_name,
+            // 'user_name' => $user_name, 'user_conf_name' => $user_conf_name, 'user_conf_desc' => $user_conf_desc, 'user_position' => $user_position, 'user_email' => $user_email
         ];
     }
 

@@ -5,8 +5,8 @@
 <p>Attached is a copy of your official disband letter that will walk you through the steps to properly close your chapter.  If you have any questions at all, please do not hesitate to reach out to anyone on your Coordinator Team.</p>
 <br>
 <p><strong>MCL</strong>,<br>
-    {{ $mailData['cc_fname'] }} {{ $mailData['cc_lname'] }}<br>
-    {{ $mailData['cc_pos'] }}<br>
-    {{ $mailData['cc_conf_name'] }}, {{ $mailData['cc_conf_desc'] }}<br>
+    {{ $mailData['user_name'] }}<br>
+    {{ $mailData['user_position'] }}<br>
+    {{ $mailData['user_conf_name'] }}, {{ $mailData['user_conf_desc'] }}<br>
     International MOMS Club</p>
 @endcomponent

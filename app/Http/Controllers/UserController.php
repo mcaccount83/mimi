@@ -10,6 +10,7 @@ use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -61,15 +62,46 @@ class UserController extends Controller
     }
 
     /**
+     * Load User Information
+     */
+     public function loadUserInformation(Request $request)
+    {
+        $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition', 'coordinator.displayPosition'])
+            ->find($request->user()->id);
+
+        $userId = $user->id;
+        $fname = $user->first_name;
+        $lname = $user->last_name;
+        $user_name = $fname.' ' .$lname;
+        $user_email = $user->email;
+        $user_coorId = $user->coordinator->id;
+        $user_confId = $user->coordinator->conference_id;
+        $user_regId = $user->coordinator->region_id;
+        $user_conference = $user->coordinator->conference;
+        $user_region = $user->coordinator->region;
+        $user_position = $user->coordinator->displayPosition->long_title;
+        $user_secPositionId = $user->coordinator->sec_position_id;
+        $user_positionId = $user->coordinator->display_position_id;
+        $user_secPosition = $user->coordinator->secondaryPosition->long_title;
+        $user_layerId = $user->coordinator->layer_id;
+
+        return ['userId' => $userId, 'user_name' => $user_name, 'user_email' => $user_email,
+            'user_position' => $user_position, 'user_secPosition' => $user_secPosition, 'user_coorId' => $user_coorId, 'user_regId' => $user_regId,
+            'user_confId' => $user_confId, 'user_secPositionId' => $user_secPositionId, 'user_positionId' => $user_positionId,
+            'user_conference' => $user_conference, 'user_region' => $user_region, 'user_layerId' => $user_layerId,
+        ];
+    }
+
+    /**
      * Get Reporting Tree -- for chapter display based on chapters reporting to logged in PC and coordinators under them
      */
-    public function loadReportingTree($corId)
+    public function loadReportingTree($cdId)
     {
-        $cdDetails = Coordinators::find($corId);
+        $cdDetails = Coordinators::find($cdId);
         $cdLayerId = $cdDetails->layer_id;
         $layerColumn = 'layer'.$cdLayerId; // Dynamic layer column based on the layer ID
 
-        $reportIds = CoordinatorTree::where($layerColumn, '=', $corId)
+        $reportIds = CoordinatorTree::where($layerColumn, '=', $cdId)
             ->pluck('id'); // Get only the IDs directly
 
         $inQryArr = $reportIds->toArray();  // Convert the collection of IDs to an array
@@ -78,7 +110,7 @@ class UserController extends Controller
     }
 
     /**
-     * load Email Details -- Mail for full Board and full Coordinator Downline
+     * load Email Details -- Mail for full Board AND full Coordinator Downline
      */
     public function loadEmailDetails($chId)
     {
@@ -120,7 +152,7 @@ class UserController extends Controller
     }
 
     /**
-     * load Coordinator List
+     * load Coordinator List for a PC selected and their downline
      */
     public function loadCoordinatorList($chPcId): JsonResponse
     {
@@ -170,12 +202,11 @@ class UserController extends Controller
                 $i++;
             }
         }
-
         return response()->json($str);
     }
 
     /**
-     * Load Conference Coordinators for each Conference
+     * Load Conference Coordinator Information for each Conference based on the PC selected - used for emails and pdfs
      */
     public function loadConferenceCoord($chPcid)
     {
@@ -337,45 +368,5 @@ class UserController extends Controller
 
         return $rcDetails; // Return all coordinators as a collection
     }
-
-     /**
-     * Load Direct Reports To Dropdown List
-     */
-    // public function loadDirectReportsList($cdId, $cdConfId, $cdPositionid)
-    // {
-    //     $drList = Coordinators::with(['displayPosition', 'secondaryPosition'])
-    //         ->where('conference_id', $cdConfId)
-    //         ->whereBetween('position_id', [1, 6])
-    //         ->where('position_id', '<=', $cdPositionid)
-    //         ->where('id', '!=', $cdId)
-    //         ->where('report_id', $cdId)
-    //         ->where('is_active', 1)
-    //         ->where('on_leave', '!=', '1')
-    //         ->get();
-
-    //     $drDetails = $drList->map(function ($coordinator) {
-    //         $cpos = $coordinator->displayPosition->short_title ?? '';
-    //         if (isset($coordinator->secondaryPosition->short_title)) {
-    //             $cpos = "({$cpos}/{$coordinator->secondaryPosition->short_title})";
-    //         } elseif ($cpos) {
-    //             $cpos = "({$cpos})";
-    //         }
-
-    //         return [
-    //             'cid' => $coordinator->id,
-    //             'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-    //             'dpos' => $coordinator->displayPosition->short_title ?? '',
-    //             'spos' => $coordinator->secondaryPosition->short_title ?? '',
-    //             'cpos' => $cpos,
-    //             'regid' => $coordinator->region_id,
-    //         ];
-    //     });
-
-    //     $drDetails = $drDetails->unique('cid');  // Remove duplicates based on the 'cid' field
-
-    //     return $drDetails; // Return all coordinators as a collection
-    // }
-
-
 
 }

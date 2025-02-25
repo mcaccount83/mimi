@@ -77,22 +77,20 @@ class ChapterController extends Controller
     /*/ Forum Subscription Controller /*/
     //  $this->forumSubscriptionController->defaultCategories()
 
+
     /**
      * Display the Active chapter list mapped with login coordinator
      */
     public function showChapters(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
@@ -107,17 +105,14 @@ class ChapterController extends Controller
      */
     public function showZappedChapter(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
 
         $countList = count($chapterList);
@@ -131,17 +126,14 @@ class ChapterController extends Controller
      */
     public function showChapterInquiries(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
@@ -156,17 +148,14 @@ class ChapterController extends Controller
      */
     public function showZappedChapterInquiries(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getZappedInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getZappedInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
 
         $countList = count($chapterList);
@@ -180,15 +169,11 @@ class ChapterController extends Controller
      */
     public function showIntChapter(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($cdId);
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList];
@@ -201,13 +186,10 @@ class ChapterController extends Controller
      */
     public function showIntZappedChapter(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-
-        $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($cdId);
+        $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
         $chapterList = $baseQuery['query']->get();
 
         $countList = count($chapterList);
@@ -221,18 +203,13 @@ class ChapterController extends Controller
      */
     public function viewChapterDetails(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $positionId = $user['user_positionId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chId = $baseQuery['chId'];
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -262,16 +239,19 @@ class ChapterController extends Controller
         $startYear = $chDetails->start_year;
         $startDate = Carbon::createFromDate($startYear, $startMonthId, 1);
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'cdPositionid' => $cdPositionid, 'cdId' => $cdId, 'reviewComplete' => $reviewComplete, 'threeMonthsAgo' => $threeMonthsAgo,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionId' => $positionId, 'coorId' => $coorId, 'reviewComplete' => $reviewComplete, 'threeMonthsAgo' => $threeMonthsAgo,
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
-            'startMonthName' => $startMonthName, 'cdConfId' => $cdConfId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate,
+            'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
-            'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE
+            'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE,
         ];
 
         return view('chapters.view')->with($data);
     }
 
+    /**
+     * Check to see if there is already an EIN on file
+     */
     public function checkEIN(Request $request): JsonResponse
     {
         $chapterId = $request->input('chapter_id');
@@ -282,15 +262,13 @@ class ChapterController extends Controller
         ]);
     }
 
+    /**
+     * Update EIN number
+     */
     public function updateEIN(Request $request): JsonResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userName = $user->first_name.' '.$user->last_name;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];;
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $ein = $request->input('ein');
@@ -306,15 +284,10 @@ class ChapterController extends Controller
                     'last_updated_date' => $lastupdatedDate,
                 ]);
 
-            // Commit the transaction
             DB::commit();
-
-            $message = 'Chapter EIN successfully updated';
-
             // Return JSON response
             return response()->json([
-                'status' => 'success',
-                'message' => $message,
+                'status' => 'success', 'message' => 'Chapter EIN successfully updated',
                 'redirect' => route('chapters.view', ['id' => $chapterId]),
             ]);
 
@@ -322,13 +295,9 @@ class ChapterController extends Controller
             // Rollback transaction on exception
             DB::rollback();
             Log::error($e);
-
-            $message = 'Something went wrong, Please try again.';
-
             // Return JSON error response
             return response()->json([
-                'status' => 'error',
-                'message' => $message,
+                'status' => 'error', 'message' => 'Something went wrong, Please try again.',
                 'redirect' => route('chapters.view', ['id' => $chapterId]),
             ]);
         }
@@ -339,16 +308,12 @@ class ChapterController extends Controller
      */
     public function sendNewChapterEmail(Request $request): JsonResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdName = $cdDetails->first_name.' '.$cdDetails->last_name;
-        $cdEmail = $cdDetails->email;
-        $cdPosition = $cdDetails->displayPosition->long_title;
-        $cdConfId = $cdDetails->conference_id;
-        $cdCoferenceDescription = $cdDetails->conference->conference_description;
+        $user = $this->userController->loadUserInformation($request);
+        $UserName = $user['user_name'];
+        $UserEmail = $user['user_email'];
+        $confId = $user['user_confId'];
+        $confDesc = $user['user_conf_desc'];
+        $position = $user['user_position'];
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
@@ -361,7 +326,6 @@ class ChapterController extends Controller
          $chDetails = $baseQuery['chDetails'];
          $stateShortName = $baseQuery['stateShortName'];
          $chConfId = $baseQuery['chConfId'];
-         $chPcId = $baseQuery['chPcId'];
          $emailPC = $baseQuery['emailPC'];
          $pcName = $baseQuery['pcName'];
          $PresDetails = $baseQuery['PresDetails'];
@@ -377,11 +341,11 @@ class ChapterController extends Controller
             'cor_name' => $pcName,
             'cor_email' => $emailPC,
             'conf' => $chConfId,
-            'userName' => $cdName,
-            'userEmail' => $cdEmail,
-            'positionTitle' => $cdPosition,
-            'conf' => $cdConfId,
-            'conf_name' => $cdCoferenceDescription,
+            'userName' => $UserName,
+            'userEmail' => $UserEmail,
+            'positionTitle' => $position,
+            'conf' => $confId,
+            'conf_name' => $confDesc,
         ];
 
         $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
@@ -424,13 +388,8 @@ class ChapterController extends Controller
      */
     public function updateChapterDisband(Request $request): JsonResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userName = $user->first_name.' '.$user->last_name;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
@@ -475,64 +434,42 @@ class ChapterController extends Controller
                 ForumCategorySubscription::whereIn('user_id', $userIds)->delete();
             }
 
-             //Update Chapter MailData//
-             $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
-             $chDetails = $baseQuery['chDetails'];
-             $stateShortName = $baseQuery['stateShortName'];
-             $chConfId = $baseQuery['chConfId'];
-             $chPcId = $baseQuery['chPcId'];
-             $emailPC = $baseQuery['emailPC'];
-             $PresDetails = $baseQuery['PresDetails'];
-             $AVPDetails = $baseQuery['AVPDetails'];
-             $MVPDetails = $baseQuery['MVPDetails'];
-             $TRSDetails = $baseQuery['TRSDetails'];
-             $SECDetails = $baseQuery['SECDetails'];
-
-             $emailListChap = $baseQuery['emailListChap'];
-             $emailListCoord = $baseQuery['emailListCoord'];
-            $cc_email = $baseQuery['emailCC'];
-            $cc_fname = $baseQuery['cc_fname'];
-            $cc_lname = $baseQuery['cc_lname'];
-            $cc_pos = $baseQuery['cc_pos'];
-            $cc_conf_name = $baseQuery['cc_conf_name'];
-            $cc_conf_desc = $baseQuery['cc_conf_desc'];
+            //Update Chapter MailData for ListAdmin Notice//
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $chConfId = $baseQuery['chConfId'];
+            $PresDetails = $baseQuery['PresDetails'];
+            $AVPDetails = $baseQuery['AVPDetails'];
+            $MVPDetails = $baseQuery['MVPDetails'];
+            $TRSDetails = $baseQuery['TRSDetails'];
+            $SECDetails = $baseQuery['SECDetails'];
 
             $mailData = [
                 'chapterName' => $chDetails->name,
-                'chapterEmail' => $chDetails->email,
                 'chapterState' => $stateShortName,
-                'pfirst' => $PresDetails->first_name,
-                'plast' => $PresDetails->last_name,
-                'pemail' => $PresDetails->email,
-                'afirst' => $AVPDetails->first_name,
-                'alast' => $AVPDetails->last_name,
-                'aemail' => $AVPDetails->email,
-                'mfirst' => $MVPDetails->first_name,
-                'mlast' => $MVPDetails->last_name,
-                'memail' => $MVPDetails->email,
-                'tfirst' => $TRSDetails->first_name,
-                'tlast' => $TRSDetails->last_name,
-                'temail' => $TRSDetails->email,
-                'sfirst' => $SECDetails->first_name,
-                'slast' => $SECDetails->last_name,
-                'semail' => $SECDetails->email,
-                'conf' => $chConfId,
-                'cc_fname' => $cc_fname,
-                'cc_lname' => $cc_lname,
-                'cc_pos' => $cc_pos,
-                'cc_conf_name' => $cc_conf_name,
-                'cc_conf_desc' => $cc_conf_desc,
-                'cc_email' => $cc_email,
+                'chapterConf' => $chConfId,
+                'chapterEmail' => $chDetails->email,
+                'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
+                'presEmail' => $PresDetails->email,
+                'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
+                'avpEmail' => $AVPDetails->email,
+                'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
+                'mvpEmail' => $MVPDetails->email,
+                'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
+                'trsEmail' => $TRSDetails->email,
+                'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
+                'secEmail' => $SECDetails->email,
             ];
 
-            //Primary Coordinator Notification//
+            //ListAdmin Notification//
             $to_email = 'listadmin@momsclub.org';
             Mail::to($to_email)
                 ->queue(new ChapterRemoveListAdmin($mailData));
 
-            //Standard Disbanding Letter Send to Board & Coordinators//
+            //Standard Disbanding Letter & Notification to Board and Coordinators//
             if ($disbandLetter == 1) {
-                $pdfPath =  $this->pdfController->saveDisbandLetter($chapterid, $letterType);   // Generate and Send the PDF
+                $pdfPath =  $this->pdfController->saveDisbandLetter($request, $chapterid, $letterType);   // Generate and Send the PDF
             }
 
             // Commit the transaction
@@ -568,13 +505,9 @@ class ChapterController extends Controller
      */
     public function updateChapterUnZap(Request $request): JsonResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userName = $user->first_name.' '.$user->last_name;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
@@ -586,7 +519,7 @@ class ChapterController extends Controller
         $defaultCategories = $this->forumSubscriptionController->defaultCategories();
         $defaultBoardCategories = $defaultCategories['boardCategories'];
 
-        $coordinatorData = $this->userController->loadReportingTree($cdId);
+        $coordinatorData = $this->userController->loadReportingTree($coorId);
 
         try {
             DB::beginTransaction();
@@ -604,8 +537,8 @@ class ChapterController extends Controller
             $userRelatedChapterList = Boards::where('chapter_id', $chapterid)->get();
 
             if ($userRelatedChapterList->isNotEmpty()) {
-                $userIds = $userRelatedChapterList->pluck('user_id');
-                User::whereIn('id', $userIds)->update([
+                $bdUserIds = $userRelatedChapterList->pluck('user_id');
+                User::whereIn('id', $bdUserIds)->update([
                     'is_active' => 1,
                     'updated_at' => $lastupdatedDate,
                 ]);
@@ -617,10 +550,10 @@ class ChapterController extends Controller
                 'last_updated_date' => $lastupdatedDate,
             ]);
 
-            foreach ($userIds as $userId) {
+            foreach ($bdUserIds as $bdUserId) {
                 foreach ($defaultBoardCategories as $categoryId) {
                     ForumCategorySubscription::create([
-                        'user_id' => $userId,  // Now passing a single ID instead of collection
+                        'user_id' => $bdUserId,  // Now passing a single ID instead of collection
                         'category_id' => $categoryId,
                     ]);
                 }
@@ -631,21 +564,16 @@ class ChapterController extends Controller
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chConfId = $baseQuery['chConfId'];
-            $chPcId = $baseQuery['chPcId'];
-            $emailPC = $baseQuery['emailPC'];
             $PresDetails = $baseQuery['PresDetails'];
             $AVPDetails = $baseQuery['AVPDetails'];
             $MVPDetails = $baseQuery['MVPDetails'];
             $TRSDetails = $baseQuery['TRSDetails'];
             $SECDetails = $baseQuery['SECDetails'];
 
-            $emailListChap = $baseQuery['emailListChap'];
-            $emailListCoord = $baseQuery['emailListCoord'];
             $cc_email = $baseQuery['emailCC'];
             $cc_fname = $baseQuery['cc_fname'];
             $cc_lname = $baseQuery['cc_lname'];
             $cc_pos = $baseQuery['cc_pos'];
-            $cc_conf_name = $baseQuery['cc_conf_name'];
             $cc_conf_desc = $baseQuery['cc_conf_desc'];
 
             $mailData = [
@@ -714,21 +642,15 @@ class ChapterController extends Controller
      */
     public function addChapterNew(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['user_confId'];
 
         $allStates = State::all();  // Full List for Dropdown Menu
         $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
-            ->where('conference_id', $cdConfId)
+            ->where('conference_id', $confId)
             ->get();
         $allStatuses = Status::all();  // Full List for Dropdown Menu
-        $chConfId = $cdConfId;
+        $chConfId = $confId;
 
         $pcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $chConfId)
@@ -769,16 +691,9 @@ class ChapterController extends Controller
      */
     public function updateChapterNew(Request $request): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
-
-        $conference = $cdConfId;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $conference = $user['user_confId'];
         $country = 'USA';
         $currentMonth = date('m');
         $currentYear = date('Y');
@@ -1060,27 +975,13 @@ class ChapterController extends Controller
      */
     public function editChapterDetails(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chId = $baseQuery['chId'];
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
-        $chConfId = $baseQuery['chConfId'];
-        $chRegId = $baseQuery['chRegId'];
         $chPcId = $baseQuery['chPcId'];
-        $chDocuments = $baseQuery['chDocuments'];
-        $chFinancialReport = $baseQuery['chFinancialReport'];
         $reviewComplete = $baseQuery['reviewComplete'];
 
         $startMonthName = $baseQuery['startMonthName'];
@@ -1090,15 +991,12 @@ class ChapterController extends Controller
         $allStatuses = $baseQuery['allStatuses'];
         $allWebLinks = $baseQuery['allWebLinks'];
 
-        $emailListChap = $baseQuery['emailListChap'];
-        $emailListCoord = $baseQuery['emailListCoord'];
-
         $pcDetails = $baseQuery['pcDetails'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'cdPositionid' => $cdPositionid, 'cdId' => $cdId, 'reviewComplete' => $reviewComplete,
-            'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
-            'startMonthName' => $startMonthName, 'cdConfId' => $cdConfId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
-            'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'reviewComplete' => $reviewComplete,
+            'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
+            'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
+            'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'allStatuses' => $allStatuses, 'allWebLinks' => $allWebLinks,
             'pcDetails' => $pcDetails,
         ];
@@ -1111,13 +1009,8 @@ class ChapterController extends Controller
      */
     public function updateChapterDetails(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userName = $user->first_name.' '.$user->last_name;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQueryPre = $this->baseChapterController->getChapterDetails($id);
@@ -1175,7 +1068,6 @@ class ChapterController extends Controller
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chConfId = $baseQueryUpd['chConfId'];
-            $chPcId = $baseQueryUpd['chPcId'];
             $PresDetailsUpd = $baseQueryUpd['PresDetails'];
             $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
             $emailListCoord = $baseQueryUpd['emailListCoord'];  // Full Coordinaor List
@@ -1287,31 +1179,13 @@ class ChapterController extends Controller
      */
     public function editChapterBoard(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chId = $baseQuery['chId'];
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
-        $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
-        $chDocuments = $baseQuery['chDocuments'];
-        $chFinancialReport = $baseQuery['chFinancialReport'];
-        $reviewComplete = $baseQuery['reviewComplete'];
-
-        $startMonthName = $baseQuery['startMonthName'];
-        $chapterStatus = $baseQuery['chapterStatus'];
-        $websiteLink = $baseQuery['websiteLink'];
 
         $PresDetails = $baseQuery['PresDetails'];
         $AVPDetails = $baseQuery['AVPDetails'];
@@ -1320,11 +1194,10 @@ class ChapterController extends Controller
         $SECDetails = $baseQuery['SECDetails'];
 
         $allStates = $baseQuery['allStates'];
-        $websiteLink = $baseQuery['websiteLink'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'cdId' => $cdId, 'reviewComplete' => $reviewComplete, 'stateShortName' => $stateShortName,
-            'chDetails' => $chDetails, 'websiteLink' => $websiteLink, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
-            'cdConfId' => $cdConfId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'allStates' => $allStates, 'PresDetails' => $PresDetails,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName,
+            'chDetails' => $chDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
+            'chPcId' => $chPcId, 'allStates' => $allStates, 'PresDetails' => $PresDetails,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
         ];
 
@@ -1336,13 +1209,8 @@ class ChapterController extends Controller
      */
     public function updateChapterBoard(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userName = $user->first_name.' '.$user->last_name;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQueryPre = $this->baseChapterController->getChapterDetails($id);
@@ -1719,7 +1587,6 @@ class ChapterController extends Controller
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chConfId = $baseQueryUpd['chConfId'];
-            $chPcId = $baseQueryUpd['chPcId'];
             $emailPC = $baseQueryUpd['emailPC'];
             $PresDetailsUpd = $baseQueryUpd['PresDetails'];
             $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
@@ -1887,13 +1754,6 @@ class ChapterController extends Controller
      */
     public function editChapterIRS(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
@@ -1901,13 +1761,12 @@ class ChapterController extends Controller
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $startMonthName = $baseQuery['startMonthName'];
         $chIsActive = $baseQuery['chIsActive'];
-        $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chDocuments = $baseQuery['chDocuments'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'cdId' => $cdId, 'conferenceDescription' => $conferenceDescription,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'conferenceDescription' => $conferenceDescription,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'startMonthName' => $startMonthName,
-            'cdConfId' => $cdConfId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chDocuments' => $chDocuments,
+            'chPcId' => $chPcId, 'chDocuments' => $chDocuments,
         ];
 
         return view('chapters.editirs')->with($data);
@@ -1918,12 +1777,9 @@ class ChapterController extends Controller
      */
     public function updateChapterIRS(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
@@ -1931,7 +1787,7 @@ class ChapterController extends Controller
         DB::beginTransaction();
         try {
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
             $documents->ein_letter = $request->has('ch_ein_letter') ? 1 : 0;
@@ -1955,17 +1811,14 @@ class ChapterController extends Controller
      */
     public function showChapterWebsite(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $websiteList = $baseQuery['query']->get();
 
         $data = ['websiteList' => $websiteList];
@@ -1978,20 +1831,17 @@ class ChapterController extends Controller
      */
     public function showRptSocialMedia(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
 
-        $data = ['chapterList' => $chapterList, 'corId' => $cdId];
+        $data = ['chapterList' => $chapterList];
 
         return view('chapreports.chaprptsocialmedia')->with($data);
     }
@@ -2001,30 +1851,19 @@ class ChapterController extends Controller
      */
     public function editChapterWebsite(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chId = $baseQuery['chId'];
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
-        $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
 
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'cdId' => $cdId, 'stateShortName' => $stateShortName, 'conferenceDescription' => $conferenceDescription,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'conferenceDescription' => $conferenceDescription,
             'chDetails' => $chDetails, 'allWebLinks' => $allWebLinks,
-            'cdConfId' => $cdConfId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'regionLongName' => $regionLongName,
+            'chPcId' => $chPcId, 'regionLongName' => $regionLongName,
         ];
 
         return view('chapters.editwebsite')->with($data);
@@ -2035,12 +1874,9 @@ class ChapterController extends Controller
      */
     public function updateChapterWebsite(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQueryPre = $this->baseChapterController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
@@ -2068,7 +1904,7 @@ class ChapterController extends Controller
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
 
             $chapter->save();
 
@@ -2076,7 +1912,6 @@ class ChapterController extends Controller
             $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
-            $chPcId = $baseQueryUpd['chPcId'];
             $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
             $emailListCoord = $baseQueryUpd['emailListCoord']; // Full Coord List
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
@@ -2135,17 +1970,14 @@ class ChapterController extends Controller
      */
     public function showChapterBoardlist(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $activeChapterList = $baseQuery['query']->get();
 
         $countList = count($activeChapterList);
@@ -2159,20 +1991,17 @@ class ChapterController extends Controller
      */
     public function showChapterReRegistration(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
         $currentYear = date('Y');
         $currentMonth = date('m');
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox3Status = $baseQuery['checkBox3Status'];
 
@@ -2194,7 +2023,7 @@ class ChapterController extends Controller
         }
 
         $countList = count($reChapterList);
-        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status, 'corId' => $cdId];
+        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
 
         return view('chapters.chapreregistration')->with($data);
     }
@@ -2204,13 +2033,8 @@ class ChapterController extends Controller
      */
     public function createChapterReRegistrationReminder(Request $request): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['user_confId'];
 
         $now = Carbon::now();
         $month = $now->month;
@@ -2225,7 +2049,7 @@ class ChapterController extends Controller
         try {
 
             $chapters = Chapters::with(['state', 'conference', 'region'])
-                ->where('conference_id', $cdConfId)
+                ->where('conference_id', $confId)
                 ->where('start_month_id', $month)
                 ->where('next_renewal_year', $year)
                 ->where('is_active', 1)
@@ -2293,13 +2117,8 @@ class ChapterController extends Controller
      */
     public function createChapterReRegistrationLateReminder(Request $request): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['user_confId'];
 
         $now = Carbon::now();
         $month = $now->month;
@@ -2319,7 +2138,7 @@ class ChapterController extends Controller
         try {
 
             $chapters = Chapters::with(['state', 'conference', 'region'])
-                ->where('chapters.conference_id', $cdConfId)
+                ->where('chapters.conference_id', $confId)
                 ->where('chapters.start_month_id', $lastMonth)
                 ->where('chapters.next_renewal_year', $year)
                 ->where('chapters.is_active', 1)
@@ -2388,21 +2207,18 @@ class ChapterController extends Controller
      */
     public function showRptDonations(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $cdId];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
 
         return view('chapters.chapdonations')->with($data);
     }
@@ -2412,19 +2228,11 @@ class ChapterController extends Controller
      */
     public function showIntdonation(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-
-        $chapterList = Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth',
-            'state', 'primaryCoordinator'])
-            ->where('is_active', 1)
-            ->orderBy(State::select('state_short_name')
-                ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name')
-            ->get();
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $chapterList = $baseQuery['query']->get();
 
         $data = ['chapterList' => $chapterList];
 
@@ -2436,12 +2244,6 @@ class ChapterController extends Controller
      */
     public function editChapterPayment(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
@@ -2463,13 +2265,9 @@ class ChapterController extends Controller
      */
     public function updateChapterPayment(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userName = $user->first_name.' '.$user->last_name;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -2500,7 +2298,7 @@ class ChapterController extends Controller
                 $chapter->members_paid_for = $members_paid_for;
                 $chapter->next_renewal_year = $nextRenewalYear + 1;
                 $chapter->last_updated_by = $lastUpdatedBy;
-                $chapter->last_updated_date = date('Y-m-d H:i:s');
+                $chapter->last_updated_date = $lastupdatedDate;
                 $chapter->save();
 
                 if ($request->input('ch_notify') == 'on') {
@@ -2522,7 +2320,7 @@ class ChapterController extends Controller
                 $chapter->m2m_date = $m2m_date;
                 $chapter->m2m_payment = $m2m_payment;
                 $chapter->last_updated_by = $lastUpdatedBy;
-                $chapter->last_updated_date = date('Y-m-d H:i:s');
+                $chapter->last_updated_date = $lastupdatedDate;
                 $chapter->save();
 
                 if ($request->input('ch_thanks') == 'on') {
@@ -2543,7 +2341,7 @@ class ChapterController extends Controller
                 $chapter->sustaining_date = $sustaining_date;
                 $chapter->sustaining_donation = $sustaining_donation;
                 $chapter->last_updated_by = $lastUpdatedBy;
-                $chapter->last_updated_date = date('Y-m-d H:i:s');
+                $chapter->last_updated_date = $lastupdatedDate;
                 $chapter->save();
 
                 if ($request->input('ch_sustaining') == 'on') {

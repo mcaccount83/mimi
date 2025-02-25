@@ -36,7 +36,7 @@ class ChapterDisbandLetter extends Mailable implements ShouldQueue
     {
         return $this
             ->subject('Chapter Disband Letter')
-            ->replyTo($this->mailData['cc_email'])
+            ->replyTo($this->mailData['user_email'])
             ->markdown('emails.chapterupdate.chapterdisbandletter')
             ->attach($this->pdfPath, [
                 'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterName'].'_Disband_Letter.pdf',

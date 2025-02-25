@@ -52,17 +52,14 @@ class CoordinatorController extends Controller
      */
     public function showCoordinators(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
@@ -79,17 +76,14 @@ class CoordinatorController extends Controller
      */
     public function showRetiredCoordinator(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $userDetails = $user->coordinator;
-        $userCdId = $userDetails->id;
-        $userConfId = $userDetails->conference_id;
-        $userRegId = $userDetails->region_id;
-        $userPositionid = $userDetails->position_id;
-        $userSecPositionid = $userDetails->sec_position_id;
-
-        $baseQuery = $this->baseCoordinatorController->getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid);
+        $baseQuery = $this->baseCoordinatorController->getRetiredBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
 
         $data = ['coordinatorList' => $coordinatorList];
@@ -102,17 +96,10 @@ class CoordinatorController extends Controller
      */
     public function showIntCoordinator(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($coorId);
         $coordinatorList = $baseQuery['query']->get();
 
         $data = ['coordinatorList' => $coordinatorList];
@@ -125,17 +112,10 @@ class CoordinatorController extends Controller
      */
     public function showIntCoordinatorRetired(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
 
-        $userDetails = $user->coordinator;
-        $userCdId = $userDetails->id;
-        $userConfId = $userDetails->conference_id;
-        $userRegId = $userDetails->region_id;
-        $userPositionid = $userDetails->position_id;
-        $userSecPositionid = $userDetails->sec_position_id;
-
-        $baseQuery = $this->baseCoordinatorController->getRetiredInternationalBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid);
+        $baseQuery = $this->baseCoordinatorController->getRetiredInternationalBaseQuery($coorId);
         $coordinatorList = $baseQuery['query']->get();
 
         $data = ['coordinatorList' => $coordinatorList];
@@ -148,26 +128,25 @@ class CoordinatorController extends Controller
      */
     public function addCoordNew(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdName = $cdDetails->first_name.' '.$cdDetails->last_name;
-        $cdConfId = $cdDetails->conference_id;
-        $cdConferenceNum = $cdDetails->conference->short_name;
-        $cdConferenceName = $cdDetails->conference->conference_description;
-        $cdRegId = $cdDetails->region_id;
-        $cdRegionName = $cdDetails->region->long_name;
+        $user = $this->userController->loadUserInformation($request);
+        $userName = $user['user_name'];
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $conference = $user['user_conference'];
+        $confLongName = $conference->conference_name;
+        $confDescription = $conference->conference_description;
+        $regId = $user['user_regId'];
+        $region = $user['user_region'];
+        $regLongName = $region->long_name;
 
         $allStates = State::all();  // Full List for Dropdown Menu
         $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
-            ->where('conference_id', $cdConfId)
+            ->where('conference_id', $confId)
             ->get();
         $allMonths = Month::all();  // Full List for Dropdown Menu
 
-        $data = ['allStates' => $allStates, 'allMonths' => $allMonths, 'allRegions' => $allRegions, 'cdName' => $cdName, 'cdConferenceNum' => $cdConferenceNum,
-            'cdConfId' => $cdConfId, 'cdId' => $cdId, 'cdRegId' => $cdRegId, 'cdConferenceName' => $cdConferenceName, 'cdRegionName' => $cdRegionName,
+        $data = ['allStates' => $allStates, 'allMonths' => $allMonths, 'allRegions' => $allRegions, 'userName' => $userName, 'coorId' => $coorId,
+            'confId' => $confId, 'regId' => $regId, 'confLongName' => $confLongName, 'regLongName' => $regLongName, 'confDescription' => $confDescription,
         ];
 
         return view('coordinators.editnew')->with($data);
@@ -178,19 +157,14 @@ class CoordinatorController extends Controller
      */
     public function updateCoordNew(Request $request): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['user_confId'];
+        $reportsTo = $user['user_coorId'];
+        $userLayerId = $user['user_layerId'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdlayerId = $cdDetails->layer_id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
-
-        $reportsTo = $cdId;
-
-        $new_layer_id = $cdlayerId + 1;
+        $new_layer_id = $userLayerId + 1;
         $input = $request->all();
 
         $defaultCategories = $this->forumSubscriptionController->defaultCategories();
@@ -209,7 +183,7 @@ class CoordinatorController extends Controller
 
             $cordId = DB::table('coordinators')->insertGetId(
                 ['user_id' => $userId,
-                    'conference_id' => $cdConfId,
+                    'conference_id' => $confId,
                     'region_id' => $input['cord_region'],
                     'layer_id' => $new_layer_id,
                     'first_name' => $input['cord_fname'],
@@ -229,9 +203,9 @@ class CoordinatorController extends Controller
                     'birthday_month_id' => $input['cord_month'],
                     'birthday_day' => $input['cord_day'],
                     'home_chapter' => $input['cord_chapter'],
-                    'coordinator_start_date' => date('Y-m-d H:i:s'),
+                    'coordinator_start_date' => $lastupdatedDate,
                     'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => date('Y-m-d H:i:s'),
+                    'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1]
             );
 
@@ -279,14 +253,8 @@ class CoordinatorController extends Controller
      */
     public function viewCoordDetails(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetailsUser = $user->coordinator;
-        $cdIdUser = $cdDetailsUser->id;
-        $cdConfIdUser = $cdDetailsUser->conference_id;
-        $cdRegIdUser = $cdDetailsUser->region_id;
-        $cdPositionidUser = $cdDetailsUser->position_id;
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['user_confId'];
 
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
         $cdDetails = $baseQuery['cdDetails'];
@@ -296,7 +264,6 @@ class CoordinatorController extends Controller
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
-        $cdRptId = $baseQuery['cdRptId'];
         $RptFName = $baseQuery['RptFName'];
         $RptLName = $baseQuery['RptLName'];
         $ReportTo = $RptFName.' '.$RptLName;
@@ -321,7 +288,7 @@ class CoordinatorController extends Controller
             ->get();
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
+            'cdIsActive' => $cdIsActive, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
             'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo'=> $threeMonthsAgo, 'cdPositionid' => $cdPositionid
         ];
