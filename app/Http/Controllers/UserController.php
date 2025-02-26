@@ -70,6 +70,7 @@ class UserController extends Controller
             ->find($request->user()->id);
 
         $userId = $user->id;
+        $userType = $user->user_type;
         $fname = $user->first_name;
         $lname = $user->last_name;
         $user_name = $fname.' ' .$lname;
@@ -85,7 +86,7 @@ class UserController extends Controller
         $user_secPosition = $user->coordinator->secondaryPosition->long_title;
         $user_layerId = $user->coordinator->layer_id;
 
-        return ['userId' => $userId, 'user_name' => $user_name, 'user_email' => $user_email,
+        return ['userId' => $userId, 'userType' => $userType, 'user_name' => $user_name, 'user_email' => $user_email,
             'user_position' => $user_position, 'user_secPosition' => $user_secPosition, 'user_coorId' => $user_coorId, 'user_regId' => $user_regId,
             'user_confId' => $user_confId, 'user_secPositionId' => $user_secPositionId, 'user_positionId' => $user_positionId,
             'user_conference' => $user_conference, 'user_region' => $user_region, 'user_layerId' => $user_layerId,

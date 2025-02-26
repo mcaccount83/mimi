@@ -36,12 +36,8 @@ class ViewAsBoardController extends Controller
      */
     public function showChapterView(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $user_type = $user->user_type;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -69,16 +65,9 @@ class ViewAsBoardController extends Controller
         $displayTESTING = $displayEOY['displayTESTING'];
         $displayLIVE = $displayEOY['displayLIVE'];
 
-        $admin = Admin::orderBy('id', 'desc')
-            ->limit(1)
-            ->first();
-
-        $display_testing = ($admin->display_testing == 1);
-        $display_live = ($admin->display_live == 1);
-
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
-            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
+            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
             'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments
         ];
 
@@ -91,12 +80,8 @@ class ViewAsBoardController extends Controller
      */
     public function showChapterReregistrationView(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $user_type = $user->user_type;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -125,7 +110,7 @@ class ViewAsBoardController extends Controller
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
+            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
         ];
 
         return view('boards.payment')->with($data);
@@ -136,12 +121,8 @@ class ViewAsBoardController extends Controller
      */
     public function showChapterBoardInfoView(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $user_type = $user->user_type;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -158,7 +139,7 @@ class ViewAsBoardController extends Controller
         $SECDetails = $baseQuery['SECDetails'];
 
         $data = ['stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'allStates' => $allStates, 'SECDetails' => $SECDetails,
-            'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'user_type' => $user_type,
+            'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'userType' => $userType,
             'allWebLinks' => $allWebLinks,
         ];
 
@@ -170,13 +151,17 @@ class ViewAsBoardController extends Controller
      */
     public function showChapterFinancialView(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $user_type = $user->user_type;
-        $loggedInName = $user->first_name.' '.$user->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $loggedInName = $user['user_name'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
+        // $user = User::find($request->user()->id);
+        // $userId = $user->id;
+        // $user_type = $user->user_type;
+        // $loggedInName = $user->first_name.' '.$user->last_name;
+
+        // $cdDetails = $user->coordinator;
+        // $cdId = $cdDetails->id;
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -189,7 +174,7 @@ class ViewAsBoardController extends Controller
 
         $resources = Resources::with('categoryName')->get();
 
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'user_type' => $user_type,
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'userType' => $userType,
             'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'allAwards' => $allAwards,
         ];
 
