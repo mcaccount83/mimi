@@ -673,8 +673,10 @@ class AdminController extends Controller
     public function updateEOYDatabase(Request $request): JsonResponse
     {
         try {
-            $corDetails = User::find($request->user()->id)->coordinator;
-            $corId = $corDetails['id'];
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
             // Get the current year +/- 1 for table renaming
             $currentYear = Carbon::now()->year;
@@ -763,8 +765,8 @@ class AdminController extends Controller
                 ->limit(1)
                 ->update([
                     'reset_eoy_tables' => '1',
-                    'updated_id' => $corId,
-                    'updated_at' => Carbon::today(),
+                    'updated_id' => $coorId,
+                    'updated_at' => $lastupdatedDate,
                 ]);
 
                 DB::commit(); // Commit transaction
@@ -784,8 +786,10 @@ class AdminController extends Controller
     public function updateEOYDatabaseAFTERTesting(Request $request): JsonResponse
     {
         try {
-            $corDetails = User::find($request->user()->id)->coordinator;
-            $corId = $corDetails['id'];
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
              // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
              $chapters = Chapters::with('financialReportLastYear', 'documents')->get();
@@ -857,8 +861,8 @@ class AdminController extends Controller
                 ->limit(1)
                 ->update([
                     'reset_AFTER_testing' => '1',
-                    'updated_id' => $corId,
-                    'updated_at' => Carbon::today(),
+                    'updated_id' => $coorId,
+                    'updated_at' => $lastupdatedDate,
                 ]);
 
                 DB::commit(); // Commit transaction
@@ -878,8 +882,10 @@ class AdminController extends Controller
     public function updateDataDatabase(Request $request): JsonResponse
     {
         try {
-            $corDetails = User::find($request->user()->id)->coordinator;
-            $corId = $corDetails['id'];
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
             // Get the current month and year for table renaming
             $currentYear = Carbon::now()->year;
@@ -907,8 +913,8 @@ class AdminController extends Controller
                 ->limit(1)
                 ->update([
                     'update_user_tables' => '1',
-                    'updated_id' => $corId,
-                    'updated_at' => Carbon::today(),
+                    'updated_id' => $coorId,
+                    'updated_at' => $lastupdatedDate,
                 ]);
 
                 DB::commit(); // Commit transaction
@@ -928,8 +934,10 @@ class AdminController extends Controller
     public function updateEOYTesting(Request $request): JsonResponse
     {
         try {
-            $corDetails = User::find($request->user()->id)->coordinator;
-            $corId = $corDetails['id'];
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
@@ -937,8 +945,8 @@ class AdminController extends Controller
                 ->limit(1)
                 ->update([
                     'display_testing' => '1',
-                    'updated_id' => $corId,
-                    'updated_at' => Carbon::today(),
+                    'updated_id' => $coorId,
+                    'updated_at' => $lastupdatedDate,
                 ]);
 
                 DB::commit(); // Commit transaction
@@ -958,8 +966,10 @@ class AdminController extends Controller
     public function updateEOYLive(Request $request): JsonResponse
     {
         try {
-            $corDetails = User::find($request->user()->id)->coordinator;
-            $corId = $corDetails['id'];
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];;
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
@@ -967,8 +977,8 @@ class AdminController extends Controller
                 ->limit(1)
                 ->update([
                     'display_live' => '1',
-                    'updated_id' => $corId,
-                    'updated_at' => Carbon::today(),
+                    'updated_id' => $coorId,
+                    'updated_at' => $lastupdatedDate,
                 ]);
 
                 DB::commit(); // Commit transaction
@@ -985,8 +995,10 @@ class AdminController extends Controller
     public function updateSubscribeLists(Request $request): JsonResponse
     {
         try {
-            $corDetails = User::find($request->user()->id)->coordinator;
-            $corId = $corDetails['id'];
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
             // Get BoardList category
             $categoryBoardList = ForumCategory::where('title', 'BoardList')
@@ -1056,8 +1068,8 @@ class AdminController extends Controller
                 ->limit(1)
                 ->update([
                     'subscribe_list' => '1',
-                    'updated_id' => $corId,
-                    'updated_at' => Carbon::today(),
+                    'updated_id' => $coorId,
+                    'updated_at' => $lastupdatedDate,
                 ]);
 
                 DB::commit(); // Commit transaction
@@ -1074,8 +1086,10 @@ class AdminController extends Controller
     public function updateUnsubscribeLists(Request $request): JsonResponse
     {
         try {
-            $corDetails = User::find($request->user()->id)->coordinator;
-            $corId = $corDetails['id'];
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
             $categoryBoardList = ForumCategory::where('title', 'BoardList')
                 ->first();
@@ -1100,8 +1114,8 @@ class AdminController extends Controller
                 ->limit(1)
                 ->update([
                     'unsubscribe_list' => '1',
-                    'updated_id' => $corId,
-                    'updated_at' => Carbon::today(),
+                    'updated_id' => $coorId,
+                    'updated_at' => $lastupdatedDate,
                 ]);
 
                 DB::commit(); // Commit transaction
