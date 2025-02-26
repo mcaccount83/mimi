@@ -51,14 +51,11 @@ class EOYReportController extends Controller
      */
     public function getPageTitle(Request $request)
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+        $conditions = getPositionConditions($positionId, $secPositionId);
         $adminReportCondition = $conditions['adminReportCondition'];
         $eoyTestCondition = $conditions['eoyTestCondition'];
 
@@ -93,17 +90,14 @@ class EOYReportController extends Controller
         $title = $titles['eoy_reports'];
         $breadcrumb = 'EOY Status Report';
 
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -121,17 +115,14 @@ class EOYReportController extends Controller
      */
     public function sendEOYStatusReminder(Request $request): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->whereHas('documents', function ($query) {
                 $query->where('report_extension', '0')
@@ -212,14 +203,9 @@ class EOYReportController extends Controller
         $title = $titles['eoy_details'];
         $breadcrumb = 'EOY Details';
 
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -236,7 +222,7 @@ class EOYReportController extends Controller
         $rrDetails = $baseQuery['rrDetails'];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb,
-            'cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
+            'coorId' => $coorId, 'confId' => $confId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
             'reviewComplete' => $reviewComplete,  'rrDetails' => $rrDetails,
@@ -250,13 +236,10 @@ class EOYReportController extends Controller
      */
     public function updateEOYDetails(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userName = $user->first_name.' '.$user->last_name;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
         $new_board_submitted = ! isset($input['new_board_submitted']) ? null : ($input['new_board_submitted'] === 'on' ? 1 : 0);
@@ -296,7 +279,7 @@ class EOYReportController extends Controller
             $financialReport->save();
 
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
             DB::commit();
@@ -319,18 +302,15 @@ class EOYReportController extends Controller
         $title = $titles['eoy_reports'];
         $breadcrumb = 'Board Election Report';
 
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+        $lastUpdatedBy = $user['user_name'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -372,17 +352,14 @@ class EOYReportController extends Controller
      */
     public function sendEOYBoardReportReminder(Request $request): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->whereHas('documents', function ($query) {
                 $query->where('report_extension', '0')
@@ -453,9 +430,10 @@ class EOYReportController extends Controller
      */
     public function activateBoard(Request $request, $chapter_id)
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $status = 'fail'; // Default to 'fail'
 
@@ -517,7 +495,7 @@ class EOYReportController extends Controller
                         'country' => 'USA',
                         'phone' => $incomingRecord->phone,
                         'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => now(),
+                        'last_updated_date' => $lastupdatedDate,
                         'is_active' => 1,
                     ]);
                 }
@@ -544,12 +522,8 @@ class EOYReportController extends Controller
      */
     public function editBoardReport(Request $request, $id)
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -612,8 +586,8 @@ class EOYReportController extends Controller
      */
     public function updateEOYBoardReport(Request $request, $chapter_id): RedirectResponse
     {
-        $user = $request->user();
-        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
 
         if ($request->input('submit_type') == 'activate_board') {
             $status = $this->activateBoard($chapter_id, $lastUpdatedBy);
@@ -904,17 +878,14 @@ class EOYReportController extends Controller
         $title = $titles['eoy_reports'];
         $breadcrumb = 'Financial Reports';
 
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -929,17 +900,14 @@ class EOYReportController extends Controller
      */
     public function sendEOYFinancialReportReminder(Request $request): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->whereHas('documents', function ($query) {
                 $query->where('report_extension', '0')
@@ -1009,12 +977,8 @@ class EOYReportController extends Controller
      */
     public function reviewFinancialReport(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $loggedInName = $user->first_name.' '.$user->last_name;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
+        $user = $this->userController->loadUserInformation($request);
+        $loggedInName = $user['user_name'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1040,13 +1004,10 @@ class EOYReportController extends Controller
      */
     public function updateEOYFinancialReport(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userName = $user->first_name.' '.$user->last_name;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $userName = $user['user_name'];
+        $lastUpdatedBy = $userName;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
         $farthest_step_visited_coord = $input['FurthestStep'];
@@ -1161,7 +1122,7 @@ class EOYReportController extends Controller
             $financialReport->check_sistered_another_chapter = $check_sistered_another_chapter;
             $financialReport->farthest_step_visited_coord = $farthest_step_visited_coord;
             if ($submitType == 'review_complete') {
-                $financialReport->review_complete = date('Y-m-d H:i:s');
+                $financialReport->review_complete = $lastupdatedDate;
             }
 
             $mailData = [
@@ -1191,13 +1152,13 @@ class EOYReportController extends Controller
 
             if ($submitType == 'review_complete') {
                 $documents->financial_report_complete = 1;
-                $documents->review_complete = date('Y-m-d H:i:s');
+                $documents->review_complete = $lastupdatedDate;
             }
 
             $documents->save();
 
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
             DB::commit();
@@ -1220,12 +1181,9 @@ class EOYReportController extends Controller
      */
     public function updateUnsubmit(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
@@ -1241,7 +1199,7 @@ class EOYReportController extends Controller
             $financialReport->save();
 
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
             DB::commit();
@@ -1260,12 +1218,9 @@ class EOYReportController extends Controller
      */
     public function updateClearReview(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
@@ -1282,7 +1237,7 @@ class EOYReportController extends Controller
             $financialReport->save();
 
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
             DB::commit();
@@ -1305,17 +1260,14 @@ class EOYReportController extends Controller
         $title = $titles['eoy_reports'];
         $breadcrumb = 'Financial Report Attacchments';
 
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1335,14 +1287,9 @@ class EOYReportController extends Controller
         $title = $titles['eoy_details'];
         $breadcrumb = 'EOY Attachments';
 
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1354,7 +1301,7 @@ class EOYReportController extends Controller
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
         ];
@@ -1367,12 +1314,9 @@ class EOYReportController extends Controller
      */
     public function updateEOYAttachments(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
@@ -1380,7 +1324,7 @@ class EOYReportController extends Controller
         DB::beginTransaction();
         try {
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
             $documents->irs_verified = (int) $request->has('irs_verified');
@@ -1407,17 +1351,14 @@ class EOYReportController extends Controller
         $title = $titles['eoy_reports'];
         $breadcrumb = 'Boundray Issues Report';
 
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1436,14 +1377,9 @@ class EOYReportController extends Controller
         $title = $titles['eoy_details'];
         $breadcrumb = 'EOY Boundaries';
 
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1455,7 +1391,7 @@ class EOYReportController extends Controller
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
         ];
@@ -1468,12 +1404,9 @@ class EOYReportController extends Controller
      */
     public function updateEOYBoundaries(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $chapter = Chapters::find($id);
 
@@ -1482,7 +1415,7 @@ class EOYReportController extends Controller
             $chapter->territory = $request->filled('ch_territory') ? $request->input('ch_territory') : $request->input('ch_old_territory');
             $chapter->boundary_issue_resolved = (int) $request->has('ch_resolved');
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = now();
+            $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
             DB::commit();
@@ -1505,17 +1438,15 @@ class EOYReportController extends Controller
         $title = $titles['eoy_reports'];
         $breadcrumb = 'Chapter Awards Report';
 
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+        $lastUpdatedBy = $user['user_name'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1549,14 +1480,9 @@ class EOYReportController extends Controller
         $title = $titles['eoy_details'];
         $breadcrumb = 'EOY Awards';
 
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1569,7 +1495,7 @@ class EOYReportController extends Controller
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $allAwards = $baseQuery['allAwards'];
 
-        $data = ['title' => $title, 'breadcrumb'=> $breadcrumb, 'cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
+        $data = ['title' => $title, 'breadcrumb'=> $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
         ];
@@ -1582,12 +1508,9 @@ class EOYReportController extends Controller
      */
     public function updateEOYAwards(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
         $ChapterAwards = null;
@@ -1605,7 +1528,7 @@ class EOYReportController extends Controller
         DB::beginTransaction();
         try {
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
             $financialReport->chapter_awards = $chapter_awards;

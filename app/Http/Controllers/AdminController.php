@@ -39,12 +39,16 @@ use Illuminate\View\View;
 class AdminController extends Controller
 {
     protected $userController;
+    protected $baseChapterController;
+    protected $baseCoordinatorController;
 
-    public function __construct(UserController $userController)
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
+        $this->baseChapterController = $baseChapterController;
+        $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
     /*/Custom Helpers/*/
@@ -74,21 +78,10 @@ class AdminController extends Controller
         $title = $titles['resource_reports'];
         $breadcrumb = 'MIMI Bugs & Wishes';
 
-        $user = User::find($request->user()->id);
-
-        $corDetails = $user->coordinator;
-        // Check if CordDetails is not found for the user
-        if (! $corDetails) {
-            return to_route('home');
-        }
-
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $corId)
-            ->get();
+        $user = $this->userController->loadUserInformation($request);
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+        $canEditDetails = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
 
         $admin = DB::table('bugs')
             ->select('bugs.*',
@@ -103,12 +96,7 @@ class AdminController extends Controller
             ->orderByDesc('priority')
             ->get();
 
-        // Determine if the user is allowed to edit notes and status
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $canEditDetails = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
-
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'admin' => $admin, 'canEditDetails' => $canEditDetails, 'coordinatorDetails' => $coordinatorDetails];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'admin' => $admin, 'canEditDetails' => $canEditDetails];
 
         return view('admin.bugs')->with($data);
     }
@@ -118,21 +106,10 @@ class AdminController extends Controller
      */
     public function addBugs(AddBugsAdminRequest $request)
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        // Fetch coordinator details
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $corId)
-            ->first(); // Fetch only one record
-
-        // Fetch admin details
-        $admin = DB::table('bugs')
-            ->select('bugs.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS reported_by'))
-            ->leftJoin('coordinators as cd', 'bugs.reported_id', '=', 'cd.id')
-            ->orderByDesc('priority')
-            ->first(); // Fetch only one record
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $validatedData = $request->validated();
 
@@ -140,13 +117,13 @@ class AdminController extends Controller
         $task->task = $validatedData['taskNameNew'];
         $task->details = $validatedData['taskDetailsNew'];
         $task->priority = $validatedData['taskPriorityNew'];
-        $task->reported_id = $corId;
-        $task->reported_date = Carbon::today();
+        $task->reported_id = $coorId;
+        $task->reported_date = $lastupdatedDate;
 
         $mailData = [
             'taskNameNew' => $task->task,
             'taskDetailsNew' => $task->details,
-            'ReportedId' => $admin->reported_by,
+            'ReportedId' => $coorId,
             'ReportedDate' => $task->reported_date,
         ];
 
@@ -185,56 +162,7 @@ class AdminController extends Controller
         $title = $titles['resource_reports'];
         $breadcrumb = 'Download Reports';
 
-        //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
-
-        if ($conditions['coordinatorCondition']) {
-            //Get Coordinator Reporting Tree
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->where($sqlLayerId, '=', $corId)
-                ->get();
-
-            $inQryStr = '';
-            foreach ($reportIdList as $key => $val) {
-                $inQryStr .= $val->id.',';
-            }
-            $inQryStr = rtrim($inQryStr, ',');
-            $inQryArr = explode(',', $inQryStr);
-        }
-
-        //Get Chapter List mapped with login coordinator
-        $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('month as db', 'chapters.start_month_id', '=', 'db.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1');
-
-        if ($conditions['founderCondition']) {
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-        }
-        $chapterList = $baseQuery->get();
-
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'corId' => $corId, 'positionId' => $positionId, 'secPositionId' => $secPositionId];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb];
 
         return view('admin.downloads')->with($data);
     }
@@ -244,21 +172,10 @@ class AdminController extends Controller
      */
     public function showResources(Request $request): View
     {
-        $user = User::find($request->user()->id);
-
-        $corDetails = $user->coordinator;
-        // Check if CordDetails is not found for the user
-        if (! $corDetails) {
-            return to_route('home');
-        }
-
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $corId)
-            ->get();
+        $user = $this->userController->loadUserInformation($request);
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+        $canEditFiles = ($positionId == 7 || $secPositionId == 7);  //CC Coordinator
 
         $resources = DB::table('resources')
             ->select('resources.*', 'resources.id as id',
@@ -277,18 +194,11 @@ class AdminController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Assuming you want to access the 'id' property of each resource, you need to iterate through $resources
         foreach ($resources as $resource) {
             $id = $resource->id;
-            // Do something with $id
         }
 
-        // Determine if the user is allowed to add and update resources
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $canEditFiles = ($positionId == 7 || $secPositionId == 7);  //CC Coordinator
-
-        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails, 'id' => $id];
+        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'id' => $id];
 
         return view('admin.resources')->with($data);
     }
@@ -298,14 +208,10 @@ class AdminController extends Controller
      */
     public function addResources(AddResourcesAdminRequest $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        // Fetch coordinator details
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $corId)
-            ->first(); // Fetch only one record
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $validatedData = $request->validated();
 
@@ -317,16 +223,14 @@ class AdminController extends Controller
         $file->version = $validatedData['fileVersionNew'] ?? null;
         $file->link = $validatedData['LinkNew'] ?? null;
         $file->file_path = $validatedData['filePathNew'] ?? null;
-        $file->updated_id = $corId;
-        $file->updated_date = Carbon::today();
+        $file->updated_id = $coorId;
+        $file->updated_date = $lastupdatedDate;
 
         $file->save();
 
-        // After adding the resource, retrieve its id
         $id = $file->id;
         $fileType = $file->file_type;
 
-        // Return the id and file_type in the response
         return response()->json(['id' => $id, 'file_type' => $fileType]);
     }
 
@@ -335,14 +239,19 @@ class AdminController extends Controller
      */
     public function updateResources(UpdateResourcesAdminRequest $request, $id)
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        // Fetch coordinator details
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $corId)
-            ->first(); // Fetch only one record
+        // $corDetails = User::find($request->user()->id)->coordinator;
+        // $corId = $corDetails['id'];
+        // // Fetch coordinator details
+        // $coordinatorDetails = DB::table('coordinators as cd')
+        //     ->select('cd.*')
+        //     ->where('cd.is_active', '=', '1')
+        //     ->where('cd.id', '=', $corId)
+        //     ->first(); // Fetch only one record
+
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         // Fetch admin details
         $file = DB::table('resources')
@@ -365,8 +274,8 @@ class AdminController extends Controller
             $file->link = $validatedData['link'] ?? null;
         }
 
-        $file->updated_id = $corId;
-        $file->updated_date = Carbon::today();
+        $file->updated_id = $coorId;
+        $file->updated_date = $lastupdatedDate;
 
         $file->save();
     }
@@ -376,21 +285,10 @@ class AdminController extends Controller
      */
     public function showToolkit(Request $request): View
     {
-        $user = User::find($request->user()->id);
-
-        $corDetails = $user->coordinator;
-        // Check if CordDetails is not found for the user
-        if (! $corDetails) {
-            return to_route('home');
-        }
-
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $corId)
-            ->get();
+        $user = $this->userController->loadUserInformation($request);
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
 
         $resources = DB::table('resources')
             ->select('resources.*',
@@ -406,12 +304,7 @@ class AdminController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Determine if the user is allowed to edit notes and status
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
-
-        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails];
+        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles];
 
         return view('admin.toolkit')->with($data);
     }
@@ -421,19 +314,14 @@ class AdminController extends Controller
      */
     public function addToolkit(AddToolkitAdminRequest $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
 
-        // Fetch coordinator details
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $corId)
-            ->first();
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $validatedData = $request->validated();
 
-        // Create new file resource
         $file = new Resources;
         $file->category = $request->fileCategoryNew;
         $file->name = $request->fileNameNew;
@@ -449,12 +337,11 @@ class AdminController extends Controller
             $file->link = $request->linkNew ?? null;
         }
 
-        $file->updated_id = $corId;
-        $file->updated_date = Carbon::today();
+        $file->updated_id = $coorId;
+        $file->updated_date = $lastupdatedDate;
 
         $file->save();
 
-        // Return response
         return response()->json(['id' => $file->id, 'file_type' => $file->file_type]);
     }
 
@@ -463,14 +350,19 @@ class AdminController extends Controller
      */
     public function updateToolkit(UpdateToolkitAdminRequest $request, $id)
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        // Fetch coordinator details
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $corId)
-            ->first(); // Fetch only one record
+        // $corDetails = User::find($request->user()->id)->coordinator;
+        // $corId = $corDetails['id'];
+        // // Fetch coordinator details
+        // $coordinatorDetails = DB::table('coordinators as cd')
+        //     ->select('cd.*')
+        //     ->where('cd.is_active', '=', '1')
+        //     ->where('cd.id', '=', $corId)
+        //     ->first(); // Fetch only one record
+
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         // Fetch admin details
         $file = DB::table('resources')
@@ -493,37 +385,34 @@ class AdminController extends Controller
             $file->link = $validatedData['link'] ?? null;
         }
 
-        $file->updated_id = $corId;
-        $file->updated_date = Carbon::today();
+        $file->updated_id = $coorId;
+        $file->updated_date = $lastupdatedDate;
 
         $file->save();
     }
 
+    /**
+     * View List of ReReg Payments if Dates Need to be Udpated
+     */
     public function showReRegDate(Request $request)
     {
-        $reChapterList = Chapters::with(['state', 'conference', 'region', 'startMonth', 'president', ])
-            ->where('is_active', 1)
-            ->orderBy(State::select('state_short_name')
-            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name')
-            ->get();
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
 
-        $data = ['reChapterList' => $reChapterList];
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $chapterList = $baseQuery['query']->get();
+
+        $data = ['chapterList' => $chapterList];
 
         return view('admin.reregdate')->with($data);
     }
 
+
     public function editReRegDate(Request $request, $id): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-
-        $cdDetails = $user->coordinator;
-        $coordId = $cdDetails->id;
-
-        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($id);
-
-        $allMonths = Month::all();
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $allMonths = $baseQuery['allMonths'];
 
         $data = ['id' => $id, 'chDetails' => $chDetails, 'allMonths' => $allMonths];
 
@@ -532,8 +421,9 @@ class AdminController extends Controller
 
     public function updateReRegDate(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $chapter = Chapters::find($id);
         DB::beginTransaction();
@@ -543,7 +433,7 @@ class AdminController extends Controller
             $chapter->dues_last_paid = $request->input('ch_duespaid');
             $chapter->members_paid_for = $request->input('ch_members');
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
 
             $chapter->save();
 
@@ -646,21 +536,10 @@ class AdminController extends Controller
      */
     public function showEOY(Request $request): View
     {
-        $user = User::find($request->user()->id);
-
-        $corDetails = $user->coordinator;
-        // Check if CordDetails is not found for the user
-        if (! $corDetails) {
-            return to_route('home');
-        }
-
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.id', '=', $corId)
-            ->get();
+        $user = $this->userController->loadUserInformation($request);
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
 
         $admin = DB::table('admin')
             ->select('admin.*',
@@ -748,12 +627,7 @@ class AdminController extends Controller
             'Subscribe Board Members to Public Announcements',
         ];
 
-        // Determine if the user is allowed to edit notes and status
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
-
-        $data = ['admin' => $admin, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails, 'fiscalYears' => $fiscalYears,
+        $data = ['admin' => $admin, 'canEditFiles' => $canEditFiles, 'fiscalYears' => $fiscalYears,
             'resetEOYTableItems' => $resetEOYTableItems, 'displayCoorindatorMenuItems' => $displayCoorindatorMenuItems, 'displayChapterButtonItems' => $displayChapterButtonItems,
             'displayTestingItemsItems' => $displayTestingItemsItems, 'displayLiveItemsItems' => $displayLiveItemsItems, 'unSubscribeListItems' => $unSubscribeListItems,
             'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems

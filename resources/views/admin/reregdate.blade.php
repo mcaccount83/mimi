@@ -55,7 +55,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @foreach($reChapterList as $list)
+                    @foreach($chapterList as $list)
                   <tr>
                         <td class="text-center align-middle"><a href="{{ url("/admin/reregdate/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>

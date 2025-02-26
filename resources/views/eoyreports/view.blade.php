@@ -350,8 +350,8 @@
     var $einCondition = @json($einCondition);
     var $inquiriesCondition = @json($inquiriesCondition);
     var $chPcId = @json($chPcId);
-    var $cdId = @json($cdId);
-    var $cdConfId = @json($cdConfId);
+    var $coorId = @json($coorId);
+    var $confId = @json($confId);
 
 $(document).ready(function () {
     // Disable fields for chapters that are not active

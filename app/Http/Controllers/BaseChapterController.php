@@ -10,6 +10,7 @@ use App\Models\Region;
 use App\Models\State;
 use App\Models\Status;
 use App\Models\Website;
+use App\Models\Month;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -260,6 +261,7 @@ class BaseChapterController extends Controller
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
+        $allMonths = Month::all();  // Full List for Dropdown Menu
 
         $boards = $chDetails->boards()->with('stateName')->get();
         $bdDetails = $boards->groupBy('board_position_id');
@@ -307,6 +309,7 @@ class BaseChapterController extends Controller
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY,
             'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_conf_desc' => $cc_conf_desc, 'cc_conf_name' => $cc_conf_name,
+            'allMonths' => $allMonths,
             // 'user_name' => $user_name, 'user_conf_name' => $user_conf_name, 'user_conf_desc' => $user_conf_desc, 'user_position' => $user_position, 'user_email' => $user_email
         ];
     }

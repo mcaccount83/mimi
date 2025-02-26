@@ -58,7 +58,7 @@
             </div>
         </div>
 
-         <?php if($positionId == 8  || $positionId == 3 || $secPositionId == 13){?>
+            <?php if($founderCondition  || $ITCondition){?>
             <div class="col-md-6">
                 <div class="card card-outline card-primary">
                     <div class="card-header">
