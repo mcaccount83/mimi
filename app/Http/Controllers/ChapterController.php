@@ -322,7 +322,6 @@ class ChapterController extends Controller
          $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
          $chDetails = $baseQuery['chDetails'];
          $stateShortName = $baseQuery['stateShortName'];
-         $emailPC = $baseQuery['emailPC'];
          $pcDetails = $baseQuery['pcDetails'];
          $PresDetails = $baseQuery['PresDetails'];
          $emailListChap = $baseQuery['emailListChap'];
@@ -665,8 +664,8 @@ class ChapterController extends Controller
 
         $pcDetails = $pcDetails->unique('cid');  // Remove duplicates based on the 'cid' field
 
-        $data = ['allRegions' => $allRegions, 'allStatuses' => $allStatuses, 'pcDetails' => $pcDetails, 'allStates' => $allStates,
-
+        $data = ['allRegions' => $allRegions, 'allStatuses' => $allStatuses, 'pcDetails' => $pcDetails,
+            'allStates' => $allStates,
         ];
 
         return view('chapters.addnew')->with($data);
@@ -679,6 +678,7 @@ class ChapterController extends Controller
     {
         $user = $this->userController->loadUserInformation($request);
         $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
         $conference = $user['user_confId'];
         $country = 'USA';
         $currentMonth = date('m');
@@ -707,16 +707,16 @@ class ChapterController extends Controller
                 'primary_coordinator_id' => $input['ch_primarycor'],
                 'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
                 'last_updated_by' => $lastUpdatedBy,
-                'last_updated_date' => date('Y-m-d H:i:s'),
-                'created_at' => date('Y-m-d H:i:s'),
+                'last_updated_date' => $lastupdatedDate,
+                'created_at' => $lastupdatedDate,
                 'is_active' => 1,
             ])->id;
 
-            $financialReport = FinancialReport::create([
+            FinancialReport::create([
                 'chapter_id' => $chapterId,
             ]);
 
-            $documents = Documents::create([
+            Documents::create([
                 'chapter_id' => $chapterId,
             ]);
 
@@ -731,7 +731,7 @@ class ChapterController extends Controller
                     'is_active' => 1,
                 ])->id;
 
-                $boardId = Boards::create([
+                Boards::create([
                     'user_id' => $userId,
                     'first_name' => $input['ch_pre_fname'],
                     'last_name' => $input['ch_pre_lname'],
@@ -745,7 +745,7 @@ class ChapterController extends Controller
                     'country' => $country,
                     'phone' => $input['ch_pre_phone'],
                     'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => date('Y-m-d H:i:s'),
+                    'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1,
                 ])->id;
 
@@ -768,7 +768,7 @@ class ChapterController extends Controller
                     'is_active' => 1,
                 ])->id;
 
-                $boardId = Boards::create([
+                Boards::create([
                     'user_id' => $userId,
                     'first_name' => $input['ch_pre_fname'],
                     'last_name' => $input['ch_pre_lname'],
@@ -782,7 +782,7 @@ class ChapterController extends Controller
                     'country' => $country,
                     'phone' => $input['ch_pre_phone'],
                     'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => date('Y-m-d H:i:s'),
+                    'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1,
                 ])->id;
 
@@ -805,7 +805,7 @@ class ChapterController extends Controller
                     'is_active' => 1,
                 ])->id;
 
-                $boardId = Boards::create([
+                Boards::create([
                     'user_id' => $userId,
                     'first_name' => $input['ch_pre_fname'],
                     'last_name' => $input['ch_pre_lname'],
@@ -819,7 +819,7 @@ class ChapterController extends Controller
                     'country' => $country,
                     'phone' => $input['ch_pre_phone'],
                     'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => date('Y-m-d H:i:s'),
+                    'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1,
                 ])->id;
 
@@ -842,7 +842,7 @@ class ChapterController extends Controller
                     'is_active' => 1,
                 ])->id;
 
-                $boardId = Boards::create([
+                Boards::create([
                     'user_id' => $userId,
                     'first_name' => $input['ch_pre_fname'],
                     'last_name' => $input['ch_pre_lname'],
@@ -856,7 +856,7 @@ class ChapterController extends Controller
                     'country' => $country,
                     'phone' => $input['ch_pre_phone'],
                     'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => date('Y-m-d H:i:s'),
+                    'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1,
                 ])->id;
 
@@ -879,7 +879,7 @@ class ChapterController extends Controller
                     'is_active' => 1,
                 ])->id;
 
-                $boardId = Boards::create([
+                Boards::create([
                     'user_id' => $userId,
                     'first_name' => $input['ch_pre_fname'],
                     'last_name' => $input['ch_pre_lname'],
@@ -893,7 +893,7 @@ class ChapterController extends Controller
                     'country' => $country,
                     'phone' => $input['ch_pre_phone'],
                     'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => date('Y-m-d H:i:s'),
+                    'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1,
                 ])->id;
 
@@ -905,39 +905,72 @@ class ChapterController extends Controller
                 }
             }
 
-            $chDetails = Chapters::with(['state', 'primaryCoordinator'])->find($chapterId);
-            $stateShortName = $chDetails->state->state_short_name;
-            $chConfId = $chDetails->conference->id;
-            $pcFName = $chDetails->primaryCoordinator->first_name;
-            $pcLName = $chDetails->primaryCoordinator->last_name;
-            $pcEmail = $chDetails->primaryCoordinator->email;
+            // $chDetails = Chapters::with(['state', 'primaryCoordinator'])->find($chapterId);
+            // $stateShortName = $chDetails->state->state_short_name;
+            // $chConfId = $chDetails->conference->id;
+            // $pcFName = $chDetails->primaryCoordinator->first_name;
+            // $pcLName = $chDetails->primaryCoordinator->last_name;
+            // $pcEmail = $chDetails->primaryCoordinator->email;
 
-            $mailData = [
-                'chapter_name' => $chDetails->name,
-                'chapter_state' => $stateShortName,
-                'conf' => $chConfId,
-                'cor_fname' => $pcFName,
-                'cor_lname' => $pcLName,
-                'updated_by' => date('Y-m-d H:i:s'),
-                'pfirst' => $input['ch_pre_fname'],
-                'plast' => $input['ch_pre_lname'],
-                'pemail' => $input['ch_pre_email'],
-                'afirst' => $input['ch_avp_fname'],
-                'alast' => $input['ch_avp_lname'],
-                'aemail' => $input['ch_avp_email'],
-                'mfirst' => $input['ch_mvp_fname'],
-                'mlast' => $input['ch_mvp_lname'],
-                'memail' => $input['ch_mvp_email'],
-                'tfirst' => $input['ch_trs_fname'],
-                'tlast' => $input['ch_trs_lname'],
-                'temail' => $input['ch_trs_email'],
-                'sfirst' => $input['ch_sec_fname'],
-                'slast' => $input['ch_sec_lname'],
-                'semail' => $input['ch_sec_email'],
-            ];
+            //Load Chapter MailData//
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $pcDetails = $baseQuery['pcDetails'];
+            $PresDetails = $baseQuery['PresDetails'];
+            $AVPDetails = $baseQuery['AVPDetails'];
+            $MVPDetails = $baseQuery['MVPDetails'];
+            $TRSDetails = $baseQuery['TRSDetails'];
+            $SECDetails = $baseQuery['SECDetails'];
+
+            //  Load User Information for Signing Email & PDFs
+            $user = $this->userController->loadUserInformation($request);
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getPCData($pcDetails),
+                [
+                    'updated_by' => $lastupdatedDate,
+                    'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
+                    'presEmail' => $PresDetails->email,
+                    'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
+                    'avpEmail' => $AVPDetails->email,
+                    'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
+                    'mvpEmail' => $MVPDetails->email,
+                    'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
+                    'trsEmail' => $TRSDetails->email,
+                    'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
+                    'secEmail' => $SECDetails->email,
+                ]
+            );
+
+            // $mailData = [
+            //     'chapter_name' => $chDetails->name,
+            //     'chapter_state' => $stateShortName,
+            //     'conf' => $chConfId,
+            //     'cor_fname' => $pcFName,
+            //     'cor_lname' => $pcLName,
+            //     'updated_by' => date('Y-m-d H:i:s'),
+            //     'pfirst' => $input['ch_pre_fname'],
+            //     'plast' => $input['ch_pre_lname'],
+            //     'pemail' => $input['ch_pre_email'],
+            //     'afirst' => $input['ch_avp_fname'],
+            //     'alast' => $input['ch_avp_lname'],
+            //     'aemail' => $input['ch_avp_email'],
+            //     'mfirst' => $input['ch_mvp_fname'],
+            //     'mlast' => $input['ch_mvp_lname'],
+            //     'memail' => $input['ch_mvp_email'],
+            //     'tfirst' => $input['ch_trs_fname'],
+            //     'tlast' => $input['ch_trs_lname'],
+            //     'temail' => $input['ch_trs_email'],
+            //     'sfirst' => $input['ch_sec_fname'],
+            //     'slast' => $input['ch_sec_lname'],
+            //     'semail' => $input['ch_sec_email'],
+            // ];
 
             //Primary Coordinator Notification//
-            Mail::to($pcEmail)
+            Mail::to($pcDetails->email)
                 ->queue(new ChapterAddPrimaryCoor($mailData));
 
             //List Admin Notification//

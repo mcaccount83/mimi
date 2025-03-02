@@ -15,7 +15,6 @@ class BaseMailDataController extends Controller
         $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
-
     /**
      *  Get Basic Chapter Mail Data Information
      */

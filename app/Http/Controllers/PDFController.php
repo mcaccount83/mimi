@@ -417,11 +417,6 @@ class PDFController extends Controller
 
         //  Load User Information for Signing Email & PDFs
         $user = $this->userController->loadUserInformation($request);
-        // $user_name = $userData['user_name'];
-        // $user_email = $userData['user_email'];
-        // $user_conf_name = $userData['user_conf_name'];
-        // $user_conf_desc = $userData['user_conf_desc'];
-        // $user_position = $userData['user_position'];
 
         $date = Carbon::now();
         $dateFormatted = $date->format('m-d-Y');
@@ -440,31 +435,6 @@ class PDFController extends Controller
             ]
         );
 
-        // $pdfData = [
-        //     'chapter_name' => $chDetails->name,
-        //     'state' => $stateShortName,
-        //     'pres_fname' => $PresDetails->first_name,
-        //     'pres_lname' => $PresDetails->last_name,
-        //     'pres_addr' => $PresDetails->street_address,
-        //     'pres_city' => $PresDetails->city,
-        //     'pres_state' => $PresDetails->state,
-        //     'pres_zip' => $PresDetails->zip,
-        //     'user_name' => $user_name,
-        //     'user_email' => $user_email,
-        //     'user_conf_name' => $user_conf_name,
-        //     'user_conf_desc' => $user_conf_desc,
-        //     'user_position' => $user_position,
-        //     // 'cc_fname' => $cc_fname,
-        //     // 'cc_lname' => $cc_lname,
-        //     // 'cc_pos' => $cc_pos,
-        //     // 'cc_conf_name' => $cc_conf_name,
-        //     // 'cc_conf_desc' => $cc_conf_desc,
-        //     'ch_name' => $sanitizedChapterName,
-        //     'today' => $dateFormatted,
-        //     'nextMonth' => $nextMonthFormatted,
-        //     'startMonth' => $startMonthName,
-        // ];
-
         $type = strtolower($type);
         $view = match ($type) {
             'general' => 'pdf.disbandgeneral',
@@ -476,19 +446,13 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView($view, compact('pdfData'));
 
-        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterName']."_{$type}_Letter.pdf";
-
-        // if ($request->has('stream')) {
-        //     return $pdf->stream($filename, ['Attachment' => 0]);
-        // }
+        $filename = $pdfData['chapterState'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
 
         return [
             'pdf' => $pdf,
             'filename' => $filename,
         ];
     }
-
-
 
     /**
      * Save & Send Probation Letter
@@ -544,11 +508,6 @@ class PDFController extends Controller
 
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
-            // $user_name = $baseQuery['user_name'];
-            // $user_email = $baseQuery['user_email'];
-            // $user_conf_name = $baseQuery['user_conf_name'];
-            // $user_conf_desc = $baseQuery['user_conf_desc'];
-            // $user_position = $baseQuery['user_position'];
 
             //  Load User Information for Signing Email & PDFs
             $user = $this->userController->loadUserInformation($request);
@@ -557,31 +516,6 @@ class PDFController extends Controller
                 $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
             );
-
-
-        // $userData = $this->userController->loadUserInformation($request);
-        // $user_name = $userData['user_name'];
-        // $user_email = $userData['user_email'];
-        // $user_conf_name = $userData['user_conf_name'];
-        // $user_conf_desc = $userData['user_conf_desc'];
-        // $user_position = $userData['user_position'];
-
-        //     $mailData = [
-        //         'chapterName' => $chDetails->name,
-        //         'chapterEmail' => $chDetails->email,
-        //         'chapterState' => $stateShortName,
-        //         'user_name' => $user_name,
-        //         'user_email' => $user_email,
-        //         'user_conf_name' => $user_conf_name,
-        //         'user_conf_desc' => $user_conf_desc,
-        //         'user_position' => $user_position,
-        //         // 'cc_email' => $cc_email,
-        //         // 'cc_fname' => $cc_fname,
-        //         // 'cc_lname' => $cc_lname,
-        //         // 'cc_pos' => $cc_pos,
-        //         // 'cc_conf_name' => $cc_conf_name,
-        //         // 'cc_conf_desc' => $cc_conf_desc,
-        //     ];
 
             switch ($letterType) {
                 case 'no_report':
@@ -639,19 +573,9 @@ class PDFController extends Controller
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $PresDetails = $baseQuery['PresDetails'];
-        // $user_name = $baseQuery['user_name'];
-        // $user_email = $baseQuery['user_email'];
-        // $user_conf_name = $baseQuery['user_conf_name'];
-        // $user_conf_desc = $baseQuery['user_conf_desc'];
-        // $user_position = $baseQuery['user_position'];
-        // $cc_fname = $baseQuery['cc_fname'];
-        // $cc_lname = $baseQuery['cc_lname'];
-        // $cc_pos = $baseQuery['cc_pos'];
-        // $cc_conf_name = $baseQuery['cc_conf_name'];
-        // $cc_conf_desc = $baseQuery['cc_conf_desc'];
 
-         //  Load User Information for Signing Email & PDFs
-         $user = $this->userController->loadUserInformation($request);
+        //  Load User Information for Signing Email & PDFs
+        $user = $this->userController->loadUserInformation($request);
 
         $date = Carbon::now();
         $dateFormatted = $date->format('m-d-Y');
@@ -670,30 +594,6 @@ class PDFController extends Controller
             ]
         );
 
-        // $pdfData = [
-        //     'chapter_name' => $chDetails->name,
-        //     'state' => $stateShortName,
-        //     'month' => $startMonthName,
-        //     'pres_fname' => $PresDetails->first_name,
-        //     'pres_lname' => $PresDetails->last_name,
-        //     'pres_addr' => $PresDetails->street_address,
-        //     'pres_city' => $PresDetails->city,
-        //     'pres_state' => $PresDetails->state,
-        //     'pres_zip' => $PresDetails->zip,
-        //     'user_name' => $user_name,
-        //     'user_email' => $user_email,
-        //     'user_conf_name' => $user_conf_name,
-        //     'user_conf_desc' => $user_conf_desc,
-        //     'user_position' => $user_position,
-        //     // 'cc_fname' => $cc_fname,
-        //     // 'cc_lname' => $cc_lname,
-        //     // 'cc_pos' => $cc_pos,
-        //     // 'cc_conf_name' => $cc_conf_name,
-        //     // 'cc_conf_desc' => $cc_conf_desc,
-        //     'ch_name' => $sanitizedChapterName,
-        //     'nextMonthDate' => $nextMonthFormatted,
-        // ];
-
         $type = strtolower($type);
         $view = match ($type) {
             'no_report' => 'pdf.probationreport',
@@ -705,11 +605,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView($view, compact('pdfData'));
 
-        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterName']."_{$type}_Letter.pdf";
-
-        // if ($request->has('stream')) {
-        //     return $pdf->stream($filename, ['Attachment' => 0]);
-        // }
+        $filename = $pdfData['chapterState'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
 
         return [
             'pdf' => $pdf,
@@ -753,8 +649,6 @@ class PDFController extends Controller
 
         return false;
     }
-
-
 
 
      /**
