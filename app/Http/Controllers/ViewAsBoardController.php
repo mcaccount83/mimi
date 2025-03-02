@@ -155,14 +155,6 @@ class ViewAsBoardController extends Controller
         $userType = $user['userType'];
         $loggedInName = $user['user_name'];
 
-        // $user = User::find($request->user()->id);
-        // $userId = $user->id;
-        // $user_type = $user->user_type;
-        // $loggedInName = $user->first_name.' '.$user->last_name;
-
-        // $cdDetails = $user->coordinator;
-        // $cdId = $cdDetails->id;
-
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];

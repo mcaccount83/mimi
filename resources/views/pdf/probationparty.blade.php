@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }} | Probation Letter</title>
+    <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Probation Letter</title>
         @php
         $todayDate = date('F j, Y'); // e.g., July 9, 2024
         $date = new DateTime();
@@ -18,12 +18,12 @@
 <br>
     <p>{{ $todayDate }}</p>
     <br>
-    <p>MOMS Club of {{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }}<br>
-        {{ $pdfData['pres_fname'] }} {{ $pdfData['pres_lname'] }}<br>
-        {{ $pdfData['pres_addr'] }}<br>
-        {{ $pdfData['pres_city'] }},  {{ $pdfData['pres_state'] }}  {{ $pdfData['pres_zip'] }}</p>
+    <p>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
+        {{ $pdfData['presName'] }}<br>
+        {{ $pdfData['presAddress'] }}<br>
+        {{ $pdfData['presCity'] }},  {{ $pdfData['presState'] }}  {{ $pdfData['presZip'] }}</p>
     <br>
-    <p>Dear {{ $pdfData['pres_fname'] }}:</p>
+    <p>Dear {{ $pdfData['presName'] }}:</p>
     <p>After final review of your chapter’s Annual Reports, there was an excessive amount spent by your chapter for parties and other related activities benefiting
         members only.  By IRS rules, all of our local chapters must follow the same local chapter Bylaws, and all instruction from International.  All chapters have been
         instructed that the total paid for parties and other activities benefiting members only are not to exceed an amount equal to 15% of the dues received by the chapter
@@ -51,9 +51,9 @@
     <p>If you have any questions concerning either your chapter’s probationary status, or how to appropriately budget parties and other activities and events that benefit members only,
         please do not hesitate to contact your Primary Coordinator or myself.</p>
     <br>
-    <p>{{ $pdfData['cc_fname'] }} {{ $pdfData['cc_lname'] }}<br>
-    {{ $pdfData['cc_pos'] }}<br>
-    {{ $pdfData['cc_conf_name'] }}, {{ $pdfData['cc_conf_desc'] }}<br>
+    <p>{{ $pdfData['userName'] }}<br>
+        {{ $pdfData['userPosition'] }}<br>
+        {{ $pdfData['userConfName'] }}, {{ $pdfData['userConfDesc'] }}<br>
     International MOMS Club<sub>&reg;</sub></p>
 </div>
 </body>

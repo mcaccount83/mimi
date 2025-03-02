@@ -3,8 +3,8 @@
     <img src="https://momsclub.org/mimi/images/LOGO-W-MOMS-CLUB-old.jpg" alt="MC" style="width: 125px;">
 </center>
 <br>
-<h1><center>MOMS Club of {{$mailData['chapter']}}, {{$mailData['state']}}</center></h1>
-<b><strong>{{ $mailData['firstName'] }},</b>
+<h1><center>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</center></h1>
+<b><strong>{{ $mailData['presName'] }},</b>
 <br>
 <p>CONGRATULATIONS on getting your chapter officially started!  I've really enjoyed getting to know you and going through the startup process with you.  I'm excited to see what your new chapter will be able to accomplish!</p>
 <hr>
@@ -14,19 +14,19 @@
 <hr>
 <b>Step 1 - Meet your Coordinator</b>
 <p>All MOMS Club chapters have an International Coordinator assigned to help them. She is there for anything that you need! Any questions you have or good news you want to share -- talk to her, she loves to hear from you!</p>
-<p><center>{{ $mailData['cor_name'] }}<br>
-                <a href="mailto:{{ $mailData['cor_email'] }}">{{ $mailData['cor_email'] }}</a></center></p>
+<p><center>{{ $mailData['pcName'] }}<br>
+                <a href="mailto:{{ $mailData['pcEmail'] }}">{{ $mailData['pcEmail'] }}</a></center></p>
 <br>
 <hr>
 <b>Step 2 - MOMS Information Management Interface (MIMI)</b>
 <p>MIMI is where important information about your chapter is held. When logged in you can see your EIN number, boundaries, update your contact information, add additional board members, pay your annual re-registration dues, link your website, see who your Coordinators, find additional resources are and more. Always keep your information up to date in MIMI as that is our official record of your chapter.</p>
 <p><center><a href="https://momsclub.org/mimi/login">https://momsclub.org/mimi/login</a><br>
-    Username: {{ $mailData['email'] }}<br>
+    Username: {{ $mailData['presEmail'] }}<br>
     Password: TempPass4You</center></p>
 <br>
 <hr>
 <b>Step 3 - Open a Bank Account</b>
-<p>Now that you have your EIN Number ({{ $mailData['ein'] }}) you should open a Chapter Checking Account. Check your area for banks that offer free accounts to non-profits. In addtion to your EIN , you will likely need a copy of the Group Exemption Letter (attached) as well as the </p>
+<p>Now that you have your EIN Number ({{ $mailData['chapterEIN'] }}) you should open a Chapter Checking Account. Check your area for banks that offer free accounts to non-profits. In addtion to your EIN , you will likely need a copy of the Group Exemption Letter (attached) as well as the </p>
 <hr>
 <b>Step 4 - Set your Dues</b>
 <p>Most chapters charge between $20-$35 per year to their members. You will have an annual re-registration payment due to International at $5/member ($50 minimum) so be sure to include that in your calculations. Read more about how income from dues may be used.</p>
@@ -43,7 +43,7 @@
 <br>
 <p><strong>MCL</strong>,<br>
     {{ $mailData['userName'] }}<br>
-    {{ $mailData['positionTitle'] }}<br>
-    Conference {{ $mailData['conf'] }}, {{ $mailData['conf_name'] }}<br>
+    {{ $mailData['userPosition'] }}<br>
+    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
     International MOMS Club</p>
 @endcomponent

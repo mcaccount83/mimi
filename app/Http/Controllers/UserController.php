@@ -79,6 +79,8 @@ class UserController extends Controller
         $user_confId = $user->coordinator->conference_id;
         $user_regId = $user->coordinator->region_id;
         $user_conference = $user->coordinator->conference;
+        $user_conf_name = $user->coordinator->conference->conference_name;
+        $user_conf_desc = $user->coordinator->conference->conference_description;
         $user_region = $user->coordinator->region;
         $user_position = $user->coordinator->displayPosition->long_title;
         $user_secPositionId = $user->coordinator->sec_position_id;
@@ -90,6 +92,7 @@ class UserController extends Controller
             'user_position' => $user_position, 'user_secPosition' => $user_secPosition, 'user_coorId' => $user_coorId, 'user_regId' => $user_regId,
             'user_confId' => $user_confId, 'user_secPositionId' => $user_secPositionId, 'user_positionId' => $user_positionId,
             'user_conference' => $user_conference, 'user_region' => $user_region, 'user_layerId' => $user_layerId,
+            'user_conf_name' => $user_conf_name, 'user_conf_desc' => $user_conf_desc
         ];
     }
 

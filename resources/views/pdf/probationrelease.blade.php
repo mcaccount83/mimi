@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }} | Probation Letter</title>
+    <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Probation Letter</title>
         @php
         $todayDate = date('F j, Y'); // e.g., July 9, 2024
         $date = new DateTime();
@@ -18,21 +18,21 @@
 <br>
     <p>{{ $todayDate }}</p>
     <br>
-    <p>MOMS Club of {{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }}<br>
-        {{ $pdfData['pres_fname'] }} {{ $pdfData['pres_lname'] }}<br>
-        {{ $pdfData['pres_addr'] }}<br>
-        {{ $pdfData['pres_city'] }},  {{ $pdfData['pres_state'] }}  {{ $pdfData['pres_zip'] }}</p>
+    <p>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
+        {{ $pdfData['presName'] }}<br>
+        {{ $pdfData['presAddress'] }}<br>
+        {{ $pdfData['presCity'] }},  {{ $pdfData['presState'] }}  {{ $pdfData['presZip'] }}</p>
     <br>
-    <p>Dear {{ $pdfData['pres_fname'] }}:</p>
+    <p>Dear {{ $pdfData['presName'] }}:</p>
     <p>At this time we have concluded that your chapter has met all of the requirements to have your probationary status lifted.  </p>
     <p>Please place this letter in your chapter’s permanent files. </p>
     <p>If you have further questions, or need assistance, please contact me or your primary coordinator.</p>
     <p>Sincerely,</p>
     <br>
     <br>
-    <p>{{ $pdfData['cc_fname'] }} {{ $pdfData['cc_lname'] }}<br>
-    {{ $pdfData['cc_pos'] }}<br>
-    {{ $pdfData['cc_conf_name'] }}, {{ $pdfData['cc_conf_desc'] }}<br>
+    <p>{{ $pdfData['userName'] }}<br>
+        {{ $pdfData['userPosition'] }}<br>
+        {{ $pdfData['userConfName'] }}, {{ $pdfData['userConfDesc'] }}<br>
     International MOMS Club<sub>&reg;</sub></p>
 </div>
 </body>

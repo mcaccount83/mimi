@@ -15,7 +15,6 @@ class PublicController extends Controller
 
     public function chapterLinks(): View
     {
-
         $international = DB::table('chapters')
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
             ->join('state', 'chapters.state_id', '=', 'state.id')

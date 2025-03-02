@@ -45,7 +45,7 @@ class NewChapterWelcome extends Mailable implements ShouldQueue
             ->replyTo($this->mailData['userEmail'])
             ->markdown('emails.chapterupdate.newchapterwelcome')
             ->attach($this->pdfPath, [
-                'as' => $this->mailData['state'].'_'.$this->mailData['chapter'].'_ChapterInGoodStanding.pdf',
+                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterName'].'_ChapterInGoodStanding.pdf',
                 'mime' => 'application/pdf',
             ])
             ->attachData($content, 'GroupExemptionLetter.pdf', [

@@ -24,12 +24,15 @@ class PDFController extends Controller
     protected $userController;
     protected $baseChapterController;
     protected $googleController;
+    protected $baseMailDataController;
 
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, GoogleController $googleController)
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController,
+        BaseMailDataController $baseMailDataController, GoogleController $googleController)
     {
         $this->userController = $userController;
         $this->googleController = $googleController;
         $this->baseChapterController = $baseChapterController;
+        $this->baseMailDataController = $baseMailDataController;
     }
 
     public $pdfData = [];
@@ -348,29 +351,12 @@ class PDFController extends Controller
             $emailListCoord = $baseQuery['emailListCoord'];
 
             //  Load User Information for Signing Email & PDFs
-            $userData = $this->userController->loadUserInformation($request);
-            $user_name = $userData['user_name'];
-            $user_email = $userData['user_email'];
-            $user_conf_name = $userData['user_conf_name'];
-            $user_conf_desc = $userData['user_conf_desc'];
-            $user_position = $userData['user_position'];
+            $user = $this->userController->loadUserInformation($request);
 
-            $mailData = [
-                'chapterName' => $chDetails->name,
-                'chapterEmail' => $chDetails->email,
-                'chapterState' => $stateShortName,
-                'user_name' => $user_name,
-                'user_email' => $user_email,
-                'user_conf_name' => $user_conf_name,
-                'user_conf_desc' => $user_conf_desc,
-                'user_position' => $user_position,
-                // 'cc_email' => $cc_email,
-                // 'cc_fname' => $cc_fname,
-                // 'cc_lname' => $cc_lname,
-                // 'cc_pos' => $cc_pos,
-                // 'cc_conf_name' => $cc_conf_name,
-                // 'cc_conf_desc' => $cc_conf_desc,
-            ];
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+            );
 
             switch ($letterType) {
                 case 'general':
@@ -430,42 +416,54 @@ class PDFController extends Controller
         $PresDetails = $baseQuery['PresDetails'];
 
         //  Load User Information for Signing Email & PDFs
-        $userData = $this->userController->loadUserInformation($request);
-        $user_name = $userData['user_name'];
-        $user_email = $userData['user_email'];
-        $user_conf_name = $userData['user_conf_name'];
-        $user_conf_desc = $userData['user_conf_desc'];
-        $user_position = $userData['user_position'];
+        $user = $this->userController->loadUserInformation($request);
+        // $user_name = $userData['user_name'];
+        // $user_email = $userData['user_email'];
+        // $user_conf_name = $userData['user_conf_name'];
+        // $user_conf_desc = $userData['user_conf_desc'];
+        // $user_position = $userData['user_position'];
 
         $date = Carbon::now();
         $dateFormatted = $date->format('m-d-Y');
         $nextMonth = $date->copy()->addMonth()->endOfMonth();
         $nextMonthFormatted = $nextMonth->format('m-d-Y');
 
-        $pdfData = [
-            'chapter_name' => $chDetails->name,
-            'state' => $stateShortName,
-            'pres_fname' => $PresDetails->first_name,
-            'pres_lname' => $PresDetails->last_name,
-            'pres_addr' => $PresDetails->street_address,
-            'pres_city' => $PresDetails->city,
-            'pres_state' => $PresDetails->state,
-            'pres_zip' => $PresDetails->zip,
-            'user_name' => $user_name,
-            'user_email' => $user_email,
-            'user_conf_name' => $user_conf_name,
-            'user_conf_desc' => $user_conf_desc,
-            'user_position' => $user_position,
-            // 'cc_fname' => $cc_fname,
-            // 'cc_lname' => $cc_lname,
-            // 'cc_pos' => $cc_pos,
-            // 'cc_conf_name' => $cc_conf_name,
-            // 'cc_conf_desc' => $cc_conf_desc,
+        $pdfData = array_merge(
+            $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+            $this->baseMailDataController->getUserData($user),
+            $this->baseMailDataController->getPresData($PresDetails),
+            [
             'ch_name' => $sanitizedChapterName,
             'today' => $dateFormatted,
             'nextMonth' => $nextMonthFormatted,
             'startMonth' => $startMonthName,
-        ];
+            ]
+        );
+
+        // $pdfData = [
+        //     'chapter_name' => $chDetails->name,
+        //     'state' => $stateShortName,
+        //     'pres_fname' => $PresDetails->first_name,
+        //     'pres_lname' => $PresDetails->last_name,
+        //     'pres_addr' => $PresDetails->street_address,
+        //     'pres_city' => $PresDetails->city,
+        //     'pres_state' => $PresDetails->state,
+        //     'pres_zip' => $PresDetails->zip,
+        //     'user_name' => $user_name,
+        //     'user_email' => $user_email,
+        //     'user_conf_name' => $user_conf_name,
+        //     'user_conf_desc' => $user_conf_desc,
+        //     'user_position' => $user_position,
+        //     // 'cc_fname' => $cc_fname,
+        //     // 'cc_lname' => $cc_lname,
+        //     // 'cc_pos' => $cc_pos,
+        //     // 'cc_conf_name' => $cc_conf_name,
+        //     // 'cc_conf_desc' => $cc_conf_desc,
+        //     'ch_name' => $sanitizedChapterName,
+        //     'today' => $dateFormatted,
+        //     'nextMonth' => $nextMonthFormatted,
+        //     'startMonth' => $startMonthName,
+        // ];
 
         $type = strtolower($type);
         $view = match ($type) {
@@ -478,7 +476,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView($view, compact('pdfData'));
 
-        $filename = $pdfData['state'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
+        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterName']."_{$type}_Letter.pdf";
 
         // if ($request->has('stream')) {
         //     return $pdf->stream($filename, ['Attachment' => 0]);
@@ -522,7 +520,7 @@ class PDFController extends Controller
                 return response()->json(['message' => 'Invalid letter type selected'], 400);
         }
 
-        $result = $this->generateProbationLetter($chapterId, $type);
+        $result = $this->generateProbationLetter($request, $chapterId, $type);
         $pdf = $result['pdf'];
         $filename = $result['filename'];
 
@@ -546,36 +544,44 @@ class PDFController extends Controller
 
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
-            $user_name = $baseQuery['user_name'];
-            $user_email = $baseQuery['user_email'];
-            $user_conf_name = $baseQuery['user_conf_name'];
-            $user_conf_desc = $baseQuery['user_conf_desc'];
-            $user_position = $baseQuery['user_position'];
+            // $user_name = $baseQuery['user_name'];
+            // $user_email = $baseQuery['user_email'];
+            // $user_conf_name = $baseQuery['user_conf_name'];
+            // $user_conf_desc = $baseQuery['user_conf_desc'];
+            // $user_position = $baseQuery['user_position'];
 
             //  Load User Information for Signing Email & PDFs
-        $userData = $this->userController->loadUserInformation($request);
-        $user_name = $userData['user_name'];
-        $user_email = $userData['user_email'];
-        $user_conf_name = $userData['user_conf_name'];
-        $user_conf_desc = $userData['user_conf_desc'];
-        $user_position = $userData['user_position'];
+            $user = $this->userController->loadUserInformation($request);
 
-            $mailData = [
-                'chapterName' => $chDetails->name,
-                'chapterEmail' => $chDetails->email,
-                'chapterState' => $stateShortName,
-                'user_name' => $user_name,
-                'user_email' => $user_email,
-                'user_conf_name' => $user_conf_name,
-                'user_conf_desc' => $user_conf_desc,
-                'user_position' => $user_position,
-                // 'cc_email' => $cc_email,
-                // 'cc_fname' => $cc_fname,
-                // 'cc_lname' => $cc_lname,
-                // 'cc_pos' => $cc_pos,
-                // 'cc_conf_name' => $cc_conf_name,
-                // 'cc_conf_desc' => $cc_conf_desc,
-            ];
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+            );
+
+
+        // $userData = $this->userController->loadUserInformation($request);
+        // $user_name = $userData['user_name'];
+        // $user_email = $userData['user_email'];
+        // $user_conf_name = $userData['user_conf_name'];
+        // $user_conf_desc = $userData['user_conf_desc'];
+        // $user_position = $userData['user_position'];
+
+        //     $mailData = [
+        //         'chapterName' => $chDetails->name,
+        //         'chapterEmail' => $chDetails->email,
+        //         'chapterState' => $stateShortName,
+        //         'user_name' => $user_name,
+        //         'user_email' => $user_email,
+        //         'user_conf_name' => $user_conf_name,
+        //         'user_conf_desc' => $user_conf_desc,
+        //         'user_position' => $user_position,
+        //         // 'cc_email' => $cc_email,
+        //         // 'cc_fname' => $cc_fname,
+        //         // 'cc_lname' => $cc_lname,
+        //         // 'cc_pos' => $cc_pos,
+        //         // 'cc_conf_name' => $cc_conf_name,
+        //         // 'cc_conf_desc' => $cc_conf_desc,
+        //     ];
 
             switch ($letterType) {
                 case 'no_report':
@@ -624,7 +630,7 @@ class PDFController extends Controller
     /**
      * Generate Probation Letter
      */
-    public function generateProbationLetter($chapterId, $type)
+    public function generateProbationLetter(Request $request, $chapterId, $type)
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -633,45 +639,60 @@ class PDFController extends Controller
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $PresDetails = $baseQuery['PresDetails'];
-        $user_name = $baseQuery['user_name'];
-        $user_email = $baseQuery['user_email'];
-        $user_conf_name = $baseQuery['user_conf_name'];
-        $user_conf_desc = $baseQuery['user_conf_desc'];
-        $user_position = $baseQuery['user_position'];
-        $cc_fname = $baseQuery['cc_fname'];
-        $cc_lname = $baseQuery['cc_lname'];
-        $cc_pos = $baseQuery['cc_pos'];
-        $cc_conf_name = $baseQuery['cc_conf_name'];
-        $cc_conf_desc = $baseQuery['cc_conf_desc'];
+        // $user_name = $baseQuery['user_name'];
+        // $user_email = $baseQuery['user_email'];
+        // $user_conf_name = $baseQuery['user_conf_name'];
+        // $user_conf_desc = $baseQuery['user_conf_desc'];
+        // $user_position = $baseQuery['user_position'];
+        // $cc_fname = $baseQuery['cc_fname'];
+        // $cc_lname = $baseQuery['cc_lname'];
+        // $cc_pos = $baseQuery['cc_pos'];
+        // $cc_conf_name = $baseQuery['cc_conf_name'];
+        // $cc_conf_desc = $baseQuery['cc_conf_desc'];
+
+         //  Load User Information for Signing Email & PDFs
+         $user = $this->userController->loadUserInformation($request);
 
         $date = Carbon::now();
         $dateFormatted = $date->format('m-d-Y');
         $nextMonth = $date->copy()->addMonth()->endOfMonth();
         $nextMonthFormatted = $nextMonth->format('m-d-Y');
 
-        $pdfData = [
-            'chapter_name' => $chDetails->name,
-            'state' => $stateShortName,
-            'month' => $startMonthName,
-            'pres_fname' => $PresDetails->first_name,
-            'pres_lname' => $PresDetails->last_name,
-            'pres_addr' => $PresDetails->street_address,
-            'pres_city' => $PresDetails->city,
-            'pres_state' => $PresDetails->state,
-            'pres_zip' => $PresDetails->zip,
-            'user_name' => $user_name,
-            'user_email' => $user_email,
-            'user_conf_name' => $user_conf_name,
-            'user_conf_desc' => $user_conf_desc,
-            'user_position' => $user_position,
-            // 'cc_fname' => $cc_fname,
-            // 'cc_lname' => $cc_lname,
-            // 'cc_pos' => $cc_pos,
-            // 'cc_conf_name' => $cc_conf_name,
-            // 'cc_conf_desc' => $cc_conf_desc,
+        $pdfData = array_merge(
+            $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+            $this->baseMailDataController->getUserData($user),
+            $this->baseMailDataController->getPresData($PresDetails),
+            [
             'ch_name' => $sanitizedChapterName,
-            'nextMonthDate' => $nextMonthFormatted,
-        ];
+            'today' => $dateFormatted,
+            'nextMonth' => $nextMonthFormatted,
+            'startMonth' => $startMonthName,
+            ]
+        );
+
+        // $pdfData = [
+        //     'chapter_name' => $chDetails->name,
+        //     'state' => $stateShortName,
+        //     'month' => $startMonthName,
+        //     'pres_fname' => $PresDetails->first_name,
+        //     'pres_lname' => $PresDetails->last_name,
+        //     'pres_addr' => $PresDetails->street_address,
+        //     'pres_city' => $PresDetails->city,
+        //     'pres_state' => $PresDetails->state,
+        //     'pres_zip' => $PresDetails->zip,
+        //     'user_name' => $user_name,
+        //     'user_email' => $user_email,
+        //     'user_conf_name' => $user_conf_name,
+        //     'user_conf_desc' => $user_conf_desc,
+        //     'user_position' => $user_position,
+        //     // 'cc_fname' => $cc_fname,
+        //     // 'cc_lname' => $cc_lname,
+        //     // 'cc_pos' => $cc_pos,
+        //     // 'cc_conf_name' => $cc_conf_name,
+        //     // 'cc_conf_desc' => $cc_conf_desc,
+        //     'ch_name' => $sanitizedChapterName,
+        //     'nextMonthDate' => $nextMonthFormatted,
+        // ];
 
         $type = strtolower($type);
         $view = match ($type) {
@@ -684,7 +705,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView($view, compact('pdfData'));
 
-        $filename = $pdfData['state'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
+        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterName']."_{$type}_Letter.pdf";
 
         // if ($request->has('stream')) {
         //     return $pdf->stream($filename, ['Attachment' => 0]);

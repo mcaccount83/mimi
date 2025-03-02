@@ -1,7 +1,7 @@
 @component('mail::message')
 # ListAdmin unZapped Notification
 
-The follownig chapter has unZapped: MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}, Conference {{$mailData['conf']}}.<br>
+The follownig chapter has unZapped: MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}, Conference {{$mailData['chapterConf']}}.<br>
 <br>
 Please re-add members of this chapter from any groups, forums and mailing lists.<br>
 <br>
@@ -26,29 +26,30 @@ International MOMS Club
         </tr>
         <tr>
             <td>President</td>
-            <td>{{$mailData['pfirst']}} {{$mailData['plast']}}</td>
-            <td>{{$mailData['pemail']}}</td>
+            <td>{{$mailData['presName']}}</td>
+            <td>{{$mailData['presEmail']}}</td>
         </tr>
         <tr>
             <td>AVP</td>
-            <td>{{$mailData['afirst']}} {{$mailData['alast']}}</td>
-            <td>{{$mailData['aemail']}}</td>
+            <td>{{$mailData['avpName']}}</td>
+            <td>{{$mailData['avpEmail']}}</td>
         </tr>
         <tr>
             <td>MVP</td>
-            <td>{{$mailData['mfirst']}} {{$mailData['mlast']}}</td>
-            <td>{{$mailData['memail']}}</td>
-        </tr>
-        <tr>
-            <td>Secretary</td>
-            <td>{{$mailData['sfirst']}} {{$mailData['slast']}}</td>
-            <td>{{$mailData['semail']}}</td>
+            <td>{{$mailData['mvpName']}}</td>
+            <td>{{$mailData['mvpEmail']}}</td>
         </tr>
         <tr>
             <td>Treasurer</td>
-            <td>{{$mailData['tfirst']}} {{$mailData['tlast']}}</td>
-            <td>{{$mailData['temail']}}</td>
+            <td>{{$mailData['trsName']}}</td>
+            <td>{{$mailData['trsEmail']}}</td>
         </tr>
+        <tr>
+            <td>Secretary</td>
+            <td>{{$mailData['secName']}}</td>
+            <td>{{$mailData['secEmail']}}</td>
+        </tr>
+
     </tbody>
 </table>
 @endcomponent

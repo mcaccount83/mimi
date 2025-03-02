@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }} | Disband Letter</title>
+    <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Disband Letter</title>
         @php
         $todayDate = date('F j, Y'); // e.g., July 9, 2024
         $date = new DateTime();
@@ -19,12 +19,12 @@
 {{-- <div class="keep-together" style="page-break-inside: avoid;"> --}}
     <p>{{ $todayDate }}</p>
     <br>
-    <p>MOMS Club of {{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }}<br>
-        {{ $pdfData['pres_fname'] }} {{ $pdfData['pres_lname'] }}<br>
-        {{ $pdfData['pres_addr'] }}<br>
-        {{ $pdfData['pres_city'] }},  {{ $pdfData['pres_state'] }}  {{ $pdfData['pres_zip'] }}</p>
+    <p>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
+        {{ $pdfData['presName'] }}<br>
+        {{ $pdfData['presAddress'] }}<br>
+        {{ $pdfData['presCity'] }},  {{ $pdfData['presState'] }}  {{ $pdfData['presZip'] }}</p>
     <br>
-    <p>Dear {{ $pdfData['pres_fname'] }}:</p>
+    <p>Dear {{ $pdfData['presName'] }}:</p>
     <p>It’s our understanding that you did not start your MOMS Club chapter as you had planned. We know that plans sometimes change, so we want you to know that we appreciate
         your good intentions.</p>
     <p>Since you did not start your chapter, there is still one thing you need to do according to the commitment you signed on the registration form. Because only on-going
@@ -37,9 +37,9 @@
     <p>Sincerely,</p>
     <br>
     <br>
-    <p>{{ $pdfData['cc_fname'] }} {{ $pdfData['cc_lname'] }}<br>
-    {{ $pdfData['cc_pos'] }}<br>
-    {{ $pdfData['cc_conf_name'] }}, {{ $pdfData['cc_conf_desc'] }}<br>
+    <p>{{ $pdfData['userName'] }}<br>
+        {{ $pdfData['userPosition'] }}<br>
+        {{ $pdfData['userConfName'] }}, {{ $pdfData['userConfDesc'] }}<br>
     International MOMS Club<sub>&reg;</sub></p>
 </div>
 </body>

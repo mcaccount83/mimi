@@ -36,8 +36,8 @@ class ProbationNoPmtLetter extends Mailable implements ShouldQueue
     {
         return $this
             ->subject('Probation No Payment Letter')
-            ->replyTo($this->mailData['cc_email'])
-            ->markdown('emails.chapterupdate.probationnopmtletter')
+            ->replyTo($this->mailData['userEmail'])
+            ->markdown('emails.chapterupdate.probationpmtletter')
             ->attach($this->pdfPath, [
                 'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterName'].'_Probation_No_Payment.pdf',
                 'mime' => 'application/pdf',

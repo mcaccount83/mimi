@@ -50,9 +50,10 @@ class ChapterController extends Controller
     protected $pdfController;
     protected $baseChapterController;
     protected $forumSubscriptionController;
+    protected $baseMailDataController;
 
     public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
-        ForumSubscriptionController $forumSubscriptionController)
+        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
@@ -60,6 +61,7 @@ class ChapterController extends Controller
         $this->pdfController = $pdfController;
         $this->baseChapterController = $baseChapterController;
         $this->forumSubscriptionController = $forumSubscriptionController;
+        $this->baseMailDataController = $baseMailDataController;
     }
 
     /*/Custom Helpers/*/
@@ -309,11 +311,6 @@ class ChapterController extends Controller
     public function sendNewChapterEmail(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $UserName = $user['user_name'];
-        $UserEmail = $user['user_email'];
-        $confId = $user['user_confId'];
-        $confDesc = $user['user_conf_desc'];
-        $position = $user['user_position'];
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
@@ -325,28 +322,34 @@ class ChapterController extends Controller
          $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
          $chDetails = $baseQuery['chDetails'];
          $stateShortName = $baseQuery['stateShortName'];
-         $chConfId = $baseQuery['chConfId'];
          $emailPC = $baseQuery['emailPC'];
-         $pcName = $baseQuery['pcName'];
+         $pcDetails = $baseQuery['pcDetails'];
          $PresDetails = $baseQuery['PresDetails'];
          $emailListChap = $baseQuery['emailListChap'];
          $emailListCoord = $baseQuery['emailListCoord'];
 
-        $mailData = [
-            'chapter' => $chDetails->name,
-            'state' => $stateShortName,
-            'ein' => $chDetails->ein,
-            'firstName' => $PresDetails->first_name,
-            'email' => $PresDetails->email,
-            'cor_name' => $pcName,
-            'cor_email' => $emailPC,
-            'conf' => $chConfId,
-            'userName' => $UserName,
-            'userEmail' => $UserEmail,
-            'positionTitle' => $position,
-            'conf' => $confId,
-            'conf_name' => $confDesc,
-        ];
+         $mailData = array_merge(
+             $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+             $this->baseMailDataController->getUserData($user),
+             $this->baseMailDataController->getPresData($PresDetails),
+             $this->baseMailDataController->getPCData($pcDetails),
+         );
+
+        // $mailData = [
+        //     'chapter' => $chDetails->name,
+        //     'state' => $stateShortName,
+        //     'ein' => $chDetails->ein,
+        //     'firstName' => $PresDetails->first_name,
+        //     'email' => $PresDetails->email,
+        //     'cor_name' => $pcName,
+        //     'cor_email' => $emailPC,
+        //     'conf' => $chConfId,
+        //     'userName' => $UserName,
+        //     'userEmail' => $UserEmail,
+        //     'positionTitle' => $position,
+        //     'conf' => $confId,
+        //     'conf_name' => $confDesc,
+        // ];
 
         $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
         $pdfPath =  $this->pdfController->saveGoodStandingLetter($chapterid);   // Generate and save the PDF
@@ -506,7 +509,6 @@ class ChapterController extends Controller
     public function updateChapterUnZap(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
@@ -518,8 +520,6 @@ class ChapterController extends Controller
 
         $defaultCategories = $this->forumSubscriptionController->defaultCategories();
         $defaultBoardCategories = $defaultCategories['boardCategories'];
-
-        $coordinatorData = $this->userController->loadReportingTree($coorId);
 
         try {
             DB::beginTransaction();
@@ -542,20 +542,22 @@ class ChapterController extends Controller
                     'is_active' => 1,
                     'updated_at' => $lastupdatedDate,
                 ]);
-            }
 
-            Boards::where('chapter_id', $chapterid)->update([
-                'is_active' => 1,
-                'last_updated_by' => $lastUpdatedBy,
-                'last_updated_date' => $lastupdatedDate,
-            ]);
+                Boards::where('chapter_id', $chapterid)->update([
+                    'is_active' => 1,
+                    'last_updated_by' => $lastUpdatedBy,
+                    'last_updated_date' => $lastupdatedDate,
+                ]);
 
-            foreach ($bdUserIds as $bdUserId) {
-                foreach ($defaultBoardCategories as $categoryId) {
-                    ForumCategorySubscription::create([
-                        'user_id' => $bdUserId,  // Now passing a single ID instead of collection
-                        'category_id' => $categoryId,
-                    ]);
+                $validUserIds = User::whereIn('id', $bdUserIds)->pluck('id')->toArray();
+
+                foreach ($validUserIds as $userId) {
+                    foreach ($defaultBoardCategories as $categoryId) {
+                        ForumCategorySubscription::create([
+                            'user_id' => $userId,
+                            'category_id' => $categoryId,
+                        ]);
+                    }
                 }
             }
 
@@ -570,37 +572,21 @@ class ChapterController extends Controller
             $TRSDetails = $baseQuery['TRSDetails'];
             $SECDetails = $baseQuery['SECDetails'];
 
-            $cc_email = $baseQuery['emailCC'];
-            $cc_fname = $baseQuery['cc_fname'];
-            $cc_lname = $baseQuery['cc_lname'];
-            $cc_pos = $baseQuery['cc_pos'];
-            $cc_conf_desc = $baseQuery['cc_conf_desc'];
-
             $mailData = [
                 'chapterName' => $chDetails->name,
-                'chapterEmail' => $chDetails->email,
                 'chapterState' => $stateShortName,
-                'pfirst' => $PresDetails->first_name,
-                'plast' => $PresDetails->last_name,
-                'pemail' => $PresDetails->email,
-                'afirst' => $AVPDetails->first_name,
-                'alast' => $AVPDetails->last_name,
-                'aemail' => $AVPDetails->email,
-                'mfirst' => $MVPDetails->first_name,
-                'mlast' => $MVPDetails->last_name,
-                'memail' => $MVPDetails->email,
-                'tfirst' => $TRSDetails->first_name,
-                'tlast' => $TRSDetails->last_name,
-                'temail' => $TRSDetails->email,
-                'sfirst' => $SECDetails->first_name,
-                'slast' => $SECDetails->last_name,
-                'semail' => $SECDetails->email,
-                'conf' => $chConfId,
-                'cc_fname' => $cc_fname,
-                'cc_lname' => $cc_lname,
-                'cc_pos' => $cc_pos,
-                'cc_conf_desc' => $cc_conf_desc,
-                'cc_email' => $cc_email,
+                'chapterConf' => $chConfId,
+                'chapterEmail' => $chDetails->email,
+                'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
+                'presEmail' => $PresDetails->email,
+                'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
+                'avpEmail' => $AVPDetails->email,
+                'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
+                'mvpEmail' => $MVPDetails->email,
+                'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
+                'trsEmail' => $TRSDetails->email,
+                'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
+                'secEmail' => $SECDetails->email,
             ];
 
             //Primary Coordinator Notification//

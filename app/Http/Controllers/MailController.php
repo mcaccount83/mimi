@@ -3,22 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\IndexMailRequest;
-use App\Mail\NewChapterWelcome;
-use App\Models\Chapters;
-use App\Models\Conference;
-use App\Models\CoordinatorPosition;
-use App\Models\Region;
-use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
-use GuzzleHttp\Client;
 use Illuminate\Database as DatabaseConnections;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use romanzipp\QueueMonitor\Controllers\Payloads\Metric;
 use romanzipp\QueueMonitor\Controllers\Payloads\Metrics;
 use romanzipp\QueueMonitor\Enums\MonitorStatus;
