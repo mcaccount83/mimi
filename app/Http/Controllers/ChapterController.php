@@ -334,22 +334,6 @@ class ChapterController extends Controller
              $this->baseMailDataController->getPCData($pcDetails),
          );
 
-        // $mailData = [
-        //     'chapter' => $chDetails->name,
-        //     'state' => $stateShortName,
-        //     'ein' => $chDetails->ein,
-        //     'firstName' => $PresDetails->first_name,
-        //     'email' => $PresDetails->email,
-        //     'cor_name' => $pcName,
-        //     'cor_email' => $emailPC,
-        //     'conf' => $chConfId,
-        //     'userName' => $UserName,
-        //     'userEmail' => $UserEmail,
-        //     'positionTitle' => $position,
-        //     'conf' => $confId,
-        //     'conf_name' => $confDesc,
-        // ];
-
         $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
         $pdfPath =  $this->pdfController->saveGoodStandingLetter($chapterid);   // Generate and save the PDF
         Mail::to($emailListChap)
@@ -382,7 +366,6 @@ class ChapterController extends Controller
                  'redirect' => route('chapters.view', ['id' => $chapterid]),
              ]);
          }
-
     }
 
     /**
@@ -447,22 +430,21 @@ class ChapterController extends Controller
             $TRSDetails = $baseQuery['TRSDetails'];
             $SECDetails = $baseQuery['SECDetails'];
 
-            $mailData = [
-                'chapterName' => $chDetails->name,
-                'chapterState' => $stateShortName,
-                'chapterConf' => $chConfId,
-                'chapterEmail' => $chDetails->email,
-                'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
-                'presEmail' => $PresDetails->email,
-                'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-                'avpEmail' => $AVPDetails->email,
-                'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-                'mvpEmail' => $MVPDetails->email,
-                'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-                'trsEmail' => $TRSDetails->email,
-                'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-                'secEmail' => $SECDetails->email,
-            ];
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                [
+                    'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
+                    'presEmail' => $PresDetails->email,
+                    'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
+                    'avpEmail' => $AVPDetails->email,
+                    'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
+                    'mvpEmail' => $MVPDetails->email,
+                    'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
+                    'trsEmail' => $TRSDetails->email,
+                    'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
+                    'secEmail' => $SECDetails->email,
+                ]
+            );
 
             //ListAdmin Notification//
             $to_email = 'listadmin@momsclub.org';
@@ -571,22 +553,21 @@ class ChapterController extends Controller
             $TRSDetails = $baseQuery['TRSDetails'];
             $SECDetails = $baseQuery['SECDetails'];
 
-            $mailData = [
-                'chapterName' => $chDetails->name,
-                'chapterState' => $stateShortName,
-                'chapterConf' => $chConfId,
-                'chapterEmail' => $chDetails->email,
-                'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
-                'presEmail' => $PresDetails->email,
-                'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-                'avpEmail' => $AVPDetails->email,
-                'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-                'mvpEmail' => $MVPDetails->email,
-                'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-                'trsEmail' => $TRSDetails->email,
-                'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-                'secEmail' => $SECDetails->email,
-            ];
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                [
+                    'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
+                    'presEmail' => $PresDetails->email,
+                    'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
+                    'avpEmail' => $AVPDetails->email,
+                    'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
+                    'mvpEmail' => $MVPDetails->email,
+                    'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
+                    'trsEmail' => $TRSDetails->email,
+                    'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
+                    'secEmail' => $SECDetails->email,
+                ]
+            );
 
             //Primary Coordinator Notification//
             $to_email = 'listadmin@momsclub.org';
@@ -979,14 +960,14 @@ class ChapterController extends Controller
         $allStatuses = $baseQuery['allStatuses'];
         $allWebLinks = $baseQuery['allWebLinks'];
 
-        $pcDetails = $baseQuery['pcDetails'];
+        $pcList = $baseQuery['pcList'];
 
         $data = ['id' => $id, 'chIsActive' => $chIsActive, 'reviewComplete' => $reviewComplete,
             'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'allStatuses' => $allStatuses, 'allWebLinks' => $allWebLinks,
-            'pcDetails' => $pcDetails,
+            'pcList' => $pcList,
         ];
 
         return view('chapters.edit')->with($data);
@@ -1004,6 +985,7 @@ class ChapterController extends Controller
         $baseQueryPre = $this->baseChapterController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
         $PresDetailsPre = $baseQueryPre['PresDetails'];
+        $pcDetailsPre = $baseQueryPre['pcDetails'];
 
         $input = $request->all();
         $chPcIdPre = $input['ch_hid_primarycor'];
@@ -1060,55 +1042,69 @@ class ChapterController extends Controller
             $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
             $emailListCoord = $baseQueryUpd['emailListCoord'];  // Full Coordinaor List
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
-            $pcDetails = $baseQueryUpd['chDetails']->primaryCoordinator;
-            $pcEmail = $pcDetails->email;  // PC Email
+            $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
+            $pcEmail = $pcDetailsUpd->email;  // PC Email
             $EINCordEmail = 'jackie.mchenry@momsclub.org';  // EIN Coor Email
 
-            $mailData = [
-                'chapterNameUpd' => $chDetailsUpd->name,
-                'boundUpd' => $chDetailsUpd->territory,
-                'chapstatusUpd' => $chDetailsUpd->status_id,
-                'chapNoteUpd' => $chDetailsUpd->notes,
-                'inConUpd' => $chDetailsUpd->inquiries_contact,
-                'inNoteUpd' => $chDetailsUpd->inquiries_note,
-                'chapemailUpd' => $chDetailsUpd->email,
-                'poBoxUpd' => $chDetailsUpd->po_box,
-                'addInfoUpd' => $chDetailsUpd->additional_info,
-                'webUrlUpd' => $chDetailsUpd->website_url,
-                'webStatusUpd' => $chDetailsUpd->website_status,
-                'egroupUpd' => $chDetailsUpd->egroup,
-                'cor_fnameUpd' => $PresDetailsUpd->cor_f_name,
-                'cor_lnameUpd' => $PresDetailsUpd->cor_l_name,
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getPCData($pcDetailsUpd),
+                $this->baseMailDataController->getPreviousData($chDetailsPre, $pcDetailsPre, $PresDetailsPre, $stateShortName),
+                $this->baseMailDataController->getUpdatedData($chDetailsUpd, $pcDetailsUpd, $PresDetailsUpd, $stateShortName),
 
-                'chapterNamePre' => $chDetailsPre->name,
-                'boundPre' => $chDetailsPre->territory,
-                'chapstatusPre' => $chDetailsPre->status_id,
-                'chapNotePre' => $chDetailsPre->notes,
-                'inConPre' => $chDetailsPre->inquiries_contact,
-                'inNotePre' => $chDetailsPre->inquiries_note,
-                'chapemailPre' => $chDetailsPre->email,
-                'poBoxPre' => $chDetailsPre->po_box,
-                'addInfoPre' => $chDetailsPre->additional_info,
-                'webUrlPre' => $chDetailsPre->website_url,
-                'webStatusPre' => $chDetailsPre->website_status,
-                'egroupPre' => $chDetailsPre->egroup,
-                'cor_fnamePre' => $PresDetailsPre->cor_f_name,
-                'cor_lnamePre' => $PresDetailsPre->cor_l_name,
+                [
+                    'lastupdatedDate' => $lastupdatedDate,
+                    'chapterWebsiteUrl' => $website,
+                ]
+            );
 
-                'chapter_name' => $chDetailsUpd->name,
-                'chapter_state' => $stateShortName,
-                'conference' => $chConfId,
-                'updated_byUpd' => $lastupdatedDate,
 
-                'ch_pre_fname' => $PresDetailsPre->first_name,
-                'ch_pre_lname' => $PresDetailsPre->last_name,
-                'ch_pre_email' => $PresDetailsPre->email,
-                'name1' => $pcDetails->first_name,
-                'name2' => $pcDetails->last_name,
-                'email1' => $pcDetails->email,
+            // $mailData = [
+            //     'chapterNameUpd' => $chDetailsUpd->name,
+            //     'boundUpd' => $chDetailsUpd->territory,
+            //     'chapstatusUpd' => $chDetailsUpd->status_id,
+            //     'chapNoteUpd' => $chDetailsUpd->notes,
+            //     'inConUpd' => $chDetailsUpd->inquiries_contact,
+            //     'inNoteUpd' => $chDetailsUpd->inquiries_note,
+            //     'chapemailUpd' => $chDetailsUpd->email,
+            //     'poBoxUpd' => $chDetailsUpd->po_box,
+            //     'addInfoUpd' => $chDetailsUpd->additional_info,
+            //     'webUrlUpd' => $chDetailsUpd->website_url,
+            //     'webStatusUpd' => $chDetailsUpd->website_status,
+            //     'egroupUpd' => $chDetailsUpd->egroup,
+            //     'cor_fnameUpd' => $PresDetailsUpd->cor_f_name,
+            //     'cor_lnameUpd' => $PresDetailsUpd->cor_l_name,
 
-                'ch_website_url' => $website,
-            ];
+            //     'chapterNamePre' => $chDetailsPre->name,
+            //     'boundPre' => $chDetailsPre->territory,
+            //     'chapstatusPre' => $chDetailsPre->status_id,
+            //     'chapNotePre' => $chDetailsPre->notes,
+            //     'inConPre' => $chDetailsPre->inquiries_contact,
+            //     'inNotePre' => $chDetailsPre->inquiries_note,
+            //     'chapemailPre' => $chDetailsPre->email,
+            //     'poBoxPre' => $chDetailsPre->po_box,
+            //     'addInfoPre' => $chDetailsPre->additional_info,
+            //     'webUrlPre' => $chDetailsPre->website_url,
+            //     'webStatusPre' => $chDetailsPre->website_status,
+            //     'egroupPre' => $chDetailsPre->egroup,
+            //     'cor_fnamePre' => $PresDetailsPre->cor_f_name,
+            //     'cor_lnamePre' => $PresDetailsPre->cor_l_name,
+
+            //     'chapter_name' => $chDetailsUpd->name,
+            //     'chapter_state' => $stateShortName,
+            //     'conference' => $chConfId,
+            //     'updated_byUpd' => $lastupdatedDate,
+
+            //     'ch_pre_fname' => $PresDetailsPre->first_name,
+            //     'ch_pre_lname' => $PresDetailsPre->last_name,
+            //     'ch_pre_email' => $PresDetailsPre->email,
+            //     'name1' => $pcDetails->first_name,
+            //     'name2' => $pcDetails->last_name,
+            //     'email1' => $pcDetails->email,
+
+            //     'ch_website_url' => $website,
+            // ];
 
             //Primary Coordinator Notification//
             if ($chDetailsUpd->name != $chDetailsPre->name || $chDetailsUpd->inquiries_contact != $chDetailsPre->inquiries_contact || $chDetailsUpd->inquiries_note != $chDetailsPre->inquiries_note ||
@@ -2290,12 +2286,20 @@ class ChapterController extends Controller
                 $chapter->save();
 
                 if ($request->input('ch_notify') == 'on') {
-                    $mailData = [
-                        'chapterName' => $chDetails->name,
-                        'chapterState' => $stateShortName,
-                        'chapterDate' => $dues_last_paid,
-                        'chapterMembers' => $members_paid_for,
-                    ];
+                    $mailData = array_merge(
+                        $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                        [
+                            'chapterDate' => $dues_last_paid,
+                            'chapterMembers' => $members_paid_for,
+                        ]
+                    );
+
+                    // $mailData = [
+                    //     'chapterName' => $chDetails->name,
+                    //     'chapterState' => $stateShortName,
+                    //     'chapterDate' => $dues_last_paid,
+                    //     'chapterMembers' => $members_paid_for,
+                    // ];
 
                     // Payment Thank You Email
                     Mail::to($emailListChap)
@@ -2312,11 +2316,18 @@ class ChapterController extends Controller
                 $chapter->save();
 
                 if ($request->input('ch_thanks') == 'on') {
-                    $mailData = [
-                        'chapterName' => $chDetails->name,
-                        'chapterState' => $stateShortName,
-                        'chapterAmount' => $m2m_payment,
-                    ];
+                    $mailData = array_merge(
+                        $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                        [
+                            'chapterAmount' => $m2m_payment,
+                        ]
+                    );
+
+                    // $mailData = [
+                    //     'chapterName' => $chDetails->name,
+                    //     'chapterState' => $stateShortName,
+                    //     'chapterAmount' => $m2m_payment,
+                    // ];
 
                     //M2M Donation Thank You Email//
                     Mail::to($emailListChap)
@@ -2333,11 +2344,18 @@ class ChapterController extends Controller
                 $chapter->save();
 
                 if ($request->input('ch_sustaining') == 'on') {
-                    $mailData = [
-                        'chapterName' => $chDetails->name,
-                        'chapterState' => $stateShortName,
-                        'chapterTotal' => $sustaining_donation,
-                    ];
+                    $mailData = array_merge(
+                        $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                        [
+                            'chapterTotal' => $sustaining_donation,
+                        ]
+                    );
+
+                    // $mailData = [
+                    //     'chapterName' => $chDetails->name,
+                    //     'chapterState' => $stateShortName,
+                    //     'chapterTotal' => $sustaining_donation,
+                    // ];
 
                     //Sustaining Chapter Thank You Email//
                     Mail::to($emailListChap)

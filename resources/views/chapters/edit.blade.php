@@ -85,7 +85,7 @@
                             <label class="ch_primarycor">Update Primary Coordinator:</label>
                             <select name="ch_primarycor" id="ch_primarycor" class="form-control float-right col-sm-6 text-right" style="width: 100%;" onchange="loadCoordinatorList(this.value)" required>
                                 <option value="">Select Primary Coordinator</option>
-                                @foreach($pcDetails as $coordinator)
+                                @foreach($pcList as $coordinator)
                                     <option value="{{ $coordinator['cid'] }}"
                                         {{ isset($chDetails->primary_coordinator_id) && $chDetails->primary_coordinator_id == $coordinator['cid'] ? 'selected' : '' }}>
                                         {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
