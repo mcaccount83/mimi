@@ -27,12 +27,12 @@ class ChapersUpdateListAdmin extends Mailable implements ShouldQueue
     }
 
     /**
-     * Build the message.
+     * Build the message.  From MIMI to ListAdmin
      */
     public function build(): static
     {
         return $this
-            ->subject('Chapter Update ListAdmin Notice')
+            ->subject("Chapter Update ListAdmin Notice | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.chapterupdate.listadmin');
     }
 }

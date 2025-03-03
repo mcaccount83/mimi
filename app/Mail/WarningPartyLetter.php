@@ -35,7 +35,7 @@ class WarningPartyLetter extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject('Warning Party Expense Letter')
+            ->subject("Warning Party Expense Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->replyTo($this->mailData['userEmail'])
             ->markdown('emails.chapterupdate.warningpartyletter')
             ->attach($this->pdfPath, [

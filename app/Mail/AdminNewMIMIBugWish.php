@@ -25,7 +25,7 @@ class AdminNewMIMIBugWish extends Mailable implements ShouldQueue
     }
 
     /**
-     * Build the message.
+     * Build the message.  From MIMI to IT Coordinator
      */
     public function build(): static
     {

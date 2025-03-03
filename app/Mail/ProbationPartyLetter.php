@@ -35,7 +35,7 @@ class ProbationPartyLetter extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject('Probation Party Expense Letter')
+            ->subject("Probation Party Expense Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->replyTo($this->mailData['userEmail'])
             ->markdown('emails.chapterupdate.probationpartyletter')
             ->attach($this->pdfPath, [

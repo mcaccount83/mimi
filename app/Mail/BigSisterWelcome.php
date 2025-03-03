@@ -27,7 +27,7 @@ class BigSisterWelcome extends Mailable implements ShouldQueue
     }
 
     /**
-     * Build the message.
+     * Build the message.  From CC/RC to new Big Sister
      */
     public function build(): static
     {

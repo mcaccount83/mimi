@@ -32,7 +32,7 @@ class ChapersUpdatePrimaryCoor extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject('Chapter Update Notification')
+            ->subject("Chapter Update Notification | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.chapterupdate.primarycoor');
     }
 }

@@ -760,9 +760,9 @@ class ChapterController extends Controller
             //AVP Info
             if (isset($input['ch_avp_fname']) && isset($input['ch_avp_lname']) && isset($input['ch_avp_email'])) {
                 $userId = User::create([
-                    'first_name' => $input['ch_pre_fname'],
-                    'last_name' => $input['ch_pre_lname'],
-                    'email' => $input['ch_pre_email'],
+                    'first_name' => $input['ch_avp_fname'],
+                    'last_name' => $input['ch_avp_lname'],
+                    'email' => $input['ch_avp_email'],
                     'password' => Hash::make('TempPass4You'),
                     'user_type' => 'board',
                     'is_active' => 1,
@@ -770,17 +770,17 @@ class ChapterController extends Controller
 
                 Boards::create([
                     'user_id' => $userId,
-                    'first_name' => $input['ch_pre_fname'],
-                    'last_name' => $input['ch_pre_lname'],
-                    'email' => $input['ch_pre_email'],
+                    'first_name' => $input['ch_avp_fname'],
+                    'last_name' => $input['ch_avp_lname'],
+                    'email' => $input['ch_avp_email'],
                     'board_position_id' => 1,
                     'chapter_id' => $chapterId,
-                    'street_address' => $input['ch_pre_street'],
-                    'city' => $input['ch_pre_city'],
-                    'state' => $input['ch_pre_state'],
-                    'zip' => $input['ch_pre_zip'],
+                    'street_address' => $input['ch_avp_street'],
+                    'city' => $input['ch_avp_city'],
+                    'state' => $input['ch_avp_state'],
+                    'zip' => $input['ch_avp_zip'],
                     'country' => $country,
-                    'phone' => $input['ch_pre_phone'],
+                    'phone' => $input['ch_avp_phone'],
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1,
@@ -797,9 +797,9 @@ class ChapterController extends Controller
             //MVP Info
             if (isset($input['ch_mvp_fname']) && isset($input['ch_mvp_lname']) && isset($input['ch_mvp_email'])) {
                 $userId = User::create([
-                    'first_name' => $input['ch_pre_fname'],
-                    'last_name' => $input['ch_pre_lname'],
-                    'email' => $input['ch_pre_email'],
+                    'first_name' => $input['ch_mvp_fname'],
+                    'last_name' => $input['ch_mvp_lname'],
+                    'email' => $input['ch_mvp_email'],
                     'password' => Hash::make('TempPass4You'),
                     'user_type' => 'board',
                     'is_active' => 1,
@@ -807,17 +807,17 @@ class ChapterController extends Controller
 
                 Boards::create([
                     'user_id' => $userId,
-                    'first_name' => $input['ch_pre_fname'],
-                    'last_name' => $input['ch_pre_lname'],
-                    'email' => $input['ch_pre_email'],
+                    'first_name' => $input['ch_mvp_fname'],
+                    'last_name' => $input['ch_mvp_lname'],
+                    'email' => $input['ch_mvp_email'],
                     'board_position_id' => 1,
                     'chapter_id' => $chapterId,
-                    'street_address' => $input['ch_pre_street'],
-                    'city' => $input['ch_pre_city'],
-                    'state' => $input['ch_pre_state'],
-                    'zip' => $input['ch_pre_zip'],
+                    'street_address' => $input['ch_mvp_street'],
+                    'city' => $input['ch_mvp_city'],
+                    'state' => $input['ch_mvp_state'],
+                    'zip' => $input['ch_mvp_zip'],
                     'country' => $country,
-                    'phone' => $input['ch_pre_phone'],
+                    'phone' => $input['ch_mvp_phone'],
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1,
@@ -834,9 +834,9 @@ class ChapterController extends Controller
             //TREASURER Info
             if (isset($input['ch_trs_fname']) && isset($input['ch_trs_lname']) && isset($input['ch_trs_email'])) {
                 $userId = User::create([
-                    'first_name' => $input['ch_pre_fname'],
-                    'last_name' => $input['ch_pre_lname'],
-                    'email' => $input['ch_pre_email'],
+                    'first_name' => $input['ch_trs_fname'],
+                    'last_name' => $input['ch_trs_lname'],
+                    'email' => $input['ch_trs_email'],
                     'password' => Hash::make('TempPass4You'),
                     'user_type' => 'board',
                     'is_active' => 1,
@@ -844,17 +844,17 @@ class ChapterController extends Controller
 
                 Boards::create([
                     'user_id' => $userId,
-                    'first_name' => $input['ch_pre_fname'],
-                    'last_name' => $input['ch_pre_lname'],
-                    'email' => $input['ch_pre_email'],
+                    'first_name' => $input['ch_trs_fname'],
+                    'last_name' => $input['ch_trs_lname'],
+                    'email' => $input['ch_trs_email'],
                     'board_position_id' => 1,
                     'chapter_id' => $chapterId,
-                    'street_address' => $input['ch_pre_street'],
-                    'city' => $input['ch_pre_city'],
-                    'state' => $input['ch_pre_state'],
-                    'zip' => $input['ch_pre_zip'],
+                    'street_address' => $input['ch_trs_street'],
+                    'city' => $input['ch_trs_city'],
+                    'state' => $input['ch_trs_state'],
+                    'zip' => $input['ch_trs_zip'],
                     'country' => $country,
-                    'phone' => $input['ch_pre_phone'],
+                    'phone' => $input['ch_trs_phone'],
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1,
@@ -871,9 +871,9 @@ class ChapterController extends Controller
             //Secretary Info
             if (isset($input['ch_sec_fname']) && isset($input['ch_sec_lname']) && isset($input['ch_sec_email'])) {
                 $userId = User::create([
-                    'first_name' => $input['ch_pre_fname'],
-                    'last_name' => $input['ch_pre_lname'],
-                    'email' => $input['ch_pre_email'],
+                    'first_name' => $input['ch_sec_fname'],
+                    'last_name' => $input['ch_sec_lname'],
+                    'email' => $input['ch_sec_email'],
                     'password' => Hash::make('TempPass4You'),
                     'user_type' => 'board',
                     'is_active' => 1,
@@ -881,17 +881,17 @@ class ChapterController extends Controller
 
                 Boards::create([
                     'user_id' => $userId,
-                    'first_name' => $input['ch_pre_fname'],
-                    'last_name' => $input['ch_pre_lname'],
-                    'email' => $input['ch_pre_email'],
+                    'first_name' => $input['ch_sec_fname'],
+                    'last_name' => $input['ch_sec_lname'],
+                    'email' => $input['ch_sec_email'],
                     'board_position_id' => 1,
                     'chapter_id' => $chapterId,
-                    'street_address' => $input['ch_pre_street'],
-                    'city' => $input['ch_pre_city'],
-                    'state' => $input['ch_pre_state'],
-                    'zip' => $input['ch_pre_zip'],
+                    'street_address' => $input['ch_sec_street'],
+                    'city' => $input['ch_sec_city'],
+                    'state' => $input['ch_sec_state'],
+                    'zip' => $input['ch_sec_zip'],
                     'country' => $country,
-                    'phone' => $input['ch_pre_phone'],
+                    'phone' => $input['ch_sec_phone'],
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1,
@@ -904,13 +904,6 @@ class ChapterController extends Controller
                     ]);
                 }
             }
-
-            // $chDetails = Chapters::with(['state', 'primaryCoordinator'])->find($chapterId);
-            // $stateShortName = $chDetails->state->state_short_name;
-            // $chConfId = $chDetails->conference->id;
-            // $pcFName = $chDetails->primaryCoordinator->first_name;
-            // $pcLName = $chDetails->primaryCoordinator->last_name;
-            // $pcEmail = $chDetails->primaryCoordinator->email;
 
             //Load Chapter MailData//
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
@@ -944,30 +937,6 @@ class ChapterController extends Controller
                     'secEmail' => $SECDetails->email,
                 ]
             );
-
-            // $mailData = [
-            //     'chapter_name' => $chDetails->name,
-            //     'chapter_state' => $stateShortName,
-            //     'conf' => $chConfId,
-            //     'cor_fname' => $pcFName,
-            //     'cor_lname' => $pcLName,
-            //     'updated_by' => date('Y-m-d H:i:s'),
-            //     'pfirst' => $input['ch_pre_fname'],
-            //     'plast' => $input['ch_pre_lname'],
-            //     'pemail' => $input['ch_pre_email'],
-            //     'afirst' => $input['ch_avp_fname'],
-            //     'alast' => $input['ch_avp_lname'],
-            //     'aemail' => $input['ch_avp_email'],
-            //     'mfirst' => $input['ch_mvp_fname'],
-            //     'mlast' => $input['ch_mvp_lname'],
-            //     'memail' => $input['ch_mvp_email'],
-            //     'tfirst' => $input['ch_trs_fname'],
-            //     'tlast' => $input['ch_trs_lname'],
-            //     'temail' => $input['ch_trs_email'],
-            //     'sfirst' => $input['ch_sec_fname'],
-            //     'slast' => $input['ch_sec_lname'],
-            //     'semail' => $input['ch_sec_email'],
-            // ];
 
             //Primary Coordinator Notification//
             Mail::to($pcDetails->email)

@@ -27,12 +27,12 @@ class ChapersUpdateEINCoor extends Mailable implements ShouldQueue
     }
 
     /**
-     * Build the message.
+     * Build the message.  From MIMI to EIN Coordinator
      */
     public function build(): static
     {
         return $this
-            ->subject('Chapter Name Change Notification')
+            ->subject("Chapter Name Change Notification | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.chapterupdate.eincoor');
     }
 }

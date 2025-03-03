@@ -35,7 +35,7 @@ class ProbationReleaseLetter extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject('Probation Release Letter')
+            ->subject("Probation Release Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->replyTo($this->mailData['userEmail'])
             ->markdown('emails.chapterupdate.probationreleaseletter')
             ->attach($this->pdfPath, [
