@@ -1,7 +1,7 @@
 @component('mail::message')
 # Financial Report Submitted
 
-{{ $mailData['chapter_name'] }}, {{ $mailData['chapter_state'] }}, thank you for submitting your Financial Report.<br>
+{{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}, thank you for submitting your Financial Report.<br>
 <br>
 Your Coordintor Team will review your report shortly and reach out with any questions they may have!<br>
 <br>

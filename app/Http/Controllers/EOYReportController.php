@@ -219,13 +219,13 @@ class EOYReportController extends Controller
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $allAwards = $baseQuery['allAwards'];
         $reviewComplete = $baseQuery['reviewComplete'];
-        $rrDetails = $baseQuery['rrDetails'];
+        $rrList = $baseQuery['rrList'];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb,
             'coorId' => $coorId, 'confId' => $confId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
-            'reviewComplete' => $reviewComplete,  'rrDetails' => $rrDetails,
+            'reviewComplete' => $reviewComplete,  'rrList' => $rrList,
         ];
 
         return view('eoyreports.view')->with($data);
@@ -989,10 +989,10 @@ class EOYReportController extends Controller
         $chDocuments = $baseQuery['chDocuments'];
         $allAwards = $baseQuery['allAwards'];
         $submitted = $baseQuery['submitted'];
-        $rrDetails = $baseQuery['rrDetails'];
+        $rrList = $baseQuery['rrList'];
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrDetails' => $rrDetails, 'submitted' => $submitted, 'allAwards' => $allAwards,
+            'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'submitted' => $submitted, 'allAwards' => $allAwards,
             'chDocuments' => $chDocuments,
         ];
 

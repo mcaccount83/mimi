@@ -284,7 +284,7 @@
                 <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
                 <select class="form-control" name="AssignedReviewer" id="AssignedReviewer" style="width: 250px;"  required>
                     <option value="" style="display:none" disabled selected>Select a reviewer</option>
-                        @foreach($rrDetails as $coordinator)
+                        @foreach($rrList as $coordinator)
                             <option value="{{ $coordinator['cid'] }}"
                                 {{ isset($chFinancialReport->reviewer_id) && $chFinancialReport->reviewer_id == $coordinator['cid'] ? 'selected' : '' }}>
                                 {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})

@@ -39,14 +39,17 @@ class BoardController extends Controller
     protected $userController;
     protected $baseBoardController;
     protected $pdfController;
+    protected $baseMailDataController;
 
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController)
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController,
+        BaseMailDataController $baseMailDataController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndBoard::class);
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseBoardController = $baseBoardController;
+        $this->baseMailDataController = $baseMailDataController;
     }
 
     /*/ Base Board Controller /*/
@@ -1363,11 +1366,15 @@ if (!is_null($website) && !empty(trim($website))) {
             // Send email to full Board
             $to_email2 = $emailListChap;
 
-            $mailData = [
-                'chapterid' => $id,
-                'chapter_name' => $chDetails->name,
-                'chapter_state' => $stateShortName,
-            ];
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+            );
+
+            // $mailData = [
+            //     'chapterid' => $id,
+            //     'chapter_name' => $chDetails->name,
+            //     'chapter_state' => $stateShortName,
+            // ];
 
             Mail::to($to_email)
                 ->queue(new EOYElectionReportSubmitted($mailData));

@@ -244,9 +244,6 @@ class BaseChapterController extends Controller
         $chRegId = $chDetails->region_id;
         $chPcId = $chDetails->primary_coordinator_id;
 
-        // Log::info("Chapter ID: " . $chId);
-        // Log::info("Primary Coordinator ID: " . $chPcId);
-
         $startMonthName = $chDetails->startMonth->month_long_name;
         $chapterStatus = $chDetails->status->chapter_status;
         $websiteLink = $chDetails->webLink->link_status ?? null;
@@ -255,7 +252,7 @@ class BaseChapterController extends Controller
         $submitted = $chDetails->documents->financial_report_received ?? null;
         $reviewComplete = $chDetails->documents->review_complete ?? null;
         $chFinancialReport = $chDetails->financialReport;
-        $displayEOY = getEOYDisplay();
+        $displayEOY = getEOYDisplay();  // Conditions to Show EOY Items
 
         $allStatuses = Status::all();  // Full List for Dropdown Menu
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
@@ -288,29 +285,25 @@ class BaseChapterController extends Controller
         $cc_conf_name = $emailCCData['cc_conf_name'];
         $cc_conf_desc = $emailCCData['cc_conf_desc'];
 
-        // //Primary Coordinator Notification//
+        // Load Primary Coordinator Inforamtion //
         $pcDetails = Coordinators::find($chPcId);
         $emailPC = $pcDetails->email;
         $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
 
         // Load Primary Coordinator Dropdown List
         $pcList = $this->userController->loadPrimaryList($chRegId, $chConfId)  ?? null;;
-
-        // Log::info("PC Details: " . json_encode($pcDetails));
-
         // Load Report Reviewer Coordinator Dropdown List
-        $rrDetailsList = $this->userController->loadReviewerList($chRegId, $chConfId)  ?? null;;
+        $rrList = $this->userController->loadReviewerList($chRegId, $chConfId)  ?? null;;
 
         return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'submitted' => $submitted, 'rrDetailsList' => $rrDetailsList,
+            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'submitted' => $submitted, 'rrList' => $rrList,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY,
             'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_conf_desc' => $cc_conf_desc, 'cc_conf_name' => $cc_conf_name,
             'allMonths' => $allMonths, 'pcDetails' => $pcDetails,
-            // 'user_name' => $user_name, 'user_conf_name' => $user_conf_name, 'user_conf_desc' => $user_conf_desc, 'user_position' => $user_position, 'user_email' => $user_email
         ];
     }
 

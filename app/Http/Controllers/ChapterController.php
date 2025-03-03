@@ -1051,9 +1051,7 @@ class ChapterController extends Controller
                 $this->baseMailDataController->getPresData($PresDetails),
                 $this->baseMailDataController->getChapterPreviousData($chDetailsPre, $pcDetailsPre),
                 $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
-
                 [
-                    'lastupdatedDate' => $lastupdatedDate,
                     'chapterWebsiteUrl' => $website,
                 ]
             );
@@ -1530,31 +1528,12 @@ class ChapterController extends Controller
             $TRSDetailsUpd = $baseQueryUpd['TRSDetails'];
             $SECDetailsUpd = $baseQueryUpd['SECDetails'];
 
-            $mailDataPres = [
-                'chapter_name' => $chDetailsUpd->name,
-                'chapter_state' => $stateShortName,
-                'conference' => $chConfId,
-                'updated_byUpd' => $lastUpdatedBy,
-                'updated_byPre' => $lastupdatedDate,
-
-                'chapfnamePre' => $PresDetailsPre->first_name,
-                'chaplnamePre' => $PresDetailsPre->last_name,
-                'chapteremailPre' => $PresDetailsPre->email,
-                'phonePre' => $PresDetailsPre->phone,
-                'streetPre' => $PresDetailsPre->street,
-                'cityPre' => $PresDetailsPre->city,
-                'statePre' => $PresDetailsPre->state,
-                'zipPre' => $PresDetailsPre->zip,
-
-                'chapfnameUpd' => $PresDetailsUpd->first_name,
-                'chaplnameUpd' => $PresDetailsUpd->last_name,
-                'chapteremailUpd' => $PresDetailsUpd->email,
-                'phoneUpd' => $PresDetailsUpd->phone,
-                'streetUpd' => $PresDetailsUpd->street,
-                'cityUpd' => $PresDetailsUpd->city,
-                'stateUpd' => $PresDetailsUpd->state,
-                'zipUpd' => $PresDetailsUpd->zip,
-            ];
+            $mailDataPres = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getPresPreviousData($PresDetailsPre),
+                $this->baseMailDataController->getPresUpdatedData($PresDetailsUpd),
+            );
 
             $mailData = array_merge($mailDataPres);
             if ($AVPDetailsUpd !== null) {
@@ -1816,6 +1795,7 @@ class ChapterController extends Controller
 
         $baseQueryPre = $this->baseChapterController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
+        $pcDetailsPre = $baseQueryPre['pcDetails'];
 
         $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
         if (empty(trim($ch_webstatus))) {
@@ -1848,17 +1828,19 @@ class ChapterController extends Controller
             $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
+            $pcDetailsUpd = $baseQueryUpd['pcDetails'];
             $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
             $emailListCoord = $baseQueryUpd['emailListCoord']; // Full Coord List
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
             $emailPC = $baseQueryUpd['emailPC'];
 
             if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
-                $mailData = [
-                    'chapter_name' => $chDetailsUpd->name,
-                    'chapter_state' => $stateShortName,
-                    'ch_website_url' => $website,
-                ];
+                $mailData = array_merge(
+                    $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
+                    [
+                        'chapterWebsiteUrl' => $website,
+                    ]
+                );
 
                 if ($request->input('ch_webstatus') == 1) {
                     Mail::to($emailCC)
@@ -1875,15 +1857,11 @@ class ChapterController extends Controller
                 }
             }
 
-            $mailData = [
-                'chapter_name' => $chDetailsUpd->name,
-                'chapter_state' => $stateShortName,
-                'webUrlUpd' => $chDetailsUpd->website_url,
-                'webStatusUpd' => $chDetailsUpd->website_status,
-                'webUrlPre' => $chDetailsPre->website_url,
-                'webStatusPre' => $chDetailsPre->website_status,
-                'updated_byUpd' => $chDetailsPre->last_updated_date,
-            ];
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
+                $this->baseMailDataController->getChapterPreviousData($chDetailsPre, $pcDetailsPre),
+                $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
+            );
 
             if ($chDetailsUpd->website_url != $chDetailsPre->website_url || $chDetailsUpd->website_status != $chDetailsPre->website_status) {
                 Mail::to($emailPC)

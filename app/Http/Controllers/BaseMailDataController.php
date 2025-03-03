@@ -21,6 +21,7 @@ class BaseMailDataController extends Controller
     public function getChapterBasicData($chDetails, $stateShortName)
     {
         return [
+            // 'chapterId' => $chDetails->id,
             'chapterName' => $chDetails->name,
             'chapterState' => $stateShortName,
             'chapterConf' => $chDetails->conference_id,
@@ -99,6 +100,48 @@ class BaseMailDataController extends Controller
         ];
     }
 
+    public function getPresPreviousData($PresDetailsPre)
+    {
+        return [
+            'presNamePre' => $PresDetailsPre->first_name.' '. $PresDetailsPre->last_name,
+            'presAddressPre' => $PresDetailsPre->street_address,
+            'presCityPre' => $PresDetailsPre->city,
+            'presStatePre' => $PresDetailsPre->state,
+            'presZipPre' => $PresDetailsPre->zip,
+            'presPhpnePre' => $PresDetailsPre->phone,
+            'presEmailPre' => $PresDetailsPre->email,
+        ];
+    }
 
+    public function getPresUpdatedData($PresDetailsUpd)
+    {
+        return [
+            'presNameUpd' => $PresDetailsUpd->first_name.' '. $PresDetailsUpd->last_name,
+            'presAddressUpd' => $PresDetailsUpd->street_address,
+            'presCityUpd' => $PresDetailsUpd->city,
+            'presStateUpd' => $PresDetailsUpd->state,
+            'presZipUpd' => $PresDetailsUpd->zip,
+            'presPhoneUpd' => $PresDetailsUpd->phone,
+            'presEmailUpd' => $PresDetailsUpd->email,
+        ];
+    }
+
+    public function getFinancialReportData($chDocuments, $chFinancialReport)
+    {
+        return [
+            'completed_name' => $chFinancialReport->completed_name,
+            'completed_email' => $chFinancialReport->completed_email,
+            'boardElectionReportReceived' => $chDocuments->new_board_submitted,
+            'financialReportReceived' => $chDocuments->financial_report_received,
+            '990NSubmissionReceived' => $chDocuments->financial_report_received,
+            'einLetterCopyReceived' => $chDocuments->ein_letter_path,
+            'roster_path' => $chDocuments->roster_path,
+            'file_irs_path' => $chDocuments->irs_path,
+            'bank_statement_included_path' => $$chDocuments->statement_1_path,
+            'bank_statement_2_included_path' => $chDocuments->statement_2_path,
+            'financial_pdf_path' => $chDocuments->financial_pdf_path,
+            'reviewer_email_message' => $chFinancialReport->reviewer_email_message,
+        ];
+    }
 
 }

@@ -1,7 +1,7 @@
 @component('mail::message')
 # Primary Coordinator Notification
 
-Website Information for the MOMS Club of  {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}} has been updated through the MOMS Information Management Interface.<br>
+Website Information for the MOMS Club of  {{$mailData['chapterName']}}, {{$mailData['chapterState']}} has been updated through the MOMS Information Management Interface.<br>
 <br>
 <strong>MCL</strong>,<br>
 MIMI Database Administrator
@@ -20,27 +20,27 @@ MIMI Database Administrator
                     <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Website Information</strong></center></td>
                 </tr>
                 </tr>
-                <tr style="{{$mailData['webUrlPre'] != $mailData['webUrlUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['websiteURLPre'] != $mailData['websiteURLUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Website URL</td>
-                    <td>{{$mailData['webUrlPre']}}</td>
-                    <td>{{$mailData['webUrlUpd']}}</td>
+                    <td>{{$mailData['websiteURLPre']}}</td>
+                    <td>{{$mailData['websiteURLUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['webStatusPre'] != $mailData['webStatusUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['websiteStatusPre'] != $mailData['websiteStatusUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Website Link Status</td>
-                    <td>@if($mailData['webStatusPre']==1)
+                    <td>@if($mailData['websiteStatusPre']==1)
                             Linked
-                            @elseif($mailData['webStatusPre']==2)
+                            @elseif($mailData['websiteStatusPre']==2)
                             Link Requested
-                            @elseif($mailData['webStatusPre']==3)
+                            @elseif($mailData['websiteStatusPre']==3)
                             Do Not Link
                             @else
                             Not Linked
                             @endif</td>
-                    <td>@if($mailData['webStatusUpd']==1)
+                    <td>@if($mailData['websiteStatusUpd']==1)
                         Linked
-                        @elseif($mailData['webStatusUpd']==2)
+                        @elseif($mailData['websiteStatusUpd']==2)
                         Link Requested
-                        @elseif($mailData['webStatusUpd']==3)
+                        @elseif($mailData['websiteStatusUpd']==3)
                         Do Not Link
                         @else
                         Not Linked
