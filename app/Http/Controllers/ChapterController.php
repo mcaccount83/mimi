@@ -984,7 +984,6 @@ class ChapterController extends Controller
 
         $baseQueryPre = $this->baseChapterController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
-        $PresDetailsPre = $baseQueryPre['PresDetails'];
         $pcDetailsPre = $baseQueryPre['pcDetails'];
 
         $input = $request->all();
@@ -1038,7 +1037,7 @@ class ChapterController extends Controller
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chConfId = $baseQueryUpd['chConfId'];
-            $PresDetailsUpd = $baseQueryUpd['PresDetails'];
+            $PresDetails = $baseQueryUpd['PresDetails'];
             $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
             $emailListCoord = $baseQueryUpd['emailListCoord'];  // Full Coordinaor List
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
@@ -1049,62 +1048,15 @@ class ChapterController extends Controller
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
-                $this->baseMailDataController->getPCData($pcDetailsUpd),
-                $this->baseMailDataController->getPreviousData($chDetailsPre, $pcDetailsPre, $PresDetailsPre, $stateShortName),
-                $this->baseMailDataController->getUpdatedData($chDetailsUpd, $pcDetailsUpd, $PresDetailsUpd, $stateShortName),
+                $this->baseMailDataController->getPresData($PresDetails),
+                $this->baseMailDataController->getChapterPreviousData($chDetailsPre, $pcDetailsPre),
+                $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
 
                 [
                     'lastupdatedDate' => $lastupdatedDate,
                     'chapterWebsiteUrl' => $website,
                 ]
             );
-
-
-            // $mailData = [
-            //     'chapterNameUpd' => $chDetailsUpd->name,
-            //     'boundUpd' => $chDetailsUpd->territory,
-            //     'chapstatusUpd' => $chDetailsUpd->status_id,
-            //     'chapNoteUpd' => $chDetailsUpd->notes,
-            //     'inConUpd' => $chDetailsUpd->inquiries_contact,
-            //     'inNoteUpd' => $chDetailsUpd->inquiries_note,
-            //     'chapemailUpd' => $chDetailsUpd->email,
-            //     'poBoxUpd' => $chDetailsUpd->po_box,
-            //     'addInfoUpd' => $chDetailsUpd->additional_info,
-            //     'webUrlUpd' => $chDetailsUpd->website_url,
-            //     'webStatusUpd' => $chDetailsUpd->website_status,
-            //     'egroupUpd' => $chDetailsUpd->egroup,
-            //     'cor_fnameUpd' => $PresDetailsUpd->cor_f_name,
-            //     'cor_lnameUpd' => $PresDetailsUpd->cor_l_name,
-
-            //     'chapterNamePre' => $chDetailsPre->name,
-            //     'boundPre' => $chDetailsPre->territory,
-            //     'chapstatusPre' => $chDetailsPre->status_id,
-            //     'chapNotePre' => $chDetailsPre->notes,
-            //     'inConPre' => $chDetailsPre->inquiries_contact,
-            //     'inNotePre' => $chDetailsPre->inquiries_note,
-            //     'chapemailPre' => $chDetailsPre->email,
-            //     'poBoxPre' => $chDetailsPre->po_box,
-            //     'addInfoPre' => $chDetailsPre->additional_info,
-            //     'webUrlPre' => $chDetailsPre->website_url,
-            //     'webStatusPre' => $chDetailsPre->website_status,
-            //     'egroupPre' => $chDetailsPre->egroup,
-            //     'cor_fnamePre' => $PresDetailsPre->cor_f_name,
-            //     'cor_lnamePre' => $PresDetailsPre->cor_l_name,
-
-            //     'chapter_name' => $chDetailsUpd->name,
-            //     'chapter_state' => $stateShortName,
-            //     'conference' => $chConfId,
-            //     'updated_byUpd' => $lastupdatedDate,
-
-            //     'ch_pre_fname' => $PresDetailsPre->first_name,
-            //     'ch_pre_lname' => $PresDetailsPre->last_name,
-            //     'ch_pre_email' => $PresDetailsPre->email,
-            //     'name1' => $pcDetails->first_name,
-            //     'name2' => $pcDetails->last_name,
-            //     'email1' => $pcDetails->email,
-
-            //     'ch_website_url' => $website,
-            // ];
 
             //Primary Coordinator Notification//
             if ($chDetailsUpd->name != $chDetailsPre->name || $chDetailsUpd->inquiries_contact != $chDetailsPre->inquiries_contact || $chDetailsUpd->inquiries_note != $chDetailsPre->inquiries_note ||
@@ -1122,7 +1074,7 @@ class ChapterController extends Controller
             }
 
             //PC Change Notification//
-            if ($chPcIdUpd != $chPcIdPre) {
+            if ($chDetailsUpd->primary_coordinator_id != $chDetailsPre->primary_coordinator_id) {
                 Mail::to($emailListChap)
                     ->queue(new ChaptersPrimaryCoordinatorChange($mailData));
 
@@ -1131,8 +1083,8 @@ class ChapterController extends Controller
             }
 
             //Website URL Change Notification//
-            if ($webStatusUpd != $webStatusPre) {
-                if ($webStatusUpd == 1) {
+            if ($chDetailsUpd->website_status != $chDetailsPre->website_status) {
+                if ($chDetailsUpd->website_status == 1) {
                     Mail::to($emailCC)
                         ->queue(new WebsiteAddNoticeAdmin($mailData));
 
@@ -1141,7 +1093,7 @@ class ChapterController extends Controller
                         ->queue(new WebsiteAddNoticeChapter($mailData));
                 }
 
-                if ($webStatusUpd == 2) {
+                if ($chDetailsUpd->website_status == 2) {
                     Mail::to($emailCC)
                         ->queue(new WebsiteReviewNotice($mailData));
                 }

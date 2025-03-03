@@ -1,10 +1,10 @@
 @component('mail::message')
-# MOMS Club of {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}}
+# MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
 
 Your chapter has been assigned a new Priamry Coordinator:
 <ul class="list-unstyled">
-    <li>{{$mailData['name1']}} {{$mailData['name2']}}</li>
-    <li>{{$mailData['email1']}}</li>
+    <li>{{$mailData['pcNameUpd']}}</li>
+    <li>{{$mailData['pcEmailUpd']}}</li>
 </ul>
 You should begin using her as your primary point of contact immediately.<br>
 <br>

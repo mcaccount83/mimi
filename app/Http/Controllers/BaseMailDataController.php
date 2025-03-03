@@ -60,7 +60,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getPreviousData($chDetailsPre, $pcDetailsPre, $PresDetailsPre, $stateShortName)
+    public function getChapterPreviousData($chDetailsPre, $pcDetailsPre)
     {
         return [
             'chapterNamePre' => $chDetailsPre->name,
@@ -79,7 +79,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getUpdatedData($chDetailsUpd, $pcDetailsUpd, $PresDetailsUpd, $stateShortName)
+    public function getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd)
     {
         return [
             'chapterNameUpd' => $chDetailsUpd->name,
@@ -95,6 +95,7 @@ class BaseMailDataController extends Controller
             'websiteStatusUpd' => $chDetailsUpd->website_status,
 
             'pcNameUpd' => $pcDetailsUpd->first_name.' '.$pcDetailsUpd->last_name,
+            'pcEmailUpd' => $pcDetailsUpd->email,
         ];
     }
 

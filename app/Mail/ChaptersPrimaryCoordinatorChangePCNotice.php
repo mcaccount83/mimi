@@ -31,7 +31,7 @@ class ChaptersPrimaryCoordinatorChangePCNotice extends Mailable implements Shoul
      */
     public function build(): static
     {
-        return $this->subject("Primary Coordinator Change | {$this->mailData['chapter_name']}, {$this->mailData['chapter_state']}")
+        return $this->subject("Primary Coordinator Change | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.chapterupdate.primarycoordinatorchangepcnotice');
     }
 }
