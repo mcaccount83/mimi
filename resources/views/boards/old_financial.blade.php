@@ -3599,9 +3599,8 @@
 /* Disable fields and buttons  */
     $(document).ready(function () {
         var submitted = @json($chapterDetails[0]->financial_report_received);
-        var userType = @json($user_type);
 
-    if (userType === 'coordinator') {
+    if ($isCoordinator) {
         // Disable all input fields, select elements, textareas, and buttons
         $('button').not('#btn-back').prop('disabled', true);
         $('input, select, textarea').prop('disabled', true);
