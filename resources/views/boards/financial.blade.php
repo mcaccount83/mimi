@@ -3058,10 +3058,10 @@
             @endif
 
             <div class="card-body text-center">
-                @if($isBoard)
+                @if($userType === 'board')
                     <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
                 @endif
-                @if($isCoordinator)
+                @if($userType === 'coordinator')
                     <a href="{{ route('viewas.viewchapterpresident', $chFinancialReport['chapter_id']) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
                 @endif
                 @if($submitted !='1')
@@ -3083,8 +3083,9 @@
 /* Disable fields and buttons  */
     $(document).ready(function () {
         var submitted = @json($submitted);
+        var userType = @json($userType);
 
-    if ($isCoordinator) {
+    if (userType === 'coordinator') {
         // Disable all input fields, select elements, textareas, and buttons
         $('button').not('#btn-back').prop('disabled', true);
         $('input, select, textarea').prop('disabled', true);

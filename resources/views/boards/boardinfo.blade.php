@@ -411,7 +411,7 @@
             @endif
 
                 <div class="card-body text-center">
-                    @if($isCoordinator)
+                    @if($userType === 'coordinator')
                             <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply mr-2"></i>Back to Chapter Profile</a>
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply mr-2"></i>Back to Chapter Profile</a>
@@ -428,12 +428,13 @@
 @section('customscript')
 <script>
 $(document).ready(function() {
+    var userType = @json($userType);
 
   $('#add_link_req').parent().hide();
   $('#not_link').parent().hide();
 
   // Disable all input fields, select elements, textareas, and submit button if the condition is met
-  if ($isCoordinator) {
+  if (userType === 'coordinator') {
         // Disable all input fields, select elements, textareas, and buttons
         $('button').not('#btn-back').prop('disabled', true);
         $('input, select, textarea').prop('disabled', true);
