@@ -50,12 +50,12 @@
 
 <body style="background-color: #f0f0f0 !important;" class="hold-transition layout-top-nav">
     <div class="wrapper">
-        {{-- @php
+        @php
             $user = Auth::user();
             $userName = $user->first_name.' '.$user->last_name;
             $userEmail = $user->email;
             $user_type = $user->user_type;
-        @endphp --}}
+        @endphp
 
           <!-- Navbar -->
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
@@ -63,7 +63,7 @@
         {{-- <a href="{{ route('home') }}" class="navbar-brand">
             <img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" class="brand-image img-circle elevation-3" >
           </a> --}}
-    @if($isBoard)
+    @if($user_type == 'board')
 
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
         <!-- Left navbar links -->
@@ -87,7 +87,7 @@
       </div>
       @endif
 
-    @if(!$isCoordinator)
+    @if($user_type !== 'coordinator')
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
 
@@ -104,7 +104,7 @@
       </ul>
       @endif
 
-      @if($isCoordinator)
+      @if($user_type == 'coordinator')
       @php
           // Assuming you're already on a chapter edit page and the 'id' is available in the route.
           $id = request()->route('id'); // Get the current chapter ID from the route
@@ -132,7 +132,7 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container">
-        @if($isCoordinator)
+        @if($user_type === 'coordinator')
         <p class="description text-center"><span style="color: red;">You are Viewing Chapter Profile as a Coordinator -- All Information is READ ONLY.</p>
         @endif
       </div><!-- /.container-fluid -->

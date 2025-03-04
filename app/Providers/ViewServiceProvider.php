@@ -19,20 +19,16 @@ class ViewServiceProvider extends ServiceProvider
 
             if (Auth::check()) {
                 $user = Auth::user();
-                $userType = $user->user_type;
 
-                $isCoordinator = $userType === 'coordinator';
-                $isBoard = $userType === 'board';
-                $isOutgoing = $userType === 'outgoing';
-
-                if ($isCoordinator && $user->coordinator) {
+                if ($user->user_type === 'coordinator' && $user->coordinator) {
                     $corDetails = $user->coordinator;
-                    // $corId = $corDetails['coordinator_id'];
+                    $corId = $corDetails['coordinator_id'];
                     $positionid = $corDetails['position_id'];
                     $secpositionid = $corDetails['sec_position_id'];
-                    // $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
+                    $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
                 }
 
+                // Additional conditions for other user types can be handled here
             }
 
             // Define conditions
@@ -68,6 +64,14 @@ class ViewServiceProvider extends ServiceProvider
             $displayTESTING = ($display_testing == true && $display_live != true);
             $displayLIVE = ($display_live == true);
 
+            // $display_testing = $admin->display_testing ?? 0; // Handle null cases
+            // $display_live = $admin->display_live ?? 0; // Handle null cases
+            // $eoy_coordinators = $admin->eoy_coordinators ?? 0; // Handle null cases
+            // Define testers and coordinators conditions
+            // $displayTESTING = ($display_testing == 1);
+            // $displayLIVE = ($display_live == 1);
+            // $coordinators_yes = ($eoy_coordinators == 1);
+
             // Pass conditions and other variables to views
             $view->with(compact(
                 'corId',
@@ -94,10 +98,7 @@ class ViewServiceProvider extends ServiceProvider
                 'm2mCondition',
                 'listAdminCondition',
                 'displayTESTING',
-                'displayLIVE',
-                'isCoordinator',  // Add this line
-    'isBoard',        // And this line if you're using it
-    'isOutgoing',
+                'displayLIVE'
             ));
         });
     }
