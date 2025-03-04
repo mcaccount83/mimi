@@ -487,7 +487,7 @@
                             @else
                                 <span style="color: red;">Your Re-registration payment is now considered overdue.<br>
                             @endif
-                            @if($userType === 'coordinator')
+                            @if($user_type === 'coordinator')
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterreregistration', ['id' => $chDetails->id]) }}'">PAY HERE</button>
                             @else
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.showreregpayment') }}'">PAY HERE</button>
