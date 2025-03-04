@@ -126,6 +126,32 @@ class BaseMailDataController extends Controller
         ];
     }
 
+    public function getBoardPreviousData($borDetailsPre)
+    {
+        return [
+            'borNamePre' => $borDetailsPre->first_name.' '. $borDetailsPre->last_name,
+            'borAddressPre' => $borDetailsPre->street_address,
+            'borCityPre' => $borDetailsPre->city,
+            'borStatePre' => $borDetailsPre->state,
+            'borZipPre' => $borDetailsPre->zip,
+            'borPhpnePre' => $borDetailsPre->phone,
+            'borEmailPre' => $borDetailsPre->email,
+        ];
+    }
+
+    public function getBoardUpdatedData($borDetailsUpd)
+    {
+        return [
+            'borNameUpd' => $borDetailsUpd->first_name.' '. $borDetailsUpd->last_name,
+            'borAddressUpd' => $borDetailsUpd->street_address,
+            'borCityUpd' => $borDetailsUpd->city,
+            'borStateUpd' => $borDetailsUpd->state,
+            'borZipUpd' => $borDetailsUpd->zip,
+            'borPhoneUpd' => $borDetailsUpd->phone,
+            'borEmailUpd' => $borDetailsUpd->email,
+        ];
+    }
+
     public function getFinancialReportData($chDocuments, $chFinancialReport)
     {
         return [

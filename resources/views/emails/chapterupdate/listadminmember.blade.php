@@ -1,7 +1,7 @@
 @component('mail::message')
 # ListAdmin Update Notification
 
-The MOMS Club of {{ $mailData['chapter_name'] }}, {{ $mailData['chapter_state'] }} has been updated through the MOMS Information Management Interface. Please update members of this chapter in any groups, forums, and mailing lists.<br>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has been updated through the MOMS Information Management Interface. Please update members of this chapter in any groups, forums, and mailing lists.<br>
 <br>
 <strong>MCL</strong>,<br>
 MIMI Database Administrator
@@ -19,20 +19,15 @@ MIMI Database Administrator
                     <td></td>
                     <td colspan="2" style="background-color: #D0D0D0;"><center><b>{{ $mailData['borposition'] }} Information</b></center></td>
                 </tr>
-                <tr style="{{$mailData['borfname'] != $mailData['borfnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['borNamePre'] != $mailData['borNameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>First Name</td>
-                    <td>{{$mailData['borfname']}}</td>
-                    <td>{{$mailData['borfnameUpd']}}</td>
+                    <td>{{$mailData['borNamePre']}}</td>
+                    <td>{{$mailData['borNameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['borlname'] != $mailData['borlnameUpd'] ? 'background-color: yellow;' : ''}}">
-                    <td>Last Name</td>
-                    <td>{{$mailData['borlname']}}</td>
-                    <td>{{$mailData['borlnameUpd']}}</td>
-                </tr>
-                <tr style="{{$mailData['boremail'] != $mailData['boremailUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['borEmailPre'] != $mailData['borEmailUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>E-mail</td>
-                    <td>{{$mailData['boremail']}}</td>
-                    <td>{{$mailData['boremailUpd']}}</td>
+                    <td>{{$mailData['borEmailPre']}}</td>
+                    <td>{{$mailData['borEmailUpd']}}</td>
                 </tr>
             </tbody>
         </table>

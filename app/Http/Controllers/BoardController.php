@@ -234,32 +234,21 @@ class BoardController extends Controller
         $input = $request->all();
         $webStatusPre = $input['ch_hid_webstatus'];
 
-        // $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
-        // if (empty(trim($ch_webstatus))) {
-        //     $ch_webstatus = 0; // Set it to 0 if it's blank
-        // }
-
-        // $website = $request->input('ch_website');
-        // // Ensure it starts with "http://" or "https://"
-        // if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
-        //     $website = 'http://'.$website;
-        // }
-
         // Handle web status - allow null values
-$ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
-// Only convert to 0 if the website is not null but status is empty
-if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
-    $ch_webstatus = 0;
-}
+        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+        // Only convert to 0 if the website is not null but status is empty
+        if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+            $ch_webstatus = 0;
+        }
 
-// Handle website URL
-$website = $request->input('ch_website');
-// Only add http:// if the website field is not null or empty
-if (!is_null($website) && !empty(trim($website))) {
-    if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
-        $website = 'http://' . $website;
-    }
-}
+        // Handle website URL
+        $website = $request->input('ch_website');
+        // Only add http:// if the website field is not null or empty
+        if (!is_null($website) && !empty(trim($website))) {
+            if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+                $website = 'http://' . $website;
+            }
+        }
 
         $chapter = Chapters::find($id);
 
@@ -556,45 +545,55 @@ if (!is_null($website) && !empty(trim($website))) {
             $pcEmail = $pcDetails->email;  // PC Email
             $EINCordEmail = 'jackie.mchenry@momsclub.org';  // EIN Coor Email
 
-            $mailDataPres = [
-                'chapter_name' => $chDetailsUpd->name,
-                'chapter_state' => $stateShortName,
-                'conference' => $chConfId,
-                'updated_byUpd' => $lastUpdatedBy,
-                'updated_byPre' => $lastupdatedDate,
+            // $mailDataPres = [
+            //     'chapter_name' => $chDetailsUpd->name,
+            //     'chapter_state' => $stateShortName,
+            //     'conference' => $chConfId,
+            //     'updated_byUpd' => $lastUpdatedBy,
+            //     'updated_byPre' => $lastupdatedDate,
 
-                'inConPre' => $chDetailsPre->inquiries_contact,
-                'chapemailPre' => $chDetailsPre->email,
-                'poBoxPre' => $chDetailsPre->po_box,
-                'webUrlPre' => $chDetailsPre->website_url,
-                'webStatusPre' => $chDetailsPre->website_status,
-                'egroupPre' => $chDetailsPre->egroup,
-                'chapfnamePre' => $PresDetailsPre->first_name,
-                'chaplnamePre' => $PresDetailsPre->last_name,
-                'chapteremailPre' => $PresDetailsPre->email,
-                'phonePre' => $PresDetailsPre->phone,
-                'streetPre' => $PresDetailsPre->street,
-                'cityPre' => $PresDetailsPre->city,
-                'statePre' => $PresDetailsPre->state,
-                'zipPre' => $PresDetailsPre->zip,
+            //     'inConPre' => $chDetailsPre->inquiries_contact,
+            //     'chapemailPre' => $chDetailsPre->email,
+            //     'poBoxPre' => $chDetailsPre->po_box,
+            //     'webUrlPre' => $chDetailsPre->website_url,
+            //     'webStatusPre' => $chDetailsPre->website_status,
+            //     'egroupPre' => $chDetailsPre->egroup,
+            //     'chapfnamePre' => $PresDetailsPre->first_name,
+            //     'chaplnamePre' => $PresDetailsPre->last_name,
+            //     'chapteremailPre' => $PresDetailsPre->email,
+            //     'phonePre' => $PresDetailsPre->phone,
+            //     'streetPre' => $PresDetailsPre->street,
+            //     'cityPre' => $PresDetailsPre->city,
+            //     'statePre' => $PresDetailsPre->state,
+            //     'zipPre' => $PresDetailsPre->zip,
 
-                'inConUpd' => $chDetailsUpd->inquiries_contact,
-                'chapemailUpd' => $chDetailsUpd->email,
-                'poBoxUpd' => $chDetailsUpd->po_box,
-                'webUrlUpd' => $chDetailsUpd->website_url,
-                'webStatusUpd' => $chDetailsUpd->website_status,
-                'egroupUpd' => $chDetailsUpd->egroup,
-                'chapfnameUpd' => $PresDetailsUpd->first_name,
-                'chaplnameUpd' => $PresDetailsUpd->last_name,
-                'chapteremailUpd' => $PresDetailsUpd->email,
-                'phoneUpd' => $PresDetailsUpd->phone,
-                'streetUpd' => $PresDetailsUpd->street,
-                'cityUpd' => $PresDetailsUpd->city,
-                'stateUpd' => $PresDetailsUpd->state,
-                'zipUpd' => $PresDetailsUpd->zip,
+            //     'inConUpd' => $chDetailsUpd->inquiries_contact,
+            //     'chapemailUpd' => $chDetailsUpd->email,
+            //     'poBoxUpd' => $chDetailsUpd->po_box,
+            //     'webUrlUpd' => $chDetailsUpd->website_url,
+            //     'webStatusUpd' => $chDetailsUpd->website_status,
+            //     'egroupUpd' => $chDetailsUpd->egroup,
+            //     'chapfnameUpd' => $PresDetailsUpd->first_name,
+            //     'chaplnameUpd' => $PresDetailsUpd->last_name,
+            //     'chapteremailUpd' => $PresDetailsUpd->email,
+            //     'phoneUpd' => $PresDetailsUpd->phone,
+            //     'streetUpd' => $PresDetailsUpd->street,
+            //     'cityUpd' => $PresDetailsUpd->city,
+            //     'stateUpd' => $PresDetailsUpd->state,
+            //     'zipUpd' => $PresDetailsUpd->zip,
 
-                'ch_website_url' => $website,
-            ];
+            //     'ch_website_url' => $website,
+            // ];
+
+            $mailDataPres = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getPresPreviousData($PresDetailsPre),
+                $this->baseMailDataController->getPresUpdatedData($PresDetailsUpd),
+                [
+                    'ch_website_url' => $website,
+                ]
+            );
 
             $mailData = array_merge($mailDataPres);
             if ($AVPDetailsUpd !== null) {
@@ -847,36 +846,46 @@ if (!is_null($website) && !empty(trim($website))) {
                 $borDetailsUpd = $SECDetailsUpd;
             }
 
-            $mailData = [
-                'chapter_name' => $chDetailsUpd->name,
-                'chapter_state' => $stateShortName,
-                'conference' => $chConfId,
-                'borposition' => $borDetailsPre->position->position,
-                'updated_byUpd' => $lastUpdatedBy,
-                'updated_byPre' => $lastupdatedDate,
+            // $mailData = [
+            //     'chapter_name' => $chDetailsUpd->name,
+            //     'chapter_state' => $stateShortName,
+            //     'conference' => $chConfId,
+            //     'borposition' => $borDetailsPre->position->position,
+            //     'updated_byUpd' => $lastUpdatedBy,
+            //     'updated_byPre' => $lastupdatedDate,
 
-                'inConPre' => $chDetailsPre->inquiries_contact,
-                'chapemailPre' => $chDetailsPre->email,
-                'poBoxPre' => $chDetailsPre->po_box,
-                'webUrlPre' => $chDetailsPre->website_url,
-                'webStatusPre' => $chDetailsPre->website_status,
-                'egroupPre' => $chDetailsPre->egroup,
-                'borfname' => $borDetailsPre->first_name,
-                'borlname' => $borDetailsPre->last_name,
-                'boremail' => $borDetailsPre->email,
+            //     'inConPre' => $chDetailsPre->inquiries_contact,
+            //     'chapemailPre' => $chDetailsPre->email,
+            //     'poBoxPre' => $chDetailsPre->po_box,
+            //     'webUrlPre' => $chDetailsPre->website_url,
+            //     'webStatusPre' => $chDetailsPre->website_status,
+            //     'egroupPre' => $chDetailsPre->egroup,
+            //     'borfname' => $borDetailsPre->first_name,
+            //     'borlname' => $borDetailsPre->last_name,
+            //     'boremail' => $borDetailsPre->email,
 
-                'inConUpd' => $chDetailsUpd->inquiries_contact,
-                'chapemailUpd' => $chDetailsUpd->email,
-                'poBoxUpd' => $chDetailsUpd->po_box,
-                'webUrlUpd' => $chDetailsUpd->website_url,
-                'webStatusUpd' => $chDetailsUpd->website_status,
-                'egroupUpd' => $chDetailsUpd->egroup,
-                'borfnameUpd' => $borDetailsUpd->first_name,
-                'borlnameUpd' => $borDetailsUpd->last_name,
-                'boremailUpd' => $borDetailsUpd->email,
+            //     'inConUpd' => $chDetailsUpd->inquiries_contact,
+            //     'chapemailUpd' => $chDetailsUpd->email,
+            //     'poBoxUpd' => $chDetailsUpd->po_box,
+            //     'webUrlUpd' => $chDetailsUpd->website_url,
+            //     'webStatusUpd' => $chDetailsUpd->website_status,
+            //     'egroupUpd' => $chDetailsUpd->egroup,
+            //     'borfnameUpd' => $borDetailsUpd->first_name,
+            //     'borlnameUpd' => $borDetailsUpd->last_name,
+            //     'boremailUpd' => $borDetailsUpd->email,
 
-                'ch_website_url' => $website,
-            ];
+            //     'ch_website_url' => $website,
+            // ];
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getBoardPreviousData($borDetailsPre),
+                $this->baseMailDataController->getBoardUpdatedData($borDetailsUpd),
+                [
+                    'ch_website_url' => $website,
+                ]
+            );
 
             if ($chDetailsUpd->name != $chDetailsPre->name || $borDetailsUpd->bor_email != $borDetailsPre->bor_email || $borDetailsUpd->street_address != $borDetailsPre->street_address || $borDetailsUpd->city != $borDetailsPre->city ||
                     $borDetailsUpd->state != $borDetailsPre->state || $borDetailsUpd->first_name != $borDetailsPre->first_name || $borDetailsUpd->last_name != $borDetailsPre->last_name ||

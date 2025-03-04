@@ -1,7 +1,7 @@
 @component('mail::message')
 # Primary Coordinator Notification
 
-The MOMS Club of  {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}} has been updated through the MOMS Information Management Interface.<br>
+The MOMS Club of  {{$mailData['chapterName']}}, {{$mailData['chapterState']}} has been updated through the MOMS Information Management Interface.<br>
 <br>
 <strong>MCL</strong>,<br>
 MIMI Database Administrator
@@ -19,56 +19,42 @@ MIMI Database Administrator
             <tbody>
                 <tr>
                     <td></td>
-                    <td colspan="2" style="background-color: #D0D0D0; text-align: center;"><strong>Chapter Email</strong></td>
-                </tr>
-                <tr style="{{$mailData['chapemailPre'] != $mailData['chapemailUpd'] ? 'background-color: yellow;' : ''}}">
-                    <td>Chapter E-mail</td>
-                    <td>{{$mailData['chapemailPre']}}</td>
-                    <td>{{$mailData['chapemailUpd']}}</td>
-                </tr>
-                <tr>
-                    <td></td>
                     <td colspan="2" style="background-color: #D0D0D0; text-align: center;"><strong>President</strong></td>
                 </tr>
-                <tr style="{{$mailData['chapfnamePre'] != $mailData['chapfnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presNamePre'] != $mailData['presNameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>First Name</td>
-                    <td>{{$mailData['chapfnamePre']}}</td>
-                    <td>{{$mailData['chapfnameUpd']}}</td>
+                    <td>{{$mailData['presNamePre']}}</td>
+                    <td>{{$mailData['presNameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['chaplnamePre'] != $mailData['chaplnameUpd'] ? 'background-color: yellow;' : ''}}">
-                    <td>Last Name</td>
-                    <td>{{$mailData['chaplnamePre']}}</td>
-                    <td>{{$mailData['chaplnameUpd']}}</td>
-                </tr>
-                <tr style="{{$mailData['chapteremailPre'] != $mailData['chapteremailUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presEmailPre'] != $mailData['presEmailUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>E-mail</td>
-                    <td>{{$mailData['chapteremailPre']}}</td>
-                    <td>{{$mailData['chapteremailUpd']}}</td>
+                    <td>{{$mailData['presEmailPre']}}</td>
+                    <td>{{$mailData['presEmailUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['streetPre'] != $mailData['streetUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presAddressPre'] != $mailData['presAddressUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Street</td>
-                    <td>{{$mailData['streetPre']}}</td>
-                    <td>{{$mailData['streetUpd']}}</td>
+                    <td>{{$mailData['presAddressPre']}}</td>
+                    <td>{{$mailData['presAddressUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['cityPre'] != $mailData['cityUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presCityPre'] != $mailData['presCityUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>City</td>
-                    <td>{{$mailData['cityPre']}}</td>
-                    <td>{{$mailData['cityUpd']}}</td>
+                    <td>{{$mailData['presCityPre']}}</td>
+                    <td>{{$mailData['presCityUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['statePre'] != $mailData['stateUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presStatePre'] != $mailData['presStateUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>State</td>
-                    <td>{{$mailData['statePre']}}</td>
-                    <td>{{$mailData['stateUpd']}}</td>
+                    <td>{{$mailData['presStatePre']}}</td>
+                    <td>{{$mailData['presStateUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['zipPre'] != $mailData['zipUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presZipPre'] != $mailData['presZipUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Zip</td>
-                    <td>{{$mailData['zipPre']}}</td>
-                    <td>{{$mailData['zipUpd']}}</td>
+                    <td>{{$mailData['presZipPre']}}</td>
+                    <td>{{$mailData['presZipUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['phonePre'] != $mailData['phoneUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presPhpnePre'] != $mailData['presPhoneUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Phone</td>
-                    <td>{{$mailData['phonePre']}}</td>
-                    <td>{{$mailData['phoneUpd']}}</td>
+                    <td>{{$mailData['presPhpnePre']}}</td>
+                    <td>{{$mailData['presPhoneUpd']}}</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -150,45 +136,45 @@ MIMI Database Administrator
                     <td></td>
                     <td colspan="2" style="background-color: #D0D0D0; text-align: center;"><strong>Chapter Fields</strong></td>
                 </tr>
-                <tr style="{{$mailData['inConPre'] != $mailData['inConUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['inquiriesContactPre'] != $mailData['inquiriesContactUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Inquiries Contact</td>
-                    <td>{{$mailData['inConPre']}}</td>
-                    <td>{{$mailData['inConUpd']}}</td>
+                    <td>{{$mailData['inquiriesContactPre']}}</td>
+                    <td>{{$mailData['inquiriesContactUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['chapemailPre'] != $mailData['chapemailUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['chapterEmailPre'] != $mailData['inquiriesNotesUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Chapter E-mail</td>
-                    <td>{{$mailData['chapemailPre']}}</td>
-                    <td>{{$mailData['chapemailUpd']}}</td>
+                    <td>{{$mailData['chapterEmailPre']}}</td>
+                    <td>{{$mailData['inquiriesNotesUpd']}}</td>
                 </tr>
                 <tr style="{{$mailData['poBoxPre'] != $mailData['poBoxUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>PO Box</td>
                     <td>{{$mailData['poBoxPre']}}</td>
                     <td>{{$mailData['poBoxUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['webUrlPre'] != $mailData['webUrlUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['websiteURLPre'] != $mailData['websiteURLUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Website URL</td>
-                    <td>{{$mailData['webUrlPre']}}</td>
-                    <td>{{$mailData['webUrlUpd']}}</td>
+                    <td>{{$mailData['websiteURLPre']}}</td>
+                    <td>{{$mailData['websiteURLUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['webStatusPre'] != $mailData['webStatusUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['websiteStatusPre'] != $mailData['websiteStatusUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Website Link Status</td>
                     <td>
-                        @if($mailData['webStatusPre']==1)
+                        @if($mailData['websiteStatusPre']==1)
                             Linked
-                        @elseif($mailData['webStatusPre']==2)
+                        @elseif($mailData['websiteStatusPre']==2)
                             Link Requested
-                        @elseif($mailData['webStatusPre']==3)
+                        @elseif($mailData['websiteStatusPre']==3)
                             Do Not Link
                         @else
                             Not Linked
                         @endif
                     </td>
                     <td>
-                        @if($mailData['webStatusUpd']==1)
+                        @if($mailData['websiteStatusUpd']==1)
                             Linked
-                        @elseif($mailData['webStatusUpd']==2)
+                        @elseif($mailData['websiteStatusUpd']==2)
                             Link Requested
-                        @elseif($mailData['webStatusUpd']==3)
+                        @elseif($mailData['websiteStatusUpd']==3)
                             Do Not Link
                         @else
                             Not Linked

@@ -1,7 +1,7 @@
 @component('mail::message')
 # ListAdmin Update Notification
 
-Board member informationfor the MOMS Club of {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}} has been updated through the MOMS Information Management Interface. Please update members of this chapter in any groups, forums, and mailing lists.<br>
+Board member informationfor the MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}} has been updated through the MOMS Information Management Interface. Please update members of this chapter in any groups, forums, and mailing lists.<br>
 <br>
 <strong>MCL</strong>,<br>
 MIMI Database Administrator
@@ -19,45 +19,15 @@ MIMI Database Administrator
                     <td></td>
                     <td colspan="2" style="background-color: #D0D0D0;"><center><b>President</b></center></td>
                 </tr>
-                <tr style="{{$mailData['chapfnamePre'] != $mailData['chapfnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presNamePre'] != $mailData['presNameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>First Name</td>
-                    <td>{{$mailData['chapfnamePre']}}</td>
-                    <td>{{$mailData['chapfnameUpd']}}</td>
+                    <td>{{$mailData['presNamePre']}}</td>
+                    <td>{{$mailData['presNameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['chaplnamePre'] != $mailData['chaplnameUpd'] ? 'background-color: yellow;' : ''}}">
-                    <td>Last Name</td>
-                    <td>{{$mailData['chaplnamePre']}}</td>
-                    <td>{{$mailData['chaplnameUpd']}}</td>
-                </tr>
-                <tr style="{{$mailData['chapteremailPre'] != $mailData['chapteremailUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presEmailPre'] != $mailData['presEmailUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>E-mail</td>
-                    <td>{{$mailData['chapteremailPre']}}</td>
-                    <td>{{$mailData['chapteremailUpd']}}</td>
-                </tr>
-                <tr style="{{$mailData['streetPre'] != $mailData['streetUpd'] ? 'background-color: yellow;' : ''}}">
-                    <td>Street</td>
-                    <td>{{$mailData['streetPre']}}</td>
-                    <td>{{$mailData['streetUpd']}}</td>
-                </tr>
-                <tr style="{{$mailData['cityPre'] != $mailData['cityUpd'] ? 'background-color: yellow;' : ''}}">
-                    <td>City</td>
-                    <td>{{$mailData['cityPre']}}</td>
-                    <td>{{$mailData['cityUpd']}}</td>
-                </tr>
-                <tr style="{{$mailData['statePre'] != $mailData['stateUpd'] ? 'background-color: yellow;' : ''}}">
-                    <td>State</td>
-                    <td>{{$mailData['statePre']}}</td>
-                    <td>{{$mailData['stateUpd']}}</td>
-                </tr>
-                <tr style="{{$mailData['zipPre'] != $mailData['zipUpd'] ? 'background-color: yellow;' : ''}}">
-                    <td>Zip</td>
-                    <td>{{$mailData['zipPre']}}</td>
-                    <td>{{$mailData['zipUpd']}}</td>
-                </tr>
-                <tr style="{{$mailData['phonePre'] != $mailData['phoneUpd'] ? 'background-color: yellow;' : ''}}">
-                    <td>Phone</td>
-                    <td>{{$mailData['phonePre']}}</td>
-                    <td>{{$mailData['phoneUpd']}}</td>
+                    <td>{{$mailData['presEmailPre']}}</td>
+                    <td>{{$mailData['presEmailUpd']}}</td>
                 </tr>
                 <tr>
                     <td></td>
