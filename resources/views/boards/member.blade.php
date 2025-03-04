@@ -286,7 +286,7 @@
                             @else
                                 <span style="color: red;">Your Re-registration payment is now considered overdue.<br>
                             @endif
-                            @if($user_type === 'coordinator')
+                            @if($isCoordinator)
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('chapter.viewreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
                             @else
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.showreregpayment') }}'">PAY HERE</button>
@@ -310,7 +310,7 @@
                       <li class="list-group-item">
                             <h5>End of year Filing</h5>
 
-                            @if($user_type === 'coordinator' && $chDocuments->new_board_active!='1')
+                            @if($isCoordinator && $chDocuments->new_board_active!='1')
                                 @if($display_testing)
                                     <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y') . '-' . (date('Y') + 1) }} Board Report *TESTING*
@@ -322,7 +322,7 @@
                                 @else
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                                 @endif
-                            @elseif($user_type === 'coordinator' && $chDocuments->new_board_active =='1')
+                            @elseif($isCoordinator && $chDocuments->new_board_active =='1')
                                 @if($display_testing)
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated *TESTING*</button><br>
                                 @else
@@ -340,7 +340,7 @@
                                 <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                             @endif
 
-                            @if($user_type === 'coordinator')
+                            @if($isCoordinator)
                                 @if($display_testing)
                                     <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y')-1 .'-'.date('Y') }} Financial Report *TESTING*
@@ -402,9 +402,8 @@
 $(document).ready(function () {
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
-    var userType = @json($user_type);
 
-    if (userType === 'coordinator') {
+    if ($isCoordinator) {
         // Disable all input fields, select elements, textareas, and buttons
         $('input, select, textarea').prop('disabled', true);
         $('#Save, #Password, #logout-btn, #eLearning, #Resources').prop('disabled', true);

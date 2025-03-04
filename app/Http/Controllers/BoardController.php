@@ -93,6 +93,9 @@ class BoardController extends Controller
      */
     public function showPresident(Request $request): View
     {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
         $user_type = $user->user_type;
@@ -139,7 +142,7 @@ class BoardController extends Controller
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
-            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
+            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date,
             'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments
         ];
 
@@ -936,6 +939,8 @@ class BoardController extends Controller
 
         $bdDetails = $request->user()->board;
         $bdId = $bdDetails->id;
+        $bdPositionid = $bdDetails->board_position_id;
+        $bdIsActive = $bdDetails->is_active;
         $id = $bdDetails->chapter_id;
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);

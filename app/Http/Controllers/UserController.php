@@ -66,35 +66,65 @@ class UserController extends Controller
      */
      public function loadUserInformation(Request $request)
     {
-        $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition', 'coordinator.displayPosition'])
+        $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition', 'coordinator.displayPosition',
+                'board', 'board.chapters.region', 'board.chapters.conference','board.position'])
             ->find($request->user()->id);
 
-        $userId = $user->id;
-        $userType = $user->user_type;
-        $fname = $user->first_name;
-        $lname = $user->last_name;
-        $user_name = $fname.' ' .$lname;
-        $user_email = $user->email;
-        $user_coorId = $user->coordinator->id;
-        $user_confId = $user->coordinator->conference_id;
-        $user_regId = $user->coordinator->region_id;
-        $user_conference = $user->coordinator->conference;
-        $user_conf_name = $user->coordinator->conference->conference_name;
-        $user_conf_desc = $user->coordinator->conference->conference_description;
-        $user_region = $user->coordinator->region;
-        $user_position = $user->coordinator->displayPosition->long_title;
-        $user_secPositionId = $user->coordinator->sec_position_id;
-        $user_positionId = $user->coordinator->display_position_id;
-        $user_secPosition = $user->coordinator->secondaryPosition->long_title;
-        $user_layerId = $user->coordinator->layer_id;
+        $user_type = $user['user_type'];
+        $userType = getEOYDisplay($user_type);
 
-        return ['userId' => $userId, 'userType' => $userType, 'user_name' => $user_name, 'user_email' => $user_email,
-            'user_position' => $user_position, 'user_secPosition' => $user_secPosition, 'user_coorId' => $user_coorId, 'user_regId' => $user_regId,
-            'user_confId' => $user_confId, 'user_secPositionId' => $user_secPositionId, 'user_positionId' => $user_positionId,
-            'user_conference' => $user_conference, 'user_region' => $user_region, 'user_layerId' => $user_layerId,
-            'user_conf_name' => $user_conf_name, 'user_conf_desc' => $user_conf_desc
+        $baseUserInfo = [
+            'userId' => $user->id,
+            'userType' => $user->user_type,
+            'user_name' => $user->first_name . ' ' . $user->last_name,
+            'user_email' => $user->email,
         ];
+
+        switch ($userType) {
+            case 'coordinator':
+                return $this->loadCoordinatorInformation($user, $baseUserInfo);
+
+            case 'board':
+                return $this->loadBoardMemberInformation($user, $baseUserInfo);
+
+            default:
+                return $baseUserInfo;
+        }
     }
+
+        protected function loadCoordinatorInformation($user, $baseUserInfo)
+        {
+            return array_merge($baseUserInfo, [
+                'user_position' => $user->coordinator->displayPosition->long_title,
+                'user_secPosition' => $user->coordinator->secondaryPosition->long_title,
+                'user_coorId' => $user->coordinator->id,
+                'user_regId' => $user->coordinator->region_id,
+                'user_confId' => $user->coordinator->conference_id,
+                'user_secPositionId' => $user->coordinator->sec_position_id,
+                'user_positionId' => $user->coordinator->display_position_id,
+                'user_layerId' => $user->coordinator->layer_id,
+                'user_conference' => $user->coordinator->conference,
+                'user_region' => $user->coordinator->region,
+                'user_conf_name' => $user->coordinator->conference->conference_name,
+                'user_conf_desc' => $user->coordinator->conference->conference_description
+            ]);
+        }
+
+        protected function loadBoardMemberInformation($user, $baseUserInfo)
+        {
+            return array_merge($baseUserInfo, [
+                'user_bdId' => $user->board->id,
+                'user_regId' => $user->board->region_id,
+                'user_confId' => $user->board->conference_id,
+                'user_positionId' => $user->board->board_position_id,
+                'user_position' => $user->board->position->position,
+                'user_chapter_id' => $user->board->chapter_id,
+                'user_conference' => $user->board->chapters->conference,
+                'user_region' => $user->board->chapters->region,
+                'user_conf_name' => $user->board->chapters->conference->conference_name,
+                'user_conf_desc' => $user->board->chapters->conference->conference_description,
+            ]);
+        }
 
     /**
      * Get Reporting Tree -- for chapter display based on chapters reporting to logged in PC and coordinators under them
