@@ -85,7 +85,7 @@ class UserController extends Controller
         $user_position = $user->coordinator->displayPosition->long_title;
         $user_secPositionId = $user->coordinator->sec_position_id;
         $user_positionId = $user->coordinator->display_position_id;
-        $user_secPosition = $user->coordinator->secondaryPosition->long_title;
+        $user_secPosition = $user->coordinator->secondaryPosition?->long_title;
         $user_layerId = $user->coordinator->layer_id;
 
         return ['userId' => $userId, 'userType' => $userType, 'user_name' => $user_name, 'user_email' => $user_email,
