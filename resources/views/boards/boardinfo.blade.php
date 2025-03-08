@@ -439,7 +439,7 @@ $(document).ready(function() {
         $('button').not('#btn-back').prop('disabled', true);
         $('input, select, textarea').prop('disabled', true);
 
-    } else if ("{{$chDetails->new_board_submitted}}" === '1') {
+    } else if ("{{$chDetails->documents->new_board_submitted}}" === '1') {
         $('input, select, textarea').prop('disabled', true);
         $('#submit').prop('disabled', true);
     } else {

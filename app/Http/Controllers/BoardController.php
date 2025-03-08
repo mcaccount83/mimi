@@ -17,7 +17,7 @@ use App\Models\Boards;
 use App\Models\Chapters;
 use App\Models\Documents;
 use App\Models\FinancialReport;
-use App\Models\FinancialReportAwards;
+use App\Models\incomingboard;
 use App\Models\Resources;
 use App\Models\State;
 use App\Models\User;
@@ -244,7 +244,7 @@ class BoardController extends Controller
             $chapter->email = $request->input('ch_email');
             $chapter->po_box = $request->input('ch_pobox');
             $chapter->website_url = $website;
-            $chapter->website_status = $request->input('ch_webstatus');
+            $chapter->website_status = $ch_webstatus;
             $chapter->egroup = $request->input('ch_onlinediss');
             $chapter->social1 = $request->input('ch_social1');
             $chapter->social2 = $request->input('ch_social2');
@@ -692,20 +692,9 @@ class BoardController extends Controller
         $lastUpdatedBy = $user['user_name'];;
         $lastupdatedDate = date('Y-m-d H:i:s');
 
-        // $user = User::find($request->user()->id);
-        // $userId = $user->id;
-        // $userName = $user->first_name.' '.$user->last_name;
-
-        // $bdDetails = $request->user()->board;
-        // $bdId = $bdDetails->id;
-        // $bdPositionid = $bdDetails->board_position_id;
-        // $lastUpdatedBy = $bdDetails->first_name.' '.$bdDetails->last_name;
-        // $lastupdatedDate = date('Y-m-d H:i:s');
-
         $baseQueryPre = $this->baseBoardController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
         $pcDetailsPre = $baseQueryPre['pcDetails'];
-        // $PresDetailsPre = $baseQueryPre['PresDetails'];
         $AVPDetailsPre = $baseQueryPre['AVPDetails'];
         $MVPDetailsPre = $baseQueryPre['MVPDetails'];
         $TRSDetailsPre = $baseQueryPre['TRSDetails'];
@@ -784,7 +773,6 @@ class BoardController extends Controller
             $baseQueryUpd = $this->baseBoardController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
-            $chConfId = $baseQueryUpd['chConfId'];
             $webStatusUpd = $ch_webstatus;
             $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
             $MVPDetailsUpd = $baseQueryUpd['MVPDetails'];
@@ -793,9 +781,6 @@ class BoardController extends Controller
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
             $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
             $pcEmail = $pcDetailsUpd->email;  // PC Email
-
-            // $pcDetails = $baseQueryUpd['chDetails']->primaryCoordinator;
-            // $pcEmail = $pcDetails->email;  // PC Email
 
             if ($bdPositionid == 2) {
                 $borDetailsUpd = $AVPDetailsUpd;
@@ -806,37 +791,6 @@ class BoardController extends Controller
             } elseif ($bdPositionid == 5) {
                 $borDetailsUpd = $SECDetailsUpd;
             }
-
-            // $mailData = [
-            //     'chapter_name' => $chDetailsUpd->name,
-            //     'chapter_state' => $stateShortName,
-            //     'conference' => $chConfId,
-            //     'borposition' => $borDetailsPre->position->position,
-            //     'updated_byUpd' => $lastUpdatedBy,
-            //     'updated_byPre' => $lastupdatedDate,
-
-            //     'inConPre' => $chDetailsPre->inquiries_contact,
-            //     'chapemailPre' => $chDetailsPre->email,
-            //     'poBoxPre' => $chDetailsPre->po_box,
-            //     'webUrlPre' => $chDetailsPre->website_url,
-            //     'webStatusPre' => $chDetailsPre->website_status,
-            //     'egroupPre' => $chDetailsPre->egroup,
-            //     'borfname' => $borDetailsPre->first_name,
-            //     'borlname' => $borDetailsPre->last_name,
-            //     'boremail' => $borDetailsPre->email,
-
-            //     'inConUpd' => $chDetailsUpd->inquiries_contact,
-            //     'chapemailUpd' => $chDetailsUpd->email,
-            //     'poBoxUpd' => $chDetailsUpd->po_box,
-            //     'webUrlUpd' => $chDetailsUpd->website_url,
-            //     'webStatusUpd' => $chDetailsUpd->website_status,
-            //     'egroupUpd' => $chDetailsUpd->egroup,
-            //     'borfnameUpd' => $borDetailsUpd->first_name,
-            //     'borlnameUpd' => $borDetailsUpd->last_name,
-            //     'boremailUpd' => $borDetailsUpd->email,
-
-            //     'ch_website_url' => $website,
-            // ];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
@@ -927,44 +881,20 @@ class BoardController extends Controller
      */
     public function showM2MDonationForm(Request $request)
     {
-        $user = $request->user();
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $chId = $user['user_chapterId'];
 
-        $borDetails = $user->board;
-        // Check if BoardDetails is not found for the user
-        if (! $borDetails) {
-            return to_route('home');
-        }
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
 
-        $borPositionId = $borDetails['board_position_id'];
-        $chapterId = $borDetails['chapter_id'];
-        $isActive = $borDetails['is_active'];
+        $now = Carbon::now();
+        $month = $now->month;
+        $year = $now->year;
 
-        $chapterDetails = Chapters::find($chapterId);
-        $stateArr = DB::table('state')
-            ->select('state.*')
-            ->orderBy('id')
-            ->get();
-
-        $chapterState = DB::table('state')
-            ->select('state_short_name')
-            ->where('id', '=', $chapterDetails->state)
-            ->get();
-        $chapterState = $chapterState[0]->state_short_name;
-
-        $boardPosition = ['1' => 'President', '2' => 'AVP', '3' => 'MVP', '4' => 'Treasurer', '5' => 'Secretary'];
-        $boardPositionCode = $borPositionId;
-        $boardPositionAbbreviation = isset($boardPosition[$boardPositionCode]) ? $boardPosition[$boardPositionCode] : '';
-
-        $chapterList = DB::table('chapters as ch')
-            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
-                'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
-            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $chapterId)
-            ->where('bd.board_position_id', '=', '1')
-            ->get();
-
-        $data = ['chapterState' => $chapterState, 'stateArr' => $stateArr, 'chapterList' => $chapterList, 'boardPositionAbbreviation' => $boardPositionAbbreviation];
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType,
+            ];
 
         return view('boards.donation')->with($data);
     }
@@ -1024,21 +954,36 @@ class BoardController extends Controller
      */
     public function createBoardInfo(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userType = $user->user_type;
-        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
+        $chId = $user['user_chapterId'];
 
-        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
-
         $stateShortName = $baseQuery['stateShortName'];
         $emailListChap = $baseQuery['emailListChap'];
         $emailListCoord = $baseQuery['emailListCoord'];
         $emailCC = $baseQuery['emailCC'];
+
+        $input = $request->all();
+
+        // Handle web status - allow null values
+        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+        // Only convert to 0 if the website is not null but status is empty
+        if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+            $ch_webstatus = 0;
+        }
+
+        // Handle website URL
+        $website = $request->input('ch_website');
+        // Only add http:// if the website field is not null or empty
+        if (!is_null($website) && !empty(trim($website))) {
+            if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+                $website = 'http://' . $website;
+            }
+        }
 
         $boundaryStatus = $request->input('BoundaryStatus');
         $issue_note = $request->input('BoundaryIssue');
@@ -1047,50 +992,37 @@ class BoardController extends Controller
             $issue_note = '';
         }
 
-        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
-        if (empty(trim($ch_webstatus))) {
-            $ch_webstatus = 0; // Set it to 0 if it's blank
-        }
-
-        $website = $request->input('ch_website');
-        // Ensure it starts with "http://" or "https://"
-        if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
-            $website = 'http://'.$website;
-        }
-
-        $chapter = Chapters::find($id);
+        $chapter = Chapters::find($chId);
         $documents = Documents::find($id);
 
         DB::beginTransaction();
         try {
-            $chDetails->inquiries_contact = $request->input('InquiriesContact');
-            $chDetails->boundary_issues = $request->input('BoundaryStatus');
-            $chDetails->boundary_issue_notes = $issue_note;
-            $chDetails->website_url = $website;
-            $chDetails->website_status = $ch_webstatus;
-            $chDetails->egroup = $request->input('ch_onlinediss');
-            $chDetails->social1 = $request->input('ch_social1');
-            $chDetails->social2 = $request->input('ch_social2');
-            $chDetails->social3 = $request->input('ch_social3');
-            $chDetails->last_updated_by = $lastUpdatedBy;
-            $chDetails->last_updated_date = date('Y-m-d H:i:s');
-            $chDetails->save();
+            $chapter->inquiries_contact = $request->input('InquiriesContact');
+            $chapter->boundary_issues = $request->input('BoundaryStatus');
+            $chapter->boundary_issue_notes = $issue_note;
+            $chapter->website_url = $website;
+            $chapter->website_status = $ch_webstatus;
+            $chapter->egroup = $request->input('ch_onlinediss');
+            $chapter->social1 = $request->input('ch_social1');
+            $chapter->social2 = $request->input('ch_social2');
+            $chapter->social3 = $request->input('ch_social3');
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->save();
 
             $documents->new_board_submitted = 1;
             $documents->save();
 
-            //President Info
+            // President Info
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
-                $PREDetails = DB::table('incoming_board_member')
-                    ->select('id')
-                    ->where('chapter_id', '=', $id)
-                    ->where('board_position_id', '=', '1')
+                $PREDetails = IncomingBoard::where('chapter_id', $chId)
+                    ->where('board_position_id', '1')
                     ->get();
-                $id = $request->input('presID');
+                $presId = $request->input('presID');
                 if (count($PREDetails) != 0) {
-                    DB::table('incoming_board_member')
-                        ->where('id', $bdId)
-                        ->update(['first_name' => $request->input('ch_pre_fname'),
+                    IncomingBoard::where('id', $presId)
+                        ->update([   // Update board details
+                            'first_name' => $request->input('ch_pre_fname'),
                             'last_name' => $request->input('ch_pre_lname'),
                             'email' => $request->input('ch_pre_email'),
                             'street_address' => $request->input('ch_pre_street'),
@@ -1100,64 +1032,44 @@ class BoardController extends Controller
                             'country' => 'USA',
                             'phone' => $request->input('ch_pre_phone'),
                             'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s')]);
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
                 } else {
-                    $board = DB::table('incoming_board_member')->insert(
-                        ['first_name' => $request->input('ch_pre_fname'),
-                            'last_name' => $request->input('ch_pre_lname'),
-                            'email' => $request->input('ch_pre_email'),
-                            'board_position_id' => 1,
-                            'chapter_id' => $id,
-                            'street_address' => $request->input('ch_pre_street'),
-                            'city' => $request->input('ch_pre_city'),
-                            'state' => $request->input('ch_pre_state'),
-                            'zip' => $request->input('ch_pre_zip'),
-                            'country' => 'USA',
-                            'phone' => $request->input('ch_pre_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s'),
-                        ]
-                    );
+                    IncomingBoard::create([  // Create board details if new
+                        'chapter_id' => $chId,
+                        'board_position_id' => '1',
+                        'first_name' => $request->input('ch_pre_fname'),
+                        'last_name' => $request->input('ch_pre_lname'),
+                        'email' => $request->input('ch_pre_email'),
+                        'street_address' => $request->input('ch_pre_street'),
+                        'city' => $request->input('ch_pre_city'),
+                        'state' => $request->input('ch_pre_state'),
+                        'zip' => $request->input('ch_pre_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_pre_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => $lastupdatedDate,
+                    ]);
                 }
-
             }
+
             //AVP Info
-            if ($request->input('AVPVacant') == 'on') {
-                $bdId = $request->input('avpID');
-                DB::table('incoming_board_member')
-                    ->where('id', $bdId)
-                    ->delete();
-            }
-            if ($request->input('ch_avp_fname') != '' && $request->input('ch_avp_lname') != '' && $request->input('ch_avp_email') != '') {
-                $AVPDetails = DB::table('incoming_board_member')
-                    ->select('id')
-                    ->where('chapter_id', '=', $id)
-                    ->where('board_position_id', '=', '2')
-                    ->get();
-                $id = $request->input('avpID');
-                if (count($AVPDetails) != 0) {
-                    DB::table('incoming_board_member')
-                        ->where('id', $bdId)
-                        ->update(['first_name' => $request->input('ch_avp_fname'),
-                            'last_name' => $request->input('ch_avp_lname'),
-                            'email' => $request->input('ch_avp_email'),
-                            'street_address' => $request->input('ch_avp_street'),
-                            'city' => $request->input('ch_avp_city'),
-                            'state' => $request->input('ch_avp_state'),
-                            'zip' => $request->input('ch_avp_zip'),
-                            'country' => 'USA',
-                            'phone' => $request->input('ch_avp_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s')]);
-                } else {
+            $AVPDetails = IncomingBoard::where('chapter_id', $chId)
+                ->where('board_position_id', '2')
+                ->get();
 
-                    $board = DB::table('incoming_board_member')->insert(
-                        [
+            if (count($AVPDetails) > 0) {
+                if ($request->input('AVPVacant') == 'on') {
+                    IncomingBoard::where('chapter_id', $chId)
+                        ->where('board_position_id', '2')
+                        ->delete();  // Delete board member if now Vacant
+                } else {
+                    $AVPId = $request->input('avpID');
+                    IncomingBoard::where('id', $AVPId)
+                        ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_avp_fname'),
                             'last_name' => $request->input('ch_avp_lname'),
                             'email' => $request->input('ch_avp_email'),
-                            'board_position_id' => 2,
-                            'chapter_id' => $id,
                             'street_address' => $request->input('ch_avp_street'),
                             'city' => $request->input('ch_avp_city'),
                             'state' => $request->input('ch_avp_state'),
@@ -1165,48 +1077,46 @@ class BoardController extends Controller
                             'country' => 'USA',
                             'phone' => $request->input('ch_avp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s'),
-                        ]
-                    );
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
+                }
+            } else {
+                if ($request->input('AVPVacant') != 'on') {
+                    IncomingBoard::create([  // Create board details if new
+                        'chapter_id' => $chId,
+                        'board_position_id' => '2',
+                        'first_name' => $request->input('ch_avp_fname'),
+                        'last_name' => $request->input('ch_avp_lname'),
+                        'email' => $request->input('ch_avp_email'),
+                        'street_address' => $request->input('ch_avp_street'),
+                        'city' => $request->input('ch_avp_city'),
+                        'state' => $request->input('ch_avp_state'),
+                        'zip' => $request->input('ch_avp_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_avp_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => $lastupdatedDate,
+                    ]);
                 }
             }
-            //MVP Info
-            if ($request->input('MVPVacant') == 'on') {
-                $bdId = $request->input('mvpID');
-                DB::table('incoming_board_member')
-                    ->where('id', $bdId)
-                    ->delete();
-            }
-            if ($request->input('ch_mvp_fname') != '' && $request->input('ch_mvp_lname') != '' && $request->input('ch_mvp_email') != '') {
-                $MVPDetails = DB::table('incoming_board_member')
-                    ->select('id')
-                    ->where('chapter_id', '=', $id)
-                    ->where('board_position_id', '=', '3')
-                    ->get();
-                $id = $request->input('mvpID');
-                if (count($MVPDetails) != 0) {
-                    DB::table('incoming_board_member')
-                        ->where('id', $bdId)
-                        ->update(['first_name' => $request->input('ch_mvp_fname'),
-                            'last_name' => $request->input('ch_mvp_lname'),
-                            'email' => $request->input('ch_mvp_email'),
-                            'street_address' => $request->input('ch_mvp_street'),
-                            'city' => $request->input('ch_mvp_city'),
-                            'state' => $request->input('ch_mvp_state'),
-                            'zip' => $request->input('ch_mvp_zip'),
-                            'country' => 'USA',
-                            'phone' => $request->input('ch_mvp_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s')]);
-                } else {
 
-                    $board = DB::table('incoming_board_member')->insert(
-                        [
+            //MVP Info
+            $MVPDetails = IncomingBoard::where('chapter_id', $chId)
+                ->where('board_position_id', '3')
+                ->get();
+
+            if (count($MVPDetails) > 0) {
+                if ($request->input('MVPVacant') == 'on') {
+                    IncomingBoard::where('chapter_id', $chId)
+                        ->where('board_position_id', '3')
+                        ->delete();  // Delete board member if now Vacant
+                } else {
+                    $MVPId = $request->input('mvpID');
+                    IncomingBoard::where('id', $MVPId)
+                        ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_mvp_fname'),
                             'last_name' => $request->input('ch_mvp_lname'),
                             'email' => $request->input('ch_mvp_email'),
-                            'board_position_id' => 3,
-                            'chapter_id' => $id,
                             'street_address' => $request->input('ch_mvp_street'),
                             'city' => $request->input('ch_mvp_city'),
                             'state' => $request->input('ch_mvp_state'),
@@ -1214,49 +1124,46 @@ class BoardController extends Controller
                             'country' => 'USA',
                             'phone' => $request->input('ch_mvp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s'),
-                        ]
-                    );
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
+                }
+            } else {
+                if ($request->input('MVPVacant') != 'on') {
+                    IncomingBoard::create([  // Create board details if new
+                        'chapter_id' => $chId,
+                        'board_position_id' => '3',
+                        'first_name' => $request->input('ch_mvp_fname'),
+                        'last_name' => $request->input('ch_mvp_lname'),
+                        'email' => $request->input('ch_mvp_email'),
+                        'street_address' => $request->input('ch_mvp_street'),
+                        'city' => $request->input('ch_mvp_city'),
+                        'state' => $request->input('ch_mvp_state'),
+                        'zip' => $request->input('ch_mvp_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_mvp_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => $lastupdatedDate,
+                    ]);
                 }
             }
+
             //TRS Info
-            if ($request->input('TreasVacant') == 'on') {
-                $bdId = $request->input('trsID');
-                DB::table('incoming_board_member')
-                    ->where('id', $bdId)
-                    ->delete();
-            }
-            if ($request->input('ch_trs_fname') != '' && $request->input('ch_trs_lname') != '' && $request->input('ch_trs_email') != '') {
-                $TRSDetails = DB::table('incoming_board_member')
-                    ->select('id')
-                    ->where('chapter_id', '=', $id)
-                    ->where('board_position_id', '=', '4')
-                    ->get();
-                $id = $request->input('trsID');
-                if (count($TRSDetails) != 0) {
-                    DB::table('incoming_board_member')
-                        ->where('id', $bdId)
-                        ->update(['first_name' => $request->input('ch_trs_fname'),
-                            'last_name' => $request->input('ch_trs_lname'),
-                            'email' => $request->input('ch_trs_email'),
-                            'street_address' => $request->input('ch_trs_street'),
-                            'city' => $request->input('ch_trs_city'),
-                            'state' => $request->input('ch_trs_state'),
-                            'zip' => $request->input('ch_trs_zip'),
-                            'country' => 'USA',
-                            'phone' => $request->input('ch_trs_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s')]);
+            $TRSDetails = IncomingBoard::where('chapter_id', $chId)
+                ->where('board_position_id', '4')
+                ->get();
 
+            if (count($TRSDetails) > 0) {
+                if ($request->input('TreasVacant') == 'on') {
+                    IncomingBoard::where('chapter_id', $chId)
+                        ->where('board_position_id', '4')
+                        ->delete();  // Delete board member if now Vacant
                 } else {
-
-                    $board = DB::table('incoming_board_member')->insert(
-                        [
+                    $TRSId = $request->input('trsID');
+                    IncomingBoard::where('id', $TRSId)
+                        ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_trs_fname'),
                             'last_name' => $request->input('ch_trs_lname'),
                             'email' => $request->input('ch_trs_email'),
-                            'board_position_id' => 4,
-                            'chapter_id' => $id,
                             'street_address' => $request->input('ch_trs_street'),
                             'city' => $request->input('ch_trs_city'),
                             'state' => $request->input('ch_trs_state'),
@@ -1264,48 +1171,46 @@ class BoardController extends Controller
                             'country' => 'USA',
                             'phone' => $request->input('ch_trs_phone'),
                             'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s'),
-                        ]
-                    );
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
+                }
+            } else {
+                if ($request->input('TreasVacant') != 'on') {
+                    IncomingBoard::create([  // Create board details if new
+                        'chapter_id' => $chId,
+                        'board_position_id' => '4',
+                        'first_name' => $request->input('ch_trs_fname'),
+                        'last_name' => $request->input('ch_trs_lname'),
+                        'email' => $request->input('ch_trs_email'),
+                        'street_address' => $request->input('ch_trs_street'),
+                        'city' => $request->input('ch_trs_city'),
+                        'state' => $request->input('ch_trs_state'),
+                        'zip' => $request->input('ch_trs_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_trs_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => $lastupdatedDate,
+                    ]);
                 }
             }
-            //SEC Info
-            if ($request->input('SecVacant') == 'on') {
-                $bdId = $request->input('secID');
-                DB::table('incoming_board_member')
-                    ->where('id', $bdId)
-                    ->delete();
-            }
-            if ($request->input('ch_sec_fname') != '' && $request->input('ch_sec_lname') != '' && $request->input('ch_sec_email') != '') {
-                $SECDetails = DB::table('incoming_board_member')
-                    ->select('id')
-                    ->where('chapter_id', '=', $id)
-                    ->where('board_position_id', '=', '5')
-                    ->get();
-                $id = $request->input('secID');
-                if (count($SECDetails) != 0) {
-                    DB::table('incoming_board_member')
-                        ->where('id', $bdId)
-                        ->update(['first_name' => $request->input('ch_sec_fname'),
-                            'last_name' => $request->input('ch_sec_lname'),
-                            'email' => $request->input('ch_sec_email'),
-                            'street_address' => $request->input('ch_sec_street'),
-                            'city' => $request->input('ch_sec_city'),
-                            'state' => $request->input('ch_sec_state'),
-                            'zip' => $request->input('ch_sec_zip'),
-                            'country' => 'USA',
-                            'phone' => $request->input('ch_sec_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s')]);
 
+            //SEC Info
+            $SECDetails = IncomingBoard::where('chapter_id', $chId)
+                ->where('board_position_id', '5')
+                ->get();
+
+            if (count($SECDetails) > 0) {
+                if ($request->input('SecVacant') == 'on') {
+                    IncomingBoard::where('chapter_id', $chId)
+                        ->where('board_position_id', '5')
+                        ->delete();  // Delete board member if now Vacant
                 } else {
-                    $board = DB::table('incoming_board_member')->insert(
-                        [
+                    $SECId = $request->input('secID');
+                    IncomingBoard::where('id', $SECId)
+                        ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_sec_fname'),
                             'last_name' => $request->input('ch_sec_lname'),
                             'email' => $request->input('ch_sec_email'),
-                            'board_position_id' => 5,
-                            'chapter_id' => $id,
                             'street_address' => $request->input('ch_sec_street'),
                             'city' => $request->input('ch_sec_city'),
                             'state' => $request->input('ch_sec_state'),
@@ -1313,33 +1218,37 @@ class BoardController extends Controller
                             'country' => 'USA',
                             'phone' => $request->input('ch_sec_phone'),
                             'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s'),
-                        ]
-                    );
-
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
+                }
+            } else {
+                if ($request->input('SecVacant') != 'on') {
+                    IncomingBoard::create([  // Create board details if new
+                        'chapter_id' => $chId,
+                        'board_position_id' => '5',
+                        'first_name' => $request->input('ch_sec_fname'),
+                        'last_name' => $request->input('ch_sec_lname'),
+                        'email' => $request->input('ch_sec_email'),
+                        'street_address' => $request->input('ch_sec_street'),
+                        'city' => $request->input('ch_sec_city'),
+                        'state' => $request->input('ch_sec_state'),
+                        'zip' => $request->input('ch_sec_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('ch_sec_phone'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => $lastupdatedDate,
+                    ]);
                 }
             }
-
-            // Send email to Conference Coordinator
-            $to_email = $emailCC;
-
-            // Send email to full Board
-            $to_email2 = $emailListChap;
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
             );
 
-            // $mailData = [
-            //     'chapterid' => $id,
-            //     'chapter_name' => $chDetails->name,
-            //     'chapter_state' => $stateShortName,
-            // ];
-
-            Mail::to($to_email)
+            Mail::to($emailCC)
                 ->queue(new EOYElectionReportSubmitted($mailData));
 
-            Mail::to($to_email2)
+            Mail::to($emailListChap)
                 ->queue(new EOYElectionReportThankYou($mailData));
 
             DB::commit();
