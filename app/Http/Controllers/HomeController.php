@@ -28,7 +28,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $user_type = $user->user_type;
+        $userType = $user->user_type;
         $userStatus = $user->is_active;
         if ($userStatus != 1) {
             Auth::logout();  // logout inactive user
@@ -37,12 +37,12 @@ class HomeController extends Controller
             return redirect()->to('/login');
         }
 
-        if ($user_type == 'coordinator') {
+        if ($userType == 'coordinator') {
             //Send to Coordinator Dashboard
             return redirect()->to('coordviewprofile');
         }
 
-        if ($user_type == 'board') {
+        if ($userType == 'board') {
             //Send to President or Board Profile Screen
             $borDetails = $request->user()->board;
             $borPositionId = $borDetails['board_position_id'];
@@ -54,7 +54,7 @@ class HomeController extends Controller
             }
         }
 
-        if ($user_type == 'outgoing') {
+        if ($userType == 'outgoing') {
             //Send to Financial Report without Menus
             $user = User::with('outgoing')->find($request->user()->id);
             $userName = $user->first_name.' '.$user->last_name;
@@ -74,7 +74,7 @@ class HomeController extends Controller
 
             $resources = Resources::with('categoryName')->get();
 
-            $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'user_type' => $user_type,
+            $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'userType' => $userType,
                 'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
                 'awards' => $awards, 'allAwards' => $allAwards,
             ];
