@@ -15,11 +15,13 @@ class HomeController extends Controller
      * Create a new controller instance.
      */
     protected $userController;
+    protected $baseBoardController;
 
-    public function __construct(UserController $userController)
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController)
     {
         $this->middleware('auth')->except('logout');
         $this->userController = $userController;
+        $this->baseBoardController = $baseBoardController;
     }
 
     /**
@@ -27,9 +29,10 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
-        $userType = $user->user_type;
-        $userStatus = $user->is_active;
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userStatus = $user['userStatus'];
+
         if ($userStatus != 1) {
             Auth::logout();  // logout inactive user
             $request->session()->flush();
@@ -43,11 +46,10 @@ class HomeController extends Controller
         }
 
         if ($userType == 'board') {
-            //Send to President or Board Profile Screen
-            $borDetails = $request->user()->board;
-            $borPositionId = $borDetails['board_position_id'];
+            //Send to President or Member Profile Screen
+            $user_bdPositionId = $user['user_bdPositionId'];
 
-            if ($borPositionId == 1) {
+            if ($user_bdPositionId == '1') {
                 return redirect()->to('board/president');
             } else {
                 return redirect()->to('board/member');
@@ -55,22 +57,20 @@ class HomeController extends Controller
         }
 
         if ($userType == 'outgoing') {
-            //Send to Financial Report without Menus
-            $user = User::with('outgoing')->find($request->user()->id);
-            $userName = $user->first_name.' '.$user->last_name;
-            $userEmail = $user->email;
-            $loggedInName = $user->first_name.' '.$user->last_name;
+            //Send Outgoing Board Members to Financial Report ONLY
+            $userName = $user['user_name'];
+            $userEmail = $user['user_email'];
+            $loggedInName = $user['user_name'];
+            $chId = $user['user_OutchapterId'];
 
-            $bdDetails = $user->outgoing;
-            $chId = $bdDetails->chapter_id;
-            $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($chId);
-
-            $stateShortName = $chDetails->state->state_short_name;
-            $chDocuments = $chDetails->documents;
-            $submitted = $chDocuments->financial_report_received;
-            $chFinancialReport = $chDetails->financialReport;
-            $awards = $chDetails->financialReport;
-            $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
+            $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $chDocuments = $baseQuery['chDocuments'];
+            $submitted = $baseQuery['submitted'];
+            $chFinancialReport = $baseQuery['chFinancialReport'];
+            $awards = $baseQuery['awards'];
+            $allAwards = $baseQuery['allAwards'];
 
             $resources = Resources::with('categoryName')->get();
 

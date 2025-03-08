@@ -142,6 +142,7 @@ class BaseMailDataController extends Controller
     public function getBoardUpdatedData($borDetailsUpd)
     {
         return [
+            'borPosition' => $borDetailsUpd->position->position,
             'borNameUpd' => $borDetailsUpd->first_name.' '. $borDetailsUpd->last_name,
             'borAddressUpd' => $borDetailsUpd->street_address,
             'borCityUpd' => $borDetailsUpd->city,

@@ -54,7 +54,7 @@
             $user = Auth::user();
             $userName = $user->first_name.' '.$user->last_name;
             $userEmail = $user->email;
-            $user_type = $user->user_type;
+            $userType = $user->user_type;
         @endphp
 
           <!-- Navbar -->
@@ -63,7 +63,7 @@
         {{-- <a href="{{ route('home') }}" class="navbar-brand">
             <img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" class="brand-image img-circle elevation-3" >
           </a> --}}
-    @if($user_type == 'board')
+    @if($userType == 'board')
 
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
         <!-- Left navbar links -->
@@ -87,7 +87,7 @@
       </div>
       @endif
 
-    @if($user_type !== 'coordinator')
+    @if($userType !== 'coordinator')
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
 
@@ -104,7 +104,7 @@
       </ul>
       @endif
 
-      @if($user_type == 'coordinator')
+      @if($userType == 'coordinator')
       @php
           // Assuming you're already on a chapter edit page and the 'id' is available in the route.
           $id = request()->route('id'); // Get the current chapter ID from the route

@@ -204,13 +204,8 @@ class BoardController extends Controller
      */
     public function updatePresident(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userName = $user->first_name.' '.$user->last_name;
-
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
-        $lastUpdatedBy = $bdDetails->first_name.' '.$bdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];;
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQueryPre = $this->baseBoardController->getChapterDetails($id);
@@ -255,7 +250,7 @@ class BoardController extends Controller
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
             //President Info
@@ -268,7 +263,7 @@ class BoardController extends Controller
                     'first_name' => $request->input('ch_pre_fname'),
                     'last_name' => $request->input('ch_pre_lname'),
                     'email' => $request->input('ch_pre_email'),
-                    'updated_at' => now(),
+                    'updated_at' => $lastupdatedDate,
                 ]);
                 $president->update([   // Update board details
                     'first_name' => $request->input('ch_pre_fname'),
@@ -281,7 +276,7 @@ class BoardController extends Controller
                     'country' => 'USA',
                     'phone' => $request->input('ch_pre_phone'),
                     'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => now(),
+                    'last_updated_date' => $lastupdatedDate,
                 ]);
             }
 
@@ -298,7 +293,7 @@ class BoardController extends Controller
                         'first_name' => $request->input('ch_avp_fname'),
                         'last_name' => $request->input('ch_avp_lname'),
                         'email' => $request->input('ch_avp_email'),
-                        'updated_at' => now(),
+                        'updated_at' => $lastupdatedDate,
                     ]);
                     $avp->update([   // Update board details if alrady exists
                         'first_name' => $request->input('ch_avp_fname'),
@@ -311,7 +306,7 @@ class BoardController extends Controller
                         'country' => 'USA',
                         'phone' => $request->input('ch_avp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => now(),
+                        'last_updated_date' => $lastupdatedDate,
                     ]);
                 }
             } else {
@@ -337,7 +332,7 @@ class BoardController extends Controller
                         'country' => 'USA',
                         'phone' => $request->input('ch_avp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => now(),
+                        'last_updated_date' => $lastupdatedDate,
                         'is_active' => 1,
                     ]);
                 }
@@ -356,7 +351,7 @@ class BoardController extends Controller
                         'first_name' => $request->input('ch_mvp_fname'),
                         'last_name' => $request->input('ch_mvp_lname'),
                         'email' => $request->input('ch_mvp_email'),
-                        'updated_at' => now(),
+                        'updated_at' => $lastupdatedDate,
                     ]);
                     $mvp->update([   // Update board details if alrady exists
                         'first_name' => $request->input('ch_mvp_fname'),
@@ -369,7 +364,7 @@ class BoardController extends Controller
                         'country' => 'USA',
                         'phone' => $request->input('ch_mvp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => now(),
+                        'last_updated_date' => $lastupdatedDate,
                     ]);
                 }
             } else {
@@ -395,7 +390,7 @@ class BoardController extends Controller
                         'country' => 'USA',
                         'phone' => $request->input('ch_mvp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => now(),
+                        'last_updated_date' => $lastupdatedDate,
                         'is_active' => 1,
                     ]);
                 }
@@ -414,7 +409,7 @@ class BoardController extends Controller
                         'first_name' => $request->input('ch_trs_fname'),
                         'last_name' => $request->input('ch_trs_lname'),
                         'email' => $request->input('ch_trs_email'),
-                        'updated_at' => now(),
+                        'updated_at' => $lastupdatedDate,
                     ]);
                     $treasurer->update([   // Update board details if alrady exists
                         'first_name' => $request->input('ch_trs_fname'),
@@ -427,7 +422,7 @@ class BoardController extends Controller
                         'country' => 'USA',
                         'phone' => $request->input('ch_trs_phone'),
                         'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => now(),
+                        'last_updated_date' => $lastupdatedDate,
                     ]);
                 }
             } else {
@@ -453,7 +448,7 @@ class BoardController extends Controller
                         'country' => 'USA',
                         'phone' => $request->input('ch_trs_phone'),
                         'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => now(),
+                        'last_updated_date' => $lastupdatedDate,
                         'is_active' => 1,
                     ]);
                 }
@@ -472,7 +467,7 @@ class BoardController extends Controller
                         'first_name' => $request->input('ch_sec_fname'),
                         'last_name' => $request->input('ch_sec_lname'),
                         'email' => $request->input('ch_sec_email'),
-                        'updated_at' => now(),
+                        'updated_at' => $lastupdatedDate,
                     ]);
                     $secretary->update([   // Update board details if alrady exists
                         'first_name' => $request->input('ch_sec_fname'),
@@ -485,7 +480,7 @@ class BoardController extends Controller
                         'country' => 'USA',
                         'phone' => $request->input('ch_sec_phone'),
                         'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => now(),
+                        'last_updated_date' => $lastupdatedDate,
                     ]);
                 }
             } else {
@@ -511,7 +506,7 @@ class BoardController extends Controller
                         'country' => 'USA',
                         'phone' => $request->input('ch_sec_phone'),
                         'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => now(),
+                        'last_updated_date' => $lastupdatedDate,
                         'is_active' => 1,
                     ]);
                 }
@@ -537,46 +532,6 @@ class BoardController extends Controller
             // $pcDetails = $baseQueryUpd['chDetails']->primaryCoordinator;
             // $pcEmail = $pcDetails->email;  // PC Email
             $EINCordEmail = 'jackie.mchenry@momsclub.org';  // EIN Coor Email
-
-            // $mailDataPres = [
-            //     'chapter_name' => $chDetailsUpd->name,
-            //     'chapter_state' => $stateShortName,
-            //     'conference' => $chConfId,
-            //     'updated_byUpd' => $lastUpdatedBy,
-            //     'updated_byPre' => $lastupdatedDate,
-
-            //     'inConPre' => $chDetailsPre->inquiries_contact,
-            //     'chapemailPre' => $chDetailsPre->email,
-            //     'poBoxPre' => $chDetailsPre->po_box,
-            //     'webUrlPre' => $chDetailsPre->website_url,
-            //     'webStatusPre' => $chDetailsPre->website_status,
-            //     'egroupPre' => $chDetailsPre->egroup,
-            //     'chapfnamePre' => $PresDetailsPre->first_name,
-            //     'chaplnamePre' => $PresDetailsPre->last_name,
-            //     'chapteremailPre' => $PresDetailsPre->email,
-            //     'phonePre' => $PresDetailsPre->phone,
-            //     'streetPre' => $PresDetailsPre->street,
-            //     'cityPre' => $PresDetailsPre->city,
-            //     'statePre' => $PresDetailsPre->state,
-            //     'zipPre' => $PresDetailsPre->zip,
-
-            //     'inConUpd' => $chDetailsUpd->inquiries_contact,
-            //     'chapemailUpd' => $chDetailsUpd->email,
-            //     'poBoxUpd' => $chDetailsUpd->po_box,
-            //     'webUrlUpd' => $chDetailsUpd->website_url,
-            //     'webStatusUpd' => $chDetailsUpd->website_status,
-            //     'egroupUpd' => $chDetailsUpd->egroup,
-            //     'chapfnameUpd' => $PresDetailsUpd->first_name,
-            //     'chaplnameUpd' => $PresDetailsUpd->last_name,
-            //     'chapteremailUpd' => $PresDetailsUpd->email,
-            //     'phoneUpd' => $PresDetailsUpd->phone,
-            //     'streetUpd' => $PresDetailsUpd->street,
-            //     'cityUpd' => $PresDetailsUpd->city,
-            //     'stateUpd' => $PresDetailsUpd->state,
-            //     'zipUpd' => $PresDetailsUpd->zip,
-
-            //     'ch_website_url' => $website,
-            // ];
 
             $mailDataPres = array_merge(
                 $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
@@ -730,15 +685,22 @@ class BoardController extends Controller
      */
     public function updateMember(Request $request, $id): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userName = $user->first_name.' '.$user->last_name;
-
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
-        $bdPositionid = $bdDetails->board_position_id;
-        $lastUpdatedBy = $bdDetails->first_name.' '.$bdDetails->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $bdId = $user['user_bdId'];
+        $bdPositionid = $user['user_bdPositionId'];
+        $lastUpdatedBy = $user['user_name'];;
         $lastupdatedDate = date('Y-m-d H:i:s');
+
+        // $user = User::find($request->user()->id);
+        // $userId = $user->id;
+        // $userName = $user->first_name.' '.$user->last_name;
+
+        // $bdDetails = $request->user()->board;
+        // $bdId = $bdDetails->id;
+        // $bdPositionid = $bdDetails->board_position_id;
+        // $lastUpdatedBy = $bdDetails->first_name.' '.$bdDetails->last_name;
+        // $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQueryPre = $this->baseBoardController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
@@ -794,14 +756,14 @@ class BoardController extends Controller
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
             // Update User Details
             $user->first_name = $request->input('bor_fname');
             $user->last_name = $request->input('bor_lname');
             $user->email = $request->input('bor_email');
-            $user->updated_at = now();
+            $user->updated_at = $lastupdatedDate;
             $user->save();
 
             // Update Board Details
@@ -815,7 +777,7 @@ class BoardController extends Controller
             $board->zip = $request->input('bor_zip');
             $board->country = 'USA';
             $board->last_updated_by = $lastUpdatedBy;
-            $board->last_updated_date = now();
+            $board->last_updated_date = $lastupdatedDate;
             $board->save();
 
             //Update Chapter MailData//
@@ -881,6 +843,8 @@ class BoardController extends Controller
                 $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getBoardPreviousData($borDetailsPre),
                 $this->baseMailDataController->getBoardUpdatedData($borDetailsUpd),
+                $this->baseMailDataController->getChapterPreviousData($chDetailsPre, $pcDetailsPre),
+                $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
                 [
                     'ch_website_url' => $website,
                 ]
@@ -1062,7 +1026,7 @@ class BoardController extends Controller
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
-        $user_type = $user->user_type;
+        $userType = $user->user_type;
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
 
         $bdDetails = $request->user()->board;
@@ -1429,7 +1393,7 @@ class BoardController extends Controller
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
-        $user_type = $user->user_type;
+        $userType = $user->user_type;
         $userName = $user->first_name.' '.$user->last_name;
         $userEmail = $user->email;
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;

@@ -73,6 +73,7 @@ class UserController extends Controller
         $userInfo = [
             'userId' => $user->id,
             'userType' => $user->user_type,
+            'userStatus' => $user->is_active,
             'user_name' => $user->first_name . ' ' . $user->last_name,
             'user_email' => $user->email,
         ];
@@ -99,7 +100,7 @@ class UserController extends Controller
                 $userInfo += [
                     'user_bdDetails' => $user->board,
                     'user_bdId' => $user->board->id,
-                    'user_bdPositionId' => $user->board->position_id,
+                    'user_bdPositionId' => $user->board->board_position_id,
                     'user_bdPosition' => $user->board->position?->postion,
                     'user_bdIsActive' => $user->board->is_active,
                     'user_chapterId' => $user->board->chapter_id,
@@ -108,10 +109,11 @@ class UserController extends Controller
 
             case 'outgoing':
                 $userInfo += [
-                    'user_bdId' => $user->outgoing->id,
-                    'user_bdPositionId' => $user->outgoing->position_id,
-                    'user_bdIsActive' => $user->outgoing->is_active,
-                    'user_chapterId' => $user->outgoing->chapter_id,
+                    // 'user_bdOutDetails' => $user->outgoing,
+                    'user_bdOutId' => $user->outgoing->id,
+                    // 'user_bdOutPositionId' => $user->outgoing->board_position_id,
+                    // 'user_bdOutIsActive' => $user->outgoing->is_active,
+                    'user_OutchapterId' => $user->outgoing->chapter_id,
                 ];
                 break;
         }

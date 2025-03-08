@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chapters;
+use App\Models\Coordinators;
 use App\Models\FinancialReportAwards;
 use App\Models\State;
 use App\Models\Website;
@@ -68,8 +69,13 @@ class BaseBoardController extends Controller
         $emailListChap = $emailData['emailListChap'];
         $emailListCoord = $emailData['emailListCoord'];
 
+        // PC Details for Sending Email
+        $pcDetails = Coordinators::find($chPcId);
+        $pcEmail = $pcDetails->email;
+        $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
+
         // PC Email for Sending Email
-        $pcEmail = $chDetails->primaryCoordinator->email;
+        // $pcEmail = $chDetails->primaryCoordinator->email;
 
         // Load Conference Coordinators for Sending Email
         $ccEmailData = $this->userController->loadConferenceCoord($chPcId);
@@ -81,6 +87,7 @@ class BaseBoardController extends Controller
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,
             'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail, 'displayEOY' => $displayEOY,
+            'pcDetails' => $pcDetails,
         ];
     }
 

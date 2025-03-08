@@ -17,7 +17,7 @@ MIMI Database Administrator
             <tbody>
                 <tr>
                     <td></td>
-                    <td colspan="2" style="background-color: #D0D0D0;"><center><b>{{ $mailData['borposition'] }} Information</b></center></td>
+                    <td colspan="2" style="background-color: #D0D0D0;"><center><b>{{ $mailData['borPosition'] }} Information</b></center></td>
                 </tr>
                 <tr style="{{$mailData['borNamePre'] != $mailData['borNameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>First Name</td>
@@ -56,7 +56,7 @@ MIMI Database Administrator
                 <tr style="{{$mailData['websiteStatusPre'] != $mailData['websiteStatusUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Website Link Status</td>
                     <td>
-                        @if($mailData['webStatusPre']==1)
+                        @if($mailData['websiteStatusPre']==1)
                             Linked
                         @elseif($mailData['websiteStatusPre']==2)
                             Link Requested
