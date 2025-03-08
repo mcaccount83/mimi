@@ -452,9 +452,10 @@ class EOYReportController extends Controller
 
                         $userDetails->user_type = 'outgoing';
                         $userDetails->updated_at =  now();
+                        $userDetails->save();
                     }
 
-                    Boards::query($chapter_id)->delete();
+                    Boards::where('chapter_id', $chapter_id)->delete();
                 }
 
                 foreach ($incomingBoardDetails as $incomingRecord) {
@@ -626,24 +627,6 @@ class EOYReportController extends Controller
         }
 
         $documents = Documents::find($chapter_id);
-
-        // $president = IncomingBoard::where('chapter_id', $chapter_id)
-        //     ->where('board_position_id', 1)
-        //     ->first();
-        // $avp = IncomingBoard::where('chapter_id', '=', $chapter_id)
-        //     ->where('board_position_id', '=', '2')
-        //     ->first();
-        //     Log::info('AVP Record Found: ' . ($avp ? 'Yes' : 'No'));
-
-        // $mvp = IncomingBoard::where('chapter_id', '=', $chapter_id)
-        //     ->where('board_position_id', '=', '3')
-        //     ->first();
-        // $trs= IncomingBoard::where('chapter_id', '=', $chapter_id)
-        //     ->where('board_position_id', '=', '4')
-        //     ->first();
-        // $sec = IncomingBoard::where('chapter_id', '=', $chapter_id)
-        //     ->where('board_position_id', '=', '5')
-        //     ->first();
 
         DB::beginTransaction();
         try {

@@ -414,7 +414,7 @@
                             <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateBeforeSubmit(true)"><i class="fas fa-save mr-2" ></i>Save</button>
                         @endif
                         @if ($chDetails->documents->new_board_submitted == '1' )
-                        <button type="button" id="board-active" class="btn bg-gradient-primary mb-3"><i class="fas fa-play mr-2" ></i>Ativate Board</button>
+                        <button type="button" id="board-active" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}'"><i class="fas fa-play mr-2" ></i>Ativate Board</button>
                         @endif
                     @endif
 				</form>
