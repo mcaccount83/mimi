@@ -3018,7 +3018,7 @@
                 <!------End Step 13 ------>
 
                 <!------Start Step 14 ------>
-                @if ($user_type != 'coordinator')
+                @if ($userType != 'coordinator')
                 <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='14') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
@@ -3058,10 +3058,10 @@
             @endif
 
             <div class="card-body text-center">
-                @if($user_type === 'board')
+                @if($userType === 'board')
                     <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
                 @endif
-                @if($user_type === 'coordinator')
+                @if($userType === 'coordinator')
                     <a href="{{ route('viewas.viewchapterpresident', $chFinancialReport['chapter_id']) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
                 @endif
                 @if($submitted !='1')
@@ -3083,7 +3083,7 @@
 /* Disable fields and buttons  */
     $(document).ready(function () {
         var submitted = @json($submitted);
-        var userType = @json($user_type);
+        var userType = @json($userType);
 
     if (userType === 'coordinator') {
         // Disable all input fields, select elements, textareas, and buttons

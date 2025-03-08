@@ -411,7 +411,7 @@
             @endif
 
                 <div class="card-body text-center">
-                    @if($user_type === 'coordinator')
+                    @if($userType === 'coordinator')
                             <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply mr-2"></i>Back to Chapter Profile</a>
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply mr-2"></i>Back to Chapter Profile</a>
@@ -428,7 +428,7 @@
 @section('customscript')
 <script>
 $(document).ready(function() {
-    var userType = @json($user_type);
+    var userType = @json($userType);
 
   $('#add_link_req').parent().hide();
   $('#not_link').parent().hide();
