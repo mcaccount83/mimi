@@ -64,36 +64,59 @@ class UserController extends Controller
     /**
      * Load User Information
      */
-     public function loadUserInformation(Request $request)
+    public function loadUserInformation(Request $request)
     {
-        $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition', 'coordinator.displayPosition'])
+        $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition',
+                    'board', 'board.position', 'outgoing'])
             ->find($request->user()->id);
 
-        $userId = $user->id;
-        $userType = $user->user_type;
-        $fname = $user->first_name;
-        $lname = $user->last_name;
-        $user_name = $fname.' ' .$lname;
-        $user_email = $user->email;
-        $user_coorId = $user->coordinator->id;
-        $user_confId = $user->coordinator->conference_id;
-        $user_regId = $user->coordinator->region_id;
-        $user_conference = $user->coordinator->conference;
-        $user_conf_name = $user->coordinator->conference->conference_name;
-        $user_conf_desc = $user->coordinator->conference->conference_description;
-        $user_region = $user->coordinator->region;
-        $user_position = $user->coordinator->displayPosition->long_title;
-        $user_secPositionId = $user->coordinator->sec_position_id;
-        $user_positionId = $user->coordinator->display_position_id;
-        $user_secPosition = $user->coordinator->secondaryPosition?->long_title;
-        $user_layerId = $user->coordinator->layer_id;
-
-        return ['userId' => $userId, 'userType' => $userType, 'user_name' => $user_name, 'user_email' => $user_email,
-            'user_position' => $user_position, 'user_secPosition' => $user_secPosition, 'user_coorId' => $user_coorId, 'user_regId' => $user_regId,
-            'user_confId' => $user_confId, 'user_secPositionId' => $user_secPositionId, 'user_positionId' => $user_positionId,
-            'user_conference' => $user_conference, 'user_region' => $user_region, 'user_layerId' => $user_layerId,
-            'user_conf_name' => $user_conf_name, 'user_conf_desc' => $user_conf_desc
+        $userInfo = [
+            'userId' => $user->id,
+            'userType' => $user->user_type,
+            'user_name' => $user->first_name . ' ' . $user->last_name,
+            'user_email' => $user->email,
         ];
+
+        switch ($user->user_type) {
+            case 'coordinator':
+                $userInfo += [
+                    'user_coorId' => $user->coordinator->id,
+                    'user_confId' => $user->coordinator->conference_id,
+                    'user_regId' => $user->coordinator->region_id,
+                    'user_conference' => $user->coordinator->conference,
+                    'user_conf_name' => $user->coordinator->conference?->conference_name,
+                    'user_conf_desc' => $user->coordinator->conference?->conference_description,
+                    'user_region' => $user->coordinator->region,
+                    'user_position' => $user->coordinator->displayPosition->long_title,
+                    'user_secPositionId' => $user->coordinator->sec_position_id,
+                    'user_positionId' => $user->coordinator->display_position_id,
+                    'user_secPosition' => $user->coordinator->secondaryPosition?->long_title,
+                    'user_layerId' => $user->coordinator->layer_id,
+                ];
+                break;
+
+            case 'board':
+                $userInfo += [
+                    'user_bdDetails' => $user->board,
+                    'user_bdId' => $user->board->id,
+                    'user_bdPositionId' => $user->board->position_id,
+                    'user_bdPosition' => $user->board->position?->postion,
+                    'user_bdIsActive' => $user->board->is_active,
+                    'user_chapterId' => $user->board->chapter_id,
+                ];
+                break;
+
+            case 'outgoing':
+                $userInfo += [
+                    'user_bdId' => $user->outgoing->id,
+                    'user_bdPositionId' => $user->outgoing->position_id,
+                    'user_bdIsActive' => $user->outgoing->is_active,
+                    'user_chapterId' => $user->outgoing->chapter_id,
+                ];
+                break;
+        }
+
+        return $userInfo;
     }
 
     /**

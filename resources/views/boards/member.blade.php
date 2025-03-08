@@ -305,7 +305,7 @@
                             @endif
                             <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
                             <button id="eLearning" type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn bg-primary mb-1 btn-sm">eLearning Library</button><br>
-                            <button id="Resources" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.resources') }}'">Chapter Resources</button>
+                            <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.resources') }}'">Chapter Resources</button>
                       </li>
                       <li class="list-group-item">
                             <h5>End of year Filing</h5>

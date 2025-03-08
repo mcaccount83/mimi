@@ -344,9 +344,9 @@ Route::get('/view/chapterreregistration/{id}', [ViewAsBoardController::class, 's
 Route::get('/board/president', [BoardController::class, 'showPresident'])->name('board.showpresident');
 Route::post('/board/update/{id}', [BoardController::class, 'updatePresident'])->name('board.update');
 Route::get('/board/member', [BoardController::class, 'showMember'])->name('board.showmember');
-Route::post('/member/update/{id}', [BoardController::class, 'updateMember'])->name('member.update');
-Route::get('/boardinfo', [BoardController::class, 'showBoardInfo'])->name('boardinfo.showboardinfo');
-Route::post('/boardinfo/{id}', [BoardController::class, 'createBoardInfo'])->name('boardinfo.createboardinfo');
+Route::post('/board/member/update/{id}', [BoardController::class, 'updateMember'])->name('member.update');
+Route::get('/board/boardinfo', [BoardController::class, 'showBoardInfo'])->name('boardinfo.showboardinfo');
+Route::post('/board/boardinfo/{id}', [BoardController::class, 'createBoardInfo'])->name('boardinfo.createboardinfo');
 Route::get('/board/financial/{id}', [BoardController::class, 'showFinancialReport'])->name('board.showfinancial');
 Route::post('/board/financial/{id}', [BoardController::class, 'storeFinancialReport'])->name('board.storefinancial');
 Route::get('/board/reregpayment', [BoardController::class, 'showReregistrationPaymentForm'])->name('board.showreregpayment');

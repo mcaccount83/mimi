@@ -93,17 +93,11 @@ class BoardController extends Controller
      */
     public function showPresident(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $user_type = $user->user_type;
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $chId = $user['user_chapterId'];
 
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
-        $bdPositionid = $bdDetails->board_position_id;
-        $bdIsActive = $bdDetails->is_active;
-        $id = $bdDetails->chapter_id;
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
@@ -139,7 +133,7 @@ class BoardController extends Controller
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
-            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
+            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $userType,
             'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments
         ];
 
@@ -151,17 +145,13 @@ class BoardController extends Controller
      */
     public function showMember(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $user_type = $user->user_type;
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $bdPositionId = $user['user_bdPositionId'];
+        $chId = $user['user_chapterId'];
+        $borDetails = $user['user_bdDetails'];
 
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
-        $bdPositionid = $bdDetails->board_position_id;
-        $bdIsActive = $bdDetails->is_active;
-        $id = $bdDetails->chapter_id;
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
@@ -177,13 +167,13 @@ class BoardController extends Controller
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
 
-        if ($bdPositionid == 2) {
+        if ($bdPositionId == 2) {
             $borDetails = $AVPDetails;
-        } elseif ($bdPositionid == 3) {
+        } elseif ($bdPositionId == 3) {
             $borDetails = $MVPDetails;
-        } elseif ($bdPositionid == 4) {
+        } elseif ($bdPositionId == 4) {
             $borDetails = $TRSDetails;
-        } elseif ($bdPositionid == 5) {
+        } elseif ($bdPositionId == 5) {
             $borDetails = $SECDetails;
         }
 
@@ -202,7 +192,7 @@ class BoardController extends Controller
         $display_live = ($admin->display_live == 1);
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
-            'borDetails' => $borDetails, 'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
+            'borDetails' => $borDetails, 'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $userType,
             'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments
         ];
 
@@ -225,6 +215,7 @@ class BoardController extends Controller
 
         $baseQueryPre = $this->baseBoardController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
+        $pcDetailsPre = $baseQueryPre['pcDetails'];
         $PresDetailsPre = $baseQueryPre['PresDetails'];
         $AVPDetailsPre = $baseQueryPre['AVPDetails'];
         $MVPDetailsPre = $baseQueryPre['MVPDetails'];
@@ -541,8 +532,10 @@ class BoardController extends Controller
             $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
             $emailListCoord = $baseQueryUpd['emailListCoord'];  // Full Coordinaor List
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
-            $pcDetails = $baseQueryUpd['chDetails']->primaryCoordinator;
-            $pcEmail = $pcDetails->email;  // PC Email
+            $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
+            $pcEmail = $pcDetailsUpd->email;  // PC Email
+            // $pcDetails = $baseQueryUpd['chDetails']->primaryCoordinator;
+            // $pcEmail = $pcDetails->email;  // PC Email
             $EINCordEmail = 'jackie.mchenry@momsclub.org';  // EIN Coor Email
 
             // $mailDataPres = [
@@ -590,6 +583,8 @@ class BoardController extends Controller
                 $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getPresPreviousData($PresDetailsPre),
                 $this->baseMailDataController->getPresUpdatedData($PresDetailsUpd),
+                $this->baseMailDataController->getChapterPreviousData($chDetailsPre, $pcDetailsPre),
+                $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
                 [
                     'ch_website_url' => $website,
                 ]
@@ -747,6 +742,7 @@ class BoardController extends Controller
 
         $baseQueryPre = $this->baseBoardController->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
+        $pcDetailsPre = $baseQueryPre['pcDetails'];
         // $PresDetailsPre = $baseQueryPre['PresDetails'];
         $AVPDetailsPre = $baseQueryPre['AVPDetails'];
         $MVPDetailsPre = $baseQueryPre['MVPDetails'];
@@ -833,8 +829,11 @@ class BoardController extends Controller
             $TRSDetailsUpd = $baseQueryUpd['TRSDetails'];
             $SECDetailsUpd = $baseQueryUpd['SECDetails'];
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
-            $pcDetails = $baseQueryUpd['chDetails']->primaryCoordinator;
-            $pcEmail = $pcDetails->email;  // PC Email
+            $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
+            $pcEmail = $pcDetailsUpd->email;  // PC Email
+
+            // $pcDetails = $baseQueryUpd['chDetails']->primaryCoordinator;
+            // $pcEmail = $pcDetails->email;  // PC Email
 
             if ($bdPositionid == 2) {
                 $borDetailsUpd = $AVPDetailsUpd;
@@ -930,15 +929,11 @@ class BoardController extends Controller
      */
     public function showReregistrationPaymentForm(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $user_type = $user->user_type;
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $chId = $user['user_chapterId'];
 
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
-        $id = $bdDetails->chapter_id;
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
@@ -957,7 +952,7 @@ class BoardController extends Controller
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
+            'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $userType,
         ];
 
         return view('boards.payment')->with($data);
@@ -1015,14 +1010,10 @@ class BoardController extends Controller
      */
     public function showResources(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $chId = $user['user_chapterId'];
 
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
-        $id = $bdDetails->chapter_id;
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
 
@@ -1038,15 +1029,11 @@ class BoardController extends Controller
      */
     public function showBoardInfo(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $user_type = $user->user_type;
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $chId = $user['user_chapterId'];
 
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
-        $id = $bdDetails->chapter_id;
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
@@ -1061,7 +1048,7 @@ class BoardController extends Controller
         $SECDetails = $baseQuery['SECDetails'];
 
         $data = ['stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'allStates' => $allStates, 'SECDetails' => $SECDetails,
-            'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'user_type' => $user_type,
+            'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'user_type' => $userType,
             'allWebLinks' => $allWebLinks,
         ];
 
@@ -1409,19 +1396,13 @@ class BoardController extends Controller
      */
     public function showFinancialReport(Request $request, $chapterId): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $user_type = $user->user_type;
-        $userName = $user->first_name.' '.$user->last_name;
-        $userEmail = $user->email;
-        $loggedInName = $user->first_name.' '.$user->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userName = $loggedInName = $user['user_name'];
+        $userEmail = $user['user_email'];
+        $chId = $user['user_chapterId'];
 
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
-
-        $id = $bdDetails->chapter_id;
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
@@ -1432,7 +1413,7 @@ class BoardController extends Controller
 
         $resources = Resources::with('categoryName')->get();
 
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'user_type' => $user_type,
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'user_type' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'awards' => $awards, 'allAwards' => $allAwards,
         ];

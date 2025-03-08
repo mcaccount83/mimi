@@ -3018,7 +3018,7 @@
                 <!------End Step 13 ------>
 
                 <!------Start Step 14 ------>
-                @if ($userType != 'coordinator')
+                @if ($user_type != 'coordinator')
                 <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='14') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
