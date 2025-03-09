@@ -4859,7 +4859,6 @@ function showAwardUploadModal() {
             submitFormWithStep(13);
         });
         $("#btn-step-14").click(function() {
-            // if (!EnsureSubmitInformation()) return false;
             submitFormWithStep(14);
         });
         $("#btn-save").click(function() {

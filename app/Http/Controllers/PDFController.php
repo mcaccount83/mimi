@@ -96,7 +96,8 @@ class PDFController extends Controller
 
         $file = $request->file('file');
 
-        if ($file_id = $this->googleController->uploadToEOYGoogleDrive($file, $filename, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+        // if ($file_id = $this->googleController->uploadToEOYGoogleDrive($file, $filename, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+        if ($file_id = $this->uploadToGoogleDrive($file, $filename, $sharedDriveId)) {
             $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
             $existingDocRecord->update([
                 'financial_pdf_path' => $file_id,
