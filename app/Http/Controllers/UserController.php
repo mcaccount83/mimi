@@ -185,7 +185,9 @@ class UserController extends Controller
      */
     public function loadCoordinatorList($chPcId): JsonResponse
     {
-        $coordiantors = CoordinatorTree::with('coordinator')->find($chPcId);
+        $coordiantors = CoordinatorTree::with('coordinator')
+            ->where('coordinator_id', $chPcId)
+            ->get();
         $attributes = $coordiantors->getAttributes();
 
         $coordinatorList = [];

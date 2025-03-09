@@ -5271,7 +5271,6 @@ function showAwardUploadModal() {
             return true;
         }
 
-
         function EnsureChapterQuestions() {
             var requiredQuestions = [
                 'ByLawsAvailable', 'VoteAllActivities', 'ChildOutings', 'Playgroups',

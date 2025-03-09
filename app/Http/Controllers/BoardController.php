@@ -1298,40 +1298,35 @@ class BoardController extends Controller
     /**
      * Save EOY Financial Report All Board Members
      */
-    public function storeFinancialReport(Request $request, $id): RedirectResponse
+    public function storeFinancialReport(Request $request, $chapterId): RedirectResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
-        $userType = $user->user_type;
-        $userName = $user->first_name.' '.$user->last_name;
-        $userEmail = $user->email;
-        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+        $user = $this->userController->loadUserInformation($request);
+        $userName = $user['user_name'];
+        $userEmail = $user['user_email'];
+        $lastUpdatedBy = $user['user_name'];;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
+        // $user = User::find($request->user()->id);
+        // $userId = $user->id;
+        // $userType = $user->user_type;
+        // $userName = $user->first_name.' '.$user->last_name;
+        // $userEmail = $user->email;
+        // $lastUpdatedBy = $user->first_name.' '.$user->last_name;
 
-        $id = $bdDetails->chapter_id;
+        // $bdDetails = $request->user()->board;
+        // $bdId = $bdDetails->id;
+
+        // $id = $bdDetails->chapter_id;
 
         $input = $request->all();
         $farthest_step_visited = $input['FurthestStep'];
         $reportReceived = $input['submitted'];
 
-        $baseQuery = $this->baseBoardController->getChapterDetails($id);
-        $chDetails = $baseQuery['chDetails'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $chDocuments = $baseQuery['chDocuments'];
-        $chFinancialReport = $baseQuery['chFinancialReport'];
-        $emailListChap = $baseQuery['emailListChap'];
-        $emailListCoord = $baseQuery['emailListCoord'];
-        $emailCC = $baseQuery['emailCC'];
-        $cc_id = $baseQuery['cc_id'];
-        $reviewerEmail = $baseQuery['reviewerEmail'];
-
-        $roster_path = $chDocuments->roster_path;
-        $irs_path = $chDocuments->irs_path;
-        $statement_1_path = $chDocuments->statement_1_path;
-        $statement_2_path = $chDocuments->statement_2_path;
-        $financial_pdf_path = $chDocuments->financial_pdf_path;
+        // $roster_path = $chDocuments->roster_path;
+        // $irs_path = $chDocuments->irs_path;
+        // $statement_1_path = $chDocuments->statement_1_path;
+        // $statement_2_path = $chDocuments->statement_2_path;
+        // $financial_pdf_path = $chDocuments->financial_pdf_path;
 
         // CHAPTER DUES
         $changed_dues = isset($input['optChangeDues']) ? $input['optChangeDues'] : null;
@@ -1542,9 +1537,9 @@ class BoardController extends Controller
             $award_agree = null;
         }
 
-        $report = FinancialReport::find($id);
-        $documents = Documents::find($id);
-        $chapter = Chapters::find($id);
+        $report = FinancialReport::find($chapterId);
+        $documents = Documents::find($chapterId);
+        $chapter = Chapters::find($chapterId);
 
         DB::beginTransaction();
         try {
@@ -1633,57 +1628,78 @@ class BoardController extends Controller
             $report->farthest_step_visited = $farthest_step_visited;
             $report->completed_name = $userName;
             $report->completed_email = $userEmail;
-            $report->submitted = date('Y-m-d H:i:s');
-
-            $mailData = [
-                'chapterid' => $id,
-                'chapter_name' => $chDetails->name,
-                'chapter_state' => $stateShortName,
-                'completed_name' => $userName,
-                'completed_email' => $userEmail,
-                'roster_path' => $roster_path,
-                'file_irs_path' => $irs_path,
-                'bank_statement_included_path' => $statement_1_path,
-                'bank_statement_2_included_path' => $statement_2_path,
-                'financial_pdf_path' => $financial_pdf_path,
-            ];
-
-            // Send emails
-            $to_email = $emailCC;
-            $to_email3 = $reviewerEmail;
-            $to_email2 = $userEmail;
-            $to_email4 = $emailListChap;
-
-            if ($reportReceived == 1) {
-                $pdfPath = $this->pdfController->generateAndSavePdf($id, $userId);   // Generate and save the PDF
-                Mail::to($to_email2)
-                    ->cc($to_email4)
-                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
-
-                if ($chFinancialReport->reviewer_id == null) {
-                    DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $id]);
-                    Mail::to($to_email)
-                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
-                }
-
-                if ($chFinancialReport->reviewer_id != null) {
-                    Mail::to($to_email3)
-                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
-                }
-            }
+            $report->submitted = $lastupdatedDate;
 
             $report->save();
 
             if ($reportReceived == 1) {
                 $documents->financial_report_received = 1;
-                $documents->report_received = date('Y-m-d H:i:s');
+                $documents->report_received = $lastupdatedDate;
+
+                $documents->save();
             }
 
-            $documents->save();
-
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->last_updated_date = $lastupdatedDate;
+
             $chapter->save();
+
+            $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $chDocuments = $baseQuery['chDocuments'];
+            $chFinancialReport = $baseQuery['chFinancialReport'];
+            $emailListChap = $baseQuery['emailListChap'];
+            $emailListCoord = $baseQuery['emailListCoord'];
+            $emailCC = $baseQuery['emailCC'];
+            $cc_id = $baseQuery['cc_id'];
+            $reviewerEmail = $baseQuery['reviewerEmail'];
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+            );
+
+            if ($reportReceived == 1) {
+                $pdfPath =  $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
+                // $pdfPath = $this->pdfController->generateAndSavePdf($id, $userId);   // Generate and save the PDF
+                Mail::to($userEmail)
+                    ->cc($emailListChap)
+                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
+
+                if ($chFinancialReport->reviewer_id == null) {
+                    DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
+                    Mail::to($emailCC)
+                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+                }
+
+                if ($chFinancialReport->reviewer_id != null) {
+                    Mail::to($reviewerEmail)
+                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+                }
+            }
+
+
+            // $mailData = [
+            //     'chapterid' => $id,
+            //     'chapter_name' => $chDetails->name,
+            //     'chapter_state' => $stateShortName,
+            //     'completed_name' => $userName,
+            //     'completed_email' => $userEmail,
+            //     'roster_path' => $roster_path,
+            //     'file_irs_path' => $irs_path,
+            //     'bank_statement_included_path' => $statement_1_path,
+            //     'bank_statement_2_included_path' => $statement_2_path,
+            //     'financial_pdf_path' => $financial_pdf_path,
+            // ];
+
+            // Send emails
+            // $to_email = $emailCC;
+            // $to_email3 = $reviewerEmail;
+            // $to_email2 = $userEmail;
+            // $to_email4 = $emailListChap;
+
+
 
             DB::commit();
             if ($reportReceived == 1) {

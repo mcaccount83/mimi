@@ -10,6 +10,7 @@ use App\Mail\WarningPartyLetter;
 use App\Mail\ChapterDisbandLetter;
 use App\Models\GoogleDrive;
 use App\Models\User;
+use App\Models\Documents;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -63,22 +64,30 @@ class PDFController extends Controller
      */
     public function saveFinancialReport(Request $request, $chapterId)
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        // $user = User::find($request->user()->id);
+        // $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
 
-        $eoyDrive = GoogleDrive::value('eoy_uploads');
-        $sharedDriveId = $eoyDrive;
-        $year = GoogleDrive::value('eoy_uploads_year');
+        $googleDrive = GoogleDrive::first();
+        $eoyDrive = $googleDrive->eoy_uploads;
+        $year = $googleDrive->eoy_uploads_year;
+        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+
+        // $eoyDrive = GoogleDrive::value('eoy_uploads');
+        // $sharedDriveId = $eoyDrive;
+        // $year = GoogleDrive::value('eoy_uploads_year');
 
         // $baseQuery = $this->getChapterDetails($chapterId);
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
         $chDetails = $baseQuery['chDetails'];
         $chDocuments = $baseQuery['chDocuments'];
-        $chapterName = $chDetails->name;
-        $state = $baseQuery['stateShortName'];
         $conf = $chDetails->conference_id;
+        $state = $baseQuery['stateShortName'];
+        $chapterName = $chDetails->name;
+        $name = $state.'_'.$chapterName.'_Financial_Report_'.$year;
 
-        $result = $this->generateFinancialReport($chapterId, false);
+        $result = $this->generateFinancialReport($chapterId);
         $pdf = $result['pdf'];
         $filename = $result['filename'];
 
@@ -88,8 +97,13 @@ class PDFController extends Controller
         $file = $request->file('file');
 
         if ($file_id = $this->googleController->uploadToEOYGoogleDrive($file, $filename, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-            $chDocuments->financial_pdf_path = $file_id;
-            $chDocuments->save();
+            $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
+            $existingDocRecord->update([
+                'financial_pdf_path' => $file_id,
+            ]);
+
+            // $chDocuments->financial_pdf_path = $file_id;
+            // $chDocuments->save();
 
             return $pdfPath;  // Return the full local stored path
         }
@@ -98,16 +112,16 @@ class PDFController extends Controller
      /**
      * Generate Financial Report
      */
-    public function generateFinancialReport(Request $request, $chapterId, $streamResponse = true)
+    public function generateFinancialReport($chapterId)
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        // $user = User::find($request->user()->id);
+        // $userId = $user->id;
 
-        $userName = $user->first_name.' '.$user->last_name;
-        $userEmail = $user->email;
+        // $userName = $user->first_name.' '.$user->last_name;
+        // $userEmail = $user->email;
 
         // $baseQuery = $this->getChapterDetails($chapterId);
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
         $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
@@ -202,8 +216,8 @@ class PDFController extends Controller
             'bank_statement_included' => $chFinancialReport->bank_statement_included,
             'bank_statement_included_explanation' => $chFinancialReport->bank_statement_included_explanation,
             'wheres_the_money' => $chFinancialReport->wheres_the_money,
-            'completed_name' => $userName,
-            'completed_email' => $userEmail,
+            'completed_name' => $chFinancialReport->completed_name,
+            'completed_email' => $chFinancialReport->completed_email,
             'submitted' => $submitted,
             'ch_name' => $sanitizedChapterName,
         ];
@@ -212,9 +226,9 @@ class PDFController extends Controller
 
         $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['ch_name'].'_FinancialReport.pdf';
 
-        if ($streamResponse) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
-        }
+        // if ($streamResponse) {
+        //     return $pdf->stream($filename, ['Attachment' => 0]);
+        // }
 
         return [
             'pdf' => $pdf,

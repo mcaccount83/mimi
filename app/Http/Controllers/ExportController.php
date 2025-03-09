@@ -1365,7 +1365,7 @@ class ExportController extends Controller
 
                 // Get coordinator reporting tree
                 $reportingList = DB::table('coordinator_reporting_tree')
-                    ->where('id', $chapter->primary_coordinator_id)
+                    ->where('coordinator_id', $chapter->primary_coordinator_id)
                     ->first();
 
                 // Filter and reverse reporting list

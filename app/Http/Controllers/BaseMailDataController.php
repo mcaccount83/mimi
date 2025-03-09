@@ -164,7 +164,7 @@ class BaseMailDataController extends Controller
             'einLetterCopyReceived' => $chDocuments->ein_letter_path,
             'roster_path' => $chDocuments->roster_path,
             'file_irs_path' => $chDocuments->irs_path,
-            'bank_statement_included_path' => $$chDocuments->statement_1_path,
+            'bank_statement_included_path' => $chDocuments->statement_1_path,
             'bank_statement_2_included_path' => $chDocuments->statement_2_path,
             'financial_pdf_path' => $chDocuments->financial_pdf_path,
             'reviewer_email_message' => $chFinancialReport->reviewer_email_message,
