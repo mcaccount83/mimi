@@ -3392,9 +3392,6 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         document.getElementById("ServiceProjectIncomeTotal").value = IncomeTotal;
         document.getElementById("SumServiceProjectIncome").value = IncomeTotal;
 
-        // document.getElementById("ServiceProjectSuppliesTotal").value = ExpenseTotal;
-        // document.getElementById("ServiceProjectDonationTotal").value = CharityTotal;
-        // document.getElementById("ServiceProjectM2MDonationTotal").value = M2MTotal;
         document.getElementById("SumServiceProjectExpense").value = ExpenseTotal;
         document.getElementById("SumDonationExpense").value = CharityTotal;
         document.getElementById("SumM2MExpense").value = M2MTotal;
@@ -4816,9 +4813,11 @@ function showAwardUploadModal() {
             submitFormWithStep(1);
         });
         $("#btn-step-2").click(function() {
+            if (!EnsureMeetingQuestions()) return false;
             submitFormWithStep(2);
         });
         $("#btn-step-3").click(function() {
+            if (!EnsureServiceProjectQuestions()) return false;
             if (!EnsureServiceProject()) return false;
             submitFormWithStep(3);
         });
@@ -4830,6 +4829,7 @@ function showAwardUploadModal() {
         });
         $("#btn-step-6").click(function() {
             if (!EnsureReRegistration()) return false;
+            if (!EnsureInternationalQuestions()) return false;
             submitFormWithStep(6);
         });
         $("#btn-step-7").click(function() {
@@ -4842,15 +4842,17 @@ function showAwardUploadModal() {
             submitFormWithStep(9);
         });
         $("#btn-step-10").click(function() {
+            if (!EnsureReconciliationQuestions()) return false;
             if (!EnsureStatement()) return false;
             if (!EnsureReconciliation()) return false;
             submitFormWithStep(10);
         });
         $("#btn-step-11").click(function() {
+            if (!EnsureIRSQuestions()) return false;
             submitFormWithStep(11);
         });
         $("#btn-step-12").click(function() {
-            if (!EnsureQuestions()) return false;
+            if (!EnsureChapterQuestions()) return false;
             submitFormWithStep(12);
         });
         $("#btn-step-13").click(function() {
@@ -4868,10 +4870,15 @@ function showAwardUploadModal() {
     $("#final-submit").click(async function() {
         if (!EnsureRoster()) return false;
         if (!EnsureMembers()) return false;
+        if (!EnsureMeetingQuestions()) return false;
+        if (!EnsureServiceProjectQuestions()) return false;
         if (!EnsureServiceProject()) return false;
         if (!EnsureReRegistration()) return false;
-        if (!EnsureQuestions()) return false;
+        if (!EnsureInternationalQuestions()) return false;
+        if (!EnsureReconciliationQuestions()) return false;
         if (!EnsureReconciliation()) return false;
+        if (!EnsureIRSQuestions()) return false;
+        if (!EnsureChapterQuestions()) return false;
 
         // Await EnsureBalance if it is an async function
         if (!await EnsureBalance()) return false;
@@ -5076,39 +5083,219 @@ function showAwardUploadModal() {
             return true;
         }
 
-        function EnsureQuestions() {
+        function EnsureMeetingQuestions() {
             var requiredQuestions = [
-                'ReceiveCompensation', 'FinancialBenefit', 'InfluencePolitical', 'VoteAllActivities',
-                'BoughtPins', 'BoughtMerch', 'OfferedMerch', 'ByLawsAvailable', 'ChildrensRoom',
-                'Playgroups', 'ChildOutings', 'MotherOutings', 'MeetingSpeakers', 'SpeakerFrequency',
-                'ParkDays', 'ContributionsNotRegNP', 'Activity[]', 'PerformServiceProject', 'SisterChapter',
-                'InternationalEvent', 'FileIRS', 'BankStatementIncluded'
+                'MeetingSpeakers', 'SpeakerFrequency', 'ChildrensRoom',
             ];
 
             // Mapping of internal names to user-friendly labels
             var questionLabels = {
+                'MeetingSpeakers': 'Did the chapter have meeting speakers?',
+                'SpeakerFrequency': 'Did the chapter have discussion topics at meetings?',
+                'ChildrensRoom': 'Did the chapter have a children\'s room?',
+            };
+
+            var missingQuestions = [];
+
+            // Check for unanswered questions
+            for (var i = 0; i < requiredQuestions.length; i++) {
+                var questionName = requiredQuestions[i];
+                var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
+                if (!isAnswered) {
+                    missingQuestions.push(questionLabels[questionName] || questionName);
+                }
+            }
+
+            // Display the missing questions if any
+            if (missingQuestions.length > 0) {
+                var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
+                var message = `<p>The following questions in the MONTHLY MEETING EXPENSES section are required, please answer the required questions to continue.</p>
+                                <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+                                    ${missingQuestionsText}
+                                </ul>
+                                `;
+                                customWarningAlert(message);
+                accordion.openAccordionItem('accordion-header-questions');
+                return false;
+            }
+
+            return true;
+        }
+
+        function EnsureServiceProjectQuestions() {
+            var requiredQuestions = [
+                'PerformServiceProject', 'ContributionsNotRegNP'
+            ];
+
+            // Mapping of internal names to user-friendly labels
+            var questionLabels = {
+                    'PerformServiceProject': 'Did the chapter perform at least one service project?',
+                    'ContributionsNotRegNP': 'Did the chapter make contributions to non-charities?',
+            };
+
+            var missingQuestions = [];
+
+            // Check for unanswered questions
+            for (var i = 0; i < requiredQuestions.length; i++) {
+                var questionName = requiredQuestions[i];
+                var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
+                if (!isAnswered) {
+                    missingQuestions.push(questionLabels[questionName] || questionName);
+                }
+            }
+
+            // Display the missing questions if any
+            if (missingQuestions.length > 0) {
+                var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
+                var message = `<p>The following questions in the SERVICE PROJECTS section are required, please answer the required questions to continue.</p>
+                                <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+                                    ${missingQuestionsText}
+                                </ul>
+                                `;
+                                customWarningAlert(message);
+                accordion.openAccordionItem('accordion-header-questions');
+                return false;
+            }
+
+            return true;
+        }
+
+        function EnsureInternationalQuestions() {
+            var requiredQuestions = [
+                'InternationalEvent'
+            ];
+
+            // Mapping of internal names to user-friendly labels
+            var questionLabels = {
+                'InternationalEvent': 'Did the chapter atend an International event?',
+            };
+
+            var missingQuestions = [];
+
+            // Check for unanswered questions
+            for (var i = 0; i < requiredQuestions.length; i++) {
+                var questionName = requiredQuestions[i];
+                var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
+                if (!isAnswered) {
+                    missingQuestions.push(questionLabels[questionName] || questionName);
+                }
+            }
+
+            // Display the missing questions if any
+            if (missingQuestions.length > 0) {
+                var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
+                var message = `<p>The following questions in the INTERNATIONAL EVENTS & RE-REGISTRATION section are required, please answer the required questions to continue.</p>
+                                <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+                                    ${missingQuestionsText}
+                                </ul>
+                                `;
+                                customWarningAlert(message);
+                accordion.openAccordionItem('accordion-header-questions');
+                return false;
+            }
+
+            return true;
+        }
+
+        function EnsureReconciliationQuestions() {
+            var requiredQuestions = [
+                'BankStatementIncluded'
+            ];
+
+            // Mapping of internal names to user-friendly labels
+            var questionLabels = {
+                'BankStatementIncluded': 'Is the most recent Bank Statment Attached?'
+            };
+
+            var missingQuestions = [];
+
+            // Check for unanswered questions
+            for (var i = 0; i < requiredQuestions.length; i++) {
+                var questionName = requiredQuestions[i];
+                var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
+                if (!isAnswered) {
+                    missingQuestions.push(questionLabels[questionName] || questionName);
+                }
+            }
+
+            // Display the missing questions if any
+            if (missingQuestions.length > 0) {
+                var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
+                var message = `<p>The following questions in the BANK RECONCILIATION section are required, please answer the required questions to continue.</p>
+                                <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+                                    ${missingQuestionsText}
+                                </ul>
+                                `;
+                                customWarningAlert(message);
+                accordion.openAccordionItem('accordion-header-questions');
+                return false;
+            }
+
+            return true;
+        }
+
+        function EnsureIRSQuestions() {
+            var requiredQuestions = [
+                'FileIRS'
+            ];
+
+            // Mapping of internal names to user-friendly labels
+            var questionLabels = {
+                'FileIRS': 'Is the 990N filed with the IRS?',
+            };
+
+            var missingQuestions = [];
+
+            // Check for unanswered questions
+            for (var i = 0; i < requiredQuestions.length; i++) {
+                var questionName = requiredQuestions[i];
+                var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
+                if (!isAnswered) {
+                    missingQuestions.push(questionLabels[questionName] || questionName);
+                }
+            }
+
+            // Display the missing questions if any
+            if (missingQuestions.length > 0) {
+                var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
+                var message = `<p>The following questions in the 990N IRS FILING section are required, please answer the required questions to continue.</p>
+                                <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+                                    ${missingQuestionsText}
+                                </ul>
+                                `;
+                                customWarningAlert(message);
+                accordion.openAccordionItem('accordion-header-questions');
+                return false;
+            }
+
+            return true;
+        }
+
+
+        function EnsureChapterQuestions() {
+            var requiredQuestions = [
+                'ByLawsAvailable', 'VoteAllActivities', 'ChildOutings', 'Playgroups',
+                'ParkDays', 'MotherOutings', 'Activity[]', 'OfferedMerch', 'BoughtMerch',
+                'BoughtPins', 'ReceiveCompensation', 'FinancialBenefit', 'InfluencePolitical',
+                'SisterChapter'
+            ];
+
+            // Mapping of internal names to user-friendly labels
+            var questionLabels = {
+                'ByLawsAvailable': 'Were By-Laws made available to members?',
+                'VoteAllActivities': 'Did the chapter vote on all activites?',
+                'ChildOutings': 'Did the chapter have child focused outings?',
+                'Playgroups': 'Did the chapter have playgroups?',
+                'ParkDays': 'Did the chapter have scheuled park days?',
+                'MotherOutings': 'Did the chapter have mother focused outings?',
+                'Activity[]': 'Did the chapter have any actifity groups?',
+                'OfferedMerch': 'Was MOMS Club merchandise offered to members?',
+                'BoughtMerch': 'Did the chapter purchase MOMS Club merchandise?',
+                'BoughtPins': 'Did the chapter purchase MOMS Club pins?',
                 'ReceiveCompensation': 'Member compensation received for work with chapter?',
                 'FinancialBenefit': 'Member benefit financially from position in chapter?',
                 'InfluencePolitical': 'Infuence or support political legislation or org?',
-                'VoteAllActivities': 'Did the chapter vote on all activites?',
-                'BoughtPins': 'Did the chapter purchase MOMS Club pins?',
-                'BoughtMerch': 'Did the chapter purchase MOMS Club merchandise?',
-                'OfferedMerch': 'Was MOMS Club merchandise offered to members?',
-                'ByLawsAvailable': 'Were By-Laws made available to members?',
-                'ChildrensRoom': 'Did the chapter have a children\'s room?',
-                'Playgroups': 'Did the chapter have playgroups?',
-                'ChildOutings': 'Did the chapter have child focused outings?',
-                'MotherOutings': 'Did the chapter have mother focused outings?',
-                'MeetingSpeakers': 'Did the chapter have meeting speakers?',
-                'SpeakerFrequency': 'Did the chapter have discussion topics at meetings?',
-                'ParkDays': 'Did the chapter have scheuled park days?',
-                'Activity[]': 'Did the chapter have any actifity groups?',
-                'ContributionsNotRegNP': 'Did the chapter make contributions to non-charities?',
-                'PerformServiceProject': 'Did the chapter perform at least one service project?',
                 'SisterChapter': 'Did the chapter Sister a New Chapter?',
-                'InternationalEvent': 'Did the chapter atend an International event?',
-                'FileIRS': 'Is the 990N filed with the IRS?',
-                'BankStatementIncluded': 'Is the most recent Bank Statment Attached?'
             };
 
             var missingQuestions = [];
