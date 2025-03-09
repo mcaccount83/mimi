@@ -28,8 +28,10 @@ class ForumEventSubscriber
         $usersToNotify = $this->getUsersToNotify($thread);
 
         // Send email to each user
-        foreach ($usersToNotify as $user) {
-            Mail::to($user->email)->queue(new NewForumPost($post, $thread, $category, $authorNameWithPosition));
+        foreach ($usersToNotify->chunk(25) as $userBatch) {
+            foreach ($userBatch as $user) {
+                Mail::to($user->email)->queue(new NewForumPost($post, $thread, $category, $authorNameWithPosition));
+            }
         }
     }
 
@@ -48,9 +50,11 @@ class ForumEventSubscriber
         // Get users to notify
         $usersToNotify = $this->getUsersToNotify($thread);
 
-        // Send email to each user
-        foreach ($usersToNotify as $user) {
-            Mail::to($user->email)->queue(new NewForumThread($post, $thread, $category, $authorNameWithPosition));
+        // Chunk the users into smaller groups (e.g., 5-10 users per batch)
+        foreach ($usersToNotify->chunk(25) as $userBatch) {
+            foreach ($userBatch as $user) {
+                Mail::to($user->email)->queue(new NewForumThread($post, $thread, $category, $authorNameWithPosition));
+            }
         }
     }
 

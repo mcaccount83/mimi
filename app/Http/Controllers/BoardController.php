@@ -1522,6 +1522,10 @@ class BoardController extends Controller
         $sister_chapter_explanation = $input['SisterChapterExplanation'];
 
         // AWARDS
+        $outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws']) ? $input['OutstandingFollowByLaws'] : null;
+        $outstanding_well_rounded = isset($input['OutstandingWellRounded']) ? $input['OutstandingWellRounded'] : null;
+        $outstanding_communicated = isset($input['OutstandingCommunicated']) ? $input['OutstandingCommunicated'] : null;
+        $outstanding_support_international = isset($input['OutstandingSupportMomsClub']) ? $input['OutstandingSupportMomsClub'] : null;
         $ChapterAwards = null;
         $FieldCount = $input['ChapterAwardsRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -1621,6 +1625,10 @@ class BoardController extends Controller
             $report->bank_statement_included_explanation = $bank_statement_included_explanation;
             $report->wheres_the_money = $wheres_the_money;
             $report->chapter_awards = $chapter_awards;
+            $report->outstanding_follow_bylaws = $outstanding_follow_bylaws;
+            $report->outstanding_well_rounded = $outstanding_well_rounded;
+            $report->outstanding_communicated = $outstanding_communicated;
+            $report->outstanding_support_international = $outstanding_support_international;
             $report->award_agree = $award_agree;
             $report->farthest_step_visited = $farthest_step_visited;
             $report->completed_name = $userName;

@@ -43,10 +43,6 @@
                     <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.storefinancial", $chDetails->id) }}'>
                     @csrf
                     <input type="hidden" id="chapter_id" name="id" value="{{ Session::get('chapterid') }}">
-                    {{-- <input type="hidden" name="ch_name" value="<?php echo $chDetails->name; ?>" /> --}}
-                    {{-- <input type="hidden" name="ch_state" value="<?php echo $stateShortName; ?>" /> --}}
-                    {{-- <input type="hidden" name="ch_pcid" value="<?php echo $chDetails->primary_coordinator_id; ?>" /> --}}
-                    {{-- <input type="hidden" name="ch_conf" value="<?php echo $chDetails->conference_id; ?>" /> --}}
                     <input type="hidden" name="submitted" id="submitted" value="<?php echo $submitted; ?>" />
                     <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($chFinancialReport['farthest_step_visited'] > 0) echo $chFinancialReport['farthest_step_visited']; else echo "0"; ?>" />
 
@@ -348,7 +344,7 @@
 
                             <div class="col-12 form-row form-group">
                                 <div class="col-md-12 float-left">
-                                <label>13. Did you have speakers at any meetings?<span class="field-required">*</span></label>
+                                <label>Did you have speakers at any meetings?<span class="field-required">*</span></label>
                                 <div class="col-md-12 form-row">
                                     <div class="form-check" >
                                         <input class="form-check-input" type="radio" id="MeetingSpeakersYes" name="MeetingSpeakers" value="1" {{ $chFinancialReport->meeting_speakers === 1 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
@@ -460,16 +456,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12 float-left">
-                                    {{-- <div class="form-group"> --}}
-                                        {{-- <div class="col-md-12"> --}}
-                                            <p>
-                                                <strong>List all Children's Room Miscellaneous Expenses below.</strong> Briefly describe the expense and list any supplies or other expenses for each project.
-                                              </p>
-                                        {{-- <label for="childrens-room">
-                                            Children's Room Miscellaneous Expenses
-                                        </label> --}}
-                                        {{-- </div> --}}
-                                    {{-- </div> --}}
+                                    <p>
+                                        <strong>List all Children's Room Miscellaneous Expenses below.</strong> Briefly describe the expense and list any supplies or other expenses for each project.
+                                        </p>
                                     <table width="100%" class="table table-bordered" id="childrens-room">
                                         <thead>
                                             <tr>
@@ -2688,11 +2677,11 @@
                         <label>11. Did anyone in your chapter receive any compensation or pay for their work with your chapter?<span class="field-required">*</span></label>
                         <div class="col-md-12 row">
                             <div class="form-check" style="margin-left: 20px;">
-                                <input class="form-check-input" type="radio" id="ReceiveCompensationYes" name="ReceiveCompensation" value="1" {{ $chFinancialReport->changed_dues === 1 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
+                                <input class="form-check-input" type="radio" id="ReceiveCompensationYes" name="ReceiveCompensation" value="1" {{ $chFinancialReport->receive_compensation === 1 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
                                 <label class="form-check-label" for="ReceiveCompensationYes">Yes</label>
                             </div>
                             <div class="form-check" style="margin-left: 20px;">
-                                <input class="form-check-input" type="radio" id="ReceiveCompensationNo" name="ReceiveCompensation" value="0" {{ $chFinancialReport->changed_dues === 0 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
+                                <input class="form-check-input" type="radio" id="ReceiveCompensationNo" name="ReceiveCompensation" value="0" {{ $chFinancialReport->receive_compensation === 0 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
                                 <label class="form-check-label" for="ReceiveCompensationNo">No</label>
                             </div>
                         </div>
@@ -2724,7 +2713,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label>13. Did your chapter attempt to influence any national, state/provincial, or local legislation, or did your chapter support any other organization that did?<span class="field-required">*</span></label>
+                        <label>13. Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?<span class="field-required">*</span></label>
                         <div class="col-md-12 row">
                             <div class="form-check" style="margin-left: 20px;">
                                 <input class="form-check-input" type="radio" id="InfluencePoliticalYes" name="InfluencePolitical" value="1" {{ $chFinancialReport->influence_political === 1 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
@@ -2895,12 +2884,12 @@
                                     <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
                                     <div class="col-md-12 row">
                                         <div class="form-check" style="margin-left: 20px;">
-                                            <input class="form-check-input" type="radio" id="OutstandingFollowByLaws2Yes" name="OutstandingFollowByLaws2" value="1" {{ $chFinancialReport->award_2_outstanding_follow_bylaws === 1 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="OutstandingFollowByLaws2Yes">Yes</label>
+                                            <input class="form-check-input" type="radio" id="OutstandingFollowByLawsYes" name="OutstandingFollowByLaws" value="1" {{ $chFinancialReport->outstanding_follow_bylaws === 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="OutstandingFollowByLawsYes">Yes</label>
                                         </div>
                                         <div class="form-check" style="margin-left: 20px;">
-                                            <input class="form-check-input" type="radio" id="OutstandingFollowByLaws2No" name="OutstandingFollowByLaws2" value="0" {{ $chFinancialReport->award_2_outstanding_follow_bylaws === 0 ? 'checked' : '' }} >
-                                            <label class="form-check-label" for="OutstandingFollowByLaws2No">No</label>
+                                            <input class="form-check-input" type="radio" id="OutstandingFollowByLawsNo" name="OutstandingFollowByLaws" value="0" {{ $chFinancialReport->outstanding_follow_bylaws === 0 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingFollowByLawsNo">No</label>
                                         </div>
                                     </div>
                                 </div>
@@ -2912,12 +2901,12 @@
                                         A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
                                     <div class="col-md-12 row">
                                         <div class="form-check" style="margin-left: 20px;">
-                                            <input class="form-check-input" type="radio" id="OutstandingWellRounded2Yes" name="OutstandingWellRounded2" value="1" {{ $chFinancialReport->award_2_outstanding_well_rounded === 1 ? 'checked' : '' }} >
-                                            <label class="form-check-label" for="OutstandingWellRounded2Yes">Yes</label>
+                                            <input class="form-check-input" type="radio" id="OutstandingWellRoundedYes" name="OutstandingWellRounded" value="1" {{ $chFinancialReport->outstanding_well_rounded === 1 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingWellRoundedYes">Yes</label>
                                         </div>
                                         <div class="form-check" style="margin-left: 20px;">
-                                            <input class="form-check-input" type="radio" id="OutstandingWellRounded2No" name="OutstandingWellRounded2" value="0" {{ $chFinancialReport->award_2_outstanding_well_rounded === 0 ? 'checked' : '' }} >
-                                            <label class="form-check-label" for="OutstandingWellRounded2No">No</label>
+                                            <input class="form-check-input" type="radio" id="OutstandingWellRoundedNo" name="OutstandingWellRounded" value="0" {{ $chFinancialReport->outstanding_well_rounded === 0 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingWellRoundedNo">No</label>
                                         </div>
                                     </div>
                                 </div>
@@ -2928,12 +2917,12 @@
                                         A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
                                     <div class="col-md-12 row">
                                         <div class="form-check" style="margin-left: 20px;">
-                                            <input class="form-check-input" type="radio" id="OutstandingCommunicated2Yes" name="OutstandingCommunicated2" value="1" {{ $chFinancialReport->award_2_outstanding_communicated === 1 ? 'checked' : '' }} >
-                                            <label class="form-check-label" for="OutstandingCommunicated2Yes">Yes</label>
+                                            <input class="form-check-input" type="radio" id="OutstandingCommunicatedYes" name="OutstandingCommunicated" value="1" {{ $chFinancialReport->outstanding_communicated === 1 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingCommunicatedYes">Yes</label>
                                         </div>
                                         <div class="form-check" style="margin-left: 20px;">
-                                            <input class="form-check-input" type="radio" id="OutstandingCommunicated2No" name="OutstandingCommunicated2" value="0" {{ $chFinancialReport->award_2_outstanding_communicated === 0 ? 'checked' : '' }} >
-                                            <label class="form-check-label" for="OutstandingCommunicated2No">No</label>
+                                            <input class="form-check-input" type="radio" id="OutstandingCommunicatedNo" name="OutstandingCommunicated" value="0" {{ $chFinancialReport->outstanding_communicated === 0 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingCommunicatedNo">No</label>
                                         </div>
                                     </div>
                                 </div>
@@ -2950,12 +2939,12 @@
                                         </ul></p>
                                     <div class="col-md-12 row">
                                         <div class="form-check" style="margin-left: 20px;">
-                                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub2Yes" name="OutstandingSupportMomsClub2" value="1" {{ $chFinancialReport->award_2_outstanding_support_international === 1 ? 'checked' : '' }} >
-                                            <label class="form-check-label" for="OutstandingSupportMomsClub2Yes">Yes</label>
+                                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClubYes" name="OutstandingSupportMomsClub" value="1" {{ $chFinancialReport->outstanding_support_international === 1 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingSupportMomsClubYes">Yes</label>
                                         </div>
                                         <div class="form-check" style="margin-left: 20px;">
-                                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub2No" name="OutstandingSupportMomsClub2" value="0" {{ $chFinancialReport->award_2_outstanding_support_international === 0 ? 'checked' : '' }} >
-                                            <label class="form-check-label" for="OutstandingSupportMomsClub2No">No</label>
+                                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClubNo" name="OutstandingSupportMomsClub" value="0" {{ $chFinancialReport->outstanding_support_international === 0 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingSupportMomsClubNo">No</label>
                                         </div>
                                     </div>
                                 </div>

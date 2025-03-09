@@ -606,6 +606,38 @@
                             <strong>Total Meeting Room Expenses:&nbsp;&nbsp;&nbsp;
                                 {{ '$'.number_format($chFinancialReport['manditory_meeting_fees_paid'] + $chFinancialReport['voluntary_donations_paid']) }}</strong><br>
                             <br>
+                            Did you have speakers at any meetings?&nbsp;&nbsp;&nbsp;
+                            <strong>{{ is_null($chFinancialReport['meeting_speakers']) ? 'Not Answered' : ($chFinancialReport['meeting_speakers'] == 0 ? 'NO'
+                                : ($chFinancialReport ['meeting_speakers'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['meeting_speakers_explanation']}}</strong><br>
+                                @php
+                                    $meetingSpeakersArray = json_decode($chFinancialReport['meeting_speakers_array']);
+                                    $meetingSpeakersMapping = [
+                                        '0' => 'N/A',
+                                        '1' => 'Child Rearing',
+                                        '2' => 'Schools/Education',
+                                        '3' => 'Home Management',
+                                        '4' => 'Politics',
+                                        '5' => 'Other Non-Profit',
+                                        '6' => 'Other',
+                                    ];
+                                @endphp
+
+                                @if (!empty($meetingSpeakersArray))
+                                    {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
+                                        // Check if the key exists in the mapping array before accessing it
+                                        return isset($meetingSpeakersMapping[$value]) ? $meetingSpeakersMapping[$value] : 'Not Answered';
+                                    }, $meetingSpeakersArray)) }}
+                                @else
+                                    N/A
+                                @endif
+                            Did you have any discussion topics at your meetings?&nbsp;&nbsp;&nbsp;
+                            <strong>{{ is_null($chFinancialReport['discussion_topic_frequency']) ? 'Not Answered' : ($chFinancialReport['discussion_topic_frequency'] == 0 ? 'NO'
+                                : ( $chFinancialReport['discussion_topic_frequency'] == 1 ? '1-3 Times' : ($chFinancialReport['discussion_topic_frequency'] == 2 ? '4-6 Times' :
+                                ($chFinancialReport['discussion_topic_frequency'] == 3 ? '7-9 Times' : ($chFinancialReport['discussion_topic_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong><br>
+                            Did you have a children's room with babysitters?&nbsp;&nbsp;&nbsp;
+                            <strong>{{ is_null($chFinancialReport['childrens_room_sitters']) ? 'Not Answered' : ($chFinancialReport['childrens_room_sitters'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['childrens_room_sitters'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport['childrens_room_sitters_explanation']}}</strong><br>
+                            <br>
                             Paid Babysitter Expense:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['paid_baby_sitters'], 2) }}</strong><br>
                             <br>
                             Children's Room Miscellaneous:
@@ -719,6 +751,13 @@
                     <div id="collapseThree" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='3') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 					<section>
+                        Did your chapter perform at least one service project to benefit mothers or children?&nbsp;&nbsp;&nbsp;
+                            <strong>{{ is_null($chFinancialReport['at_least_one_service_project']) ? 'Not Answered' : ($chFinancialReport['at_least_one_service_project'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['at_least_one_service_project'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport['at_least_one_service_project_explanation']}}</strong><br>
+                        Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?&nbsp;&nbsp;&nbsp;
+                        <strong>{{ is_null($chFinancialReport['contributions_not_registered_charity']) ? 'Not Answered' : ($chFinancialReport['contributions_not_registered_charity'] == 0 ? 'NO'
+                            : ( $chFinancialReport ['contributions_not_registered_charity'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport['contributions_not_registered_charity_explanation']}}</strong><br>
+                        <br>
                             <table width="100%" style="border-collapse: collapse;">
                             <thead>
                                 <tr style="border-bottom: 1px solid #333;">
@@ -1100,6 +1139,12 @@
                 <div id="collapseSix" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='6') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
                     <section>
+                        <strong>Chapter Re-Registration:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport['annual_registration_fee'], 2) }}</strong><br>
+                        <br>
+                        Did your chapter attend an International Event?&nbsp;&nbsp;&nbsp;
+                        <strong>{{ is_null($chFinancialReport['international_event']) ? 'Not Answered' : ($chFinancialReport['international_event'] == 0 ? 'NO'
+                            : ( $chFinancialReport ['international_event'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
+                        <br>
                         <table width="75%" style="border-collapse: collapse;">
                             <thead>
                                 <tr style="border-bottom: 1px solid #333;">
@@ -1159,8 +1204,6 @@
                         <br>
                         <strong>Total Events Income:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalEventIncome, 2) }}</strong><br>
                         <strong>Total Events Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalEventExpense, 2) }}</strong><br>
-                        <br>
-                        <strong>Chapter Re-Registration:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport['annual_registration_fee'], 2) }}</strong><br>
 						<hr style="border-bottom: 2px solid #007bff">
                 <!-- start:report_review -->
                     <div  class="form-row report_review">
@@ -1172,6 +1215,19 @@
 
                                 <div class="col-12">
                                 <div class="col-12">
+                                    <div class="form-group row">
+                                        <label>Did they attended an in person or virtual International Event? (Question 20):<span class="field-required">*&nbsp;</span></label>
+                                        <div class="col-12 row">
+                                            <div class="form-check" style="margin-right: 20px;">
+                                                <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $chFinancialReport['check_attended_training'] === 1 ? 'checked' : '' }}>
+                                                <label class="form-check-label">Yes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="checkAttendedTraining" value="0" {{ $chFinancialReport['check_attended_training'] === 0 ? 'checked' : '' }}>
+                                                <label class="form-check-label">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group row">
                                     <label for="Step6_Note">Add New Note:</label>
                                     <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
@@ -1627,14 +1683,11 @@
                     <div id="collapseTen" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='10') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 					<section>
-                        {{-- <?php
-                            $totalIncome = $totalDues + $totalServiceIncome + $totalPartyIncome + $totalDonationAmount + $totalEventIncome + $totalOtherIncome;
-                            $totalExpenses = $chFinancialReport['manditory_meeting_fees_paid'] + $chFinancialReport['voluntary_donations_paid'] + $chFinancialReport['paid_baby_sitters'] + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
-                                    + $totalPartyExpense + $chFinancialReport['office_printing_costs'] + $chFinancialReport['office_postage_costs'] +
-                                    $chFinancialReport['office_membership_pins_cost'] + $totalOfficeExpense + $chFinancialReport['annual_registration_fee'] + $totalEventExpense + $totalOtherExpenses;
-                            $treasuryBalance = $chFinancialReport ['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses
-                        ?> --}}
                         <div class="flex-container">
+                            Is a copy of your chapter’s most recent bank statement included?&nbsp;&nbsp;&nbsp;
+                            <strong>{{ is_null($chFinancialReport['bank_statement_included']) ? 'Not Answered' : ($chFinancialReport['bank_statement_included'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['bank_statement_included'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['bank_statement_included_explanation']}}{{ $chFinancialReport ['wheres_the_money'] }}</strong><br>
+                            <br>
                             <div class="flex-item">
                                 Beginning Balance&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport ['amount_reserved_from_previous_year'], 2)}}</strong><br>
                             </div>
@@ -1883,9 +1936,11 @@
                     <div class="flex-container">
                         <div class="col-12">
                             <p>The 990N filing is an IRS requirement that all chapters must complete, but it cannot be filed before July 1st.  After filing, upload a copy of your chapter's filing confirmation here.  You can upload a copy of your confirmation email or screenshot after filing.  All chapters should file their 990N directly with the IRS and not through a third party. <span style="color:red"><i>The IRS does not charge a fee for 990N filings.</i></span></p>
+                            Did your chapter file their IRS 990N?&nbsp;&nbsp;&nbsp;
+                            <strong>{{ is_null($chFinancialReport['file_irs']) ? 'Not Answered' : ($chFinancialReport['file_irs'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['file_irs'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['file_irs_explanation']}}</strong><br>
                         </div>
                 </div>
-
             <hr style="border-bottom: 2px solid #007bff">
             <!-- start:report_review -->
             <div  class="form-row report_review">
@@ -1972,167 +2027,99 @@
 				<section>
                     <table>
                         <tbody>
-                           <tr><td>1.</td>
-                               <td>Did anyone in your chapter receive any compensation or pay for their work with your chapter?</td></tr>
-                           <tr><td></td>
-                               <td><strong>{{ is_null($chFinancialReport['receive_compensation']) ? 'Not Answered' : ($chFinancialReport['receive_compensation'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['receive_compensation'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['receive_compensation_explanation']}}</strong></td></tr>
-                           <tr><td>2.</td>
-                               <td>Did any officer, member or family of a member benefit financially in any way from the member's position with your chapter?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['financial_benefit']) ? 'Not Answered' : ($chFinancialReport['financial_benefit'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['financial_benefit'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['financial_benefit_explanation']}}</strong></td></tr>
-                           <tr><td>3.</td>
-                               <td>Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['influence_political']) ? 'Not Answered' : ($chFinancialReport['influence_political'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['influence_political'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['influence_political_explanation']}}</strong></td></tr>
-                           <tr><td>4.</td>
-                               <td>Did your chapter vote on all activities and expenditures during the fiscal year?</td></tr>
-                           <tr><td></td>
+                            <tr><td>1.</td>
+                                <td>Did you make the Bylaws and/or manual available for any chapter members that requested them?</td></tr>
+                            <tr><td></td>
+                             <td><strong>{{ is_null($chFinancialReport['bylaws_available']) ? 'Not Answered' : ($chFinancialReport['bylaws_available'] == 0 ? 'NO'
+                                 : ( $chFinancialReport ['bylaws_available'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['bylaws_available_explanation']}}</strong></td></tr>
+                            <tr><td>2.</td>
+                                <td>Did your chapter vote on all activities and expenditures during the fiscal year?</td></tr>
+                            <tr><td></td>
                             <td><strong>{{ is_null($chFinancialReport['vote_all_activities']) ? 'Not Answered' : ($chFinancialReport['vote_all_activities'] == 0 ? 'NO'
                                 : ( $chFinancialReport ['vote_all_activities'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['vote_all_activities_explanation']}}</strong></td></tr>
-                           <tr><td>5.</td>
-                               <td>Did you purchase pins from International?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['purchase_pins']) ? 'Not Answered' : ($chFinancialReport['purchase_pins'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['purchase_pins'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['purchase_pins_explanation']}}</strong></td></tr>
-                           <tr><td>6.</td>
-                               <td>Did you purchase any merchandise from International other than pins?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['bought_merch']) ? 'Not Answered' : ($chFinancialReport['bought_merch'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['bought_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$chFinancialReport ['bought_merch_explanation']}}</strong></td></tr>
-                           <tr><td>7.</td>
-                               <td>Did you offer or inform your members about MOMS Club merchandise?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['offered_merch']) ? 'Not Answered' : ($chFinancialReport['offered_merch'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['offered_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['offered_merch_explanation']}}</strong></td></tr>
-                           <tr><td>8.</td>
-                               <td>Did you make the Bylaws and/or manual available for any chapter members that requested them?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['bylaws_available']) ? 'Not Answered' : ($chFinancialReport['bylaws_available'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['bylaws_available'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['bylaws_available_explanation']}}</strong></td></tr>
-                           <tr><td>9.</td>
-                               <td>Did you have a children's room with babysitters?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['childrens_room_sitters']) ? 'Not Answered' : ($chFinancialReport['childrens_room_sitters'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['childrens_room_sitters'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport['childrens_room_sitters_explanation']}}</strong></td></tr>
-                           <tr><td>10.</td>
-                               <td>Did you have playgroups? If so, how were they arranged.</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['playgroups']) ? 'Not Answered' : ($chFinancialReport['playgroups'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['playgroups'] == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'Not Answered'))) }}</strong></td></tr>
-                           <tr><td>11.</td>
-                               <td>Did you have any child focused outings or activities?</td></tr>
-                           <tr><td></td>
+                            <tr><td>3.</td>
+                                <td>Did you have any child focused outings or activities?</td></tr>
+                            <tr><td></td>
                             <td><strong>{{ is_null($chFinancialReport['child_outings']) ? 'Not Answered' : ($chFinancialReport['child_outings'] == 0 ? 'NO'
                                 : ( $chFinancialReport ['child_outings'] == 1 ? 'YES' : 'Not Answered')) }}&nbsp;&nbsp;  {{ $chFinancialReport ['child_outings_explanation']}}</strong></td></tr>
-                           <tr><td>12.</td>
-                               <td>Did you have any mother focused outings or activities?</td></tr>
-                           <tr><td></td>
+                            <tr><td>4.</td>
+                                <td>Did you have playgroups? If so, how were they arranged.</td></tr>
+                            <tr><td></td>
+                            <td><strong>{{ is_null($chFinancialReport['playgroups']) ? 'Not Answered' : ($chFinancialReport['playgroups'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['playgroups'] == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'Not Answered'))) }}</strong></td></tr>
+                            <tr><td>5.</td>
+                                <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
+                            <tr><td></td>
+                            <td><strong>{{ is_null($chFinancialReport['park_day_frequency']) ? 'Not Answered' : ($chFinancialReport['park_day_frequency'] == 0 ? 'NO'
+                                : ( $chFinancialReport['park_day_frequency'] == 1 ? '1-3 Times' : ($chFinancialReport['park_day_frequency'] == 2 ? '4-6 Times' :
+                                    ($chFinancialReport['park_day_frequency'] == 3 ? '7-9 Times' : ($chFinancialReport['park_day_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
+                            <tr><td>6.</td>
+                                <td>Did you have any mother focused outings or activities?</td></tr>
+                            <tr><td></td>
                             <td><strong>{{ is_null($chFinancialReport['mother_outings']) ? 'Not Answered' : ($chFinancialReport['mother_outings'] == 0 ? 'NO'
                                 : ( $chFinancialReport ['mother_outings'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['mother_outings_explanation']}}</strong></td></tr>
-                           <tr><td>13.</td>
-                               <td>Did you have speakers at any meetings?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['meeting_speakers']) ? 'Not Answered' : ($chFinancialReport['meeting_speakers'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['meeting_speakers'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['meeting_speakers_explanation']}}</strong></td></tr>
-                            <tr><td></td>
+                            <tr><td>7.</td>
+                                <td>Did your chapter have any of the following activity groups?</td></tr>
+                                <tr><td></td>
                                 <td><strong>
                                     @php
-                                        $meetingSpeakersArray = json_decode($chFinancialReport['meeting_speakers_array']);
-                                        $meetingSpeakersMapping = [
+                                        $activityArray = json_decode($chFinancialReport['activity_array']);
+                                        $activityMapping = [
                                             '0' => 'N/A',
-                                            '1' => 'Child Rearing',
-                                            '2' => 'Schools/Education',
-                                            '3' => 'Home Management',
-                                            '4' => 'Politics',
-                                            '5' => 'Other Non-Profit',
+                                            '1' => 'Cooking',
+                                            '2' => 'Cost Cutting Tips',
+                                            '3' => 'Mommy Playgroup',
+                                            '4' => 'Babysitting Co-op',
+                                            '5' => 'MOMS Night Out',
                                             '6' => 'Other',
                                         ];
                                     @endphp
 
-                                    @if (!empty($meetingSpeakersArray))
-                                        {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
+                                    @if (!empty($activityArray))
+                                        {{ implode(', ', array_map(function($value) use ($activityMapping) {
                                             // Check if the key exists in the mapping array before accessing it
-                                            return isset($meetingSpeakersMapping[$value]) ? $meetingSpeakersMapping[$value] : 'Not Answered';
-                                        }, $meetingSpeakersArray)) }}
+                                            return isset($activityMapping[$value]) ? $activityMapping[$value] : 'Not Answered';
+                                        }, $activityArray)) }}
                                     @else
                                         N/A
                                     @endif
                                 </strong></td></tr>
-
-                           <tr><td>14.</td>
-                               <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
+                                <tr><td>8.</td>
+                                    <td>Did you offer or inform your members about MOMS Club merchandise?</td></tr>
+                                <tr><td></td>
+                                 <td><strong>{{ is_null($chFinancialReport['offered_merch']) ? 'Not Answered' : ($chFinancialReport['offered_merch'] == 0 ? 'NO'
+                                     : ( $chFinancialReport ['offered_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['offered_merch_explanation']}}</strong></td></tr>
+                                <tr><td>9.</td>
+                                    <td>Did you purchase any merchandise from International other than pins?</td></tr>
+                                <tr><td></td>
+                                <td><strong>{{ is_null($chFinancialReport['bought_merch']) ? 'Not Answered' : ($chFinancialReport['bought_merch'] == 0 ? 'NO'
+                                    : ( $chFinancialReport ['bought_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$chFinancialReport ['bought_merch_explanation']}}</strong></td></tr>
+                                <tr><td>10.</td>
+                                    <td>Did you purchase pins from International?</td></tr>
+                                <tr><td></td>
+                                <td><strong>{{ is_null($chFinancialReport['purchase_pins']) ? 'Not Answered' : ($chFinancialReport['purchase_pins'] == 0 ? 'NO'
+                                    : ( $chFinancialReport ['purchase_pins'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['purchase_pins_explanation']}}</strong></td></tr>
+                                <tr><td>11.</td>
+                                    <td>Did anyone in your chapter receive any compensation or pay for their work with your chapter?</td></tr>
+                                <tr><td></td>
+                                    <td><strong>{{ is_null($chFinancialReport['receive_compensation']) ? 'Not Answered' : ($chFinancialReport['receive_compensation'] == 0 ? 'NO'
+                                    : ( $chFinancialReport ['receive_compensation'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['receive_compensation_explanation']}}</strong></td></tr>
+                               <tr><td>12.</td>
+                               <td>Did any officer, member or family of a member benefit financially in any way from the member's position with your chapter?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['discussion_topic_frequency']) ? 'Not Answered' : ($chFinancialReport['discussion_topic_frequency'] == 0 ? 'NO'
-                                : ( $chFinancialReport['discussion_topic_frequency'] == 1 ? '1-3 Times' : ($chFinancialReport['discussion_topic_frequency'] == 2 ? '4-6 Times' :
-                                   ($chFinancialReport['discussion_topic_frequency'] == 3 ? '7-9 Times' : ($chFinancialReport['discussion_topic_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
-                           <tr><td>15.</td>
-                               <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['financial_benefit']) ? 'Not Answered' : ($chFinancialReport['financial_benefit'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['financial_benefit'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['financial_benefit_explanation']}}</strong></td></tr>
+                          <tr><td>13.</td>
+                               <td>Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['park_day_frequency']) ? 'Not Answered' : ($chFinancialReport['park_day_frequency'] == 0 ? 'NO'
-                                : ( $chFinancialReport['park_day_frequency'] == 1 ? '1-3 Times' : ($chFinancialReport['park_day_frequency'] == 2 ? '4-6 Times' :
-                                   ($chFinancialReport['park_day_frequency'] == 3 ? '7-9 Times' : ($chFinancialReport['park_day_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
-
-                           <tr><td>16.</td>
-                            <td>Did your chapter have any of the following activity groups?</td></tr>
-                            <tr><td></td>
-                            <td><strong>
-                                @php
-                                    $activityArray = json_decode($chFinancialReport['activity_array']);
-                                    $activityMapping = [
-                                        '0' => 'N/A',
-                                        '1' => 'Cooking',
-                                        '2' => 'Cost Cutting Tips',
-                                        '3' => 'Mommy Playgroup',
-                                        '4' => 'Babysitting Co-op',
-                                        '5' => 'MOMS Night Out',
-                                        '6' => 'Other',
-                                    ];
-                                @endphp
-
-                                @if (!empty($activityArray))
-                                    {{ implode(', ', array_map(function($value) use ($activityMapping) {
-                                        // Check if the key exists in the mapping array before accessing it
-                                        return isset($activityMapping[$value]) ? $activityMapping[$value] : 'Not Answered';
-                                    }, $activityArray)) }}
-                                @else
-                                    N/A
-                                @endif
-                            </strong></td></tr>
-
-                           <tr><td>17.</td>
-                               <td>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['contributions_not_registered_charity']) ? 'Not Answered' : ($chFinancialReport['contributions_not_registered_charity'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['contributions_not_registered_charity'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['contributions_not_registered_charity_explanation']}}</strong></td></tr>
-                           <tr><td>18.</td>
-                               <td>Did your chapter perform at least one service project to benefit mothers or children?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['at_least_one_service_project']) ? 'Not Answered' : ($chFinancialReport['at_least_one_service_project'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['at_least_one_service_project'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport['at_least_one_service_project_explanation']}}</strong></td></tr>
-                           <tr><td>19.</td>
-                               <td>Did your chapter sister another chapter?</td></tr>
-                           <tr><td></td>
+                            <td><strong>{{ is_null($chFinancialReport['influence_political']) ? 'Not Answered' : ($chFinancialReport['influence_political'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['influence_political'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['influence_political_explanation']}}</strong></td></tr>
+                            <tr><td>14.</td>
+                            <td>Did your chapter sister another chapter?</td></tr>
+                        <tr><td></td>
                             <td><strong>{{ is_null($chFinancialReport['sister_chapter']) ? 'Not Answered' : ($chFinancialReport['sister_chapter'] == 0 ? 'NO'
                                 : ( $chFinancialReport ['sister_chapter'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
-                           <tr><td>20.</td>
-                               <td>Did your chapter attend an International Event?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['international_event']) ? 'Not Answered' : ($chFinancialReport['international_event'] == 0 ? 'NO'
-                                : ( $chFinancialReport['international_event'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
-                           <tr><td>21.</td>
-                               <td>Did your chapter file their IRS 990N?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['file_irs']) ? 'Not Answered' : ($chFinancialReport['file_irs'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['file_irs'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$chFinancialReport ['file_irs_explanation']}}</strong></td></tr>
-                           <tr><td>22.</td>
-                               <td>Is a copy of your chapter's most recent bank statement included with the copy of this report that you are submitting to International?</td></tr>
-                           <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport['bank_statement_included']) ? 'Not Answered' : ($chFinancialReport['bank_statement_included'] == 0 ? 'NO'
-                                : ( $chFinancialReport ['bank_statement_included'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['bank_statement_included_explanation']}}{{ $chFinancialReport ['wheres_the_money'] }}</strong></td></tr>
-                           </tbody>
+                          </tbody>
                    </table>
                    <hr style="border-bottom: 2px solid #007bff">
                    <!-- start:report_review -->
@@ -2146,7 +2133,7 @@
                             <div class="col-12">
                                     <div class="col-12">
                                         <div class="form-group row">
-                                            <label>Did they purchase or have leftover pins? (Quesion 5):<span class="field-required">*&nbsp;</span></label>
+                                            <label>Did they purchase or have leftover pins?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
                                                     <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1" {{ $chFinancialReport['check_purchased_pins'] === 1 ? 'checked' : '' }}>
@@ -2159,7 +2146,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label>Did they purchase MOMS Club merchandise? (Quesion 6):<span class="field-required">*&nbsp;</span></label>
+                                            <label>Did they purchase MOMS Club merchandise?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
                                                     <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="1" {{ $chFinancialReport['check_purchased_mc_merch'] === 1 ? 'checked' : '' }}>
@@ -2172,7 +2159,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label>Did they offer MOMS Club merchandise or info on how to buy to members? (Question 7):<span class="field-required">*&nbsp;</span></label>
+                                            <label>Did they offer MOMS Club merchandise or info on how to buy to members?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
                                                     <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1" {{ $chFinancialReport['check_offered_merch'] === 1 ? 'checked' : '' }}>
@@ -2186,7 +2173,7 @@
                                         </div>
 
                                         <div class="form-group row">
-                                            <label>Did they make the Manual/By-Laws available to members? (Question 8):<span class="field-required">*&nbsp;</span></label>
+                                            <label>Did they make the Manual/By-Laws available to members?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
                                                     <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="1" {{ $chFinancialReport['check_bylaws_available'] === 1 ? 'checked' : '' }}>
@@ -2199,7 +2186,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label>Did they Sistered another chapter? (Question 19):<span class="field-required">*&nbsp;</span></label>
+                                            <label>Did they Sistered another chapter?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
                                                     <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1" {{ $chFinancialReport['check_sistered_another_chapter'] === 1 ? 'checked' : '' }}>
@@ -2211,19 +2198,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label>Did they attended an in person or virtual International Event? (Question 20):<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $chFinancialReport['check_attended_training'] === 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkAttendedTraining" value="0" {{ $chFinancialReport['check_attended_training'] === 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">No</label>
-                                                </div>
-                                            </div>
-                                        </div>
+
 
                                         <div class="form-group row">
                                             <label for="Step12_Note">Add New Note:</label>

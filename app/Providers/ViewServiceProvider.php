@@ -64,14 +64,6 @@ class ViewServiceProvider extends ServiceProvider
             $displayTESTING = ($display_testing == true && $display_live != true);
             $displayLIVE = ($display_live == true);
 
-            // $display_testing = $admin->display_testing ?? 0; // Handle null cases
-            // $display_live = $admin->display_live ?? 0; // Handle null cases
-            // $eoy_coordinators = $admin->eoy_coordinators ?? 0; // Handle null cases
-            // Define testers and coordinators conditions
-            // $displayTESTING = ($display_testing == 1);
-            // $displayLIVE = ($display_live == 1);
-            // $coordinators_yes = ($eoy_coordinators == 1);
-
             // Pass conditions and other variables to views
             $view->with(compact(
                 'corId',
