@@ -131,7 +131,7 @@ class UserController extends Controller
         $layerColumn = 'layer'.$cdLayerId; // Dynamic layer column based on the layer ID
 
         $reportIds = CoordinatorTree::where($layerColumn, '=', $cdId)
-            ->pluck('id'); // Get only the IDs directly
+            ->pluck('coordinator_id'); // Get only the IDs directly
 
         $inQryArr = $reportIds->toArray();  // Convert the collection of IDs to an array
 

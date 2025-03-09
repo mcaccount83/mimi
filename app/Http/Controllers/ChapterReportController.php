@@ -190,7 +190,7 @@ class ChapterReportController extends Controller
             $id = $chapter->primary_coordinator_id;
             $reportingList = DB::table('coordinator_reporting_tree')
                 ->select('*')
-                ->where('id', $id)
+                ->where('coordinator_id', $id)
                 ->first();
 
             $filterReportingList = collect((array) $reportingList)
