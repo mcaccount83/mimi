@@ -94,7 +94,7 @@ class PDFController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$filename);
         $pdf->save($pdfPath);
 
-        $file = $pdf;
+        $file = $pdfPath;
 
         if ($file_id = $this->googleController->uploadToEOYGoogleDrive($file, $name, $sharedDriveId, $year, $conf, $state, $chapterName)) {
             $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
