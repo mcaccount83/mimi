@@ -85,7 +85,7 @@ class PDFController extends Controller
         $conf = $chDetails->conference_id;
         $state = $baseQuery['stateShortName'];
         $chapterName = $chDetails->name;
-        $name = $state.'_'.$chapterName.'_Financial_Report_'.$year;
+        $name = date('Y') - 1 .'-'.date('Y').'_'.$state.'_'.$chapterName.'_FinancialReport';
 
         $result = $this->generateFinancialReport($chapterId);
         $pdf = $result['pdf'];
@@ -94,7 +94,7 @@ class PDFController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$filename);
         $pdf->save($pdfPath);
 
-        $file = 'pdf';
+        $file = $pdfPath;
 
         // if ($file_id = $this->googleController->uploadToEOYGoogleDrive($file, $filename, $sharedDriveId, $year, $conf, $state, $chapterName)) {
         if ($file_id = $this->googleController->uploadToGoogleDrive($file, $name, $sharedDriveId)) {
