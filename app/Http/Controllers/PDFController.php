@@ -94,7 +94,7 @@ class PDFController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$filename);
         $pdf->save($pdfPath);
 
-        $file = $pdfPath;
+        $file = $pdf;
 
         // if ($file_id = $this->googleController->uploadToEOYGoogleDrive($file, $filename, $sharedDriveId, $year, $conf, $state, $chapterName)) {
         if ($file_id = $this->googleController->uploadToGoogleDrive($file, $name, $sharedDriveId)) {
