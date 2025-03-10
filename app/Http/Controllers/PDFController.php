@@ -64,8 +64,6 @@ class PDFController extends Controller
      */
     public function saveFinancialReport(Request $request, $chapterId)
     {
-        // $user = User::find($request->user()->id);
-        // $userId = $user->id;
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
 
@@ -73,10 +71,6 @@ class PDFController extends Controller
         $eoyDrive = $googleDrive->eoy_uploads;
         $year = $googleDrive->eoy_uploads_year;
         $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
-
-        // $eoyDrive = GoogleDrive::value('eoy_uploads');
-        // $sharedDriveId = $eoyDrive;
-        // $year = GoogleDrive::value('eoy_uploads_year');
 
         // $baseQuery = $this->getChapterDetails($chapterId);
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
@@ -114,13 +108,6 @@ class PDFController extends Controller
      */
     public function generateFinancialReport($chapterId)
     {
-        // $user = User::find($request->user()->id);
-        // $userId = $user->id;
-
-        // $userName = $user->first_name.' '.$user->last_name;
-        // $userEmail = $user->email;
-
-        // $baseQuery = $this->getChapterDetails($chapterId);
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];

@@ -187,7 +187,7 @@ class UserController extends Controller
     {
         $coordiantors = CoordinatorTree::with('coordinator')
             ->where('coordinator_id', $chPcId)
-            ->get();
+            ->first();
         $attributes = $coordiantors->getAttributes();
 
         $coordinatorList = [];
