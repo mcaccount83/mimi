@@ -8,13 +8,13 @@
         page-break-inside: avoid;
     }
     </style>
-    <title>{{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }} | <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</title>
+    <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</title>
 </head>
 <body>
-    <center><h2>MOMS Club of {{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }}<br>
+    <center><h2>MOMS Club of {{ $pdfData['ch_name'] }}, {{ $pdfData['chapterState'] }}<br>
     <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</h2></center>
-    EIN: {{ $pdfData['ein'] }}<br>
-    Boundaries: {{ $pdfData['boundaries'] }}<br>
+    EIN: {{ $pdfData['chapterEIN'] }}<br>
+    Boundaries: {{ $pdfData['chapterBoundaries'] }}<br>
 
     <br>
     <div class="keep-together" style="page-break-inside: avoid;">
@@ -158,9 +158,50 @@
                     <td>{{ '$'.number_format($pdfData['voluntary_donations_paid'], 2) }}</td></tr>
             <tr><td><strong>Total Meeting Room Expenses:</strong></td>
                     <td><strong>{{ '$'.number_format($pdfData['manditory_meeting_fees_paid'] + $pdfData['voluntary_donations_paid'], 2) }}</b></strong></tr>
-            <tr><td>&nbsp;&nbsp;&nbsp;</td></tr>
+        </tbody>
+    </table>
+    <br>
+    <table width="75%">
+        <tbody>
+            <tr><td>Did you have speakers at any meetings?</td>
+            <td><strong>{{ is_null($pdfData['meeting_speakers']) ? 'Not Answered' : ($pdfData['meeting_speakers'] == 0 ? 'NO'
+                : ($pdfData ['meeting_speakers'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $pdfData ['meeting_speakers_explanation']}}</strong></td></tr>
+                @php
+                    $meetingSpeakersArray = json_decode($pdfData['meeting_speakers_array']);
+                    $meetingSpeakersMapping = [
+                        '0' => 'N/A',
+                        '1' => 'Child Rearing',
+                        '2' => 'Schools/Education',
+                        '3' => 'Home Management',
+                        '4' => 'Politics',
+                        '5' => 'Other Non-Profit',
+                        '6' => 'Other',
+                    ];
+                @endphp
+
+                @if (!empty($meetingSpeakersArray))
+                    {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
+                        // Check if the key exists in the mapping array before accessing it
+                        return isset($meetingSpeakersMapping[$value]) ? $meetingSpeakersMapping[$value] : 'Not Answered';
+                    }, $meetingSpeakersArray)) }}
+                @else
+                    N/A
+                @endif
+            <tr><td>Did you have any discussion topics at your meetings?</td>
+            <td><strong>{{ is_null($pdfData['discussion_topic_frequency']) ? 'Not Answered' : ($pdfData['discussion_topic_frequency'] == 0 ? 'NO'
+                : ( $pdfData['discussion_topic_frequency'] == 1 ? '1-3 Times' : ($pdfData['discussion_topic_frequency'] == 2 ? '4-6 Times' :
+                ($pdfData['discussion_topic_frequency'] == 3 ? '7-9 Times' : ($pdfData['discussion_topic_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
+            <tr><td>Did you have a children's room with babysitters?</td>
+            <td><strong>{{ is_null($pdfData['childrens_room_sitters']) ? 'Not Answered' : ($pdfData['childrens_room_sitters'] == 0 ? 'NO'
+                : ( $pdfData ['childrens_room_sitters'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;{{ $pdfData['childrens_room_sitters_explanation']}}</strong></td></tr>
+        </tbody>
+    </table>
+    <br>
+    <table width="50%">
+        <tbody>
             <tr><td>Paid Babysitter Expense:</td>
                     <td>{{ '$'.number_format($pdfData['paid_baby_sitters'], 2) }}</tr>
+            <tr><td>&nbsp;&nbsp;&nbsp;</td></tr>
                 <tr><td>Children's Room Miscellaneous:</td>
                     <td></td></tr>
         </tbody>
@@ -421,6 +462,21 @@
     <b>INTERNATIONAL EVENTS & RE-REGISTRATION</b>
     <hr>
     </div>
+    <table width="50%">
+        <tbody>
+           <tr><td><strong>Chapter Re-Registration:</strong></td>
+           <td><strong>{{ '$'.number_format($pdfData['annual_registration_fee'], 2) }}</strong></td></tr>
+           </tbody>
+        </table>
+    <br>
+    <table width="75%">
+        <tbody>
+           <tr><td>Did your chapter attend an International Event?</td>
+           <td><strong>{{ is_null($pdfData['international_event']) ? 'Not Answered' : ($pdfData['international_event'] == 0 ? 'NO'
+                : ( $pdfData ['international_event'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
+           </tbody>
+        </table>
+    <br>
     <table width="75%" style="border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 1px solid #333;">
@@ -472,9 +528,9 @@
                 <td><strong>{{ '$'.number_format($totalEventIncome, 2) }}</strong></td></tr>
             <tr><td><b>Total Event Registration Expenses:</b></td>
                 <td><strong>{{ '$'.number_format($totalEventExpense, 2) }}</strong></td></tr>
-            <tr><td>&nbsp;</td></tr>
-            <tr><td><strong>Chapter Re-Registration:</strong></td>
-                <td><strong>{{ '$'.number_format($pdfData['annual_registration_fee'], 2) }}</strong></td></tr>
+            {{-- <tr><td>&nbsp;</td></tr> --}}
+            {{-- <tr><td><strong>Chapter Re-Registration:</strong></td>
+                <td><strong>{{ '$'.number_format($pdfData['annual_registration_fee'], 2) }}</strong></td></tr> --}}
         </tbody>
     </table>
     <br>
@@ -720,6 +776,14 @@
     <b>BANK RECONCILIATION</b>
     <hr>
     </div>
+    <table width="75%">
+        <tbody>
+           <tr><td>Is a copy of your chapter’s most recent bank statement included?</td>
+           <td><strong>{{ is_null($pdfData['bank_statement_included']) ? 'Not Answered' : ($pdfData['bank_statement_included'] == 0 ? 'NO'
+                : ( $pdfData ['bank_statement_included'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
+           </tbody>
+        </table>
+    <br>
     <table width="100%" >
         <tbody>
             <tr><td>Beginning Balance<td>
@@ -795,6 +859,19 @@
     </table>
     <br>
     <div class="keep-together" style="page-break-inside: avoid;">
+        <hr>
+    <b>990N IRS FILING</b>
+    <hr>
+    </div>
+    <table width="75%">
+        <tbody>
+           <tr><td> Did your chapter file their IRS 990N?</td>
+           <td><strong>{{ is_null($pdfData['file_irs']) ? 'Not Answered' : ($pdfData['file_irs'] == 0 ? 'NO'
+        : ( $pdfData ['file_irs'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $pdfData ['file_irs_explanation']}}</strong></td></tr>
+           </tbody>
+        </table>
+    <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
     <b>CHAPTER QUESTIONS</b>
     <hr>
@@ -802,110 +879,42 @@
     <table>
          <tbody>
             <tr><td>1.</td>
-                <td>Did anyone in your chapter receive any compensation or pay for their work with your chapter?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['receive_compensation'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['receive_compensation_explanation']}}</strong></td></tr>
-            <tr><td>2.</td>
-                <td>Did any officer, member or family of a member benefit financially in any way from the member's position with your chapter?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['financial_benefit'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['financial_benefit_explanation']}}</strong></td></tr>
-            <tr><td>3.</td>
-                <td>Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['influence_political'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['influence_political_explanation']}}</strong></td></tr>
-            <tr><td>4.</td>
-                <td>Did your chapter vote on all activities and expenditures during the fiscal year?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['vote_all_activities'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['vote_all_activities_explanation']}}</strong></td></tr>
-            <tr><td>5.</td>
-                <td>Did you purchase pins from International?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['purchase_pins'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['purchase_pins_explanation']}}</strong></td></tr>
-            <tr><td>6.</td>
-                <td>Did you purchase any merchandise from International other than pins?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['bought_merch'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['bought_merch_explanation']}}</strong></td></tr>
-            <tr><td>7.</td>
-                <td>Did you offer or inform your members about MOMS Club merchandise?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['offered_merch'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['offered_merch_explanation']}}</strong></td></tr>
-            <tr><td>8.</td>
                 <td>Did you make the Bylaws and/or manual available for any chapter members that requested them?</td></tr>
             <tr><td></td>
-                <td><strong>{{ $pdfData ['bylaws_available'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['bylaws_available_explanation']}}</strong></td></tr>
-            <tr><td>9.</td>
-                <td>Did you have a children's room with babysitters?</td></tr>
+             <td><strong>{{ is_null($pdfData['bylaws_available']) ? 'Not Answered' : ($pdfData['bylaws_available'] == 0 ? 'NO'
+                 : ( $pdfData ['bylaws_available'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $pdfData ['bylaws_available_explanation']}}</strong></td></tr>
+            <tr><td>2.</td>
+                <td>Did your chapter vote on all activities and expenditures during the fiscal year?</td></tr>
             <tr><td></td>
-                <td><strong>{{ $pdfData ['childrens_room_sitters'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['childrens_room_sitters_explanation']}}</strong></td></tr>
-            <tr><td>10.</td>
-                <td>Did you have playgroups? If so, how were they arranged.</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['playgroups'] == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'NO') }}</strong></td></tr>
-            <tr><td>11.</td>
+            <td><strong>{{ is_null($pdfData['vote_all_activities']) ? 'Not Answered' : ($pdfData['vote_all_activities'] == 0 ? 'NO'
+                : ( $pdfData ['vote_all_activities'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $pdfData ['vote_all_activities_explanation']}}</strong></td></tr>
+            <tr><td>3.</td>
                 <td>Did you have any child focused outings or activities?</td></tr>
             <tr><td></td>
-                <td><strong>{{ $pdfData ['child_outings'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['child_outings_explanation']}}</strong></td></tr>
-            <tr><td>12.</td>
-                <td>Did you have any mother focused outings or activities?</td></tr>
+            <td><strong>{{ is_null($pdfData['child_outings']) ? 'Not Answered' : ($pdfData['child_outings'] == 0 ? 'NO'
+                : ( $pdfData ['child_outings'] == 1 ? 'YES' : 'Not Answered')) }}&nbsp;&nbsp;  {{ $pdfData ['child_outings_explanation']}}</strong></td></tr>
+            <tr><td>4.</td>
+                <td>Did you have playgroups? If so, how were they arranged.</td></tr>
             <tr><td></td>
-                <td><strong>{{ $pdfData ['mother_outings'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['mother_outings_explanation']}}</strong></td></tr>
-            <tr><td>13.</td>
-                <td>Did you have speakers at any meetings?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['meeting_speakers'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['meeting_speakers_explanation']}}</strong></td></tr>
-                @php
-                    $meetingSpeakersArray = [];
-                    if (isset($pdfData['meeting_speakers_array']) && !is_null($pdfData['meeting_speakers_array'])) {
-                        $decodedArray = json_decode($pdfData['meeting_speakers_array'], true);
-                        if (json_last_error() === JSON_ERROR_NONE) {
-                            $meetingSpeakersArray = $decodedArray;
-                        } else {
-                            \Log::error('JSON decoding error: ' . json_last_error_msg(), ['data' => $pdfData['meeting_speakers_array']]);
-                        }
-                    }
-
-                    $meetingSpeakersMapping = [
-                        '0' => 'N/A',
-                        '1' => 'Child Rearing',
-                        '2' => 'Schools/Education',
-                        '3' => 'Home Management',
-                        '4' => 'Politics',
-                        '5' => 'Other Non-Profit',
-                        '6' => 'Other',
-                    ];
-                @endphp
-
-                @if (!empty($meetingSpeakersArray))
-                <tr><td></td>
-                    <td><strong>{{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
-                        return $meetingSpeakersMapping[$value] ?? 'Unknown';
-                    }, $meetingSpeakersArray)) }}</strong></td></tr>
-                @endif
-            <tr><td>14.</td>
-                <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData['discussion_topic_frequency'] == 1 ? '1-3 Times' : ($pdfData['discussion_topic_frequency'] == 2 ? '4-6 Times' :
-                    ($pdfData['discussion_topic_frequency'] == 3 ? '7-9 Times' : ($pdfData['discussion_topic_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
-            <tr><td>15.</td>
+            <td><strong>{{ is_null($pdfData['playgroups']) ? 'Not Answered' : ($pdfData['playgroups'] == 0 ? 'NO'
+                : ( $pdfData ['playgroups'] == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'Not Answered'))) }}</strong></td></tr>
+            <tr><td>5.</td>
                 <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
             <tr><td></td>
-                <td><strong>{{ $pdfData['park_day_frequency'] == 1 ? '1-3 Times' : ($pdfData['park_day_frequency'] == 2 ? '4-6 Times' :
-                    ($pdfData['park_day_frequency'] == 3 ? '7-9 Times' : ($pdfData['park_day_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
-            <tr><td>16.</td>
+            <td><strong>{{ is_null($pdfData['park_day_frequency']) ? 'Not Answered' : ($pdfData['park_day_frequency'] == 0 ? 'NO'
+                : ( $pdfData['park_day_frequency'] == 1 ? '1-3 Times' : ($pdfData['park_day_frequency'] == 2 ? '4-6 Times' :
+                    ($pdfData['park_day_frequency'] == 3 ? '7-9 Times' : ($pdfData['park_day_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
+            <tr><td>6.</td>
+                <td>Did you have any mother focused outings or activities?</td></tr>
+            <tr><td></td>
+            <td><strong>{{ is_null($pdfData['mother_outings']) ? 'Not Answered' : ($pdfData['mother_outings'] == 0 ? 'NO'
+                : ( $pdfData ['mother_outings'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $pdfData ['mother_outings_explanation']}}</strong></td></tr>
+            <tr><td>7.</td>
                 <td>Did your chapter have any of the following activity groups?</td></tr>
                 <tr><td></td>
                 <td><strong>
                     @php
-                        $activityArray = [];
-                        if (isset($pdfData['activity_array']) && !is_null($pdfData['activity_array'])) {
-                            $decodedArray = json_decode($pdfData['activity_array'], true);
-                            if (json_last_error() === JSON_ERROR_NONE) {
-                                $activityArray = $decodedArray;
-                            } else {
-                                \Log::error('JSON decoding error: ' . json_last_error_msg(), ['data' => $pdfData['activity_array']]);
-                            }
-                        }
-
+                        $activityArray = json_decode($pdfData['activity_array']);
                         $activityMapping = [
                             '0' => 'N/A',
                             '1' => 'Cooking',
@@ -919,37 +928,49 @@
 
                     @if (!empty($activityArray))
                         {{ implode(', ', array_map(function($value) use ($activityMapping) {
-                            return $activityMapping[$value] ?? 'Unknown';
+                            // Check if the key exists in the mapping array before accessing it
+                            return isset($activityMapping[$value]) ? $activityMapping[$value] : 'Not Answered';
                         }, $activityArray)) }}
                     @else
                         N/A
                     @endif
                 </strong></td></tr>
-            <tr><td>17.</td>
-                <td>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['contributions_not_registered_charity'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['contributions_not_registered_charity_explanation']}}</strong></td></tr>
-            <tr><td>18.</td>
-                <td>Did your chapter perform at least one service project to benefit mothers or children?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['at_least_one_service_project'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['at_least_one_service_project_explanation']}}</strong></td></tr>
-            <tr><td>19.</td>
-                <td>Did your chapter sister another chapter?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['sister_chapter'] == 1 ? 'YES' : 'NO' }}</strong></td></tr>
-            <tr><td>20.</td>
-                <td>Did your chapter attend an International Event?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['international_event'] == 1 ? 'YES' : 'NO' }}</strong></td></tr>
-            <tr><td>21.</td>
-                <td>Did your chapter file their IRS 990N?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['file_irs'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['file_irs_explanation']}}</strong></td></tr>
-            <tr><td>22.</td>
-                <td>Is a copy of your chapter's most recent bank statement included with the copy of this report that you are submitting to International?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['bank_statement_included'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['bank_statement_included_explanation']}}{{ $pdfData ['wheres_the_money']}}</strong></td></tr>
-        </tbody>
+                <tr><td>8.</td>
+                    <td>Did you offer or inform your members about MOMS Club merchandise?</td></tr>
+                <tr><td></td>
+                 <td><strong>{{ is_null($pdfData['offered_merch']) ? 'Not Answered' : ($pdfData['offered_merch'] == 0 ? 'NO'
+                     : ( $pdfData ['offered_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $pdfData ['offered_merch_explanation']}}</strong></td></tr>
+                <tr><td>9.</td>
+                    <td>Did you purchase any merchandise from International other than pins?</td></tr>
+                <tr><td></td>
+                <td><strong>{{ is_null($pdfData['bought_merch']) ? 'Not Answered' : ($pdfData['bought_merch'] == 0 ? 'NO'
+                    : ( $pdfData ['bought_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$pdfData ['bought_merch_explanation']}}</strong></td></tr>
+                <tr><td>10.</td>
+                    <td>Did you purchase pins from International?</td></tr>
+                <tr><td></td>
+                <td><strong>{{ is_null($pdfData['purchase_pins']) ? 'Not Answered' : ($pdfData['purchase_pins'] == 0 ? 'NO'
+                    : ( $pdfData ['purchase_pins'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $pdfData ['purchase_pins_explanation']}}</strong></td></tr>
+                <tr><td>11.</td>
+                    <td>Did anyone in your chapter receive any compensation or pay for their work with your chapter?</td></tr>
+                <tr><td></td>
+                    <td><strong>{{ is_null($pdfData['receive_compensation']) ? 'Not Answered' : ($pdfData['receive_compensation'] == 0 ? 'NO'
+                    : ( $pdfData ['receive_compensation'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $pdfData ['receive_compensation_explanation']}}</strong></td></tr>
+               <tr><td>12.</td>
+               <td>Did any officer, member or family of a member benefit financially in any way from the member's position with your chapter?</td></tr>
+           <tr><td></td>
+            <td><strong>{{ is_null($pdfData['financial_benefit']) ? 'Not Answered' : ($pdfData['financial_benefit'] == 0 ? 'NO'
+                : ( $pdfData ['financial_benefit'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $pdfData ['financial_benefit_explanation']}}</strong></td></tr>
+          <tr><td>13.</td>
+               <td>Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?</td></tr>
+           <tr><td></td>
+            <td><strong>{{ is_null($pdfData['influence_political']) ? 'Not Answered' : ($pdfData['influence_political'] == 0 ? 'NO'
+                : ( $pdfData ['influence_political'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $pdfData ['influence_political_explanation']}}</strong></td></tr>
+            <tr><td>14.</td>
+            <td>Did your chapter sister another chapter?</td></tr>
+        <tr><td></td>
+            <td><strong>{{ is_null($pdfData['sister_chapter']) ? 'Not Answered' : ($pdfData['sister_chapter'] == 0 ? 'NO'
+                : ( $pdfData ['sister_chapter'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
+          </tbody>
     </table>
     <br>
     <div class="keep-together" style="page-break-inside: avoid;">

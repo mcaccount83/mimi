@@ -26,6 +26,7 @@ class BaseMailDataController extends Controller
             'chapterState' => $stateShortName,
             'chapterConf' => $chDetails->conference_id,
             'chapterEIN' => $chDetails->ein,
+            'chapterBoundaries' => $chDetails->territory,
             'chapterEmail' => $chDetails->email,
         ];
     }
