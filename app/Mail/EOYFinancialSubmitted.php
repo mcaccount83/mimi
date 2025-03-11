@@ -36,10 +36,10 @@ class EOYFinancialSubmitted extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject('Financial Report Submitted')
+            ->subject("Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.endofyear.financialsubmitted')
             ->attach($this->pdfPath, [
-                'as' => date('Y') - 1 .'-'.date('Y').'_'.$this->mailData['chapter_state'].'_'.$this->mailData['chapter_name'].'_FinancialReport.pdf',
+                'as' => date('Y') - 1 .'-'.date('Y').'_'.$this->mailData['chapterState'].'_'.$this->mailData['chapterName'].'_FinancialReport.pdf',
                 'mime' => 'application/pdf',
             ]);
 

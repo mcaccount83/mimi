@@ -29,13 +29,15 @@ class EOYReportController extends Controller
 {
     protected $userController;
     protected $baseChapterController;
+    protected $baseMailDataController;
 
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController)
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseMailDataController $baseMailDataController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
+        $this->baseMailDataController = $baseMailDataController;
     }
 
     /*/Custom Helpers/*/
@@ -149,34 +151,29 @@ class EOYReportController extends Controller
             $chapterIds[] = $chapter->id;
 
             if ($chapter->name) {
-                $emailData = $this->userController->loadEmailDetails($chapter->id);
-                $emailListChap = $emailData['emailListChap'];
-                $emailListCoord = $emailData['emailListCoord'];
+                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+                $chDetails = $emailDetails['chDetails'];
+                $stateShortName = $emailDetails['stateShortName'];
+                $chDocuments = $emailDetails['chDocuments'];
+                $chFinancialReport = $emailDetails['chFinancialReport'];
+                $emailListChap = $emailDetails['emailListChap'];
+                $emailListCoord = $emailDetails['emailListCoord'];
 
-                $chapterEmails[$chapter->name] = $emailListChap;
-                $coordinatorEmails[$chapter->name] = $emailListCoord;
+                $chapterEmails[$chDetails->name] = $emailListChap;
+                $coordinatorEmails[$chDetails->name] = $emailListCoord;
             }
 
-            $stateShortName = $chapter->state->state_short_name;
-            $chDocuments = $chapter->documents;
+            $mailData[$chDetails->name] = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+            );
 
-            $mailData[$chapter->name] = [
-                'chapterName' => $chapter->name,
-                'chapterState' => $stateShortName,
-                'boardElectionReportReceived' => $chDocuments->new_board_submitted,
-                'financialReportReceived' => $chDocuments->financial_report_received,
-                '990NSubmissionReceived' => $chDocuments->financial_report_received,
-                'einLetterCopyReceived' => $chDocuments->ein_letter_path,
-            ];
         }
 
         foreach ($mailData as $chapterName => $data) {
-            $to_email = $chapterEmails[$chapterName] ?? [];
-            $cc_email = $coordinatorEmails[$chapterName] ?? [];
-
-            if (! empty($to_email)) {
-                Mail::to($to_email)
-                    ->cc($cc_email)
+            if (! empty($chapterName)) {
+                Mail::to($chapterEmails[$chapterName] ?? [])
+                    ->cc($coordinatorEmails[$chapterName] ?? [])
                     ->queue(new EOYLateReportReminder($data));
             }
         }
@@ -384,30 +381,29 @@ class EOYReportController extends Controller
             $chapterIds[] = $chapter->id;
 
             if ($chapter->name) {
-                $emailData = $this->userController->loadEmailDetails($chapter->id);
-                $emailListChap = $emailData['emailListChap'];
-                $emailListCoord = $emailData['emailListCoord'];
+                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+                $chDetails = $emailDetails['chDetails'];
+                $stateShortName = $emailDetails['stateShortName'];
+                $chDocuments = $emailDetails['chDocuments'];
+                $chFinancialReport = $emailDetails['chFinancialReport'];
+                $emailListChap = $emailDetails['emailListChap'];
+                $emailListCoord = $emailDetails['emailListCoord'];
 
-                $chapterEmails[$chapter->name] = $emailListChap;
-                $coordinatorEmails[$chapter->name] = $emailListCoord;
+                $chapterEmails[$chDetails->name] = $emailListChap;
+                $coordinatorEmails[$chDetails->name] = $emailListCoord;
             }
 
-            $stateShortName = $chapter->state->state_short_name;
-            $chDocuments = $chapter->documents;
+            $mailData[$chDetails->name] = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+            );
 
-            $mailData[$chapter->name] = [
-                'chapterName' => $chapter->name,
-                'chapterState' => $stateShortName,
-            ];
         }
 
         foreach ($mailData as $chapterName => $data) {
-            $to_email = $chapterEmails[$chapterName] ?? [];
-            $cc_email = $coordinatorEmails[$chapterName] ?? [];
-
-            if (! empty($to_email)) {
-                Mail::to($to_email)
-                    ->cc($cc_email)
+            if (! empty($chapterName)) {
+                Mail::to($chapterEmails[$chapterName] ?? [])
+                    ->cc($coordinatorEmails[$chapterName] ?? [])
                     ->queue(new EOYElectionReportReminder($data));
             }
         }
@@ -948,30 +944,29 @@ class EOYReportController extends Controller
             $chapterIds[] = $chapter->id;
 
             if ($chapter->name) {
-                $emailData = $this->userController->loadEmailDetails($chapter->id);
-                $emailListChap = $emailData['emailListChap'];
-                $emailListCoord = $emailData['emailListCoord'];
+                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+                $chDetails = $emailDetails['chDetails'];
+                $stateShortName = $emailDetails['stateShortName'];
+                $chDocuments = $emailDetails['chDocuments'];
+                $chFinancialReport = $emailDetails['chFinancialReport'];
+                $emailListChap = $emailDetails['emailListChap'];
+                $emailListCoord = $emailDetails['emailListCoord'];
 
-                $chapterEmails[$chapter->name] = $emailListChap;
-                $coordinatorEmails[$chapter->name] = $emailListCoord;
+                $chapterEmails[$chDetails->name] = $emailListChap;
+                $coordinatorEmails[$chDetails->name] = $emailListCoord;
             }
 
-            $stateShortName = $chapter->state->state_short_name;
-            $chDocuments = $chapter->documents;
+            $mailData[$chDetails->name] = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+            );
 
-            $mailData[$chapter->name] = [
-                'chapterName' => $chapter->name,
-                'chapterState' => $stateShortName,
-            ];
         }
 
         foreach ($mailData as $chapterName => $data) {
-            $to_email = $chapterEmails[$chapterName] ?? [];
-            $cc_email = $coordinatorEmails[$chapterName] ?? [];
-
-            if (! empty($to_email)) {
-                Mail::to($to_email)
-                    ->cc($cc_email)
+            if (! empty($chapterName)) {
+                Mail::to($chapterEmails[$chapterName] ?? [])
+                    ->cc($coordinatorEmails[$chapterName] ?? [])
                     ->queue(new EOYFinancialReportReminder($data));
             }
         }
@@ -1042,7 +1037,7 @@ class EOYReportController extends Controller
         $step_10_notes_log = $input['Step10_Log'];
         $step_11_notes_log = $input['Step11_Log'];
         $step_12_notes_log = $input['Step12_Log'];
-        $step_13_notes_log = $input['Step13_Log'];
+        // $step_13_notes_log = $input['Step13_Log'];
 
         $reviewer_email_message = $input['reviewer_email_message'];
 
@@ -1118,7 +1113,7 @@ class EOYReportController extends Controller
             $financialReport->step_10_notes_log = $step_10_notes_log;
             $financialReport->step_11_notes_log = $step_11_notes_log;
             $financialReport->step_12_notes_log = $step_12_notes_log;
-            $financialReport->step_13_notes_log = $step_13_notes_log;
+            // $financialReport->step_13_notes_log = $step_13_notes_log;
             $financialReport->check_roster_attached = $check_roster_attached;
             $financialReport->check_renewal_seems_right = $check_renewal_seems_right;
             $financialReport->check_minimum_service_project = $check_minimum_service_project;
@@ -1141,19 +1136,25 @@ class EOYReportController extends Controller
                 $financialReport->review_complete = $lastupdatedDate;
             }
 
-            $mailData = [
-                'chapterid' => $id,
-                'chapter_name' => $chDetails->name,
-                'chapter_state' => $stateShortName,
-                'completed_name' => $completed_name,
-                'completed_email' => $completed_email,
-                'roster_path' => $roster_path,
-                'file_irs_path' => $file_irs_path,
-                'bank_statement_included_path' => $statement_1_path,
-                'bank_statement_2_included_path' => $statement_2_path,
-                'reviewer_email_message' => $reviewer_email_message,
-                'userName' => $userName,
-            ];
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+            );
+
+            // $mailData = [
+            //     'chapterid' => $id,
+            //     'chapter_name' => $chDetails->name,
+            //     'chapter_state' => $stateShortName,
+            //     'completed_name' => $completed_name,
+            //     'completed_email' => $completed_email,
+            //     'roster_path' => $roster_path,
+            //     'file_irs_path' => $file_irs_path,
+            //     'bank_statement_included_path' => $statement_1_path,
+            //     'bank_statement_2_included_path' => $statement_2_path,
+            //     'reviewer_email_message' => $reviewer_email_message,
+            //     'userName' => $userName,
+            // ];
 
             if ($financialReport->isDirty('reviewer_id')) {
                 $newReviewerId = $financialReport->reviewer_id;

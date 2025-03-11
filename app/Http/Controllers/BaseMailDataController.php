@@ -75,7 +75,6 @@ class BaseMailDataController extends Controller
             'additionalInfoPre' => $chDetailsPre->additional_info,
             'websiteURLPre' => $chDetailsPre->website_url,
             'websiteStatusPre' => $chDetailsPre->website_status,
-
             'pcNamePre' => $pcDetailsPre->first_name.' '.$pcDetailsPre->last_name,
         ];
     }
@@ -94,7 +93,6 @@ class BaseMailDataController extends Controller
             'additionalInfoUpd' => $chDetailsUpd->additional_info,
             'websiteURLUpd' => $chDetailsUpd->website_url,
             'websiteStatusUpd' => $chDetailsUpd->website_status,
-
             'pcNameUpd' => $pcDetailsUpd->first_name.' '.$pcDetailsUpd->last_name,
             'pcEmailUpd' => $pcDetailsUpd->email,
         ];
@@ -156,18 +154,18 @@ class BaseMailDataController extends Controller
     public function getFinancialReportData($chDocuments, $chFinancialReport)
     {
         return [
-            'completed_name' => $chFinancialReport->completed_name,
-            'completed_email' => $chFinancialReport->completed_email,
+            'completedName' => $chFinancialReport->completed_name,
+            'completedEmail' => $chFinancialReport->completed_email,
             'boardElectionReportReceived' => $chDocuments->new_board_submitted,
             'financialReportReceived' => $chDocuments->financial_report_received,
             '990NSubmissionReceived' => $chDocuments->financial_report_received,
             'einLetterCopyReceived' => $chDocuments->ein_letter_path,
-            'roster_path' => $chDocuments->roster_path,
-            'file_irs_path' => $chDocuments->irs_path,
-            'bank_statement_included_path' => $chDocuments->statement_1_path,
-            'bank_statement_2_included_path' => $chDocuments->statement_2_path,
-            'financial_pdf_path' => $chDocuments->financial_pdf_path,
-            'reviewer_email_message' => $chFinancialReport->reviewer_email_message,
+            'rosterPath' => $chDocuments->roster_path,
+            'irsPath' => $chDocuments->irs_path,
+            'statement1Path' => $chDocuments->statement_1_path,
+            'statement2Path' => $chDocuments->statement_2_path,
+            'financialPdfPath' => $chDocuments->financial_pdf_path,
+            'reviewerEmailMessage' => $chFinancialReport->reviewer_email_message,
         ];
     }
 

@@ -389,11 +389,11 @@
                                 <div class="col-sm-9">
                                     @php
                                     // Check if $chFinancialReport is null before proceeding
-                                    $attachments = $chFinancialReport ? [
-                                        'Roster' => $chFinancialReport->roster_path ?? null,
-                                        'Statement' => $chFinancialReport->bank_statement_included_path ?? null,
-                                        'Additional Statement' => $chFinancialReport->bank_statement_2_included_path ?? null,
-                                        '990N Confirmation' => $chFinancialReport->file_irs_path ?? null,
+                                    $attachments = $chDocuments ? [
+                                        'Roster' => $chDocuments->roster_path ?? null,
+                                        'Statement' => $chDocuments->statement_1_path ?? null,
+                                        'Additional Statement' => $chDocuments->statement_2_path ?? null,
+                                        '990N Confirmation' => $chDocuments->irs_path ?? null,
                                     ] : [];
 
                                     $included = array_keys(array_filter($attachments, fn($path) => $path !== null));

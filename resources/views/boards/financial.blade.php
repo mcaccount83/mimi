@@ -3057,7 +3057,7 @@
                     <button type="button" id="btn-save" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp; Save</button>
                 @endif
                 @if($submitted =='1')
-                    <button type="button" id="btn-download-pdf" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chFinancialReport['financial_pdf_path'] }}'"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</button>
+                    <button type="button" id="btn-download-pdf" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments['financial_pdf_path'] }}'"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</button>
                 @endif
             </div>
 

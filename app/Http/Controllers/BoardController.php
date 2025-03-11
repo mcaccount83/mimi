@@ -1651,12 +1651,14 @@ class BoardController extends Controller
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
+            $pcDetails = $baseQuery['pcDetails'];
             $emailCC = $baseQuery['emailCC'];
             $cc_id = $baseQuery['cc_id'];
             $reviewerEmail = $baseQuery['reviewerEmail'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );
 

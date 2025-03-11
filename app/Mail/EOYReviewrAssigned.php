@@ -32,7 +32,7 @@ class EOYReviewrAssigned extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject('Financial Reviewer Assigned')
+            ->subject("Financial Reviewer Assigned | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.endofyear.reviewerassigned');
     }
 }

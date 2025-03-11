@@ -197,8 +197,8 @@
                             <label>Chapter Roster File:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chFinancialReport->roster_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chFinancialReport->roster_path }}'">View Chapter Roster</button>
+                                @if (!empty($chDocuments->roster_path))
+                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->roster_path }}'">View Chapter Roster</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()">Replace Roster File</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -212,8 +212,8 @@
                             <label>Primary Bank Statement:</label>
                         </div>
                         <div class="col-sm-9">
-                            @if (!empty($chFinancialReport->bank_statement_included_path))
-                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chFinancialReport->bank_statement_included_path }}'">View Bank Statement</button>
+                            @if (!empty($chDocuments->statement_1_path))
+                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->statement_1_path }}'">View Bank Statement</button>
                                 <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()">Replace Bank Statement</button>
                             @else
                                 <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -227,8 +227,8 @@
                             <label>Primary Bank Statement:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chFinancialReport->bank_statement_2_included_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chFinancialReport->bank_statement_2_included_path }}'">View Additional Bank Statement</button>
+                                @if (!empty($chDocuments->statement_2_path))
+                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->statement_2_path }}'">View Additional Bank Statement</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()">Replace Additional Bank Statement</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -254,8 +254,8 @@
                             <label></label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chFinancialReport->file_irs_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chFinancialReport->file_irs_path }}'">View 990N Confirmation</button>
+                                @if (!empty($chDocuments->irs_path))
+                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->irs_path }}'">View 990N Confirmation</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()">Replace 990N Confirmation</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>

@@ -44,36 +44,36 @@
             <br>
             @if ($submitted)
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Financial Report PDF:</b> <span class="float-right"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['financial_pdf_path']; ?>">Download PDF</a></span>
+                <b>Financial Report PDF:</b> <span class="float-right"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['financial_pdf_path']; ?>">Download PDF</a></span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Chapter Roster File:</b> <span class="float-right">
-                @if ($chFinancialReport['roster_path'] != null)
-                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['financial_pdf_path']; ?>">Chapter Roster</a></span>
+                @if ($chDocuments['roster_path'] != null)
+                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['roster_path']; ?>">Chapter Roster</a></span>
                 @else
                 No file attached</span>
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Primary Bank Statement:</b> <span class="float-right">
-                @if ($chFinancialReport['bank_statement_included_path'] != null)
-                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['bank_statement_included_path']; ?>">Primary Statement</a></span>
+                @if ($chDocuments['statement_1_path'] != null)
+                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['statement_1_path']; ?>">Primary Statement</a></span>
                 @else
                 No file attached</span>
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Additional Bank Statement:</b> <span class="float-right">
-                    @if ($chFinancialReport['bank_statement_2_included_path'] != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['bank_statement_2_included_path']; ?>">Additional Statement</a></span>
+                    @if ($chDocuments['statement_2_path'] != null)
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['statement_2_path']; ?>">Additional Statement</a></span>
                     @else
                     No file attached</span>
                     @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>990N Filing:</b> <span class="float-right">
-                    @if ($chFinancialReport['file_irs_path'] != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['file_irs_path']; ?>">990N Confirmation</a></span>
+                    @if ($chDocuments['irs_path'] != null)
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['irs_path']; ?>">990N Confirmation</a></span>
                     @else
                     No file attached</span>
                     @endif
@@ -515,9 +515,9 @@
                             </div>
 							<div class="card-body form-row">
                                 <div class="col-12">
-                                @if (!is_null($chFinancialReport['roster_path']))
+                                @if (!is_null($chDocuments['roster_path']))
                                         <div class="col-12">
-                                            <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chFinancialReport['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
+                                            <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
                                         </div>
                                         <div class="col-12" id="RosterBlock">
                                             <strong style="color:red">Please Note</strong><br>
@@ -531,7 +531,7 @@
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
                                     </div>
                                 @endif
-                                <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $chFinancialReport['roster_path']; ?>">
+                                <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $chDocuments['roster_path']; ?>">
                                 <div class="clearfix"></div>
                                 <div class="col-12"><br></div>
                                 <div class="col-12">
@@ -1216,7 +1216,7 @@
                                 <div class="col-12">
                                 <div class="col-12">
                                     <div class="form-group row">
-                                        <label>Did they attended an in person or virtual International Event? (Question 20):<span class="field-required">*&nbsp;</span></label>
+                                        <label>Did they attended an in person or virtual International Event?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
                                                 <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $chFinancialReport['check_attended_training'] === 1 ? 'checked' : '' }}>
@@ -1794,36 +1794,36 @@
                             <div class="card-body form-row">
                                 <div class="col-12">
 
-                                    @if (!is_null($chFinancialReport['bank_statement_included_path']))
+                                    @if (!is_null($chDocuments['statement_1_path']))
                                         <div class="col-12">
-                                            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['bank_statement_included_path']; ?>" >&nbsp; View Bank Statement</a><br>
+                                            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['statement_1_path']; ?>" >&nbsp; View Bank Statement</a><br>
                                         </div>
                                     @endif
-                                    @if (!is_null($chFinancialReport['bank_statement_2_included_path']))
+                                    @if (!is_null($chDocuments['statement_2_path']))
                                         <div class="col-12">
-                                            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['bank_statement_2_included_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
+                                            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['statement_2_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
                                         </div>
                                     @endif
                                     <div class="col-12" id="StatementBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
-                                        @if (!is_null($chFinancialReport['bank_statement_included_path']))
+                                        @if (!is_null($chDocuments['statement_1_path']))
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
                                         @else
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
                                         @endif
                                     </div>
-                                        <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $chFinancialReport['bank_statement_included_path']; ?>">
+                                        <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $chDocuments['statement_1_path']; ?>">
                                     <div class="clearfix"></div>
                                     <div class="col-12"><br></div>
                                     <div class="col-12" id="Statement2Block">
-                                        @if (!is_null($chFinancialReport['bank_statement_2_included_path']))
+                                        @if (!is_null($chDocuments['statement_2_path']))
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
                                         @else
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
                                         @endif
                                     </div>
-                                    <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $chFinancialReport['bank_statement_2_included_path']; ?>">
+                                    <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $chDocuments['statement_2_path']; ?>">
                                     <div class="clearfix"></div>
                                     <div class="col-12"><br></div>
 
@@ -1949,9 +1949,9 @@
                 </div>
                         <div class="card-body form-row">
                               <div class="col-12">
-                            @if (!is_null($chFinancialReport['roster_path']))
+                            @if (!is_null($chDocuments['irs_path']))
                                     <div class="col-12">
-                                        <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chFinancialReport['file_irs_path'] }}">&nbsp; View 990N Confirmation</a><br>
+                                        <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['irs_path'] }}">&nbsp; View 990N Confirmation</a><br>
                                     </div>
                                     <div class="col-12" id="990NBlock">
                                         <strong style="color:red">Please Note</strong><br>
@@ -1965,7 +1965,7 @@
                                         <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
                                 </div>
                             @endif
-                            <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $chFinancialReport['file_irs_path']; ?>">
+                            <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $chDocuments['irs_path']; ?>">
                             <div class="clearfix"></div>
                             <div class="col-12"><br></div>
                             <div class="col-12">
@@ -2239,7 +2239,7 @@
 
             <div class="card-body text-center">
                 @if ($submitted)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a>
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a>
                 @else
                     <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary mb-2 disabled">Download PDF Report</a>
                 @endif
@@ -2669,8 +2669,8 @@ function show990NUploadModal() {
 
     /* Disable fields and buttons  */
     $(document).ready(function () {
-        var submitted = @json($chDetails->financial_report_complete);
-        var received =  @json($chDetails->financial_report_received);
+        var submitted = @json($chDocuments->financial_review_complete);
+        var received =  @json($chDocuments->financial_report_received);
 
         if (received != '1') {
             $('button').not('#btn-back').prop('disabled', true);

@@ -32,7 +32,7 @@ class EOYElectionReportSubmitted extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject('Election Report Submitted')
+            ->subject("Election Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.endofyear.electionreportsubmitted');
     }
 }

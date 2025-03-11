@@ -19,6 +19,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 const client_id = 'YOUR_CLIENT_ID';
 const client_secret = 'YOUR_CLIENT_SECRET';
@@ -440,7 +441,7 @@ class GoogleController extends Controller
     /**
      *  Create Folder Structure for EOY Report Attachments
      */
-    private function createFolderIfNotExists($year, $conf, $state, $chapterName, $accessToken, $sharedDriveId)
+    public function createFolderIfNotExists($year, $conf, $state, $chapterName, $accessToken, $sharedDriveId)
     {
         // Check if the year folder exists, create it if not
         $yearFolderId = $this->getOrCreateYearFolder($year, $accessToken, $sharedDriveId);
@@ -474,6 +475,9 @@ class GoogleController extends Controller
                 'driveId' => $sharedDriveId,
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
+
+            Log::info("Creating year folder with data: " . json_encode($folderMetadata));
+
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
                     'Authorization' => 'Bearer '.$accessToken,
@@ -509,10 +513,12 @@ class GoogleController extends Controller
             $folderMetadata = [
                 'name' => "Conference $conf",
                 'parents' => [$yearFolderId],
-                // 'parents' => [$sharedDriveId],
                 'driveId' => $sharedDriveId,
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
+
+            Log::info("Creating conference folder with data: " . json_encode($folderMetadata));
+
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
                     'Authorization' => 'Bearer '.$accessToken,
@@ -553,6 +559,9 @@ class GoogleController extends Controller
                 'driveId' => $sharedDriveId,
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
+
+            Log::info("Creating state folder with data: " . json_encode($folderMetadata));
+
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
                     'Authorization' => 'Bearer '.$accessToken,
@@ -595,6 +604,9 @@ class GoogleController extends Controller
                 'driveId' => $sharedDriveId,
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
+
+            Log::info("Creating chapter folder with data: " . json_encode($folderMetadata));
+
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
                     'Authorization' => 'Bearer '.$accessToken,

@@ -39,7 +39,7 @@ class EOYFinancialReportThankYou extends Mailable implements ShouldQueue
             ->subject('Financial Report Submitted')
             ->markdown('emails.endofyear.financialreportthankyou')
             ->attach($this->pdfPath, [
-                'as' => date('Y') - 1 .'-'.date('Y').'_'.$this->mailData['chapter_state'].'_'.$this->mailData['chapter_name'].'_FinancialReport.pdf',
+                'as' => date('Y') - 1 .'-'.date('Y').'_'.$this->mailData['chapterState'].'_'.$this->mailData['chapterName'].'_FinancialReport.pdf',
                 'mime' => 'application/pdf',
             ]);
 

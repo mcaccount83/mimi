@@ -88,9 +88,7 @@ class PDFController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$filename);
         $pdf->save($pdfPath);
 
-        $file = $pdfPath;
-
-        if ($file_id = $this->googleController->uploadToEOYGoogleDrive($file, $name, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+        if ($file_id = $this->uploadToEOYGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId, $year, $conf, $state, $chapterName)) {
             $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
             $existingDocRecord->update([
                 'financial_pdf_path' => $file_id,
@@ -627,6 +625,43 @@ class PDFController extends Controller
             'name' => $filename,
             'mimeType' => 'application/pdf',
             'parents' => [$sharedDriveId],
+        ];
+
+        $fileContent = file_get_contents($pdfPath);
+        $fileContentBase64 = base64_encode($fileContent);
+        $metadataJson = json_encode($fileMetadata);
+
+        $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
+
+        if ($response->getStatusCode() === 200) {
+            $responseData = json_decode($response->getBody()->getContents(), true);
+            $pdfFileId = $responseData['id'] ?? null; // Extract file ID
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function uploadToEOYGoogleDrive($pdfPath, &$pdfFileId, $sharedDriveId, $year, $conf, $state, $chapterName)
+    {
+        $googleClient = new Client;
+        $accessToken = $this->token();
+
+        $chapterFolderId = $this->googleController->createFolderIfNotExists($year, $conf, $state, $chapterName, $accessToken, $sharedDriveId);
+
+        $filename = basename($pdfPath);
+        $fileMetadata = [
+            'name' => $filename,
+            'mimeType' => 'application/pdf',
+            'parents' => [$chapterFolderId],
+            'driveId' => $sharedDriveId,
         ];
 
         $fileContent = file_get_contents($pdfPath);
