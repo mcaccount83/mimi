@@ -278,7 +278,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- <?php
+                                    <?php
                                     $chapter_awards = null;
 
                                     if (isset($chFinancialReport['chapter_awards'])) {
@@ -309,7 +309,7 @@
                                     } else {
                                         echo "<tr><td colspan='3'>Chapter has no award nominations.</td></tr>";
                                     }
-                                    ?> --}}
+                                    ?>
                                 </tbody>
                             </table>
                     </div>

@@ -1473,46 +1473,46 @@ class BoardController extends Controller
         $file_irs_explanation = $input['FileIRSExplanation'];
 
         // CHPATER QUESTIONS
-        //Question 1
+        // 1
         $bylaws_available = isset($input['ByLawsAvailable']) ? $input['ByLawsAvailable'] : null;
         $bylaws_available_explanation = $input['ByLawsAvailableExplanation'];
-        //Question 2
+        // 2
         $vote_all_activities = isset($input['VoteAllActivities']) ? $input['VoteAllActivities'] : null;
         $vote_all_activities_explanation = $input['VoteAllActivitiesExplanation'];
-        //Question 3
+        // 3
         $child_outings = isset($input['ChildOutings']) ? $input['ChildOutings'] : null;
         $child_outings_explanation = $input['ChildOutingsExplanation'];
-        //Question 4
+        // 4
         $playgroups = isset($input['Playgroups']) ? $input['Playgroups'] : null;
         $had_playgroups_explanation = $input['PlaygroupsExplanation'];
-        //Question 5
+        // 5
         $park_day_frequency = isset($input['ParkDays']) ? $input['ParkDays'] : null;
         $park_day_frequency_explanation = $input['ParkDaysExplanation'];
-        //Question 6
+        // 6
         $mother_outings = isset($input['MotherOutings']) ? $input['MotherOutings'] : null;
         $mother_outings_explanation = $input['MotherOutingsExplanation'];
-        //Question 7
+        // 7
         $activity_array = isset($input['Activity']) ? $input['Activity'] : null;
         $activity_other_explanation = $input['ActivityOtherExplanation'];
-        //Question 8
+        // 8
         $offered_merch = isset($input['OfferedMerch']) ? $input['OfferedMerch'] : null;
         $offered_merch_explanation = $input['OfferedMerchExplanation'];
-        //Question 9
+        // 9
         $bought_merch = isset($input['BoughtMerch']) ? $input['BoughtMerch'] : null;
         $bought_merch_explanation = $input['BoughtMerchExplanation'];
-        //Question 10
+        // 10
         $purchase_pins = isset($input['BoughtPins']) ? $input['BoughtPins'] : null;
         $purchase_pins_explanation = $input['BoughtPinsExplanation'];
-        //Question 11
+        // 11
         $receive_compensation = isset($input['ReceiveCompensation']) ? $input['ReceiveCompensation'] : null;
         $receive_compensation_explanation = $input['ReceiveCompensationExplanation'];
-        //Question 12
+        // 12
         $financial_benefit = isset($input['FinancialBenefit']) ? $input['FinancialBenefit'] : null;
         $financial_benefit_explanation = $input['FinancialBenefitExplanation'];
-        //Question 13
+        // 13
         $influence_political = isset($input['InfluencePolitical']) ? $input['InfluencePolitical'] : null;
         $influence_political_explanation = $input['InfluencePoliticalExplanation'];
-        //Question 14
+        // 14
         $sister_chapter = isset($input['SisterChapter']) ? $input['SisterChapter'] : null;
         $sister_chapter_explanation = $input['SisterChapterExplanation'];
 
@@ -1526,6 +1526,7 @@ class BoardController extends Controller
         for ($i = 0; $i < $FieldCount; $i++) {
             $ChapterAwards[$i]['awards_type'] = $input['ChapterAwardsType'.$i] ?? null;
             $ChapterAwards[$i]['awards_desc'] = $input['ChapterAwardsDesc'.$i] ?? null;
+            $ChapterAwards[$i]['awards_approved'] = false;
         }
         $chapter_awards = base64_encode(serialize($ChapterAwards));
 
@@ -1537,100 +1538,100 @@ class BoardController extends Controller
             $award_agree = null;
         }
 
-        $report = FinancialReport::find($chapterId);
+        $financialReport = FinancialReport::find($chapterId);
         $documents = Documents::find($chapterId);
         $chapter = Chapters::find($chapterId);
 
         DB::beginTransaction();
         try {
-            $report->changed_dues = $changed_dues;
-            $report->different_dues = $different_dues;
-            $report->not_all_full_dues = $not_all_full_dues;
-            $report->total_new_members = $total_new_members;
-            $report->total_renewed_members = $total_renewed_members;
-            $report->dues_per_member = $dues_per_member;
-            $report->total_new_members_changed_dues = $total_new_members_changed_dues;
-            $report->total_renewed_members_changed_dues = $total_renewed_members_changed_dues;
-            $report->dues_per_member_renewal = $dues_per_member_renewal;
-            $report->dues_per_member_new_changed = $dues_per_member_new_changed;
-            $report->dues_per_member_renewal_changed = $dues_per_member_renewal_changed;
-            $report->members_who_paid_no_dues = $members_who_paid_no_dues;
-            $report->members_who_paid_partial_dues = $members_who_paid_partial_dues;
-            $report->total_partial_fees_collected = $total_partial_fees_collected;
-            $report->total_associate_members = $total_associate_members;
-            $report->associate_member_fee = $associate_member_fee;
-            $report->manditory_meeting_fees_paid = $manditory_meeting_fees_paid;
-            $report->voluntary_donations_paid = $voluntary_donations_paid;
-            $report->paid_baby_sitters = $paid_baby_sitters;
-            $report->childrens_room_expenses = $childrens_room_expenses;
-            $report->service_project_array = $service_project_array;
-            $report->party_expense_array = $party_expense_array;
-            $report->office_printing_costs = $office_printing_costs;
-            $report->office_postage_costs = $office_postage_costs;
-            $report->office_membership_pins_cost = $office_membership_pins_cost;
-            $report->office_other_expenses = $office_other_expenses;
-            $report->international_event_array = $international_event_array;
-            $report->annual_registration_fee = $annual_registration_fee;
-            $report->monetary_donations_to_chapter = $monetary_donations_to_chapter;
-            $report->non_monetary_donations_to_chapter = $non_monetary_donations_to_chapter;
-            $report->other_income_and_expenses_array = $other_income_and_expenses_array;
-            $report->amount_reserved_from_previous_year = $amount_reserved_from_previous_year;
-            $report->bank_balance_now = $bank_balance_now;
-            $report->bank_reconciliation_array = $bank_reconciliation_array;
-            $report->receive_compensation = $receive_compensation;
-            $report->receive_compensation_explanation = $receive_compensation_explanation;
-            $report->financial_benefit = $financial_benefit;
-            $report->financial_benefit_explanation = $financial_benefit_explanation;
-            $report->influence_political = $influence_political;
-            $report->influence_political_explanation = $influence_political_explanation;
-            $report->vote_all_activities = $vote_all_activities;
-            $report->vote_all_activities_explanation = $vote_all_activities_explanation;
-            $report->purchase_pins = $purchase_pins;
-            $report->purchase_pins_explanation = $purchase_pins_explanation;
-            $report->bought_merch = $bought_merch;
-            $report->bought_merch_explanation = $bought_merch_explanation;
-            $report->offered_merch = $offered_merch;
-            $report->offered_merch_explanation = $offered_merch_explanation;
-            $report->bylaws_available = $bylaws_available;
-            $report->bylaws_available_explanation = $bylaws_available_explanation;
-            $report->childrens_room_sitters = $childrens_room_sitters;
-            $report->playgroups = $playgroups;
-            $report->had_playgroups_explanation = $had_playgroups_explanation;
-            $report->child_outings = $child_outings;
-            $report->child_outings_explanation = $child_outings_explanation;
-            $report->mother_outings = $mother_outings;
-            $report->mother_outings_explanation = $mother_outings_explanation;
-            $report->meeting_speakers = $meeting_speakers;
-            $report->meeting_speakers_array = $meeting_speakers_array;
-            $report->discussion_topic_frequency = $discussion_topic_frequency;
-            $report->park_day_frequency = $park_day_frequency;
-            $report->park_day_frequency_explanation = $park_day_frequency_explanation;
-            $report->activity_array = $activity_array;
-            $report->activity_other_explanation = $activity_other_explanation;
-            $report->contributions_not_registered_charity = $contributions_not_registered_charity;
-            $report->contributions_not_registered_charity_explanation = $contributions_not_registered_charity_explanation;
-            $report->at_least_one_service_project = $at_least_one_service_project;
-            $report->at_least_one_service_project_explanation = $at_least_one_service_project_explanation;
-            $report->sister_chapter = $sister_chapter;
-            $report->sister_chapter_explanation = $sister_chapter_explanation;
-            $report->international_event = $international_event;
-            $report->file_irs = $file_irs;
-            $report->file_irs_explanation = $file_irs_explanation;
-            $report->bank_statement_included = $bank_statement_included;
-            $report->bank_statement_included_explanation = $bank_statement_included_explanation;
-            $report->wheres_the_money = $wheres_the_money;
-            $report->chapter_awards = $chapter_awards;
-            $report->outstanding_follow_bylaws = $outstanding_follow_bylaws;
-            $report->outstanding_well_rounded = $outstanding_well_rounded;
-            $report->outstanding_communicated = $outstanding_communicated;
-            $report->outstanding_support_international = $outstanding_support_international;
-            $report->award_agree = $award_agree;
-            $report->farthest_step_visited = $farthest_step_visited;
-            $report->completed_name = $userName;
-            $report->completed_email = $userEmail;
-            $report->submitted = $lastupdatedDate;
+            $financialReport->changed_dues = $changed_dues;
+            $financialReport->different_dues = $different_dues;
+            $financialReport->not_all_full_dues = $not_all_full_dues;
+            $financialReport->total_new_members = $total_new_members;
+            $financialReport->total_renewed_members = $total_renewed_members;
+            $financialReport->dues_per_member = $dues_per_member;
+            $financialReport->total_new_members_changed_dues = $total_new_members_changed_dues;
+            $financialReport->total_renewed_members_changed_dues = $total_renewed_members_changed_dues;
+            $financialReport->dues_per_member_renewal = $dues_per_member_renewal;
+            $financialReport->dues_per_member_new_changed = $dues_per_member_new_changed;
+            $financialReport->dues_per_member_renewal_changed = $dues_per_member_renewal_changed;
+            $financialReport->members_who_paid_no_dues = $members_who_paid_no_dues;
+            $financialReport->members_who_paid_partial_dues = $members_who_paid_partial_dues;
+            $financialReport->total_partial_fees_collected = $total_partial_fees_collected;
+            $financialReport->total_associate_members = $total_associate_members;
+            $financialReport->associate_member_fee = $associate_member_fee;
+            $financialReport->manditory_meeting_fees_paid = $manditory_meeting_fees_paid;
+            $financialReport->voluntary_donations_paid = $voluntary_donations_paid;
+            $financialReport->paid_baby_sitters = $paid_baby_sitters;
+            $financialReport->childrens_room_expenses = $childrens_room_expenses;
+            $financialReport->service_project_array = $service_project_array;
+            $financialReport->party_expense_array = $party_expense_array;
+            $financialReport->office_printing_costs = $office_printing_costs;
+            $financialReport->office_postage_costs = $office_postage_costs;
+            $financialReport->office_membership_pins_cost = $office_membership_pins_cost;
+            $financialReport->office_other_expenses = $office_other_expenses;
+            $financialReport->international_event_array = $international_event_array;
+            $financialReport->annual_registration_fee = $annual_registration_fee;
+            $financialReport->monetary_donations_to_chapter = $monetary_donations_to_chapter;
+            $financialReport->non_monetary_donations_to_chapter = $non_monetary_donations_to_chapter;
+            $financialReport->other_income_and_expenses_array = $other_income_and_expenses_array;
+            $financialReport->amount_reserved_from_previous_year = $amount_reserved_from_previous_year;
+            $financialReport->bank_balance_now = $bank_balance_now;
+            $financialReport->bank_reconciliation_array = $bank_reconciliation_array;
+            $financialReport->receive_compensation = $receive_compensation;
+            $financialReport->receive_compensation_explanation = $receive_compensation_explanation;
+            $financialReport->financial_benefit = $financial_benefit;
+            $financialReport->financial_benefit_explanation = $financial_benefit_explanation;
+            $financialReport->influence_political = $influence_political;
+            $financialReport->influence_political_explanation = $influence_political_explanation;
+            $financialReport->vote_all_activities = $vote_all_activities;
+            $financialReport->vote_all_activities_explanation = $vote_all_activities_explanation;
+            $financialReport->purchase_pins = $purchase_pins;
+            $financialReport->purchase_pins_explanation = $purchase_pins_explanation;
+            $financialReport->bought_merch = $bought_merch;
+            $financialReport->bought_merch_explanation = $bought_merch_explanation;
+            $financialReport->offered_merch = $offered_merch;
+            $financialReport->offered_merch_explanation = $offered_merch_explanation;
+            $financialReport->bylaws_available = $bylaws_available;
+            $financialReport->bylaws_available_explanation = $bylaws_available_explanation;
+            $financialReport->childrens_room_sitters = $childrens_room_sitters;
+            $financialReport->playgroups = $playgroups;
+            $financialReport->had_playgroups_explanation = $had_playgroups_explanation;
+            $financialReport->child_outings = $child_outings;
+            $financialReport->child_outings_explanation = $child_outings_explanation;
+            $financialReport->mother_outings = $mother_outings;
+            $financialReport->mother_outings_explanation = $mother_outings_explanation;
+            $financialReport->meeting_speakers = $meeting_speakers;
+            $financialReport->meeting_speakers_array = $meeting_speakers_array;
+            $financialReport->discussion_topic_frequency = $discussion_topic_frequency;
+            $financialReport->park_day_frequency = $park_day_frequency;
+            $financialReport->park_day_frequency_explanation = $park_day_frequency_explanation;
+            $financialReport->activity_array = $activity_array;
+            $financialReport->activity_other_explanation = $activity_other_explanation;
+            $financialReport->contributions_not_registered_charity = $contributions_not_registered_charity;
+            $financialReport->contributions_not_registered_charity_explanation = $contributions_not_registered_charity_explanation;
+            $financialReport->at_least_one_service_project = $at_least_one_service_project;
+            $financialReport->at_least_one_service_project_explanation = $at_least_one_service_project_explanation;
+            $financialReport->sister_chapter = $sister_chapter;
+            $financialReport->sister_chapter_explanation = $sister_chapter_explanation;
+            $financialReport->international_event = $international_event;
+            $financialReport->file_irs = $file_irs;
+            $financialReport->file_irs_explanation = $file_irs_explanation;
+            $financialReport->bank_statement_included = $bank_statement_included;
+            $financialReport->bank_statement_included_explanation = $bank_statement_included_explanation;
+            $financialReport->wheres_the_money = $wheres_the_money;
+            $financialReport->chapter_awards = $chapter_awards;
+            $financialReport->outstanding_follow_bylaws = $outstanding_follow_bylaws;
+            $financialReport->outstanding_well_rounded = $outstanding_well_rounded;
+            $financialReport->outstanding_communicated = $outstanding_communicated;
+            $financialReport->outstanding_support_international = $outstanding_support_international;
+            $financialReport->award_agree = $award_agree;
+            $financialReport->farthest_step_visited = $farthest_step_visited;
+            $financialReport->completed_name = $userName;
+            $financialReport->completed_email = $userEmail;
+            $financialReport->submitted = $lastupdatedDate;
 
-            $report->save();
+            $financialReport->save();
 
             if ($reportReceived == 1) {
                 $documents->financial_report_received = 1;
@@ -1664,7 +1665,6 @@ class BoardController extends Controller
 
             if ($reportReceived == 1) {
                 $pdfPath =  $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
-                // $pdfPath = $this->pdfController->generateAndSavePdf($id, $userId);   // Generate and save the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
@@ -1680,28 +1680,6 @@ class BoardController extends Controller
                         ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
                 }
             }
-
-
-            // $mailData = [
-            //     'chapterid' => $id,
-            //     'chapter_name' => $chDetails->name,
-            //     'chapter_state' => $stateShortName,
-            //     'completed_name' => $userName,
-            //     'completed_email' => $userEmail,
-            //     'roster_path' => $roster_path,
-            //     'file_irs_path' => $irs_path,
-            //     'bank_statement_included_path' => $statement_1_path,
-            //     'bank_statement_2_included_path' => $statement_2_path,
-            //     'financial_pdf_path' => $financial_pdf_path,
-            // ];
-
-            // Send emails
-            // $to_email = $emailCC;
-            // $to_email3 = $reviewerEmail;
-            // $to_email2 = $userEmail;
-            // $to_email4 = $emailListChap;
-
-
 
             DB::commit();
             if ($reportReceived == 1) {
