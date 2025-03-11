@@ -29,7 +29,7 @@
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
 
-                <b>IRS Notes:</b> {{$chDetails->ein_notes}}
+                <b>IRS Notes:</b> {{$chDocuments->irs_notes}}
                     </li>
                     <li class="list-group-item">
                         <b>Re-Registration Dues:</b><span class="float-right">
@@ -747,7 +747,7 @@
                     <br>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editpayment', ['id' => $chDetails->id]) }}'"><i class="fas fa-dollar-sign mr-2"></i>Enter Payment/Donation</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
-                    <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDetails->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
+                    <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDocuments->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
                 @endif
                 @if($regionalCoordinatorCondition)
                     @if($chIsActive == 1)

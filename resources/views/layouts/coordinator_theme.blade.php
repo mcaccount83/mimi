@@ -53,6 +53,12 @@ window.onload = function () {
 };
 </script>
 
+<script>
+    function openPdfViewer(fileId) {
+        window.open('/pdf-viewer?id=' + fileId, '_blank');
+    }
+</script>
+
 <style>
     .email-column a {
         display: inline-block;

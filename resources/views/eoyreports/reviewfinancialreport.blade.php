@@ -278,7 +278,7 @@
         </div>
 
         <div class="d-flex align-items-center justify-content-between w-100">
-            <?php if ($chDetails->financial_report_received == 1 && $chFinancialReport['reviewer_id'] == null): ?>
+            <?php if ($chDocuments->financial_report_received == 1 && $chFinancialReport['reviewer_id'] == null): ?>
                     <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.<br></span>
                 <?php endif; ?>
                 <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>

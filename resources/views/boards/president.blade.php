@@ -499,9 +499,12 @@
 
                       <li class="list-group-item">
                         <h5>Resources</h5>
-                            @if($chDetails->ein_letter_path != null)
-                                <button type="button" class="btn bg-primary btn-sm mb-1" onclick="window.open('{{ $chDetails->ein_letter_path }}', '_blank')">View/Download EIN Letter</button><br>
-                            @else
+                            @if($chDocuments->ein_letter_path != null)
+                                {{-- <button type="button" class="btn bg-primary btn-sm mb-1" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->ein_letter_path }}'">Download EIN Letter</button><br> --}}
+                                <button type="button" class="btn bg-primary btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">View/Download EIN Letter</button>
+
+<br>
+                                @else
                                 <button type="button" class="btn bg-primary btn-sm mb-1 disabled">No EIN Letter on File</button><br>
                             @endif
                             <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>

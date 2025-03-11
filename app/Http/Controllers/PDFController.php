@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class PDFController extends Controller
 {
@@ -72,30 +73,34 @@ class PDFController extends Controller
         $year = $googleDrive->eoy_uploads_year;
         $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
-        // $baseQuery = $this->getChapterDetails($chapterId);
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
         $chDetails = $baseQuery['chDetails'];
         $chDocuments = $baseQuery['chDocuments'];
         $conf = $chDetails->conference_id;
         $state = $baseQuery['stateShortName'];
         $chapterName = $chDetails->name;
-        $name = date('Y') - 1 .'-'.date('Y').'_'.$state.'_'.$chapterName.'_FinancialReport';
 
         $result = $this->generateFinancialReport($chapterId);
         $pdf = $result['pdf'];
-        $filename = $result['filename'];
+        $name = $result['filename'];
 
-        $pdfPath = storage_path('app/pdf_reports/'.$filename);
+        $pdfPath = storage_path('app/pdf_reports/'.$name);
         $pdf->save($pdfPath);
+        $filename = basename($pdfPath);
+        $mimetype = 'application/pdf';
+        $filecontent = file_get_contents($pdfPath);
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+        if ($file_id = $this->googleController->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
             $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
-            $existingDocRecord->update([
-                'financial_pdf_path' => $file_id,
-            ]);
-
-            // $chDocuments->financial_pdf_path = $file_id;
-            // $chDocuments->save();
+            if ($existingDocRecord) {
+                $existingDocRecord->financial_pdf_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$chapterId} not found");
+                $newDocData = ['chapter_id' => $chapterId,];
+                $newDocData['financial_pdf_path'] = $file_id;
+                Documents::create($newDocData);
+            }
 
             return $pdfPath;  // Return the full local stored path
         }
@@ -226,23 +231,31 @@ class PDFController extends Controller
      */
     public function saveGoodStandingLetter($chapterId)
     {
-        $goodStandingDrive = GoogleDrive::value('good_standing_letter');
-        $sharedDriveId = $goodStandingDrive;
+        $googleDrive = GoogleDrive::first();
+        $goodStandingDrive = $googleDrive->good_standing_letter;
+        $sharedDriveId = $goodStandingDrive;  //Shared Drive -> Good Standing Letter
 
         $result = $this->generateGoodStanding($chapterId, false);
         $pdf = $result['pdf'];
-        $filename = $result['filename'];
+        $name = $result['filename'];
 
-        $pdfPath = storage_path('app/pdf_reports/'.$filename);
+        $pdfPath = storage_path('app/pdf_reports/'.$name);
         $pdf->save($pdfPath);
+        $filename = basename($pdfPath);
+        $mimetype = 'application/pdf';
+        $filecontent = file_get_contents($pdfPath);
 
-        if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)) {
-            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
-            $chDetails = $baseQuery['chDetails'];
-            $chDocuments = $baseQuery['chDocuments'];
-
-            $chDocuments->good_standing_letter = $pdfFileId;
-            $chDocuments->save();
+        if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+            $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
+            if ($existingDocRecord) {
+                $existingDocRecord->good_standing_letter = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$chapterId} not found");
+                $newDocData = ['chapter_id' => $chapterId,];
+                $newDocData['good_standing_letter'] = $file_id;
+                Documents::create($newDocData);
+            }
 
             return $pdfPath;  // Return the full local stored path
         }
@@ -304,8 +317,15 @@ class PDFController extends Controller
      */
     public function saveDisbandLetter(Request $request, $chapterId, $type): JsonResponse
     {
-        // $chapterId = $request->chapterId;
-        // $letterType = $request->letterType;
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailListCoord = $baseQuery['emailListCoord'];
+
         $letterType = $type;
         $disbandDrive = DB::table('google_drive')->value('disband_letter');
         $sharedDriveId = $disbandDrive;
@@ -332,25 +352,26 @@ class PDFController extends Controller
 
         $result = $this->generateDisbandLetter($request, $chapterId, $type);
         $pdf = $result['pdf'];
-        $filename = $result['filename'];
+        $name = $result['filename'];
 
-        $pdfPath = storage_path('app/pdf_reports/'.$filename);
+        $pdfPath = storage_path('app/pdf_reports/'.$name);
         $pdf->save($pdfPath);
 
-        if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)) {
-            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $request);
-            $chDetails = $baseQuery['chDetails'];
-            $chDocuments = $baseQuery['chDocuments'];
-            $stateShortName = $baseQuery['stateShortName'];
+        $filename = basename($pdfPath);
+        $mimetype = 'application/pdf';
+        $filecontent = file_get_contents($pdfPath);
 
-            $chDocuments->disband_letter_path = $pdfFileId;
-            $chDocuments->save();
-
-            $emailListChap = $baseQuery['emailListChap'];
-            $emailListCoord = $baseQuery['emailListCoord'];
-
-            //  Load User Information for Signing Email & PDFs
-            $user = $this->userController->loadUserInformation($request);
+        if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+            $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
+            if ($existingDocRecord) {
+                $existingDocRecord->disband_letter_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$chapterId} not found");
+                $newDocData = ['chapter_id' => $chapterId,];
+                $newDocData['disband_letter_path'] = $file_id;
+                Documents::create($newDocData);
+            }
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
@@ -391,7 +412,7 @@ class PDFController extends Controller
                 'status' => 'success',
                 'message' => 'Letter emailed successfully.',
                 'pdf_path' => $pdfPath,
-                'google_drive_id' => $pdfFileId,
+                'google_drive_id' => $file_id,
             ]);
         }
 
@@ -460,6 +481,16 @@ class PDFController extends Controller
     {
         $chapterId = $request->chapterId;
         $letterType = $request->letterType;
+
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailListCoord = $baseQuery['emailListCoord'];
+
         $probationDrive = GoogleDrive::value('probation_letter');
         $sharedDriveId = $probationDrive;
 
@@ -485,31 +516,54 @@ class PDFController extends Controller
 
         $result = $this->generateProbationLetter($request, $chapterId, $type);
         $pdf = $result['pdf'];
-        $filename = $result['filename'];
+        $name = $result['filename'];
 
-        $pdfPath = storage_path('app/pdf_reports/'.$filename);
+        $pdfPath = storage_path('app/pdf_reports/'.$name);
         $pdf->save($pdfPath);
 
-        if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)) {
+        $filename = basename($pdfPath);
+        $mimetype = 'application/pdf';
+        $filecontent = file_get_contents($pdfPath);
 
-            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
-            $chDetails = $baseQuery['chDetails'];
-            $chDocuments = $baseQuery['chDocuments'];
-            $stateShortName = $baseQuery['stateShortName'];
-
-            if ($letterType === 'probation_release') {
-                $chDocuments->probation_release_path = $pdfFileId;
+        if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+            $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
+            if ($existingDocRecord) {
+                if ($letterType === 'probation_release') {
+                    $existingDocRecord->probation_release_path = $file_id;
+                    $existingDocRecord->save();
+                } else {
+                    $existingDocRecord->probation_path = $file_id;
+                    $existingDocRecord->save();
+                }
             } else {
-                $chDocuments->probation_path = $pdfFileId;
+                Log::error("Expected document record for chapter_id {$chapterId} not found");
+                $newDocData = ['chapter_id' => $chapterId,];
+                if ($letterType === 'probation_release') {
+                    $newDocData['probation_release_path'] = $file_id;
+                } else {
+                    $newDocData['probation_path'] = $file_id;
+                }
+                Documents::create($newDocData);
             }
 
-            $chDocuments->save();
+            // $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+            // $chDetails = $baseQuery['chDetails'];
+            // $chDocuments = $baseQuery['chDocuments'];
+            // $stateShortName = $baseQuery['stateShortName'];
 
-            $emailListChap = $baseQuery['emailListChap'];
-            $emailListCoord = $baseQuery['emailListCoord'];
+            // if ($letterType === 'probation_release') {
+            //     $chDocuments->probation_release_path = $pdfFileId;
+            // } else {
+            //     $chDocuments->probation_path = $pdfFileId;
+            // }
 
-            //  Load User Information for Signing Email & PDFs
-            $user = $this->userController->loadUserInformation($request);
+            // $chDocuments->save();
+
+            // $emailListChap = $baseQuery['emailListChap'];
+            // $emailListCoord = $baseQuery['emailListCoord'];
+
+            // //  Load User Information for Signing Email & PDFs
+            // $user = $this->userController->loadUserInformation($request);
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
@@ -550,7 +604,7 @@ class PDFController extends Controller
                 'status' => 'success',
                 'message' => 'Letter emailed successfully.',
                 'pdf_path' => $pdfPath,
-                'google_drive_id' => $pdfFileId,
+                'google_drive_id' => $file_id,
             ]);
         }
 
@@ -649,6 +703,9 @@ class PDFController extends Controller
         return false;
     }
 
+    /**
+     * Upload to EOY Google Drive -- To create folder/sub folder system.
+     */
     private function uploadToEOYGoogleDrive($pdfPath, &$pdfFileId, $sharedDriveId, $year, $conf, $state, $chapterName)
     {
         $googleClient = new Client;
@@ -676,200 +733,14 @@ class PDFController extends Controller
             'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
         ]);
 
-        if ($response->getStatusCode() === 200) {
-            $responseData = json_decode($response->getBody()->getContents(), true);
-            $pdfFileId = $responseData['id'] ?? null; // Extract file ID
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
 
-            return true;
+            if ($response->getStatusCode() === 200) {
+                return $jsonResponse['id'];  // Return just the ID string instead of an array
+            }
+
+            return null; // Return null if upload fails
         }
 
-        return false;
     }
-
-
-     /**
-     * Save & Send Disband Letter  -------  OLD DISBAND LETTER
-     */
-    // public function generateAndSaveDisbandLetter($id)
-    // {
-    //     $baseQuery = $this->getChapterDetails($id);
-    //     $chDetails = $baseQuery['chDetails'];
-    //     $chId = $baseQuery['chId'];
-    //     $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
-    //     $stateShortName = $baseQuery['stateShortName'];
-    //     $reRegMonth = $chDetails->start_month_id;
-    //     $reRegYear = $chDetails->next_renewal_year;
-    //     $PresDetails = $baseQuery['PresDetails'];
-
-    //     $emailListChap = $baseQuery['emailListChap'];
-    //     $emailListCoord = $baseQuery['emailListCoord'];
-    //     $emailCC = $baseQuery['emailCC'];
-    //     $cc_fname = $baseQuery['cc_fname'];
-    //     $cc_lname = $baseQuery['cc_lname'];
-    //     $cc_pos = $baseQuery['cc_pos'];
-    //     $cc_conf_name = $baseQuery['cc_conf_name'];
-    //     $cc_conf_desc = $baseQuery['cc_conf_desc'];
-
-    //     $disbandDrive = GoogleDrive::value('disband_letter');
-    //     $sharedDriveId = $disbandDrive;
-
-    //     $date = Carbon::now();
-    //     $dateFormatted = $date->format('m-d-Y');
-    //     $nextMonth = $date->copy()->addMonth()->endOfMonth();
-    //     $nextMonthFormatted = $nextMonth->format('m-d-Y');
-
-    //     $pdfData = [
-    //         'ch_name' => $sanitizedChapterName,
-    //         'today' => $dateFormatted,
-    //         'nextMonth' => $nextMonthFormatted,
-    //         'chapter_name' => $chDetails->name,
-    //         'state' => $stateShortName,
-    //         'pres_fname' => $PresDetails->first_name,
-    //         'pres_lname' => $PresDetails->last_name,
-    //         'pres_addr' => $PresDetails->street_address,
-    //         'pres_city' => $PresDetails->city,
-    //         'pres_state' => $PresDetails->state,
-    //         'pres_zip' => $PresDetails->zip,
-    //         're_reg_month' => $reRegMonth,
-    //         're_reg_year' => $reRegYear,
-    //         'cc_fname' => $cc_fname,
-    //         'cc_lname' => $cc_lname,
-    //         'cc_pos' => $cc_pos,
-    //         'conf_name' => $cc_conf_name,
-    //         'conf_desc' => $cc_conf_desc,
-    //     ];
-
-    //     $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
-
-    //     $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
-    //     $filename = $pdfData['state'].'_'.$chapterName.'_Disband_Letter.pdf'; // Use sanitized chapter name
-
-    //     $pdfPath = storage_path('app/pdf_reports/'.$filename);
-    //     $pdf->save($pdfPath);
-
-    //     if ($this->uploadToGoogleDrive($pdfPath, $pdfFileId, $sharedDriveId)){
-    //         $documents = Documents::find($id);
-    //         $documents->disband_letter_path = $pdfFileId;
-    //         $documents->save();
-
-    //         return $pdfPath;  // Return the full local stored path
-    //     }
-    // }
-
-     /**
-     * Generate Financial Report PDF
-     */
-    // public function generatePdf(Request $request, $chapterId)
-    // {
-    //     $user = User::find($request->user()->id);
-    //     $userId = $user->id;
-    //     $userName = $user->first_name.' '.$user->last_name;
-    //     $userEmail = $user->email;
-
-    //     $baseQuery = $this->getChapterDetails($chapterId);
-    //     $chDetails = $baseQuery['chDetails'];
-    //     $chId = $baseQuery['chId'];
-    //     $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
-    //     $stateShortName = $baseQuery['stateShortName'];
-    //     $chFinancialReport = $chDetails->financialReport;
-    //     $submitted = $chFinancialReport->submitted;
-    //     $submittedFormatted = $submitted->format('m-d-Y');
-
-    //     $pdfData = [
-    //         'chapter_name' => $chDetails->name,
-    //         'state' => $stateShortName,
-    //         'ein' => $chDetails->ein,
-    //         'boundaries' => $chDetails->territory,
-    //         'changed_dues' => $chFinancialReport->changed_dues,
-    //         'different_dues' => $chFinancialReport->different_dues,
-    //         'not_all_full_dues' => $chFinancialReport->not_all_full_dues,
-    //         'total_new_members' => $chFinancialReport->total_new_members,
-    //         'total_renewed_members' => $chFinancialReport->total_renewed_members,
-    //         'dues_per_member' => $chFinancialReport->dues_per_member,
-    //         'total_new_members_changed_dues' => $chFinancialReport->total_new_members_changed_dues,
-    //         'total_renewed_members_changed_dues' => $chFinancialReport->total_renewed_members_changed_dues,
-    //         'dues_per_member_renewal' => $chFinancialReport->dues_per_member_renewal,
-    //         'dues_per_member_new_changed' => $chFinancialReport->dues_per_member_new_changed,
-    //         'dues_per_member_renewal_changed' => $chFinancialReport->dues_per_member_renewal_changed,
-    //         'members_who_paid_no_dues' => $chFinancialReport->members_who_paid_no_dues,
-    //         'members_who_paid_partial_dues' => $chFinancialReport->members_who_paid_partial_dues,
-    //         'total_partial_fees_collected' => $chFinancialReport->total_partial_fees_collected,
-    //         'total_associate_members' => $chFinancialReport->total_associate_members,
-    //         'associate_member_fee' => $chFinancialReport->associate_member_fee,
-    //         'manditory_meeting_fees_paid' => $chFinancialReport->manditory_meeting_fees_paid,
-    //         'voluntary_donations_paid' => $chFinancialReport->voluntary_donations_paid,
-    //         'paid_baby_sitters' => $chFinancialReport->paid_baby_sitters,
-    //         'childrens_room_expenses' => $chFinancialReport->childrens_room_expenses,
-    //         'service_project_array' => $chFinancialReport->service_project_array,
-    //         'party_expense_array' => $chFinancialReport->party_expense_array,
-    //         'office_printing_costs' => $chFinancialReport->office_printing_costs,
-    //         'office_postage_costs' => $chFinancialReport->office_postage_costs,
-    //         'office_membership_pins_cost' => $chFinancialReport->office_membership_pins_cost,
-    //         'office_other_expenses' => $chFinancialReport->office_other_expenses,
-    //         'international_event_array' => $chFinancialReport->international_event_array,
-    //         'annual_registration_fee' => $chFinancialReport->annual_registration_fee,
-    //         'monetary_donations_to_chapter' => $chFinancialReport->monetary_donations_to_chapter,
-    //         'non_monetary_donations_to_chapter' => $chFinancialReport->non_monetary_donations_to_chapter,
-    //         'other_income_and_expenses_array' => $chFinancialReport->other_income_and_expenses_array,
-    //         'amount_reserved_from_previous_year' => $chFinancialReport->amount_reserved_from_previous_year,
-    //         'bank_balance_now' => $chFinancialReport->bank_balance_now,
-    //         'bank_reconciliation_array' => $chFinancialReport->bank_reconciliation_array,
-    //         'receive_compensation' => $chFinancialReport->receive_compensation,
-    //         'receive_compensation_explanation' => $chFinancialReport->receive_compensation_explanation,
-    //         'financial_benefit' => $chFinancialReport->financial_benefit,
-    //         'financial_benefit_explanation' => $chFinancialReport->financial_benefit_explanation,
-    //         'influence_political' => $chFinancialReport->influence_political,
-    //         'influence_political_explanation' => $chFinancialReport->influence_political_explanation,
-    //         'vote_all_activities' => $chFinancialReport->vote_all_activities,
-    //         'vote_all_activities_explanation' => $chFinancialReport->vote_all_activities_explanation,
-    //         'purchase_pins' => $chFinancialReport->purchase_pins,
-    //         'purchase_pins_explanation' => $chFinancialReport->purchase_pins_explanation,
-    //         'bought_merch' => $chFinancialReport->bought_merch,
-    //         'bought_merch_explanation' => $chFinancialReport->bought_merch_explanation,
-    //         'offered_merch' => $chFinancialReport->offered_merch,
-    //         'offered_merch_explanation' => $chFinancialReport->offered_merch_explanation,
-    //         'bylaws_available' => $chFinancialReport->bylaws_available,
-    //         'bylaws_available_explanation' => $chFinancialReport->bylaws_available_explanation,
-    //         'childrens_room_sitters' => $chFinancialReport->childrens_room_sitters,
-    //         'childrens_room_sitters_explanation' => $chFinancialReport->childrens_room_sitters_explanation,
-    //         'had_playgroups' => $chFinancialReport->had_playgroups,
-    //         'playgroups' => $chFinancialReport->playgroups,
-    //         'had_playgroups_explanation' => $chFinancialReport->had_playgroups_explanation,
-    //         'child_outings' => $chFinancialReport->child_outings,
-    //         'child_outings_explanation' => $chFinancialReport->child_outings_explanation,
-    //         'mother_outings' => $chFinancialReport->mother_outings,
-    //         'mother_outings_explanation' => $chFinancialReport->mother_outings_explanation,
-    //         'meeting_speakers' => $chFinancialReport->meeting_speakers,
-    //         'meeting_speakers_explanation' => $chFinancialReport->meeting_speakers_explanation,
-    //         'meeting_speakers_array' => $chFinancialReport->meeting_speakers_array,
-    //         'discussion_topic_frequency' => $chFinancialReport->discussion_topic_frequency,
-    //         'park_day_frequency' => $chFinancialReport->park_day_frequency,
-    //         'activity_array' => $chFinancialReport->activity_array,
-    //         'contributions_not_registered_charity' => $chFinancialReport->contributions_not_registered_charity,
-    //         'contributions_not_registered_charity_explanation' => $chFinancialReport->contributions_not_registered_charity_explanation,
-    //         'at_least_one_service_project' => $chFinancialReport->at_least_one_service_project,
-    //         'at_least_one_service_project_explanation' => $chFinancialReport->at_least_one_service_project_explanation,
-    //         'sister_chapter' => $chFinancialReport->sister_chapter,
-    //         'international_event' => $chFinancialReport->international_event,
-    //         'file_irs' => $chFinancialReport->file_irs,
-    //         'file_irs_explanation' => $chFinancialReport->file_irs_explanation,
-    //         'bank_statement_included' => $chFinancialReport->bank_statement_included,
-    //         'bank_statement_included_explanation' => $chFinancialReport->bank_statement_included_explanation,
-    //         'wheres_the_money' => $chFinancialReport->wheres_the_money,
-    //         'completed_name' => $userName,
-    //         'completed_email' => $userEmail,
-    //         'submitted' => $submittedFormatted,
-    //         'ch_name' => $sanitizedChapterName,
-    //     ];
-
-    //     $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
-
-    //     $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['ch_name'].'_FinancialReport.pdf';
-
-    //     return $pdf->stream($filename, ['Attachment' => 0]); // Stream the PDF
-
-    // }
-
-
-
-}

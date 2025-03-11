@@ -52,20 +52,23 @@ class GoogleController extends Controller
     /**
      * Upload PDF to Google Drive
      */
-    public function uploadToGoogleDrive($file, $name, $sharedDriveId)
+    public function uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)
     {
         $client = new Client;
         $accessToken = $this->token();
 
         $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            // 'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'name' => $filename,
             'parents' => [$sharedDriveId],
-            'mimeType' => $file->getMimeType(),
+            // 'mimeType' => $file->getMimeType(),
+            'mimeType' => $mimetype,
+
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getPathname());
-
+        // $fileContent = file_get_contents($file->getPathname());
+        $fileContent = $filecontent;
         $fileContentBase64 = base64_encode($fileContent);
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
@@ -87,49 +90,9 @@ class GoogleController extends Controller
     }
 
     /**
-     * Upload to EOY Google Drive
-     */
-    // public function uploadToEOYGoogleDrivePDF($pdfPath, &$pdfFileId, $sharedDriveId, $year, $conf, $state, $chapterName)
-    // {
-    //     $googleClient = new Client;
-    //     $accessToken = $this->token();
-
-    //     $chapterFolderId = $this->createFolderIfNotExists($year, $conf, $state, $chapterName, $accessToken, $sharedDriveId);
-
-    //     $filename = basename($pdfPath);
-    //     $fileMetadata = [
-    //         'name' => $filename,
-    //         'mimeType' => 'application/pdf',
-    //         'parents' => [$chapterFolderId],
-    //         'parents' => [$sharedDriveId],
-    //     ];
-
-    //     $fileContent = file_get_contents($pdfPath);
-    //     $fileContentBase64 = base64_encode($fileContent);
-    //     $metadataJson = json_encode($fileMetadata);
-
-    //     $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-    //         'headers' => [
-    //             'Authorization' => 'Bearer '.$accessToken,
-    //             'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-    //         ],
-    //         'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-    //     ]);
-
-    //     if ($response->getStatusCode() === 200) {
-    //         $responseData = json_decode($response->getBody()->getContents(), true);
-    //         $pdfFileId = $responseData['id'] ?? null; // Extract file ID
-
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
-
-    /**
      * Upload to EOY Google Drive -- To create folder/sub folder system.
      */
-    public function uploadToEOYGoogleDrive($file, $name, $sharedDriveId, $year, $conf, $state, $chapterName)
+    public function uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)
     {
         $client = new Client;
         $accessToken = $this->token();
@@ -137,13 +100,16 @@ class GoogleController extends Controller
         $chapterFolderId = $this->createFolderIfNotExists($year, $conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
         $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
-            'mimeType' => $file->getMimeType(),
+            // 'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'name' => $filename,
+            // 'mimeType' => $file->getMimeType(),
+            'mimeType' => $mimetype,
             'parents' => [$chapterFolderId],
             'driveId' => $sharedDriveId,
         ];
 
-        $fileContent = file_get_contents($file->getPathname());
+        // $fileContent = file_get_contents($file->getPathname());
+        $fileContent = $filecontent;
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
 
@@ -181,12 +147,21 @@ class GoogleController extends Controller
         $sharedDriveId = $einDrive;  //Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
+        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+        $mimetype = $file->getMimeType();
+        $filecontent = file_get_contents($file->getPathname());
 
-        if ($file_id = $this->uploadToGoogleDrive($file, $name, $sharedDriveId)) {
+        if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
             $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            $existingDocRecord->update([
-                'ein_letter_path' => $file_id,
-            ]);
+            if ($existingDocRecord) {
+                $existingDocRecord->ein_letter_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$id} not found");
+                $newDocData = ['chapter_id' => $id,];
+                $newDocData['ein_letter_path'] = $file_id;
+                Documents::create($newDocData);
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -211,12 +186,26 @@ class GoogleController extends Controller
 
         $file = $request->file('file');
         $name = Str::ascii($file->getClientOriginalName());
+        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+        $mimetype = $file->getMimeType();
+        $filecontent = file_get_contents($file->getPathname());
 
-        if ($file_id = $this->uploadToGoogleDrive($file, $name, $sharedDriveId)) {
+        if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
             $existingDocRecord = Resources::find($id);
-            $existingDocRecord->update([
-                'file_path' => $file_id,
-            ]);
+            if ($existingDocRecord) {
+                $existingDocRecord->file_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$id} not found");
+                $newDocData = ['chapter_id' => $id,];
+                $newDocData['file_path'] = $file_id;
+                Resources::create($newDocData);
+            }
+
+            // $existingDocRecord = Resources::find($id);
+            // $existingDocRecord->update([
+            //     'file_path' => $file_id,
+            // ]);
 
             return response()->json([
                 'status' => 'success',
@@ -241,12 +230,26 @@ class GoogleController extends Controller
 
         $file = $request->file('file');
         $name = Str::ascii($file->getClientOriginalName());
+        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+        $mimetype = $file->getMimeType();
+        $filecontent = file_get_contents($file->getPathname());
 
-        if ($file_id = $this->uploadToGoogleDrive($file, $name, $sharedDriveId)) {
+        if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
             $existingDocRecord = Resources::find($id);
-            $existingDocRecord->update([
-                'file_path' => $file_id,
-            ]);
+            if ($existingDocRecord) {
+                $existingDocRecord->file_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$id} not found");
+                $newDocData = ['chapter_id' => $id,];
+                $newDocData['file_path'] = $file_id;
+                Resources::create($newDocData);
+            }
+
+            // $existingDocRecord = Resources::find($id);
+            // $existingDocRecord->update([
+            //     'file_path' => $file_id,
+            // ]);
 
             return response()->json([
                 'status' => 'success',
@@ -277,12 +280,21 @@ class GoogleController extends Controller
         $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
+        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+        $mimetype = $file->getMimeType();
+        $filecontent = file_get_contents($file->getPathname());
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($file, $name, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+        if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
             $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            $existingDocRecord->update([
-                'roster_path' => $file_id,
-            ]);
+            if ($existingDocRecord) {
+                $existingDocRecord->roster_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$id} not found");
+                $newDocData = ['chapter_id' => $id,];
+                $newDocData['roster_path'] = $file_id;
+                Documents::create($newDocData);
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -314,12 +326,21 @@ class GoogleController extends Controller
         $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
+        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+        $mimetype = $file->getMimeType();
+        $filecontent = file_get_contents($file->getPathname());
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($file, $name, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+        if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
             $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            $existingDocRecord->update([
-                'irs_path' => $file_id,
-            ]);
+            if ($existingDocRecord) {
+                $existingDocRecord->irs_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$id} not found");
+                $newDocData = ['chapter_id' => $id,];
+                $newDocData['irs_path'] = $file_id;
+                Documents::create($newDocData);
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -350,12 +371,21 @@ class GoogleController extends Controller
         $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
+        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+        $mimetype = $file->getMimeType();
+        $filecontent = file_get_contents($file->getPathname());
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($file, $name, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+        if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
             $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            $existingDocRecord->update([
-                'statement_1_path' => $file_id,
-            ]);
+            if ($existingDocRecord) {
+                $existingDocRecord->statement_1_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$id} not found");
+                $newDocData = ['chapter_id' => $id,];
+                $newDocData['statement_1_path'] = $file_id;
+                Documents::create($newDocData);
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -386,12 +416,21 @@ class GoogleController extends Controller
         $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
+        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+        $mimetype = $file->getMimeType();
+        $filecontent = file_get_contents($file->getPathname());
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($file, $name, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+        if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
             $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            $existingDocRecord->update([
-                'statement_2_path' => $file_id,
-            ]);
+            if ($existingDocRecord) {
+                $existingDocRecord->statement_2_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$id} not found");
+                $newDocData = ['chapter_id' => $id,];
+                $newDocData['statement_2_path'] = $file_id;
+                Documents::create($newDocData);
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -419,12 +458,21 @@ class GoogleController extends Controller
         $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
+        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+        $mimetype = $file->getMimeType();
+        $filecontent = file_get_contents($file->getPathname());
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($file, $name, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+        if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
             $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            $existingDocRecord->update([
-                'award_path' => $file_id,
-            ]);
+            if ($existingDocRecord) {
+                $existingDocRecord->award_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$id} not found");
+                $newDocData = ['chapter_id' => $id,];
+                $newDocData['award_path'] = $file_id;
+                Documents::create($newDocData);
+            }
 
             return response()->json([
                 'status' => 'success',

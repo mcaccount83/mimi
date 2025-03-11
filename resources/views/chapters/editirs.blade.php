@@ -84,7 +84,7 @@
 <div class="form-group row align-items-center mb-3">
     <label class="col-sm-2 col-form-label">EIN Letter Received:</label>
     <div class="col-sm-10 custom-control custom-switch">
-        <input type="checkbox" name="ch_ein_letter_display" id="ch_ein_letter" class="custom-control-input" {{$chDetails->ein_letter == 1 ? 'checked' : ''}} disabled>
+        <input type="checkbox" name="ch_ein_letter_display" id="ch_ein_letter" class="custom-control-input" {{$chDocuments->ein_letter == 1 ? 'checked' : ''}} disabled>
         <label class="custom-control-label" for="ch_ein_letter"></label>
         <!-- Hidden input to submit the value -->
         <input type="hidden" name="ch_ein_letter" value="{{ $chDocuments->ein_letter }}">
@@ -139,7 +139,7 @@
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
-                <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDetails->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
+                <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDocuments->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
 <br>
                     <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return PreSaveValidate();"><i class="fas fa-save mr-2"></i>Save IRS Information</button>
                 @endif

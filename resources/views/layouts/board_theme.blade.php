@@ -265,6 +265,13 @@
     $('[data-mask]').inputmask()
 
 </script>
+
+<script>
+function openPdfViewer(fileId) {
+    window.open('/pdf-viewer?id=' + fileId, '_blank');
+}
+</script>
+
 <script>
  function applyPhoneMask() {
         Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");

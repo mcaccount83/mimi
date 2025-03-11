@@ -72,7 +72,7 @@
                                 NO
                             @endif
                         </td>
-                        <td>{{ $list->documents->ein_notes }}</td>
+                        <td>{{ $list->documents->irs_notes }}</td>
 			        </tr>
                   @endforeach
                   </tbody>
