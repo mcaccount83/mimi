@@ -56,7 +56,7 @@ class ViewServiceProvider extends ServiceProvider
             $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  // *ListAdmin
 
             // Fetch the 'admin' record
-            $admin = Admin::orderBy('id', 'desc')
+            $admin = Admin::orderByDesc('id')
                 ->limit(1)
                 ->first();
             $display_testing = ($admin->display_testing == 1);

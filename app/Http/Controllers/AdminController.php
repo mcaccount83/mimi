@@ -757,7 +757,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'reset_eoy_tables' => '1',
@@ -853,7 +853,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'reset_AFTER_testing' => '1',
@@ -905,7 +905,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'update_user_tables' => '1',
@@ -937,7 +937,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'display_testing' => '1',
@@ -969,7 +969,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'display_live' => '1',
@@ -1060,7 +1060,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'subscribe_list' => '1',
@@ -1106,7 +1106,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'unsubscribe_list' => '1',

@@ -127,7 +127,7 @@ class BoardController extends Controller
         $displayTESTING = $displayEOY['displayTESTING'];
         $displayLIVE = $displayEOY['displayLIVE'];
 
-        $admin = Admin::orderBy('id', 'desc')
+        $admin = Admin::orderByDesc('id')
             ->limit(1)
             ->first();
         $display_testing = ($admin->display_testing == 1);
@@ -187,7 +187,7 @@ class BoardController extends Controller
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
         // $due_date = Carbon::create($next_renewal_year, $start_month, 1)->endOfMonth();
 
-        $admin = Admin::orderBy('id', 'desc')
+        $admin = Admin::orderByDesc('id')
             ->limit(1)
             ->first();
         $display_testing = ($admin->display_testing == 1);

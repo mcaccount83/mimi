@@ -49,7 +49,7 @@ if (! function_exists('getUserType')) {
 if (! function_exists('getEOYDisplay')) {
     function getEOYDisplay()
     {
-        $admin = Admin::orderBy('id', 'desc')
+        $admin = Admin::orderByDesc('id')
             ->limit(1)
             ->first();
         $display_testing = ($admin->display_testing == 1);
