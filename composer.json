@@ -11,29 +11,30 @@
         "php": "^8.3",
         "almasaeed2010/adminlte": "~3.2",
         "authorizenet/authorizenet": "^2.0",
-        "barryvdh/laravel-dompdf": "^3.0",
+        "barryvdh/laravel-dompdf": "^3.1",
         "dcblogdev/laravel-sent-emails": "^2.0",
         "google/apiclient": "^2.17",
         "guzzlehttp/guzzle": "^7.9",
-        "laravel/framework": "^11.21",
+        "laravel/framework": "^12.1",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9",
-        "laravel/ui": "^4.5",
+        "laravel/tinker": "^2.10.1",
+        "laravel/ui": "^4.6",
         "league/flysystem-aws-s3-v3": "^3.28",
         "livewire/livewire": "^3.5",
-        "rap2hpoutre/laravel-log-viewer": "^2.4",
+        "rap2hpoutre/laravel-log-viewer": "^2.5",
         "riari/laravel-forum": "^6.0",
-        "romanzipp/laravel-queue-monitor": "^5.3"
+        "romanzipp/laravel-queue-monitor": "dev-master"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.18",
-        "laravel/sail": "^1.31",
+        "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.4",
+        "nunomaduro/collision": "^8.6",
         "phpstan/phpstan": "^1.12",
-        "phpunit/phpunit": "^11.3",
-        "spatie/laravel-ignition": "^2.8"
+        "phpunit/phpunit": "^11.5.3",
+        "spatie/laravel-ignition": "^2.9",
+        "laravel/pail": "^1.2.2"
     },
     "autoload": {
         "psr-4": {
@@ -50,7 +51,7 @@
             "Tests\\": "tests/"
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
         "post-autoload-dump": [
@@ -67,6 +68,10 @@
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
         ]
     },
     "extra": {
