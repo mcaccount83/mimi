@@ -2,9 +2,9 @@
 
 namespace App\Policies\Forum;
 
-use TeamTeaTime\Forum\Policies\CategoryPolicy as ForumCategoryPolicy;
-use TeamTeaTime\Forum\Models\Category;
 use Illuminate\Foundation\Auth\User;
+use TeamTeaTime\Forum\Models\Category;
+use TeamTeaTime\Forum\Policies\CategoryPolicy as ForumCategoryPolicy;
 
 class CategoryPolicy extends ForumCategoryPolicy
 {
@@ -35,6 +35,7 @@ class CategoryPolicy extends ForumCategoryPolicy
         if ($category->title === 'Public Announcements') {
             return $this->forumConditions->canManageLists($user);
         }
+
         return $this->forumConditions->canAccessCoordinatorList($user, $category);
     }
 

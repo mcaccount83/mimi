@@ -3,9 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -18,7 +18,7 @@ class Handler extends ExceptionHandler
                 'user' => Auth::id() ?? 'guest',
                 'input' => collect(request()->all())->except(['password'])->toArray(),
                 'referrer' => request()->headers->get('referer'),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ];
 
             Log::error($e->getMessage(), $context);

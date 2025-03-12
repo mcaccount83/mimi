@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Middleware\HandlePageExpired;
-use App\Http\Middleware\CoordinatorListAccessTMiddleware;
 use App\Http\Middleware\CoordinatorListAccessCMiddleware;
 use App\Http\Middleware\CoordinatorListAccessPMiddleware;
+use App\Http\Middleware\CoordinatorListAccessTMiddleware;
+use App\Http\Middleware\HandlePageExpired;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -30,7 +30,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'coordinatorlistT.access' => CoordinatorListAccessTMiddleware::class,
             'coordinatorlistP.access' => CoordinatorListAccessPMiddleware::class,
         ]);
-
 
     })
     ->withExceptions(function (Exceptions $exceptions) {

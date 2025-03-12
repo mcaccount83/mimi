@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Policies\Forum\ForumConditions;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use TeamTeaTime\Forum\Models\Category;
-use App\Policies\Forum\ForumConditions;
 
 class CoordinatorListAccessCMiddleware
 {
@@ -23,9 +23,10 @@ class CoordinatorListAccessCMiddleware
         $user = $request->user(); // Same as in your other middleware
 
         // Ensure user is authenticated
-        if (!$user) {
+        if (! $user) {
             Auth::logout();
             $request->session()->flush();
+
             return redirect()->to('/login')->with('error', 'You must be logged in to access this page.');
         }
 
@@ -33,18 +34,18 @@ class CoordinatorListAccessCMiddleware
         $category = Category::find($request->route('category_id'));
 
         // Ensure category exists
-        if (!$category) {
+        if (! $category) {
             return abort(404, 'Category not found');
         }
 
         // Check access using the CategoryPolicy
-        if (!$this->forumConditions->canAccessCoordinatorList($user, $category)) {
+        if (! $this->forumConditions->canAccessCoordinatorList($user, $category)) {
             Auth::logout();
             $request->session()->flush();
+
             return redirect()->to('/login')->with('error', 'You do not have permission to access this category.');
         }
 
         return $next($request);
     }
 }
-

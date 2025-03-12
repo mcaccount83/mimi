@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chapters;
-use App\Models\State;
-use App\Models\User;
-use Exception;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class ChapterReportController extends Controller
 {
     protected $userController;
+
     protected $baseChapterController;
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController)
@@ -26,7 +21,7 @@ class ChapterReportController extends Controller
         $this->baseChapterController = $baseChapterController;
     }
 
-    /*/ Base Chapter Controller /*/
+    /* / Base Chapter Controller / */
     //  $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
     //  $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
     //  $this->baseChapterController->getChapterDetails($chId);
@@ -217,5 +212,4 @@ class ChapterReportController extends Controller
 
         return view('chapreports.chaprptcoordinators')->with($data);
     }
-
 }

@@ -11,15 +11,15 @@ use App\Http\Requests\StoreStatement1GoogleRequest;
 use App\Http\Requests\StoreStatement2GoogleRequest;
 use App\Http\Requests\StoreToolkitGoogleRequest;
 use App\Models\Chapters;
-use App\Models\GoogleDrive;
 use App\Models\Documents;
 use App\Models\FolderRecord;
+use App\Models\GoogleDrive;
 use App\Models\Resources;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 const client_id = 'YOUR_CLIENT_ID';
 const client_secret = 'YOUR_CLIENT_SECRET';
@@ -144,7 +144,7 @@ class GoogleController extends Controller
 
         $googleDrive = GoogleDrive::first();
         $einDrive = $googleDrive->ein_letter_uploads;
-        $sharedDriveId = $einDrive;  //Shared Drive -> EOY Uploads
+        $sharedDriveId = $einDrive;  // Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
         $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
@@ -158,7 +158,7 @@ class GoogleController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id,];
+                $newDocData = ['chapter_id' => $id];
                 $newDocData['ein_letter_path'] = $file_id;
                 Documents::create($newDocData);
             }
@@ -182,7 +182,7 @@ class GoogleController extends Controller
     {
         $googleDrive = GoogleDrive::first();
         $resourcesDrive = $googleDrive->resources_uploads;
-        $sharedDriveId = $resourcesDrive;  //Shared Drive -> EOY Uploads
+        $sharedDriveId = $resourcesDrive;  // Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
         $name = Str::ascii($file->getClientOriginalName());
@@ -197,7 +197,7 @@ class GoogleController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id,];
+                $newDocData = ['chapter_id' => $id];
                 $newDocData['file_path'] = $file_id;
                 Resources::create($newDocData);
             }
@@ -226,7 +226,7 @@ class GoogleController extends Controller
     {
         $googleDrive = GoogleDrive::first();
         $resourcesDrive = $googleDrive->resources_uploads;
-        $sharedDriveId = $resourcesDrive;  //Shared Drive -> EOY Uploads
+        $sharedDriveId = $resourcesDrive;  // Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
         $name = Str::ascii($file->getClientOriginalName());
@@ -241,7 +241,7 @@ class GoogleController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id,];
+                $newDocData = ['chapter_id' => $id];
                 $newDocData['file_path'] = $file_id;
                 Resources::create($newDocData);
             }
@@ -277,7 +277,7 @@ class GoogleController extends Controller
         $googleDrive = GoogleDrive::first();
         $eoyDrive = $googleDrive->eoy_uploads;
         $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
         $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
@@ -291,7 +291,7 @@ class GoogleController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id,];
+                $newDocData = ['chapter_id' => $id];
                 $newDocData['roster_path'] = $file_id;
                 Documents::create($newDocData);
             }
@@ -308,7 +308,6 @@ class GoogleController extends Controller
         ], 500);
     }
 
-
     /**
      *  Save 990N Confirmation for EOY Report Attachments
      */
@@ -323,7 +322,7 @@ class GoogleController extends Controller
         $googleDrive = GoogleDrive::first();
         $eoyDrive = $googleDrive->eoy_uploads;
         $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
         $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
@@ -337,7 +336,7 @@ class GoogleController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id,];
+                $newDocData = ['chapter_id' => $id];
                 $newDocData['irs_path'] = $file_id;
                 Documents::create($newDocData);
             }
@@ -368,7 +367,7 @@ class GoogleController extends Controller
         $googleDrive = GoogleDrive::first();
         $eoyDrive = $googleDrive->eoy_uploads;
         $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
         $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
@@ -382,7 +381,7 @@ class GoogleController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id,];
+                $newDocData = ['chapter_id' => $id];
                 $newDocData['statement_1_path'] = $file_id;
                 Documents::create($newDocData);
             }
@@ -413,7 +412,7 @@ class GoogleController extends Controller
         $googleDrive = GoogleDrive::first();
         $eoyDrive = $googleDrive->eoy_uploads;
         $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
         $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
@@ -427,7 +426,7 @@ class GoogleController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id,];
+                $newDocData = ['chapter_id' => $id];
                 $newDocData['statement_2_path'] = $file_id;
                 Documents::create($newDocData);
             }
@@ -455,7 +454,7 @@ class GoogleController extends Controller
         $googleDrive = GoogleDrive::first();
         $eoyDrive = $googleDrive->eoy_uploads;
         $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
         $file = $request->file('file');
         $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
@@ -469,7 +468,7 @@ class GoogleController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id,];
+                $newDocData = ['chapter_id' => $id];
                 $newDocData['award_path'] = $file_id;
                 Documents::create($newDocData);
             }
@@ -524,7 +523,7 @@ class GoogleController extends Controller
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
 
-            Log::info("Creating year folder with data: " . json_encode($folderMetadata));
+            Log::info('Creating year folder with data: '.json_encode($folderMetadata));
 
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
@@ -565,7 +564,7 @@ class GoogleController extends Controller
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
 
-            Log::info("Creating conference folder with data: " . json_encode($folderMetadata));
+            Log::info('Creating conference folder with data: '.json_encode($folderMetadata));
 
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
@@ -608,7 +607,7 @@ class GoogleController extends Controller
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
 
-            Log::info("Creating state folder with data: " . json_encode($folderMetadata));
+            Log::info('Creating state folder with data: '.json_encode($folderMetadata));
 
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
@@ -653,7 +652,7 @@ class GoogleController extends Controller
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
 
-            Log::info("Creating chapter folder with data: " . json_encode($folderMetadata));
+            Log::info('Creating chapter folder with data: '.json_encode($folderMetadata));
 
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
@@ -676,5 +675,4 @@ class GoogleController extends Controller
             return $folderId;
         }
     }
-
 }

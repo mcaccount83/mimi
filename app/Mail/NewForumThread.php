@@ -11,8 +11,11 @@ class NewForumThread extends Mailable
     use Queueable, SerializesModels;
 
     public $post;
+
     public $thread;
+
     public $category;
+
     public $authorNameWithPosition;
 
     public function __construct($post, $thread, $category, $authorNameWithPosition)
@@ -27,6 +30,6 @@ class NewForumThread extends Mailable
     {
         return $this->markdown('emails.forum.new-thread')
                     // ->subject("New Forum Thread: {$this->thread->title}");
-                    ->subject("{$this->category->title} | {$this->thread->title}");
+            ->subject("{$this->category->title} | {$this->thread->title}");
     }
 }

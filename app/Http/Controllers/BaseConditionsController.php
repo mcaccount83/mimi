@@ -6,17 +6,17 @@ class BaseConditionsController extends Controller
 {
     protected $userController;
 
-    public function __construct(UserController $userController )
+    public function __construct(UserController $userController)
     {
         $this->userController = $userController;
     }
 
-    /*/Custom Helpers/*/
+    /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
     // $displayEOY = getEOYDisplay();
 
     /**
-       * Get conditions and reporting tree data based on coordinator position
+     * Get conditions and reporting tree data based on coordinator position
      */
     public function getConditions($cdId, $cdPositionid, $cdSecPositionid)
     {
@@ -63,6 +63,4 @@ class BaseConditionsController extends Controller
 
         return $baseQuery;
     }
-
 }
-

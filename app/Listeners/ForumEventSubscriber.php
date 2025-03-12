@@ -2,13 +2,12 @@
 
 namespace App\Listeners;
 
-use TeamTeaTime\Forum\Events\UserCreatedPost;
-use TeamTeaTime\Forum\Events\UserCreatedThread;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\NewForumPost;
 use App\Mail\NewForumThread;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use TeamTeaTime\Forum\Events\UserCreatedPost;
+use TeamTeaTime\Forum\Events\UserCreatedThread;
 
 class ForumEventSubscriber
 {
@@ -69,10 +68,10 @@ class ForumEventSubscriber
         // Get all users subscribed to this category
         return User::whereHas('categorySubscriptions', function ($query) use ($categoryId) {
             $query->where('category_id', $categoryId);
-            })
+        })
             ->where('is_active', '1')
             ->get();
-        }
+    }
 
     /**
      * Register the listeners for the subscriber.

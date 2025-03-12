@@ -1,10 +1,10 @@
 <?php
 
 use App\Models\Admin;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use TeamTeaTime\Forum\Models\Thread;
 use TeamTeaTime\Forum\Support\Access\CategoryAccess;
-use Illuminate\Support\Facades\Auth;
 
 if (! function_exists('getPositionConditions')) {
     function getPositionConditions($positionId, $secPositionId)
@@ -40,7 +40,7 @@ if (! function_exists('getUserType')) {
     {
         return [
             'coordinator' => ($userType == 'coordinator'),  // Coordinator
-            'board' => ($userType == 'board' ),  // Current Board Member
+            'board' => ($userType == 'board'),  // Current Board Member
             'outgoing' => $userType == 'outgoing',  // Outgoing Board Member
         ];
     }
@@ -63,7 +63,7 @@ if (! function_exists('getEOYDisplay')) {
             'display_testing' => $display_testing,
             'display_live' => $display_live,
             'displayTESTING' => $displayTESTING,
-            'displayLIVE' => $displayLIVE
+            'displayLIVE' => $displayLIVE,
         ];
     }
 }
@@ -91,7 +91,7 @@ if (! function_exists('getUnreadForumCount')) {
                 $accessibleCategoryIds = CategoryAccess::getFilteredIdsFor(Auth::user());
 
                 // If the category isn't private, allow access
-                if (!$thread->category->is_private) {
+                if (! $thread->category->is_private) {
                     return $thread->userReadStatus !== null;
                 }
 

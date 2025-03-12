@@ -2,23 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Chapters;
 use App\Models\Coordinators;
-use App\Models\State;
-use App\Models\Region;
-use App\Models\Conference;
-use Illuminate\Support\Facades\DB;
 use App\Models\ForumCategorySubscription;
-use TeamTeaTime\Forum\Models\Category as ForumCategory;
-use Illuminate\Support\Facades\Log;
-
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
 class ForumSubscriptionController extends Controller
 {
     protected $userController;
+
     protected $baseChapterController;
+
     protected $baseCoordinatorController;
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
@@ -57,7 +54,7 @@ class ForumSubscriptionController extends Controller
 
         return response()->json([
             'message' => 'Successfully subscribed to category',
-            'redirect' => back()->getTargetUrl()
+            'redirect' => back()->getTargetUrl(),
         ]);
     }
 
@@ -67,11 +64,11 @@ class ForumSubscriptionController extends Controller
             'user_id' => $request->user_id,
             'category_id' => $request->category_id,
         ])
-        ->delete();
+            ->delete();
 
         return response()->json([
             'message' => 'Successfully unsubscribed from category',
-            'redirect' => back()->getTargetUrl()
+            'redirect' => back()->getTargetUrl(),
         ]);
     }
 
@@ -170,6 +167,7 @@ class ForumSubscriptionController extends Controller
         $coordinatorList = $baseQuery['query']->get();
 
         $data = ['coordinatorList' => $coordinatorList];
+
         return view('forum.internationalcoordinatorsubscriptionlist')->with($data);
     }
 
@@ -195,28 +193,28 @@ class ForumSubscriptionController extends Controller
         $errors = [];
 
         foreach ($activeCoordinators as $user) {
-        try {
-            // Check if subscription already exists
-            $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-                ->where('category_id', $categoryId)
-                ->first();
+            try {
+                // Check if subscription already exists
+                $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                    ->where('category_id', $categoryId)
+                    ->first();
 
-            if (!$existingSubscription) {
-                ForumCategorySubscription::create([
-                    'user_id' => $user->id,
-                    'category_id' => $categoryId,
-                ]);
-                $subscriptionCount++;
+                if (! $existingSubscription) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $user->id,
+                        'category_id' => $categoryId,
+                    ]);
+                    $subscriptionCount++;
+                }
+            } catch (\Exception $e) {
+                $errors[] = "Failed to subscribe user {$user->id}: {$e->getMessage()}";
             }
-        } catch (\Exception $e) {
-            $errors[] = "Failed to subscribe user {$user->id}: {$e->getMessage()}";
-        }
         }
 
         if (empty($errors)) {
-        return back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to CoorinatorList");
+            return back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to CoorinatorList");
         } else {
-        return back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: " . implode(', ', $errors));
+            return back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -242,28 +240,28 @@ class ForumSubscriptionController extends Controller
         $errors = [];
 
         foreach ($activeCoordinators as $user) {
-        try {
-            // Check if subscription already exists
-            $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-                ->where('category_id', $categoryId)
-                ->first();
+            try {
+                // Check if subscription already exists
+                $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                    ->where('category_id', $categoryId)
+                    ->first();
 
-            if (!$existingSubscription) {
-                ForumCategorySubscription::create([
-                    'user_id' => $user->id,
-                    'category_id' => $categoryId,
-                ]);
-                $subscriptionCount++;
+                if (! $existingSubscription) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $user->id,
+                        'category_id' => $categoryId,
+                    ]);
+                    $subscriptionCount++;
+                }
+            } catch (\Exception $e) {
+                $errors[] = "Failed to subscribe user {$user->id}: {$e->getMessage()}";
             }
-        } catch (\Exception $e) {
-            $errors[] = "Failed to subscribe user {$user->id}: {$e->getMessage()}";
-        }
         }
 
         if (empty($errors)) {
-        return back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to BoardList");
+            return back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to BoardList");
         } else {
-        return back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: " . implode(', ', $errors));
+            return back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -289,28 +287,28 @@ class ForumSubscriptionController extends Controller
         $errors = [];
 
         foreach ($activeCoordinators as $user) {
-        try {
-            // Check if subscription already exists
-            $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-                ->where('category_id', $categoryId)
-                ->first();
+            try {
+                // Check if subscription already exists
+                $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                    ->where('category_id', $categoryId)
+                    ->first();
 
-            if (!$existingSubscription) {
-                ForumCategorySubscription::create([
-                    'user_id' => $user->id,
-                    'category_id' => $categoryId,
-                ]);
-                $subscriptionCount++;
+                if (! $existingSubscription) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $user->id,
+                        'category_id' => $categoryId,
+                    ]);
+                    $subscriptionCount++;
+                }
+            } catch (\Exception $e) {
+                $errors[] = "Failed to subscribe user {$user->id}: {$e->getMessage()}";
             }
-        } catch (\Exception $e) {
-            $errors[] = "Failed to subscribe user {$user->id}: {$e->getMessage()}";
-        }
         }
 
         if (empty($errors)) {
-        return back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to Public Announcements");
+            return back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to Public Announcements");
         } else {
-        return back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: " . implode(', ', $errors));
+            return back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -360,7 +358,7 @@ class ForumSubscriptionController extends Controller
                     ->where('category_id', $categoryId)
                     ->first();
 
-                if (!$existingSubscription) {
+                if (! $existingSubscription) {
                     ForumCategorySubscription::create([
                         'user_id' => $user->id,
                         'category_id' => $categoryId,
@@ -375,7 +373,7 @@ class ForumSubscriptionController extends Controller
         if (empty($errors)) {
             return back()->with('success', "Successfully subscribed {$subscriptionCount} users to BoardList");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} users, but encountered errors: " . implode(', ', $errors));
+            return back()->with('warning', "Subscribed {$subscriptionCount} users, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -425,7 +423,7 @@ class ForumSubscriptionController extends Controller
                     ->where('category_id', $categoryId)
                     ->first();
 
-                if (!$existingSubscription) {
+                if (! $existingSubscription) {
                     ForumCategorySubscription::create([
                         'user_id' => $user->id,
                         'category_id' => $categoryId,
@@ -440,7 +438,7 @@ class ForumSubscriptionController extends Controller
         if (empty($errors)) {
             return back()->with('success', "Successfully subscribed {$subscriptionCount} users to Public Announcements");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} users, but encountered errors: " . implode(', ', $errors));
+            return back()->with('warning', "Subscribed {$subscriptionCount} users, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -475,7 +473,7 @@ class ForumSubscriptionController extends Controller
                     ->where('category_id', $categoryId)
                     ->first();
 
-                if (!$existingSubscription) {
+                if (! $existingSubscription) {
                     ForumCategorySubscription::create([
                         'user_id' => $user->id,
                         'category_id' => $categoryId,
@@ -490,7 +488,7 @@ class ForumSubscriptionController extends Controller
         if (empty($errors)) {
             return back()->with('success', "Successfully subscribed {$subscriptionCount} board members to BoardList");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} board members, but encountered errors: " . implode(', ', $errors));
+            return back()->with('warning', "Subscribed {$subscriptionCount} board members, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -525,7 +523,7 @@ class ForumSubscriptionController extends Controller
                     ->where('category_id', $categoryId)
                     ->first();
 
-                if (!$existingSubscription) {
+                if (! $existingSubscription) {
                     ForumCategorySubscription::create([
                         'user_id' => $user->id,
                         'category_id' => $categoryId,
@@ -540,7 +538,7 @@ class ForumSubscriptionController extends Controller
         if (empty($errors)) {
             return back()->with('success', "Successfully subscribed {$subscriptionCount} board members to Public Announcements");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} board members, but encountered errors: " . implode(', ', $errors));
+            return back()->with('warning', "Subscribed {$subscriptionCount} board members, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -562,6 +560,7 @@ class ForumSubscriptionController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+
             return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
         }
     }
@@ -576,13 +575,13 @@ class ForumSubscriptionController extends Controller
             $category = ForumCategory::where('title', 'BoardList')
                 ->first();
 
-            if (!$category) {
+            if (! $category) {
                 return back()->with('error', 'BoardList category not found');
             }
 
             // Delete subscriptions only for users who are coordinators
             $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
-                ->whereHas('user', function($query) {
+                ->whereHas('user', function ($query) {
                     $query->where('user_type', 'coordinator');
                 })
                 ->delete();
@@ -591,6 +590,7 @@ class ForumSubscriptionController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+
             return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
         }
     }
@@ -605,13 +605,13 @@ class ForumSubscriptionController extends Controller
             $category = ForumCategory::where('title', 'BoardList')
                 ->first();
 
-            if (!$category) {
+            if (! $category) {
                 return back()->with('error', 'BoardList category not found');
             }
 
             // Delete subscriptions only for users who are board members
             $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
-                ->whereHas('user', function($query) {
+                ->whereHas('user', function ($query) {
                     $query->where('user_type', 'board');
                 })
                 ->delete();
@@ -620,6 +620,7 @@ class ForumSubscriptionController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+
             return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
         }
     }
@@ -634,13 +635,13 @@ class ForumSubscriptionController extends Controller
             $category = ForumCategory::where('title', 'Public Announcements')
                 ->first();
 
-            if (!$category) {
+            if (! $category) {
                 return back()->with('error', 'Public Announcements category not found');
             }
 
             // Delete subscriptions only for users who are board members
             $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
-                ->whereHas('user', function($query) {
+                ->whereHas('user', function ($query) {
                     $query->where('user_type', 'board');
                 })
                 ->delete();
@@ -649,8 +650,8 @@ class ForumSubscriptionController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+
             return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
         }
     }
-
 }

@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
+use App\Listeners\ForumEventSubscriber;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use TeamTeaTime\Forum\Events\UserCreatedPost;
 use TeamTeaTime\Forum\Events\UserCreatedThread;
-use App\Listeners\ForumEventSubscriber;
 
 class AppServiceProvider extends ServiceProvider
 {

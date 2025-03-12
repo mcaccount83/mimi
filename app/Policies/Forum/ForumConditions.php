@@ -2,19 +2,19 @@
 
 namespace App\Policies\Forum;
 
-use TeamTeaTime\Forum\Models\Thread;
-use TeamTeaTime\Forum\Models\Category;
-use Illuminate\Foundation\Auth\User;
 use App\Models\Coordinators;
+use Illuminate\Foundation\Auth\User;
+use TeamTeaTime\Forum\Models\Category;
+use TeamTeaTime\Forum\Models\Thread;
 
 class ForumConditions
 {
-    /*/Custom Helpers/*/
+    /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
     public function canAccessCoordinatorList(User $user, Category $category): bool
     {
-        if ($user->user_type === 'outgoing'){
+        if ($user->user_type === 'outgoing') {
             return false; // Hide ALL from outgoing
         }
 

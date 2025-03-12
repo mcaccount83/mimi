@@ -17,9 +17,9 @@ return new class extends Migration
 
             // Add foreign key after defining the column
             $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
 
             // Unique constraint to prevent duplicate subscriptions
             $table->unique(['user_id', 'category_id']);

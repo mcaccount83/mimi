@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CoordinatorTree;
 use App\Models\Chapters;
+use App\Models\CoordinatorTree;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +12,7 @@ use Illuminate\View\View;
 class CoordinatorReportController extends Controller
 {
     protected $userController;
+
     protected $baseCoordinatorController;
 
     public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController)
@@ -22,10 +23,10 @@ class CoordinatorReportController extends Controller
         $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
-    /*/Custom Helpers/*/
+    /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
-    /*/ Base Coordinator Controller /*/
+    /* / Base Coordinator Controller / */
     //  $this->baseCoordinatorController->getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
     //  $this->baseCoordinatorController->getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
     //  $this->baseCoordinatorController->getCoordinatorDetails($id)
@@ -89,7 +90,7 @@ class CoordinatorReportController extends Controller
         // Calculate Ttoal chapter report
         $total_report = $direct_report + $indirect_report;
 
-        return ['direct_report' => $direct_report, 'indirect_report' => $indirect_report, 'total_report' => $total_report,];
+        return ['direct_report' => $direct_report, 'indirect_report' => $indirect_report, 'total_report' => $total_report];
     }
 
     /**
@@ -112,7 +113,7 @@ class CoordinatorReportController extends Controller
         return view('coordreports.coordrptappreciation')->with($data);
     }
 
-     /**
+    /**
      * View the Volunteer Birthday list
      */
     public function showRptBirthdays(Request $request): View

@@ -43,17 +43,17 @@ class ViewServiceProvider extends ServiceProvider
             $areaCoordinatorCondition = ($positionid >= 2 && $positionid <= 8); // AC-Founder
             $bigSisterCondition = ($positionid >= 1 && $positionid <= 8); // BS-Founder
 
-            $eoyTestCondition = ($positionid >= 6 && $positionid <= 8) || ($positionid == 29 || $secpositionid == 29);  //ACC-Founder, AR Tester
-            $eoyReportCondition = ($positionid >= 1 && $positionid <= 8) || ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder, AR Reviewer, AR Tester
-            $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
-            $inquiriesCondition = ($positionid == 15 || $secpositionid == 15 || $positionid == 18 || $secpositionid == 18);  //*Inquiries Coordinator
-            $inquiriesInternationalCondition = ($positionid == 18 || $secpositionid == 18);  //*International Inquiries Coordinator
-            $inquiriesConferneceCondition = ($positionid == 15 || $secpositionid == 15);  //*Conference Inquiries Coordinator
-            $webReviewCondition = ($positionid == 9 || $secpositionid == 9);  //*Website Reviewer
-            $einCondition = ($positionid == 12 || $secpositionid == 12);  //*EIN Coordinator
-            $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
-            $m2mCondition = ($positionid == 21 || $secpositionid == 21 || $positionid == 20 || $secpositionid == 20);  //*M2M Committee
-            $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  //*ListAdmin
+            $eoyTestCondition = ($positionid >= 6 && $positionid <= 8) || ($positionid == 29 || $secpositionid == 29);  // ACC-Founder, AR Tester
+            $eoyReportCondition = ($positionid >= 1 && $positionid <= 8) || ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  // *BS-Founder, AR Reviewer, AR Tester
+            $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  // *IT Coordinator
+            $inquiriesCondition = ($positionid == 15 || $secpositionid == 15 || $positionid == 18 || $secpositionid == 18);  // *Inquiries Coordinator
+            $inquiriesInternationalCondition = ($positionid == 18 || $secpositionid == 18);  // *International Inquiries Coordinator
+            $inquiriesConferneceCondition = ($positionid == 15 || $secpositionid == 15);  // *Conference Inquiries Coordinator
+            $webReviewCondition = ($positionid == 9 || $secpositionid == 9);  // *Website Reviewer
+            $einCondition = ($positionid == 12 || $secpositionid == 12);  // *EIN Coordinator
+            $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  // *IT Coordinator
+            $m2mCondition = ($positionid == 21 || $secpositionid == 21 || $positionid == 20 || $secpositionid == 20);  // *M2M Committee
+            $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  // *ListAdmin
 
             // Fetch the 'admin' record
             $admin = Admin::orderBy('id', 'desc')

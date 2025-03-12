@@ -10,7 +10,7 @@ class PublicController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('auth')->except('logout');
+        // $this->middleware('auth')->except('logout');
     }
 
     public function chapterLinks(): View

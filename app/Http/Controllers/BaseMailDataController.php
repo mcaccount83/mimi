@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 class BaseMailDataController extends Controller
 {
     protected $userController;
+
     protected $baseChapterController;
+
     protected $baseCoordinatorController;
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
@@ -45,7 +47,7 @@ class BaseMailDataController extends Controller
     public function getPresData($PresDetails)
     {
         return [
-            'presName' => $PresDetails->first_name.' '. $PresDetails->last_name,
+            'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
             'presAddress' => $PresDetails->street_address,
             'presCity' => $PresDetails->city,
             'presState' => $PresDetails->state,
@@ -102,7 +104,7 @@ class BaseMailDataController extends Controller
     public function getPresPreviousData($PresDetailsPre)
     {
         return [
-            'presNamePre' => $PresDetailsPre->first_name.' '. $PresDetailsPre->last_name,
+            'presNamePre' => $PresDetailsPre->first_name.' '.$PresDetailsPre->last_name,
             'presAddressPre' => $PresDetailsPre->street_address,
             'presCityPre' => $PresDetailsPre->city,
             'presStatePre' => $PresDetailsPre->state,
@@ -115,7 +117,7 @@ class BaseMailDataController extends Controller
     public function getPresUpdatedData($PresDetailsUpd)
     {
         return [
-            'presNameUpd' => $PresDetailsUpd->first_name.' '. $PresDetailsUpd->last_name,
+            'presNameUpd' => $PresDetailsUpd->first_name.' '.$PresDetailsUpd->last_name,
             'presAddressUpd' => $PresDetailsUpd->street_address,
             'presCityUpd' => $PresDetailsUpd->city,
             'presStateUpd' => $PresDetailsUpd->state,
@@ -128,7 +130,7 @@ class BaseMailDataController extends Controller
     public function getBoardPreviousData($borDetailsPre)
     {
         return [
-            'borNamePre' => $borDetailsPre->first_name.' '. $borDetailsPre->last_name,
+            'borNamePre' => $borDetailsPre->first_name.' '.$borDetailsPre->last_name,
             'borAddressPre' => $borDetailsPre->street_address,
             'borCityPre' => $borDetailsPre->city,
             'borStatePre' => $borDetailsPre->state,
@@ -142,7 +144,7 @@ class BaseMailDataController extends Controller
     {
         return [
             'borPosition' => $borDetailsUpd->position->position,
-            'borNameUpd' => $borDetailsUpd->first_name.' '. $borDetailsUpd->last_name,
+            'borNameUpd' => $borDetailsUpd->first_name.' '.$borDetailsUpd->last_name,
             'borAddressUpd' => $borDetailsUpd->street_address,
             'borCityUpd' => $borDetailsUpd->city,
             'borStateUpd' => $borDetailsUpd->state,
@@ -169,5 +171,4 @@ class BaseMailDataController extends Controller
             'reviewerEmailMessage' => $chFinancialReport->reviewer_email_message,
         ];
     }
-
 }

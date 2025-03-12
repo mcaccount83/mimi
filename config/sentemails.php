@@ -4,7 +4,7 @@
  * You can place your custom package configuration in here.
  */
 return [
-    //set the route path to load the sent emails ui defaults to /sentemails
+    // set the route path to load the sent emails ui defaults to /sentemails
     'routepath' => 'admin/sentemails',
 
     // set the route middlewares to apply on the sent emails ui

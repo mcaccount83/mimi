@@ -170,5 +170,4 @@ class MailController extends Controller
                 new Metric('Average Execution Time', $aggregatedInfo->average_time_elapsed ?? 0, $aggregatedComparisonInfo->average_time_elapsed, '%0.2fs')
             );
     }
-
 }

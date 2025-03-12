@@ -3,20 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chapters;
+use App\Models\Conference;
 use App\Models\Coordinators;
 use App\Models\FinancialReportAwards;
-use App\Models\Conference;
+use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
 use App\Models\Status;
 use App\Models\Website;
-use App\Models\Month;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Log;
 
 class BaseChapterController extends Controller
 {
     protected $userController;
+
     protected $baseConditionsController;
 
     public function __construct(UserController $userController, BaseConditionsController $baseConditionsController)
@@ -25,18 +24,18 @@ class BaseChapterController extends Controller
         $this->baseConditionsController = $baseConditionsController;
     }
 
-    /*/Custom Helpers/*/
+    /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
     // $displayEOY = getEOYDisplay();
 
-    /*/User Controller/*/
+    /* /User Controller/ */
     // $this->userController->loadUserInformation($request);
     // $this->userController->loadReportingTree($cdId);
     // $this->userController->loadEmailDetails($chId);
     // $this->userController->loadConferenceCoord($chPcId);
     // $this->userController->loadPrimaryList($chRegId, $chConfId);
 
-    /*/Base Coditions Controller/*/
+    /* /Base Coditions Controller/ */
     // $this->baseConditionsController->getConditions($cdId, $cdPositionid, $cdSecPositionid);
     // $this->baseConditionsController->applyPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
     // $this->baseConditionsController->applyInquiriesPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArrrr)
@@ -80,7 +79,8 @@ class BaseChapterController extends Controller
     /**
      * Apply sorting based on query type and page
      */
-    private function applySorting($baseQuery, $queryType) {
+    private function applySorting($baseQuery, $queryType)
+    {
         $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';
 
         if ($queryType === 'zapped') {
@@ -92,11 +92,13 @@ class BaseChapterController extends Controller
                 $baseQuery->orderBy(State::select('state_short_name')
                     ->whereColumn('state.id', 'chapters.state_id'), 'asc')
                     ->orderBy('chapters.name');
+
                 return ['query' => $baseQuery, 'checkBox3Status' => 'checked'];
             }
 
             $baseQuery->orderByDesc('next_renewal_year')
-                     ->orderByDesc('start_month_id');
+                ->orderByDesc('start_month_id');
+
             return ['query' => $baseQuery, 'checkBox3Status' => ''];
         }
 
@@ -147,7 +149,7 @@ class BaseChapterController extends Controller
         $sortingResults = $this->applySorting($baseQuery, $params['isActive'] ? 'active' : 'zapped');
 
         return ['query' => $sortingResults['query'], 'checkBoxStatus' => $checkboxStatus['checkBoxStatus'] ?? '', 'checkBox2Status' => $checkboxStatus['checkBox2Status'] ?? '',
-            'checkBox3Status' => $sortingResults['checkBox3Status'], 'checkBox4Status' => $checkboxStatus['checkBox4Status'] ?? ''
+            'checkBox3Status' => $sortingResults['checkBox3Status'], 'checkBox4Status' => $checkboxStatus['checkBox4Status'] ?? '',
         ];
     }
 
@@ -164,7 +166,7 @@ class BaseChapterController extends Controller
             'positionId' => $positionId,
             'secPositionId' => $secPositionId,
             'conditions' => true,
-            'queryType' => 'regular'
+            'queryType' => 'regular',
         ]);
     }
 
@@ -178,7 +180,7 @@ class BaseChapterController extends Controller
             'positionId' => $positionId,
             'secPositionId' => $secPositionId,
             'conditions' => true,
-            'queryType' => 'regular'
+            'queryType' => 'regular',
         ]);
     }
 
@@ -192,7 +194,7 @@ class BaseChapterController extends Controller
             'positionId' => $positionId,
             'secPositionId' => $secPositionId,
             'conditions' => true,
-            'queryType' => 'inquiries'
+            'queryType' => 'inquiries',
         ]);
     }
 
@@ -206,7 +208,7 @@ class BaseChapterController extends Controller
             'positionId' => $positionId,
             'secPositionId' => $secPositionId,
             'conditions' => true,
-            'queryType' => 'inquiries'
+            'queryType' => 'inquiries',
         ]);
     }
 
@@ -216,22 +218,23 @@ class BaseChapterController extends Controller
             'isActive' => 1,
             'coorId' => $coorId,
             'conditions' => false,
-            'queryType' => 'international'
+            'queryType' => 'international',
         ]);
     }
 
-    public function getZappedInternationalBaseQuery($coorId) {
+    public function getZappedInternationalBaseQuery($coorId)
+    {
         return $this->buildChapterQuery([
             'isActive' => 0,
             'coorId' => $coorId,
             'conditions' => false,
-            'queryType' => 'international'
+            'queryType' => 'international',
         ]);
     }
 
     /**
      * Chapter Details Base Query for all (active and zapped) chapters
-    */
+     */
     public function getChapterDetails($chId)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])
@@ -291,9 +294,9 @@ class BaseChapterController extends Controller
         $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
 
         // Load Primary Coordinator Dropdown List
-        $pcList = $this->userController->loadPrimaryList($chRegId, $chConfId)  ?? null;;
+        $pcList = $this->userController->loadPrimaryList($chRegId, $chConfId) ?? null;
         // Load Report Reviewer Coordinator Dropdown List
-        $rrList = $this->userController->loadReviewerList($chRegId, $chConfId)  ?? null;;
+        $rrList = $this->userController->loadReviewerList($chRegId, $chConfId) ?? null;
 
         return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
@@ -306,5 +309,4 @@ class BaseChapterController extends Controller
             'allMonths' => $allMonths, 'pcDetails' => $pcDetails,
         ];
     }
-
 }

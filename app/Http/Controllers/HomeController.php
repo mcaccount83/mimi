@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chapters;
-use App\Models\FinancialReportAwards;
 use App\Models\Resources;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,6 +13,7 @@ class HomeController extends Controller
      * Create a new controller instance.
      */
     protected $userController;
+
     protected $baseBoardController;
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController)
@@ -41,12 +40,12 @@ class HomeController extends Controller
         }
 
         if ($userType == 'coordinator') {
-            //Send to Coordinator Dashboard
+            // Send to Coordinator Dashboard
             return redirect()->to('coordviewprofile');
         }
 
         if ($userType == 'board') {
-            //Send to President or Member Profile Screen
+            // Send to President or Member Profile Screen
             $user_bdPositionId = $user['user_bdPositionId'];
 
             if ($user_bdPositionId == '1') {
@@ -57,7 +56,7 @@ class HomeController extends Controller
         }
 
         if ($userType == 'outgoing') {
-            //Send Outgoing Board Members to Financial Report ONLY
+            // Send Outgoing Board Members to Financial Report ONLY
             $userName = $user['user_name'];
             $userEmail = $user['user_email'];
             $loggedInName = $user['user_name'];

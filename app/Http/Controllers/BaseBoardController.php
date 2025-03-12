@@ -17,14 +17,14 @@ class BaseBoardController extends Controller
         $this->userController = $userController;
     }
 
-    /*/Custom Helpers/*/
+    /* /Custom Helpers/ */
     // $displayEOY = getEOYDisplay();
 
-    /*/User Controller/*/
+    /* /User Controller/ */
     // $this->userController->loadEmailDetails($chId);
     // $this->userController->loadConferenceCoord($chPcId);
 
-    /*/ Active Chapter Details Base Query /*/
+    /* / Active Chapter Details Base Query / */
     public function getChapterDetails($id)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'president',
@@ -90,5 +90,4 @@ class BaseBoardController extends Controller
             'pcDetails' => $pcDetails,
         ];
     }
-
 }

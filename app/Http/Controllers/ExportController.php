@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Coordinators;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -14,7 +13,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class ExportController extends Controller
 {
     protected $userController;
+
     protected $baseChapterController;
+
     protected $baseCoordinatorController;
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
@@ -26,15 +27,15 @@ class ExportController extends Controller
         $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
-    /*/Custom Helpers/*/
+    /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
-    /*/ Base Chapter Controller /*/
+    /* / Base Chapter Controller / */
     //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     //  $this->baseChapterController->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     //  $this->baseChapterController->getChapterDetails($chId)
 
-    /*/ Base Coordinator Controller /*/
+    /* / Base Coordinator Controller / */
     //  $this->baseCoordinatorController->getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
     //  $this->baseCoordinatorController->getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
     //  $this->baseCoordinatorController->getCoordinatorDetails($id)
@@ -222,10 +223,10 @@ class ExportController extends Controller
                 $exportChapterList[] = $rowData;
             }
 
-            $callback = function() use ($exportChapterList) {
+            $callback = function () use ($exportChapterList) {
                 $file = fopen('php://output', 'w');
 
-                if (!empty($exportChapterList)) {
+                if (! empty($exportChapterList)) {
                     fputcsv($file, array_keys($exportChapterList[0]));
                 }
 
@@ -332,17 +333,17 @@ class ExportController extends Controller
                     'Founder' => $chDetails->founders_name,
                     'Sistered By' => $chDetails->sistered_by,
                     'FormerName' => $chDetails->former_name,
-                    'Disband Date'=> $chDetails->zap_date,
+                    'Disband Date' => $chDetails->zap_date,
                     'Disband Reason' => $chDetails->disband_reason,
                 ];
 
                 $exportZapChapterList[] = $rowData;
             }
 
-            $callback = function() use ($exportZapChapterList) {
+            $callback = function () use ($exportZapChapterList) {
                 $file = fopen('php://output', 'w');
 
-                if (!empty($exportZapChapterList)) {
+                if (! empty($exportZapChapterList)) {
                     fputcsv($file, array_keys($exportZapChapterList[0]));
                 }
 
@@ -358,9 +359,6 @@ class ExportController extends Controller
 
         return redirect()->to('/home');
     }
-
-
-
 
     /**
      * Export Zapped Chapter List
@@ -530,14 +528,14 @@ class ExportController extends Controller
 
         // Extra conditions applied to *already filtered* base query
         $chapterList = $query->where(function ($query) use ($currentYear, $currentMonth) {
-                $query->where(function ($q) use ($currentYear, $currentMonth) {
-                    $q->where('chapters.next_renewal_year', '=', $currentYear)
-                        ->where('chapters.start_month_id', '<', $currentMonth);
-                })
+            $query->where(function ($q) use ($currentYear, $currentMonth) {
+                $q->where('chapters.next_renewal_year', '=', $currentYear)
+                    ->where('chapters.start_month_id', '<', $currentMonth);
+            })
                 ->orWhere(function ($q) use ($currentYear) {
                     $q->where('chapters.next_renewal_year', '<', $currentYear);
                 });
-            })
+        })
             ->orderBy('chapters.next_renewal_year')
             ->orderBy('chapters.start_month_id');
 
@@ -577,10 +575,10 @@ class ExportController extends Controller
                 $exportReRegList[] = $rowData;
             }
 
-            $callback = function() use ($exportReRegList) {
+            $callback = function () use ($exportReRegList) {
                 $file = fopen('php://output', 'w');
 
-                if (!empty($exportReRegList)) {
+                if (! empty($exportReRegList)) {
                     fputcsv($file, array_keys($exportReRegList[0]));
                 }
 
@@ -805,7 +803,7 @@ class ExportController extends Controller
         // Execute query
         $zappedChapterList = $chapterList->get();
 
-        //print sizeof($zappedChapterList); die;
+        // print sizeof($zappedChapterList); die;
         if (count($zappedChapterList) > 0) {
             $exportZapChapterList = [];
 
@@ -907,7 +905,7 @@ class ExportController extends Controller
         // Get January 1st of the previous year
         $previousYear = Carbon::now()->subYear()->startOfYear();
 
-        //Get Coordinators Details
+        // Get Coordinators Details
         $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
@@ -991,7 +989,7 @@ class ExportController extends Controller
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Expires' => '0',
         ];
-        //Get Coordinators Details
+        // Get Coordinators Details
         $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
@@ -1164,7 +1162,7 @@ class ExportController extends Controller
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Expires' => '0',
         ];
-        //Get Coordinators Details
+        // Get Coordinators Details
         $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
@@ -1322,7 +1320,7 @@ class ExportController extends Controller
         return redirect()->to('/home');
     }
 
-     /**
+    /**
      * Export Chapter Coordinator List
      */
     public function indexChapterCoordinator(Request $request)
@@ -1404,10 +1402,10 @@ class ExportController extends Controller
                 $exportChapterList[] = $rowData;
             }
 
-            $callback = function() use ($exportChapterList) {
+            $callback = function () use ($exportChapterList) {
                 $file = fopen('php://output', 'w');
 
-                if (!empty($exportChapterList)) {
+                if (! empty($exportChapterList)) {
                     fputcsv($file, array_keys($exportChapterList[0]));
                 }
 
@@ -1473,11 +1471,11 @@ class ExportController extends Controller
                     'Conference' => $cdConfId,
                     'Region' => $regionLongName,
                     'Coordinator Name' => $cdDetails->first_name.' '.$cdDetails->last_name,
-                    'Position'=> $displayPosition->long_title,
-                    'Sec Position'=> $secondaryPosition->long_title ?? null,
+                    'Position' => $displayPosition->long_title,
+                    'Sec Position' => $secondaryPosition->long_title ?? null,
                     'Email' => $cdDetails->email,
                     'Email2' => $cdDetails->sec_email,
-                    'Report To'=> $ReportTo,
+                    'Report To' => $ReportTo,
                     'Address' => $cdDetails->address,
                     'City' => $cdDetails->city,
                     'State' => $cdDetails->state,
@@ -1496,10 +1494,10 @@ class ExportController extends Controller
                 $exportCoordinatorList[] = $rowData;
             }
 
-            $callback = function() use ($exportCoordinatorList) {
+            $callback = function () use ($exportCoordinatorList) {
                 $file = fopen('php://output', 'w');
 
-                if (!empty($exportCoordinatorList)) {
+                if (! empty($exportCoordinatorList)) {
                     fputcsv($file, array_keys($exportCoordinatorList[0]));
                 }
 
@@ -1565,11 +1563,11 @@ class ExportController extends Controller
                     'Conference' => $cdConfId,
                     'Region' => $regionLongName,
                     'Coordinator Name' => $cdDetails->first_name.' '.$cdDetails->last_name,
-                    'Position'=> $displayPosition->long_title,
-                    'Sec Position'=> $secondaryPosition->long_title ?? null,
+                    'Position' => $displayPosition->long_title,
+                    'Sec Position' => $secondaryPosition->long_title ?? null,
                     'Email' => $cdDetails->email,
                     'Email2' => $cdDetails->sec_email,
-                    'Report To'=> $ReportTo,
+                    'Report To' => $ReportTo,
                     'Address' => $cdDetails->address,
                     'City' => $cdDetails->city,
                     'State' => $cdDetails->state,
@@ -1590,10 +1588,10 @@ class ExportController extends Controller
                 $exportCoordinatorList[] = $rowData;
             }
 
-            $callback = function() use ($exportCoordinatorList) {
+            $callback = function () use ($exportCoordinatorList) {
                 $file = fopen('php://output', 'w');
 
-                if (!empty($exportCoordinatorList)) {
+                if (! empty($exportCoordinatorList)) {
                     fputcsv($file, array_keys($exportCoordinatorList[0]));
                 }
 
@@ -1623,7 +1621,7 @@ class ExportController extends Controller
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Expires' => '0',
         ];
-        //Get Coordinators Details
+        // Get Coordinators Details
         $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
 
@@ -1631,7 +1629,7 @@ class ExportController extends Controller
         $coordinatorData = $this->userController->loadReportingTree($corId);
         $inQryArr = $coordinatorData['inQryArr'];
 
-        //Get Coordinator List mapped with login coordinator
+        // Get Coordinator List mapped with login coordinator
         $exportCoordinatorList = DB::table('coordinators as cd')
             ->select('cd.*', 'cp.long_title as position', 'cds.first_name as reporting_fname', 'cds.last_name as reporting_lname', 'rg.short_name as reg_name',
                 'cp2.long_title as sec_position')
@@ -1695,7 +1693,7 @@ class ExportController extends Controller
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Expires' => '0',
         ];
-        //Get Coordinators Details
+        // Get Coordinators Details
         $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
 
@@ -1703,7 +1701,7 @@ class ExportController extends Controller
         $coordinatorData = $this->userController->loadReportingTree($corId);
         $inQryArr = $coordinatorData['inQryArr'];
 
-        //Get Coordinator List mapped with login coordinator
+        // Get Coordinator List mapped with login coordinator
 
         $exportCoordinatorList = DB::table('coordinators as cd')
             ->select('cd.*', 'cp.long_title as position', 'cds.first_name as reporting_fname', 'cds.last_name as reporting_lname', 'rg.short_name as reg_name',
@@ -1802,14 +1800,14 @@ class ExportController extends Controller
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
                 $cdLeave = ($baseQuery['cdDetails']->on_leave == 1) ? 'YES' : '';
-                $necklace = ($cdDetails->recognition_necklace ==1) ? 'YES' : '';
+                $necklace = ($cdDetails->recognition_necklace == 1) ? 'YES' : '';
 
                 $rowData = [
                     'Conference' => $cdConfId,
                     'Region' => $regionLongName,
                     'Coordinator Name' => $cdDetails->first_name.' '.$cdDetails->last_name,
-                    'Position'=> $displayPosition->long_title,
-                    'Sec Position'=> $secondaryPosition->long_title ?? null,
+                    'Position' => $displayPosition->long_title,
+                    'Sec Position' => $secondaryPosition->long_title ?? null,
                     'Start Date' => $cdDetails->coordinator_start_date,
                     '<1 Year' => $cdDetails->recognition_year0,
                     '1 Year' => $cdDetails->recognition_year1,
@@ -1830,10 +1828,10 @@ class ExportController extends Controller
                 $exportCoordinatorList[] = $rowData;
             }
 
-            $callback = function() use ($exportCoordinatorList) {
+            $callback = function () use ($exportCoordinatorList) {
                 $file = fopen('php://output', 'w');
 
-                if (!empty($exportCoordinatorList)) {
+                if (! empty($exportCoordinatorList)) {
                     fputcsv($file, array_keys($exportCoordinatorList[0]));
                 }
 
@@ -1850,7 +1848,6 @@ class ExportController extends Controller
         return redirect()->to('/home');
     }
 
-
     /**
      * Export Board Election Report List
      */
@@ -1864,7 +1861,7 @@ class ExportController extends Controller
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Expires' => '0',
         ];
-        //Get Coordinators Details
+        // Get Coordinators Details
         $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $positionid = $corDetails['position_id'];
@@ -1985,5 +1982,4 @@ class ExportController extends Controller
 
         return redirect()->to('/home');
     }
-
 }

@@ -2,8 +2,8 @@
 
 namespace App\Policies\Forum;
 
-use TeamTeaTime\Forum\Policies\ThreadPolicy as ForumThreadPolicy;
 use TeamTeaTime\Forum\Models\Thread;
+use TeamTeaTime\Forum\Policies\ThreadPolicy as ForumThreadPolicy;
 
 class ThreadPolicy extends ForumThreadPolicy
 {
@@ -30,7 +30,7 @@ class ThreadPolicy extends ForumThreadPolicy
     {
         return $this->forumConditions->canManageLists($user)
             || $this->forumConditions->checkPublicAnnouncements($user, $thread)
-            || !$thread->locked;
+            || ! $thread->locked;
     }
 
     public function delete($user, Thread $thread): bool

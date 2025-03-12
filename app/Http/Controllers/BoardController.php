@@ -19,7 +19,6 @@ use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\incomingboard;
 use App\Models\Resources;
-use App\Models\State;
 use App\Models\User;
 use App\Models\Website;
 use Illuminate\Http\JsonResponse;
@@ -37,8 +36,11 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class BoardController extends Controller
 {
     protected $userController;
+
     protected $baseBoardController;
+
     protected $pdfController;
+
     protected $baseMailDataController;
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController,
@@ -52,7 +54,7 @@ class BoardController extends Controller
         $this->baseMailDataController = $baseMailDataController;
     }
 
-    /*/ Base Board Controller /*/
+    /* / Base Board Controller / */
     //  $this->baseBoardController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     //  $this->baseBoardController->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     //  $this->baseBoardController->getChapterDetails($chId)
@@ -134,7 +136,7 @@ class BoardController extends Controller
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
-            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments
+            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments,
         ];
 
         return view('boards.president')->with($data);
@@ -193,7 +195,7 @@ class BoardController extends Controller
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'borDetails' => $borDetails, 'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
-            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments
+            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments,
         ];
 
         return view('boards.member')->with($data);
@@ -205,7 +207,7 @@ class BoardController extends Controller
     public function updatePresident(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];;
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQueryPre = $this->baseBoardController->getChapterDetails($id);
@@ -223,16 +225,16 @@ class BoardController extends Controller
         // Handle web status - allow null values
         $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
         // Only convert to 0 if the website is not null but status is empty
-        if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+        if (! is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
             $ch_webstatus = 0;
         }
 
         // Handle website URL
         $website = $request->input('ch_website');
         // Only add http:// if the website field is not null or empty
-        if (!is_null($website) && !empty(trim($website))) {
-            if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
-                $website = 'http://' . $website;
+        if (! is_null($website) && ! empty(trim($website))) {
+            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+                $website = 'http://'.$website;
             }
         }
 
@@ -253,7 +255,7 @@ class BoardController extends Controller
             $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
-            //President Info
+            // President Info
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
                 $chapter = Chapters::with('president')->find($id);
                 $president = $chapter->president;
@@ -280,7 +282,7 @@ class BoardController extends Controller
                 ]);
             }
 
-            //AVP Info
+            // AVP Info
             $chapter = Chapters::with('avp')->find($id);
             $avp = $chapter->avp;
             if ($avp) {
@@ -338,7 +340,7 @@ class BoardController extends Controller
                 }
             }
 
-            //MVP Info
+            // MVP Info
             $chapter = Chapters::with('mvp')->find($id);
             $mvp = $chapter->mvp;
             if ($mvp) {
@@ -396,7 +398,7 @@ class BoardController extends Controller
                 }
             }
 
-            //TRS Info
+            // TRS Info
             $chapter = Chapters::with('treasurer')->find($id);
             $treasurer = $chapter->treasurer;
             if ($treasurer) {
@@ -454,7 +456,7 @@ class BoardController extends Controller
                 }
             }
 
-            //SEC Info
+            // SEC Info
             $chapter = Chapters::with('secretary')->find($id);
             $secretary = $chapter->secretary;
             if ($secretary) {
@@ -512,7 +514,7 @@ class BoardController extends Controller
                 }
             }
 
-            //Update Chapter MailData//
+            // Update Chapter MailData//
             $baseQueryUpd = $this->baseBoardController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
@@ -661,7 +663,7 @@ class BoardController extends Controller
                     ->queue(new ChapersUpdateListAdmin($mailData));
             }
 
-            //Website URL Change Notification//
+            // Website URL Change Notification//
             if ($webStatusUpd != $webStatusPre) {
                 if ($webStatusUpd == 2) {
                     Mail::to($emailCC)
@@ -689,7 +691,7 @@ class BoardController extends Controller
         $userId = $user['userId'];
         $bdId = $user['user_bdId'];
         $bdPositionid = $user['user_bdPositionId'];
-        $lastUpdatedBy = $user['user_name'];;
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQueryPre = $this->baseBoardController->getChapterDetails($id);
@@ -716,16 +718,16 @@ class BoardController extends Controller
         // Handle web status - allow null values
         $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
         // Only convert to 0 if the website is not null but status is empty
-        if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+        if (! is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
             $ch_webstatus = 0;
         }
 
         // Handle website URL
         $website = $request->input('ch_website');
         // Only add http:// if the website field is not null or empty
-        if (!is_null($website) && !empty(trim($website))) {
-            if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
-                $website = 'http://' . $website;
+        if (! is_null($website) && ! empty(trim($website))) {
+            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+                $website = 'http://'.$website;
             }
         }
 
@@ -769,7 +771,7 @@ class BoardController extends Controller
             $board->last_updated_date = $lastupdatedDate;
             $board->save();
 
-            //Update Chapter MailData//
+            // Update Chapter MailData//
             $baseQueryUpd = $this->baseBoardController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
@@ -817,13 +819,13 @@ class BoardController extends Controller
             // //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
-            if ($borDetailsUpd->email != $borDetailsPre->email ) {
+            if ($borDetailsUpd->email != $borDetailsPre->email) {
 
                 Mail::to($to_email2)
                     ->queue(new ChapersUpdateListAdmin($mailData));
             }
 
-            //Website URL Change Notification//
+            // Website URL Change Notification//
             if ($webStatusUpd != $webStatusPre) {
                 if ($webStatusUpd == 2) {
                     Mail::to($emailCC)
@@ -894,7 +896,7 @@ class BoardController extends Controller
         $year = $now->year;
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType,
-            ];
+        ];
 
         return view('boards.donation')->with($data);
     }
@@ -955,7 +957,7 @@ class BoardController extends Controller
     public function createBoardInfo(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];;
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $chId = $user['user_chapterId'];
@@ -972,22 +974,22 @@ class BoardController extends Controller
         // Handle web status - allow null values
         $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
         // Only convert to 0 if the website is not null but status is empty
-        if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+        if (! is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
             $ch_webstatus = 0;
         }
 
         // Handle website URL
         $website = $request->input('ch_website');
         // Only add http:// if the website field is not null or empty
-        if (!is_null($website) && !empty(trim($website))) {
-            if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
-                $website = 'http://' . $website;
+        if (! is_null($website) && ! empty(trim($website))) {
+            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+                $website = 'http://'.$website;
             }
         }
 
         $boundaryStatus = $request->input('BoundaryStatus');
         $issue_note = $request->input('BoundaryIssue');
-        //Boundary Issues Correct 0 | Not Correct 1
+        // Boundary Issues Correct 0 | Not Correct 1
         if ($boundaryStatus == 0) {
             $issue_note = '';
         }
@@ -1053,7 +1055,7 @@ class BoardController extends Controller
                 }
             }
 
-            //AVP Info
+            // AVP Info
             $AVPDetails = IncomingBoard::where('chapter_id', $chId)
                 ->where('board_position_id', '2')
                 ->get();
@@ -1100,7 +1102,7 @@ class BoardController extends Controller
                 }
             }
 
-            //MVP Info
+            // MVP Info
             $MVPDetails = IncomingBoard::where('chapter_id', $chId)
                 ->where('board_position_id', '3')
                 ->get();
@@ -1147,7 +1149,7 @@ class BoardController extends Controller
                 }
             }
 
-            //TRS Info
+            // TRS Info
             $TRSDetails = IncomingBoard::where('chapter_id', $chId)
                 ->where('board_position_id', '4')
                 ->get();
@@ -1194,7 +1196,7 @@ class BoardController extends Controller
                 }
             }
 
-            //SEC Info
+            // SEC Info
             $SECDetails = IncomingBoard::where('chapter_id', $chId)
                 ->where('board_position_id', '5')
                 ->get();
@@ -1303,7 +1305,7 @@ class BoardController extends Controller
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
-        $lastUpdatedBy = $user['user_name'];;
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         // $user = User::find($request->user()->id);
@@ -1664,7 +1666,7 @@ class BoardController extends Controller
             );
 
             if ($reportReceived == 1) {
-                $pdfPath =  $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
+                $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));

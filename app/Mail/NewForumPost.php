@@ -5,18 +5,18 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
-
 
 class NewForumPost extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $post;
-    public $thread;
-    public $category;
-    public $authorNameWithPosition;
 
+    public $thread;
+
+    public $category;
+
+    public $authorNameWithPosition;
 
     public function __construct($post, $thread, $category, $authorNameWithPosition)
     {
@@ -30,6 +30,6 @@ class NewForumPost extends Mailable
     {
         return $this->markdown('emails.forum.new-post')
                     // ->subject("New Reply in: {$this->thread->title}");
-                    ->subject("{$this->category->title} | RE:{$this->thread->title}");
+            ->subject("{$this->category->title} | RE:{$this->thread->title}");
     }
 }
