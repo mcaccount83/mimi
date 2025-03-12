@@ -560,14 +560,14 @@ class AdminController extends Controller
             'Pre-Balance Added to Financial Report from Documents',
             'EOY Fields Reset in Chapters Table',
             'EOY Fields Reset in Documents Table',
-            'Upate Outgoing Board Members from Board Details',
+            'Add Outgoing Board Members from Board Details',
             'Update Google Shared Drive to new year for Attachmnet Uploads',
         ];
 
         $displayTestingItemsItems = [
             'Display EOY Dashboard Menu Items for testers',
             'Display Board Election Report Button  for testers',
-            'Display Financal Report Button  for testers',
+            'Display Financal Report Button for testers',
         ];
 
         $displayLiveItemsItems = [

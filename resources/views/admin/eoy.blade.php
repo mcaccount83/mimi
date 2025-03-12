@@ -43,9 +43,9 @@
                     <div class="col-md-2">
                         <h4>Fiscal Year: {{ $admin->fiscal_year }}</h4>
                     </div>
-                    <div class="col-md-10">
-                        <p><strong>Reset in December.</strong><br>
-                            Reset Data to disable all menus and buttons and set for New Year before dates auto change to new year on all items.</p>
+                    <div class="col-md-6">
+                        <p><strong>RESET IN DECEMBER.</strong><br>
+                            Reset Data to disable all menus and buttons back to *ADMIN* ONLY and prep for New Year before dates auto change to new year on all Buttons/Links/Emails/Forms.</p>
                             <h5>This CANNOT be undone!</h5>
                             <button type="button" id="reset-year" class="btn bg-gradient-danger"><i class="fas fa-undo" ></i>&nbsp;&nbsp;&nbsp;Reset for New Year</button>
                     </div>
@@ -86,7 +86,7 @@
                     <div class="grid-item">
                         <div class="card card-outline card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">#2 - Activate Menus/Buttons/Links BEFORE Testing</h3><br>
+                                <h3 class="card-title">#2 - Activate *TESTING* Menus/Buttons/Links BEFORE Testing</h3><br>
                                 <p style="color: #007bff; font-weight: bold;">Complete in Feb/March when ready for testing.</p>
                                 <button type="button" id="view-eoy-testing" class="btn bg-gradient-primary mb-3"><i class="fas fa-eye mr-2"></i>Display EOY Testing Items</button>
                             </div>
