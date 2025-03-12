@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Mail\ChapersUpdateEINCoor;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapterAddListAdmin;
@@ -44,7 +46,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
-class ChapterController extends Controller
+class ChapterController extends Controller implements HasMiddleware
 {
     protected $userController;
 
@@ -59,13 +61,21 @@ class ChapterController extends Controller
     public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
         ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController)
     {
-        $this->middleware('auth')->except('logout');
-        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+        
+
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseChapterController = $baseChapterController;
         $this->forumSubscriptionController = $forumSubscriptionController;
         $this->baseMailDataController = $baseMailDataController;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+        ];
     }
 
     /* /Custom Helpers/ */

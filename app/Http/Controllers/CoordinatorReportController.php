@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Models\Chapters;
 use App\Models\CoordinatorTree;
 use App\Models\User;
@@ -9,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class CoordinatorReportController extends Controller
+class CoordinatorReportController extends Controller implements HasMiddleware
 {
     protected $userController;
 
@@ -17,10 +19,18 @@ class CoordinatorReportController extends Controller
 
     public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController)
     {
-        $this->middleware('auth')->except('logout');
-        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+        
+
         $this->userController = $userController;
         $this->baseCoordinatorController = $baseCoordinatorController;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+        ];
     }
 
     /* /Custom Helpers/ */

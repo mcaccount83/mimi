@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Requests\Store990NGoogleRequest;
 use App\Http\Requests\StoreAwardGoogleRequest;
 use App\Http\Requests\StoreEINGoogleRequest;
@@ -24,11 +26,13 @@ use Illuminate\Support\Str;
 const client_id = 'YOUR_CLIENT_ID';
 const client_secret = 'YOUR_CLIENT_SECRET';
 
-class GoogleController extends Controller
+class GoogleController extends Controller implements HasMiddleware
 {
-    public function __construct()
+    public static function middleware(): array
     {
-        $this->middleware('auth')->except('logout');
+        return [
+            new Middleware('auth', except: ['logout']),
+        ];
     }
 
     private function token()

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class ChapterReportController extends Controller
+class ChapterReportController extends Controller implements HasMiddleware
 {
     protected $userController;
 
@@ -15,10 +17,18 @@ class ChapterReportController extends Controller
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController)
     {
-        $this->middleware('auth')->except('logout');
-        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+        
+
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+        ];
     }
 
     /* / Base Chapter Controller / */

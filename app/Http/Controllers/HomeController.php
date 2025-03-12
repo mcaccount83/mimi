@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Models\Resources;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class HomeController extends Controller
+class HomeController extends Controller implements HasMiddleware
 {
     /**
      * Create a new controller instance.
@@ -18,9 +20,16 @@ class HomeController extends Controller
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController)
     {
-        $this->middleware('auth')->except('logout');
+        
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+        ];
     }
 
     /**

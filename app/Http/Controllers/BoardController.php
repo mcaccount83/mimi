@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Requests\CheckCurrentPasswordBoardRequest;
 use App\Http\Requests\UpdatePasswordBoardRequest;
 use App\Mail\ChapersUpdateListAdmin;
@@ -33,7 +35,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class BoardController extends Controller
+class BoardController extends Controller implements HasMiddleware
 {
     protected $userController;
 
@@ -46,12 +48,20 @@ class BoardController extends Controller
     public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController,
         BaseMailDataController $baseMailDataController)
     {
-        $this->middleware('auth')->except('logout');
-        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndBoard::class);
+        
+
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseBoardController = $baseBoardController;
         $this->baseMailDataController = $baseMailDataController;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndBoard::class,
+        ];
     }
 
     /* / Base Board Controller / */

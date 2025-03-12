@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsM2MOnline;
 use App\Mail\PaymentsReRegChapterThankYou;
@@ -18,7 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
 
-class PaymentController extends Controller
+class PaymentController extends Controller implements HasMiddleware
 {
     protected $userController;
 
@@ -26,9 +28,16 @@ class PaymentController extends Controller
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController)
     {
-        $this->middleware('auth')->except('logout');
+        
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+        ];
     }
 
     /**
