@@ -537,7 +537,7 @@ window.onload = function () {
                             </script>
                         @endif
 
-                        @if ($errors->any())
+                        {{-- @if ($errors->any())
                             <script>
                                 document.addEventListener("DOMContentLoaded", function() {
                                     Swal.fire({
@@ -549,7 +549,21 @@ window.onload = function () {
                                     });
                                 });
                             </script>
-                        @endif
+                        @endif --}}
+
+                        @if(View::shared('errors', false) !== false && $errors->any())
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'There were some errors!',
+                html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
+                showConfirmButton: true,
+            });
+        });
+    </script>
+@endif
 
                         <section class="content-header">
                             <div class="container-fluid">

@@ -27,12 +27,12 @@ return [
 
         // Accepts route group configuration
         'route' => [
-            'prefix' => 'jobs',
+            'prefix' => 'admin/queue',
             // 'middleware' => [],
         ],
 
         // Set the monitored jobs count to be displayed per page.
-        'per_page' => 35,
+        'per_page' => 20,
 
         // Show custom data stored on model
         'show_custom_data' => false,

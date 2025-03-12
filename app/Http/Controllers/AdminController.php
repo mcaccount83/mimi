@@ -559,6 +559,7 @@ class AdminController extends Controller implements HasMiddleware
         $fiscalYears = DB::table('admin')->distinct()->pluck('fiscal_year');
 
         $resetEOYTableItems = [
+            'Set all Outgoing Users to Inactive',
             'Clear Outgoing Board Member Table',
             'Clear Incoming Board Member Table',
             'Ending Balance Added to Documents from Financial Reports',
@@ -586,14 +587,12 @@ class AdminController extends Controller implements HasMiddleware
         $displayCoorindatorMenuItems = [
             'Display EOY Dashboard Menu Items for testers',
             'Display EOY Chapter Profile Buttons for testers',
-
             'Financial Report for Chapters - button will be available after June 1st.',
         ];
 
         $displayCoorindatorMenuItems = [
             'Display EOY Dashboard Menu Items for testers',
             'Display EOY Chapter Profile Buttons for testers',
-
             'Financial Report for Chapters - button will be available after June 1st.',
         ];
 
@@ -687,6 +686,14 @@ class AdminController extends Controller implements HasMiddleware
             $currentYear = Carbon::now()->year;
             $nextYear = $currentYear + 1;
             $lastyear = $currentYear - 1;
+
+            // Make outgoing users inactive
+            DB::table('users')
+                ->where('user_type', 'outgoing')
+                ->where('is_active', '1')
+                ->update([
+                    'is_active' => '0',
+                ]);
 
             // Remove Data from the `outgoing_board_member` and `incoming_board_member` tables
             OutgoingBoard::query()->delete();
