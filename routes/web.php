@@ -88,9 +88,7 @@ Route::get('/test-429', function () {
 // Public Page Routes...
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
 Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])->name('board.resources');
-Route::get('/pdf-viewer', function () {
-    return view('public.pdf-viewer');
-})->name('pdf-viewer');
+Route::view('/pdf-viewer', 'public.pdf-viewer')->name('pdf-viewer');
 
 // Admin Controller Routes...
 Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
