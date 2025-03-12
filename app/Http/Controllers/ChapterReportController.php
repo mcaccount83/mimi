@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -17,7 +17,6 @@ class ChapterReportController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController)
     {
-        
 
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;

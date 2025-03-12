@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\ForumCategorySubscription;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
 class ForumSubscriptionController extends Controller implements HasMiddleware
@@ -25,7 +25,6 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
     {
-        
 
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;

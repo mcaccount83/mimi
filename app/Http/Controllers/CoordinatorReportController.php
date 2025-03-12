@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use App\Models\Chapters;
 use App\Models\CoordinatorTree;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -19,7 +19,6 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController)
     {
-        
 
         $this->userController = $userController;
         $this->baseCoordinatorController = $baseCoordinatorController;

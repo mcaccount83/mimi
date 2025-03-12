@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsM2MOnline;
 use App\Mail\PaymentsReRegChapterThankYou;
@@ -13,6 +11,8 @@ use App\Models\Chapters;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +28,7 @@ class PaymentController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController)
     {
-        
+
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
     }

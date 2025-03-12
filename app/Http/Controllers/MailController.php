@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Requests\IndexMailRequest;
 use Illuminate\Database as DatabaseConnections;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use romanzipp\QueueMonitor\Controllers\Payloads\Metric;
@@ -20,7 +20,7 @@ class MailController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController)
     {
-        
+
         $this->userController = $userController;
     }
 

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use App\Models\Resources;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller implements HasMiddleware
@@ -20,7 +20,7 @@ class HomeController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController)
     {
-        
+
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
     }

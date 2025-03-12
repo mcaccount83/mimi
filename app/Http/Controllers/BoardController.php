@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Requests\CheckCurrentPasswordBoardRequest;
 use App\Http\Requests\UpdatePasswordBoardRequest;
 use App\Mail\ChapersUpdateListAdmin;
@@ -26,6 +24,8 @@ use App\Models\Website;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -48,7 +48,6 @@ class BoardController extends Controller implements HasMiddleware
     public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController,
         BaseMailDataController $baseMailDataController)
     {
-        
 
         $this->userController = $userController;
         $this->pdfController = $pdfController;

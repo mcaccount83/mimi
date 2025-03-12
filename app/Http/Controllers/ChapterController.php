@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use App\Mail\ChapersUpdateEINCoor;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapterAddListAdmin;
@@ -39,6 +37,8 @@ use App\Models\Website;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -61,7 +61,6 @@ class ChapterController extends Controller implements HasMiddleware
     public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
         ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController)
     {
-        
 
         $this->userController = $userController;
         $this->pdfController = $pdfController;
