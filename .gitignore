@@ -8,6 +8,7 @@
 public/storage
 storage
 /storage/*.key
+/storage/pail
 /vendor
 .env
 .env.backup
@@ -20,5 +21,6 @@ npm-debug.log
 yarn-error.log
 /.fleet
 /.idea
+/.nova
 /.vscode
 run_scheduler.php
