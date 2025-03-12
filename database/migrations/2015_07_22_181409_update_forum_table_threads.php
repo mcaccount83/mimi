@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class UpdateForumTableThreads extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -24,4 +24,4 @@ class UpdateForumTableThreads extends Migration
             $table->renameColumn('category_id', 'parent_category');
         });
     }
-}
+};

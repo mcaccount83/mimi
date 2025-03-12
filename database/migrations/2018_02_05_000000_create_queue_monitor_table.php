@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use romanzipp\QueueMonitor\Enums\MonitorStatus;
 
-class CreateQueueMonitorTable extends Migration
+return new class extends Migration
 {
     /**
      * Get the customized connection name.
@@ -50,4 +50,4 @@ class CreateQueueMonitorTable extends Migration
     {
         Schema::drop(config('queue-monitor.table'));
     }
-}
+};
