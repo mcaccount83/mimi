@@ -6,52 +6,60 @@ use App\Http\Requests\AddBugsAdminRequest;
 use App\Http\Requests\AddResourcesAdminRequest;
 use App\Http\Requests\AddToolkitAdminRequest;
 use App\Http\Requests\UpdateBugsAdminRequest;
-use App\Http\Requests\UpdateEOYRequest;
 use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
-use App\Models\OutgoingBoard;
-use App\Models\IncomingBoard;
 use App\Models\Boards;
 use App\Models\Bugs;
 use App\Models\Chapters;
 use App\Models\Coordinators;
-use App\Models\State;
 use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
-use TeamTeaTime\Forum\Models\Category as ForumCategory;
 use App\Models\GoogleDrive;
+use App\Models\IncomingBoard;
 use App\Models\Month;
+use App\Models\OutgoingBoard;
 use App\Models\Resources;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
-class AdminController extends Controller
+class AdminController extends Controller implements HasMiddleware
 {
     protected $userController;
+
     protected $baseChapterController;
+
     protected $baseCoordinatorController;
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
     {
-        $this->middleware('auth')->except('logout');
-        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
-    /*/Custom Helpers/*/
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+        ];
+    }
+
+    /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
     /**
@@ -81,7 +89,7 @@ class AdminController extends Controller
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditDetails = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
+        $canEditDetails = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
 
         $admin = DB::table('bugs')
             ->select('bugs.*',
@@ -175,7 +183,7 @@ class AdminController extends Controller
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 7 || $secPositionId == 7);  //CC Coordinator
+        $canEditFiles = ($positionId == 7 || $secPositionId == 7);  // CC Coordinator
 
         $resources = DB::table('resources')
             ->select('resources.*', 'resources.id as id',
@@ -288,7 +296,7 @@ class AdminController extends Controller
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
+        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
 
         $resources = DB::table('resources')
             ->select('resources.*',
@@ -394,7 +402,7 @@ class AdminController extends Controller
     /**
      * View List of ReReg Payments if Dates Need to be Udpated
      */
-    public function showReRegDate(Request $request)
+    public function showReRegDate(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
@@ -406,7 +414,6 @@ class AdminController extends Controller
 
         return view('admin.reregdate')->with($data);
     }
-
 
     public function editReRegDate(Request $request, $id): View
     {
@@ -445,7 +452,7 @@ class AdminController extends Controller
             Log::error($e);  // Log the error
 
             return redirect()->to('/admin/reregdate')->with('success', 'Re-Reg Date updated successfully.');
-            }
+        }
 
         return redirect()->to('/admin/reregdate')->with('error', 'Failed to update Re-Reg Date.');
     }
@@ -539,7 +546,7 @@ class AdminController extends Controller
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
+        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
 
         $admin = DB::table('admin')
             ->select('admin.*',
@@ -575,7 +582,6 @@ class AdminController extends Controller
             'Display Board Election Report Button for Board Members after May 1st',
             'Display Financal Report Button for Board Members after June 1st',
         ];
-
 
         $displayCoorindatorMenuItems = [
             'Display EOY Dashboard Menu Items for testers',
@@ -620,7 +626,6 @@ class AdminController extends Controller
             'Remove Coordinators from BoardList',
         ];
 
-
         $subscribeListItems = [
             'Subscribe Coordinators to BoardList',
             'Subscribe Board Members to BoardList',
@@ -630,7 +635,7 @@ class AdminController extends Controller
         $data = ['admin' => $admin, 'canEditFiles' => $canEditFiles, 'fiscalYears' => $fiscalYears,
             'resetEOYTableItems' => $resetEOYTableItems, 'displayCoorindatorMenuItems' => $displayCoorindatorMenuItems, 'displayChapterButtonItems' => $displayChapterButtonItems,
             'displayTestingItemsItems' => $displayTestingItemsItems, 'displayLiveItemsItems' => $displayLiveItemsItems, 'unSubscribeListItems' => $unSubscribeListItems,
-            'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems
+            'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems,
         ];
 
         return view('admin.eoy')->with($data);
@@ -658,14 +663,14 @@ class AdminController extends Controller
 
             DB::commit(); // Commit transaction
 
-                return response()->json(['success' => 'Fiscal year reset successfully.']);
-            } catch (\Exception $e) {
-                DB::rollback(); // Rollback Transaction
-                Log::error($e); // Log the error
+            return response()->json(['success' => 'Fiscal year reset successfully.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
 
-                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-            }
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
+    }
 
     /**
      * Udate EOY Database Tables
@@ -761,7 +766,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'reset_eoy_tables' => '1',
@@ -769,16 +774,16 @@ class AdminController extends Controller
                     'updated_at' => $lastupdatedDate,
                 ]);
 
-                DB::commit(); // Commit transaction
+            DB::commit(); // Commit transaction
 
-                return response()->json(['success' => 'Data tables successfully updated, copied, and renamed.']);
-            } catch (\Exception $e) {
-                DB::rollback(); // Rollback Transaction
-                Log::error($e); // Log the error
+            return response()->json(['success' => 'Data tables successfully updated, copied, and renamed.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
 
-                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-            }
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
+    }
 
     /**
      * Udate EOY Database Tables AFTER Testing
@@ -791,15 +796,15 @@ class AdminController extends Controller
             $lastUpdatedBy = $user['user_name'];
             $lastupdatedDate = date('Y-m-d H:i:s');
 
-             // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
-             $chapters = Chapters::with('financialReportLastYear', 'documents')->get();
-             foreach ($chapters as $chapter) {
+            // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
+            $chapters = Chapters::with('financialReportLastYear', 'documents')->get();
+            foreach ($chapters as $chapter) {
                 if ($chapter->financialReportLastYear && $chapter->documents) {
                     $document = $chapter->documents;
                     $document->balance = $chapter->financialReportLastYear->post_balance;
                     $document->save();
                 }
-             }
+            }
 
             OutgoingBoard::query()->delete();
             IncomingBoard::query()->delete();
@@ -815,8 +820,8 @@ class AdminController extends Controller
                 ]);
             }
 
-             // Update chapters table: Set specified columns to NULL
-             DB::table('chapters')->update([
+            // Update chapters table: Set specified columns to NULL
+            DB::table('chapters')->update([
                 'boundary_issues' => null,
                 'boundary_issue_notes' => null,
                 'boundary_issue_resolved' => null,
@@ -857,7 +862,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'reset_AFTER_testing' => '1',
@@ -865,16 +870,16 @@ class AdminController extends Controller
                     'updated_at' => $lastupdatedDate,
                 ]);
 
-                DB::commit(); // Commit transaction
+            DB::commit(); // Commit transaction
 
-                return response()->json(['success' => 'Data sucessfully reset.']);
-            } catch (\Exception $e) {
-                DB::rollback(); // Rollback Transaction
-                Log::error($e); // Log the error
+            return response()->json(['success' => 'Data sucessfully reset.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
 
-                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-            }
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
+    }
 
     /**
      * Udate User Database Tables
@@ -909,7 +914,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'update_user_tables' => '1',
@@ -917,16 +922,16 @@ class AdminController extends Controller
                     'updated_at' => $lastupdatedDate,
                 ]);
 
-                DB::commit(); // Commit transaction
+            DB::commit(); // Commit transaction
 
-                return response()->json(['success' => 'User data tables successfully updated, copied, and renamed.']);
-            } catch (\Exception $e) {
-                DB::rollback(); // Rollback Transaction
-                Log::error($e); // Log the error
+            return response()->json(['success' => 'User data tables successfully updated, copied, and renamed.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
 
-                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-            }
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
+    }
 
     /**
      * View EOY Teating Items
@@ -941,7 +946,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'display_testing' => '1',
@@ -949,16 +954,16 @@ class AdminController extends Controller
                     'updated_at' => $lastupdatedDate,
                 ]);
 
-                DB::commit(); // Commit transaction
+            DB::commit(); // Commit transaction
 
-                return response()->json(['success' => 'Testing items successfully set to view.']);
-            } catch (\Exception $e) {
-                DB::rollback(); // Rollback Transaction
-                Log::error($e); // Log the error
+            return response()->json(['success' => 'Testing items successfully set to view.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
 
-                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-            }
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
+    }
 
     /**
      * View EOY Live Items
@@ -968,12 +973,12 @@ class AdminController extends Controller
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];;
+            $lastUpdatedBy = $user['user_name'];
             $lastupdatedDate = date('Y-m-d H:i:s');
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'display_live' => '1',
@@ -981,16 +986,16 @@ class AdminController extends Controller
                     'updated_at' => $lastupdatedDate,
                 ]);
 
-                DB::commit(); // Commit transaction
+            DB::commit(); // Commit transaction
 
-                return response()->json(['success' => 'Live items successfully set to view.']);
-            } catch (\Exception $e) {
-                DB::rollback(); // Rollback Transaction
-                Log::error($e); // Log the error
+            return response()->json(['success' => 'Live items successfully set to view.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
 
-                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-            }
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
+    }
 
     public function updateSubscribeLists(Request $request): JsonResponse
     {
@@ -1010,7 +1015,7 @@ class AdminController extends Controller
                 ->first();
             $categoryIdPublic = $categoryPublic->id;
 
-             // Get active coordinators
+            // Get active coordinators
             $coordinatorUserIds = Coordinators::where('is_active', '1')
                 ->where('on_leave', '0')
                 ->get()
@@ -1040,7 +1045,7 @@ class AdminController extends Controller
                     ->where('category_id', $categoryIdBoardList)
                     ->first();
 
-                if (!$existingSubscription) {
+                if (! $existingSubscription) {
                     ForumCategorySubscription::create([
                         'user_id' => $user->id,
                         'category_id' => $categoryIdBoardList,
@@ -1054,7 +1059,7 @@ class AdminController extends Controller
                     ->where('category_id', $categoryIdPublic)
                     ->first();
 
-                if (!$existingSubscription) {
+                if (! $existingSubscription) {
                     ForumCategorySubscription::create([
                         'user_id' => $user->id,
                         'category_id' => $categoryIdPublic,
@@ -1064,7 +1069,7 @@ class AdminController extends Controller
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'subscribe_list' => '1',
@@ -1072,16 +1077,16 @@ class AdminController extends Controller
                     'updated_at' => $lastupdatedDate,
                 ]);
 
-                DB::commit(); // Commit transaction
+            DB::commit(); // Commit transaction
 
-                return response()->json(['success' => 'Successfully subscribed to lists.']);
-            } catch (\Exception $e) {
-                DB::rollback(); // Rollback Transaction
-                Log::error($e); // Log the error
+            return response()->json(['success' => 'Successfully subscribed to lists.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
 
-                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-            }
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
+    }
 
     public function updateUnsubscribeLists(Request $request): JsonResponse
     {
@@ -1103,14 +1108,14 @@ class AdminController extends Controller
 
             // Delete board members for this category
             $unsubscribePublic = ForumCategorySubscription::where('category_id', $categoryPublic->id)
-                ->whereHas('user', function($query) {
+                ->whereHas('user', function ($query) {
                     $query->where('user_type', 'board');
                 })
                 ->delete();
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->limit(1)
                 ->update([
                     'unsubscribe_list' => '1',
@@ -1118,18 +1123,18 @@ class AdminController extends Controller
                     'updated_at' => $lastupdatedDate,
                 ]);
 
-                DB::commit(); // Commit transaction
+            DB::commit(); // Commit transaction
 
-                return response()->json(['success' => 'Successfully unsubscribed to lists.']);
-            } catch (\Exception $e) {
-                DB::rollback(); // Rollback Transaction
-                Log::error($e); // Log the error
+            return response()->json(['success' => 'Successfully unsubscribed to lists.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
 
-                return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-            }
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
+    }
 
-     /**
+    /**
      * view Google Drive Shared Folder Ids
      */
     public function showGoogleDrive(): View
@@ -1162,7 +1167,7 @@ class AdminController extends Controller
 
             $message = 'Google Drive ID updated successfully';
 
-            return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('admin.googledrive'),]);
+            return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('admin.googledrive')]);
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback transaction on exception
@@ -1170,8 +1175,7 @@ class AdminController extends Controller
 
             $message = 'Something went wrong, Please try again.';
 
-            return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('admin.googledrive'),]);
+            return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('admin.googledrive')]);
         }
     }
-
 }

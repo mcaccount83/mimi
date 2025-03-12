@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -46,32 +46,31 @@ class User extends Authenticatable
 
     public function authorFullName()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name.' '.$this->last_name;
     }
 
     public function authorNameWithPosition()
     {
         if ($this->user_type == 'coordinator') {
             $regionText = ($this->coordinator->region && $this->coordinator->region->long_name !== 'None')
-                ? ', ' . $this->coordinator->region->long_name . ' Region'
-                : ', ' . $this->coordinator->conference->conference_description;
+                ? ', '.$this->coordinator->region->long_name.' Region'
+                : ', '.$this->coordinator->conference->conference_description;
 
-            return $this->first_name . ' ' . $this->last_name . ', ' .
-                   $this->coordinator->displayPosition->long_title . ' <br> ' .
-                   $this->coordinator->conference->conference_name . $regionText;
+            return $this->first_name.' '.$this->last_name.', '.
+                   $this->coordinator->displayPosition->long_title.' <br> '.
+                   $this->coordinator->conference->conference_name.$regionText;
         } elseif ($this->user_type == 'board') {
-            return $this->first_name . ' ' . $this->last_name . ', ' .
-                   $this->board->position->position . ' <br> ' .
-                   $this->board->chapters->name . ', ' .
+            return $this->first_name.' '.$this->last_name.', '.
+                   $this->board->position->position.' <br> '.
+                   $this->board->chapters->name.', '.
                    $this->board->chapters->state->state_short_name;
         }
-        return $this->first_name . ' ' . $this->last_name;
+
+        return $this->first_name.' '.$this->last_name;
     }
 
-
-    public function categorySubscriptions()
+    public function categorySubscriptions(): HasMany
     {
         return $this->hasMany(ForumCategorySubscription::class);
     }
-
 }

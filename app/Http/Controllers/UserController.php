@@ -11,14 +11,18 @@ use App\Models\CoordinatorTree;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
-    public function __construct()
+    public static function middleware(): array
     {
-        $this->middleware('auth')->except('logout');
+        return [
+            new Middleware('auth', except: ['logout']),
+        ];
     }
 
     /**
@@ -67,14 +71,14 @@ class UserController extends Controller
     public function loadUserInformation(Request $request)
     {
         $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition',
-                    'board', 'board.position', 'outgoing'])
+            'board', 'board.position', 'outgoing'])
             ->find($request->user()->id);
 
         $userInfo = [
             'userId' => $user->id,
             'userType' => $user->user_type,
             'userStatus' => $user->is_active,
-            'user_name' => $user->first_name . ' ' . $user->last_name,
+            'user_name' => $user->first_name.' '.$user->last_name,
             'user_email' => $user->email,
         ];
 
@@ -233,6 +237,7 @@ class UserController extends Controller
                 $i++;
             }
         }
+
         return response()->json($str);
     }
 
@@ -352,12 +357,12 @@ class UserController extends Controller
         return $rrDetails; // Return all coordinators as a collection
     }
 
-     /**
+    /**
      * Load Reports To Dropdown List
      */
     public function loadReportsToList($cdId, $cdConfId, $cdPositionid)
     {
-        if ($cdConfId == 0 || $cdPositionid == 7){
+        if ($cdConfId == 0 || $cdPositionid == 7) {
             $rcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
                 ->where('position_id', '>', 7)
                 ->where('position_id', '>=', $cdPositionid)
@@ -365,7 +370,7 @@ class UserController extends Controller
                 ->where('is_active', 1)
                 ->where('on_leave', '!=', '1')
                 ->get();
-        }else{
+        } else {
             $rcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
                 ->where('conference_id', $cdConfId)
                 ->whereBetween('position_id', [3, 7])
@@ -399,5 +404,4 @@ class UserController extends Controller
 
         return $rcDetails; // Return all coordinators as a collection
     }
-
 }

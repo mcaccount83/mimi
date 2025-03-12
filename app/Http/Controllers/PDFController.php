@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ChapterDisbandLetter;
 use App\Mail\ProbationNoPmtLetter;
 use App\Mail\ProbationNoRptLetter;
 use App\Mail\ProbationPartyLetter;
 use App\Mail\ProbationReleaseLetter;
 use App\Mail\WarningPartyLetter;
-use App\Mail\ChapterDisbandLetter;
+use App\Models\Documents;
 use App\Models\GoogleDrive;
 use App\Models\User;
-use App\Models\Documents;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -18,14 +18,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class PDFController extends Controller
 {
     protected $userController;
+
     protected $baseChapterController;
+
     protected $googleController;
+
     protected $baseMailDataController;
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController,
@@ -57,7 +60,7 @@ class PDFController extends Controller
         return $accessToken;
     }
 
-    /*/ Base Chapter Controller /*/
+    /* / Base Chapter Controller / */
     //  $this->baseChapterController->getChapterDetails($chId)
 
     /**
@@ -71,7 +74,7 @@ class PDFController extends Controller
         $googleDrive = GoogleDrive::first();
         $eoyDrive = $googleDrive->eoy_uploads;
         $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
         $chDetails = $baseQuery['chDetails'];
@@ -97,7 +100,7 @@ class PDFController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
-                $newDocData = ['chapter_id' => $chapterId,];
+                $newDocData = ['chapter_id' => $chapterId];
                 $newDocData['financial_pdf_path'] = $file_id;
                 Documents::create($newDocData);
             }
@@ -106,7 +109,7 @@ class PDFController extends Controller
         }
     }
 
-     /**
+    /**
      * Generate Financial Report
      */
     public function generateFinancialReport($chapterId)
@@ -233,7 +236,7 @@ class PDFController extends Controller
     {
         $googleDrive = GoogleDrive::first();
         $goodStandingDrive = $googleDrive->good_standing_letter;
-        $sharedDriveId = $goodStandingDrive;  //Shared Drive -> Good Standing Letter
+        $sharedDriveId = $goodStandingDrive;  // Shared Drive -> Good Standing Letter
 
         $result = $this->generateGoodStanding($chapterId, false);
         $pdf = $result['pdf'];
@@ -252,7 +255,7 @@ class PDFController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
-                $newDocData = ['chapter_id' => $chapterId,];
+                $newDocData = ['chapter_id' => $chapterId];
                 $newDocData['good_standing_letter'] = $file_id;
                 Documents::create($newDocData);
             }
@@ -261,7 +264,7 @@ class PDFController extends Controller
         }
     }
 
-     /**
+    /**
      * Generate Chaper in Good Standing PDF All Board Members
      */
     public function generateGoodStanding($chapterId, $streamResponse = true)
@@ -294,7 +297,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
 
-        $filename = $pdfData['chapterState'].'_'.$pdfData['ch_name']."_ChapterInGoodStanding.pdf";
+        $filename = $pdfData['chapterState'].'_'.$pdfData['ch_name'].'_ChapterInGoodStanding.pdf';
 
         if ($streamResponse) {
             return $pdf->stream($filename, ['Attachment' => 0]);
@@ -325,21 +328,21 @@ class PDFController extends Controller
         $sharedDriveId = $disbandDrive;
 
         switch ($letterType) {
-                    case 'general':
-                        $type = 'general';
-                        break;
-                    case 'did_not_start':
-                        $type = 'did_not_start';
-                        break;
-                    case 'no_report':
-                        $type = 'no_report';
-                        break;
-                    case 'no_payment':
-                        $type = 'no_payment';
-                        break;
-                    case 'no_communication':
-                        $type = 'no_communication';
-                        break;
+            case 'general':
+                $type = 'general';
+                break;
+            case 'did_not_start':
+                $type = 'did_not_start';
+                break;
+            case 'no_report':
+                $type = 'no_report';
+                break;
+            case 'no_payment':
+                $type = 'no_payment';
+                break;
+            case 'no_communication':
+                $type = 'no_communication';
+                break;
             default:
                 return response()->json(['message' => 'Invalid letter type selected'], 400);
         }
@@ -362,7 +365,7 @@ class PDFController extends Controller
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
-                $newDocData = ['chapter_id' => $chapterId,];
+                $newDocData = ['chapter_id' => $chapterId];
                 $newDocData['disband_letter_path'] = $file_id;
                 Documents::create($newDocData);
             }
@@ -442,10 +445,10 @@ class PDFController extends Controller
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
             [
-            'ch_name' => $sanitizedChapterName,
-            'today' => $dateFormatted,
-            'nextMonth' => $nextMonthFormatted,
-            'startMonth' => $startMonthName,
+                'ch_name' => $sanitizedChapterName,
+                'today' => $dateFormatted,
+                'nextMonth' => $nextMonthFormatted,
+                'startMonth' => $startMonthName,
             ]
         );
 
@@ -531,7 +534,7 @@ class PDFController extends Controller
                 }
             } else {
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
-                $newDocData = ['chapter_id' => $chapterId,];
+                $newDocData = ['chapter_id' => $chapterId];
                 if ($letterType === 'probation_release') {
                     $newDocData['probation_release_path'] = $file_id;
                 } else {
@@ -634,10 +637,10 @@ class PDFController extends Controller
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
             [
-            'ch_name' => $sanitizedChapterName,
-            'today' => $dateFormatted,
-            'nextMonth' => $nextMonthFormatted,
-            'startMonth' => $startMonthName,
+                'ch_name' => $sanitizedChapterName,
+                'today' => $dateFormatted,
+                'nextMonth' => $nextMonthFormatted,
+                'startMonth' => $startMonthName,
             ]
         );
 
@@ -730,11 +733,10 @@ class PDFController extends Controller
         $bodyContents = $response->getBody()->getContents();
         $jsonResponse = json_decode($bodyContents, true);
 
-            if ($response->getStatusCode() === 200) {
-                return $jsonResponse['id'];  // Return just the ID string instead of an array
-            }
-
-            return null; // Return null if upload fails
+        if ($response->getStatusCode() === 200) {
+            return $jsonResponse['id'];  // Return just the ID string instead of an array
         }
 
+        return null; // Return null if upload fails
     }
+}

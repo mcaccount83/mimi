@@ -7,10 +7,12 @@ use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController extends Controller
+class LoginController extends Controller implements HasMiddleware
 {
     use AuthenticatesUsers;
 
@@ -19,12 +21,11 @@ class LoginController extends Controller
      */
     protected $redirectTo = AppServiceProvider::HOME;
 
-    /**
-     * Create a new controller instance.
-     */
-    public function __construct()
+    public static function middleware(): array
     {
-        $this->middleware('guest')->except('logout');
+        return [
+            new Middleware('guest', except: ['logout']),
+        ];
     }
 
     /**

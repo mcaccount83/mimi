@@ -40,9 +40,8 @@ class Boards extends Model
         return $this->belongsTo(BoardPosition::class, 'board_position_id', 'id');  // 'board_position_id' in boards BelongsTo 'id' in board_position
     }
 
-    public function categorySubscriptions()
+    public function categorySubscriptions(): HasMany
     {
         return $this->hasMany(ForumCategorySubscription::class);
     }
-
 }

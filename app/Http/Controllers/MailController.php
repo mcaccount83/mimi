@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\IndexMailRequest;
 use Illuminate\Database as DatabaseConnections;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use romanzipp\QueueMonitor\Controllers\Payloads\Metric;
@@ -12,14 +14,21 @@ use romanzipp\QueueMonitor\Enums\MonitorStatus;
 use romanzipp\QueueMonitor\Models\Contracts\MonitorContract;
 use romanzipp\QueueMonitor\Services\QueueMonitor;
 
-class MailController extends Controller
+class MailController extends Controller implements HasMiddleware
 {
     protected $userController;
 
     public function __construct(UserController $userController)
     {
-        $this->middleware('auth')->except('logout');
+
         $this->userController = $userController;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+        ];
     }
 
     public function index(IndexMailRequest $request)
@@ -170,5 +179,4 @@ class MailController extends Controller
                 new Metric('Average Execution Time', $aggregatedInfo->average_time_elapsed ?? 0, $aggregatedComparisonInfo->average_time_elapsed, '%0.2fs')
             );
     }
-
 }

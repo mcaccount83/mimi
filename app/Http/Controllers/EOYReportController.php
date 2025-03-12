@@ -6,45 +6,55 @@ use App\Mail\EOYElectionReportReminder;
 use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
 use App\Mail\EOYReviewrAssigned;
+use App\Models\Boards;
 use App\Models\Chapters;
 use App\Models\Coordinators;
-use App\Models\OutgoingBoard;
-use App\Models\IncomingBoard;
-use App\Models\Boards;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
+use App\Models\IncomingBoard;
 use App\Models\State;
 use App\Models\User;
 use App\Models\Website;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
-class EOYReportController extends Controller
+class EOYReportController extends Controller implements HasMiddleware
 {
     protected $userController;
+
     protected $baseChapterController;
+
     protected $baseMailDataController;
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseMailDataController $baseMailDataController)
     {
-        $this->middleware('auth')->except('logout');
-        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
     }
 
-    /*/Custom Helpers/*/
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+        ];
+    }
+
+    /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
     // $displayEOY = getEOYDisplay();
 
-    /*/ Base Chapter Controller /*/
+    /* / Base Chapter Controller / */
     //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     //  $this->baseChapterController->getChapterDetails($chId)
 
@@ -67,15 +77,15 @@ class EOYReportController extends Controller
 
         $titles = [
             'eoy_reports' => 'End of Year Reports',
-            'eoy_details' => 'EOY Details'
+            'eoy_details' => 'EOY Details',
         ];
 
-        if ($adminReportCondition && !$displayTESTING && !$displayLIVE){
+        if ($adminReportCondition && ! $displayTESTING && ! $displayLIVE) {
             $titles['eoy_reports'] .= ' *ADMIN*';
             $titles['eoy_details'] .= ' *ADMIN*';
         }
 
-        if ($eoyTestCondition && $displayTESTING){
+        if ($eoyTestCondition && $displayTESTING) {
             $titles['eoy_reports'] .= ' *TESTING*';
             $titles['eoy_details'] .= ' *TESTING*';
         }
@@ -106,7 +116,7 @@ class EOYReportController extends Controller
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-            'title' => $title, 'breadcrumb' => $breadcrumb
+            'title' => $title, 'breadcrumb' => $breadcrumb,
         ];
 
         return view('eoyreports.eoystatus')->with($data);
@@ -316,13 +326,13 @@ class EOYReportController extends Controller
 
         if (isset($_GET['board'])) {
             foreach ($chapterList as $chapter) {
-                if ($chapter->documents->new_board_submitted && !$chapter->documents->new_board_active) {
+                if ($chapter->documents->new_board_submitted && ! $chapter->documents->new_board_active) {
                     $status = $this->activateBoard($chapter->id, $lastUpdatedBy);
                     $activationStatuses[$chapter->id] = $status;
                 }
             }
 
-            $successfulActivations = array_filter($activationStatuses, function($status) {
+            $successfulActivations = array_filter($activationStatuses, function ($status) {
                 return $status === 'success';
             });
 
@@ -424,7 +434,7 @@ class EOYReportController extends Controller
     /**
      * Activate New Board Members
      */
-    public function activateBoard(Request $request, $chapter_id)
+    public function activateBoard(Request $request, $chapter_id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
@@ -447,7 +457,7 @@ class EOYReportController extends Controller
                         $userDetails = User::find($user_id);
 
                         $userDetails->user_type = 'outgoing';
-                        $userDetails->updated_at =  now();
+                        $userDetails->updated_at = now();
                         $userDetails->save();
                     }
 
@@ -530,11 +540,11 @@ class EOYReportController extends Controller
 
         // $boards = IncomingBoard::find($id);
         $boards = IncomingBoard::where('chapter_id', $id)->get();
-            if ($boards && $boards->count() > 0) {
-                $bdDetails = $boards->groupBy('board_position_id');
-            } else {
-                $bdDetails = collect(); // Empty collection
-            }
+        if ($boards && $boards->count() > 0) {
+            $bdDetails = $boards->groupBy('board_position_id');
+        } else {
+            $bdDetails = collect(); // Empty collection
+        }
 
         // $bdDetails = $boards->groupBy('board_position_id');
         $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
@@ -549,25 +559,25 @@ class EOYReportController extends Controller
         $allStates = State::all();  // Full List for Dropdown Menu
 
         // Check if the board activation button was clicked
-    if ($request->has('board') && $request->input('board') === 'active') {
-        $activationStatuses = [];
+        if ($request->has('board') && $request->input('board') === 'active') {
+            $activationStatuses = [];
 
-        // Only activate if the board is submitted and not yet active
-        if ($chDetails->documents->new_board_submitted && !$chDetails->documents->new_board_active) {
-            $status = $this->activateBoard($chDetails->id, $lastUpdatedBy);
-            $activationStatuses[$chDetails->id] = $status;
+            // Only activate if the board is submitted and not yet active
+            if ($chDetails->documents->new_board_submitted && ! $chDetails->documents->new_board_active) {
+                $status = $this->activateBoard($chDetails->id, $lastUpdatedBy);
+                $activationStatuses[$chDetails->id] = $status;
+            }
+
+            $successfulActivations = array_filter($activationStatuses, function ($status) {
+                return $status === 'success';
+            });
+
+            if (count($successfulActivations) > 0) {
+                return redirect()->to('/eoy/boardreport')->with('success', 'Board activated successfully');
+            } else {
+                return redirect()->to('/eoy/boardreport')->with('fail', 'Board activation failed');
+            }
         }
-
-        $successfulActivations = array_filter($activationStatuses, function ($status) {
-            return $status === 'success';
-        });
-
-        if (count($successfulActivations) > 0) {
-            return redirect()->to('/eoy/boardreport')->with('success', 'Board activated successfully');
-        } else {
-            return redirect()->to('/eoy/boardreport')->with('fail', 'Board activation failed');
-        }
-    }
 
         $data = [
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
@@ -601,7 +611,7 @@ class EOYReportController extends Controller
 
         $boundaryStatus = $request->input('BoundaryStatus');
         $issue_note = $request->input('BoundaryIssue');
-        //Boundary Issues Correct 0 | Not Correct 1
+        // Boundary Issues Correct 0 | Not Correct 1
         if ($boundaryStatus == 0) {
             $issue_note = '';
         }
@@ -609,16 +619,16 @@ class EOYReportController extends Controller
         // Handle web status - allow null values
         $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
         // Only convert to 0 if the website is not null but status is empty
-        if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+        if (! is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
             $ch_webstatus = 0;
         }
 
         // Handle website URL
         $website = $request->input('ch_website');
         // Only add http:// if the website field is not null or empty
-        if (!is_null($website) && !empty(trim($website))) {
-            if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
-                $website = 'http://' . $website;
+        if (! is_null($website) && ! empty(trim($website))) {
+            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+                $website = 'http://'.$website;
             }
         }
 
@@ -682,7 +692,7 @@ class EOYReportController extends Controller
                 }
             }
 
-            //AVP Info
+            // AVP Info
             $AVPDetails = IncomingBoard::where('chapter_id', $chId)
                 ->where('board_position_id', '2')
                 ->get();
@@ -729,7 +739,7 @@ class EOYReportController extends Controller
                 }
             }
 
-            //MVP Info
+            // MVP Info
             $MVPDetails = IncomingBoard::where('chapter_id', $chId)
                 ->where('board_position_id', '3')
                 ->get();
@@ -776,7 +786,7 @@ class EOYReportController extends Controller
                 }
             }
 
-            //TRS Info
+            // TRS Info
             $TRSDetails = IncomingBoard::where('chapter_id', $chId)
                 ->where('board_position_id', '4')
                 ->get();
@@ -823,7 +833,7 @@ class EOYReportController extends Controller
                 }
             }
 
-            //SEC Info
+            // SEC Info
             $SECDetails = IncomingBoard::where('chapter_id', $chId)
                 ->where('board_position_id', '5')
                 ->get();
@@ -1052,10 +1062,10 @@ class EOYReportController extends Controller
         // Step 4 - Parties
         $check_party_percentage = isset($input['check_party_percentage']) ? $input['check_party_percentage'] : null;
 
-        //Step - Financials
+        // Step - Financials
         $check_total_income_less = isset($input['checkTotalIncome']) ? $input['checkTotalIncome'] : null;
 
-        //Step 8 - Reconciliation
+        // Step 8 - Reconciliation
         $check_beginning_balance = isset($input['check_beginning_balance']) ? $input['check_beginning_balance'] : null;
         $check_bank_statement_included = isset($input['checkBankStatementIncluded']) ? $input['checkBankStatementIncluded'] : null;
         $check_bank_statement_matches = isset($input['checkBankStatementMatches']) ? $input['checkBankStatementMatches'] : null;
@@ -1064,7 +1074,7 @@ class EOYReportController extends Controller
         $post_balance = str_replace(',', '', $post_balance);
         $post_balance = $post_balance === '' ? null : $post_balance;
 
-        //Step 9 - Questions
+        // Step 9 - Questions
         $check_purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;
         $check_purchased_mc_merch = isset($input['checkPurchasedMCMerch']) ? $input['checkPurchasedMCMerch'] : null;
         $check_offered_merch = isset($input['checkOfferedMerch']) ? $input['checkOfferedMerch'] : null;
@@ -1512,7 +1522,7 @@ class EOYReportController extends Controller
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $allAwards = $baseQuery['allAwards'];
 
-        $data = ['title' => $title, 'breadcrumb'=> $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
         ];

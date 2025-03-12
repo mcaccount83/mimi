@@ -13,7 +13,7 @@ class Resources extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'name', 'description', 'version', 'link', 'file_path'
+        'name', 'description', 'version', 'link', 'file_path',
     ];
 
     public function categoryName(): BelongsTo

@@ -11,6 +11,8 @@ use App\Models\Chapters;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -18,16 +20,24 @@ use Illuminate\Support\Facades\Mail;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
 
-class PaymentController extends Controller
+class PaymentController extends Controller implements HasMiddleware
 {
     protected $userController;
+
     protected $baseBoardController;
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController)
     {
-        $this->middleware('auth')->except('logout');
+
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+        ];
     }
 
     /**
@@ -37,7 +47,7 @@ class PaymentController extends Controller
     {
         $paymentResponse = $this->processPayment($request);
 
-        if (!$paymentResponse['success']) {
+        if (! $paymentResponse['success']) {
             return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
         }
 
@@ -62,7 +72,7 @@ class PaymentController extends Controller
             $existingRecord->save();
 
             // Send Chepter email
-            if ($rereg){
+            if ($rereg) {
                 $mailData = [
                     'chapterName' => $chapterDetails->name,
                     'chapterState' => $chapterState,
@@ -73,10 +83,10 @@ class PaymentController extends Controller
                 Mail::to($emailListChap)
                     ->cc($pcEmail)
                     ->queue(new PaymentsReRegChapterThankYou($mailData));
-                }
+            }
 
             // Update Record and Send Chepter email
-            if($donation){
+            if ($donation) {
                 $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
                 $existingRecord->sustaining_donation = $sustaining;
                 $existingRecord->sustaining_date = Carbon::today();
@@ -121,6 +131,7 @@ class PaymentController extends Controller
                 ->queue(new PaymentsReRegOnline($mailData));
 
             DB::commit();
+
             return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
 
         } catch (\Exception $e) {
@@ -155,7 +166,7 @@ class PaymentController extends Controller
             $existingRecord = Chapters::where('id', $chapterDetails->id)->first();
 
             // Save Chapter and Send Chepter email
-            if ($sustaining){
+            if ($sustaining) {
                 $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
                 $existingRecord->sustaining_donation = $sustaining;
                 $existingRecord->sustaining_date = Carbon::today();
@@ -172,7 +183,7 @@ class PaymentController extends Controller
                     ->queue(new PaymentsSustainingChapterThankYou($mailData));
             }
 
-            if ($m2m){
+            if ($m2m) {
                 $donation = (float) preg_replace('/[^\d.]/', '', $request->input('donation'));
                 $existingRecord->m2m_payment = $donation;
                 $existingRecord->m2m_date = Carbon::today();
@@ -325,7 +336,7 @@ class PaymentController extends Controller
 
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType;
-        //$transactionRequestType->setTransactionType('authOnlyTransaction');
+        // $transactionRequestType->setTransactionType('authOnlyTransaction');
         $transactionRequestType->setTransactionType('authCaptureTransaction');
         $transactionRequestType->setAmount($amount);
         $transactionRequestType->setOrder($order);
@@ -356,7 +367,7 @@ class PaymentController extends Controller
                         'data' => [
                             'transactionId' => $tresponse->getTransId(),
                             'invoiceNumber' => $randomInvoiceNumber,
-                        ]
+                        ],
                     ];
                 }
             }
@@ -366,12 +377,12 @@ class PaymentController extends Controller
             $tresponse = $response->getTransactionResponse();
             if ($tresponse != null && $tresponse->getErrors() != null) {
                 $error_message = 'Transaction Failed';
-                $error_message .= "\n Error Code: " . $tresponse->getErrors()[0]->getErrorCode();
-                $error_message .= "\n Error Message: " . $tresponse->getErrors()[0]->getErrorText();
+                $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
+                $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
             } else {
                 $error_message = 'Transaction Failed';
-                $error_message .= "\n Error Code: " . $response->getMessages()->getMessage()[0]->getCode();
-                $error_message .= "\n Error Message: " . $response->getMessages()->getMessage()[0]->getText();
+                $error_message .= "\n Error Code: ".$response->getMessages()->getMessage()[0]->getCode();
+                $error_message .= "\n Error Message: ".$response->getMessages()->getMessage()[0]->getText();
             }
         } else {
             $error_message = 'No response returned';
@@ -379,8 +390,7 @@ class PaymentController extends Controller
 
         return [
             'success' => false,
-            'error' => $error_message
+            'error' => $error_message,
         ];
     }
-
 }

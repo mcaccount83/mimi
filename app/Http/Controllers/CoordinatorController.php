@@ -2,49 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\CoordinatorRetireAdmin;
 use App\Mail\BigSisterWelcome;
-use App\Models\CoordinatorPosition;
+use App\Mail\CoordinatorRetireAdmin;
+use App\Models\Chapters;
+use App\Models\Conference;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
-use App\Models\Chapters;
-use App\Models\User;
-use App\Models\State;
-use App\Models\Region;
-use App\Models\Conference;
-use App\Models\Month;
 use App\Models\ForumCategorySubscription;
+use App\Models\Month;
+use App\Models\Region;
+use App\Models\State;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
-class CoordinatorController extends Controller
+class CoordinatorController extends Controller implements HasMiddleware
 {
     protected $userController;
+
     protected $baseCoordinatorController;
+
     protected $forumSubscriptionController;
 
     public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController)
     {
-        $this->middleware('auth')->except('logout');
-        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+
         $this->userController = $userController;
         $this->baseCoordinatorController = $baseCoordinatorController;
         $this->forumSubscriptionController = $forumSubscriptionController;
     }
 
-    /*/ Base Coordinator Controller /*/
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+        ];
+    }
+
+    /* / Base Coordinator Controller / */
     //  $this->baseCoordinatorController->getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
     //  $this->baseCoordinatorController->getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
     //  $this->baseCoordinatorController->getCoordinatorDetails($id)
 
-    /*/ Forum Subscription Controller /*/
+    /* / Forum Subscription Controller / */
     //  $this->forumSubscriptionController->defaultCategories()
 
     /**
@@ -212,7 +222,7 @@ class CoordinatorController extends Controller
             $reportingUpline = CoordinatorTree::where('coordinator_id', $reportsTo)->first();  // Get reporting coordinator's upline data
 
             $treeData = [
-                'coordinator_id' => $cordId
+                'coordinator_id' => $cordId,
             ];
 
             // Use the reporting coordinator's upline data
@@ -290,7 +300,7 @@ class CoordinatorController extends Controller
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
-            'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo'=> $threeMonthsAgo, 'cdPositionid' => $cdPositionid
+            'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid,
         ];
 
         return view('coordinators.view')->with($data);
@@ -315,21 +325,21 @@ class CoordinatorController extends Controller
         $input = $request->all();
         $id = $input['chapterid'];
 
-         //Load Chapter MailData//
-         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
-         $cdDetails = $baseQuery['cdDetails'];
-         $cdId = $baseQuery['cdId'];
-         $cdName = $cdDetails->first_name.' '.$cdDetails->last_name;
-         $cdEmail = $cdDetails->email;
-         $regionLongName = $baseQuery['regionLongName'];
-         $conferenceDescription = $baseQuery['conferenceDescription'];
-         $cdConfId = $baseQuery['cdConfId'];
-         $cdRptId = $baseQuery['cdRptId'];
-         $RptFName = $baseQuery['RptFName'];
-         $RptLName = $baseQuery['RptLName'];
-         $ReportTo = $baseQuery['RptFName'].' '.$baseQuery['RptLName'];
-         $ReportEmail = $cdDetails->reportsTo?->email;
-         $ReportPhone = $cdDetails->reportsTo?->phone;
+        // Load Chapter MailData//
+        $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
+        $cdDetails = $baseQuery['cdDetails'];
+        $cdId = $baseQuery['cdId'];
+        $cdName = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $cdEmail = $cdDetails->email;
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $cdConfId = $baseQuery['cdConfId'];
+        $cdRptId = $baseQuery['cdRptId'];
+        $RptFName = $baseQuery['RptFName'];
+        $RptLName = $baseQuery['RptLName'];
+        $ReportTo = $baseQuery['RptFName'].' '.$baseQuery['RptLName'];
+        $ReportEmail = $cdDetails->reportsTo?->email;
+        $ReportPhone = $cdDetails->reportsTo?->phone;
 
         $chList = Chapters::with('state')
             ->where('primary_coordinator_id', $cdId)  // Chapter Harcoaded List
@@ -339,54 +349,54 @@ class CoordinatorController extends Controller
         try {
             DB::beginTransaction();
 
-        $mailData = [
-            'conf_name' => $conferenceDescription,
-            'reg_name' => $regionLongName,
-            'cdName' => $cdName,
-            'cor_fname' => $RptFName,
-            'cor_lname' => $RptLName,
-            'cor_name' => $ReportTo,
-            'cor_email' => $ReportEmail,
-            'cor_phone' => $ReportPhone,
-            'email' => $cdEmail,
-            'chapters' => $chList,
-            'userName' => $cdNameUser,
-            'userEmail' => $cdEmailUser,
-            'positionTitle' => $cdPositionUser,
-            'conf' => $cdConfIdUser,
-            'conf_name' => $cdCoferenceDescriptionUser,
-        ];
+            $mailData = [
+                'conf_name' => $conferenceDescription,
+                'reg_name' => $regionLongName,
+                'cdName' => $cdName,
+                'cor_fname' => $RptFName,
+                'cor_lname' => $RptLName,
+                'cor_name' => $ReportTo,
+                'cor_email' => $ReportEmail,
+                'cor_phone' => $ReportPhone,
+                'email' => $cdEmail,
+                'chapters' => $chList,
+                'userName' => $cdNameUser,
+                'userEmail' => $cdEmailUser,
+                'positionTitle' => $cdPositionUser,
+                'conf' => $cdConfIdUser,
+                'conf_name' => $cdCoferenceDescriptionUser,
+            ];
 
-        Mail::to($cdEmail)
-            ->cc($ReportEmail, $cdEmailUser)
-            ->queue(new BigSisterWelcome($mailData));
+            Mail::to($cdEmail)
+                ->cc($ReportEmail, $cdEmailUser)
+                ->queue(new BigSisterWelcome($mailData));
 
-             // Commit the transaction
-             DB::commit();
+            // Commit the transaction
+            DB::commit();
 
-             $message = 'Big Sister Welcome email successfully sent';
+            $message = 'Big Sister Welcome email successfully sent';
 
-             // Return JSON response
-             return response()->json([
-                 'status' => 'success',
-                 'message' => $message,
-                 'redirect' => route('coordinators.view', ['id' => $id]),
-             ]);
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('coordinators.view', ['id' => $id]),
+            ]);
 
-         } catch (\Exception $e) {
-             // Rollback transaction on exception
-             DB::rollback();
-             Log::error($e);
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
 
-             $message = 'Something went wrong, Please try again.';
+            $message = 'Something went wrong, Please try again.';
 
-             // Return JSON error response
-             return response()->json([
-                 'status' => 'error',
-                 'message' => $message,
-                 'redirect' => route('coordinators.view', ['id' => $id]),
-             ]);
-         }
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('coordinators.view', ['id' => $id]),
+            ]);
+        }
 
     }
 
@@ -746,7 +756,6 @@ class CoordinatorController extends Controller
 
         $pcRowCount = count($pcOptions);
 
-
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'drOptions' => $drOptions, 'rcDetails' => $rcDetails, 'allRegions' => $allRegions,
             'chList' => $chList, 'drList' => $drList, 'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
             'pcOptions' => $pcOptions, 'cdId' => $cdId, 'allPositions' => $allPositions, 'chDetails' => $chDetails, 'drDetails' => $drDetails,
@@ -780,16 +789,16 @@ class CoordinatorController extends Controller
 
         DB::beginTransaction();
         try {
-                $chapter->primary_coordinator_id = $coordinator_id;
-                $chapter->last_updated_by = $lastUpdatedBy;
-                $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->primary_coordinator_id = $coordinator_id;
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = date('Y-m-d H:i:s');
 
-                $chapter->save();
+            $chapter->save();
 
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return false;
         }
@@ -816,14 +825,14 @@ class CoordinatorController extends Controller
             }
         }
 
-        $newCoordinator = Coordinators::find($new_coordinator_id);  //Find new layer
+        $newCoordinator = Coordinators::find($new_coordinator_id);  // Find new layer
         $new_layer_id = $newCoordinator->layer_id + 1;
 
         $coordinator = Coordinators::find($coordinator_id);
 
         DB::beginTransaction();
         try {
-            //Update their main report ID & layer
+            // Update their main report ID & layer
             $coordinator->report_id = $new_coordinator_id;
             $coordinator->layer_id = $new_layer_id;
             $coordinator->last_updated_by = $lastUpdatedBy;
@@ -834,7 +843,7 @@ class CoordinatorController extends Controller
             $reportingUpline = CoordinatorTree::where('coordinator_id', $new_coordinator_id)->first();  // Get reporting coordinator's upline data
 
             $treeData = [
-                'coordinator_id' => $coordinator_id
+                'coordinator_id' => $coordinator_id,
             ];
 
             // Use the reporting coordinator's upline data
@@ -874,35 +883,35 @@ class CoordinatorController extends Controller
         $cdIdUser = $cdDetailsUser->id;
         $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
-         ///Reassign Direct Report Coordinators that Changed
-         $rowcountCord = $_POST['CoordinatorCount'];
-         for ($i = 0; $i < $rowcountCord; $i++) {
-             $new_coordinator_field = 'Report'.$i;
-             $new_coordinator_id = $_POST[$new_coordinator_field];
+        // /Reassign Direct Report Coordinators that Changed
+        $rowcountCord = $_POST['CoordinatorCount'];
+        for ($i = 0; $i < $rowcountCord; $i++) {
+            $new_coordinator_field = 'Report'.$i;
+            $new_coordinator_id = $_POST[$new_coordinator_field];
 
-             $coordinator_field = 'CoordinatorIDRow'.$i;
-             $coordinator_id = $_POST[$coordinator_field];
+            $coordinator_field = 'CoordinatorIDRow'.$i;
+            $coordinator_id = $_POST[$coordinator_field];
 
-             $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
-         }
+            $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
+        }
 
-         //Reassign Primary Coordinatory Chapters that Changed
-         $rowcountChapter = $_POST['ChapterCount'];
-         for ($i = 0; $i < $rowcountChapter; $i++) {
-             $coordinator_field = 'PCID'.$i;
-             $chapter_field = 'ChapterIDRow'.$i;
+        // Reassign Primary Coordinatory Chapters that Changed
+        $rowcountChapter = $_POST['ChapterCount'];
+        for ($i = 0; $i < $rowcountChapter; $i++) {
+            $coordinator_field = 'PCID'.$i;
+            $chapter_field = 'ChapterIDRow'.$i;
 
-             if (! isset($_POST[$coordinator_field]) || ! isset($_POST[$chapter_field])) {
-                 continue; // Skip if the field doesn't exist
-             }
+            if (! isset($_POST[$coordinator_field]) || ! isset($_POST[$chapter_field])) {
+                continue; // Skip if the field doesn't exist
+            }
 
-             $coordinator_id = $_POST[$coordinator_field];
-             $chapter_id = $_POST[$chapter_field];
+            $coordinator_id = $_POST[$coordinator_field];
+            $chapter_id = $_POST[$chapter_field];
 
-             $this->ReassignChapter($request, $chapter_id, $coordinator_id, true);
-         }
+            $this->ReassignChapter($request, $chapter_id, $coordinator_id, true);
+        }
 
-        //Reassign Report To / Direct Supervisor that Changed
+        // Reassign Report To / Direct Supervisor that Changed
         $coordinator_id = $request->input('coordinator_id');
         $new_coordinator_id = $request->input('cord_report_pc');
         $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
@@ -934,7 +943,6 @@ class CoordinatorController extends Controller
 
         return to_route('coordinators.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
     }
-
 
     /**
      * Edit Coordiantor Details
@@ -969,7 +977,7 @@ class CoordinatorController extends Controller
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
-            'allStates' => $allStates, 'allMonths' => $allMonths
+            'allStates' => $allStates, 'allMonths' => $allMonths,
         ];
 
         return view('coordinators.editdetails')->with($data);
@@ -992,43 +1000,43 @@ class CoordinatorController extends Controller
         $user = User::find($cdUserId);
 
         DB::beginTransaction();
-            try {
-                    $user->first_name = $request->input('cord_fname');
-                    $user->last_name = $request->input('cord_lname');
-                    $user->email = $request->input('cord_email');
-                    $user->updated_at = now();
+        try {
+            $user->first_name = $request->input('cord_fname');
+            $user->last_name = $request->input('cord_lname');
+            $user->email = $request->input('cord_email');
+            $user->updated_at = now();
 
-                    $user->save();
+            $user->save();
 
-                    $coordinator->first_name = $request->input('cord_fname');
-                    $coordinator->last_name = $request->input('cord_lname');
-                    $coordinator->email = $request->input('cord_email');
-                    $coordinator->sec_email = $request->input('cord_sec_email');
-                    $coordinator->address = $request->input('cord_addr');
-                    $coordinator->city = $request->input('cord_city');
-                    $coordinator->state = $request->input('cord_state');
-                    $coordinator->zip = $request->input('cord_zip');
-                    $coordinator->phone = $request->input('cord_phone');
-                    $coordinator->alt_phone = $request->input('cord_altphone');
-                    $coordinator->birthday_month_id = $request->input('cord_month');
-                    $coordinator->birthday_day = $request->input('cord_day');
-                    $coordinator->home_chapter = $request->input('cord_chapter');
-                    $coordinator->last_updated_by = $lastUpdatedBy;
-                    $coordinator->last_updated_date = now();
+            $coordinator->first_name = $request->input('cord_fname');
+            $coordinator->last_name = $request->input('cord_lname');
+            $coordinator->email = $request->input('cord_email');
+            $coordinator->sec_email = $request->input('cord_sec_email');
+            $coordinator->address = $request->input('cord_addr');
+            $coordinator->city = $request->input('cord_city');
+            $coordinator->state = $request->input('cord_state');
+            $coordinator->zip = $request->input('cord_zip');
+            $coordinator->phone = $request->input('cord_phone');
+            $coordinator->alt_phone = $request->input('cord_altphone');
+            $coordinator->birthday_month_id = $request->input('cord_month');
+            $coordinator->birthday_day = $request->input('cord_day');
+            $coordinator->home_chapter = $request->input('cord_chapter');
+            $coordinator->last_updated_by = $lastUpdatedBy;
+            $coordinator->last_updated_date = now();
 
-                    $coordinator->save();
+            $coordinator->save();
 
-                DB::commit();
-            } catch (\Exception $e) {
-                // Rollback Transaction
-                echo $e->getMessage();
-                exit();
-                DB::rollback();
-                // Log the error
-                Log::error($e);
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            echo $e->getMessage();
+            exit();
+            DB::rollback();
+            // Log the error
+            Log::error($e);
 
-                return to_route('coordinators.editdetails', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
-            }
+            return to_route('coordinators.editdetails', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        }
 
         return to_route('coordinators.editdetails', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
     }
@@ -1084,27 +1092,27 @@ class CoordinatorController extends Controller
 
         DB::beginTransaction();
         try {
-                $coordinator->recognition_year0 = $request->input('recognition_year0');
-                $coordinator->recognition_year1 = $request->input('recognition_year1');
-                $coordinator->recognition_year2 = $request->input('recognition_year2');
-                $coordinator->recognition_year3 = $request->input('recognition_year3');
-                $coordinator->recognition_year4 = $request->input('recognition_year4');
-                $coordinator->recognition_year5 = $request->input('recognition_year5');
-                $coordinator->recognition_year6 = $request->input('recognition_year6');
-                $coordinator->recognition_year7 = $request->input('recognition_year7');
-                $coordinator->recognition_year8 = $request->input('recognition_year8');
-                $coordinator->recognition_year9 = $request->input('recognition_year9');
-                $coordinator->recognition_toptier = $request->input('recognition_toptier');
-                $coordinator->recognition_necklace = (int) $request->has('recognition_necklace');
-                $coordinator->last_updated_by = $lastUpdatedBy;
-                $coordinator->last_updated_date = now();
+            $coordinator->recognition_year0 = $request->input('recognition_year0');
+            $coordinator->recognition_year1 = $request->input('recognition_year1');
+            $coordinator->recognition_year2 = $request->input('recognition_year2');
+            $coordinator->recognition_year3 = $request->input('recognition_year3');
+            $coordinator->recognition_year4 = $request->input('recognition_year4');
+            $coordinator->recognition_year5 = $request->input('recognition_year5');
+            $coordinator->recognition_year6 = $request->input('recognition_year6');
+            $coordinator->recognition_year7 = $request->input('recognition_year7');
+            $coordinator->recognition_year8 = $request->input('recognition_year8');
+            $coordinator->recognition_year9 = $request->input('recognition_year9');
+            $coordinator->recognition_toptier = $request->input('recognition_toptier');
+            $coordinator->recognition_necklace = (int) $request->has('recognition_necklace');
+            $coordinator->last_updated_by = $lastUpdatedBy;
+            $coordinator->last_updated_date = now();
 
-                $coordinator->save();
+            $coordinator->save();
 
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return to_route('coordinators.editrecognition', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         }
@@ -1187,7 +1195,7 @@ class CoordinatorController extends Controller
         $allStates = $baseQuery['allStates'];
         $allMonths = $baseQuery['allMonths'];
 
-        $data = ['cdDetails' => $cdDetails, 'allStates' =>$allStates, 'allMonths' => $allMonths,
+        $data = ['cdDetails' => $cdDetails, 'allStates' => $allStates, 'allMonths' => $allMonths,
             'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'displayPosition' => $displayPosition, 'secondaryPosition' => $secondaryPosition, 'ReportTo' => $ReportTo,
         ];
@@ -1248,9 +1256,9 @@ class CoordinatorController extends Controller
         return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
     }
 
-     /**
-     * Get Region List -- auto updates dropdown menu in top section of update role screen when conference changes.
-     */
+    /**
+    * Get Region List -- auto updates dropdown menu in top section of update role screen when conference changes.
+    */
     // public function getRegionList($corConfId): JsonResponse
     // {
     //     $regionList = DB::table('region')
@@ -1368,6 +1376,5 @@ class CoordinatorController extends Controller
 
     //     return response()->json(['html' => $html]);
     // }
-
 
 }

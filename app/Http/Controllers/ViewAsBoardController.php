@@ -2,33 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
-use App\Models\Chapters;
 use App\Models\Resources;
-use App\Models\State;
-use App\Models\User;
-use App\Models\Website;
-use App\Models\FinancialReportAwards;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
-class ViewAsBoardController extends Controller
+class ViewAsBoardController extends Controller implements HasMiddleware
 {
     protected $userController;
+
     protected $baseBoardController;
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController)
     {
-        $this->middleware('auth')->except('logout');
-        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
     }
 
-    /*/Custom Helpers/*/
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+        ];
+    }
 
-    /*/ Board Controller /*/
+    /* /Custom Helpers/ */
+
+    /* / Board Controller / */
     //  $this->boardController->getChapterDetails($id)
 
     /**
@@ -68,7 +72,7 @@ class ViewAsBoardController extends Controller
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
-            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments
+            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments,
         ];
 
         return view('boards.president')->with($data);

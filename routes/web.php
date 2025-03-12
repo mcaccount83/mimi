@@ -11,9 +11,9 @@ use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CoordinatorReportController;
 use App\Http\Controllers\EOYReportController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ForumSubscriptionController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ForumSubscriptionController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PDFController;
@@ -88,7 +88,7 @@ Route::get('/test-429', function () {
 // Public Page Routes...
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
 Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])->name('board.resources');
-Route::get('/pdf-viewer', function () {return view('public.pdf-viewer');})->name('pdf-viewer');
+Route::view('/pdf-viewer', 'public.pdf-viewer')->name('pdf-viewer');
 
 // Admin Controller Routes...
 Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
@@ -102,7 +102,6 @@ Route::post('/admin/updateeoytesting', [AdminController::class, 'updateEOYTestin
 Route::post('/admin/updateeoylive', [AdminController::class, 'updateEOYLive'])->name('admin.updateeoylive');
 Route::post('/admin/updatesubscribelists', [AdminController::class, 'updateSubscribeLists'])->name('admin.updatesubscribelists');
 Route::post('/admin/updateunsubscribelists', [AdminController::class, 'updateUnsubscribeLists'])->name('admin.updateunsubscribelists');
-
 
 Route::get('/admin/reregdate', [AdminController::class, 'showReRegDate'])->name('admin.reregdate');
 Route::get('/admin/reregdate/{id}', [AdminController::class, 'EditReRegDate'])->name('admin.editreregdate');

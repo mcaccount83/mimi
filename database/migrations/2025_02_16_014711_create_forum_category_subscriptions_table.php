@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('forum_category_subscriptions', function (Blueprint $table) {
             $table->id();
@@ -17,16 +17,16 @@ return new class extends Migration
 
             // Add foreign key after defining the column
             $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
 
             // Unique constraint to prevent duplicate subscriptions
             $table->unique(['user_id', 'category_id']);
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('forum_category_subscriptions');
     }

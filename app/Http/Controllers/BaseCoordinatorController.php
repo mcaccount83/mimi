@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conference;
 use App\Models\CoordinatorPosition;
 use App\Models\Coordinators;
-use App\Models\State;
-use App\Models\Region;
-use App\Models\Conference;
 use App\Models\Month;
+use App\Models\Region;
+use App\Models\State;
 use Illuminate\Support\Facades\DB;
 
 class BaseCoordinatorController extends Controller
 {
     protected $userController;
+
     protected $baseConditionsController;
 
     public function __construct(UserController $userController, BaseConditionsController $baseConditionsController)
@@ -21,13 +22,13 @@ class BaseCoordinatorController extends Controller
         $this->baseConditionsController = $baseConditionsController;
     }
 
-    /*/Custom Helpers/*/
+    /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
-    /*/User Controller/*/
+    /* /User Controller/ */
     // $this->userController->loadReportingTree($cdId);
 
-    /*/Base Coditions Controller/*/
+    /* /Base Coditions Controller/ */
     // $this->baseConditionsController->getConditions($cdId, $cdPositionid, $cdSecPositionid);
     // $this->baseConditionsController->applyPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
 
@@ -55,16 +56,17 @@ class BaseCoordinatorController extends Controller
             ->where('is_active', $cdIsActive);
     }
 
-     /**
+    /**
      * Apply sorting based on query type and page
      */
-    private function applySorting($baseQuery, $queryType) {
+    private function applySorting($baseQuery, $queryType)
+    {
         $isBirthdayPage = request()->route()->getName() === 'coordreports.coordrptbirthdays';
         $isUtilizationPage = request()->route()->getName() === 'coordreports.coordrptvolutilization';
 
         if ($queryType === 'retired') {
             return ['query' => $baseQuery->orderByDesc('coordinators.zapped_date'), 'checkBoxStatus' => ''];
-            }
+        }
 
         if ($isBirthdayPage) {
             $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
@@ -72,8 +74,9 @@ class BaseCoordinatorController extends Controller
                 ->limit(1))
                 ->orderBy('birthday_month_id')
                 ->orderBy('birthday_day');
-                return ['query' => $baseQuery, 'checkBoxStatus' => ''];
-            }
+
+            return ['query' => $baseQuery, 'checkBoxStatus' => ''];
+        }
 
         if ($isUtilizationPage) {
             $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
@@ -83,8 +86,9 @@ class BaseCoordinatorController extends Controller
                     ->whereColumn('region.id', 'coordinators.region_id')
                     ->limit(1))
                 ->orderBy('coordinator_start_date');
-                return ['query' => $baseQuery, 'checkBoxStatus' => ''];
-            }
+
+            return ['query' => $baseQuery, 'checkBoxStatus' => ''];
+        }
 
         return ['query' => $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
             ->whereColumn('conference.id', 'coordinators.conference_id')
@@ -126,11 +130,11 @@ class BaseCoordinatorController extends Controller
 
         return [
             'query' => $sortingResults['query'],
-            'checkBoxStatus' => $checkboxStatus['checkBoxStatus'] ?? ''
+            'checkBoxStatus' => $checkboxStatus['checkBoxStatus'] ?? '',
         ];
     }
 
-     /**
+    /**
      * Public methods for different query types
      */
     public function getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
@@ -143,7 +147,7 @@ class BaseCoordinatorController extends Controller
             'positionId' => $positionId,
             'secPositionId' => $secPositionId,
             'conditions' => true,
-            'queryType' => 'regular'
+            'queryType' => 'regular',
         ]);
     }
 
@@ -157,7 +161,7 @@ class BaseCoordinatorController extends Controller
             'positionId' => $positionId,
             'secPositionId' => $secPositionId,
             'conditions' => true,
-            'queryType' => 'regular'
+            'queryType' => 'regular',
         ]);
     }
 
@@ -167,16 +171,17 @@ class BaseCoordinatorController extends Controller
             'cdIsActive' => 1,
             'coorId' => $coorId,
             'conditions' => false,
-            'queryType' => 'international'
+            'queryType' => 'international',
         ]);
     }
 
-    public function getRetiredInternationalBaseQuery($coorId) {
+    public function getRetiredInternationalBaseQuery($coorId)
+    {
         return $this->buildCoordinatorQuery([
             'cdIsActive' => 0,
             'coorId' => $coorId,
             'conditions' => false,
-            'queryType' => 'international'
+            'queryType' => 'international',
         ]);
     }
 
@@ -212,8 +217,8 @@ class BaseCoordinatorController extends Controller
             ->where('is_active', 1)
             ->get();
 
-         // Load ReportsTo Coordinator Dropdown List
-         $rcDetails = $this->userController->loadReportsToList($cdId, $cdConfId, $cdPositionid);
+        // Load ReportsTo Coordinator Dropdown List
+        $rcDetails = $this->userController->loadReportsToList($cdId, $cdConfId, $cdPositionid);
 
         return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdIsActive' => $cdIsActive, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId,

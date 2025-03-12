@@ -24,19 +24,21 @@ use App\Mail\WebsiteReviewNotice;
 use App\Mail\WebsiteUpdatePrimaryCoor;
 use App\Models\Boards;
 use App\Models\Chapters;
+use App\Models\Conference;
 use App\Models\Coordinators;
 use App\Models\Documents;
 use App\Models\FinancialReport;
-use App\Models\Conference;
+use App\Models\ForumCategorySubscription;
 use App\Models\Region;
 use App\Models\State;
 use App\Models\Status;
 use App\Models\User;
 use App\Models\Website;
-use App\Models\ForumCategorySubscription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -44,19 +46,22 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
-class ChapterController extends Controller
+class ChapterController extends Controller implements HasMiddleware
 {
     protected $userController;
+
     protected $pdfController;
+
     protected $baseChapterController;
+
     protected $forumSubscriptionController;
+
     protected $baseMailDataController;
 
     public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
         ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController)
     {
-        $this->middleware('auth')->except('logout');
-        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseChapterController = $baseChapterController;
@@ -64,10 +69,18 @@ class ChapterController extends Controller
         $this->baseMailDataController = $baseMailDataController;
     }
 
-    /*/Custom Helpers/*/
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+        ];
+    }
+
+    /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
-    /*/ Base Chapter Controller /*/
+    /* / Base Chapter Controller / */
     //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     //  $this->baseChapterController->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     //  $this->baseChapterController->getActiveInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
@@ -76,9 +89,8 @@ class ChapterController extends Controller
     //  $this->baseChapterController->getZappedBaseInternationalQuery($cdId)
     //  $this->baseChapterController->getChapterDetails($chId)
 
-    /*/ Forum Subscription Controller /*/
+    /* / Forum Subscription Controller / */
     //  $this->forumSubscriptionController->defaultCategories()
-
 
     /**
      * Display the Active chapter list mapped with login coordinator
@@ -270,7 +282,7 @@ class ChapterController extends Controller
     public function updateEIN(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];;
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $ein = $request->input('ein');
@@ -287,6 +299,7 @@ class ChapterController extends Controller
                 ]);
 
             DB::commit();
+
             // Return JSON response
             return response()->json([
                 'status' => 'success', 'message' => 'Chapter EIN successfully updated',
@@ -297,6 +310,7 @@ class ChapterController extends Controller
             // Rollback transaction on exception
             DB::rollback();
             Log::error($e);
+
             // Return JSON error response
             return response()->json([
                 'status' => 'error', 'message' => 'Something went wrong, Please try again.',
@@ -318,54 +332,54 @@ class ChapterController extends Controller
         try {
             DB::beginTransaction();
 
-         //Load Chapter MailData//
-         $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
-         $chDetails = $baseQuery['chDetails'];
-         $stateShortName = $baseQuery['stateShortName'];
-         $pcDetails = $baseQuery['pcDetails'];
-         $PresDetails = $baseQuery['PresDetails'];
-         $emailListChap = $baseQuery['emailListChap'];
-         $emailListCoord = $baseQuery['emailListCoord'];
+            // Load Chapter MailData//
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $pcDetails = $baseQuery['pcDetails'];
+            $PresDetails = $baseQuery['PresDetails'];
+            $emailListChap = $baseQuery['emailListChap'];
+            $emailListCoord = $baseQuery['emailListCoord'];
 
-         $mailData = array_merge(
-             $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
-             $this->baseMailDataController->getUserData($user),
-             $this->baseMailDataController->getPresData($PresDetails),
-             $this->baseMailDataController->getPCData($pcDetails),
-         );
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getPresData($PresDetails),
+                $this->baseMailDataController->getPCData($pcDetails),
+            );
 
-        $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
-        $pdfPath =  $this->pdfController->saveGoodStandingLetter($chapterid);   // Generate and save the PDF
-        Mail::to($emailListChap)
-            ->cc($emailListCoord)
-            ->queue(new NewChapterWelcome($mailData, $pdfPath, $pdfPath2));
+            $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
+            $pdfPath = $this->pdfController->saveGoodStandingLetter($chapterid);   // Generate and save the PDF
+            Mail::to($emailListChap)
+                ->cc($emailListCoord)
+                ->queue(new NewChapterWelcome($mailData, $pdfPath, $pdfPath2));
 
-             // Commit the transaction
-             DB::commit();
+            // Commit the transaction
+            DB::commit();
 
-             $message = 'New Chapter email successfully sent';
+            $message = 'New Chapter email successfully sent';
 
-             // Return JSON response
-             return response()->json([
-                 'status' => 'success',
-                 'message' => $message,
-                 'redirect' => route('chapters.view', ['id' => $chapterid]),
-             ]);
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
+            ]);
 
-         } catch (\Exception $e) {
-             // Rollback transaction on exception
-             DB::rollback();
-             Log::error($e);
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
 
-             $message = 'Something went wrong, Please try again.';
+            $message = 'Something went wrong, Please try again.';
 
-             // Return JSON error response
-             return response()->json([
-                 'status' => 'error',
-                 'message' => $message,
-                 'redirect' => route('chapters.view', ['id' => $chapterid]),
-             ]);
-         }
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
+            ]);
+        }
     }
 
     /**
@@ -419,7 +433,7 @@ class ChapterController extends Controller
                 ForumCategorySubscription::whereIn('user_id', $userIds)->delete();
             }
 
-            //Update Chapter MailData for ListAdmin Notice//
+            // Update Chapter MailData for ListAdmin Notice//
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
@@ -446,14 +460,14 @@ class ChapterController extends Controller
                 ]
             );
 
-            //ListAdmin Notification//
+            // ListAdmin Notification//
             $to_email = 'listadmin@momsclub.org';
             Mail::to($to_email)
                 ->queue(new ChapterRemoveListAdmin($mailData));
 
-            //Standard Disbanding Letter & Notification to Board and Coordinators//
+            // Standard Disbanding Letter & Notification to Board and Coordinators//
             if ($disbandLetter == 1) {
-                $pdfPath =  $this->pdfController->saveDisbandLetter($request, $chapterid, $letterType);   // Generate and Send the PDF
+                $pdfPath = $this->pdfController->saveDisbandLetter($request, $chapterid, $letterType);   // Generate and Send the PDF
             }
 
             // Commit the transaction
@@ -542,7 +556,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //Update Chapter MailData//
+            // Update Chapter MailData//
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
@@ -569,7 +583,7 @@ class ChapterController extends Controller
                 ]
             );
 
-            //Primary Coordinator Notification//
+            // Primary Coordinator Notification//
             $to_email = 'listadmin@momsclub.org';
             Mail::to($to_email)
                 ->queue(new ChapterReAddListAdmin($mailData));
@@ -701,7 +715,7 @@ class ChapterController extends Controller
                 'chapter_id' => $chapterId,
             ]);
 
-            //President Info
+            // President Info
             if (isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email'])) {
                 $userId = User::create([
                     'first_name' => $input['ch_pre_fname'],
@@ -738,7 +752,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //AVP Info
+            // AVP Info
             if (isset($input['ch_avp_fname']) && isset($input['ch_avp_lname']) && isset($input['ch_avp_email'])) {
                 $userId = User::create([
                     'first_name' => $input['ch_avp_fname'],
@@ -775,7 +789,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //MVP Info
+            // MVP Info
             if (isset($input['ch_mvp_fname']) && isset($input['ch_mvp_lname']) && isset($input['ch_mvp_email'])) {
                 $userId = User::create([
                     'first_name' => $input['ch_mvp_fname'],
@@ -812,7 +826,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //TREASURER Info
+            // TREASURER Info
             if (isset($input['ch_trs_fname']) && isset($input['ch_trs_lname']) && isset($input['ch_trs_email'])) {
                 $userId = User::create([
                     'first_name' => $input['ch_trs_fname'],
@@ -849,7 +863,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //Secretary Info
+            // Secretary Info
             if (isset($input['ch_sec_fname']) && isset($input['ch_sec_lname']) && isset($input['ch_sec_email'])) {
                 $userId = User::create([
                     'first_name' => $input['ch_sec_fname'],
@@ -886,7 +900,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //Load Chapter MailData//
+            // Load Chapter MailData//
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
@@ -919,11 +933,11 @@ class ChapterController extends Controller
                 ]
             );
 
-            //Primary Coordinator Notification//
+            // Primary Coordinator Notification//
             Mail::to($pcDetails->email)
                 ->queue(new ChapterAddPrimaryCoor($mailData));
 
-            //List Admin Notification//
+            // List Admin Notification//
             $listAdminEmail = 'listadmin@momsclub.org';
             Mail::to($listAdminEmail)
                 ->queue(new ChapterAddListAdmin($mailData));
@@ -1032,7 +1046,7 @@ class ChapterController extends Controller
 
             $chapter->save();
 
-            //Update Chapter MailData//
+            // Update Chapter MailData//
             $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
@@ -1056,7 +1070,7 @@ class ChapterController extends Controller
                 ]
             );
 
-            //Primary Coordinator Notification//
+            // Primary Coordinator Notification//
             if ($chDetailsUpd->name != $chDetailsPre->name || $chDetailsUpd->inquiries_contact != $chDetailsPre->inquiries_contact || $chDetailsUpd->inquiries_note != $chDetailsPre->inquiries_note ||
                     $chDetailsUpd->email != $chDetailsPre->email || $chDetailsUpd->po_box != $chDetailsPre->po_box || $chDetailsUpd->website_url != $chDetailsPre->website_url ||
                     $chDetailsUpd->website_status != $chDetailsPre->website_status || $chDetailsUpd->egroup != $chDetailsPre->egroup || $chDetailsUpd->territory != $chDetailsPre->territory ||
@@ -1065,13 +1079,13 @@ class ChapterController extends Controller
                     ->queue(new ChaptersUpdatePrimaryCoorChapter($mailData));
             }
 
-            //Name Change Notification//
+            // Name Change Notification//
             if ($chDetailsUpd->name != $chDetailsPre->name) {
                 Mail::to($EINCordEmail)
                     ->queue(new ChapersUpdateEINCoor($mailData));
             }
 
-            //PC Change Notification//
+            // PC Change Notification//
             if ($chDetailsUpd->primary_coordinator_id != $chDetailsPre->primary_coordinator_id) {
                 Mail::to($emailListChap)
                     ->queue(new ChaptersPrimaryCoordinatorChange($mailData));
@@ -1080,7 +1094,7 @@ class ChapterController extends Controller
                     ->queue(new ChaptersPrimaryCoordinatorChangePCNotice($mailData));
             }
 
-            //Website URL Change Notification//
+            // Website URL Change Notification//
             if ($chDetailsUpd->website_status != $chDetailsPre->website_status) {
                 if ($chDetailsUpd->website_status == 1) {
                     Mail::to($emailCC)
@@ -1166,7 +1180,7 @@ class ChapterController extends Controller
             $chapter->last_updated_date = date('Y-m-d H:i:s');
             $chapter->save();
 
-            //President Info
+            // President Info
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
                 $chapter = Chapters::with('president')->find($id);
                 $president = $chapter->president;
@@ -1196,7 +1210,7 @@ class ChapterController extends Controller
                     $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
                         ->where('category_id', $categoryId)
                         ->first();
-                    if (!$existingSubscription) {
+                    if (! $existingSubscription) {
                         ForumCategorySubscription::create([
                             'user_id' => $user->id,
                             'category_id' => $categoryId,
@@ -1205,7 +1219,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //AVP Info
+            // AVP Info
             $chapter = Chapters::with('avp')->find($id);
             $avp = $chapter->avp;
             if ($avp) {
@@ -1234,19 +1248,19 @@ class ChapterController extends Controller
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
                     ]);
-                        // Check if subscription already exists
-                        foreach ($defaultBoardCategories as $categoryId) {
-                            $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-                                ->where('category_id', $categoryId)
-                                ->first();
-                            if (!$existingSubscription) {
-                                ForumCategorySubscription::create([
-                                    'user_id' => $user->id,
-                                    'category_id' => $categoryId,
-                                ]);
-                            }
+                    // Check if subscription already exists
+                    foreach ($defaultBoardCategories as $categoryId) {
+                        $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+                            ->where('category_id', $categoryId)
+                            ->first();
+                        if (! $existingSubscription) {
+                            ForumCategorySubscription::create([
+                                'user_id' => $user->id,
+                                'category_id' => $categoryId,
+                            ]);
                         }
                     }
+                }
             } else {
                 if ($request->input('AVPVacant') != 'on') {
                     $user = User::create([  // Create user details if new
@@ -1282,7 +1296,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //MVP Info
+            // MVP Info
             $chapter = Chapters::with('mvp')->find($id);
             $mvp = $chapter->mvp;
             if ($mvp) {
@@ -1316,7 +1330,7 @@ class ChapterController extends Controller
                         $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
                             ->where('category_id', $categoryId)
                             ->first();
-                        if (!$existingSubscription) {
+                        if (! $existingSubscription) {
                             ForumCategorySubscription::create([
                                 'user_id' => $user->id,
                                 'category_id' => $categoryId,
@@ -1360,7 +1374,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //TRS Info
+            // TRS Info
             $chapter = Chapters::with('treasurer')->find($id);
             $treasurer = $chapter->treasurer;
             if ($treasurer) {
@@ -1394,7 +1408,7 @@ class ChapterController extends Controller
                         $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
                             ->where('category_id', $categoryId)
                             ->first();
-                        if (!$existingSubscription) {
+                        if (! $existingSubscription) {
                             ForumCategorySubscription::create([
                                 'user_id' => $user->id,
                                 'category_id' => $categoryId,
@@ -1438,7 +1452,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //SEC Info
+            // SEC Info
             $chapter = Chapters::with('secretary')->find($id);
             $secretary = $chapter->secretary;
             ForumCategorySubscription::where('user_id', $user)->delete();
@@ -1472,7 +1486,7 @@ class ChapterController extends Controller
                         $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
                             ->where('category_id', $categoryId)
                             ->first();
-                        if (!$existingSubscription) {
+                        if (! $existingSubscription) {
                             ForumCategorySubscription::create([
                                 'user_id' => $user->id,
                                 'category_id' => $categoryId,
@@ -1516,7 +1530,7 @@ class ChapterController extends Controller
                 }
             }
 
-            //Update Chapter MailData//
+            // Update Chapter MailData//
             $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
@@ -1693,7 +1707,7 @@ class ChapterController extends Controller
     public function updateChapterIRS(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];;
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $chapter = Chapters::find($id);
@@ -1790,7 +1804,7 @@ class ChapterController extends Controller
     public function updateChapterWebsite(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];;
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQueryPre = $this->baseChapterController->getChapterDetails($id);
@@ -1824,7 +1838,7 @@ class ChapterController extends Controller
 
             $chapter->save();
 
-            //Update Chapter MailData//
+            // Update Chapter MailData//
             $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
@@ -2180,7 +2194,7 @@ class ChapterController extends Controller
     public function updateChapterPayment(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];;
+        $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
@@ -2259,7 +2273,7 @@ class ChapterController extends Controller
                     //     'chapterAmount' => $m2m_payment,
                     // ];
 
-                    //M2M Donation Thank You Email//
+                    // M2M Donation Thank You Email//
                     Mail::to($emailListChap)
                         ->cc($emailPC)
                         ->queue(new PaymentsM2MChapterThankYou($mailData));
@@ -2287,7 +2301,7 @@ class ChapterController extends Controller
                     //     'chapterTotal' => $sustaining_donation,
                     // ];
 
-                    //Sustaining Chapter Thank You Email//
+                    // Sustaining Chapter Thank You Email//
                     Mail::to($emailListChap)
                         ->cc($emailPC)
                         ->queue(new PaymentsSustainingChapterThankYou($mailData));

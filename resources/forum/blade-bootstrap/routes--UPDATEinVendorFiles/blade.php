@@ -1,15 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ForumSubscriptionController;
-use TeamTeaTime\Forum\Http\Controllers\Blade\{
-    Bulk\CategoryController as BulkCategoryController,
-    Bulk\PostController as BulkPostController,
-    Bulk\ThreadController as BulkThreadController,
-    CategoryController,
-    PostController,
-    ThreadController,
-};
+use Illuminate\Support\Facades\Route;
+use TeamTeaTime\Forum\Http\Controllers\Blade\Bulk\CategoryController as BulkCategoryController;
+use TeamTeaTime\Forum\Http\Controllers\Blade\Bulk\PostController as BulkPostController;
+use TeamTeaTime\Forum\Http\Controllers\Blade\Bulk\ThreadController as BulkThreadController;
+use TeamTeaTime\Forum\Http\Controllers\Blade\CategoryController;
+use TeamTeaTime\Forum\Http\Controllers\Blade\PostController;
+use TeamTeaTime\Forum\Http\Controllers\Blade\ThreadController;
 
 $authMiddleware = config('forum.frontend.router.auth_middleware');
 $prefix = config('forum.frontend.route_prefixes');
@@ -25,15 +23,15 @@ Route::patch('unread/mark-as-read', [ThreadController::class, 'markAsRead'])->na
 Route::get('manage', [CategoryController::class, 'manage'])->name('category.manage')->middleware($authMiddleware);
 
 // Categories
-Route::post($prefix['category'] . '/create', [CategoryController::class, 'store'])->name('category.store');
+Route::post($prefix['category'].'/create', [CategoryController::class, 'store'])->name('category.store');
 Route::middleware(['auth', 'coordinatorlistC.access'])->group(function () use ($prefix, $authMiddleware) {
-    Route::prefix($prefix['category'] . '/{category_id}-{category_slug}')->group(function () use ($prefix, $authMiddleware) {
+    Route::prefix($prefix['category'].'/{category_id}-{category_slug}')->group(function () use ($prefix, $authMiddleware) {
         Route::get('/', [CategoryController::class, 'show'])->name('category.show');
         Route::patch('/', [CategoryController::class, 'update'])->name('category.update')->middleware($authMiddleware);
         Route::delete('/', [CategoryController::class, 'delete'])->name('category.delete')->middleware($authMiddleware);
 
-        Route::get($prefix['thread'] . '/create', [ThreadController::class, 'create'])->name('thread.create');
-        Route::post($prefix['thread'] . '/create', [ThreadController::class, 'store'])->name('thread.store')->middleware($authMiddleware);
+        Route::get($prefix['thread'].'/create', [ThreadController::class, 'create'])->name('thread.create');
+        Route::post($prefix['thread'].'/create', [ThreadController::class, 'store'])->name('thread.store')->middleware($authMiddleware);
 
         Route::post('/subscribe', [ForumSubscriptionController::class, 'subscribe'])->name('category.subscribe');
         Route::delete('/unsubscribe', [ForumSubscriptionController::class, 'unsubscribe'])->name('category.unsubscribe');
@@ -42,9 +40,9 @@ Route::middleware(['auth', 'coordinatorlistC.access'])->group(function () use ($
 
 // Threads
 Route::middleware(['auth', 'coordinatorlistT.access'])->group(function () use ($prefix, $authMiddleware) {
-    Route::prefix($prefix['thread'] . '/{thread_id}-{thread_slug}')->group(function () use ($prefix, $authMiddleware) {
+    Route::prefix($prefix['thread'].'/{thread_id}-{thread_slug}')->group(function () use ($authMiddleware) {
         Route::get('/', [ThreadController::class, 'show'])->name('thread.show');
-        Route::middleware($authMiddleware)->group(function () use ($prefix) {
+        Route::middleware($authMiddleware)->group(function () {
             Route::patch('/', [ThreadController::class, 'update'])->name('thread.update');
             Route::post('lock', [ThreadController::class, 'lock'])->name('thread.lock');
             Route::post('unlock', [ThreadController::class, 'unlock'])->name('thread.unlock');
@@ -60,21 +58,20 @@ Route::middleware(['auth', 'coordinatorlistT.access'])->group(function () use ($
 
 // Posts
 Route::middleware(['auth', 'coordinatorlistP.access'])->group(function () use ($prefix, $authMiddleware) {
-    Route::prefix($prefix['thread'] . '/{thread_id}-{thread_slug}')->group(function () use ($prefix, $authMiddleware) {
-        Route::get($prefix['post'] . '/{post_id}', [PostController::class, 'show'])->name('post.show');
+    Route::prefix($prefix['thread'].'/{thread_id}-{thread_slug}')->group(function () use ($prefix, $authMiddleware) {
+        Route::get($prefix['post'].'/{post_id}', [PostController::class, 'show'])->name('post.show');
         Route::middleware($authMiddleware)->group(function () use ($prefix) {
             Route::get('reply', [PostController::class, 'create'])->name('post.create');
             Route::post('reply', [PostController::class, 'store'])->name('post.store');
-            Route::get($prefix['post'] . '/{post_id}/edit', [PostController::class, 'edit'])->name('post.edit');
-            Route::patch($prefix['post'] . '/{post_id}', [PostController::class, 'update'])->name('post.update');
-            Route::get($prefix['post'] . '/{post_id}/delete', [PostController::class, 'confirmDelete'])->name('post.confirm-delete');
-            Route::get($prefix['post'] . '/{post_id}/restore', [PostController::class, 'confirmRestore'])->name('post.confirm-restore');
-            Route::delete($prefix['post'] . '/{post_id}', [PostController::class, 'delete'])->name('post.delete');
-            Route::post($prefix['post'] . '/{post_id}/restore', [PostController::class, 'restore'])->name('post.restore');
+            Route::get($prefix['post'].'/{post_id}/edit', [PostController::class, 'edit'])->name('post.edit');
+            Route::patch($prefix['post'].'/{post_id}', [PostController::class, 'update'])->name('post.update');
+            Route::get($prefix['post'].'/{post_id}/delete', [PostController::class, 'confirmDelete'])->name('post.confirm-delete');
+            Route::get($prefix['post'].'/{post_id}/restore', [PostController::class, 'confirmRestore'])->name('post.confirm-restore');
+            Route::delete($prefix['post'].'/{post_id}', [PostController::class, 'delete'])->name('post.delete');
+            Route::post($prefix['post'].'/{post_id}/restore', [PostController::class, 'restore'])->name('post.restore');
         });
     });
 });
-
 
 // Bulk actions
 Route::prefix('bulk')->middleware($authMiddleware)->name('bulk.')->group(function () {
