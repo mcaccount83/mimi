@@ -212,9 +212,9 @@ class ForumSubscriptionController extends Controller
         }
 
         if (empty($errors)) {
-            return back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to CoorinatorList");
+            return redirect()->back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to CoorinatorList");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
+            return redirect()->back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -259,9 +259,9 @@ class ForumSubscriptionController extends Controller
         }
 
         if (empty($errors)) {
-            return back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to BoardList");
+            return redirect()->back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to BoardList");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
+            return redirect()->back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -306,9 +306,9 @@ class ForumSubscriptionController extends Controller
         }
 
         if (empty($errors)) {
-            return back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to Public Announcements");
+            return redirect()->back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to Public Announcements");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
+            return redirect()->back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -371,9 +371,9 @@ class ForumSubscriptionController extends Controller
         }
 
         if (empty($errors)) {
-            return back()->with('success', "Successfully subscribed {$subscriptionCount} users to BoardList");
+            return redirect()->back()->with('success', "Successfully subscribed {$subscriptionCount} users to BoardList");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} users, but encountered errors: ".implode(', ', $errors));
+            return redirect()->back()->with('warning', "Subscribed {$subscriptionCount} users, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -436,9 +436,9 @@ class ForumSubscriptionController extends Controller
         }
 
         if (empty($errors)) {
-            return back()->with('success', "Successfully subscribed {$subscriptionCount} users to Public Announcements");
+            return redirect()->back()->with('success', "Successfully subscribed {$subscriptionCount} users to Public Announcements");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} users, but encountered errors: ".implode(', ', $errors));
+            return redirect()->back()->with('warning', "Subscribed {$subscriptionCount} users, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -486,9 +486,9 @@ class ForumSubscriptionController extends Controller
         }
 
         if (empty($errors)) {
-            return back()->with('success', "Successfully subscribed {$subscriptionCount} board members to BoardList");
+            return redirect()->back()->with('success', "Successfully subscribed {$subscriptionCount} board members to BoardList");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} board members, but encountered errors: ".implode(', ', $errors));
+            return redirect()->back()->with('warning', "Subscribed {$subscriptionCount} board members, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -536,9 +536,9 @@ class ForumSubscriptionController extends Controller
         }
 
         if (empty($errors)) {
-            return back()->with('success', "Successfully subscribed {$subscriptionCount} board members to Public Announcements");
+            return redirect()->back()->with('success', "Successfully subscribed {$subscriptionCount} board members to Public Announcements");
         } else {
-            return back()->with('warning', "Subscribed {$subscriptionCount} board members, but encountered errors: ".implode(', ', $errors));
+            return redirect()->back()->with('warning', "Subscribed {$subscriptionCount} board members, but encountered errors: ".implode(', ', $errors));
         }
     }
 
@@ -556,12 +556,12 @@ class ForumSubscriptionController extends Controller
             $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
                 ->delete();
 
-            return back()->with('success', "Successfully unsubscribed {$deletedCount} members from BoardList");
+            return redirect()->back()->with('success', "Successfully unsubscribed {$deletedCount} members from BoardList");
 
         } catch (\Exception $e) {
             Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
 
-            return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
+            return redirect()->back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
         }
     }
 
@@ -576,7 +576,7 @@ class ForumSubscriptionController extends Controller
                 ->first();
 
             if (! $category) {
-                return back()->with('error', 'BoardList category not found');
+                return redirect()->back()->with('error', 'BoardList category not found');
             }
 
             // Delete subscriptions only for users who are coordinators
@@ -586,12 +586,12 @@ class ForumSubscriptionController extends Controller
                 })
                 ->delete();
 
-            return back()->with('success', "Successfully unsubscribed {$deletedCount} coordinators from BoardList");
+            return redirect()->back()->with('success', "Successfully unsubscribed {$deletedCount} coordinators from BoardList");
 
         } catch (\Exception $e) {
             Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
 
-            return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
+            return redirect()->back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
         }
     }
 
@@ -606,7 +606,7 @@ class ForumSubscriptionController extends Controller
                 ->first();
 
             if (! $category) {
-                return back()->with('error', 'BoardList category not found');
+                return redirect()->back()->with('error', 'BoardList category not found');
             }
 
             // Delete subscriptions only for users who are board members
@@ -616,12 +616,12 @@ class ForumSubscriptionController extends Controller
                 })
                 ->delete();
 
-            return back()->with('success', "Successfully unsubscribed {$deletedCount} board members from BoardList");
+            return redirect()->back()->with('success', "Successfully unsubscribed {$deletedCount} board members from BoardList");
 
         } catch (\Exception $e) {
             Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
 
-            return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
+            return redirect()->back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
         }
     }
 
@@ -636,7 +636,7 @@ class ForumSubscriptionController extends Controller
                 ->first();
 
             if (! $category) {
-                return back()->with('error', 'Public Announcements category not found');
+                return redirect()->back()->with('error', 'Public Announcements category not found');
             }
 
             // Delete subscriptions only for users who are board members
@@ -646,12 +646,12 @@ class ForumSubscriptionController extends Controller
                 })
                 ->delete();
 
-            return back()->with('success', "Successfully unsubscribed {$deletedCount} board members from Public Announcements");
+            return redirect()->back()->with('success', "Successfully unsubscribed {$deletedCount} board members from Public Announcements");
 
         } catch (\Exception $e) {
             Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
 
-            return back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
+            return redirect()->back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
         }
     }
 }
