@@ -435,7 +435,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Activate New Board Members
      */
-    public function activateBoard(Request $request, $chapter_id)
+    public function activateBoard(Request $request, $chapter_id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];

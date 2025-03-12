@@ -403,7 +403,7 @@ class AdminController extends Controller implements HasMiddleware
     /**
      * View List of ReReg Payments if Dates Need to be Udpated
      */
-    public function showReRegDate(Request $request)
+    public function showReRegDate(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];

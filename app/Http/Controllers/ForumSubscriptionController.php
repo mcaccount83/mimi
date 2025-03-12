@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use App\Models\Chapters;
@@ -55,7 +58,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      *  Coordinator Subscribe FOR the Board Member or Coordinator on Details Page
      */
-    public function subscribeCategory(Request $request)
+    public function subscribeCategory(Request $request): JsonResponse
     {
         ForumCategorySubscription::create([
             'user_id' => $request->user_id,
@@ -68,7 +71,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function unsubscribeCategory(Request $request)
+    public function unsubscribeCategory(Request $request): JsonResponse
     {
         ForumCategorySubscription::where([
             'user_id' => $request->user_id,
@@ -85,7 +88,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      *  Show list of chapters subscribitios by email
      */
-    public function showChapterListSubscriptions(Request $request)
+    public function showChapterListSubscriptions(Request $request): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -110,7 +113,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      *  Show list of coordinators subscribitios by email
      */
-    public function showCoordinatorListSubscriptions(Request $request)
+    public function showCoordinatorListSubscriptions(Request $request): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -137,7 +140,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      *  Show list of intrnational chapters subscribitios by email
      */
-    public function showInternationalChapterListSubscriptions(Request $request)
+    public function showInternationalChapterListSubscriptions(Request $request): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -161,7 +164,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      *  Show list of intrnational coordinators subscribitios by email
      */
-    public function showInternationalCoordinatorListSubscriptions(Request $request)
+    public function showInternationalCoordinatorListSubscriptions(Request $request): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -184,7 +187,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Add all active coordinators to CoordinatorList Subscribe by Email
      */
-    public function bulkAddCoordinatorsList()
+    public function bulkAddCoordinatorsList(): RedirectResponse
     {
         $category = ForumCategory::where('title', 'CoordinatorList')
             ->first();
@@ -231,7 +234,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Add all active coordinators to BoardList Subscribe by Email
      */
-    public function bulkAddCoordinatorsBoardList()
+    public function bulkAddCoordinatorsBoardList(): RedirectResponse
     {
         $category = ForumCategory::where('title', 'BoardList')
             ->first();
@@ -278,7 +281,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Add all active coordinators to Public Announcements Subscribe by Email
      */
-    public function bulkAddCoordinatorsPublicAnnounceements()
+    public function bulkAddCoordinatorsPublicAnnounceements(): RedirectResponse
     {
         $category = ForumCategory::where('title', 'Public Announcements')
             ->first();
@@ -325,7 +328,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Add all active board members & coordinators to BoardList Subscribe by Email
      */
-    public function bulkAddBoardList()
+    public function bulkAddBoardList(): RedirectResponse
     {
         // Get category
         $category = ForumCategory::where('title', 'BoardList')
@@ -390,7 +393,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Add all active users to Public Annoncements Subscribe by Email
      */
-    public function bulkAddPublicAnnouncements()
+    public function bulkAddPublicAnnouncements(): RedirectResponse
     {
         // Get category
         $category = ForumCategory::where('title', 'Public Announcements')
@@ -455,7 +458,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Add all active board members to BoardList Subscribe by Email
      */
-    public function bulkAddBoardBoardList()
+    public function bulkAddBoardBoardList(): RedirectResponse
     {
         // Get category
         $category = ForumCategory::where('title', 'BoardList')
@@ -505,7 +508,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Add all active board members to Public Annoncements Subscribe by Email
      */
-    public function bulkAddBoardPublicAnnouncements()
+    public function bulkAddBoardPublicAnnouncements(): RedirectResponse
     {
         // Get category
         $category = ForumCategory::where('title', 'Public Announcements')
@@ -555,7 +558,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Remove all coordinaors and board members from BoardList Subscription
      */
-    public function bulkRemoveBoardList()
+    public function bulkRemoveBoardList(): RedirectResponse
     {
         try {
             // Get category
@@ -578,7 +581,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Remove all coordinators from BoardList Subscription
      */
-    public function bulkRemoveCoordinatorsBoardList()
+    public function bulkRemoveCoordinatorsBoardList(): RedirectResponse
     {
         try {
             // Get category
@@ -608,7 +611,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Remove all board members from BoardList Subscription
      */
-    public function bulkRemoveBoardBoardList()
+    public function bulkRemoveBoardBoardList(): RedirectResponse
     {
         try {
             // Get category
@@ -638,7 +641,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Remove all board members from BoardList Subscription
      */
-    public function bulkRemoveBoardPublicAnnouncements()
+    public function bulkRemoveBoardPublicAnnouncements(): RedirectResponse
     {
         try {
             // Get category

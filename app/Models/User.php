@@ -69,7 +69,7 @@ class User extends Authenticatable
         return $this->first_name.' '.$this->last_name;
     }
 
-    public function categorySubscriptions()
+    public function categorySubscriptions(): HasMany
     {
         return $this->hasMany(ForumCategorySubscription::class);
     }

@@ -891,7 +891,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show M2M Donation Form All Board Members
      */
-    public function showM2MDonationForm(Request $request)
+    public function showM2MDonationForm(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
