@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use romanzipp\QueueMonitor\Providers\QueueMonitorProvider;
-use Illuminate\Support\Facades\View;
 
 class QueueMonitorServiceProvider extends ServiceProvider
 {
