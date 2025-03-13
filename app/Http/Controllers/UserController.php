@@ -71,7 +71,7 @@ class UserController extends Controller implements HasMiddleware
     public function loadUserInformation(Request $request)
     {
         $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition',
-            'board', 'board.position', 'outgoing'])
+            'board', 'board.position', 'outgoing', 'disbanded'])
             ->find($request->user()->id);
 
         $userInfo = [
@@ -113,11 +113,15 @@ class UserController extends Controller implements HasMiddleware
 
             case 'outgoing':
                 $userInfo += [
-                    // 'user_bdOutDetails' => $user->outgoing,
                     'user_bdOutId' => $user->outgoing->id,
-                    // 'user_bdOutPositionId' => $user->outgoing->board_position_id,
-                    // 'user_bdOutIsActive' => $user->outgoing->is_active,
-                    'user_OutchapterId' => $user->outgoing->chapter_id,
+                    'user_outChapterId' => $user->outgoing->chapter_id,
+                ];
+                break;
+
+            case 'disbanded':
+                $userInfo += [
+                    'user_bdDisId' => $user->disbanded->id,
+                    'user_disChapterId' => $user->disbanded->chapter_id,
                 ];
                 break;
         }

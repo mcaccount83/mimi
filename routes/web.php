@@ -11,10 +11,10 @@ use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CoordinatorReportController;
 use App\Http\Controllers\EOYReportController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\ForumSubscriptionController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\MailController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicController;
@@ -261,19 +261,22 @@ Route::get('/view/chapter/{id}', [ViewAsBoardController::class, 'showChapterView
 Route::get('/view/chapterfinancial/{id}', [ViewAsBoardController::class, 'showChapterFinancialView'])->name('viewas.viewchapterfinancial');
 Route::get('/view/chapterboardinfo/{id}', [ViewAsBoardController::class, 'showChapterBoardInfoView'])->name('viewas.viewchapterboardinfo');
 Route::get('/view/chapterreregistration/{id}', [ViewAsBoardController::class, 'showChapterReregistrationView'])->name('viewas.viewchapterreregistration');
+Route::get('/view/chapterdisband/{id}', [ViewAsBoardController::class, 'showDisbandChecklistView'])->name('viewas.viewchapterdisbandchecklist');
 
 // Board Controller Routes...
-Route::get('/board/president', [BoardController::class, 'showPresident'])->name('board.showpresident');
-Route::post('/board/update/{id}', [BoardController::class, 'updatePresident'])->name('board.update');
-Route::get('/board/member', [BoardController::class, 'showMember'])->name('board.showmember');
-Route::post('/board/member/update/{id}', [BoardController::class, 'updateMember'])->name('member.update');
-Route::get('/board/boardinfo', [BoardController::class, 'showBoardInfo'])->name('boardinfo.showboardinfo');
-Route::post('/board/boardinfo/{id}', [BoardController::class, 'createBoardInfo'])->name('boardinfo.createboardinfo');
-Route::get('/board/financial/{id}', [BoardController::class, 'showFinancialReport'])->name('board.showfinancial');
-Route::post('/board/financial/{id}', [BoardController::class, 'storeFinancialReport'])->name('board.storefinancial');
-Route::get('/board/reregpayment', [BoardController::class, 'showReregistrationPaymentForm'])->name('board.showreregpayment');
-Route::get('/board/m2mdonation', [BoardController::class, 'showM2MDonationForm'])->name('board.showm2mdonation');
-Route::get('/board/resources', [BoardController::class, 'showResources'])->name('board.resources');
+Route::get('/board/president', [BoardController::class, 'editPresident'])->name('board.editpresident');
+Route::post('/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('board.updatepresident');
+Route::get('/board/member', [BoardController::class, 'editMember'])->name('board.editmember');
+Route::post('/board/memberupdate/{id}', [BoardController::class, 'updateMember'])->name('board.updatemember');
+Route::get('/board/boardreport', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
+Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
+Route::get('/board/financialreport', [BoardController::class, 'editFinancialReport'])->name('board.editfinancialreport');
+Route::post('/board/financialreportupdate/{id}', [BoardController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
+Route::get('/board/reregpayment', [BoardController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
+Route::get('/board/m2mdonation', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
+Route::get('/board/resources', [BoardController::class, 'viewResources'])->name('board.viewresources');
+
+Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
 
 // Forum Subscription Controller Routes...
 Route::get('/forum/chaptersubscriptionlist', [ForumSubscriptionController::class, 'showChapterListSubscriptions'])->name('forum.chaptersubscriptionlist');

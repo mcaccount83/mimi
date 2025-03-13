@@ -69,25 +69,52 @@ class HomeController extends Controller implements HasMiddleware
             $userName = $user['user_name'];
             $userEmail = $user['user_email'];
             $loggedInName = $user['user_name'];
-            $chId = $user['user_OutchapterId'];
+            $chId = $user['user_outChapterId'];
 
             $baseQuery = $this->baseBoardController->getChapterDetails($chId);
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
-            $submitted = $baseQuery['submitted'];
+            // $submitted = $baseQuery['submitted'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $awards = $baseQuery['awards'];
             $allAwards = $baseQuery['allAwards'];
 
             $resources = Resources::with('categoryName')->get();
 
-            $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'userType' => $userType,
+            $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
                 'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-                'awards' => $awards, 'allAwards' => $allAwards,
             ];
 
             return view('boards.financial')->with($data);
+        }
+
+            if ($userType == 'disbanded') {
+                // Send Disbanded Chapter Board Members to Disbanded Checklist and Financial Report
+                $userName = $user['user_name'];
+                $userEmail = $user['user_email'];
+                $loggedInName = $user['user_name'];
+                $chId = $user['user_disChapterId'];
+
+                $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+                $chDetails = $baseQuery['chDetails'];
+                $stateShortName = $baseQuery['stateShortName'];
+                $chDocuments = $baseQuery['chDocuments'];
+                // $submitted = $baseQuery['submitted'];
+                $chFinancialReport = $baseQuery['chFinancialReport'];
+                $awards = $baseQuery['awards'];
+                $allAwards = $baseQuery['allAwards'];
+
+                $resources = Resources::with('categoryName')->get();
+
+                $chDisbanded = $baseQuery['chDisbanded'];
+
+                $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+                    'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+                   'chDisbanded' => $chDisbanded
+                ];
+
+                return view('boards.disband')->with($data);
 
         } else {
             Auth::logout(); // logout non-user

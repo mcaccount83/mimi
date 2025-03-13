@@ -27,7 +27,7 @@
                     <h4 class="text-center"><?php if($chapterDetails[0]->financial_report_received) echo "<br><font color=\"red\">Your chapter's Financial Report has been Submitted!<br>
                         Please save a copy of the PDF for your records.</font>"; ?></h4>
                          <div class="col-md-12 text-center">
-                                @if($submitted =='1')
+                                @if($sub$chapterDetails[0]->financial_report_received =='1')
                                 <button type="button" id="btn-download-pdf" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $financial_report_array['financial_pdf_path'] }}'"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</button>
                                 {{-- <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-primary" ><i class="fas fa-download" ></i>&nbsp; Download PDF</a> --}}
                                 @endif
@@ -45,7 +45,7 @@
                     <input type="hidden" name="ch_state" value="<?php echo $chapterDetails[0]->state; ?>" />
                     <input type="hidden" name="ch_pcid" value="<?php echo $chapterDetails[0]->pcid; ?>" />
                     <input type="hidden" name="ch_conf" value="<?php echo $chapterDetails[0]->conf; ?>" />
-                    <input type="hidden" name="submitted" id="submitted" value="<?php echo $submitted; ?>" />
+                    <input type="hidden" name="submitted" id="submitted" value="<?php echo $chapterDetails[0]->financial_report_received; ?>" />
                     <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($financial_report_array['farthest_step_visited'] > 0) echo $financial_report_array['farthest_step_visited']; else echo "0"; ?>" />
 
             <div class="row">
@@ -2886,9 +2886,9 @@
                                     </ul>
 
                                     <div class="award_sec_btn">
-                                        <button type="button" id="btnAddAwardNomination" class="btn btn-sm btn-success " onclick="AddAwardNomination()" <?php if($submitted || $financial_report_array['award_nominations']==5) echo "disabled"; ?>>
+                                        <button type="button" id="btnAddAwardNomination" class="btn btn-sm btn-success " onclick="AddAwardNomination()" <?php if($chapterDetails[0]->financial_report_received || $financial_report_array['award_nominations']==5) echo "disabled"; ?>>
                                             <i class="fas fa-plus"></i>&nbsp; Add Nomination</button>
-                                        <button type="button" id="btnDeleteAwardNomination" class="btn btn-sm btn-danger" onclick="DeleteAwardNomination()" <?php if($submitted || $financial_report_array['award_nominations']<1) echo "disabled"; ?>>
+                                        <button type="button" id="btnDeleteAwardNomination" class="btn btn-sm btn-danger" onclick="DeleteAwardNomination()" <?php if($chapterDetails[0]->financial_report_received || $financial_report_array['award_nominations']<1) echo "disabled"; ?>>
                                             <i class="fas fa-minus"></i>&nbsp; Delete Nomination</button>
                                     </div>
                             </div>
@@ -3483,10 +3483,10 @@
                 @if($userType === 'coordinator')
                     <a href="{{ route('viewas.viewchapterpresident', $financial_report_array['chapter_id']) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
                 @endif
-                @if($submitted !='1')
+                @if($chDocuments->financial_report_received !='1')
                     <button type="button" id="btn-save" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp; Save</button>
                 @endif
-                @if($submitted =='1')
+                @if($chDocuments->financial_report_received =='1')
                     <button type="button" id="btn-download-pdf" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $financial_report_array['financial_pdf_path'] }}'"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</button>
                     {{-- <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['financial_pdf_path'] }}" class="btn btn-primary"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</a> --}}
                 @endif

@@ -42,6 +42,7 @@ if (! function_exists('getUserType')) {
             'coordinator' => ($userType == 'coordinator'),  // Coordinator
             'board' => ($userType == 'board'),  // Current Board Member
             'outgoing' => $userType == 'outgoing',  // Outgoing Board Member
+            'disbanded' => $userType == 'disbanded',  // Disbanded Chapter Board Member
         ];
     }
 }

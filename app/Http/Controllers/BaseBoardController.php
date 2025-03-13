@@ -28,7 +28,7 @@ class BaseBoardController extends Controller
     public function getChapterDetails($id)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'president',
-            'boards', 'reportReviewer', 'primaryCoordinator'])->find($id);
+            'boards', 'reportReviewer', 'primaryCoordinator', 'disbandCheck'])->find($id);
         $chId = $chDetails->id;
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
@@ -45,13 +45,14 @@ class BaseBoardController extends Controller
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
         $chDocuments = $chDetails->documents;
-        $submitted = $chDocuments->financial_report_received;
         $reviewComplete = $chDetails->documents->review_complete;
         $reviewerEmail = $chDetails->reportReviewer?->email;  // Could be null -- no reviewer assigned
         $chFinancialReport = $chDetails->financialReport;
         $displayEOY = getEOYDisplay();
 
         $awards = $chDetails->financialReport;
+
+        $chDisbanded = $chDetails->disbandCheck;
 
         $boards = $chDetails->boards()->with(['stateName', 'position'])->get();
         $bdDetails = $boards->groupBy('board_position_id');
@@ -83,11 +84,11 @@ class BaseBoardController extends Controller
         $emailCC = $ccEmailData['cc_email'];
 
         return ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'cc_id' => $cc_id,
-            'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'submitted' => $submitted,
+            'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,
             'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail, 'displayEOY' => $displayEOY,
-            'pcDetails' => $pcDetails,
+            'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded
         ];
     }
 }

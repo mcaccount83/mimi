@@ -60,9 +60,7 @@
           <!-- Navbar -->
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
     <div class="container">
-        {{-- <a href="{{ route('home') }}" class="navbar-brand">
-            <img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" class="brand-image img-circle elevation-3" >
-          </a> --}}
+
     @if($userType == 'board')
 
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
@@ -121,8 +119,6 @@
       @endif
   @endif
 
-
-
     </div>
   </nav>
   <!-- /.navbar -->
@@ -133,7 +129,7 @@
     <div class="content-header">
       <div class="container">
         @if($userType === 'coordinator')
-        <p class="description text-center"><span style="color: red;">You are Viewing Chapter Profile as a Coordinator -- All Information is READ ONLY.</p>
+        <p class="description text-center"><span style="color: red;">You are Viewing Chapter Pages as a Coordinator -- All Information is READ ONLY.</p>
         @endif
       </div><!-- /.container-fluid -->
     </div>
@@ -234,6 +230,7 @@
 
 <!-- jQuery -->
 <script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="{{ config('settings.base_url') }}theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- FontAwesome -->
@@ -267,34 +264,47 @@
 </script>
 
 <script>
-function openPdfViewer(fileId) {
-    window.open('/pdf-viewer?id=' + fileId, '_blank');
-}
+    function openPdfViewer(fileId) {
+        window.open('/pdf-viewer?id=' + fileId, '_blank');
+    }
 </script>
 
 <script>
- function applyPhoneMask() {
-        Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
-    }
+    function applyPhoneMask() {
+            Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
+        }
 
-     // Currency mask
-     function applyCurrencyMask() {
-    Inputmask({
-        alias: 'currency',
-        rightAlign: false,
-        groupSeparator: ',',
-        digits: 2,
-        digitsOptional: false,
-        placeholder: '0'
-    }).mask(".currency-mask");
-    }
+        // Currency mask
+        function applyCurrencyMask() {
+        Inputmask({
+            alias: 'currency',
+            rightAlign: false,
+            groupSeparator: ',',
+            digits: 2,
+            digitsOptional: false,
+            placeholder: '0'
+        }).mask(".currency-mask");
+        }
 
-      //Cusotmize AJAX Popups to Match Theme
-  function customSuccessAlert(message) {
+        //Cusotmize AJAX Popups to Match Theme
+    function customSuccessAlert(message) {
+            Swal.fire({
+                title: 'Success',
+                html: message,
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn-sm btn-success', // Match your theme button class
+                },
+                buttonsStyling: false // Disable default button styling
+            });
+        }
+
+    function customWarningAlert(message) {
         Swal.fire({
-            title: 'Success',
+            title: 'Warning',
             html: message,
-            icon: 'success',
+            icon: 'warning',
             confirmButtonText: 'OK',
             customClass: {
                 confirmButton: 'btn-sm btn-success', // Match your theme button class
@@ -303,48 +313,36 @@ function openPdfViewer(fileId) {
         });
     }
 
-function customWarningAlert(message) {
-    Swal.fire({
-        title: 'Warning',
-        html: message,
-        icon: 'warning',
-        confirmButtonText: 'OK',
-        customClass: {
-            confirmButton: 'btn-sm btn-success', // Match your theme button class
-        },
-        buttonsStyling: false // Disable default button styling
-    });
-}
+    function customInfoAlert(message) {
+        Swal.fire({
+            title: 'Info',
+            html: message,
+            icon: 'info',
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'btn-sm btn-success', // Match your theme button class
+            },
+            buttonsStyling: false // Disable default button styling
+        });
+    }
 
-function customInfoAlert(message) {
-    Swal.fire({
-        title: 'Info',
-        html: message,
-        icon: 'info',
-        confirmButtonText: 'OK',
-        customClass: {
-            confirmButton: 'btn-sm btn-success', // Match your theme button class
-        },
-        buttonsStyling: false // Disable default button styling
-    });
-}
-
-function customErrorAlert(message) {
-    Swal.fire({
-        title: 'Error',
-        html: message,
-        icon: 'error',
-        confirmButtonText: 'OK',
-        customClass: {
-            confirmButton: 'btn-sm btn-success', // Match your theme button class
-        },
-        buttonsStyling: false // Disable default button styling
-    });
-}
-
-  </script>
+    function customErrorAlert(message) {
+        Swal.fire({
+            title: 'Error',
+            html: message,
+            icon: 'error',
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'btn-sm btn-success', // Match your theme button class
+            },
+            buttonsStyling: false // Disable default button styling
+        });
+    }
+</script>
 
 @yield('customscript')
+
+@stack('scripts')
 
 </body>
 </html>

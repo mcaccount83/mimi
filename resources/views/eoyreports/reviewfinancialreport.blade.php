@@ -28,7 +28,7 @@
         <div class="col-md-4">
             <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("eoyreports.updatefinancialreport", $chDetails->id) }}' novalidate>
                 @csrf
-                <input type="hidden" name="submitted" id="submitted" value="{{ $submitted }}" />
+                <input type="hidden" name="submitted" id="submitted" value="{{ $chFinancialReport['financial_report_received'] }}" />
                 <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($chFinancialReport['farthest_step_visited_coord'] != null) echo $chFinancialReport['farthest_step_visited_coord']; else echo '14'; ?>" />
                 <input type="hidden" name="submit_type" id="submit_type" value="" />
 
@@ -42,7 +42,7 @@
                <h5>Review Summary</h5>
             Answers from questios in previous sections will show up here after they have been saved.<br>
             <br>
-            @if ($submitted)
+            @if ($chDocuments['financial_report_received'])
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Financial Report PDF:</b> <span class="float-right"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['financial_pdf_path']; ?>">Download PDF</a></span>
             </div>
@@ -301,7 +301,7 @@
             <br>
             <button type="submit" id="btn-step-14" class="btn bg-gradient-primary mb-2"><i class="fas fa-save mr-2"></i>Save Report Review</button>
             <br>
-            @if ($chFinancialReport['review_complete'] != "" && $submitted)
+            @if ($chDocuments['financial_review_complete'] != "" && $chDocuments['financial_report_received'])
                 @if ($regionalCoordinatorCondition)
                     <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
                 @else
@@ -331,7 +331,7 @@
             <!-- /.card-header -->
             <div class="row">
                 <div class="col-md-12">
-                    @if($submitted)
+                    @if($chDocuments->financial_report_received)
                         @if ($chFinancialReport->reviewer_id != null)
                             <label>Assigned Reviewer:</label>&nbsp;&nbsp;{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}
                         @else
@@ -1016,7 +1016,7 @@
 
 					<!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-4" class="btn bg-gradient-primary" <?php if($chFinancialReport['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fas fa-save mr-2"></i>Save Report Review</button>
+                        <button type="submit" id="btn-step-4" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
                     </div>
                 </div>
             </div>
@@ -2238,7 +2238,7 @@
             </div>
 
             <div class="card-body text-center">
-                @if ($submitted)
+                @if ($chDocuments->financial_report_received)
                     <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a>
                 @else
                     <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary mb-2 disabled">Download PDF Report</a>

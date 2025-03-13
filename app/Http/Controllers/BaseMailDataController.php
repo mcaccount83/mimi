@@ -161,7 +161,7 @@ class BaseMailDataController extends Controller
             'completedEmail' => $chFinancialReport->completed_email,
             'boardElectionReportReceived' => $chDocuments->new_board_submitted,
             'financialReportReceived' => $chDocuments->financial_report_received,
-            '990NSubmissionReceived' => $chDocuments->financial_report_received,
+            '990NSubmissionReceived' => $chDocuments->irs_verified,
             'einLetterCopyReceived' => $chDocuments->ein_letter_path,
             'rosterPath' => $chDocuments->roster_path,
             'irsPath' => $chDocuments->irs_path,

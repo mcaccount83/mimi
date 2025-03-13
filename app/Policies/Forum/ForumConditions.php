@@ -18,6 +18,10 @@ class ForumConditions
             return false; // Hide ALL from outgoing
         }
 
+        if ($user->user_type === 'disbanded') {
+            return false; // Hide ALL from outgoing
+        }
+
         if ($category->title === 'CoordinatorList' && $user->user_type !== 'coordinator') {
             return false; // Hide from everyone except coordinators
         }
@@ -59,6 +63,7 @@ class ForumConditions
             'isCoordinator' => $userTypes['coordinator'],
             'isBoard' => $userTypes['board'],
             'isOutgoing' => $userTypes['outgoing'],
+            'isDisbanded' => $userTypes['disbanded'],
         ];
     }
 

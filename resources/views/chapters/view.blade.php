@@ -237,7 +237,6 @@
                                 </div>
                             </div>
 
-
                         @endif
 
                         </div>
@@ -315,6 +314,69 @@
 
                         </div>
                         @endif
+
+                        @if($chDetails->is_active != '1')
+                        <div class="col-md-6">
+                            <h3 class="profile-username">Disband Checklist
+                            <button id="viewdisband" class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('viewas.viewchapterdisbandchecklist', ['id' => $chDetails->id]) }}'">View Checklist/Report As President</button>
+                        </h3>
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Final Re-Reg Payment:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded->final_payment == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Funds Donated:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded->donate_funds == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Manual Returned/Destroyed:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded->destroy_manual == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Online Accounts Removed:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded->remove_online == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Final 990N Filed:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded->file_irs == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Final Financial Report Submitted:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded->file_financial == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                        </div>
+                        @endif
+
                     </div>
 
                     </div>
@@ -820,7 +882,7 @@ $(document).ready(function () {
         $('#back-international').prop('disabled', false);
         $('#back-international-zapped').prop('disabled', false);
         $('#unzap').prop('disabled', false);
-
+        $('#viewdisband').prop('disabled', false);
     }
 });
 

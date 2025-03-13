@@ -237,8 +237,8 @@ class BaseChapterController extends Controller
      */
     public function getChapterDetails($chId)
     {
-        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator'])
-            ->find($chId);
+        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator',
+            'disbandCheck']) ->find($chId);
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
         $regionLongName = $chDetails->region->long_name;
@@ -252,7 +252,6 @@ class BaseChapterController extends Controller
         $websiteLink = $chDetails->webLink->link_status ?? null;
 
         $chDocuments = $chDetails->documents;
-        $submitted = $chDetails->documents->financial_report_received ?? null;
         $reviewComplete = $chDetails->documents->review_complete ?? null;
         $chFinancialReport = $chDetails->financialReport;
         $displayEOY = getEOYDisplay();  // Conditions to Show EOY Items
@@ -262,6 +261,8 @@ class BaseChapterController extends Controller
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
         $allMonths = Month::all();  // Full List for Dropdown Menu
+
+        $chDisbanded = $chDetails->disbandCheck;
 
         $boards = $chDetails->boards()->with('stateName')->get();
         $bdDetails = $boards->groupBy('board_position_id');
@@ -302,11 +303,11 @@ class BaseChapterController extends Controller
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'submitted' => $submitted, 'rrList' => $rrList,
+            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY,
             'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_conf_desc' => $cc_conf_desc, 'cc_conf_name' => $cc_conf_name,
-            'allMonths' => $allMonths, 'pcDetails' => $pcDetails,
+            'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded
         ];
     }
 }

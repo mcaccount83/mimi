@@ -231,6 +231,7 @@ class ChapterController extends Controller implements HasMiddleware
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chDisbanded = $baseQuery['chDisbanded'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $reviewComplete = $baseQuery['reviewComplete'];
         $displayEOY = $baseQuery['displayEOY'];
@@ -257,7 +258,7 @@ class ChapterController extends Controller implements HasMiddleware
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
-            'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE,
+            'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded'=> $chDisbanded
         ];
 
         return view('chapters.view')->with($data);

@@ -27,7 +27,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <form id="boardinfo" method="POST" action="{{ route('boardinfo.createboardinfo',$chDetails->id) }}">
+                    <form id="boardinfo" method="POST" action="{{ route('board.updateboardreport',$chDetails->id) }}">
                         @csrf
 
                         <input type="hidden" name="presID" id="presID" value="<?php echo $PresDetails->id; ?>" />

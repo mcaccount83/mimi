@@ -31,6 +31,7 @@
                     'coordinator' => false,
                     'board' => false,
                     'outgoing' => false,
+                    'disbanded' => false,
                 ];
             @endphp
 

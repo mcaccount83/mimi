@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
-class OutgoingBoard extends Model
+class DisbandedBoard extends Model
 {
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'outgoing_board_member';
+    protected $table = 'disbanded_board_member';
 
     public $timestamps = false;
 
@@ -23,21 +23,21 @@ class OutgoingBoard extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in outgoing BelongsTo 'id' in user
+        return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in disbanded BelongsTo 'id' in user
     }
 
     public function chapters(): BelongsTo
     {
-        return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in outgoing BelongsTo 'id' in chapters
+        return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in disbanded BelongsTo 'id' in chapters
     }
 
     public function stateName(): BelongsTo
     {
-        return $this->belongsTo(State::class, 'state', 'state_short_name');  // 'state' in outgoing BelongsTo 'state_short_name' in state
+        return $this->belongsTo(State::class, 'state', 'state_short_name');  // 'state' in disbanded BelongsTo 'state_short_name' in state
     }
 
     public function position(): BelongsTo
     {
-        return $this->belongsTo(BoardPosition::class, 'board_position_id', 'id');  // 'board_position_id' in outgoing BelongsTo 'id' in board_position
+        return $this->belongsTo(BoardPosition::class, 'board_position_id', 'id');  // 'board_position_id' in disbanded BelongsTo 'id' in board_position
     }
 }

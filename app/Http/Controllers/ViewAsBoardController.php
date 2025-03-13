@@ -157,23 +157,57 @@ class ViewAsBoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
+        $userName = $user['user_name'];
+        $userEmail = $user['user_email'];
         $loggedInName = $user['user_name'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
-        $submitted = $baseQuery['submitted'];
+        // $submitted = $baseQuery['submitted'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
         $allAwards = $baseQuery['allAwards'];
 
         $resources = Resources::with('categoryName')->get();
 
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'userType' => $userType,
-            'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'allAwards' => $allAwards,
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+            'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'allAwards' => $allAwards,
         ];
 
         return view('boards.financial')->with($data);
+    }
+
+    /**
+     * View the Disband Checklis & Report Report View
+     */
+    public function showDisbandChecklistView(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userName = $user['user_name'];
+        $userEmail = $user['user_email'];
+        $loggedInName = $user['user_name'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $chDocuments = $baseQuery['chDocuments'];
+        // $submitted = $baseQuery['submitted'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+
+        $allAwards = $baseQuery['allAwards'];
+
+        $chDisbanded = $baseQuery['chDisbanded'];
+
+        $resources = Resources::with('categoryName')->get();
+
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+            'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+            'allAwards' => $allAwards, 'chDisbanded' => $chDisbanded
+        ];
+
+        return view('boards.disband')->with($data);
     }
 }

@@ -120,7 +120,7 @@ class PDFController extends Controller
         $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
         $stateShortName = $baseQuery['stateShortName'];
         $chFinancialReport = $chDetails->financialReport;
-        $submitted = $chFinancialReport->submitted;
+        // $submitted = $chFinancialReport->submitted;
         $PresDetails = $baseQuery['PresDetails'];
         // $cc_fname = $baseQuery['cc_fname'];
         // $cc_lname = $baseQuery['cc_lname'];
@@ -210,7 +210,7 @@ class PDFController extends Controller
                 'wheres_the_money' => $chFinancialReport->wheres_the_money,
                 'completed_name' => $chFinancialReport->completed_name,
                 'completed_email' => $chFinancialReport->completed_email,
-                'submitted' => $submitted,
+                'submitted' => $chFinancialReport->submitted,
                 'ch_name' => $sanitizedChapterName,
             ],
         );
