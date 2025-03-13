@@ -17,8 +17,6 @@ class QueueMonitorServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        View::share('errors', session()->get('errors') ?: new \Illuminate\Support\ViewErrorBag);
-
         view()->addNamespace('queue-monitor', resource_path('views/vendor/queue-monitor'));
     }
 }

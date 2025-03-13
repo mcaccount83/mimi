@@ -11,6 +11,6 @@ class LogViewerServiceProvider extends ServiceProvider
     {
         $this->app->register(LogViewer::class);
 
-        $this->app->alias('LogViewer', Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
+        $this->app->alias('LogViewer', \Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
     }
 }
