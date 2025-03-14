@@ -47,7 +47,7 @@
                                     <div class="col-md-12 float-left d-flex">
                                         <label style="margin-right: 20px;">Our final re-registration payment has been sent International.</label>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" id="FinalPayment" name="FinalPayment" class="custom-control-input" {{$chDisbanded->final_payment == '1' ? 'checked' : ''}} >
+                                            <input type="checkbox" id="FinalPayment" name="FinalPayment" class="custom-control-input" {{$chDisbanded?->final_payment == '1' ? 'checked' : ''}} >
                                             <label class="custom-control-label" for="FinalPayment">YES</label>
                                         </div>
                                     </div>
@@ -57,7 +57,7 @@
                                     <div class="col-md-12 float-left d-flex">
                                         <label style="margin-right: 20px;">Our remaining treasury balance has been donated to a registered 501(c)(3) charity.</label>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" id="DonateFunds" name="DonateFunds" class="custom-control-input" {{$chDisbanded->donate_funds == '1' ? 'checked' : ''}}>
+                                            <input type="checkbox" id="DonateFunds" name="DonateFunds" class="custom-control-input" {{$chDisbanded?->donate_funds == '1' ? 'checked' : ''}}>
                                             <label class="custom-control-label" for="DonateFunds">YES</label>
                                         </div>
                                     </div>
@@ -67,7 +67,7 @@
                                     <div class="col-md-12 float-left d-flex">
                                         <label style="margin-right: 20px;">Our MOMS Club manual has been returned or destroyed.</label>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" id="DestroyManual" name="DestroyManual" class="custom-control-input" {{$chDisbanded->destroy_manual == '1' ? 'checked' : ''}}>
+                                            <input type="checkbox" id="DestroyManual" name="DestroyManual" class="custom-control-input" {{$chDisbanded?->destroy_manual == '1' ? 'checked' : ''}}>
                                             <label class="custom-control-label" for="DestroyManual">YES</label>
                                         </div>
                                     </div>
@@ -77,7 +77,7 @@
                                     <div class="col-md-12 float-left d-flex">
                                         <label style="margin-right: 20px;">All references to our chapter and it's affiliation to MOMS Club has been removed from the internet.</label>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" id="RemoveOnline" name="RemoveOnline" class="custom-control-input" {{$chDisbanded->remove_online == '1' ? 'checked' : ''}}>
+                                            <input type="checkbox" id="RemoveOnline" name="RemoveOnline" class="custom-control-input" {{$chDisbanded?->remove_online == '1' ? 'checked' : ''}}>
                                             <label class="custom-control-label" for="RemoveOnline">YES</label>
                                         </div>
                                     </div>
@@ -87,7 +87,7 @@
                                     <div class="col-md-12 float-left d-flex">
                                         <label style="margin-right: 20px;">Our final 990N has been filed with the IRS.</label>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" id="FileIRS" name="FileIRS" class="custom-control-input" {{$chDisbanded->file_irs == '1' ? 'checked' : ''}}>
+                                            <input type="checkbox" id="FileIRS" name="FileIRS" class="custom-control-input" {{$chDisbanded?->file_irs == '1' ? 'checked' : ''}}>
                                             <label class="custom-control-label" for="FileIRS">YES</label>
                                         </div>
                                     </div>
@@ -97,7 +97,7 @@
                                     <div class="col-md-12 float-left d-flex">
                                         <label style="margin-right: 20px;">Our final Financial Report has been submitted (below).</label>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" id="FileFinancial" name="FileFinancial" class="custom-control-input" {{$chDisbanded->file_financial == '1' ? 'checked' : ''}}>
+                                            <input type="checkbox" id="FileFinancial" name="FileFinancial" class="custom-control-input" {{$chDisbanded?->file_financial == '1' ? 'checked' : ''}}>
                                             <label class="custom-control-label" for="FileFinancial">YES</label>
                                         </div>
                                     </div>
