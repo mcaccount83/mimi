@@ -104,33 +104,37 @@
                                 </div>
 
                                 <div class="card-body text-center">
-                                    <button type="submit" id="btn-save" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp; Save Checklist</button>
+                                    <button type="submit" id="btn-save" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save Checklist</button>
                                 </div>
 
-
-
-                <div class="col-12"><br></div>
-                    <hr>
-                <div class="col-12 form-row form-group">
-                    <div class="col-md-12 float-left">
-                    <h4>Financial Report</h4>
-                </div>
-            </div>
-
-
-            @include('partials.financial_accordion', ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
-            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            ])
-
-
-            {{-- <div class="card-body text-center">
-                <button type="button" id="btn-save" class="btn btn-primary"><i class="fas fa-share-square"></i>&nbsp; Submit Checklist & Report</button>
-            </div> --}}
-                            </div>
+                    <div class="col-12"><br></div>
+                        <hr>
+                    <div class="col-12 form-row form-group">
+                        <div class="col-md-12 float-left">
+                                @if ($chDocuments->financial_report_received != '1')
+                                    <h4>
+                                    Financial Report
+                                @else
+                                    <h4>
+                                        Financial Report has been submitted.
+                                    </h4>
+                                    <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chDocuments->financial_pdf_path }}')">
+                                        <i class="fas fa-file-pdf mr-2"></i>View/Download Financial Report</button>
+                                @endif
                         </div>
+                    </div>
+
+                    @if ($chDocuments->financial_report_received != '1')
+                        @include('partials.financial_accordion', ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+                            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+                            ])
+                    @endif
 
                     </div>
                 </div>
+
+            </div>
+        </div>
 
 
         </div>
