@@ -7,5 +7,9 @@ not need to be reviewed.<br>
 Submitted by: {{$mailData['completedName']}}, <a href="mailto:{{$mailData['completedEmail']}}">{{$mailData['completedEmail']}}</a><br>
 <br>
 
+<strong>MCL,</strong><br>
+MIMI Database Administrator
+@endcomponent
+
 @endcomponent
 
