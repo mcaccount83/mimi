@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckCurrentPasswordBoardRequest;
 use App\Http\Requests\UpdatePasswordBoardRequest;
-use App\Mail\ChapersUpdateListAdmin;
-use App\Mail\ChapersUpdatePrimaryCoorMember;
-use App\Mail\ChaptersUpdatePrimaryCoorPresident;
+
 use App\Mail\EOYElectionReportSubmitted;
 use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
-use App\Mail\WebsiteReviewNotice;
+use App\Mail\DisbandChecklistComplete;
+use App\Mail\DisbandChecklistThankYou;
+use App\Mail\DisbandFinancialReportThankYou;
+use App\Mail\DisbandFinancialReportSubmit;
+
 use App\Models\Admin;
 use App\Models\Boards;
 use App\Models\Chapters;
@@ -306,15 +308,15 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try{
+            $disbandChecklist->final_payment = $request->has('FinalPayment') ? 1 : 0;
+            $disbandChecklist->donate_funds = $request->has('DonateFunds') ? 1 : 0;
+            $disbandChecklist->destroy_manual = $request->has('DestroyManual') ? 1 : 0;
+            $disbandChecklist->remove_online = $request->has('RemoveOnline') ? 1 : 0;
+            $disbandChecklist->file_irs = $request->has('FileIRS') ? 1 : 0;
+            $disbandChecklist->file_financial = $request->has('FileFinancial') ? 1 : 0;
 
-
-            $disbandChecklist->final_payment = isset($input['FinalPayment']) ? 1 : ($disbandChecklist->final_payment ?? null);
-            $disbandChecklist->donate_funds = isset($input['DonateFunds']) ? 1 : ($disbandChecklist->donate_funds ?? null);
-            $disbandChecklist->destroy_manual = isset($input['DestroyManual']) ? 1 : ($disbandChecklist->destroy_manual ?? null);
-            $disbandChecklist->remove_online = isset($input['RemoveOnline']) ? 1 : ($disbandChecklist->remove_online ?? null);
-            $disbandChecklist->file_irs = isset($input['FileIRS']) ? 1 : ($disbandChecklist->file_irs ?? null);
-            $disbandChecklist->file_financial = isset($input['FileFinancial']) ? 1 : ($disbandChecklist->file_financial ?? null);
             $disbandChecklist->save();
+
 
             $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
                 $disbandChecklist->destroy_manual == '1' && $disbandChecklist->remove_online == '1' &&
@@ -343,27 +345,15 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );
 
-            if ($reportReceived == 1) {
-                $pdfPath = $this->pdfController->saveFinalFinancialReport($request, $chapterId);   // Generate and Send the PDF
+
+            if ($documents->financial_report_received == '1' && $checklistComplete) {
                 Mail::to($userEmail)
                     ->cc($emailListChap)
-                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
+                    ->queue(new DisbandChecklistThankYou($mailData));
 
-                if ($chFinancialReport->reviewer_id == null) {
-                    DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
-                    Mail::to($emailCC)
-                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
-                }
+                Mail::to($emailCC)
+                    ->queue(new DisbandChecklistComplete($mailData));
             }
-
-            // if ($documents->financial_report_received == '1' && $checklistComplete == '1'){
-            //     Mail::to($userEmail)
-            //         ->cc($emailListChap)
-            //         ->queue(new DisbandChecklistThankYou($mailData));
-
-            //     Mail::to($emailCC)
-            //         ->queue(new DisbandChecklistComplete($mailData));
-            // }
 
             DB::commit();
             if ($reportReceived == 1) {
@@ -440,23 +430,23 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $pdfPath = $this->pdfController->saveFinalFinancialReport($request, $chapterId);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
-                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
+                    ->queue(new DisbandFinancialReportThankYou($mailData, $pdfPath));
 
                 if ($chFinancialReport->reviewer_id == null) {
                     DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
                     Mail::to($emailCC)
-                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+                        ->queue(new DisbandFinancialReportSubmit($mailData, $pdfPath));
                 }
             }
 
-            // if ($documents->financial_report_received == '1' && $checklistComplete == '1'){
-            //     Mail::to($userEmail)
-            //         ->cc($emailListChap)
-            //         ->queue(new DisbandChecklistThankYou($mailData));
+            if ($documents->financial_report_received == '1' && $checklistComplete == '1'){
+                Mail::to($userEmail)
+                    ->cc($emailListChap)
+                    ->queue(new DisbandChecklistThankYou($mailData));
 
-            //     Mail::to($emailCC)
-            //         ->queue(new DisbandChecklistComplete($mailData));
-            // }
+                Mail::to($emailCC)
+                    ->queue(new DisbandChecklistComplete($mailData));
+            }
 
             DB::commit();
             if ($reportReceived == 1) {

@@ -279,9 +279,6 @@ Route::get('/board/resources', [BoardController::class, 'viewResources'])->name(
 Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
 Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
 
-Route::get('/board/disbandchecklist', [BoardController::class, 'viewDisbandChecklist'])->name('board.viewdisbandchecklist');
-// Route::post('/board/disbandchecklistupdate/{id}', [BoardController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklistbd');
-
 // Forum Subscription Controller Routes...
 Route::get('/forum/chaptersubscriptionlist', [ForumSubscriptionController::class, 'showChapterListSubscriptions'])->name('forum.chaptersubscriptionlist');
 Route::get('/forum/coordinatorsubscriptionlist', [ForumSubscriptionController::class, 'showCoordinatorListSubscriptions'])->name('forum.coordinatorsubscriptionlist');

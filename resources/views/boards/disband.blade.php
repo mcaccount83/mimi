@@ -29,7 +29,9 @@
                 <div class="col-md-12">
                     <div class="card card-primary card-outline">
                         <div class="card-body">
-                            <form id="checklist" name="checklist" role="form" data-toggle="validator"  method="POST" action='{{ route("board.updatedisbandchecklist", $chDetails->id) }}'>
+
+                            {{-- Checklist Form --}}
+                            <form id="checklist" name="checklist" role="form" data-toggle="validator" method="POST" action='{{ route("board.updatedisbandchecklist", $chDetails->id) }}'>
                                 @csrf
 
                             <div class="row">
@@ -99,17 +101,25 @@
                                     </div>
                                 </div>
 
+                                <div class="card-body text-center">
+                                    <button type="submit" id="btn-save" class="btn btn-primary">
+                                        <i class="fas fa-save mr-2"></i>Save Checklist
+                                    </button>
+                                </div>
+                            </form>
 
-                            <div class="card-body text-center">
-                                <button type="submit" id="btn-save" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save Checklist</button>
-                            </div>
-
-                        </form>
-
+                        </div>
                     </div>
+                </div>
 
-                    <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatedisbandreport", $chDetails->id) }}'>
-                        @csrf
+                {{-- Separate div and card for Financial Report --}}
+<div class="col-md-12">
+    <div class="card card-primary card-outline">
+        <div class="card-body">
+
+     {{-- Financial Report Form --}}
+     <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatedisbandreport", $chDetails->id) }}'>
+        @csrf
                     <div class="row">
 
                                 <div class="col-12 form-row form-group">
@@ -143,7 +153,9 @@
 
                     </div>
                 </div>
+
             </form>
+
         </div>
     </div>
 </div>
