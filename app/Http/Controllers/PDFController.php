@@ -110,6 +110,53 @@ class PDFController extends Controller
     }
 
     /**
+     * Save & Send Fianncial Reprot
+     */
+    public function saveFinalFinancialReport(Request $request, $chapterId)
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+
+        $googleDrive = GoogleDrive::first();
+        $eoyDrive = $googleDrive->eoy_uploads;
+        $year = $googleDrive->eoy_uploads_year;
+        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
+        $chDetails = $baseQuery['chDetails'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $conf = $chDetails->conference_id;
+        $state = $baseQuery['stateShortName'];
+        $chapterName = $chDetails->name;
+
+        $result = $this->generateFinancialReport($chapterId);
+        $pdf = $result['pdf'];
+        $name = $result['filename'];
+
+        $pdfPath = storage_path('app/pdf_reports/'.$name);
+        $pdf->save($pdfPath);
+        $filename = basename($pdfPath);
+        $mimetype = 'application/pdf';
+        $filecontent = file_get_contents($pdfPath);
+
+        // if ($file_id = $this->googleController->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+        if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+            $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
+            if ($existingDocRecord) {
+                $existingDocRecord->final_financial_pdf_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$chapterId} not found");
+                $newDocData = ['chapter_id' => $chapterId];
+                $newDocData['financial_pdf_path'] = $file_id;
+                Documents::create($newDocData);
+            }
+
+            return $pdfPath;  // Return the full local stored path
+        }
+    }
+
+    /**
      * Generate Financial Report
      */
     public function generateFinancialReport($chapterId)

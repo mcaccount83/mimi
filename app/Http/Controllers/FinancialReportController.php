@@ -354,7 +354,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             );
 
             if ($reportReceived == 1) {
-                $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
+                $pdfPath = $this->pdfController->saveFinalFinancialReport($request, $chapterId);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));

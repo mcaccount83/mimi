@@ -1,6 +1,6 @@
 <div class="col-12"  id="accordion">
     <input type="hidden" id="chapter_id" name="id" value="{{ Session::get('chapterid') }}">
-    {{-- <input type="hidden" name="submitted" id="submitted" value="<?php echo $chDocuments['financial_report_received']; ?>" /> --}}
+    <input type="hidden" name="submitted" id="submitted" value="<?php echo $chDocuments['financial_report_received']; ?>" />
     <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($chFinancialReport['farthest_step_visited'] > 0) echo $chFinancialReport['farthest_step_visited']; else echo "0"; ?>" />
 
     <!------Start Step 1 ------>
