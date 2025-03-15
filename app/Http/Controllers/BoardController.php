@@ -1331,6 +1331,12 @@ class BoardController extends Controller implements HasMiddleware
         try{
             $this->financialReportController->saveAccordionFields($financialReport, $input);
 
+            if ($reportReceived == 1) {
+                $financialReport->completed_name = $userName;
+                $financialReport->completed_email = $userEmail;
+                $financialReport->submitted = $lastupdatedDate;
+            }
+
             $financialReport->save();
 
             if ($reportReceived == 1) {

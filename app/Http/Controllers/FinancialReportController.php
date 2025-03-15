@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckCurrentPasswordBoardRequest;
 use App\Http\Requests\UpdatePasswordBoardRequest;
-
 use App\Mail\EOYElectionReportSubmitted;
 use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
@@ -12,8 +11,7 @@ use App\Mail\EOYFinancialSubmitted;
 use App\Mail\DisbandChecklistComplete;
 use App\Mail\DisbandChecklistThankYou;
 use App\Mail\DisbandFinancialReportThankYou;
-use App\Mail\DisbandFinancialReportSubmit;
-
+use App\Mail\DisbandFinalReportSubmit;
 use App\Models\Admin;
 use App\Models\Boards;
 use App\Models\Chapters;
@@ -282,8 +280,6 @@ class FinancialReportController extends Controller implements HasMiddleware
             $ChapterAwards[$i]['awards_approved'] = false;
         }
         $financialReport->chapter_awards = base64_encode(serialize($ChapterAwards));
-
-        $financialReport->award_agree = isset($input['AwardsAgree']) ? 1 : null;
     }
 
     /**
@@ -312,6 +308,13 @@ class FinancialReportController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try{
             $this->saveAccordionFields($financialReport, $input);
+
+            if ($reportReceived == 1) {
+                $financialReport->completed_name = $userName;
+                $financialReport->completed_email = $userEmail;
+                $financialReport->submitted = $lastupdatedDate;
+            }
+
             $financialReport->save();
 
             if ($reportReceived == 1) {
@@ -352,9 +355,10 @@ class FinancialReportController extends Controller implements HasMiddleware
 
                 if ($chFinancialReport->reviewer_id == null) {
                     DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
-                    Mail::to($emailCC)
-                        ->queue(new DisbandFinancialReportSubmit($mailData, $pdfPath));
                 }
+
+                Mail::to($emailCC)
+                    ->queue(new DisbandFinalReportSubmit($mailData, $pdfPath));
             }
 
             if ($documents->final_report_received == '1' && $checklistComplete){
