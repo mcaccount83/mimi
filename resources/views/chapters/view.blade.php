@@ -855,7 +855,7 @@
                                 <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
                             @endif
                         @endif
-                    @elseif ($einCondition && ($confId != $chConfId) || $inquiriesCondition  && ($cdConfId != $chConfId) || $adminReportCondition  && ($cdConfId != $chConfId))
+                    @elseif ($einCondition && ($confId != $chConfId) || $inquiriesCondition  && ($confId != $chConfId) || $adminReportCondition  && ($confId != $chConfId))
                         @if ($chIsActive == 1)
                             <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-reply mr-2"></i>Back to International Chapter List</button>
                         @else
