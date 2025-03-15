@@ -465,8 +465,8 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
                                             </div>
-                                            <input type="text" class="form-control" name="ChildrensRoomOther{{ $row }}" id="ChildrensRoomOther{{ $row }}" oninput="ChangeChildrensRoomExpenses()"
-                                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $childrens_room[$row]['childrens_room_other'] ?? '' }}">
+                                            <input type="text" class="form-control" name="ChildrensRoomOther{{ $row }}" id="ChildrensRoomOther{{ $row }}" oninput="ChangeChildrensRoomExpenses()" value="{{ $childrens_room[$row]['childrens_room_other'] ?? '' }}"
+                                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                         </div>
                                     </div>
                                 </td>
@@ -4008,7 +4008,6 @@ window.addEventListener('load', function() {
     TogglePerformServiceProjectExplanation();
     ToggleFileIRSExplanation();
     ToggleBankStatementIncludedExplanation();
-    ToggleBankStatementDiffExplanation();
     TogglePlaygroupsExplanation();
     ToggleParkDaysExplanation();
     ToggleSisterChapterExplanation();

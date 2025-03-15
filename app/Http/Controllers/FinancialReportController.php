@@ -320,8 +320,8 @@ class FinancialReportController extends Controller implements HasMiddleware
             $disbandChecklist->final_payment = isset($input['FinalPayment']) ? 1 : null;
             $disbandChecklist->donate_funds = isset($input['DonateFunds']) ? 1 : null;
             $disbandChecklist->destroy_manual = isset($input['DestroyManual']) ? 1 : null;
-            $disbandChecklist->remove_online = isset($input['RenoveOnline']) ? 1 : null;
-            $disbandChecklist->file_irs = isset($input['FileIrs']) ? 1 : null;
+            $disbandChecklist->remove_online = isset($input['RemoveOnline']) ? 1 : null;
+            $disbandChecklist->file_irs = isset($input['FileIRS']) ? 1 : null;
             $disbandChecklist->file_financial = isset($input['FileFinancial']) ? 1 : null;
 
             $disbandChecklist->save();

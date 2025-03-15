@@ -103,9 +103,7 @@
                                     </div>
                                 </div>
 
-                                <div class="card-body text-center">
-                                    <button type="submit" id="btn-save" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save Checklist</button>
-                                </div>
+
 
                     <div class="col-12"><br></div>
                         <hr>
@@ -129,6 +127,15 @@
                             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
                             ])
                     @endif
+
+                </form>
+
+
+                <div class="card-body text-center">
+                    <button type="submit" id="btn-save" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save Checklist</button>
+                </div>
+
+
 
                     </div>
                 </div>

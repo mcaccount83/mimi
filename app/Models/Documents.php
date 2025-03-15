@@ -18,6 +18,7 @@ class Documents extends Model
         'ein_letter_path',
         'disband_letter_path',
         'financial_pdf_path',
+        'final_financial_pdf_path',
         'roster_path',
         'irs_path',
         'statement_1_path',
