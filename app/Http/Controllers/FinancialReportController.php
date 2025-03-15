@@ -298,7 +298,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
-        $reportReceived = $input['submitted']?? null;
+        $reportReceived = $input['submitted'] ?? null;
 
         $financialReport = FinancialReport::find($chapterId);
         $documents = Documents::find($chapterId);
@@ -344,7 +344,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );
 
-            if ($reportReceived == 1) {
+            if ($documents->final_report_received == '1') {
                 $pdfPath = $this->pdfController->saveFinalFinancialReport($request, $chapterId);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
