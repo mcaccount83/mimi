@@ -1218,6 +1218,8 @@ class ChapterController extends Controller implements HasMiddleware
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $chIsActive = $baseQuery['chIsActive'];
+        $chDocuments = $baseQuery['chDocuments'];
+
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -1234,7 +1236,7 @@ class ChapterController extends Controller implements HasMiddleware
         $pcList = $baseQuery['pcList'];
 
         $data = ['id' => $id, 'chIsActive' => $chIsActive, 'reviewComplete' => $reviewComplete,
-            'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
+            'chDetails' => $chDetails, 'websiteLink' => $websiteLink, 'chDocuments' => $chDocuments,
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'allStatuses' => $allStatuses, 'allWebLinks' => $allWebLinks,
