@@ -169,6 +169,8 @@ class BaseMailDataController extends Controller
             'statement2Path' => $chDocuments->statement_2_path,
             'financialPdfPath' => $chDocuments->financial_pdf_path,
             'reviewerEmailMessage' => $chFinancialReport->reviewer_email_message,
+            'final_report_received' => $chDocuments->final_report_received,
+            'financialFinalPdfPath' => $chDocuments->final_financial_pdf_path,
         ];
     }
 }

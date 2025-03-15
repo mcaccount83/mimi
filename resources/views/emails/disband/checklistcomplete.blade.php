@@ -7,5 +7,4 @@
 <strong>MCL,</strong><br>
 MIMI Database Administrator
 @endcomponent
-@endcomponent
 

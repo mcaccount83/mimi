@@ -3031,25 +3031,20 @@ $(document).ready(function () {
         var submittedfinal = @json($chDocuments->final_report_received);
         var userType = @json($userType);
 
-        // By default, use 'submitted', but if userType is 'disbanded', switch to 'submittedfinal'
         var effectiveSubmitted = (userType === 'disbanded') ? submittedfinal : submitted;
 
         if (userType === 'coordinator') {
-            // Disable all input fields, select elements, textareas, and buttons except #btn-back
             $('button').not('#btn-back').prop('disabled', true);
             $('input, select, textarea').prop('disabled', true);
 
         } else if (effectiveSubmitted == '1') {
-            // If effectiveSubmitted is 1, disable all except #btn-back and #btn-download-pdf
             $('button').not('#btn-back, #btn-download-pdf').prop('disabled', true);
             $('input, select, textarea').prop('disabled', true);
 
         } else {
-            // Otherwise, enable all fields
             $('button, input, select, textarea').prop('disabled', false);
         }
 
-        // Check if all fields are disabled
         var allDisabled = true;
         $('input, select, textarea').each(function() {
             if (!$(this).prop('disabled')) {
@@ -3058,7 +3053,6 @@ $(document).ready(function () {
             }
         });
 
-        // Show or hide the .description element based on whether all fields are disabled
         if (allDisabled) {
             $('.description').show();
         } else {

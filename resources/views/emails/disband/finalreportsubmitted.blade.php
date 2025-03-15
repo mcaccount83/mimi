@@ -10,6 +10,3 @@ Submitted by: {{$mailData['completedName']}}, <a href="mailto:{{$mailData['compl
 <strong>MCL,</strong><br>
 MIMI Database Administrator
 @endcomponent
-
-@endcomponent
-

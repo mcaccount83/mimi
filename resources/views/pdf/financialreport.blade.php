@@ -12,7 +12,11 @@
 </head>
 <body>
     <center><h2>MOMS Club of {{ $pdfData['ch_name'] }}, {{ $pdfData['chapterState'] }}<br>
-    <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</h2></center>
+    @if ($pdfData['final_report_received'] == 1)
+        Final Financial Report</h2></center>
+    @else
+        <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</h2></center>
+    @endif
     EIN: {{ $pdfData['chapterEIN'] }}<br>
     Boundaries: {{ $pdfData['chapterBoundaries'] }}<br>
 
@@ -528,9 +532,6 @@
                 <td><strong>{{ '$'.number_format($totalEventIncome, 2) }}</strong></td></tr>
             <tr><td><b>Total Event Registration Expenses:</b></td>
                 <td><strong>{{ '$'.number_format($totalEventExpense, 2) }}</strong></td></tr>
-            {{-- <tr><td>&nbsp;</td></tr> --}}
-            {{-- <tr><td><strong>Chapter Re-Registration:</strong></td>
-                <td><strong>{{ '$'.number_format($pdfData['annual_registration_fee'], 2) }}</strong></td></tr> --}}
         </tbody>
     </table>
     <br>

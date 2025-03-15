@@ -161,21 +161,16 @@ class PDFController extends Controller
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
-        // $chId = $baseQuery['chId'];
         $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
         $stateShortName = $baseQuery['stateShortName'];
-        $chFinancialReport = $chDetails->financialReport;
-        // $submitted = $chFinancialReport->submitted;
+        $chDocuments = $baseQuery['chDocuments'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
         $PresDetails = $baseQuery['PresDetails'];
-        // $cc_fname = $baseQuery['cc_fname'];
-        // $cc_lname = $baseQuery['cc_lname'];
-        // $cc_pos = $baseQuery['cc_pos'];
-        // $cc_conf_name = $baseQuery['cc_conf_name'];
-        // $cc_conf_desc = $baseQuery['cc_conf_desc'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
+            $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             [
                 'changed_dues' => $chFinancialReport->changed_dues,
                 'different_dues' => $chFinancialReport->different_dues,
