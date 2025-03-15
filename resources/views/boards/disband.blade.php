@@ -4,11 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <!-- Start your form here and keep it open until after the submit button -->
-            <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatedisbandchecklist", $chDetails->id) }}'>
-                @csrf
-
-                <div class="col-md-12">
+            <div class="col-md-12">
                     <div class="card card-widget widget-user">
                         <div class="widget-user-header bg-primary">
                             <div class="widget-user-image">
@@ -27,12 +23,15 @@
                         <div class="col-md-12" style="color: red;"><center>Our records indicate that your chpater has disbanded.</center></div>
                         <div class="col-md-12" style="color: red;"><center>If you believe this information is incorrect, then please contact your Primary Coordinator immediately</center></div>
                         <div class="col-md-12"><br></div>
-                    </div><!-- End widget-user card -->
+                    </div>
                 </div>
 
                 <div class="col-md-12">
                     <div class="card card-primary card-outline">
                         <div class="card-body">
+                            <form id="checklist" name="checklist" role="form" data-toggle="validator"  method="POST" action='{{ route("board.updatedisbandchecklist", $chDetails->id) }}'>
+                                @csrf
+
                             <div class="row">
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left">
@@ -40,7 +39,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Your checkboxes here -->
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left d-flex">
                                         <label style="margin-right: 20px;">Our final re-registration payment has been sent International.</label>
@@ -50,7 +48,6 @@
                                         </div>
                                     </div>
                                 </div>
-
 
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left d-flex">
@@ -103,23 +100,32 @@
                                 </div>
 
 
+                            <div class="card-body text-center">
+                                <button type="submit" id="btn-save" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save Checklist</button>
+                            </div>
 
-                                <div class="col-12"><br></div>
-                                <hr>
+                        </form>
+
+                    </div>
+
+                    <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatedisbandreport", $chDetails->id) }}'>
+                        @csrf
+                    <div class="row">
+
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left">
-                                        @if ($chDocuments->financial_report_received != '1')
+                                        @if ($chDocuments->final_financial_pdf_path === null)
                                             <h4>Financial Report</h4>
                                         @else
                                             <h4>Financial Report has been submitted.</h4>
-                                            <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chDocuments->financial_pdf_path }}')">
+                                            <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chDocuments->final_financial_pdf_path }}')">
                                                 <i class="fas fa-file-pdf mr-2"></i>View/Download Financial Report
                                             </button>
                                         @endif
                                     </div>
                                 </div>
 
-                                @if ($chDocuments->financial_report_received != '1')
+                                @if ($chDocuments->final_financial_pdf_path === null)
                                     @include('partials.financial_accordion', [
                                         'chFinancialReport' => $chFinancialReport,
                                         'loggedInName' => $loggedInName,
@@ -132,17 +138,12 @@
                                         'stateShortName' => $stateShortName,
                                     ])
                                 @endif
-                            </div><!-- End row -->
-                        </div><!-- End card-body -->
-
-                        <div class="card-body text-center">
-                            <button type="submit" id="btn-save" class="btn btn-primary">
-                                <i class="fas fa-save mr-2"></i>Save Checklist
-                            </button>
+                            </div>
                         </div>
-                    </div><!-- End card-primary card -->
+
+                    </div>
                 </div>
-            </form><!-- Close the form here after the submit button -->
+            </form>
         </div>
     </div>
 </div>
