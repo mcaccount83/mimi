@@ -19,7 +19,6 @@
                             <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
                             <h4 class="text-center">Disbanding Checklist</h4>
                         </div>
-                        <div class="col-md-12"><br></div>
                         <div class="col-md-12" style="color: red;"><center>Our records indicate that your chpater has disbanded.</center></div>
                         <div class="col-md-12" style="color: red;"><center>If you believe this information is incorrect, then please contact your Primary Coordinator immediately</center></div>
                         <div class="col-md-12"><br></div>

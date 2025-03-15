@@ -167,9 +167,22 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->disband_letter_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="disband-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->disband_letter_path }}'">Disband Letter</button>
+                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
+                                        {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="disband-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->disband_letter_path }}'">Disband Letter</button> --}}
                                     @else
                                         <button class="btn bg-gradient-primary btn-sm disabled">No Disband Letter on File</button>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Final Financial Report:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    @if($chDocuments->final_financial_pdf_path != null)
+                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chDocuments->final_financial_pdf_path }}')">Final Financial Report</button>
+                                    @else
+                                        <button class="btn bg-gradient-primary btn-sm disabled">Final Report Not Filed</button>
                                     @endif
                                 </div>
                             </div>
@@ -181,7 +194,8 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chDocuments->ein_letter_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->ein_letter_path }}'">EIN Letter from IRS</button>
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->ein_letter_path }}'">EIN Letter from IRS</button> --}}
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
                                 @endif
@@ -194,7 +208,8 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chDocuments->roster_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->roster_path }}'">Most Current Roster</button>
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="openPdfViewer('{{ $chDocuments->roster_path }}')">Most Current Roster</button>
+                                    {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->roster_path }}'">Most Current Roster</button> --}}
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm disabled">No Roster on File</button>
                                 @endif
@@ -217,7 +232,8 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->probation_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->probation_path }}'">Probation Letter</button>
+                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
+                                        {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="probation-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->probation_path }}'">Probation Letter</button> --}}
                                     @else
                                         <button class="btn bg-gradient-primary btn-sm disabled">No Probation Letter on File</button>
                                     @endif
@@ -230,7 +246,8 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->probation_release_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->probation_release_path }}'">Probation Release Letter</button>
+                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
+                                        {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->probation_release_path }}'">Probation Release Letter</button> --}}
                                     @else
                                         <button class="btn bg-gradient-primary btn-sm disabled">No Probation Release Letter on File</button>
                                     @endif
@@ -878,6 +895,7 @@ $(document).ready(function () {
 
         // Re-enable the specific "Back" buttons
         $('#disband-letter').prop('disabled', false);
+        $('#final-pdf').prop('disabled', false);
         $('#ein-letter').prop('disabled', false);
         $('#roster-file').prop('disabled', false);
         $('#back-zapped').prop('disabled', false);

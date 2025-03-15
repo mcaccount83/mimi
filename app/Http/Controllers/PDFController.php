@@ -318,7 +318,7 @@ class PDFController extends Controller
         $reRegYear = $chDetails->next_renewal_year;
         $PresDetails = $baseQuery['PresDetails'];
 
-        $ccName = $baseQuery['cc_fname'].' '.$baseQuery['cc_fname'];
+        $ccName = $baseQuery['cc_fname'].' '.$baseQuery['cc_lname'];
         $ccPosition = $baseQuery['cc_pos'];
         $ccConfName = $baseQuery['cc_conf_name'];
         $ccConfDescription = $baseQuery['cc_conf_desc'];
