@@ -118,9 +118,8 @@ class PDFController extends Controller
         $userId = $user['userId'];
 
         $googleDrive = GoogleDrive::first();
-        $eoyDrive = $googleDrive->eoy_uploads;
-        $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
+        $finalFinancialDrive = $googleDrive->final_financial_report;
+        $sharedDriveId = $finalFinancialDrive;  // Shared Drive -> EOY Uploads
 
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
         $chDetails = $baseQuery['chDetails'];
@@ -139,7 +138,6 @@ class PDFController extends Controller
         $mimetype = 'application/pdf';
         $filecontent = file_get_contents($pdfPath);
 
-        // if ($file_id = $this->googleController->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
         if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
             $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
             if ($existingDocRecord) {
@@ -148,7 +146,7 @@ class PDFController extends Controller
             } else {
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
                 $newDocData = ['chapter_id' => $chapterId];
-                $newDocData['financial_pdf_path'] = $file_id;
+                $newDocData['final_financial_pdf_path'] = $file_id;
                 Documents::create($newDocData);
             }
 
