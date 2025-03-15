@@ -3023,32 +3023,42 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 @push('scripts')
 <script>
 /* Disable fields and buttons  */
-    $(document).ready(function () {
-        setTimeout(function () {
-            console.log('Running after delay');
+$(document).ready(function () {
+    setTimeout(function () {
+        console.log('Running after delay');
 
         var submitted = @json($chDocuments->financial_report_received);
+        var submittedfinal = @json($chDocuments->final_report_received);
         var userType = @json($userType);
 
-    if (userType === 'coordinator') {
-        // Disable all input fields, select elements, textareas, and buttons
-        $('button').not('#btn-back').prop('disabled', true);
-        $('input, select, textarea').prop('disabled', true);
+        // By default, use 'submitted', but if userType is 'disbanded', switch to 'submittedfinal'
+        var effectiveSubmitted = (userType === 'disbanded') ? submittedfinal : submitted;
 
-    } else if (submitted == '1') {
+        if (userType === 'coordinator') {
+            // Disable all input fields, select elements, textareas, and buttons except #btn-back
+            $('button').not('#btn-back').prop('disabled', true);
+            $('input, select, textarea').prop('disabled', true);
+
+        } else if (effectiveSubmitted == '1') {
+            // If effectiveSubmitted is 1, disable all except #btn-back and #btn-download-pdf
             $('button').not('#btn-back, #btn-download-pdf').prop('disabled', true);
             $('input, select, textarea').prop('disabled', true);
+
         } else {
+            // Otherwise, enable all fields
             $('button, input, select, textarea').prop('disabled', false);
         }
+
+        // Check if all fields are disabled
         var allDisabled = true;
         $('input, select, textarea').each(function() {
             if (!$(this).prop('disabled')) {
                 allDisabled = false;
-                return false;
+                return false; // Exit loop early if any field is enabled
             }
         });
 
+        // Show or hide the .description element based on whether all fields are disabled
         if (allDisabled) {
             $('.description').show();
         } else {

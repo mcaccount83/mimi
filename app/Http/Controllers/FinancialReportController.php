@@ -286,90 +286,9 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->award_agree = isset($input['AwardsAgree']) ? 1 : null;
     }
 
-
     /**
-     * Save EOY Financial Report All Board Members
+     * Save Financial Report for Disbanded Chapters
      */
-    public function updateDisbandChecklist(Request $request, $chapterId): RedirectResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $userName = $user['user_name'];
-        $userEmail = $user['user_email'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
-
-        $input = $request->all();
-        $reportReceived = $input['submitted']?? null;
-
-        $financialReport = FinancialReport::find($chapterId);
-        $documents = Documents::find($chapterId);
-        $chapter = Chapters::find($chapterId);
-        $disbandChecklist = DisbandedChecklist::find($chapterId);
-
-        DB::beginTransaction();
-        try{
-            $disbandChecklist->final_payment = $request->has('FinalPayment') ? 1 : 0;
-            $disbandChecklist->donate_funds = $request->has('DonateFunds') ? 1 : 0;
-            $disbandChecklist->destroy_manual = $request->has('DestroyManual') ? 1 : 0;
-            $disbandChecklist->remove_online = $request->has('RemoveOnline') ? 1 : 0;
-            $disbandChecklist->file_irs = $request->has('FileIRS') ? 1 : 0;
-            $disbandChecklist->file_financial = $request->has('FileFinancial') ? 1 : 0;
-
-            $disbandChecklist->save();
-
-
-            $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
-                $disbandChecklist->destroy_manual == '1' && $disbandChecklist->remove_online == '1' &&
-                $disbandChecklist->file_irs == '1' && $disbandChecklist->file_financial == '1');
-
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
-
-            $chapter->save();
-
-            $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
-            $chDetails = $baseQuery['chDetails'];
-            $stateShortName = $baseQuery['stateShortName'];
-            $chDocuments = $baseQuery['chDocuments'];
-            $chFinancialReport = $baseQuery['chFinancialReport'];
-            $emailListChap = $baseQuery['emailListChap'];
-            $emailListCoord = $baseQuery['emailListCoord'];
-            $pcDetails = $baseQuery['pcDetails'];
-            $emailCC = $baseQuery['emailCC'];
-            $cc_id = $baseQuery['cc_id'];
-            $reviewerEmail = $baseQuery['reviewerEmail'];
-
-            $mailData = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
-                $this->baseMailDataController->getPCData($pcDetails),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
-            );
-
-
-            if ($documents->financial_report_received == '1' && $checklistComplete) {
-                Mail::to($userEmail)
-                    ->cc($emailListChap)
-                    ->queue(new DisbandChecklistThankYou($mailData));
-
-                Mail::to($emailCC)
-                    ->queue(new DisbandChecklistComplete($mailData));
-            }
-
-            DB::commit();
-            if ($reportReceived == 1) {
-                return redirect()->back()->with('success', 'Checklist has been successfully Submitted');
-            } else {
-                return redirect()->back()->with('success', 'Checklist has been successfully updated');
-            }
-
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
-            return redirect()->back()->with('fail', 'Something went wrong Please try again.');
-        }
-    }
-
     public function updateDisbandReport(Request $request, $chapterId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
@@ -384,24 +303,24 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport = FinancialReport::find($chapterId);
         $documents = Documents::find($chapterId);
         $chapter = Chapters::find($chapterId);
+
         $disbandChecklist = DisbandedChecklist::find($chapterId);
+        $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
+            $disbandChecklist->destroy_manual == '1' && $disbandChecklist->remove_online == '1' &&
+            $disbandChecklist->file_irs == '1' && $disbandChecklist->file_financial == '1');
 
         DB::beginTransaction();
         try{
             $this->saveAccordionFields($financialReport, $input);
-
             $financialReport->save();
 
             if ($reportReceived == 1) {
                 $documents->financial_report_received = 1;
+                $documents->final_report_received = 1;
                 $documents->report_received = $lastupdatedDate;
 
                 $documents->save();
             }
-
-            $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
-                $disbandChecklist->destroy_manual == '1' && $disbandChecklist->remove_online == '1' &&
-                $disbandChecklist->file_irs == '1' && $disbandChecklist->file_financial == '1');
 
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = $lastupdatedDate;
@@ -418,7 +337,6 @@ class FinancialReportController extends Controller implements HasMiddleware
             $pcDetails = $baseQuery['pcDetails'];
             $emailCC = $baseQuery['emailCC'];
             $cc_id = $baseQuery['cc_id'];
-            $reviewerEmail = $baseQuery['reviewerEmail'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
@@ -439,7 +357,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                 }
             }
 
-            if ($documents->financial_report_received == '1' && $checklistComplete == '1'){
+            if ($documents->final_report_received == '1' && $checklistComplete){
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new DisbandChecklistThankYou($mailData));
@@ -454,6 +372,78 @@ class FinancialReportController extends Controller implements HasMiddleware
             } else {
                 return redirect()->back()->with('success', 'Report has been successfully updated');
             }
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->back()->with('fail', 'Something went wrong Please try again.');
+        }
+    }
+
+     /**
+     * Save Disbanded Checklsit Questions
+     */
+    public function updateDisbandChecklist(Request $request, $chapterId): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userName = $user['user_name'];
+        $userEmail = $user['user_email'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+
+        $documents = Documents::find($chapterId);
+        $chapter = Chapters::find($chapterId);
+        $disbandChecklist = DisbandedChecklist::find($chapterId);
+
+        DB::beginTransaction();
+        try{
+            $disbandChecklist->final_payment = $request->has('FinalPayment') ? 1 : 0;
+            $disbandChecklist->donate_funds = $request->has('DonateFunds') ? 1 : 0;
+            $disbandChecklist->destroy_manual = $request->has('DestroyManual') ? 1 : 0;
+            $disbandChecklist->remove_online = $request->has('RemoveOnline') ? 1 : 0;
+            $disbandChecklist->file_irs = $request->has('FileIRS') ? 1 : 0;
+            $disbandChecklist->file_financial = $request->has('FileFinancial') ? 1 : 0;
+
+            $disbandChecklist->save();
+
+            $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
+                $disbandChecklist->destroy_manual == '1' && $disbandChecklist->remove_online == '1' &&
+                $disbandChecklist->file_irs == '1' && $disbandChecklist->file_financial == '1');
+
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+
+            $chapter->save();
+
+            $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $chDocuments = $baseQuery['chDocuments'];
+            $chFinancialReport = $baseQuery['chFinancialReport'];
+            $emailListChap = $baseQuery['emailListChap'];
+            $emailListCoord = $baseQuery['emailListCoord'];
+            $pcDetails = $baseQuery['pcDetails'];
+            $emailCC = $baseQuery['emailCC'];
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getPCData($pcDetails),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+            );
+
+
+            if ($documents->final_financial_report_received == '1' && $checklistComplete) {
+                Mail::to($userEmail)
+                    ->cc($emailListChap)
+                    ->queue(new DisbandChecklistThankYou($mailData));
+
+                Mail::to($emailCC)
+                    ->queue(new DisbandChecklistComplete($mailData));
+            }
+
+            DB::commit();
+                return redirect()->back()->with('success', 'Checklist has been successfully updated');
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
