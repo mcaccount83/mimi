@@ -277,6 +277,8 @@ Route::get('/board/m2mdonation', [BoardController::class, 'editM2MDonationForm']
 Route::get('/board/resources', [BoardController::class, 'viewResources'])->name('board.viewresources');
 
 Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
+Route::get('/board/disbandchecklist', [BoardController::class, 'viewDisbandChecklist'])->name('board.viewdisbandchecklist');
+// Route::post('/board/disbandchecklistupdate/{id}', [BoardController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklistbd');
 
 // Forum Subscription Controller Routes...
 Route::get('/forum/chaptersubscriptionlist', [ForumSubscriptionController::class, 'showChapterListSubscriptions'])->name('forum.chaptersubscriptionlist');

@@ -317,13 +317,13 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $documents->save();
             }
 
-            $disbandChecklist->final_payment = isset($input['FinalPayment']) ? 1 : null;
-            $disbandChecklist->donate_funds = isset($input['DonateFunds']) ? 1 : null;
-            $disbandChecklist->destroy_manual = isset($input['DestroyManual']) ? 1 : null;
-            $disbandChecklist->remove_online = isset($input['RemoveOnline']) ? 1 : null;
-            $disbandChecklist->file_irs = isset($input['FileIRS']) ? 1 : null;
-            $disbandChecklist->file_financial = isset($input['FileFinancial']) ? 1 : null;
 
+            $disbandChecklist->final_payment = isset($input['FinalPayment']) ? 1 : ($disbandChecklist->final_payment ?? null);
+            $disbandChecklist->donate_funds = isset($input['DonateFunds']) ? 1 : ($disbandChecklist->donate_funds ?? null);
+            $disbandChecklist->destroy_manual = isset($input['DestroyManual']) ? 1 : ($disbandChecklist->destroy_manual ?? null);
+            $disbandChecklist->remove_online = isset($input['RemoveOnline']) ? 1 : ($disbandChecklist->remove_online ?? null);
+            $disbandChecklist->file_irs = isset($input['FileIRS']) ? 1 : ($disbandChecklist->file_irs ?? null);
+            $disbandChecklist->file_financial = isset($input['FileFinancial']) ? 1 : ($disbandChecklist->file_financial ?? null);
             $disbandChecklist->save();
 
             $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
