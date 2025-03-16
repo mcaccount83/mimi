@@ -279,6 +279,8 @@
                 @if($assistConferenceCoordinatorCondition)
                     <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrecognition', ['id' => $cdDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Appreciation & Recognition</button>
                     <br>
+                @endif
+                @if($regionalCoordinatorCondition)
                     @if ($cdPositionid == 1 && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
                         <button id="BigSister" type="button" class="btn bg-gradient-primary mb-3" onclick="showBigSisterEmailModal()"><i class="fas fa-envelope mr-2"></i>Send Big Sister Welcome Email</button>
                     @endif
