@@ -73,6 +73,7 @@ class HomeController extends Controller implements HasMiddleware
 
             $baseQuery = $this->baseBoardController->getChapterDetails($chId);
             $chDetails = $baseQuery['chDetails'];
+            $chIsActive = $baseQuery['chIsActive'];
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
             // $submitted = $baseQuery['submitted'];
@@ -84,6 +85,7 @@ class HomeController extends Controller implements HasMiddleware
 
             $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
                 'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+                'chIsActive' => $chIsActive
             ];
 
             return view('boards.financial')->with($data);
@@ -98,6 +100,7 @@ class HomeController extends Controller implements HasMiddleware
 
                 $baseQuery = $this->baseBoardController->getChapterDetails($chId);
                 $chDetails = $baseQuery['chDetails'];
+                $chIsActive = $baseQuery['chIsActive'];
                 $stateShortName = $baseQuery['stateShortName'];
                 $chDocuments = $baseQuery['chDocuments'];
                 // $submitted = $baseQuery['submitted'];
@@ -111,7 +114,7 @@ class HomeController extends Controller implements HasMiddleware
 
                 $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
                     'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-                   'chDisbanded' => $chDisbanded
+                   'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive
                 ];
 
                 return view('boards.disband')->with($data);

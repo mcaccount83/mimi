@@ -1291,6 +1291,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
+        $chIsActive =  $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         // $submitted = $baseQuery['submitted'];
@@ -1302,7 +1303,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'awards' => $awards, 'allAwards' => $allAwards,
+            'awards' => $awards, 'allAwards' => $allAwards, 'chIsActive' => $chIsActive
         ];
 
         return view('boards.financial')->with($data);

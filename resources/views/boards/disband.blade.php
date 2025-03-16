@@ -42,7 +42,7 @@
 
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left d-flex">
-                                        <label style="margin-right: 20px;">Our final re-registration payment has been sent International.</label>
+                                        <label style="margin-right: 20px;">Our final re-registration payment has been sent to International.</label>
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" id="FinalPayment" name="FinalPayment" class="custom-control-input" {{$chDisbanded?->final_payment == '1' ? 'checked' : ''}} >
                                             <label class="custom-control-label" for="FinalPayment">YES</label>
@@ -72,7 +72,7 @@
 
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left d-flex">
-                                        <label style="margin-right: 20px;">All references to our chapter and it's affiliation to MOMS Club has been removed from the internet.</label>
+                                        <label style="margin-right: 20px;">All references to our chapter and it's affiliation to MOMS Club have been removed from the internet.</label>
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" id="RemoveOnline" name="RemoveOnline" class="custom-control-input" {{$chDisbanded?->remove_online == '1' ? 'checked' : ''}}>
                                             <label class="custom-control-label" for="RemoveOnline">YES</label>
@@ -136,15 +136,8 @@
 
                                 @if ($chDocuments->final_financial_pdf_path === null)
                                     @include('partials.financial_accordion', [
-                                        'chFinancialReport' => $chFinancialReport,
-                                        'loggedInName' => $loggedInName,
-                                        'chDetails' => $chDetails,
-                                        'userType' => $userType,
-                                        'userName' => $userName,
-                                        'userEmail' => $userEmail,
-                                        'resources' => $resources,
-                                        'chDocuments' => $chDocuments,
-                                        'stateShortName' => $stateShortName,
+                                        'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType, 'userName' => $userName,
+                                        'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'chIsActive' => $chIsActive
                                     ])
                                 @endif
                             </div>

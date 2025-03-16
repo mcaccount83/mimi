@@ -163,6 +163,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         // $submitted = $baseQuery['submitted'];
@@ -173,7 +174,8 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         $resources = Resources::with('categoryName')->get();
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
-            'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'allAwards' => $allAwards,
+            'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+            'allAwards' => $allAwards, 'chIsActive' => $chIsActive
         ];
 
         return view('boards.financial')->with($data);
@@ -192,6 +194,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         // $submitted = $baseQuery['submitted'];
@@ -205,7 +208,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'allAwards' => $allAwards, 'chDisbanded' => $chDisbanded
+            'allAwards' => $allAwards, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive
         ];
 
         return view('boards.disband')->with($data);

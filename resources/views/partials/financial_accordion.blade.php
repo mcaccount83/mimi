@@ -2742,7 +2742,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 <!------End Step 12 ------>
 
 <!------Begin Step 13 ------>
-@if ($userType != 'disbanded')
+@if ($chIsActive == '1')
     <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '13' ? 'active' : '' }}">
     <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
