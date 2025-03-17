@@ -503,7 +503,7 @@ class EOYReportController extends Controller implements HasMiddleware
                         'phone' => $incomingRecord->phone,
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
-                        'is_active' => 1,
+                        // 'is_active' => 1,
                     ]);
                 }
 

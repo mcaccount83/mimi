@@ -461,13 +461,11 @@ class AdminController extends Controller implements HasMiddleware
      */
     public function showDuplicateId(): View
     {
-        $userData = Boards::where('is_active', '=', '1')
-            ->groupBy('email')
+        $userData = Boards::groupBy('email')
             ->having(DB::raw('count(email)'), '>', 1)
             ->pluck('email');
 
-        $userList = Boards::where('is_active', '=', '1')
-            ->whereIn('email', $userData)
+        $userList = Boards::whereIn('email', $userData)
             ->get();
 
         $data = ['userList' => $userList];
@@ -481,7 +479,6 @@ class AdminController extends Controller implements HasMiddleware
     public function showNoPresident(): View
     {
         $PresId = DB::table('boards')
-            ->where('is_active', '=', '1')
             ->where('board_position_id', '=', '1')
             ->pluck('chapter_id');
 
@@ -825,7 +822,7 @@ class AdminController extends Controller implements HasMiddleware
             ]);
 
             // Get board details where board members are active and insert into outgoing_boards
-            $boardDetails = Boards::where('is_active', 1)->get();
+            $boardDetails = Boards::get();
             foreach ($boardDetails as $boardDetail) {
                 OutgoingBoard::create([
                     // 'board_id' => $boardDetail->id,
@@ -926,7 +923,7 @@ class AdminController extends Controller implements HasMiddleware
             ]);
 
             // Get board details where board members are active and insert into outgoing_boards
-            $boardDetails = Boards::where('is_active', 1)->get();
+            $boardDetails = Boards::get();
             foreach ($boardDetails as $boardDetail) {
                 OutgoingBoard::create([
                     // 'board_id' => $boardDetail->id,

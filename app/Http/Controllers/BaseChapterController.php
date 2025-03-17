@@ -238,7 +238,7 @@ class BaseChapterController extends Controller
     public function getChapterDetails($chId)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator',
-            'disbandCheck']) ->find($chId);
+            'disbandCheck', 'boardsDisbanded']) ->find($chId);
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
         $regionLongName = $chDetails->region->long_name;
@@ -262,8 +262,6 @@ class BaseChapterController extends Controller
         $allStates = State::all();  // Full List for Dropdown Menu
         $allMonths = Month::all();  // Full List for Dropdown Menu
 
-        $chDisbanded = $chDetails->disbandCheck;
-
         $boards = $chDetails->boards()->with('stateName')->get();
         $bdDetails = $boards->groupBy('board_position_id');
         $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
@@ -274,6 +272,18 @@ class BaseChapterController extends Controller
         $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
         $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
         $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
+
+        $chDisbanded = $chDetails->disbandCheck;
+        $bdDisbanded = $chDetails->boardsDisbanded()->with('stateName')->get();
+        $bdDisbandedDetails = $bdDisbanded->groupBy('board_position_id');
+        $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+
+        // Fetch board details or fallback to default
+        $PresDisbandedDetails = $bdDisbandedDetails->get(1, collect([$defaultDisbandedBoardMember]))->first(); // President
+        $AVPDisbandedDetails = $bdDisbandedDetails->get(2, collect([$defaultDisbandedBoardMember]))->first(); // AVP
+        $MVPDisbandedDetails = $bdDisbandedDetails->get(3, collect([$defaultDisbandedBoardMember]))->first(); // MVP
+        $TRSDisbandedDetails = $bdDisbandedDetails->get(4, collect([$defaultDisbandedBoardMember]))->first(); // Treasurer
+        $SECDisbandedDetails = $bdDisbandedDetails->get(5, collect([$defaultDisbandedBoardMember]))->first(); // Secretary
 
         // Load Board and Coordinators for Sending Email
         $emailData = $this->userController->loadEmailDetails($chId);
@@ -307,7 +317,8 @@ class BaseChapterController extends Controller
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY,
             'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_conf_desc' => $cc_conf_desc, 'cc_conf_name' => $cc_conf_name,
-            'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded
+            'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
+            'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
         ];
     }
 }

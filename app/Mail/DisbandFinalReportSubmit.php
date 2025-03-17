@@ -39,7 +39,7 @@ class DisbandFinalReportSubmit extends Mailable implements ShouldQueue
         ->subject("Final Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
         ->markdown('emails.disband.finalreportsubmitted')
             ->attach($this->pdfPath, [
-                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterName'].'_Final_FinancialReport.pdf',
+                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Final_FinancialReport.pdf',
                 'mime' => 'application/pdf',
             ]);
 

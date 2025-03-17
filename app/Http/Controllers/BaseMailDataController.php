@@ -25,6 +25,7 @@ class BaseMailDataController extends Controller
         return [
             // 'chapterId' => $chDetails->id,
             'chapterName' => $chDetails->name,
+            'chapterNameSanitized' => $chDetails->sanitized_name,
             'chapterState' => $stateShortName,
             'chapterConf' => $chDetails->conference_id,
             'chapterEIN' => $chDetails->ein,

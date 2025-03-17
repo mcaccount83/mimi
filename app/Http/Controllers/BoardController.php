@@ -347,7 +347,7 @@ class BoardController extends Controller implements HasMiddleware
                         'phone' => $request->input('ch_avp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
-                        'is_active' => 1,
+                        // 'is_active' => 1,
                     ]);
                 }
             }
@@ -405,7 +405,7 @@ class BoardController extends Controller implements HasMiddleware
                         'phone' => $request->input('ch_mvp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
-                        'is_active' => 1,
+                        // 'is_active' => 1,
                     ]);
                 }
             }
@@ -463,7 +463,7 @@ class BoardController extends Controller implements HasMiddleware
                         'phone' => $request->input('ch_trs_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
-                        'is_active' => 1,
+                        // 'is_active' => 1,
                     ]);
                 }
             }
@@ -521,7 +521,7 @@ class BoardController extends Controller implements HasMiddleware
                         'phone' => $request->input('ch_sec_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
-                        'is_active' => 1,
+                        // 'is_active' => 1,
                     ]);
                 }
             }

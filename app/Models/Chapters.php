@@ -28,15 +28,20 @@ class Chapters extends Model
         return $this->hasMany(Boards::class, 'chapter_id', 'id');
     }
 
+    public function boardsDisbanded(): HasMany
+    {
+        return $this->hasMany(BoardsDisbanded::class, 'chapter_id', 'id');
+    }
+
     public function boardsOutgoing(): HasMany
     {
         return $this->hasMany(OutgoingBoard::class, 'chapter_id', 'id');
     }
 
-    public function boardsDisbanded(): HasMany
-    {
-        return $this->hasMany(DisbandedBoard::class, 'chapter_id', 'id');
-    }
+    // public function boardsDisbanded(): HasMany
+    // {
+    //     return $this->hasMany(DisbandedBoard::class, 'chapter_id', 'id');
+    // }
 
     public function president(): HasOne
     {
@@ -138,4 +143,6 @@ class Chapters extends Model
     {
         return $this->hasOne(DisbandedChecklist::class, 'chapter_id', 'id');  // 'chapter_id' in documents HasOne 'id' in chapters
     }
+
+
 }

@@ -161,7 +161,7 @@ class PDFController extends Controller
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
-        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+        // $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
@@ -251,13 +251,13 @@ class PDFController extends Controller
                 'completed_name' => $chFinancialReport->completed_name,
                 'completed_email' => $chFinancialReport->completed_email,
                 'submitted' => $chFinancialReport->submitted,
-                'ch_name' => $sanitizedChapterName,
+                // 'ch_name' => $sanitizedChapterName,
             ],
         );
 
         $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
 
-        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['chapterState'].'_'.$pdfData['ch_name'].'_FinancialReport.pdf';
+        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_FinancialReport.pdf';
 
         // if ($streamResponse) {
         //     return $pdf->stream($filename, ['Attachment' => 0]);
@@ -312,7 +312,7 @@ class PDFController extends Controller
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
-        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+        // $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
         $stateShortName = $baseQuery['stateShortName'];
         $reRegMonth = $chDetails->start_month_id;
         $reRegYear = $chDetails->next_renewal_year;
@@ -331,13 +331,13 @@ class PDFController extends Controller
                 'ccPosition' => $ccPosition,
                 'ccConfName' => $ccConfName,
                 'ccConfDescription' => $ccConfDescription,
-                'ch_name' => $sanitizedChapterName,
+                // 'ch_name' => $sanitizedChapterName,
             ],
         );
 
         $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
 
-        $filename = $pdfData['chapterState'].'_'.$pdfData['ch_name'].'_ChapterInGoodStanding.pdf';
+        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_ChapterInGoodStanding.pdf';
 
         if ($streamResponse) {
             return $pdf->stream($filename, ['Attachment' => 0]);
@@ -467,10 +467,11 @@ class PDFController extends Controller
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $request);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
-        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+        // $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+        // $sanitizedChapterName = $baseQuery['chapterNameSanitized'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
-        $PresDetails = $baseQuery['PresDetails'];
+        $PresDetails = $baseQuery['PresDisbandedDetails'];
 
         //  Load User Information for Signing Email & PDFs
         $user = $this->userController->loadUserInformation($request);
@@ -485,7 +486,7 @@ class PDFController extends Controller
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
             [
-                'ch_name' => $sanitizedChapterName,
+                // 'ch_name' => $sanitizedChapterName,
                 'today' => $dateFormatted,
                 'nextMonth' => $nextMonthFormatted,
                 'startMonth' => $startMonthName,
@@ -503,7 +504,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView($view, compact('pdfData'));
 
-        $filename = $pdfData['chapterState'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
+        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized']."_{$type}_Letter.pdf";
 
         return [
             'pdf' => $pdf,
@@ -659,7 +660,7 @@ class PDFController extends Controller
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
-        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
+        // $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $PresDetails = $baseQuery['PresDetails'];
@@ -677,7 +678,7 @@ class PDFController extends Controller
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
             [
-                'ch_name' => $sanitizedChapterName,
+                // 'ch_name' => $sanitizedChapterName,
                 'today' => $dateFormatted,
                 'nextMonth' => $nextMonthFormatted,
                 'startMonth' => $startMonthName,
@@ -695,7 +696,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView($view, compact('pdfData'));
 
-        $filename = $pdfData['chapterState'].'_'.$pdfData['ch_name']."_{$type}_Letter.pdf";
+        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized']."_{$type}_Letter.pdf";
 
         return [
             'pdf' => $pdf,

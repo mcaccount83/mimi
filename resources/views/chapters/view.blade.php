@@ -564,147 +564,213 @@
                   <!-- /.tab-pane -->
 
                   <div class="tab-pane" id="pre">
-                      <div class="pre-field">
-                        <h3 class="profile-username">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <a href="mailto:{{ $PresDetails->email }}">{{ $PresDetails->email }}</a>
-                                <br>
-                                <span class="phone-mask">{{$PresDetails->phone }}</span>
-                                <br>
-                                {{$PresDetails->street_address}}
-                                <br>
-                                {{$PresDetails->city}},{{$PresDetails->state}}&nbsp;{{$PresDetails->zip}}
-                            </div>
-                            <div class="col-md-6">
+                    @if ($chIsActive == '1')
+                        <div class="pre-field">
+                                <h3 class="profile-username">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="mailto:{{ $PresDetails->email }}">{{ $PresDetails->email }}</a>
+                                        <br>
+                                        <span class="phone-mask">{{$PresDetails->phone }}</span>
+                                        <br>
+                                        {{$PresDetails->street_address}}
+                                        <br>
+                                        {{$PresDetails->city}},{{$PresDetails->state}}&nbsp;{{$PresDetails->zip}}
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                </div>
+                                    <div class="row mt-3">
+                                        @php
+                                            $Subscriptions = $PresDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                        @endphp
+                                        <dt class="col-sm-3">Public Announcements</dt>
+                                        <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                                            <dd class="col-sm-6">
+                                                @if (in_array(1, $Subscriptions))
+                                                    <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $PresDetails->user_id }})">Unsubscribe</button>
+                                                @else
+                                                    <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $PresDetails->user_id }})">Subscribe</button>
+                                                @endif
+                                            </dd>
+                                        <div class="col-md-12">
+                                    <p>This will reset password to default "TempPass4You" for this user only.
+                                    <br>
+                                    <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                            <div class="row mt-3">
-                                @php
-                                    $Subscriptions = $PresDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                @endphp
-                                <dt class="col-sm-3">Public Announcements</dt>
-                                <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
-                                {{-- @if ($assistConferenceCoordinatorCondition) --}}
-                                    <dd class="col-sm-6">
-                                        @if (in_array(1, $Subscriptions))
-                                            <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $PresDetails->user_id }})">Unsubscribe</button>
-                                        @else
-                                            <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $PresDetails->user_id }})">Subscribe</button>
-                                        @endif
-                                    </dd>
-                                {{-- @endif --}}
-                                <div class="col-md-12">
-                            <p>This will reset password to default "TempPass4You" for this user only.
-                            <br>
-                            <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
-                            </p>
+                        @else
+                        <div class="pre-field">
+                            <h3 class="profile-username">{{$PresDisbandedDetails->first_name}} {{$PresDisbandedDetails->last_name}}</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a href="mailto:{{ $PresDisbandedDetails->email }}">{{ $PresDisbandedDetails->email }}</a>
+                                    <br>
+                                    <span class="phone-mask">{{$PresDisbandedDetails->phone }}</span>
+                                    <br>
+                                    {{$PresDisbandedDetails->street_address}}
+                                    <br>
+                                    {{$PresDisbandedDetails->city}},{{$PresDisbandedDetails->state}}&nbsp;{{$PresDisbandedDetails->zip}}
+                                </div>
+                                <div class="col-md-6">
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                    </div>
+                    @endif
                 </div>
 
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="avp">
-                    @if ($AVPDetails->user_id == '')
-                      <div class="avp-field-vacant">
-                          <h3 class="profile-username">Administrative Vice President Position is Vacant</h3>
-                          <br><br>
-                      </div>
-                    @else
-                      <div class="avp-field">
-                          <h3 class="profile-username">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
-                          <div class="row">
-                            <div class="col-md-6">
-                                <a href="mailto:{{ $AVPDetails->email }}">{{ $AVPDetails->email }}</a>
-                                <br>
-                                <span class="phone-mask">{{$AVPDetails->phone}}</span>
-                                <br>
-                                {{$AVPDetails->street_address}}
-                                <br>
-                                {{$AVPDetails->city}},{{$AVPDetails->state}}&nbsp;{{$AVPDetails->zip}}
+                    @if ($chIsActive == '1')
+                        @if ($AVPDetails->user_id == '')
+                            <div class="avp-field-vacant">
+                                <h3 class="profile-username">Administrative Vice President Position is Vacant</h3>
+                                <br><br>
                             </div>
-                            <div class="col-md-6">
+                        @else
+                            <div class="avp-field">
+                                <h3 class="profile-username">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="mailto:{{ $AVPDetails->email }}">{{ $AVPDetails->email }}</a>
+                                        <br>
+                                        <span class="phone-mask">{{$AVPDetails->phone}}</span>
+                                        <br>
+                                        {{$AVPDetails->street_address}}
+                                        <br>
+                                        {{$AVPDetails->city}},{{$AVPDetails->state}}&nbsp;{{$AVPDetails->zip}}
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                        @php
+                                            $Subscriptions = $AVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                        @endphp
+                                    <dt class="col-sm-3">Public Announcements</dt>
+                                    <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                                    <dd class="col-sm-6">
+                                        @if (in_array(1, $Subscriptions))
+                                            <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $AVPDetails->user_id }})">Unsubscribe</button>
+                                        @else
+                                            <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $AVPDetails->user_id }})">Subscribe</button>
+                                        @endif
+                                    </dd>
+                                <div class="col-md-12">
+                                    <p>This will reset password to default "TempPass4You" for this user only.
+                                    <br>
+                                    <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $AVPDetails->user_id }}">Reset AVP Password</button>
+                                    </p>
+                                </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                                @php
-                                $Subscriptions = $AVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                            @endphp
-                            <dt class="col-sm-3">Public Announcements</dt>
-                            <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
-                            {{-- @if ($assistConferenceCoordinatorCondition) --}}
-                                <dd class="col-sm-6">
-                                    @if (in_array(1, $Subscriptions))
-                                        <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $AVPDetails->user_id }})">Unsubscribe</button>
-                                    @else
-                                        <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $AVPDetails->user_id }})">Subscribe</button>
-                                    @endif
-                                </dd>
-                            {{-- @endif --}}
-                        <div class="col-md-12">
-                        <p>This will reset password to default "TempPass4You" for this user only.
-                        <br>
-                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $AVPDetails->user_id }}">Reset AVP Password</button>
-                        </p>
-                    </div>
-                        </div>
-                    </div>
+                        @endif
+                        @else
+                        @if ($AVPDetails->user_id == '')
+                            <div class="avp-field-vacant">
+                                <h3 class="profile-username">Administrative Vice President Position is Vacant</h3>
+                                <br><br>
+                            </div>
+                        @else
+                            <div class="avp-field">
+                                <h3 class="profile-username">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="mailto:{{ $AVPDetails->email }}">{{ $AVPDetails->email }}</a>
+                                        <br>
+                                        <span class="phone-mask">{{$AVPDetails->phone}}</span>
+                                        <br>
+                                        {{$AVPDetails->street_address}}
+                                        <br>
+                                        {{$AVPDetails->city}},{{$AVPDetails->state}}&nbsp;{{$AVPDetails->zip}}
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     @endif
                     </div>
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="mvp">
-                    @if ($MVPDetails->user_id == '')
-                      <div class="mvp-field-vacant">
-                          <h3 class="profile-username">Membership Vice President Position is Vacant</h3>
-                          <br><br>
-                      </div>
+                    @if ($chIsActive == '1')
+                        @if ($MVPDetails->user_id == '')
+                            <div class="mvp-field-vacant">
+                                <h3 class="profile-username">Membership Vice President Position is Vacant</h3>
+                                <br><br>
+                            </div>
+                        @else
+                            <div class="mvp-field">
+                                <h3 class="profile-username">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</h3>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="mailto:{{ $MVPDetails->email }}">{{ $MVPDetails->email }}</a>
+                                        <br>
+                                        <span class="phone-mask">{{$MVPDetails->phone}}</span>
+                                        <br>
+                                        {{$MVPDetails->street_address}}
+                                        <br>
+                                        {{$MVPDetails->city}},{{$MVPDetails->state}}&nbsp;{{$MVPDetails->zip}}
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    @php
+                                        $Subscriptions = $MVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                    @endphp
+                                    <dt class="col-sm-3">Public Announcements</dt>
+                                    <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                                        <dd class="col-sm-6">
+                                            @if (in_array(1, $Subscriptions))
+                                                <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $MVPDetails->user_id }})">Unsubscribe</button>
+                                            @else
+                                                <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $MVPDetails->user_id }})">Subscribe</button>
+                                            @endif
+                                        </dd>
+                                    <div class="col-md-12">
+                                        <p>This will reset password to default "TempPass4You" for this user only.
+                                        <br>
+                                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $MVPDetails->user_id }}">Reset MVP Password</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     @else
-                      <div class="mvp-field">
-                          <h3 class="profile-username">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</h3>
-                          <div class="row">
-                            <div class="col-md-6">
-                                <a href="mailto:{{ $MVPDetails->email }}">{{ $MVPDetails->email }}</a>
-                                <br>
-                                <span class="phone-mask">{{$MVPDetails->phone}}</span>
-                                <br>
-                                {{$MVPDetails->street_address}}
-                                <br>
-                                {{$MVPDetails->city}},{{$MVPDetails->state}}&nbsp;{{$MVPDetails->zip}}
+                        @if ($MVPDisbandedDetails->user_id == '')
+                            <div class="mvp-field-vacant">
+                                <h3 class="profile-username">Membership Vice President Position is Vacant</h3>
+                                <br><br>
                             </div>
-                            <div class="col-md-6">
+                        @else
+                            <div class="mvp-field">
+                                <h3 class="profile-username">{{$MVPDisbandedDetails->first_name}} {{$MVPDisbandedDetails->last_name}}</h3>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="mailto:{{ $MVPDisbandedDetails->email }}">{{ $MVPDisbandedDetails->email }}</a>
+                                        <br>
+                                        <span class="phone-mask">{{$MVPDisbandedDetails->phone}}</span>
+                                        <br>
+                                        {{$MVPDisbandedDetails->street_address}}
+                                        <br>
+                                        {{$MVPDisbandedDetails->city}},{{$MVPDisbandedDetails->state}}&nbsp;{{$MVPDisbandedDetails->zip}}
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                                @php
-                                    $Subscriptions = $MVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                @endphp
-                                <dt class="col-sm-3">Public Announcements</dt>
-                                <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
-                                {{-- @if ($assistConferenceCoordinatorCondition) --}}
-                                    <dd class="col-sm-6">
-                                        @if (in_array(1, $Subscriptions))
-                                            <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $MVPDetails->user_id }})">Unsubscribe</button>
-                                        @else
-                                            <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $MVPDetails->user_id }})">Subscribe</button>
-                                        @endif
-                                    </dd>
-                                {{-- @endif --}}
-                                <div class="col-md-12">
-                          <p>This will reset password to default "TempPass4You" for this user only.
-                          <br>
-                          <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $MVPDetails->user_id }}">Reset MVP Password</button>
-                        </p>
-                    </div>
-                </div>
-            </div>
+                        @endif
                     @endif
                     </div>
                   <!-- /.tab-pane -->
                     <div class="tab-pane" id="trs">
+                        @if ($chIsActive == '1')
                         @if ($TRSDetails->user_id == '')
                           <div class="trs-field-vacant">
-                              <h3 class="profile-username">Treasury Position is Vacant</h3>
+                              <h3 class="profile-username">Treasurer Position is Vacant</h3>
                               <br><br>
                           </div>
                         @else
@@ -729,7 +795,6 @@
                                     @endphp
                                     <dt class="col-sm-3">Public Announcements</dt>
                                     <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
-                                    {{-- @if ($assistConferenceCoordinatorCondition) --}}
                                         <dd class="col-sm-6">
                                             @if (in_array(1, $Subscriptions))
                                                 <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $TRSDetails->user_id }})">Unsubscribe</button>
@@ -737,7 +802,6 @@
                                                 <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $TRSDetails->user_id }})">Subscribe</button>
                                             @endif
                                         </dd>
-                                    {{-- @endif --}}
                                     <div class="col-md-12">
                                <p>This will reset password to default "TempPass4You" for this user only.
                               <br>
@@ -747,9 +811,35 @@
                     </div>
                 </div>
                         @endif
+                        @else
+                        @if ($TRSDisbandedDetails->user_id == '')
+                            <div class="trs-field-vacant">
+                                <h3 class="profile-username">Treasurer Position is Vacant</h3>
+                                <br><br>
+                            </div>
+                        @else
+                            <div class="trs-field">
+                                <h3 class="profile-username">{{$TRSDisbandedDetails->first_name}} {{$TRSDisbandedDetails->last_name}}</h3>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="mailto:{{ $TRSDisbandedDetails->email }}">{{ $TRSDisbandedDetails->email }}</a>
+                                        <br>
+                                        <span class="phone-mask">{{$TRSDisbandedDetails->phone}}</span>
+                                        <br>
+                                        {{$TRSDisbandedDetails->street_address}}
+                                        <br>
+                                        {{$TRSDisbandedDetails->city}},{{$TRSDisbandedDetails->state}}&nbsp;{{$TRSDisbandedDetails->zip}}
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
                         </div>
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="sec">
+                    @if ($chIsActive == '1')
                   @if ($SECDetails->user_id == '')
                     <div class="sec-field-vacant">
                         <h3 class="profile-username">Secretary Position is Vacant</h3>
@@ -777,7 +867,6 @@
                                 @endphp
                                 <dt class="col-sm-3">Public Announcements</dt>
                                 <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
-                                {{-- @if ($assistConferenceCoordinatorCondition) --}}
                                     <dd class="col-sm-6">
                                         @if (in_array(1, $Subscriptions))
                                             <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $SECDetails->user_id }})">Unsubscribe</button>
@@ -785,7 +874,6 @@
                                             <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $SECDetails->user_id }})">Subscribe</button>
                                         @endif
                                     </dd>
-                                {{-- @endif --}}
                                 <div class="col-md-12">
                         <p>This will reset password to default "TempPass4You" for this user only.
                         <br>
@@ -794,8 +882,33 @@
                     </div>
                 </div>
             </div>
-                  @endif
-                  </div>
+            @endif
+            @else
+            @if ($SECDisbandedDetails->user_id == '')
+                <div class="sec-field-vacant">
+                    <h3 class="profile-username">Secretary Position is Vacant</h3>
+                    <br><br>
+                </div>
+            @else
+                <div class="sec-field">
+                    <h3 class="profile-username">{{$SECDisbandedDetails->first_name}} {{$SECDisbandedDetails->last_name}}</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="mailto:{{ $SECDisbandedDetails->email }}">{{ $SECDisbandedDetails->email }}</a>
+                            <br>
+                            <span class="phone-mask">{{$SECDisbandedDetails->phone}}</span>
+                            <br>
+                            {{$SECDisbandedDetails->street_address}}
+                            <br>
+                            {{$SECDisbandedDetails->city}},{{$SECDisbandedDetails->state}}&nbsp;{{$SECDisbandedDetails->zip}}
+                        </div>
+                        <div class="col-md-6">
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endif
+    </div>
                   <!-- /.tab-pane -->
                 </div>
                 <!-- /.tab-content -->

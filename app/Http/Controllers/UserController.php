@@ -71,7 +71,7 @@ class UserController extends Controller implements HasMiddleware
     public function loadUserInformation(Request $request)
     {
         $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition',
-            'board', 'board.position', 'outgoing', 'disbanded'])
+            'board', 'board.position', 'outgoing', 'boardDisbanded'])
             ->find($request->user()->id);
 
         $userInfo = [
@@ -106,7 +106,6 @@ class UserController extends Controller implements HasMiddleware
                     'user_bdId' => $user->board->id,
                     'user_bdPositionId' => $user->board->board_position_id,
                     'user_bdPosition' => $user->board->position?->postion,
-                    'user_bdIsActive' => $user->board->is_active,
                     'user_chapterId' => $user->board->chapter_id,
                 ];
                 break;
@@ -120,8 +119,8 @@ class UserController extends Controller implements HasMiddleware
 
             case 'disbanded':
                 $userInfo += [
-                    'user_bdDisId' => $user->disbanded->id,
-                    'user_disChapterId' => $user->disbanded->chapter_id,
+                    'user_bdDisId' => $user->boardDisbanded->id,
+                    'user_disChapterId' => $user->boardDisbanded->chapter_id,
                 ];
                 break;
         }
@@ -151,12 +150,17 @@ class UserController extends Controller implements HasMiddleware
      */
     public function loadEmailDetails($chId)
     {
-        $chDetails = Chapters::with(['state', 'documents', 'boards', 'coordinatorTree'])->find($chId);
-
+        $chDetails = Chapters::with(['state', 'documents', 'boards', 'coordinatorTree', 'boardsDisbanded'])->find($chId);
+        $chIsActive = $chDetails->is_active;
         $chEmail = trim($chDetails->email);
         $stateShortName = $chDetails->state->state_short_name ?? '';
         $documents = $chDetails->documents()->first();
-        $boards = $chDetails->boards()->pluck('email')->filter()->toArray();
+
+        if ($chIsActive == '1')
+            $boards = $chDetails->boards()->pluck('email')->filter()->toArray();
+        else
+            $boards = $chDetails->boardsDisbanded()->pluck('email')->filter()->toArray();
+
         $coordiantors = $chDetails->coordinatorTree()->get();
 
         $emailListChap = $boards;
