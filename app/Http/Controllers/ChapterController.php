@@ -444,7 +444,7 @@ class ChapterController extends Controller implements HasMiddleware
                     'first_name' => $board->first_name,
                     'last_name' => $board->last_name,
                     'email' => $board->email,
-                    'is_active' => 1,
+                    // 'is_active' => 1,
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
                 ]);

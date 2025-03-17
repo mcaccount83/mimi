@@ -45,7 +45,6 @@ class AdminController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
     {
-
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
@@ -247,15 +246,6 @@ class AdminController extends Controller implements HasMiddleware
      */
     public function updateResources(UpdateResourcesAdminRequest $request, $id)
     {
-        // $corDetails = User::find($request->user()->id)->coordinator;
-        // $corId = $corDetails['id'];
-        // // Fetch coordinator details
-        // $coordinatorDetails = DB::table('coordinators as cd')
-        //     ->select('cd.*')
-        //     ->where('cd.is_active', '=', '1')
-        //     ->where('cd.id', '=', $corId)
-        //     ->first(); // Fetch only one record
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $lastUpdatedBy = $user['user_name'];
@@ -322,7 +312,6 @@ class AdminController extends Controller implements HasMiddleware
      */
     public function addToolkit(AddToolkitAdminRequest $request): JsonResponse
     {
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $lastUpdatedBy = $user['user_name'];
@@ -358,15 +347,6 @@ class AdminController extends Controller implements HasMiddleware
      */
     public function updateToolkit(UpdateToolkitAdminRequest $request, $id)
     {
-        // $corDetails = User::find($request->user()->id)->coordinator;
-        // $corId = $corDetails['id'];
-        // // Fetch coordinator details
-        // $coordinatorDetails = DB::table('coordinators as cd')
-        //     ->select('cd.*')
-        //     ->where('cd.is_active', '=', '1')
-        //     ->where('cd.id', '=', $corId)
-        //     ->first(); // Fetch only one record
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $lastUpdatedBy = $user['user_name'];
@@ -520,22 +500,31 @@ class AdminController extends Controller implements HasMiddleware
      */
     public function showOutgoingBoard(): View
     {
-        $OutgoingBoard = DB::table('outgoing_board_member as ob')
-            ->select('ob.chapter_id', 'ob.first_name', 'ob.last_name', 'ob.email', 'users.user_type', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state')
-            ->leftJoin('users', 'ob.email', '=', 'users.email')
-            ->leftJoin('chapters', 'ob.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state', 'chapters.state_id', '=', 'state.id')
-            ->where('users.user_type', 'outgoing')
-            ->where('users.is_active', '1')
-            ->orderBy('chapters.name')
+        $outgoingList = User::with(['outgoing', 'board.chapters'])
+            ->where('user_type', 'outgoing')
+            ->where('is_active', '1')
             ->get();
 
-        $countList = count($OutgoingBoard);
-
-        $data = ['OutgoingBoard' => $OutgoingBoard, 'countList' => $countList];
-        // $data = ['OutgoingBoard' => $OutgoingBoard, 'countList' => $countList, 'checkBoxStatus' => $checkBoxStatus];
+        $countList = count($outgoingList);
+        $data = ['countList' => $countList, 'outgoingList' => $outgoingList];
 
         return view('admin.outgoingboard')->with($data);
+    }
+
+    /**
+     * Disbanded Board Members
+     */
+    public function showDisbandedBoard(): View
+    {
+        $disbandedList = User::with(['disbanded', 'board.chapters'])
+            ->where('user_type', 'disbanded')
+            ->where('is_active', '1')
+            ->get();
+
+        $countList = count($disbandedList);
+        $data = ['countList' => $countList, 'disbandedList' => $disbandedList];
+
+        return view('admin.disbandedboard')->with($data);
     }
 
     /**
@@ -640,6 +629,89 @@ class AdminController extends Controller implements HasMiddleware
         return view('admin.eoy')->with($data);
     }
 
+     /**
+     * Reset Disbanded Users to NOT active
+     */
+    public function resetDisbandedUsers(): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            // Make disbanded users inactive
+            DB::table('users')
+            ->where('user_type', 'disbanded')
+            ->where('is_active', '1')
+            ->update([
+                'is_active' => '0',
+            ]);
+
+        DB::commit();
+
+            $message = 'Disbanded users successfully updated';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('admin.disbandedboard'),
+            ]);
+
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('admin.disbandedboard'),
+            ]);
+        }
+    }
+
+    /**
+     * Reset Outgoing Users to NOT active
+     */
+    public function resetOutgoingUsers(): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            // Make outgoing users inactive
+            DB::table('users')
+            ->where('user_type', 'outgoing')
+            ->where('is_active', '1')
+            ->update([
+                'is_active' => '0',
+            ]);
+
+            DB::commit();
+
+            $message = 'Outgoing users successfully updated';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('admin.outgoingboard'),
+            ]);
+
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('admin.outgoingboard'),
+            ]);
+        }
+    }
     /**
      * Reset EOY Procedurles for New year
      */
@@ -756,7 +828,7 @@ class AdminController extends Controller implements HasMiddleware
             $boardDetails = Boards::where('is_active', 1)->get();
             foreach ($boardDetails as $boardDetail) {
                 OutgoingBoard::create([
-                    'board_id' => $boardDetail->id,
+                    // 'board_id' => $boardDetail->id,
                     'user_id' => $boardDetail->user_id,
                     'chapter_id' => $boardDetail->chapter_id,
                     'board_position_id' => $boardDetail->board_position_id,
@@ -857,7 +929,7 @@ class AdminController extends Controller implements HasMiddleware
             $boardDetails = Boards::where('is_active', 1)->get();
             foreach ($boardDetails as $boardDetail) {
                 OutgoingBoard::create([
-                    'board_id' => $boardDetail->id,
+                    // 'board_id' => $boardDetail->id,
                     'user_id' => $boardDetail->user_id,
                     'chapter_id' => $boardDetail->chapter_id,
                     'board_position_id' => $boardDetail->board_position_id,
@@ -1165,7 +1237,8 @@ class AdminController extends Controller implements HasMiddleware
             $drive->eoy_uploads_year = $request->input('eoyDriveYear');
             $drive->resources_uploads = $request->input('resourcesDrive');
             $drive->disband_letter = $request->input('disbandDrive');
-            $drive->good_standing_letter = $$request->input('goodStandingDrive');
+            $drive->final_financial_report = $request->input('finalReportDrive');
+            $drive->good_standing_letter = $request->input('goodStandingDrive');
             $drive->probation_letter = $request->input('probationDrive');
 
             $drive->save();

@@ -18,7 +18,7 @@ class DisbandedBoard extends Model
 
     protected $fillable = [
         'user_id', 'chapter_id', 'board_position_id', 'first_name', 'last_name', 'email', 'phone', 'street_address', 'city', 'state', 'zip', 'country',
-        'is_active', 'last_updated_by', 'last_updated_date',
+        'last_updated_by', 'last_updated_date',
     ];
 
     public function user(): BelongsTo

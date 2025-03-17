@@ -36,6 +36,9 @@
                         <label>Disband Letters:</label>&nbsp;{{ $googleDrive[0]->disband_letter }}
                     </div>
                     <div class="form-group">
+                        <label>Final Financial Report:</label>&nbsp;{{ $googleDrive[0]->final_financial_report }}
+                    </div>
+                    <div class="form-group">
                         <label>Good Standing Letters:</label>&nbsp;{{ $googleDrive[0]->good_standing_letter }}
                     </div>
                     <div class="form-group">
@@ -92,6 +95,12 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
+                                        <label for="finalReportDrive">Shared Drive ID for Final Financial Reports</label>
+                                        <input type="text" class="form-control" id="finalReportDrive" value="{{ $googleDrive[0]->final_financial_report }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
                                         <label for="goodStandingDrive">Shared Drive ID for Good Standing Letters</label>
                                         <input type="text" class="form-control" id="goodStandingDrive" value="{{ $googleDrive[0]->good_standing_letter }}">
                                     </div>
@@ -136,10 +145,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('saveChanges').addEventListener('click', updateDrive);
-});
+// document.addEventListener('DOMContentLoaded', function () {
+//     document.getElementById('saveChanges').addEventListener('click', updateDrive);
+// });
 
 function updateDrive() {
     console.log('Save button clicked');  // For debugging
@@ -149,6 +157,7 @@ function updateDrive() {
     var eoyDriveYear = document.getElementById('eoyDriveYear').value;
     var resourcesDrive = document.getElementById('resourcesDrive').value;
     var disbandDrive = document.getElementById('disbandDrive').value;
+    var finalReportDrive = document.getElementById('finalReportDrive').value;
     var goodStandingDrive = document.getElementById('goodStandingDrive').value;
     var probationDrive = document.getElementById('probationDrive').value;
 
@@ -158,31 +167,63 @@ function updateDrive() {
     formData.append('eoyDriveYear', eoyDriveYear);
     formData.append('resourcesDrive', resourcesDrive);
     formData.append('disbandDrive', disbandDrive);
+    formData.append('finalReportDrive', finalReportDrive);
     formData.append('goodStandingDrive', goodStandingDrive);
     formData.append('probationDrive', probationDrive);
 
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    $.ajax({
-        url: '{{ route('admin.updategoogledrive') }}',
-        method: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
+    Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait while we update drive information.',
+        allowOutsideClick: false,
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
         },
-        success: function(response) {
-            alert('Shared DriveId Updated Successfully');
-            location.reload();
-        },
-        error: function(xhr, status, error) {
-            // Handle error if needed
+        didOpen: () => {
+            Swal.showLoading();
+
+            $.ajax({
+                url: '{{ route('admin.updategoogledrive') }}',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Shared DriveId Updated Successfully',
+                        icon: 'success',
+                        showConfirmButton: false,  // Automatically close without "OK" button
+                        timer: 1500,
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    }).then(() => {
+                        location.reload(); // Reload the page to reflect changes
+                    });
+
+                    // Close the modal
+                    $('#editDrive').modal('hide');
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong, Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                }
+            });
         }
     });
-
-    // Close the modal
-    $('#editDrive').modal('hide');
 }
 
 </script>

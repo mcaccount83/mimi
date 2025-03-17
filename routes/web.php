@@ -116,6 +116,10 @@ Route::get('/adminreports/duplicateuser', [AdminController::class, 'showDuplicat
 Route::get('/adminreports/duplicateboardid', [AdminController::class, 'showDuplicateId'])->name('admin.duplicateboardid');
 Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresident'])->name('admin.nopresident');
 Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('admin.outgoingboard');
+Route::post('/admin/resetoutgoingusers', [AdminController::class, 'resetOutgoingUsers'])->name('admin.resetoutgoingusers');
+Route::get('/adminreports/disbandedboard', [AdminController::class, 'showDisbandedBoard'])->name('admin.disbandedboard');
+Route::post('/admin/resetdisbandedusers', [AdminController::class, 'resetDisbandedUsers'])->name('admin.resetdisbandedusers');
+
 
 // Payment Controller Routes...
 Route::post('/process-payment', [PaymentController::class, 'reRegistrationPayment'])->name('process.payment');
