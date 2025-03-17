@@ -32,7 +32,7 @@
                 <tbody>
                     @foreach($disbandedList as $list)
                     <tr>
-                        <td>{{ $list->board->chapters->name }}, {{ $list->board->chapters->state->state_short_name }}</td>
+                        <td>{{ $list->boardDisbanded->chapters->name }}, {{ $list->boardDisbanded->chapters->state->state_short_name }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td class="email-column">
                             <a href="mailto:{{ $list->email }}">{{ $list->email }}</a>

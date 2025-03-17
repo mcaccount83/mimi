@@ -513,7 +513,7 @@ class AdminController extends Controller implements HasMiddleware
      */
     public function showDisbandedBoard(): View
     {
-        $disbandedList = User::with(['disbanded', 'board.chapters'])
+        $disbandedList = User::with(['boardDisbanded', 'boardDisbanded.chapters'])
             ->where('user_type', 'disbanded')
             ->where('is_active', '1')
             ->get();
