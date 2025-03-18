@@ -21,6 +21,8 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewAsBoardController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -85,7 +87,17 @@ Route::get('/test-429', function () {
 // Public Page Routes...
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
 Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])->name('board.resources');
-Route::view('/pdf-viewer', 'public.pdf-viewer')->name('pdf-viewer');
+
+Route::get('/pdf-viewer', function (Request $request) {
+    $fileId = $request->query('id');
+    $path = storage_path("app/pdfs/{$fileId}.pdf");
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path);
+})->name('pdf-viewer');
 
 // Admin Controller Routes...
 Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
