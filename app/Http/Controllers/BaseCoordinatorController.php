@@ -194,8 +194,8 @@ class BaseCoordinatorController extends Controller
             'reportsTo'])->find($cdId);
         $cdIsActive = $cdDetails->is_active;
         $cdPositionid = $cdDetails->position_id;
-        $regionLongName = $cdDetails->region->long_name;
-        $conferenceDescription = $cdDetails->conference->conference_description;
+        $regionLongName = $cdDetails->region?->long_name;
+        $conferenceDescription = $cdDetails->conference?->conference_description;
         $cdConfId = $cdDetails->conference_id;
         $cdRegId = $cdDetails->region_id;
         $cdRptId = $cdDetails->report_id;

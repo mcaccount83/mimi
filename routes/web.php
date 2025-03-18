@@ -241,7 +241,7 @@ Route::get('/eoy/editawards/{id}', [EOYReportController::class, 'editEOYAwards']
 Route::post('/eoy/updateawards/{id}', [EOYReportController::class, 'updateEOYAwards'])->name('eoyreports.updateawards');
 
 // Export Controller Routes...
-Route::get('/export/chapter/{id}', [ExportController::class, 'indexChapter'])->name('export.chapter');
+Route::get('/export/chapter', [ExportController::class, 'indexChapter'])->name('export.chapter');
 Route::get('/export/zapchapter', [ExportController::class, 'indexZappedChapter'])->name('export.zapchapter');
 Route::get('/export/coordinator/{id}', [ExportController::class, 'indexCoordinator'])->name('export.coordinator');
 Route::get('/export/retiredcoordinator', [ExportController::class, 'indexRetiredCoordinator'])->name('export.retiredcoordinator');

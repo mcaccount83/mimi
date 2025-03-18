@@ -23,7 +23,7 @@
             <div class="card-body">
 
 					    <div>
-                            <a href="{{ route('export.chapter',0)}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Chapter List</button></a>
+                            <a href="{{ route('export.chapter')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Chapter List</button></a>
                         </div>
                         <div>
                             <a href="{{ route('export.zapchapter')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Zapped Chapter List</button></a>
@@ -114,6 +114,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+
 
 </script>
 

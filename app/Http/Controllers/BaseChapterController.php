@@ -241,18 +241,18 @@ class BaseChapterController extends Controller
             'disbandCheck', 'boardsDisbanded']) ->find($chId);
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
-        $regionLongName = $chDetails->region->long_name;
-        $conferenceDescription = $chDetails->conference->conference_description;
+        $regionLongName = $chDetails->region?->long_name;
+        $conferenceDescription = $chDetails->conference?->conference_description;
         $chConfId = $chDetails->conference_id;
         $chRegId = $chDetails->region_id;
         $chPcId = $chDetails->primary_coordinator_id;
 
-        $startMonthName = $chDetails->startMonth->month_long_name;
-        $chapterStatus = $chDetails->status->chapter_status;
-        $websiteLink = $chDetails->webLink->link_status ?? null;
+        $startMonthName = $chDetails->startMonth?->month_long_name;
+        $chapterStatus = $chDetails->status?->chapter_status;
+        $websiteLink = $chDetails->webLink?->link_status ?? null;
 
         $chDocuments = $chDetails->documents;
-        $reviewComplete = $chDetails->documents->review_complete ?? null;
+        $reviewComplete = $chDetails->documents?->review_complete ?? null;
         $chFinancialReport = $chDetails->financialReport;
         $displayEOY = getEOYDisplay();  // Conditions to Show EOY Items
 
@@ -301,8 +301,8 @@ class BaseChapterController extends Controller
 
         // Load Primary Coordinator Inforamtion //
         $pcDetails = Coordinators::find($chPcId);
-        $emailPC = $pcDetails->email;
-        $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
+        $emailPC = $pcDetails?->email;
+        $pcName = $pcDetails?->first_name.' '.$pcDetails?->last_name;
 
         // Load Primary Coordinator Dropdown List
         $pcList = $this->userController->loadPrimaryList($chRegId, $chConfId) ?? null;

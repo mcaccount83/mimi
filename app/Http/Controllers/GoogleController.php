@@ -164,6 +164,7 @@ class GoogleController extends Controller implements HasMiddleware
                 Log::error("Expected document record for chapter_id {$id} not found");
                 $newDocData = ['chapter_id' => $id];
                 $newDocData['ein_letter_path'] = $file_id;
+                $newDocData['ein_letter'] = '1';
                 Documents::create($newDocData);
             }
 
