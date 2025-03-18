@@ -73,7 +73,7 @@
                 @if($conferenceCoordinatorCondition)
                     <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Coordinator</a>
                     @if($checkBoxStatus == null)
-                        <a class="btn bg-gradient-primary" href="{{ route('export.coordinator','0') }}"><i class="fas fa-download mr-2" ></i>Export Coordinator List</a>
+                    <button class="btn bg-gradient-primary" onclick="startExport('coordinator', 'Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
                     @else
                         <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button></a>
                     @endif

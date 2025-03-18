@@ -54,7 +54,7 @@
             </div>
               <!-- /.card-body -->
               <div class="card-body text-center">
-                <a href="{{ route('export.retiredcoordinator')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export Retired Coordinator List</button></a>
+                <button class="btn bg-gradient-primary" onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Retired Coordinator List</button>
             </div>
             </div>
 

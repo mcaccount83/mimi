@@ -90,7 +90,7 @@
                 </table>
             </div>
                 <div class="card-body text-center">
-                    <a href="{{ route('export.einstatus')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download " ></i>&nbsp;&nbsp;&nbsp;Export EIN Status List</button></a>
+                    <button class="btn bg-gradient-primary" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
                     <a href="{{ route('export.irsfiling')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download " ></i>&nbsp;&nbsp;&nbsp;Export Subordinate Filing List</button></a>
 
                 </div>

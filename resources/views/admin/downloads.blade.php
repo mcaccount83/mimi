@@ -21,39 +21,36 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-
 					    <div>
-                            <a href="{{ route('export.chapter')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Chapter List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('chapter', 'Chapter List')"><i class="fas fa-download"></i>&nbsp; Export Chapter List</button>
                         </div>
                         <div>
-                            <a href="{{ route('export.zapchapter')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Zapped Chapter List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="fas fa-download"></i>&nbsp; Export Zapped Chapter List</button>
                         </div>
                         <div>
-                            <a href="{{ route('export.coordinator',0)}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Coordinator List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('coordinator', 'Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export Coordinator List</button>
                         </div>
                         <div>
-                            <a href="{{ route('export.retiredcoordinator')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Retired Coordinator List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export Retired Coordinator List</button>
                         </div>
                         <div>
-					        <a href="{{ route('export.appreciation')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Coordinator Appriciation List</button></a>
-					    </div>
-                        <div>
-                            <a href="{{ route('export.chaptercoordinator')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Chapter/Coordinator List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('appreciation', 'Coordinator Appreciation List')"><i class="fas fa-download"></i>&nbsp; Export Coordinator Appriciation List</button>
                         </div>
                         <div>
-                            <a href="{{ route('export.rereg')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Overdue Re-Reg List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('chaptercoordinator', 'Chapter/Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export Chapter/Coordinator List</button>
+                        </div>
+                        <div>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')"><i class="fas fa-download"></i>&nbsp; Export Overdue Re-Reg List</button>
                         </div>
 					    <div>
-					        <a href="{{ route('export.einstatus')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export EIN Status List</button></a>
-					    </div>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('einstatus', 'EIN Status List')"><i class="fas fa-download"></i>&nbsp; Export EIN Status List</button>
+                        </div>
 					    <div>
-					        <a href="{{ route('export.eoystatus')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export EOY Report Status List</button></a>
-					    </div>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('eoystatus', 'EOY Status List')"><i class="fas fa-download"></i>&nbsp; Export EOY Report Status List</button>
+                        </div>
 					    <div>
-					        <a href="{{ route('export.chapteraward',0)}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Chapter Awards List</button></a>
-					    </div>
-
-
+                            <button class="btn btn-themeBlue margin" onclick="startExport('chapterawards', 'Chapter Awards List')"><i class="fas fa-download"></i>&nbsp; Export Chapter Awards List</button>
+                        </div>
                 </div>
             </div>
         </div>
@@ -66,28 +63,27 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-
                         <div>
-                            <a href="{{ route('export.intchapter')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Chapter List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('intchapter', 'International Chapter List')"><i class="fas fa-download"></i>&nbsp; Export Chapter List</button>
                         </div>
                         <div>
-                            <a href="{{ route('export.intzapchapter')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Zapped Chapter List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('intzapchapter', 'International Zapped Chapter List')"><i class="fas fa-download"></i>&nbsp; Export Zapped Chapter List</button>
                         </div>
                         <div>
-                            <a href="{{ route('export.intcoordinator')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Coordinator List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('intcoordinator', 'International Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export Coordinator List</button>
                         </div>
                         <div>
-                            <a href="{{ route('export.intretcoordinator')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Retired Coordinator List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('intretiredcoordinator', 'International Retired Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export Retired Coordinator List</button>
                         </div>
                         <div>
-                            <a href="{{ route('export.intrereg')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export Overdue Re-Reg List</button></a>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('intreregoverdue', 'International Overdue Re-Reg List')"><i class="fas fa-download"></i>&nbsp; Export Overdue Re-Reg List</button>
                         </div>
 					    <div>
-					        <a href="{{ route('export.inteinstatus')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export EIN Status List</button></a>
-					    </div>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download"></i>&nbsp; Export EIN Status List</button>
+                        </div>
 					    <div>
-					        <a href="{{ route('export.inteoystatus')}}"><button class="btn btn-themeBlue margin"><i class="fas fa-download"></i>&nbsp; Export EOY Report Status List</button></a>
-					    </div>
+                            <button class="btn btn-themeBlue margin" onclick="startExport('inteoystatus', 'International EOY Status List')"><i class="fas fa-download"></i>&nbsp; Export EOY Report Status List</button>
+                        </div>
                 </div>
     <?php } ?>
            </div>
@@ -116,8 +112,5 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-
 </script>
-
-
 @endsection

@@ -77,17 +77,14 @@
                     </div>
                 </div>
                 <div class="card-body text-center">
-                    <?php if($regionalCoordinatorCondition){ ?>
+                    @if ($regionalCoordinatorCondition)
                         <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Chapter</a>
-                        <?php }?>
-                        <?php
-                        if($checkBoxStatus){ ?>
+                        @if ($checkBoxStatus)
                             <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
-                        <?php
-                        }
-                        else{ ?>
-                            <a href="{{ route('export.chapter','0') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Chapter List</button></a>
-                        <?php } ?>
+                        @else
+                            <button class="btn bg-gradient-primary" onclick="startExport('chapter', 'Chapter List')"><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
+                        @endif
+                    @endif
                     </div>
                 </div>
           </div>

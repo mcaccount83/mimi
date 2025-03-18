@@ -59,7 +59,9 @@
                 </table>
              </div>
              <!-- /.card-body -->
-             <div class="card-body text-center">&nbsp; </div>
+             <div class="card-body text-center">
+                <button class="btn bg-gradient-primary" onclick="startExport('intcoordinator', 'International Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
+            </div>
             </div>
             <!-- /.box -->
         </div>

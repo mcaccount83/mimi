@@ -55,9 +55,8 @@
             </div>
 
             <div class="card-body text-center">
-              <a href="{{ route('export.zapchapter') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download mr-2"></i>Export Zapped Chapter List</button></a>
+                <button class="btn bg-gradient-primary" onclick="startExport('einstatus', 'EIN Status List')"><i class="fas fa-download mr-2" ></i>Export Zapped Chapter List</button>
              </div>
-
           </div>
           <!-- /.box -->
         </div>

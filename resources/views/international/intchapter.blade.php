@@ -61,8 +61,8 @@
             </div>
 
             <div class="card-body text-center">
-            <a href="{{ route('export.intchapter') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Chapter List</button></a>
-              </div>
+                <button class="btn bg-gradient-primary" onclick="startExport('intchapter', 'International Chapter List')"><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
+            </div>
             </div>
           <!-- /.box -->
         </div>

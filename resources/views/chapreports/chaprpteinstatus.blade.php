@@ -86,7 +86,7 @@
                 </div>
             </div>
                 <div class="card-body text-center">
-                    <a href="{{ route('export.einstatus')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button></a>
+                    <button class="btn bg-gradient-primary" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
                 </div>
 
               </div>
