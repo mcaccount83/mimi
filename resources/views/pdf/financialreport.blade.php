@@ -11,7 +11,7 @@
     <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</title>
 </head>
 <body>
-    <center><h2>MOMS Club of {{ $pdfData['ch_name'] }}, {{ $pdfData['chapterState'] }}<br>
+    <center><h2>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
     @if ($pdfData['final_report_received'] == 1)
         Final Financial Report</h2></center>
     @else

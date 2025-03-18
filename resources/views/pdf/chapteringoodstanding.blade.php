@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $pdfData['ch_name'] }}, {{ $pdfData['chapterState'] }} | Chapter In Good Standing</title>
+    <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Chapter In Good Standing</title>
         @php
         $todayDate = date('F j, Y');
         @endphp

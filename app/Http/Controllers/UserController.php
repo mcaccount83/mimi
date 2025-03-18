@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckCurrentPasswordUserRequest;
 use App\Http\Requests\UpdatePasswordUserRequest;
-use App\Models\Chapter;
+use App\Models\Boards;
+use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
+use App\Models\ForumCategorySubscription;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -71,7 +74,7 @@ class UserController extends Controller implements HasMiddleware
     public function loadUserInformation(Request $request)
     {
         $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition',
-            'board', 'board.position', 'outgoing', 'boardDisbanded'])
+            'board', 'board.position', 'boardOutgoing', 'boardDisbanded'])
             ->find($request->user()->id);
 
         $userInfo = [
@@ -412,4 +415,40 @@ class UserController extends Controller implements HasMiddleware
 
         return $rcDetails; // Return all coordinators as a collection
     }
+
+
+    /**
+     * Update User to Outgoing when replaced on board
+     */
+    public function updateUserToOutgoing($userId, $lastUpdatedBy, $lastupdatedDate)
+    {
+        $boardDetails = Boards::where('user_id', $userId)->get();
+
+        User::where('id', $userId)->update([
+            'user_type' => 'outgoing',
+            'updated_at' => $lastupdatedDate,
+        ]);
+
+        BoardsOutgoing::create([
+            'user_id' => $boardDetails->user_id,
+            'chapter_id' => $boardDetails->chapter_id,
+            'board_position_id' => $boardDetails->board_position_id,
+            'first_name' => $boardDetails->first_name,
+            'last_name' => $boardDetails->last_name,
+            'email' => $boardDetails->email,
+            'phone' => $boardDetails->phone,
+            'street_address' => $boardDetails->street_address,
+            'city' => $boardDetails->city,
+            'state' => $boardDetails->state,
+            'zip' => $boardDetails->zip,
+            'country' => $boardDetails->country,
+            'last_updated_by' => $lastUpdatedBy,
+            'last_updated_date' => $lastupdatedDate,
+        ]);
+
+    }
+
+
+
+
 }

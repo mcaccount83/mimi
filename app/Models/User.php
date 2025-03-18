@@ -44,10 +44,15 @@ class User extends Authenticatable
         return $this->hasOne(BoardsDisbanded::class, 'user_id', 'id');  // 'user_id' in boards HasOne 'id' in users
     }
 
-    public function outgoing(): HasOne
+    public function boardOutgoing(): HasOne
     {
-        return $this->hasOne(OutgoingBoard::class, 'user_id', 'id');  // 'user_id' in outgoing_board_members HasOne 'id' in users
+        return $this->hasOne(BoardsOutgoing::class, 'user_id', 'id');  // 'user_id' in boards HasOne 'id' in users
     }
+
+    // public function outgoing(): HasOne
+    // {
+    //     return $this->hasOne(OutgoingBoard::class, 'user_id', 'id');  // 'user_id' in outgoing_board_members HasOne 'id' in users
+    // }
 
     // public function disbanded(): HasOne
     // {

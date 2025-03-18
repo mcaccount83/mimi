@@ -25,7 +25,7 @@ use App\Mail\WebsiteUpdatePrimaryCoor;
 use App\Models\Boards;
 use App\Models\BoardsDisbanded;
 use App\Models\Chapters;
-use App\Models\DisbandedBoard;
+use App\Models\BoardsOutgoing;
 use App\Models\DisbandedChecklist;
 use App\Models\Coordinators;
 use App\Models\Documents;
@@ -1753,10 +1753,32 @@ class ChapterController extends Controller implements HasMiddleware
             $avp = $chapter->avp;
             if ($avp) {
                 $user = $avp->user;
+                $bdDetails = $avp;
                 if ($request->input('AVPVacant') == 'on') {
-                    $avp->delete();  // Delete board member and associated user if now Vacant
-                    $user->delete();
-                    ForumCategorySubscription::where('user_id', $user)->delete();
+                    if ($user) {
+                        User::where('id', $user->id)->update([
+                            'user_type' => 'outgoing',
+                            'updated_at' => $lastupdatedDate,
+                        ]);
+                        BoardsOutgoing::create([
+                            'user_id' => $user->id,
+                            'chapter_id' => $bdDetails->chapter_id,
+                            'board_position_id' => $bdDetails->board_position_id,
+                            'first_name' => $bdDetails->first_name,
+                            'last_name' => $bdDetails->last_name,
+                            'email' => $bdDetails->email,
+                            'phone' => $bdDetails->phone,
+                            'street_address' => $bdDetails->street_address,
+                            'city' => $bdDetails->city,
+                            'state' => $bdDetails->state,
+                            'zip' => $bdDetails->zip,
+                            'country' => $bdDetails->country,
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
+                        Boards::where('user_id', $user->id)->delete();
+                        ForumCategorySubscription::where('user_id', $user->id)->delete();
+                    }
                 } else {
                     $user->update([   // Update user details if alrady exists
                         'first_name' => $request->input('ch_avp_fname'),
@@ -1830,10 +1852,32 @@ class ChapterController extends Controller implements HasMiddleware
             $mvp = $chapter->mvp;
             if ($mvp) {
                 $user = $mvp->user;
+                $bdDetails = $mvp;
                 if ($request->input('MVPVacant') == 'on') {
-                    $mvp->delete();  // Delete board member and associated user if now Vacant
-                    $user->delete();
-                    ForumCategorySubscription::where('user_id', $user)->delete();
+                    if ($user) {
+                        User::where('id', $user->id)->update([
+                            'user_type' => 'outgoing',
+                            'updated_at' => $lastupdatedDate,
+                        ]);
+                        BoardsOutgoing::create([
+                            'user_id' => $user->id,
+                            'chapter_id' => $bdDetails->chapter_id,
+                            'board_position_id' => $bdDetails->board_position_id,
+                            'first_name' => $bdDetails->first_name,
+                            'last_name' => $bdDetails->last_name,
+                            'email' => $bdDetails->email,
+                            'phone' => $bdDetails->phone,
+                            'street_address' => $bdDetails->street_address,
+                            'city' => $bdDetails->city,
+                            'state' => $bdDetails->state,
+                            'zip' => $bdDetails->zip,
+                            'country' => $bdDetails->country,
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
+                        Boards::where('user_id', $user->id)->delete();
+                        ForumCategorySubscription::where('user_id', $user->id)->delete();
+                    }
                 } else {
                     $user->update([   // Update user details if alrady exists
                         'first_name' => $request->input('ch_mvp_fname'),
@@ -1908,10 +1952,32 @@ class ChapterController extends Controller implements HasMiddleware
             $treasurer = $chapter->treasurer;
             if ($treasurer) {
                 $user = $treasurer->user;
+                $bdDetails = $treasurer;
                 if ($request->input('TreasVacant') == 'on') {
-                    $treasurer->delete();  // Delete board member and associated user if now Vacant
-                    $user->delete();
-                    ForumCategorySubscription::where('user_id', $user)->delete();
+                    if ($user) {
+                        User::where('id', $user->id)->update([
+                            'user_type' => 'outgoing',
+                            'updated_at' => $lastupdatedDate,
+                        ]);
+                        BoardsOutgoing::create([
+                            'user_id' => $user->id,
+                            'chapter_id' => $bdDetails->chapter_id,
+                            'board_position_id' => $bdDetails->board_position_id,
+                            'first_name' => $bdDetails->first_name,
+                            'last_name' => $bdDetails->last_name,
+                            'email' => $bdDetails->email,
+                            'phone' => $bdDetails->phone,
+                            'street_address' => $bdDetails->street_address,
+                            'city' => $bdDetails->city,
+                            'state' => $bdDetails->state,
+                            'zip' => $bdDetails->zip,
+                            'country' => $bdDetails->country,
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
+                        Boards::where('user_id', $user->id)->delete();
+                        ForumCategorySubscription::where('user_id', $user->id)->delete();
+                    }
                 } else {
                     $user->update([   // Update user details if alrady exists
                         'first_name' => $request->input('ch_trs_fname'),
@@ -1987,9 +2053,32 @@ class ChapterController extends Controller implements HasMiddleware
             ForumCategorySubscription::where('user_id', $user)->delete();
             if ($secretary) {
                 $user = $secretary->user;
+                $bdDetails = $secretary;
                 if ($request->input('SecVacant') == 'on') {
-                    $secretary->delete();  // Delete board member and associated user if now Vacant
-                    $user->delete();
+                    if ($user) {
+                        User::where('id', $user->id)->update([
+                            'user_type' => 'outgoing',
+                            'updated_at' => $lastupdatedDate,
+                        ]);
+                        BoardsOutgoing::create([
+                            'user_id' => $user->id,
+                            'chapter_id' => $bdDetails->chapter_id,
+                            'board_position_id' => $bdDetails->board_position_id,
+                            'first_name' => $bdDetails->first_name,
+                            'last_name' => $bdDetails->last_name,
+                            'email' => $bdDetails->email,
+                            'phone' => $bdDetails->phone,
+                            'street_address' => $bdDetails->street_address,
+                            'city' => $bdDetails->city,
+                            'state' => $bdDetails->state,
+                            'zip' => $bdDetails->zip,
+                            'country' => $bdDetails->country,
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
+                        Boards::where('user_id', $user->id)->delete();
+                        ForumCategorySubscription::where('user_id', $user->id)->delete();
+                    }
                 } else {
                     $user->update([   // Update user details if alrady exists
                         'first_name' => $request->input('ch_sec_fname'),

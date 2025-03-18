@@ -19,7 +19,7 @@ use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
 use App\Models\IncomingBoard;
 use App\Models\Month;
-use App\Models\OutgoingBoard;
+use App\Models\BoardsOutgoing;
 use App\Models\Resources;
 use App\Models\User;
 use Exception;
@@ -765,7 +765,7 @@ class AdminController extends Controller implements HasMiddleware
                 ]);
 
             // Remove Data from the `outgoing_board_member` and `incoming_board_member` tables
-            OutgoingBoard::query()->delete();
+            BoardsOutgoing::query()->delete();
             IncomingBoard::query()->delete();
 
             // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
@@ -822,18 +822,18 @@ class AdminController extends Controller implements HasMiddleware
             ]);
 
             // Get board details where board members are active and insert into outgoing_boards
-            $boardDetails = Boards::get();
-            foreach ($boardDetails as $boardDetail) {
-                OutgoingBoard::create([
-                    // 'board_id' => $boardDetail->id,
-                    'user_id' => $boardDetail->user_id,
-                    'chapter_id' => $boardDetail->chapter_id,
-                    'board_position_id' => $boardDetail->board_position_id,
-                    'first_name' => $boardDetail->first_name,
-                    'last_name' => $boardDetail->last_name,
-                    'email' => $boardDetail->email,
-                ]);
-            }
+            // $boardDetails = Boards::get();
+            // foreach ($boardDetails as $boardDetail) {
+            //     BoardsOutgoing::create([
+            //         // 'board_id' => $boardDetail->id,
+            //         'user_id' => $boardDetail->user_id,
+            //         'chapter_id' => $boardDetail->chapter_id,
+            //         'board_position_id' => $boardDetail->board_position_id,
+            //         'first_name' => $boardDetail->first_name,
+            //         'last_name' => $boardDetail->last_name,
+            //         'email' => $boardDetail->email,
+            //     ]);
+            // }
 
             // Change Year for Google Drive Financial Report Attachmnets
             DB::table('google_drive')->update([
@@ -882,7 +882,7 @@ class AdminController extends Controller implements HasMiddleware
                 }
             }
 
-            OutgoingBoard::query()->delete();
+            BoardsOutgoing::query()->delete();
             IncomingBoard::query()->delete();
             FinancialReport::query()->delete();
 
@@ -923,18 +923,18 @@ class AdminController extends Controller implements HasMiddleware
             ]);
 
             // Get board details where board members are active and insert into outgoing_boards
-            $boardDetails = Boards::get();
-            foreach ($boardDetails as $boardDetail) {
-                OutgoingBoard::create([
-                    // 'board_id' => $boardDetail->id,
-                    'user_id' => $boardDetail->user_id,
-                    'chapter_id' => $boardDetail->chapter_id,
-                    'board_position_id' => $boardDetail->board_position_id,
-                    'first_name' => $boardDetail->first_name,
-                    'last_name' => $boardDetail->last_name,
-                    'email' => $boardDetail->email,
-                ]);
-            }
+            // $boardDetails = Boards::get();
+            // foreach ($boardDetails as $boardDetail) {
+            //     BoardsOutgoing::create([
+            //         // 'board_id' => $boardDetail->id,
+            //         'user_id' => $boardDetail->user_id,
+            //         'chapter_id' => $boardDetail->chapter_id,
+            //         'board_position_id' => $boardDetail->board_position_id,
+            //         'first_name' => $boardDetail->first_name,
+            //         'last_name' => $boardDetail->last_name,
+            //         'email' => $boardDetail->email,
+            //     ]);
+            // }
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
