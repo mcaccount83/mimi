@@ -120,7 +120,8 @@
                         </div>
                         <div class="col-sm-9">
                                 @if (!empty($chDetails->documents->roster_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDetails->documents->roster_path }}'">View Chapter Roster</button>
+                                    {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDetails->documents->roster_path }}'">View Chapter Roster</button> --}}
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chDetails->documents->roster_path }}')">View Chapter Roster</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()">Replace Roster File</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -135,7 +136,8 @@
                         </div>
                         <div class="col-sm-9">
                             @if (!empty($chDetails->documents->statement_1_path))
-                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDetails->documents->statement_1_path }}'">View Bank Statement</button>
+                                {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDetails->documents->statement_1_path }}'">View Bank Statement</button> --}}
+                                <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chDetails->documents->statement_1_path }}')">View Bank Statement</button>
                                 <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()">Replace Bank Statement</button>
                             @else
                                 <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -150,7 +152,8 @@
                         </div>
                         <div class="col-sm-9">
                                 @if (!empty( $chDetails->documents->statement_2_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDetails->documents->statement_2_path }}'">View Additional Bank Statement</button>
+                                    {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDetails->documents->statement_2_path }}'">View Additional Bank Statement</button> --}}
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chDetails->documents->statement_2_path }}')">View Additional Bank Statement</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()">Replace Additional Bank Statement</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -165,7 +168,8 @@
                         </div>
                         <div class="col-sm-9">
                                 @if (!empty($chDetails->documents->irs_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDetails->documents->irs_path }}'">View 990N Confirmation</button>
+                                    {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDetails->documents->irs_path }}'">View 990N Confirmation</button> --}}
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chDetails->documents->irs_path }}')">View 990N Confirmation</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()">Replace 990N Confirmation</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>

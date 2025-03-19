@@ -198,7 +198,8 @@
                         </div>
                         <div class="col-sm-9">
                                 @if (!empty($chDocuments->roster_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->roster_path }}'">View Chapter Roster</button>
+                                    {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->roster_path }}'">View Chapter Roster</button> --}}
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chDocuments->roster_path }}')">View Chapter Roster</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()">Replace Roster File</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -213,7 +214,8 @@
                         </div>
                         <div class="col-sm-9">
                             @if (!empty($chDocuments->statement_1_path))
-                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->statement_1_path }}'">View Bank Statement</button>
+                                {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->statement_1_path }}'">View Bank Statement</button> --}}
+                                <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chDocuments->statement_1_path }}')">View Bank Statement</button>
                                 <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()">Replace Bank Statement</button>
                             @else
                                 <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -228,7 +230,8 @@
                         </div>
                         <div class="col-sm-9">
                                 @if (!empty($chDocuments->statement_2_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->statement_2_path }}'">View Additional Bank Statement</button>
+                                    {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->statement_2_path }}'">View Additional Bank Statement</button> --}}
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chDocuments->statement_2_path }}')">View Additional Bank Statement</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()">Replace Additional Bank Statement</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -255,7 +258,8 @@
                         </div>
                         <div class="col-sm-9">
                                 @if (!empty($chDocuments->irs_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->irs_path }}'">View 990N Confirmation</button>
+                                    {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->irs_path }}'">View 990N Confirmation</button> --}}
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chDocuments->irs_path }}')">View 990N Confirmation</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()">Replace 990N Confirmation</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -281,13 +285,13 @@
                                     <?php
                                     $chapter_awards = null;
 
-                                    if (isset($chFinancialReport['chapter_awards'])) {
+                                    if (isset($chFinancialReport['chapter_awards']) && !empty($chFinancialReport['chapter_awards'])) {
                                         $blobData = base64_decode($chFinancialReport['chapter_awards']);
                                         $chapter_awards = unserialize($blobData);
 
                                         if ($chapter_awards === false) {
                                             echo "<tr><td colspan='3'>Error: Failed to unserialize data.</td></tr>";
-                                        } else {
+                                        } elseif (is_array($chapter_awards) && count($chapter_awards) > 0) {
                                             foreach ($chapter_awards as $row) {
                                                 echo "<tr style='border-bottom: 1px solid #ddd;'>";
 
@@ -305,9 +309,11 @@
                                                 echo "<td>" . ($row['awards_approved'] == 1 ? 'Yes' : 'No') . "</td>";
                                                 echo "</tr>";
                                             }
+                                        } else {
+                                            echo "<tr><td colspan='3'>No awards.</td></tr>";
                                         }
                                     } else {
-                                        echo "<tr><td colspan='3'>Chapter has no award nominations.</td></tr>";
+                                        echo "<tr><td colspan='3'>No awards.</td></tr>";
                                     }
                                     ?>
                                 </tbody>

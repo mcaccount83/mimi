@@ -128,11 +128,12 @@
                         <tbody>
                             @php
                                 $chapter_awards = null;
-                                if (isset($chFinancialReport['chapter_awards'])) {
+                                if (isset($chFinancialReport['chapter_awards']) && !empty($chFinancialReport['chapter_awards'])) {
                                     $chapter_awards = unserialize(base64_decode($chFinancialReport['chapter_awards']));
-                                    $ChapterAwardsRowCount = is_array($chapter_awards) ? count($chapter_awards) : 0;
+                                    $ChapterAwardsRowCount = is_array($chapter_awards) && count($chapter_awards) > 0 ? count($chapter_awards) : 1;
                                 } else {
                                     $ChapterAwardsRowCount = 1;
+                                    $chapter_awards = [[]]; // Initialize with an empty row
                                 }
                             @endphp
 
@@ -175,7 +176,8 @@
                                                name="ChapterAwardsApproved{{ $row }}"
                                                value="0"
                                                {{ isset($chapter_awards[$row]['awards_approved']) &&
-                                                  $chapter_awards[$row]['awards_approved'] == 0 ? 'checked' : '' }}>
+                                                  $chapter_awards[$row]['awards_approved'] == 0 ? 'checked' :
+                                                  (isset($chapter_awards[$row]) ? 'checked' : '') }}>
                                         <label class="form-check-label" for="ChapterAwardsApprovedNo{{ $row }}">No</label>
                                     </div>
                                 </td>
