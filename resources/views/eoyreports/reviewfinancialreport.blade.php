@@ -313,6 +313,14 @@
                 <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-undo mr-2"></i>UnSubmit Report</button>
             <br>
             <span style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
+            <br><br>
+            @if ($chDocuments->financial_report_received == 1)
+                {{-- <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a> --}}
+                <button class="btn bg-gradient-primary mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chDocuments->financial_pdf_path }}')"><i class="fas fa-file-pdf mr-2"></i>View/Download Financial Report</button>
+            @else
+                {{-- <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary mb-2 disabled">Download PDF Report</a> --}}
+                <button class="btn bg-gradient-primary mb-2" type="button" id="financial-pdf" disabled><i class="fas fa-file-pdf mr-2"></i>View/Download Financial Report</button>
+            @endif
         </div>
         </li>
     </ul>
@@ -2238,12 +2246,7 @@
             </div>
 
             <div class="card-body text-center">
-                @if ($chDocuments->financial_report_received)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a>
-                @else
-                    <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary mb-2 disabled">Download PDF Report</a>
-                @endif
-                <br>
+
                 <button type="button" id="back-list" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Financial Report List</button>
                 <button type="button" id="back-details" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
             </div>

@@ -34,6 +34,18 @@
                                 @csrf
 
                             <div class="row">
+
+                                <div class="col-12 form-row form-group">
+                                    <div class="col-md-12 float-left">
+                                        @if ($chDocuments->disband_letter_path === null)
+                                            <button type="button" id="btn-download-pdf" class="btn bg-primary" disabled><i class="fas fa-file-pdf mr-2"></i>No Disband Letter on File</button>
+                                        @else
+                                            <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">
+                                                <i class="fas fa-file-pdf mr-2"></i>View/Download Disband Letter</button>
+                                        @endif
+                                    </div>
+                                </div>
+
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left">
                                         <h4>Please acknowledge the following items have been completed.</h4>
