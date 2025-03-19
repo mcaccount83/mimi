@@ -243,26 +243,21 @@ Route::post('/eoy/updateawards/{id}', [EOYReportController::class, 'updateEOYAwa
 // Export Controller Routes...
 Route::get('/export/chapter', [ExportController::class, 'indexChapter'])->name('export.chapter');
 Route::get('/export/zapchapter', [ExportController::class, 'indexZappedChapter'])->name('export.zapchapter');
-// Route::get('/export/coordinator/{id}', [ExportController::class, 'indexCoordinator'])->name('export.coordinator');
 Route::get('/export/coordinator', [ExportController::class, 'indexCoordinator'])->name('export.coordinator');
 Route::get('/export/retiredcoordinator', [ExportController::class, 'indexRetiredCoordinator'])->name('export.retiredcoordinator');
-Route::get('/export/einstatus', [ExportController::class, 'indexEINStatus'])->name('export.einstatus');
-Route::get('/export/irsfiling', [ExportController::class, 'indexInternationalIRSFiling'])->name('export.irsfiling');
-Route::get('/export/rereg', [ExportController::class, 'indexReReg'])->name('export.rereg');
-Route::get('/export/eoystatus', [ExportController::class, 'indexEOYStatus'])->name('export.eoystatus');
-Route::get('/export/chaptercoordinator', [ExportController::class, 'indexChapterCoordinator'])->name('export.chaptercoordinator');
-// Route::get('/export/chapteraward/{id}', [ExportController::class, 'indexChapterAwardList'])->name('export.chapteraward');
-Route::get('/export/chapteraward', [ExportController::class, 'indexChapterAwardList'])->name('export.chapteraward');
 Route::get('/export/appreciation', [ExportController::class, 'indexAppreciation'])->name('export.appreciation');
-Route::get('/export/boardelection', [ExportController::class, 'indexBoardElection'])->name('export.boardelection');
+Route::get('/export/chaptercoordinator', [ExportController::class, 'indexChapterCoordinator'])->name('export.chaptercoordinator');
+Route::get('/export/rereg', [ExportController::class, 'indexReReg'])->name('export.rereg');
+Route::get('/export/einstatus', [ExportController::class, 'indexEINStatus'])->name('export.einstatus');
+Route::get('/export/eoystatus', [ExportController::class, 'indexEOYStatus'])->name('export.eoystatus');
 Route::get('/export/intchapter', [ExportController::class, 'indexInternationalChapter'])->name('export.intchapter');
 Route::get('/export/intzapchapter', [ExportController::class, 'indexInternationalZapChapter'])->name('export.intzapchapter');
 Route::get('/export/intcoordinator', [ExportController::class, 'indexIntCoordinator'])->name('export.intcoordinator');
 Route::get('/export/intretcoordinator', [ExportController::class, 'indexIntRetCoordinator'])->name('export.intretcoordinator');
-Route::get('/export/inteinstatus', [ExportController::class, 'indexIntEINStatus'])->name('export.inteinstatus');
 Route::get('/export/intrereg', [ExportController::class, 'indexIntReReg'])->name('export.intrereg');
+Route::get('/export/inteinstatus', [ExportController::class, 'indexIntEINStatus'])->name('export.inteinstatus');
+Route::get('/export/intirsfiling', [ExportController::class, 'indexInternationalIRSFiling'])->name('export.intirsfiling');
 Route::get('/export/inteoystatus', [ExportController::class, 'indexIntEOYStatus'])->name('export.inteoystatus');
-Route::get('/export/boardlist', [ExportController::class, 'indexBoardList'])->name('export.boardlist');
 
 // ViewAsBoard Controller Routes...  These pages do not have their own resourse/views, they use the board view pages
 Route::get('/view/chapter/{id}', [ViewAsBoardController::class, 'showChapterView'])->name('viewas.viewchapterpresident');

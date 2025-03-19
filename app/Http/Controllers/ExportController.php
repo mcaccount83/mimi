@@ -50,50 +50,6 @@ class ExportController extends Controller implements HasMiddleware
     //  $this->baseCoordinatorController->getCoordinatorDetails($id)
 
     /**
-     * Get Base Chapter List
-     */
-    public function getBaseChapterQuery()
-    {
-        return DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference_id as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname',
-                'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip',
-                'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state',
-                'chapters.new_board_submitted as new_board_submitted', 'chapters.new_board_active as new_board_active', 'chapters.financial_report_received as financial_report_received',
-                'chapters.financial_report_complete as financial_report_complete', 'cd2.first_name as fr_fname', 'cd2.last_name as fr_lname',
-                'avp.first_name as avp_fname', 'avp.last_name as avp_lname', 'avp.email as avp_email', 'avp.phone as avp_phone',
-                'mvp.first_name as mvp_fname', 'mvp.last_name as mvp_lname', 'mvp.email as mvp_email', 'mvp.phone as mvp_phone',
-                'trs.first_name as trs_fname', 'trs.last_name as trs_lname', 'trs.email as trs_email', 'trs.phone as trs_phone',
-                'sec.first_name as sec_fname', 'sec.last_name as sec_lname', 'sec.email as sec_email', 'sec.phone as sec_phone'
-            )
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')  // Primary Coordinator
-            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'chapters.id')
-            ->leftJoin('coordinators as cd2', 'fr.reviewer_id', '=', 'cd2.id') // Financial Report Reviewer
-            ->leftJoin('boards as bd', function ($join) {
-                $join->on('bd.chapter_id', '=', 'chapters.id')
-                    ->where('bd.board_position_id', '=', 1); // President
-            })
-            ->leftJoin('boards as avp', function ($join) {
-                $join->on('avp.chapter_id', '=', 'chapters.id')
-                    ->where('avp.board_position_id', '=', 2); // AVP
-            })
-            ->leftJoin('boards as mvp', function ($join) {
-                $join->on('mvp.chapter_id', '=', 'chapters.id')
-                    ->where('mvp.board_position_id', '=', 3); // MVP
-            })
-            ->leftJoin('boards as trs', function ($join) {
-                $join->on('trs.chapter_id', '=', 'chapters.id')
-                    ->where('trs.board_position_id', '=', 4); // Treasurer
-            })
-            ->leftJoin('boards as sec', function ($join) {
-                $join->on('sec.chapter_id', '=', 'chapters.id')
-                    ->where('sec.board_position_id', '=', 5); // Secretary
-            })
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id');
-    }
-
-
-    /**
      * Export Chapter List
      */
     public function indexChapter(Request $request)
@@ -125,7 +81,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseChapterController->getChapterDetails($chId);
                 $chDetails = $baseQuery['chDetails'];
                 $chId = $baseQuery['chId'];
-                $chIsActive = $baseQuery['chIsActive'];
                 $stateShortName = $baseQuery['stateShortName'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $chConfId = $baseQuery['chConfId'];
@@ -237,7 +192,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseChapterController->getChapterDetails($chId);
                 $chDetails = $baseQuery['chDetails'];
                 $chId = $baseQuery['chId'];
-                $chIsActive = $baseQuery['chIsActive'];
                 $stateShortName = $baseQuery['stateShortName'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $chConfId = $baseQuery['chConfId'];
@@ -351,7 +305,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
                 $cdDetails = $baseQuery['cdDetails'];
                 $cdId = $baseQuery['cdId'];
-                $cdPositionid = $baseQuery['cdPositionid'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $cdConfId = $baseQuery['cdConfId'];
                 $RptFName = $baseQuery['RptFName'];
@@ -359,7 +312,7 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
-                $cdLeave = ($baseQuery['cdDetails']->on_leave == 1) ? 'YES' : '';
+                $cdLeave = $baseQuery['cdDetails']->on_leave == 1;
 
                 $rowData = [
                     'Conference' => $cdConfId,
@@ -379,7 +332,7 @@ class ExportController extends Controller implements HasMiddleware
                     'Birthday' => $cdDetails->birthday_month_id.' / '.$cdDetails->birthday_day,
                     'Coordinator Start' => $cdDetails->coordinator_start_date,
                     'Last Promoted' => $cdDetails->last_promoted,
-                    'Leave of Absense' => $cdLeave,
+                    'Leave of Absense' => ($cdLeave == 1) ? 'YES' : 'NO',
                     'Leave Date' => $cdDetails->leave_date,
                     'Last UpdatedBy' => $cdDetails->last_updated_by,
                     'Last UpdatedDate' => $cdDetails->last_updated_date,
@@ -440,7 +393,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
                 $cdDetails = $baseQuery['cdDetails'];
                 $cdId = $baseQuery['cdId'];
-                $cdPositionid = $baseQuery['cdPositionid'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $cdConfId = $baseQuery['cdConfId'];
                 $RptFName = $baseQuery['RptFName'];
@@ -448,7 +400,7 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
-                $cdLeave = ($baseQuery['cdDetails']->on_leave == 1) ? 'YES' : '';
+                $cdLeave = $baseQuery['cdDetails'];
 
                 $rowData = [
                     'Conference' => $cdConfId,
@@ -468,7 +420,7 @@ class ExportController extends Controller implements HasMiddleware
                     'Birthday' => $cdDetails->birthday_month_id.' / '.$cdDetails->birthday_day,
                     'Coordinator Start' => $cdDetails->coordinator_start_date,
                     'Last Promoted' => $cdDetails->last_promoted,
-                    'Leave of Absense' => $cdLeave,
+                    'Leave of Absense' => ($cdLeave == 1) ? 'YES' : 'NO',
                     'Leave Date' => $cdDetails->leave_date,
                     'Retire Date' => $cdDetails->zapped_date,
                     'Reason' => $cdDetails->reason_retired,
@@ -531,7 +483,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
                 $cdDetails = $baseQuery['cdDetails'];
                 $cdId = $baseQuery['cdId'];
-                $cdPositionid = $baseQuery['cdPositionid'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $cdConfId = $baseQuery['cdConfId'];
                 $RptFName = $baseQuery['RptFName'];
@@ -539,8 +490,8 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
-                $cdLeave = ($baseQuery['cdDetails']->on_leave == 1) ? 'YES' : '';
-                $necklace = ($cdDetails->recognition_necklace == 1) ? 'YES' : '';
+                $cdLeave = $baseQuery['cdDetails'];
+                $necklace = $cdDetails->recognition_necklace;
 
                 $rowData = [
                     'Conference' => $cdConfId,
@@ -559,10 +510,10 @@ class ExportController extends Controller implements HasMiddleware
                     '7 Years' => $cdDetails->recognition_year7,
                     '8 Years' => $cdDetails->recognition_year8,
                     '9 Years' => $cdDetails->recognition_year9,
-                    'Necklace' => $necklace,
+                    'Necklace' => ($necklace == 1) ? 'YES' : 'NO',
                     'Top Tier/Other' => $cdDetails->recognition_toptier,
-                    'Leave of Absense' => $cdLeave,
-                    'Leave Date' => $cdDetails->leave_date,
+                    'Leave of Absense' => ($cdLeave == 1) ? 'YES' : 'NO',
+                    'Leave Date' => $cdDetails->last_updated_date,
                 ];
 
                 $exportCoordinatorList[] = $rowData;
@@ -741,7 +692,6 @@ class ExportController extends Controller implements HasMiddleware
                 $pcName = $baseQuery['pcName'];
                 $startMonthName = $baseQuery['startMonthName'];
                 $chapterStatus = $baseQuery['chapterStatus'];
-                $PresDetails = $baseQuery['PresDetails'];
 
                 $rowData = [
                     'Conference' => $chConfId,
@@ -813,7 +763,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseChapterController->getChapterDetails($chId);
                 $chDetails = $baseQuery['chDetails'];
                 $chId = $baseQuery['chId'];
-                $chIsActive = $baseQuery['chIsActive'];
                 $stateShortName = $baseQuery['stateShortName'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $chConfId = $baseQuery['chConfId'];
@@ -827,7 +776,7 @@ class ExportController extends Controller implements HasMiddleware
                     'State' => $stateShortName,
                     'Name' => $chDetails->name,
                     'EIN' => $chDetails->ein,
-                    'EIN Letter' => $chDocuments->ein_letter,
+                    'EIN Letter' => ($chDocuments->ein_letter == 1) ? 'YES' : 'NO',
                     'Start Month' => $startMonthName,
                     'Start Year' => $chDetails->start_year,
                     'Pres Name' => $PresDetails->first_name.' '.$PresDetails->last_name,
@@ -894,7 +843,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseChapterController->getChapterDetails($chId);
                 $chDetails = $baseQuery['chDetails'];
                 $chId = $baseQuery['chId'];
-                $chIsActive = $baseQuery['chIsActive'];
                 $stateShortName = $baseQuery['stateShortName'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $chConfId = $baseQuery['chConfId'];
@@ -907,12 +855,12 @@ class ExportController extends Controller implements HasMiddleware
                     'State' => $stateShortName,
                     'Name' => $chDetails->name,
                     'Primary Coordinator' => $pcName,
-                    'Board Report Received' => $chDocuments->new_board_submitted,
-                    'Board Report Activated' => $chDocuments->new_board_active,
-                    'Financial Report Received' => $chDocuments->financial_report_received,
-                    'Financial Review Complete' => $chDocuments->financial_review_complete,
+                    'Board Report Received' => ($chDocuments->new_board_submitted == 1) ? 'YES' : 'NO',
+                    'Board Report Activated' => ($chDocuments->new_board_active == 1) ? 'YES' : 'NO',
+                    'Financial Report Received' => ($chDocuments->financial_report_received == 1) ? 'YES' : 'NO',
+                    'Financial Review Complete' => ($chDocuments->financial_review_complete == 1) ? 'YES' : 'NO',
                     'Report Notes' => $chDocuments->report_notes,
-                    'Extension Given' => $chDocuments->report_extension,
+                    'Extension Given' => ($chDocuments->report_extension == 1) ? 'YES' : 'NO',
                     'Extension Notes' => $chDocuments->	extension_notes,
                 ];
 
@@ -967,7 +915,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseChapterController->getChapterDetails($chId);
                 $chDetails = $baseQuery['chDetails'];
                 $chId = $baseQuery['chId'];
-                $chIsActive = $baseQuery['chIsActive'];
                 $stateShortName = $baseQuery['stateShortName'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $chConfId = $baseQuery['chConfId'];
@@ -1075,7 +1022,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseChapterController->getChapterDetails($chId);
                 $chDetails = $baseQuery['chDetails'];
                 $chId = $baseQuery['chId'];
-                $chIsActive = $baseQuery['chIsActive'];
                 $stateShortName = $baseQuery['stateShortName'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $chConfId = $baseQuery['chConfId'];
@@ -1185,7 +1131,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
                 $cdDetails = $baseQuery['cdDetails'];
                 $cdId = $baseQuery['cdId'];
-                $cdPositionid = $baseQuery['cdPositionid'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $cdConfId = $baseQuery['cdConfId'];
                 $RptFName = $baseQuery['RptFName'];
@@ -1193,7 +1138,7 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
-                $cdLeave = ($baseQuery['cdDetails']->on_leave == 1) ? 'YES' : '';
+                $cdLeave = $baseQuery['cdDetails']->on_leave;
 
                 $rowData = [
                     'Conference' => $cdConfId,
@@ -1213,7 +1158,7 @@ class ExportController extends Controller implements HasMiddleware
                     'Birthday' => $cdDetails->birthday_month_id.' / '.$cdDetails->birthday_day,
                     'Coordinator Start' => $cdDetails->coordinator_start_date,
                     'Last Promoted' => $cdDetails->last_promoted,
-                    'Leave of Absense' => $cdLeave,
+                    'Leave of Absense' => ($cdLeave == 1) ? 'YES' : 'NO',
                     'Leave Date' => $cdDetails->leave_date,
                     'Last UpdatedBy' => $cdDetails->last_updated_by,
                     'Last UpdatedDate' => $cdDetails->last_updated_date,
@@ -1270,7 +1215,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
                 $cdDetails = $baseQuery['cdDetails'];
                 $cdId = $baseQuery['cdId'];
-                $cdPositionid = $baseQuery['cdPositionid'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $cdConfId = $baseQuery['cdConfId'];
                 $RptFName = $baseQuery['RptFName'];
@@ -1278,7 +1222,7 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
-                $cdLeave = ($baseQuery['cdDetails']->on_leave == 1) ? 'YES' : '';
+                $cdLeave = $baseQuery['cdDetails'];
 
                 $rowData = [
                     'Conference' => $cdConfId,
@@ -1298,7 +1242,7 @@ class ExportController extends Controller implements HasMiddleware
                     'Birthday' => $cdDetails->birthday_month_id.' / '.$cdDetails->birthday_day,
                     'Coordinator Start' => $cdDetails->coordinator_start_date,
                     'Last Promoted' => $cdDetails->last_promoted,
-                    'Leave of Absense' => $cdLeave,
+                    'Leave of Absense' => ($cdLeave == 1) ? 'YES' : 'NO',
                     'Leave Date' => $cdDetails->leave_date,
                     'Retire Date' => $cdDetails->zapped_date,
                     'Reason' => $cdDetails->reason_retired,
@@ -1352,7 +1296,6 @@ class ExportController extends Controller implements HasMiddleware
         $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
 
         $reChapterList = $baseQuery['query']
             ->where(function ($query) use ($currentYear, $lastMonth) {
@@ -1380,7 +1323,6 @@ class ExportController extends Controller implements HasMiddleware
                     $pcName = $baseQuery['pcName'];
                     $startMonthName = $baseQuery['startMonthName'];
                     $chapterStatus = $baseQuery['chapterStatus'];
-                    $PresDetails = $baseQuery['PresDetails'];
 
                     $rowData = [
                         'Conference' => $chConfId,
@@ -1420,96 +1362,6 @@ class ExportController extends Controller implements HasMiddleware
             return redirect()->to('/home');
         }
 
-
-    /**
-     * Export International Chapter List
-     */
-    public function indexInternationalIRSFiling(Request $request)
-    {
-        $fileName = 'int_subordinate_'.date('Y-m-d').'.csv';
-        $headers = [
-            'Content-type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=$fileName",
-            'Pragma' => 'no-cache',
-            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires' => '0',
-        ];
-
-        // Get January 1st of the previous year
-        $previousYear = Carbon::now()->subYear()->startOfYear();
-
-        // Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $activeChapterList = DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference_id as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
-                'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftjoin('region as rg', 'chapters.region_id', '=', 'rg.id')
-            // ->where('chapters.is_active', '=', '1')
-            ->where(function ($query) use ($previousYear) {
-                $query->where('chapters.is_active', '=', 1)
-                    ->orWhere(function ($query) use ($previousYear) {
-                        $query->where('chapters.is_active', '=', 0)
-                            ->where('chapters.zap_date', '>', $previousYear);
-                    });
-            })
-            ->where('bd.board_position_id', '=', '1')
-            ->orderBy('chapters.ein')
-            ->get();
-
-        if (count($activeChapterList) > 0) {
-            $exportChapterList = [];
-            foreach ($activeChapterList as $list) {
-
-                // Check if the chapter is active
-                $deleteColumn = ($list->is_active == 1) ? 'DELETE' : '';
-
-                // Prepare the chapter list data
-                $exportChapterList[] = [
-                    'delete' => $deleteColumn,  // Column 1 (DELETE or empty)
-                    'ein' => $list->ein,
-                    'name' => $list->name,
-                    'pre_fname' => $list->pre_fname,
-                    'pre_lname' => $list->pre_lname,
-                    'pre_add' => $list->pre_add,
-                    'pre_city' => $list->pre_city,
-                    'pre_state' => $list->pre_state,
-                    'pre_zip' => $list->pre_zip,
-                ];
-            }
-
-            $columns = ['Updates', 'EIN', 'Name', 'First Name', 'Last Name', 'Address', 'City', 'State', 'Zip'];
-            $callback = function () use ($exportChapterList, $columns) {
-                $file = fopen('php://output', 'w');
-                fputcsv($file, $columns);
-
-                foreach ($exportChapterList as $list) {
-                    fputcsv($file, [
-                        $list['delete'],  // Column 1
-                        $list['ein'],
-                        $list['name'],
-                        $list['pre_fname'],
-                        $list['pre_lname'],
-                        $list['pre_add'],
-                        $list['pre_city'],
-                        $list['pre_state'],
-                        $list['pre_zip'],
-                    ]);
-                }
-                fclose($file);
-            };
-
-            return Response::stream($callback, 200, $headers);
-        }
-    }
-
-
     /**
      * Export International EIN Status List
      */
@@ -1538,7 +1390,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseChapterController->getChapterDetails($chId);
                 $chDetails = $baseQuery['chDetails'];
                 $chId = $baseQuery['chId'];
-                $chIsActive = $baseQuery['chIsActive'];
                 $stateShortName = $baseQuery['stateShortName'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $chConfId = $baseQuery['chConfId'];
@@ -1552,7 +1403,7 @@ class ExportController extends Controller implements HasMiddleware
                     'State' => $stateShortName,
                     'Name' => $chDetails->name,
                     'EIN' => $chDetails->ein,
-                    'EIN Letter' => $chDocuments->ein_letter,
+                    'EIN Letter' => ($chDocuments->ein_letter == 1) ? 'YES' : 'NO',
                     'Start Month' => $startMonthName,
                     'Start Year' => $chDetails->start_year,
                     'Pres Name' => $PresDetails->first_name.' '.$PresDetails->last_name,
@@ -1562,6 +1413,97 @@ class ExportController extends Controller implements HasMiddleware
                     'Pres Zip' => $PresDetails->zip,
                     'Pres Phone' => $PresDetails->phone,
                     'Pres Email' => $PresDetails->email,
+                ];
+
+                $exportChapterList[] = $rowData;
+            }
+
+            $callback = function () use ($exportChapterList) {
+                $file = fopen('php://output', 'w');
+
+                if (! empty($exportChapterList)) {
+                    fputcsv($file, array_keys($exportChapterList[0]));
+                }
+
+                foreach ($exportChapterList as $row) {
+                    fputcsv($file, $row);
+                }
+
+                fclose($file);
+            };
+
+            return Response::stream($callback, 200, $headers);
+        }
+
+        return redirect()->to('/home');
+    }
+
+     /**
+     * Export International Chapter List
+     */
+    public function indexInternationalIRSFiling(Request $request)
+    {
+        $fileName = 'int_subordinate_'.date('Y-m-d').'.csv';
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+
+        // Get January 1st of the previous year
+        $previousYear = Carbon::now()->subYear()->startOfYear();
+
+        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
+
+        $activeSubquery = $baseQueryActive['query']
+            ->select('chapters.*');
+
+        $zappedSubquery = $baseQueryZapped['query']
+            ->where('chapters.zap_date', '>', $previousYear)
+            ->select('chapters.*');
+
+        $irsChapterList = DB::table(DB::raw("({$activeSubquery->toSql()}) as active_chapters"))
+            ->mergeBindings($activeSubquery->getQuery())
+            ->union(
+                DB::table(DB::raw("({$zappedSubquery->toSql()}) as zapped_chapters"))
+                    ->mergeBindings($zappedSubquery->getQuery())
+            )
+            ->orderBy('ein')
+            ->get();
+
+        if (count($irsChapterList) > 0) {
+            $exportChapterList = [];
+
+            foreach ($irsChapterList as $list) {
+                $chId = $list->id;
+                $baseQuery = $this->baseChapterController->getChapterDetails($chId);
+                $chDetails = $baseQuery['chDetails'];
+                $chId = $baseQuery['chId'];
+                $chIsActive = $baseQuery['chIsActive'];
+                if ($chIsActive == '1'){
+                    $PresDetails = $baseQuery['PresDetails'];
+                    $deleteColumn = null;
+                }
+                if ($chIsActive == '0'){
+                    $PresDetails = $baseQuery['PresDisbandedDetails'];
+                    $deleteColumn = 'DELETE';
+                }
+
+                $rowData = [
+                    'delete' => $deleteColumn,
+                    'EIN' => $chDetails->ein,
+                    'Name' => $chDetails->name,
+                    'Pres Name' => $PresDetails->first_name.' '.$PresDetails->last_name,
+                    'Pres Address' => $PresDetails->street_address,
+                    'Pres City' => $PresDetails->city,
+                    'Pres State' => $PresDetails->state,
+                    'Pres Zip' => $PresDetails->zip,
                 ];
 
                 $exportChapterList[] = $rowData;
@@ -1615,7 +1557,6 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseChapterController->getChapterDetails($chId);
                 $chDetails = $baseQuery['chDetails'];
                 $chId = $baseQuery['chId'];
-                $chIsActive = $baseQuery['chIsActive'];
                 $stateShortName = $baseQuery['stateShortName'];
                 $regionLongName = $baseQuery['regionLongName'];
                 $chConfId = $baseQuery['chConfId'];
@@ -1628,12 +1569,12 @@ class ExportController extends Controller implements HasMiddleware
                     'State' => $stateShortName,
                     'Name' => $chDetails->name,
                     'Primary Coordinator' => $pcName,
-                    'Board Report Received' => $chDocuments->new_board_submitted,
-                    'Board Report Activated' => $chDocuments->new_board_active,
-                    'Financial Report Received' => $chDocuments->financial_report_received,
-                    'Financial Review Complete' => $chDocuments->financial_review_complete,
+                    'Board Report Received' => ($chDocuments->new_board_submitted == 1) ? 'YES' : 'NO',
+                    'Board Report Activated' => ($chDocuments->new_board_active == 1) ? 'YES' : 'NO',
+                    'Financial Report Received' => ($chDocuments->financial_report_received == 1) ? 'YES' : 'NO',
+                    'Financial Review Complete' => ($chDocuments->financial_review_complete == 1) ? 'YES' : 'NO',
                     'Report Notes' => $chDocuments->report_notes,
-                    'Extension Given' => $chDocuments->report_extension,
+                    'Extension Given' => ($chDocuments->report_extension == 1) ? 'YES' : 'NO',
                     'Extension Notes' => $chDocuments->	extension_notes,
                 ];
 

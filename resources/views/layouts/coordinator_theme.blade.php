@@ -862,7 +862,6 @@ function customErrorAlert(message) {
         'reregoverdue': '{{ route("export.rereg") }}',
         'einstatus': '{{ route("export.einstatus") }}',
         'eoystatus': '{{ route("export.eoystatus") }}',
-        'chapterawards': '{{ route("export.chapteraward") }}',
 
         'intchapter': '{{ route("export.intchapter") }}',
         'intzapchapter': '{{ route("export.intzapchapter") }}',
@@ -870,6 +869,7 @@ function customErrorAlert(message) {
         'intretiredcoordinator': '{{ route("export.intretcoordinator") }}',
         'intreregoverdue': '{{ route("export.intrereg") }}',
         'inteinstatus': '{{ route("export.inteinstatus") }}',
+        'intirsfiling': '{{ route("export.intirsfiling") }}',
         'inteoystatus': '{{ route("export.inteoystatus") }}',
     };
 
