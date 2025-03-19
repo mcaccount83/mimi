@@ -61,14 +61,15 @@
     <div class="page-container">
         <div class="toolbar">
             <h3>Document Viewer</h3>
-            <span class="ml-2">Refresh page if document loads blank</span>
+            <span>Refresh if document does not load properly</span>
             <div class="toolbar-buttons">
+                <button id="refreshBtn" title="Refresh document">↻ Refresh</button>
                 <button id="downloadBtn">Download</button>
-                {{-- <button id="printBtn">Print</button> --}}
                 <button id="closeBtn">Close</button>
             </div>
         </div>
         <div class="viewer-container">
+            <div id="loadingIndicator" style="display: none;">Loading document...</div>
             <iframe id="pdfFrame" src=""></iframe>
         </div>
     </div>
@@ -79,12 +80,42 @@
     // Get file ID from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     const fileId = urlParams.get('id');
+    const pdfFrame = document.getElementById('pdfFrame');
+    const loadingIndicator = document.getElementById('loadingIndicator');
 
-    // Set iframe source
+    // Function to load the document
+    function loadDocument() {
+        if (fileId) {
+            // Show loading indicator
+            loadingIndicator.style.display = 'block';
+            pdfFrame.style.opacity = '0.3';
+
+            // For preview
+            const previewUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
+            pdfFrame.src = previewUrl;
+
+            // Handle iframe load event
+            pdfFrame.onload = function() {
+                loadingIndicator.style.display = 'none';
+                pdfFrame.style.opacity = '1';
+            };
+
+            // Handle iframe error
+            pdfFrame.onerror = function() {
+                loadingIndicator.textContent = 'Failed to load document. Please try refreshing.';
+                loadingIndicator.style.display = 'block';
+            };
+        }
+    }
+
+    // Initial load
     if (fileId) {
-        // For preview
-        const previewUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
-        document.getElementById('pdfFrame').src = previewUrl;
+        loadDocument();
+
+        // Set up refresh button
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            loadDocument();
+        });
 
         // For download button
         document.getElementById('downloadBtn').addEventListener('click', function() {
@@ -92,25 +123,13 @@
             window.open(downloadUrl, '_blank');
         });
 
-        // For print button
-        // document.getElementById('printBtn').addEventListener('click', function() {
-            // Option 1: Print the iframe content
-            // const iframe = document.getElementById('pdfFrame');
-            // iframe.contentWindow.focus();
-            // iframe.contentWindow.print();
-
-            // Option 2 (alternative): Open in new window for printing
-            // const printUrl = 'https://drive.google.com/file/d/' + fileId + '/view';
-            // const printWindow = window.open(printUrl, '_blank');
-            // printWindow.addEventListener('load', function() {
-            //     printWindow.print();
-            // });
-        // });
-
         // For close button
         document.getElementById('closeBtn').addEventListener('click', function() {
             window.close();
         });
+    } else {
+        loadingIndicator.textContent = 'No document ID provided.';
+        loadingIndicator.style.display = 'block';
     }
 </script>
 @endsection
