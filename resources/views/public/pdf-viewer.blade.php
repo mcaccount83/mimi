@@ -1,6 +1,5 @@
 @extends('layouts.public_theme')
 
-    <title>PDF Viewer</title>
     <style>
         body, html {
             margin: 0;
@@ -60,8 +59,10 @@
 @section('content')
     <div class="page-container">
         <div class="toolbar">
-            <h3>Document Viewer</h3>
-            <span>Refresh if document does not load properly</span>
+            <div>
+                <h3>Document Viewer</h3>
+                <span>Refresh if document doesn't load properly</span>
+            </div>
             <div class="toolbar-buttons">
                 <button id="refreshBtn" title="Refresh document">↻ Refresh</button>
                 <button id="downloadBtn">Download</button>
@@ -69,13 +70,15 @@
             </div>
         </div>
         <div class="viewer-container">
-            <div id="loadingIndicator" style="display: none;">Loading document...</div>
-            <iframe id="pdfFrame" src=""></iframe>
+            <div id="loadingIndicator" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 15px; background: rgba(255, 255, 255, 0.9); border-radius: 4px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); z-index: 10;">Loading document...</div>
+            <iframe id="pdfFrame" src="" style="width: 100%; height: 100%; border: 3px solid #3c4043;"></iframe>
         </div>
     </div>
 @endsection
 
 @section('customscript')
+<script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+
 <script>
     // Get file ID from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
@@ -90,47 +93,45 @@
             loadingIndicator.style.display = 'block';
             pdfFrame.style.opacity = '0.3';
 
-            // For preview
-            const previewUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
+            // Add timestamp to prevent caching
+            const timestamp = new Date().getTime();
+            const previewUrl = `https://drive.google.com/file/d/${fileId}/preview?t=${timestamp}`;
+
+            // Set iframe source
             pdfFrame.src = previewUrl;
 
             // Handle iframe load event
             pdfFrame.onload = function() {
-                loadingIndicator.style.display = 'none';
-                pdfFrame.style.opacity = '1';
+                setTimeout(() => {
+                    loadingIndicator.style.display = 'none';
+                    pdfFrame.style.opacity = '1';
+                }, 700); // Small delay to ensure content is fully rendered
             };
-
-            // Handle iframe error
-            pdfFrame.onerror = function() {
-                loadingIndicator.textContent = 'Failed to load document. Please try refreshing.';
-                loadingIndicator.style.display = 'block';
-            };
+        } else {
+            loadingIndicator.textContent = 'No document ID provided.';
+            loadingIndicator.style.display = 'block';
         }
     }
 
-    // Initial load
-    if (fileId) {
+    // For refresh button
+    document.getElementById('refreshBtn').addEventListener('click', function() {
         loadDocument();
+    });
 
-        // Set up refresh button
-        document.getElementById('refreshBtn').addEventListener('click', function() {
-            loadDocument();
-        });
-
-        // For download button
-        document.getElementById('downloadBtn').addEventListener('click', function() {
-            const downloadUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;
+    // For download button
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+        if (fileId) {
+            const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
             window.open(downloadUrl, '_blank');
-        });
+        }
+    });
 
-        // For close button
-        document.getElementById('closeBtn').addEventListener('click', function() {
-            window.close();
-        });
-    } else {
-        loadingIndicator.textContent = 'No document ID provided.';
-        loadingIndicator.style.display = 'block';
-    }
+    // For close button
+    document.getElementById('closeBtn').addEventListener('click', function() {
+        window.close();
+    });
+
+    // Initial load
+    loadDocument();
 </script>
 @endsection
-
