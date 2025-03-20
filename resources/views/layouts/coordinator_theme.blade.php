@@ -767,9 +767,41 @@ function customErrorAlert(message) {
 
  </script>
 
+<script>
+    function openPdfViewer(pdfPath) {
+    // Check if this is a Google Drive file ID
+    if (pdfPath.startsWith('https://drive.google.com') || pdfPath.includes('google')) {
+        // Extract Google Drive file ID if it's a Google Drive URL
+        let fileId = '';
+
+        if (pdfPath.includes('/d/')) {
+            // Format: https://drive.google.com/file/d/FILE_ID/view
+            const matches = pdfPath.match(/\/d\/([^\/]+)/);
+            if (matches && matches[1]) {
+                fileId = matches[1];
+            }
+        } else if (pdfPath.includes('id=')) {
+            // Format: https://drive.google.com/open?id=FILE_ID
+            const url = new URL(pdfPath);
+            fileId = url.searchParams.get('id');
+        } else {
+            // If it's just the ID itself
+            fileId = pdfPath;
+        }
+
+        if (fileId) {
+            window.open(`/pdf-viewer?gdrive_id=${fileId}`, '_blank');
+        } else {
+            alert('Invalid Google Drive URL');
+        }
+    } else {
+        // Regular PDF URL
+        window.open(`/pdf-viewer?url=${encodeURIComponent(pdfPath)}`, '_blank');
+    }
+}
+</script>
+
  <script>
-
-
 
  $(function () {
     $('#chapterlist').DataTable({
