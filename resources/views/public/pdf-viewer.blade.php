@@ -230,71 +230,66 @@
         }
 
         /**
- * Load the PDF based on source
- */
-async function loadPdf() {
-    updateStatus('Starting PDF load process');
-    let source;
+         * Load the PDF based on source
+         */
+        async function loadPdf() {
+            updateStatus('Starting PDF load process');
+            let source;
 
-    // Get base URL from environment
-    const baseUrl = "{{ env('APP_URL') }}";
+            // Get the effective Google Drive ID (either from googleDriveId or detected from pdfUrl)
+            const effectiveDriveId = detectGoogleDriveId();
 
-    // Get the effective Google Drive ID (either from googleDriveId or detected from pdfUrl)
-    const effectiveDriveId = detectGoogleDriveId();
+            if (effectiveDriveId) {
+                updateStatus('Using Google Drive ID: ' + effectiveDriveId);
 
-    if (effectiveDriveId) {
-        updateStatus('Using Google Drive ID: ' + effectiveDriveId);
-
-        if (googleDriveToken && googleDriveToken.trim() !== '') {
-            updateStatus('Using direct access with token');
-            source = {
-                url: `https://www.googleapis.com/drive/v3/files/${effectiveDriveId}?alt=media`,
-                httpHeaders: {
-                    'Authorization': `Bearer ${googleDriveToken}`
+                if (googleDriveToken && googleDriveToken.trim() !== '') {
+                    updateStatus('Using direct access with token');
+                    source = {
+                        url: `https://www.googleapis.com/drive/v3/files/${effectiveDriveId}?alt=media`,
+                        httpHeaders: {
+                            'Authorization': `Bearer ${googleDriveToken}`
+                        }
+                    };
+                } else {
+                    updateStatus('Using proxy endpoint');
+                    // Update the proxy route to use the detected Drive ID
+                    source = {
+                        url: `{{ route('proxy.gdrive.pdf') }}?file_id=${effectiveDriveId}`
+                    };
                 }
-            };
-        } else {
-            updateStatus('Using proxy endpoint');
-            // Use the APP_URL environment variable with the route
-            const proxyRoute = "{{ route('proxy.gdrive.pdf') }}";
-            // Ensure we're using absolute URLs
-            source = {
-                url: `${baseUrl}${proxyRoute.startsWith('/') ? proxyRoute : '/' + proxyRoute}?file_id=${effectiveDriveId}`
-            };
-        }
-    } else if (pdfUrl && pdfUrl.trim() !== '') {
-        updateStatus('Using direct PDF URL: ' + pdfUrl);
-        source = { url: pdfUrl };
-    } else {
-        showError('No PDF source provided');
-        return;
-    }
-
-    try {
-        updateStatus('Fetching PDF document...');
-        // Load the PDF document
-        const loadingTask = pdfjsLib.getDocument(source);
-
-        loadingTask.onProgress = function(progressData) {
-            if (progressData.total > 0) {
-                const percent = Math.round((progressData.loaded / progressData.total) * 100);
-                updateStatus(`Loading PDF: ${percent}%`);
+            } else if (pdfUrl && pdfUrl.trim() !== '') {
+                updateStatus('Using direct PDF URL: ' + pdfUrl);
+                source = { url: pdfUrl };
+            } else {
+                showError('No PDF source provided');
+                return;
             }
-        };
 
-        pdfDoc = await loadingTask.promise;
-        updateStatus('PDF loaded successfully. Pages: ' + pdfDoc.numPages);
+            try {
+                updateStatus('Fetching PDF document...');
+                // Load the PDF document
+                const loadingTask = pdfjsLib.getDocument(source);
 
-        document.getElementById('page_count').textContent = pdfDoc.numPages;
-        loadingOverlay.style.display = 'none';
+                loadingTask.onProgress = function(progressData) {
+                    if (progressData.total > 0) {
+                        const percent = Math.round((progressData.loaded / progressData.total) * 100);
+                        updateStatus(`Loading PDF: ${percent}%`);
+                    }
+                };
 
-        // Initial render
-        renderPage(pageNum);
-    } catch (error) {
-        console.error('Error loading PDF:', error);
-        showError('Failed to load PDF: ' + error.message);
-    }
-}
+                pdfDoc = await loadingTask.promise;
+                updateStatus('PDF loaded successfully. Pages: ' + pdfDoc.numPages);
+
+                document.getElementById('page_count').textContent = pdfDoc.numPages;
+                loadingOverlay.style.display = 'none';
+
+                // Initial render
+                renderPage(pageNum);
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                showError('Failed to load PDF: ' + error.message);
+            }
+        }
 
         /**
          * Render the page
@@ -388,71 +383,66 @@ async function loadPdf() {
         }
 
         /**
- * Download the PDF file
- */
-async function downloadPdf() {
-    updateStatus('Preparing PDF for download...');
+         * Download the PDF file
+         */
+        async function downloadPdf() {
+            updateStatus('Preparing PDF for download...');
 
-    // Get base URL from environment
-    const baseUrl = "{{ env('APP_URL') }}";
+            try {
+                let downloadUrl;
+                const effectiveDriveId = detectGoogleDriveId();
 
-    try {
-        let downloadUrl;
-        const effectiveDriveId = detectGoogleDriveId();
+                if (effectiveDriveId) {
+                    // For Google Drive files, we need to use a different approach
+                    if (googleDriveToken && googleDriveToken.trim() !== '') {
+                        // Use direct access
+                        downloadUrl = `https://www.googleapis.com/drive/v3/files/${effectiveDriveId}?alt=media`;
 
-        if (effectiveDriveId) {
-            // For Google Drive files, we need to use a different approach
-            if (googleDriveToken && googleDriveToken.trim() !== '') {
-                // Use direct access
-                downloadUrl = `https://www.googleapis.com/drive/v3/files/${effectiveDriveId}?alt=media`;
+                        // Create a temporary link and trigger download
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.download = `document-${effectiveDriveId}.pdf`;
+                        a.target = '_blank';
 
-                // Create a temporary link and trigger download
-                const a = document.createElement('a');
-                a.href = downloadUrl;
-                a.download = `document-${effectiveDriveId}.pdf`;
-                a.target = '_blank';
-
-                // Add necessary authorization header using fetch
-                fetch(downloadUrl, {
-                    headers: {
-                        'Authorization': `Bearer ${googleDriveToken}`
+                        // Add necessary authorization header using fetch
+                        fetch(downloadUrl, {
+                            headers: {
+                                'Authorization': `Bearer ${googleDriveToken}`
+                            }
+                        })
+                        .then(response => response.blob())
+                        .then(blob => {
+                            // Create a blob URL and trigger download
+                            const blobUrl = URL.createObjectURL(blob);
+                            a.href = blobUrl;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(blobUrl);
+                            updateStatus('Download complete');
+                        })
+                        .catch(error => {
+                            console.error('Download error:', error);
+                            updateStatus('Download failed: ' + error.message);
+                        });
+                    } else {
+                        // Use your proxy endpoint with download parameter
+                        const proxyUrl = `{{ route('proxy.gdrive.pdf') }}?file_id=${effectiveDriveId}&download=1`;
+                        window.open(proxyUrl, '_blank');
+                        updateStatus('Download initiated through proxy');
                     }
-                })
-                .then(response => response.blob())
-                .then(blob => {
-                    // Create a blob URL and trigger download
-                    const blobUrl = URL.createObjectURL(blob);
-                    a.href = blobUrl;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(blobUrl);
-                    updateStatus('Download complete');
-                })
-                .catch(error => {
-                    console.error('Download error:', error);
-                    updateStatus('Download failed: ' + error.message);
-                });
-            } else {
-                // Use your proxy endpoint with download parameter
-                const proxyRoute = "{{ route('proxy.gdrive.pdf') }}";
-                // Ensure we're using absolute URLs with the APP_URL
-                const proxyUrl = `${baseUrl}${proxyRoute.startsWith('/') ? proxyRoute : '/' + proxyRoute}?file_id=${effectiveDriveId}&download=1`;
-                window.open(proxyUrl, '_blank');
-                updateStatus('Download initiated through proxy');
+                } else if (pdfUrl && pdfUrl.trim() !== '') {
+                    // For direct PDF URLs, just open in a new tab
+                    window.open(pdfUrl, '_blank');
+                    updateStatus('Download initiated');
+                } else {
+                    showError('No PDF source available for download');
+                }
+            } catch (error) {
+                console.error('Download error:', error);
+                updateStatus('Download failed: ' + error.message);
             }
-        } else if (pdfUrl && pdfUrl.trim() !== '') {
-            // For direct PDF URLs, just open in a new tab
-            window.open(pdfUrl, '_blank');
-            updateStatus('Download initiated');
-        } else {
-            showError('No PDF source available for download');
         }
-    } catch (error) {
-        console.error('Download error:', error);
-        updateStatus('Download failed: ' + error.message);
-    }
-}
 
         // Button event listeners
         document.getElementById('prev').addEventListener('click', onPrevPage);
