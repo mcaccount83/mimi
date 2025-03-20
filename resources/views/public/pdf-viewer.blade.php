@@ -237,7 +237,7 @@
     let source;
 
     // Define the full URL for the proxy route
-    const proxyUrl = '{{ url("/proxy-gdrive-pdf") }}';
+    const proxyUrl = "{{ url('/proxy/gdrive/pdf') }}";
 
     // Get the effective Google Drive ID (either from googleDriveId or detected from pdfUrl)
     const effectiveDriveId = detectGoogleDriveId();
@@ -394,7 +394,7 @@ async function downloadPdf() {
     updateStatus('Preparing PDF for download...');
 
     // Define the full URL for the proxy route
-    const proxyUrl = '{{ url("/proxy-gdrive-pdf") }}';
+    const proxyUrl = "{{ url('/proxy/gdrive/pdf') }}";
 
     try {
         let downloadUrl;
