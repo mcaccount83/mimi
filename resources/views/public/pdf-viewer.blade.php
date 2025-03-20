@@ -229,15 +229,15 @@
             updateStatus('ERROR: ' + message);
         }
 
-        /**
+/**
  * Load the PDF based on source
  */
-async function loadPdf() {
+ async function loadPdf() {
     updateStatus('Starting PDF load process');
     let source;
 
-    // Get base URL from environment
-    const baseUrl = "{{ env('APP_URL') }}";
+    // Define the full URL for the proxy route
+    const proxyUrl = "{{ url('/proxy/gdrive/pdf') }}";
 
     // Get the effective Google Drive ID (either from googleDriveId or detected from pdfUrl)
     const effectiveDriveId = detectGoogleDriveId();
@@ -255,12 +255,12 @@ async function loadPdf() {
             };
         } else {
             updateStatus('Using proxy endpoint');
-            // Use the APP_URL environment variable with the route
-            const proxyRoute = "{{ route('proxy.gdrive.pdf') }}";
-            // Ensure we're using absolute URLs
+            // Use the full URL directly
             source = {
-                url: `${baseUrl}${proxyRoute.startsWith('/') ? proxyRoute : '/' + proxyRoute}?file_id=${effectiveDriveId}`
+                url: `${proxyUrl}?file_id=${effectiveDriveId}`
             };
+
+            updateStatus('Proxy URL: ' + source.url);
         }
     } else if (pdfUrl && pdfUrl.trim() !== '') {
         updateStatus('Using direct PDF URL: ' + pdfUrl);
@@ -387,14 +387,14 @@ async function loadPdf() {
             queueRenderPage(pageNum);
         }
 
-        /**
+ /**
  * Download the PDF file
  */
 async function downloadPdf() {
     updateStatus('Preparing PDF for download...');
 
-    // Get base URL from environment
-    const baseUrl = "{{ env('APP_URL') }}";
+    // Define the full URL for the proxy route
+    const proxyUrl = "{{ url('/proxy/gdrive/pdf') }}";
 
     try {
         let downloadUrl;
@@ -434,12 +434,11 @@ async function downloadPdf() {
                     updateStatus('Download failed: ' + error.message);
                 });
             } else {
-                // Use your proxy endpoint with download parameter
-                const proxyRoute = "{{ route('proxy.gdrive.pdf') }}";
-                // Ensure we're using absolute URLs with the APP_URL
-                const proxyUrl = `${baseUrl}${proxyRoute.startsWith('/') ? proxyRoute : '/' + proxyRoute}?file_id=${effectiveDriveId}&download=1`;
-                window.open(proxyUrl, '_blank');
+                // Use the full URL for the proxy download
+                const fullProxyUrl = `${proxyUrl}?file_id=${effectiveDriveId}&download=1`;
+                window.open(fullProxyUrl, '_blank');
                 updateStatus('Download initiated through proxy');
+                updateStatus('Proxy download URL: ' + fullProxyUrl);
             }
         } else if (pdfUrl && pdfUrl.trim() !== '') {
             // For direct PDF URLs, just open in a new tab
