@@ -11,11 +11,11 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-<!-- Font Awesome -->
-{{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css"> --}}
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/brands.css" rel="stylesheet" />
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/css/v5-font-face.css" rel="stylesheet" />
+  <!-- Font Awesome -->
+  {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css"> --}}
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/brands.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/css/v5-font-face.css" rel="stylesheet" />
   <!-- icheck bootstrap -->
   <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
@@ -56,37 +56,4 @@
 </body>
 
 @yield('customscript')
-<script>
-    function openPdfViewer(pdfPath) {
-    // Check if this is a Google Drive file ID
-    if (pdfPath.startsWith('https://drive.google.com') || pdfPath.includes('google')) {
-        // Extract Google Drive file ID if it's a Google Drive URL
-        let fileId = '';
-
-        if (pdfPath.includes('/d/')) {
-            // Format: https://drive.google.com/file/d/FILE_ID/view
-            const matches = pdfPath.match(/\/d\/([^\/]+)/);
-            if (matches && matches[1]) {
-                fileId = matches[1];
-            }
-        } else if (pdfPath.includes('id=')) {
-            // Format: https://drive.google.com/open?id=FILE_ID
-            const url = new URL(pdfPath);
-            fileId = url.searchParams.get('id');
-        } else {
-            // If it's just the ID itself
-            fileId = pdfPath;
-        }
-
-        if (fileId) {
-            window.open(`/pdf-viewer?gdrive_id=${fileId}`, '_blank');
-        } else {
-            alert('Invalid Google Drive URL');
-        }
-    } else {
-        // Regular PDF URL
-        window.open(`/pdf-viewer?url=${encodeURIComponent(pdfPath)}`, '_blank');
-    }
-}
-</script>
 </html>
