@@ -71,34 +71,6 @@ class PublicController extends Controller
         return view('public.resources', ['resources' => $resources]);
     }
 
-    // public function showPdf(Request $request)
-    // {
-    //     $fileId = $request->query('id');
-
-    //     if (empty($fileId)) {
-    //         return abort(404, 'No file ID provided.');
-    //     }
-
-    //     // You can use the fileId to fetch the actual file path from the database or storage.
-    //     $filePath = $this->getFilePathFromId($fileId);
-
-    //     if (!$filePath) {
-    //         return abort(404, 'File not found.');
-    //     }
-
-    //     return view('public.pdf-viewer', ['filePath' => $filePath]);
-    // }
-
-    // private function getFilePathFromId($fileId)
-    // {
-    //     // Retrieve the actual file path from your storage based on the file ID.
-    //     // Example: Check in your database or cloud storage for the file path.
-    //     // This can be the path in your cloud storage, or Google Drive, etc.
-
-    //     return 'path/to/your/file.pdf';  // Replace with actual logic
-    // }
-
-
     /**
      * Show the PDF viewer page
      */

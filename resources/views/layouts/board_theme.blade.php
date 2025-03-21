@@ -263,19 +263,12 @@
 
 </script>
 
-{{-- <script>
-    function openPdfViewer(fileId) {
-        window.open('/pdf-viewer?id=' + fileId, '_blank');
-    }
-</script> --}}
-
 <script>
-    function openPdfViewer(fileId) {
-        var base_url = '{{ url("/pdf-viewer") }}';  // Generate the correct base URL dynamically
-        window.open(base_url + '?id=' + fileId, '_blank');  // Concatenate the file ID
+    function openPdfViewer(filePath) {
+        var base_url = '{{ url("/pdf-viewer") }}';
+        window.open(base_url + '?id=' + encodeURIComponent(filePath), '_blank');
     }
 </script>
-
 
 <script>
     function applyPhoneMask() {

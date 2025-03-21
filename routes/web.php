@@ -85,16 +85,8 @@ Route::get('/test-429', function () {
 // Public Page Routes...
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
 Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])->name('board.resources');
-// Route::get('/pdf-viewer', [PublicController::class, 'showPdf'])->name('pdf-viewer');
-// Route::get('/pdf-viewer', [PublicController::class, 'showPdfViewer'])->name('pdf.viewer');
-// Route::get('/proxy-gdrive-pdf', [PublicController::class, 'proxyGoogleDrivePdf'])->name('proxy.gdrive.pdf');
-// Existing PDF viewer route
 Route::get('/pdf-viewer', [PublicController::class, 'showPdf'])->name('pdf-viewer');
-
-// Add this new route for the proxy
 Route::get('/pdf-proxy', [PublicController::class, 'proxyGoogleDriveFile'])->name('pdf-proxy');
-
-// Route::view('/pdf-viewer', 'public.pdf-viewer')->name('pdf-viewer');
 
 // Admin Controller Routes...
 Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
