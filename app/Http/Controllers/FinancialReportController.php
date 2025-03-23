@@ -342,7 +342,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $cc_id = $baseQuery['cc_id'];
 
             $mailData = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );
@@ -431,7 +431,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $emailCC = $baseQuery['emailCC'];
 
             $mailData = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );

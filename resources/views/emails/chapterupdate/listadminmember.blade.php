@@ -19,14 +19,14 @@ MIMI Database Administrator
                     <td></td>
                     <td colspan="2" style="background-color: #D0D0D0;"><center><b>{{ $mailData['borposition'] }} Information</b></center></td>
                 </tr>
-                <tr style="{{$mailData['borNamePre'] != $mailData['borNameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['borName'] != $mailData['borNameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>First Name</td>
-                    <td>{{$mailData['borNamePre']}}</td>
+                    <td>{{$mailData['borName']}}</td>
                     <td>{{$mailData['borNameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['borEmailPre'] != $mailData['borEmailUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['borEmail'] != $mailData['borEmailUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>E-mail</td>
-                    <td>{{$mailData['borEmailPre']}}</td>
+                    <td>{{$mailData['borEmail']}}</td>
                     <td>{{$mailData['borEmailUpd']}}</td>
                 </tr>
             </tbody>

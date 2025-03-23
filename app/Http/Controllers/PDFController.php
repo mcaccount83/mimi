@@ -60,9 +60,6 @@ class PDFController extends Controller
         return $accessToken;
     }
 
-    /* / Base Chapter Controller / */
-    //  $this->baseChapterController->getChapterDetails($chId)
-
     /**
      * Save & Send Fianncial Reprot
      */
@@ -122,11 +119,7 @@ class PDFController extends Controller
         $sharedDriveId = $finalFinancialDrive;  // Shared Drive -> EOY Uploads
 
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
-        $chDetails = $baseQuery['chDetails'];
-        $chDocuments = $baseQuery['chDocuments'];
-        $conf = $chDetails->conference_id;
-        $state = $baseQuery['stateShortName'];
-        $chapterName = $chDetails->name;
+
 
         $result = $this->generateFinancialReport($chapterId);
         $pdf = $result['pdf'];
@@ -161,14 +154,13 @@ class PDFController extends Controller
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
-        // $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $PresDetails = $baseQuery['PresDetails'];
 
         $pdfData = array_merge(
-            $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
             $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             [
@@ -251,7 +243,6 @@ class PDFController extends Controller
                 'completed_name' => $chFinancialReport->completed_name,
                 'completed_email' => $chFinancialReport->completed_email,
                 'submitted' => $chFinancialReport->submitted,
-                // 'ch_name' => $sanitizedChapterName,
             ],
         );
 
@@ -312,11 +303,11 @@ class PDFController extends Controller
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
-        // $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
         $stateShortName = $baseQuery['stateShortName'];
         $reRegMonth = $chDetails->start_month_id;
         $reRegYear = $chDetails->next_renewal_year;
         $PresDetails = $baseQuery['PresDetails'];
+        $emailCCData = $baseQuery['emailCCData'];
 
         $ccName = $baseQuery['cc_fname'].' '.$baseQuery['cc_lname'];
         $ccPosition = $baseQuery['cc_pos'];
@@ -324,14 +315,14 @@ class PDFController extends Controller
         $ccConfDescription = $baseQuery['cc_conf_desc'];
 
         $pdfData = array_merge(
-            $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
+            $this->baseMailDataController->getCCData($emailCCData),
             [
                 'ccName' => $ccName,
                 'ccPosition' => $ccPosition,
                 'ccConfName' => $ccConfName,
                 'ccConfDescription' => $ccConfDescription,
-                // 'ch_name' => $sanitizedChapterName,
             ],
         );
 
@@ -411,7 +402,7 @@ class PDFController extends Controller
             }
 
             $mailData = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
             );
 
@@ -482,7 +473,7 @@ class PDFController extends Controller
         $nextMonthFormatted = $nextMonth->format('m-d-Y');
 
         $pdfData = array_merge(
-            $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
             [
@@ -604,7 +595,7 @@ class PDFController extends Controller
             // $user = $this->userController->loadUserInformation($request);
 
             $mailData = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
             );
 
@@ -674,7 +665,7 @@ class PDFController extends Controller
         $nextMonthFormatted = $nextMonth->format('m-d-Y');
 
         $pdfData = array_merge(
-            $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
             [

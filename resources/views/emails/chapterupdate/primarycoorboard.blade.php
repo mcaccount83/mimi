@@ -19,115 +19,115 @@ MIMI Database Administrator
                     <td></td>
                     <td colspan="2" style="background-color: #D0D0D0;"><center><b>President</b></center></td>
                 </tr>
-                <tr style="{{$mailData['presNamePre'] != $mailData['presNameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presName'] != $mailData['presNameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Name</td>
-                    <td>{{$mailData['presNamePre']}}</td>
+                    <td>{{$mailData['presName']}}</td>
                     <td>{{$mailData['presNameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['presEmailPre'] != $mailData['presEmailUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presEmail'] != $mailData['presEmailUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>E-mail</td>
-                    <td>{{$mailData['presEmailPre']}}</td>
+                    <td>{{$mailData['presEmail']}}</td>
                     <td>{{$mailData['presEmailUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['presAddressPre'] != $mailData['presAddressUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presAddress'] != $mailData['presAddressUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Street</td>
-                    <td>{{$mailData['presAddressPre']}}</td>
+                    <td>{{$mailData['presAddress']}}</td>
                     <td>{{$mailData['presAddressUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['presCityPre'] != $mailData['presCityUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presCity'] != $mailData['presCityUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>City</td>
-                    <td>{{$mailData['presCityPre']}}</td>
+                    <td>{{$mailData['presCity']}}</td>
                     <td>{{$mailData['presCityUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['presStatePre'] != $mailData['presStateUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presState'] != $mailData['presStateUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>State</td>
-                    <td>{{$mailData['presStatePre']}}</td>
+                    <td>{{$mailData['presState']}}</td>
                     <td>{{$mailData['presStateUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['presZipPre'] != $mailData['presZipUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presZip'] != $mailData['presZipUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Zip</td>
-                    <td>{{$mailData['presZipPre']}}</td>
+                    <td>{{$mailData['presZip']}}</td>
                     <td>{{$mailData['presZipUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['presPhpnePre'] != $mailData['presPhoneUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['presPhone'] != $mailData['presPhoneUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Phone</td>
-                    <td>{{$mailData['presPhpnePre']}}</td>
+                    <td>{{$mailData['presPhone']}}</td>
                     <td>{{$mailData['presPhoneUpd']}}</td>
                 </tr>
                 <tr>
                     <td></td>
                     <td colspan="2" style="background-color: #D0D0D0;"><center><b>AVP</b></center></td>
                 </tr>
-                <tr style="{{$mailData['avpfnamePre'] != $mailData['avpfnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['avpfname'] != $mailData['avpfnameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>First Name</td>
-                    <td>{{$mailData['avpfnamePre']}}</td>
+                    <td>{{$mailData['avpfname']}}</td>
                     <td>{{$mailData['avpfnameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['avplnamePre'] != $mailData['avplnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['avplname'] != $mailData['avplnameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Last Name</td>
-                    <td>{{$mailData['avplnamePre']}}</td>
+                    <td>{{$mailData['avplname']}}</td>
                     <td>{{$mailData['avplnameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['avpemailPre'] != $mailData['avpemailUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['avpemail'] != $mailData['avpemailUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>E-mail</td>
-                    <td>{{$mailData['avpemailPre']}}</td>
+                    <td>{{$mailData['avpemail']}}</td>
                     <td>{{$mailData['avpemailUpd']}}</td>
                 </tr>
                 <tr>
                     <td></td>
                     <td colspan="2" style="background-color: #D0D0D0;"><center><b>MVP</b></center></td>
                 </tr>
-                <tr style="{{$mailData['mvpfnamePre'] != $mailData['mvpfnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['mvpfname'] != $mailData['mvpfnameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>First Name</td>
-                    <td>{{$mailData['mvpfnamePre']}}</td>
+                    <td>{{$mailData['mvpfname']}}</td>
                     <td>{{$mailData['mvpfnameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['mvplnamePre'] != $mailData['mvplnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['mvplname'] != $mailData['mvplnameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Last Name</td>
-                    <td>{{$mailData['mvplnamePre']}}</td>
+                    <td>{{$mailData['mvplname']}}</td>
                     <td>{{$mailData['mvplnameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['mvpemailPre'] != $mailData['mvpemailUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['mvpemail'] != $mailData['mvpemailUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>E-mail</td>
-                    <td>{{$mailData['mvpemailPre']}}</td>
+                    <td>{{$mailData['mvpemail']}}</td>
                     <td>{{$mailData['mvpemailUpd']}}</td>
                 </tr>
                 <tr>
                     <td></td>
                     <td colspan="2" style="background-color: #D0D0D0;"><center><b>Treasurer</b></center></td>
                 </tr>
-                <tr style="{{$mailData['tresfnamePre'] != $mailData['tresfnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['tresfname'] != $mailData['tresfnameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>First Name</td>
-                    <td>{{$mailData['tresfnamePre']}}</td>
+                    <td>{{$mailData['tresfname']}}</td>
                     <td>{{$mailData['tresfnameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['treslnamePre'] != $mailData['treslnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['treslname'] != $mailData['treslnameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Last Name</td>
-                    <td>{{$mailData['treslnamePre']}}</td>
+                    <td>{{$mailData['treslname']}}</td>
                     <td>{{$mailData['treslnameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['tresemailPre'] != $mailData['tresemailUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['tresemail'] != $mailData['tresemailUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>E-mail</td>
-                    <td>{{$mailData['tresemailPre']}}</td>
+                    <td>{{$mailData['tresemail']}}</td>
                     <td>{{$mailData['tresemailUpd']}}</td>
                 </tr>
                 <tr>
                     <td></td>
                     <td colspan="2" style="background-color: #D0D0D0;"><center><b>Secretary</b></center></td>
                 </tr>
-                <tr style="{{$mailData['secfnamePre'] != $mailData['secfnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['secfname'] != $mailData['secfnameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>First Name</td>
-                    <td>{{$mailData['secfnamePre']}}</td>
+                    <td>{{$mailData['secfname']}}</td>
                     <td>{{$mailData['secfnameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['seclnamePre'] != $mailData['seclnameUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['seclname'] != $mailData['seclnameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Last Name</td>
-                    <td>{{$mailData['seclnamePre']}}</td>
+                    <td>{{$mailData['seclname']}}</td>
                     <td>{{$mailData['seclnameUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['secemailPre'] != $mailData['secemailUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['secemail'] != $mailData['secemailUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>E-mail</td>
-                    <td>{{$mailData['secemailPre']}}</td>
+                    <td>{{$mailData['secemail']}}</td>
                     <td>{{$mailData['secemailUpd']}}</td>
                 </tr>
                 <tr>

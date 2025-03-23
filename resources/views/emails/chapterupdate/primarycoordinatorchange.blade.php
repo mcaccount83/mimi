@@ -3,7 +3,7 @@
 
 Your chapter has been assigned a new Priamry Coordinator:
 <ul class="list-unstyled">
-    <li>{{$mailData['pcNameUpd']}}</li>
+    <li>{{$mailData['pcName']}}</li>
     <li>{{$mailData['pcEmailUpd']}}</li>
 </ul>
 You should begin using her as your primary point of contact immediately.<br>

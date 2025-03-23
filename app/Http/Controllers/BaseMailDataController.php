@@ -17,23 +17,6 @@ class BaseMailDataController extends Controller
         $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
-    /**
-     *  Get Basic Chapter Mail Data Information
-     */
-    public function getChapterBasicData($chDetails, $stateShortName)
-    {
-        return [
-            // 'chapterId' => $chDetails->id,
-            'chapterName' => $chDetails->name,
-            'chapterNameSanitized' => $chDetails->sanitized_name,
-            'chapterState' => $stateShortName,
-            'chapterConf' => $chDetails->conference_id,
-            'chapterEIN' => $chDetails->ein,
-            'chapterBoundaries' => $chDetails->territory,
-            'chapterEmail' => $chDetails->email,
-        ];
-    }
-
     public function getUserData($user)
     {
         return [
@@ -45,6 +28,27 @@ class BaseMailDataController extends Controller
         ];
     }
 
+    public function getChapterData($chDetails, $stateShortName)
+    {
+        return [
+            'chapterName' => $chDetails->name,
+            'chapterNameSanitized' => $chDetails->sanitized_name,
+            'chapterState' => $stateShortName,
+            'chapterConf' => $chDetails->conference_id,
+            'chapterEIN' => $chDetails->ein,
+            'chapterBoundaries' => $chDetails->territory,
+            'chapterStatus' => $chDetails->status_id,
+            'chapterNotes' => $chDetails->notes,
+            'chapterInquiriesContact' => $chDetails->inquiries_contact,
+            'chapterInquiriesNotes' => $chDetails->inquiries_note,
+            'chapterEmail' => $chDetails->email,
+            'chapterPOBox' => $chDetails->po_box,
+            'chapterAdditionalInfo' => $chDetails->additional_info,
+            'chapterWebsiteURL' => $chDetails->website_url,
+            'chapterWebsiteStatus' => $chDetails->website_status,
+        ];
+    }
+
     public function getPresData($PresDetails)
     {
         return [
@@ -53,7 +57,21 @@ class BaseMailDataController extends Controller
             'presCity' => $PresDetails->city,
             'presState' => $PresDetails->state,
             'presZip' => $PresDetails->zip,
+            'presPhone' => $PresDetails->phone,
             'presEmail' => $PresDetails->email,
+        ];
+    }
+
+    public function getBoardData($borDetails)
+    {
+        return [
+            'boardName' => $borDetails->first_name.' '.$borDetails->last_name,
+            'boardAddress' => $borDetails->street_address,
+            'boardCity' => $borDetails->city,
+            'boardState' => $borDetails->state,
+            'boardZip' => $borDetails->zip,
+            'boardPhone' => $borDetails->phone,
+            'boardEmail' => $borDetails->email,
         ];
     }
 
@@ -65,21 +83,14 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getChapterPreviousData($chDetailsPre, $pcDetailsPre)
+    public function getCCData($emailCCData)
     {
         return [
-            'chapterNamePre' => $chDetailsPre->name,
-            'boundariesPre' => $chDetailsPre->territory,
-            'statusPre' => $chDetailsPre->status_id,
-            'notesPre' => $chDetailsPre->notes,
-            'inquiriesContactPre' => $chDetailsPre->inquiries_contact,
-            'inquiriesNotesPre' => $chDetailsPre->inquiries_note,
-            'chapterEmailPre' => $chDetailsPre->email,
-            'poBoxPre' => $chDetailsPre->po_box,
-            'additionalInfoPre' => $chDetailsPre->additional_info,
-            'websiteURLPre' => $chDetailsPre->website_url,
-            'websiteStatusPre' => $chDetailsPre->website_status,
-            'pcNamePre' => $pcDetailsPre->first_name.' '.$pcDetailsPre->last_name,
+            'ccEmail' => $emailCCData['cc_email'],
+            'ccName' => $emailCCData['cc_fname'].' '.['emailCCData->cc_lname'],
+            'ccPosition' => $emailCCData['cc_pos'],
+            'ccConfName' => $emailCCData['cc_conf_name'],
+            'ccConfDescription' => $emailCCData['cc_conf_desc'],
         ];
     }
 
@@ -102,19 +113,6 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getPresPreviousData($PresDetailsPre)
-    {
-        return [
-            'presNamePre' => $PresDetailsPre->first_name.' '.$PresDetailsPre->last_name,
-            'presAddressPre' => $PresDetailsPre->street_address,
-            'presCityPre' => $PresDetailsPre->city,
-            'presStatePre' => $PresDetailsPre->state,
-            'presZipPre' => $PresDetailsPre->zip,
-            'presPhpnePre' => $PresDetailsPre->phone,
-            'presEmailPre' => $PresDetailsPre->email,
-        ];
-    }
-
     public function getPresUpdatedData($PresDetailsUpd)
     {
         return [
@@ -125,19 +123,6 @@ class BaseMailDataController extends Controller
             'presZipUpd' => $PresDetailsUpd->zip,
             'presPhoneUpd' => $PresDetailsUpd->phone,
             'presEmailUpd' => $PresDetailsUpd->email,
-        ];
-    }
-
-    public function getBoardPreviousData($borDetailsPre)
-    {
-        return [
-            'borNamePre' => $borDetailsPre->first_name.' '.$borDetailsPre->last_name,
-            'borAddressPre' => $borDetailsPre->street_address,
-            'borCityPre' => $borDetailsPre->city,
-            'borStatePre' => $borDetailsPre->state,
-            'borZipPre' => $borDetailsPre->zip,
-            'borPhpnePre' => $borDetailsPre->phone,
-            'borEmailPre' => $borDetailsPre->email,
         ];
     }
 
@@ -152,6 +137,14 @@ class BaseMailDataController extends Controller
             'borZipUpd' => $borDetailsUpd->zip,
             'borPhoneUpd' => $borDetailsUpd->phone,
             'borEmailUpd' => $borDetailsUpd->email,
+        ];
+    }
+
+    public function getPCUpdatedData($pcDetailsUpd)
+    {
+        return [
+            'pcEmailUpd' => $pcDetailsUpd->email,
+            'pcNameUpd' => $pcDetailsUpd->first_name.' '.$pcDetailsUpd->last_name,
         ];
     }
 

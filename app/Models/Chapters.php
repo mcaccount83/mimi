@@ -18,7 +18,7 @@ class Chapters extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'name', 'state_id', 'country_short_name', 'conference_id', 'region_id', 'ein', 'status_id', 'territory', 'inquiries_contact',
+        'name', 'sanitized_name', 'state_id', 'country_short_name', 'conference_id', 'region_id', 'ein', 'status_id', 'territory', 'inquiries_contact',
         'start_month_id', 'start_year', 'next_renewal_year', 'primary_coordinator_id', 'founders_name', 'last_updated_by', 'last_updated_date',
         'created_at', 'is_active',
     ];

@@ -174,7 +174,7 @@ class EOYReportController extends Controller implements HasMiddleware
             }
 
             $mailData[$chDetails->name] = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );
 
@@ -404,7 +404,7 @@ class EOYReportController extends Controller implements HasMiddleware
             }
 
             $mailData[$chDetails->name] = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );
 
@@ -967,7 +967,7 @@ class EOYReportController extends Controller implements HasMiddleware
             }
 
             $mailData[$chDetails->name] = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );
 
@@ -1147,7 +1147,7 @@ class EOYReportController extends Controller implements HasMiddleware
             }
 
             $mailData = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );

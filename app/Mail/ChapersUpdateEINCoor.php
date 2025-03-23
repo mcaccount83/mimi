@@ -32,7 +32,7 @@ class ChapersUpdateEINCoor extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject("Chapter Name Change Notification | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
+            ->subject("Chapter Name Change Notification | {$this->mailData['chapterNameUpd']}, {$this->mailData['chapterState']}")
             ->markdown('emails.chapterupdate.eincoor');
     }
 }

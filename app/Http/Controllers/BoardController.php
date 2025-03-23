@@ -222,14 +222,14 @@ class BoardController extends Controller implements HasMiddleware
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $baseQueryPre = $this->baseBoardController->getChapterDetails($id);
-        $chDetailsPre = $baseQueryPre['chDetails'];
-        $pcDetailsPre = $baseQueryPre['pcDetails'];
-        $PresDetailsPre = $baseQueryPre['PresDetails'];
-        $AVPDetailsPre = $baseQueryPre['AVPDetails'];
-        $MVPDetailsPre = $baseQueryPre['MVPDetails'];
-        $TRSDetailsPre = $baseQueryPre['TRSDetails'];
-        $SECDetailsPre = $baseQueryPre['SECDetails'];
+        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $pcDetails = $baseQuery['pcDetails'];
+        $PresDetails = $baseQuery['PresDetails'];
+        $AVPDetails = $baseQuery['AVPDetails'];
+        $MVPDetails = $baseQuery['MVPDetails'];
+        $TRSDetails = $baseQuery['TRSDetails'];
+        $SECDetails = $baseQuery['SECDetails'];
 
         $input = $request->all();
         $webStatusPre = $input['ch_hid_webstatus'];
@@ -548,11 +548,10 @@ class BoardController extends Controller implements HasMiddleware
             $EINCordEmail = 'jackie.mchenry@momsclub.org';  // EIN Coor Email
 
             $mailDataPres = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
-                $this->baseMailDataController->getPresPreviousData($PresDetailsPre),
+                $this->baseMailDataController->getPresData($PresDetails),
                 $this->baseMailDataController->getPresUpdatedData($PresDetailsUpd),
-                $this->baseMailDataController->getChapterPreviousData($chDetailsPre, $pcDetailsPre),
                 $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
                 [
                     'ch_website_url' => $website,
@@ -605,60 +604,60 @@ class BoardController extends Controller implements HasMiddleware
                 $mailData = array_merge($mailData, $mailDataSec);
             }
 
-            if ($AVPDetailsPre !== null) {
-                $mailDataAvpp = ['avpfnamePre' => $AVPDetailsPre->first_name,
-                    'avplnamePre' => $AVPDetailsPre->last_name,
-                    'avpemailPre' => $AVPDetailsPre->email, ];
+            if ($AVPDetails !== null) {
+                $mailDataAvpp = ['avpfname' => $AVPDetails->first_name,
+                    'avplname' => $AVPDetails->last_name,
+                    'avpemail' => $AVPDetails->email, ];
                 $mailData = array_merge($mailData, $mailDataAvpp);
             } else {
-                $mailDataAvpp = ['avpfnamePre' => '',
-                    'avplnamePre' => '',
-                    'avpemailPre' => '', ];
+                $mailDataAvpp = ['avpfname' => '',
+                    'avplname' => '',
+                    'avpemail' => '', ];
                 $mailData = array_merge($mailData, $mailDataAvpp);
             }
-            if ($MVPDetailsPre !== null) {
-                $mailDataMvpp = ['mvpfnamePre' => $MVPDetailsPre->first_name,
-                    'mvplnamePre' => $MVPDetailsPre->last_name,
-                    'mvpemailPre' => $MVPDetailsPre->email, ];
+            if ($MVPDetails !== null) {
+                $mailDataMvpp = ['mvpfname' => $MVPDetails->first_name,
+                    'mvplname' => $MVPDetails->last_name,
+                    'mvpemail' => $MVPDetails->email, ];
                 $mailData = array_merge($mailData, $mailDataMvpp);
             } else {
-                $mailDataMvpp = ['mvpfnamePre' => '',
-                    'mvplnamePre' => '',
-                    'mvpemailPre' => '', ];
+                $mailDataMvpp = ['mvpfname' => '',
+                    'mvplname' => '',
+                    'mvpemail' => '', ];
                 $mailData = array_merge($mailData, $mailDataMvpp);
             }
-            if ($TRSDetailsPre !== null) {
-                $mailDatatresp = ['tresfnamePre' => $TRSDetailsPre->first_name,
-                    'treslnamePre' => $TRSDetailsPre->last_name,
-                    'tresemailPre' => $TRSDetailsPre->email, ];
+            if ($TRSDetails !== null) {
+                $mailDatatresp = ['tresfname' => $TRSDetails->first_name,
+                    'treslname' => $TRSDetails->last_name,
+                    'tresemail' => $TRSDetails->email, ];
                 $mailData = array_merge($mailData, $mailDatatresp);
             } else {
-                $mailDatatresp = ['tresfnamePre' => '',
-                    'treslnamePre' => '',
-                    'tresemailPre' => '', ];
+                $mailDatatresp = ['tresfname' => '',
+                    'treslname' => '',
+                    'tresemail' => '', ];
                 $mailData = array_merge($mailData, $mailDatatresp);
             }
-            if ($SECDetailsPre !== null) {
-                $mailDataSecp = ['secfnamePre' => $SECDetailsPre->first_name,
-                    'seclnamePre' => $SECDetailsPre->last_name,
-                    'secemailPre' => $SECDetailsPre->email, ];
+            if ($SECDetails !== null) {
+                $mailDataSecp = ['secfname' => $SECDetails->first_name,
+                    'seclname' => $SECDetails->last_name,
+                    'secemail' => $SECDetails->email, ];
                 $mailData = array_merge($mailData, $mailDataSecp);
             } else {
-                $mailDataSecp = ['secfnamePre' => '',
-                    'seclnamePre' => '',
-                    'secemailPre' => '', ];
+                $mailDataSecp = ['secfname' => '',
+                    'seclname' => '',
+                    'secemail' => '', ];
                 $mailData = array_merge($mailData, $mailDataSecp);
             }
 
-            if ($chDetailsUpd->name != $chDetailsPre->name || $PresDetailsUpd->bor_email != $PresDetailsPre->bor_email || $PresDetailsUpd->street_address != $PresDetailsPre->street_address || $PresDetailsUpd->city != $PresDetailsPre->city ||
-                    $PresDetailsUpd->state != $PresDetailsPre->state || $PresDetailsUpd->first_name != $PresDetailsPre->first_name || $PresDetailsUpd->last_name != $PresDetailsPre->last_name ||
-                    $PresDetailsUpd->zip != $PresDetailsPre->zip || $PresDetailsUpd->phone != $PresDetailsPre->phone || $chDetailsUpd->inquiries_contact != $chDetailsPre->inquiries_contact ||
-                    $chDetailsUpd->email != $chDetailsPre->email || $chDetailsUpd->po_box != $chDetailsPre->po_box || $chDetailsUpd->website_url != $chDetailsPre->website_url ||
-                    $chDetailsUpd->website_status != $chDetailsPre->website_status || $chDetailsUpd->egroup != $chDetailsPre->egroup ||
-                    $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
-                    $mailDataMvpp['mvpfnamePre'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplnamePre'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
-                    $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
-                    $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+            if ($chDetailsUpd->name != $chDetails->name || $PresDetailsUpd->bor_email != $PresDetails->bor_email || $PresDetailsUpd->street_address != $PresDetails->street_address || $PresDetailsUpd->city != $PresDetails->city ||
+                    $PresDetailsUpd->state != $PresDetails->state || $PresDetailsUpd->first_name != $PresDetails->first_name || $PresDetailsUpd->last_name != $PresDetails->last_name ||
+                    $PresDetailsUpd->zip != $PresDetails->zip || $PresDetailsUpd->phone != $PresDetails->phone || $chDetailsUpd->inquiries_contact != $chDetails->inquiries_contact ||
+                    $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
+                    $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup ||
+                    $mailDataAvpp['avpfname'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplname'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemail'] != $mailDataAvp['avpemailUpd'] ||
+                    $mailDataMvpp['mvpfname'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplname'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemail'] != $mailDataMvp['mvpemailUpd'] ||
+                    $mailDatatresp['tresfname'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslname'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemail'] != $mailDatatres['tresemailUpd'] ||
+                    $mailDataSecp['secfname'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclname'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
 
                 Mail::to($pcEmail)
                     ->queue(new ChaptersUpdatePrimaryCoorPresident($mailData));
@@ -667,9 +666,9 @@ class BoardController extends Controller implements HasMiddleware
             // //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
-            if ($PresDetailsUpd->email != $PresDetailsPre->email || $PresDetailsUpd->email != $PresDetailsPre->email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
-                        $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
-                        $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+            if ($PresDetailsUpd->email != $PresDetails->email || $PresDetailsUpd->email != $PresDetails->email || $mailDataAvpp['avpemail'] != $mailDataAvp['avpemailUpd'] ||
+                        $mailDataMvpp['mvpemail'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemail'] != $mailDatatres['tresemailUpd'] ||
+                        $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
 
                 Mail::to($to_email2)
                     ->queue(new ChapersUpdateListAdmin($mailData));
@@ -706,22 +705,22 @@ class BoardController extends Controller implements HasMiddleware
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $baseQueryPre = $this->baseBoardController->getChapterDetails($id);
-        $chDetailsPre = $baseQueryPre['chDetails'];
-        $pcDetailsPre = $baseQueryPre['pcDetails'];
-        $AVPDetailsPre = $baseQueryPre['AVPDetails'];
-        $MVPDetailsPre = $baseQueryPre['MVPDetails'];
-        $TRSDetailsPre = $baseQueryPre['TRSDetails'];
-        $SECDetailsPre = $baseQueryPre['SECDetails'];
+        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $pcDetails = $baseQuery['pcDetails'];
+        $AVPDetails = $baseQuery['AVPDetails'];
+        $MVPDetails = $baseQuery['MVPDetails'];
+        $TRSDetails = $baseQuery['TRSDetails'];
+        $SECDetails = $baseQuery['SECDetails'];
 
         if ($bdPositionid == 2) {
-            $borDetailsPre = $AVPDetailsPre;
+            $borDetails = $AVPDetails;
         } elseif ($bdPositionid == 3) {
-            $borDetailsPre = $MVPDetailsPre;
+            $borDetails = $MVPDetails;
         } elseif ($bdPositionid == 4) {
-            $borDetailsPre = $TRSDetailsPre;
+            $borDetails = $TRSDetails;
         } elseif ($bdPositionid == 5) {
-            $borDetailsPre = $SECDetailsPre;
+            $borDetails = $SECDetails;
         }
 
         $input = $request->all();
@@ -807,22 +806,21 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             $mailData = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetailsUpd, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
-                $this->baseMailDataController->getBoardPreviousData($borDetailsPre),
+                $this->baseMailDataController->getBoardData($borDetails),
                 $this->baseMailDataController->getBoardUpdatedData($borDetailsUpd),
-                $this->baseMailDataController->getChapterPreviousData($chDetailsPre, $pcDetailsPre),
                 $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
                 [
                     'ch_website_url' => $website,
                 ]
             );
 
-            if ($chDetailsUpd->name != $chDetailsPre->name || $borDetailsUpd->bor_email != $borDetailsPre->bor_email || $borDetailsUpd->street_address != $borDetailsPre->street_address || $borDetailsUpd->city != $borDetailsPre->city ||
-                    $borDetailsUpd->state != $borDetailsPre->state || $borDetailsUpd->first_name != $borDetailsPre->first_name || $borDetailsUpd->last_name != $borDetailsPre->last_name ||
-                    $borDetailsUpd->zip != $borDetailsPre->zip || $borDetailsUpd->phone != $borDetailsPre->phone || $chDetailsUpd->inquiries_contact != $chDetailsPre->inquiries_contact ||
-                    $chDetailsUpd->email != $chDetailsPre->email || $chDetailsUpd->po_box != $chDetailsPre->po_box || $chDetailsUpd->website_url != $chDetailsPre->website_url ||
-                    $chDetailsUpd->website_status != $chDetailsPre->website_status || $chDetailsUpd->egroup != $chDetailsPre->egroup) {
+            if ($chDetailsUpd->name != $chDetails->name || $borDetailsUpd->bor_email != $borDetails->bor_email || $borDetailsUpd->street_address != $borDetails->street_address || $borDetailsUpd->city != $borDetails->city ||
+                    $borDetailsUpd->state != $borDetails->state || $borDetailsUpd->first_name != $borDetails->first_name || $borDetailsUpd->last_name != $borDetails->last_name ||
+                    $borDetailsUpd->zip != $borDetails->zip || $borDetailsUpd->phone != $borDetails->phone || $chDetailsUpd->inquiries_contact != $chDetails->inquiries_contact ||
+                    $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
+                    $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup) {
 
                 Mail::to($pcEmail)
                     ->queue(new ChapersUpdatePrimaryCoorMember($mailData));
@@ -831,7 +829,7 @@ class BoardController extends Controller implements HasMiddleware
             // //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
-            if ($borDetailsUpd->email != $borDetailsPre->email) {
+            if ($borDetailsUpd->email != $borDetails->email) {
 
                 Mail::to($to_email2)
                     ->queue(new ChapersUpdateListAdmin($mailData));
@@ -1256,7 +1254,7 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             $mailData = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             );
 
             Mail::to($emailCC)
@@ -1365,7 +1363,7 @@ class BoardController extends Controller implements HasMiddleware
             $reviewerEmail = $baseQuery['reviewerEmail'];
 
             $mailData = array_merge(
-                $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );
@@ -1706,7 +1704,7 @@ class BoardController extends Controller implements HasMiddleware
     //         $reviewerEmail = $baseQuery['reviewerEmail'];
 
     //         $mailData = array_merge(
-    //             $this->baseMailDataController->getChapterBasicData($chDetails, $stateShortName),
+    //             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
     //             $this->baseMailDataController->getPCData($pcDetails),
     //             $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
     //         );

@@ -20,18 +20,18 @@ MIMI Database Administrator
                     <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Website Information</strong></center></td>
                 </tr>
                 </tr>
-                <tr style="{{$mailData['websiteURLPre'] != $mailData['websiteURLUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['chapterWebsiteURL'] != $mailData['websiteURLUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Website URL</td>
-                    <td>{{$mailData['websiteURLPre']}}</td>
+                    <td>{{$mailData['chapterWebsiteURL']}}</td>
                     <td>{{$mailData['websiteURLUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['websiteStatusPre'] != $mailData['websiteStatusUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['chapterWebsiteStatus'] != $mailData['websiteStatusUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Website Link Status</td>
-                    <td>@if($mailData['websiteStatusPre']==1)
+                    <td>@if($mailData['chapterWebsiteStatus']==1)
                             Linked
-                            @elseif($mailData['websiteStatusPre']==2)
+                            @elseif($mailData['chapterWebsiteStatus']==2)
                             Link Requested
-                            @elseif($mailData['websiteStatusPre']==3)
+                            @elseif($mailData['chapterWebsiteStatus']==3)
                             Do Not Link
                             @else
                             Not Linked
