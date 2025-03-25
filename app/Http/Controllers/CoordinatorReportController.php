@@ -35,11 +35,6 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
-    /* / Base Coordinator Controller / */
-    //  $this->baseCoordinatorController->getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
-    //  $this->baseCoordinatorController->getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
-    //  $this->baseCoordinatorController->getCoordinatorDetails($id)
-
     /**
      * View the Volunteer Utilization list
      */

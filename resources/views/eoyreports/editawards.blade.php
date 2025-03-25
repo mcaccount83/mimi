@@ -127,62 +127,64 @@
                         </thead>
                         <tbody>
                             @php
-                                $chapter_awards = null;
-                                if (isset($chFinancialReport['chapter_awards']) && !empty($chFinancialReport['chapter_awards'])) {
-                                    $chapter_awards = unserialize(base64_decode($chFinancialReport['chapter_awards']));
-                                    $ChapterAwardsRowCount = is_array($chapter_awards) && count($chapter_awards) > 0 ? count($chapter_awards) : 1;
-                                } else {
-                                    $ChapterAwardsRowCount = 1;
-                                    $chapter_awards = [[]]; // Initialize with an empty row
+                            $chapter_awards = null;
+                            if (isset($chFinancialReport['chapter_awards'])) {
+                                $blobData = base64_decode($chFinancialReport['chapter_awards']);
+                                $chapter_awards = unserialize($blobData);
+                                if ($chapter_awards === false) {
+                                    $chapter_awards = [];
                                 }
-                            @endphp
+                            }
+                            $ChapterAwardsRowCount = !empty($chapter_awards) ? count($chapter_awards) : 1;
+                        @endphp
 
-                            @for ($row = 0; $row < $ChapterAwardsRowCount; $row++)
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <select class="form-control" name="ChapterAwardsType{{ $row }}"
-                                            id="ChapterAwardsType{{ $row }}">
-                                            <option value="">Select an Award Type</option>
-                                            @foreach($allAwards as $award)
-                                                <option value="{{ $award->id }}"
-                                                    {{ isset($chapter_awards[$row]['awards_type']) &&
-                                                    $chapter_awards[$row]['awards_type'] == $award->id ? 'selected' : '' }}>
-                                                    {{ $award->award_type }} {{ $award->extra }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                        @for ($row = 0; $row < $ChapterAwardsRowCount; $row++)
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" name="ChapterAwardsType{{ $row }}"
+                                        id="ChapterAwardsType{{ $row }}">
+                                        <option value="">Select an Award Type</option>
+                                        @foreach($allAwards as $award)
+                                            <option value="{{ $award->id }}"
+                                                {{ isset($chapter_awards[$row]['awards_type']) &&
+                                                $chapter_awards[$row]['awards_type'] == $award->id ? 'selected' : '' }}>
+                                                {{ $award->award_type }} {{ $award->extra }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea class="form-control" rows="2" name="ChapterAwardsDesc{{ $row }}"
+                                            id="ChapterAwardsDesc{{ $row }}">{{ $chapter_awards[$row]['awards_desc'] ?? '' }}</textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group row">
+                                    <div class="col-12 row">
+                                        <div class="form-check" style="margin-right: 20px;">
+                                            <input class="form-check-input" type="radio"
+                                                   name="ChapterAwardsApproved{{ $row }}"
+                                                   value="1"
+                                                   {{ isset($chapter_awards[$row]['awards_approved']) &&
+                                                      $chapter_awards[$row]['awards_approved'] == true ? 'checked' : '' }}>
+                                            <label class="form-check-label">Yes</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio"
+                                                   name="ChapterAwardsApproved{{ $row }}"
+                                                   value="0"
+                                                   {{ isset($chapter_awards[$row]['awards_approved']) &&
+                                                      $chapter_awards[$row]['awards_approved'] == false ? 'checked' : '' }}>
+                                            <label class="form-check-label">No</label>
+                                        </div>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <textarea class="form-control" rows="2" name="ChapterAwardsDesc{{ $row }}"
-                                                id="ChapterAwardsDesc{{ $row }}">{{ $chapter_awards[$row]['awards_desc'] ?? '' }}</textarea>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio"
-                                               id="ChapterAwardsApprovedYes{{ $row }}"
-                                               name="ChapterAwardsApproved{{ $row }}"
-                                               value="1"
-                                               {{ isset($chapter_awards[$row]['awards_approved']) &&
-                                                  $chapter_awards[$row]['awards_approved'] == 1 ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="ChapterAwardsApprovedYes{{ $row }}">Yes</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio"
-                                               id="ChapterAwardsApprovedNo{{ $row }}"
-                                               name="ChapterAwardsApproved{{ $row }}"
-                                               value="0"
-                                               {{ isset($chapter_awards[$row]['awards_approved']) &&
-                                                  $chapter_awards[$row]['awards_approved'] == 0 ? 'checked' :
-                                                  (isset($chapter_awards[$row]) ? 'checked' : '') }}>
-                                        <label class="form-check-label" for="ChapterAwardsApprovedNo{{ $row }}">No</label>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endfor
+                                </div>
+                            </td>
+                        </tr>
+                        @endfor
                         </tbody>
                     </table>
 

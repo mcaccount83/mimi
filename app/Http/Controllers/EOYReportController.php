@@ -54,10 +54,6 @@ class EOYReportController extends Controller implements HasMiddleware
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
     // $displayEOY = getEOYDisplay();
 
-    /* / Base Chapter Controller / */
-    //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    //  $this->baseChapterController->getChapterDetails($chId)
-
     /**
      * View the EOY Report Title
      */

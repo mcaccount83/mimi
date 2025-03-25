@@ -9,13 +9,11 @@ use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
-use App\Models\ForumCategorySubscription;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 

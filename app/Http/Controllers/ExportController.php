@@ -39,16 +39,6 @@ class ExportController extends Controller implements HasMiddleware
     /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
-    /* / Base Chapter Controller / */
-    //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    //  $this->baseChapterController->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    //  $this->baseChapterController->getChapterDetails($chId)
-
-    /* / Base Coordinator Controller / */
-    //  $this->baseCoordinatorController->getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
-    //  $this->baseCoordinatorController->getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
-    //  $this->baseCoordinatorController->getCoordinatorDetails($id)
-
     /**
      * Export Chapter List
      */

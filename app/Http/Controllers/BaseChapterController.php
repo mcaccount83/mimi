@@ -28,18 +28,6 @@ class BaseChapterController extends Controller
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
     // $displayEOY = getEOYDisplay();
 
-    /* /User Controller/ */
-    // $this->userController->loadUserInformation($request);
-    // $this->userController->loadReportingTree($cdId);
-    // $this->userController->loadEmailDetails($chId);
-    // $this->userController->loadConferenceCoord($chPcId);
-    // $this->userController->loadPrimaryList($chRegId, $chConfId);
-
-    /* /Base Coditions Controller/ */
-    // $this->baseConditionsController->getConditions($cdId, $cdPositionid, $cdSecPositionid);
-    // $this->baseConditionsController->applyPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
-    // $this->baseConditionsController->applyInquiriesPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArrrr)
-
     /**
      * Apply checkbox filters to the query
      */
@@ -292,12 +280,8 @@ class BaseChapterController extends Controller
 
         // Load Conference Coordinators for Sending Email
         $emailCCData = $this->userController->loadConferenceCoord($chPcId);
+        $cc_id = $emailCCData['cc_id'];
         $emailCC = $emailCCData['cc_email'];
-        $cc_fname = $emailCCData['cc_fname'];
-        $cc_lname = $emailCCData['cc_lname'];
-        $cc_pos = $emailCCData['cc_pos'];
-        $cc_conf_name = $emailCCData['cc_conf_name'];
-        $cc_conf_desc = $emailCCData['cc_conf_desc'];
 
         // Load Primary Coordinator Inforamtion //
         $pcDetails = Coordinators::find($chPcId);
@@ -313,10 +297,9 @@ class BaseChapterController extends Controller
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList,
-            'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC,
+            'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList, 'emailCCData' => $emailCCData,
+            'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY,
-            'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_conf_desc' => $cc_conf_desc, 'cc_conf_name' => $cc_conf_name,
             'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
             'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
         ];

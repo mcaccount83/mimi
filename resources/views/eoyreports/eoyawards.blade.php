@@ -48,7 +48,7 @@
                         @if($chapter_awards != null)
 
                                 <tr>
-                                    <td class="text-center align-middle">
+                                    <td class="text-center">
                                         @if ($assistConferenceCoordinatorCondition)
                                             <a href="{{ url("/eoy/editawards/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                                         @endif

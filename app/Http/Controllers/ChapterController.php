@@ -82,18 +82,6 @@ class ChapterController extends Controller implements HasMiddleware
     /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
-    /* / Base Chapter Controller / */
-    //  $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    //  $this->baseChapterController->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    //  $this->baseChapterController->getActiveInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    //  $this->baseChapterController->getZappedInquiriesBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    //  $this->baseChapterController->getActiveInternationalBaseQuery($cdId)
-    //  $this->baseChapterController->getZappedBaseInternationalQuery($cdId)
-    //  $this->baseChapterController->getChapterDetails($chId)
-
-    /* / Forum Subscription Controller / */
-    //  $this->forumSubscriptionController->defaultCategories()
-
     /**
      * Display the Active chapter list mapped with login coordinator
      */

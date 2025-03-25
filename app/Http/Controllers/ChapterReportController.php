@@ -30,11 +30,6 @@ class ChapterReportController extends Controller implements HasMiddleware
         ];
     }
 
-    /* / Base Chapter Controller / */
-    //  $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-    //  $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //  $this->baseChapterController->getChapterDetails($chId);
-
     /**
      * Chpater Status Report
      */

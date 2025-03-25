@@ -16,12 +16,10 @@ use App\Models\Admin;
 use App\Models\Boards;
 use App\Models\Chapters;
 use App\Models\Documents;
-use App\Models\DisbandedChecklist;
 use App\Models\FinancialReport;
 use App\Models\incomingboard;
 use App\Models\Resources;
 use App\Models\User;
-use App\Models\Website;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -65,11 +63,6 @@ class BoardController extends Controller implements HasMiddleware
             \App\Http\Middleware\EnsureUserIsActiveAndBoard::class,
         ];
     }
-
-    /* / Base Board Controller / */
-    //  $this->baseBoardController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    //  $this->baseBoardController->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
-    //  $this->baseBoardController->getChapterDetails($chId)
 
     /**
      * Reset Password

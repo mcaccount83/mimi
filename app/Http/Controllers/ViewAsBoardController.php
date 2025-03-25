@@ -30,11 +30,6 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         ];
     }
 
-    /* /Custom Helpers/ */
-
-    /* / Board Controller / */
-    //  $this->boardController->getChapterDetails($id)
-
     /**
      * View the President Profile View
      */
@@ -166,7 +161,6 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
-        // $submitted = $baseQuery['submitted'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
         $allAwards = $baseQuery['allAwards'];
@@ -197,7 +191,6 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
-        // $submitted = $baseQuery['submitted'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
         $allAwards = $baseQuery['allAwards'];

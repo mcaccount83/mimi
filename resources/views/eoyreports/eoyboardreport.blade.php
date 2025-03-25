@@ -103,7 +103,7 @@
 				@if ($regionalCoordinatorCondition)
                     <a href="{{ route('eoyreports.eoyboardreportreminder') }}" onclick="return confirmSendReminder();">><button class="btn bg-gradient-primary"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Board Election Reminders</button></a>
 				    <button type="button" id="board-active" class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-play" ></i>&nbsp;&nbsp;&nbsp;Make Received Boards Active</button>
-				    <a href="{{ route('export.boardelection')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export UN-Activated Board List</button></a>
+				    {{-- <a href="{{ route('export.boardelection')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export UN-Activated Board List</button></a> --}}
 				@endif
              </div>
            </div>

@@ -87,7 +87,7 @@ class BaseMailDataController extends Controller
     {
         return [
             'ccEmail' => $emailCCData['cc_email'],
-            'ccName' => $emailCCData['cc_fname'].' '.['emailCCData->cc_lname'],
+            'ccName' => $emailCCData['cc_fname'].' '. $emailCCData['cc_lname'],
             'ccPosition' => $emailCCData['cc_pos'],
             'ccConfName' => $emailCCData['cc_conf_name'],
             'ccConfDescription' => $emailCCData['cc_conf_desc'],

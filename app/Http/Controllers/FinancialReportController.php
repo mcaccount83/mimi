@@ -62,8 +62,38 @@ class FinancialReportController extends Controller implements HasMiddleware
         ];
     }
 
+    /**
+     * Show EOY Financial Report All Board Members
+     */
+    public function editFinancialReport(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userName = $loggedInName = $user['user_name'];
+        $userEmail = $user['user_email'];
+        $chId = $user['user_chapterId'];
 
-        /**
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $chIsActive =  $baseQuery['chIsActive'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $awards = $baseQuery['awards'];
+        $allAwards = $baseQuery['allAwards'];
+
+        $resources = Resources::with('categoryName')->get();
+
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+            'awards' => $awards, 'allAwards' => $allAwards, 'chIsActive' => $chIsActive
+        ];
+
+        return view('boards.financial')->with($data);
+
+    }
+
+    /**
      * Save EOY Financial Report Accordion
      */
     public function saveAccordionFields($financialReport, $input)
@@ -280,6 +310,246 @@ class FinancialReportController extends Controller implements HasMiddleware
             $ChapterAwards[$i]['awards_approved'] = false;
         }
         $financialReport->chapter_awards = base64_encode(serialize($ChapterAwards));
+    }
+
+
+    /**
+     * Save EOY Financial Report All Board Members
+     */
+    public function updateFinancialReport(Request $request, $chapterId): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userName = $user['user_name'];
+        $userEmail = $user['user_email'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+
+        $input = $request->all();
+        $reportReceived = $input['submitted']?? null;
+
+        $financialReport = FinancialReport::find($chapterId);
+        $documents = Documents::find($chapterId);
+        $chapter = Chapters::find($chapterId);
+
+        if ($userType == 'disbanded') {
+            $disbandChecklist = DisbandedChecklist::find($chapterId);
+            $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
+                $disbandChecklist->destroy_manual == '1' && $disbandChecklist->remove_online == '1' &&
+                $disbandChecklist->file_irs == '1' && $disbandChecklist->file_financial == '1');
+        }
+        else {
+            $checklistComplete = null;
+        }
+
+        DB::beginTransaction();
+        try{
+            $this->saveAccordionFields($financialReport, $input);
+
+            if ($reportReceived == 1) {
+                $financialReport->completed_name = $userName;
+                $financialReport->completed_email = $userEmail;
+                $financialReport->submitted = $lastupdatedDate;
+                $financialReport->save();
+
+                $documents->financial_report_received = 1;
+                $documents->report_received = $lastupdatedDate;
+                $documents->save();
+            }
+
+            if ($reportReceived == 1 && $userType == 'disbanded') {
+                $documents->final_report_received = 1;
+                $documents->save();
+            }
+
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+
+            $chapter->save();
+
+            $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $chDocuments = $baseQuery['chDocuments'];
+            $chFinancialReport = $baseQuery['chFinancialReport'];
+            $emailListChap = $baseQuery['emailListChap'];
+            $emailListCoord = $baseQuery['emailListCoord'];
+            $pcDetails = $baseQuery['pcDetails'];
+            $emailCC = $baseQuery['emailCC'];
+            $cc_id = $baseQuery['cc_id'];
+            $reviewerEmail = $baseQuery['reviewerEmail'];
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getPCData($pcDetails),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+            );
+
+            if ($reportReceived == 1) {
+                $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
+
+                if ($userType != 'disbanded'){
+                    Mail::to($userEmail)
+                        ->cc($emailListChap)
+                        ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
+
+                    if ($chFinancialReport->reviewer_id == null) {
+                        DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
+                        Mail::to($emailCC)
+                            ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+                    }
+
+                    if ($chFinancialReport->reviewer_id != null) {
+                        Mail::to($reviewerEmail)
+                            ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+                    }
+                }
+
+                if ($userType == 'disbanded'){
+                    Mail::to($userEmail)
+                        ->cc($emailListChap)
+                        ->queue(new DisbandFinancialReportThankYou($mailData, $pdfPath));
+
+                    if ($chFinancialReport->reviewer_id == null) {
+                        DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
+                    }
+
+                    Mail::to($emailCC)
+                        ->queue(new DisbandFinalReportSubmit($mailData, $pdfPath));
+                }
+            }
+
+            if ($documents->final_report_received == '1' && $checklistComplete){
+                Mail::to($userEmail)
+                    ->cc($emailListChap)
+                    ->queue(new DisbandChecklistThankYou($mailData));
+
+                Mail::to($emailCC)
+                    ->queue(new DisbandChecklistComplete($mailData));
+            }
+
+            DB::commit();
+            if ($reportReceived == 1) {
+                return redirect()->back()->with('success', 'Report has been successfully Submitted');
+            } else {
+                return redirect()->back()->with('success', 'Report has been successfully updated');
+            }
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->back()->with('fail', 'Something went wrong Please try again.');
+        }
+    }
+
+
+
+
+
+
+    /**
+     * Save EOY Financial Report Active Board Members
+     */
+    // public function updateFinancialReport(Request $request, $chapterId): RedirectResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $userName = $user['user_name'];
+    //     $userEmail = $user['user_email'];
+    //     $lastUpdatedBy = $user['user_name'];
+    //     $lastupdatedDate = date('Y-m-d H:i:s');
+
+    //     $input = $request->all();
+    //     $reportReceived = $input['submitted']?? null;
+
+    //     $financialReport = FinancialReport::find($chapterId);
+    //     $documents = Documents::find($chapterId);
+    //     $chapter = Chapters::find($chapterId);
+
+    //     DB::beginTransaction();
+    //     try{
+    //         $this->saveAccordionFields($financialReport, $input);
+
+    //         if ($reportReceived == 1) {
+    //             $financialReport->completed_name = $userName;
+    //             $financialReport->completed_email = $userEmail;
+    //             $financialReport->submitted = $lastupdatedDate;
+    //         }
+
+    //         $financialReport->save();
+
+    //         if ($reportReceived == 1) {
+    //             $documents->financial_report_received = 1;
+    //             $documents->report_received = $lastupdatedDate;
+
+    //             $documents->save();
+    //         }
+
+    //         $chapter->last_updated_by = $lastUpdatedBy;
+    //         $chapter->last_updated_date = $lastupdatedDate;
+
+    //         $chapter->save();
+
+    //         $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
+    //         $chDetails = $baseQuery['chDetails'];
+    //         $stateShortName = $baseQuery['stateShortName'];
+    //         $chDocuments = $baseQuery['chDocuments'];
+    //         $chFinancialReport = $baseQuery['chFinancialReport'];
+    //         $emailListChap = $baseQuery['emailListChap'];
+    //         $emailListCoord = $baseQuery['emailListCoord'];
+    //         $pcDetails = $baseQuery['pcDetails'];
+    //         $emailCC = $baseQuery['emailCC'];
+    //         $cc_id = $baseQuery['cc_id'];
+    //         $reviewerEmail = $baseQuery['reviewerEmail'];
+
+    //         $mailData = array_merge(
+    //             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+    //             $this->baseMailDataController->getPCData($pcDetails),
+    //             $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+    //         );
+
+    //         if ($reportReceived == 1) {
+    //             $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
+    //             Mail::to($userEmail)
+    //                 ->cc($emailListChap)
+    //                 ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
+
+    //             if ($chFinancialReport->reviewer_id == null) {
+    //                 DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
+    //                 Mail::to($emailCC)
+    //                     ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+    //             }
+
+    //             if ($chFinancialReport->reviewer_id != null) {
+    //                 Mail::to($reviewerEmail)
+    //                     ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+    //             }
+    //         }
+
+    //         DB::commit();
+    //         if ($reportReceived == 1) {
+    //             return redirect()->back()->with('success', 'Report has been successfully Submitted');
+    //         } else {
+    //             return redirect()->back()->with('success', 'Report has been successfully updated');
+    //         }
+
+    //     } catch (\Exception $e) {
+    //         DB::rollback();  // Rollback Transaction
+    //         Log::error($e);  // Log the error
+
+    //         return redirect()->back()->with('fail', 'Something went wrong Please try again.');
+    //     }
+    // }
+
+    public function getRosterfile(): BinaryFileResponse
+    {
+        $filename = 'roster_template.xlsx';
+
+        $file_path = '/home/momsclub/public_html/mimi/storage/app/public';
+
+        return Response::download($file_path, $filename, [
+            'Content-Length: '.filesize($file_path),
+        ]);
     }
 
     /**

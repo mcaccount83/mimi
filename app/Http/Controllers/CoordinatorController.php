@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Mail\BigSisterWelcome;
 use App\Mail\CoordinatorRetireAdmin;
 use App\Models\Chapters;
-use App\Models\Conference;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\ForumCategorySubscription;
@@ -48,14 +47,6 @@ class CoordinatorController extends Controller implements HasMiddleware
             \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
         ];
     }
-
-    /* / Base Coordinator Controller / */
-    //  $this->baseCoordinatorController->getActiveBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
-    //  $this->baseCoordinatorController->getRetiredBaseQuery($userConfId, $userRegId, $userCdId, $userPositionid, $userSecPositionid)
-    //  $this->baseCoordinatorController->getCoordinatorDetails($id)
-
-    /* / Forum Subscription Controller / */
-    //  $this->forumSubscriptionController->defaultCategories()
 
     /**
      * Active Coordiantor List
@@ -1255,126 +1246,5 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
     }
-
-    /**
-    * Get Region List -- auto updates dropdown menu in top section of update role screen when conference changes.
-    */
-    // public function getRegionList($corConfId): JsonResponse
-    // {
-    //     $regionList = DB::table('region')
-    //         ->select('id', 'long_name')
-    //         ->where('conference_id', '=', $corConfId)
-    //         ->orderBy('long_name')
-    //         ->get();
-
-    //     $html = '<option value="">Select Region</option><option value="0">None</option>';
-    //     foreach ($regionList as $list) {
-    //         $html .= '<option value="'.$list->id.'">'.$list->long_name.'</option>';
-    //     }
-
-    //     return response()->json(['html' => $html]);
-
-    // }
-
-    /**
-     * Get Reporting List -- auto updates dropdown menu in top section of update role screen when region changes.
-     */
-    // public function getReportingList(): JsonResponse
-    // {
-    //     $conference_id = $_GET['conf_id'];
-    //     $position_id = $_GET['pos_id'];
-    //     $region_id = $_GET['reg_id'];
-
-    //     $reportCoordinatorList = DB::table('coordinators as cd')
-    //         ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-    //         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-    //         ->where('cd.conference_id', $conference_id)
-    //         ->where('cd.position_id', '>', $position_id)
-    //         ->where('cd.position_id', '>', 1)
-    //         ->where(function ($query) use ($region_id) {
-    //             $query->where('cd.region_id', $region_id)
-    //                 ->orWhereIn('cd.position_id', [6, 7]);
-    //         })
-    //         ->where('cd.is_active', 1)
-    //         ->orderBy('cd.position_id')
-    //         ->orderBy('cd.first_name')
-    //         ->orderBy('cd.last_name')
-    //         ->get();
-
-    //     $html = '<option value=""></option>';
-    //     foreach ($reportCoordinatorList as $list) {
-    //         $html .= '<option value="'.$list->cid.'">'.$list->cor_f_name.' '.$list->cor_l_name.' ('.$list->pos.')</option>';
-    //     }
-
-    //     return response()->json(['html' => $html]);
-    // }
-
-    /**
-     * Get Direct Report -- auto updates dropdown menu in bottom section of update role screen when region changes.
-     */
-    // public function getDirectReportingList(): JsonResponse
-    // {
-    //     $conference_id = $_GET['conf_id'];
-    //     $position_id = $_GET['pos_id'];
-    //     $region_id = $_GET['reg_id'];
-
-    //     $directReportTo = DB::table('coordinators as cd')
-    //         ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-    //         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-    //         ->where('cd.conference_id', $conference_id)
-    //         ->where('cd.position_id', '<', $position_id)
-    //         ->where(function ($query) use ($region_id) {
-    //             $query->where('cd.region_id', $region_id)
-    //                 ->orWhereIn('cd.position_id', [6, 7]);
-    //         })
-    //         ->where('cd.is_active', 1)
-    //         ->orderBy('cd.position_id')
-    //         ->orderBy('cd.first_name')
-    //         ->orderBy('cd.last_name')
-    //         ->get();
-
-    //     $html = '<option value=""></option>';
-    //     foreach ($directReportTo as $list) {
-    //         $html .= '<option value="'.$list->cid.'">'.$list->cor_f_name.' '.$list->cor_l_name.' ('.$list->pos.')</option>';
-    //     }
-
-    //     return response()->json(['html' => $html]);
-    // }
-
-    /**
-     * Get Primary Coordinator -- auto updates dropdown menu in bottom section of update role screen when region changes.
-     */
-    // public function getChapterPrimaryFor(): JsonResponse
-    // {
-    //     $conference_id = $_GET['conf_id'];
-    //     $position_id = $_GET['pos_id'];
-    //     $region_id = $_GET['reg_id'];
-
-    //     if ($region_id == 0) {
-    //         $primaryChapterList = DB::table('chapters')
-    //             ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state')
-    //             ->join('state as st', 'chapters.state_id', '=', 'st.id')
-    //             ->where('chapters.conference_id', '=', $conference_id)
-    //             ->where('chapters.is_active', '=', '1')
-    //             ->orderBy('st.state_short_name')
-    //             ->get();
-    //     } else {
-    //         $primaryChapterList = DB::table('chapters')
-    //             ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state')
-    //             ->join('state as st', 'chapters.state_id', '=', 'st.id')
-    //             ->where('chapters.region_id', '=', $region_id)
-    //             ->where('chapters.is_active', '=', '1')
-    //             ->orderBy('st.state_short_name')
-    //             ->orderBy('chapters.name')
-    //             ->get();
-    //     }
-
-    //     $html = '<option value=""></option>';
-    //     foreach ($primaryChapterList as $list) {
-    //         $html .= '<option value="'.$list->id.'">'.$list->state.' - '.$list->chapter_name.'</option>';
-    //     }
-
-    //     return response()->json(['html' => $html]);
-    // }
 
 }

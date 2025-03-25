@@ -20,10 +20,6 @@ class BaseBoardController extends Controller
     /* /Custom Helpers/ */
     // $displayEOY = getEOYDisplay();
 
-    /* /User Controller/ */
-    // $this->userController->loadEmailDetails($chId);
-    // $this->userController->loadConferenceCoord($chPcId);
-
     /* / Active Chapter Details Base Query / */
     public function getChapterDetails($id)
     {
@@ -32,20 +28,15 @@ class BaseBoardController extends Controller
         $chId = $chDetails->id;
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
-        $regionLongName = $chDetails->region->long_name;
-        $conferenceDescription = $chDetails->conference->conference_description;
         $chConfId = $chDetails->conference_id;
-        $chRegId = $chDetails->region_id;
         $chPcId = $chDetails->primary_coordinator_id;
         $startMonthName = $chDetails->startMonth->month_long_name;
-        $websiteLink = $chDetails->webLink->link_status ?? null;
 
         $allWebLinks = Website::all(); // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
         $chDocuments = $chDetails->documents;
-        $reviewComplete = $chDetails->documents->review_complete;
         $reviewerEmail = $chDetails->reportReviewer?->email;  // Could be null -- no reviewer assigned
         $chFinancialReport = $chDetails->financialReport;
         $displayEOY = getEOYDisplay();
@@ -74,9 +65,6 @@ class BaseBoardController extends Controller
         $pcDetails = Coordinators::find($chPcId);
         $pcEmail = $pcDetails->email;
         $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
-
-        // PC Email for Sending Email
-        // $pcEmail = $chDetails->primaryCoordinator->email;
 
         // Load Conference Coordinators for Sending Email
         $ccEmailData = $this->userController->loadConferenceCoord($chPcId);

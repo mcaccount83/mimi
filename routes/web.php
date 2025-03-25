@@ -272,8 +272,8 @@ Route::get('/board/member', [BoardController::class, 'editMember'])->name('board
 Route::post('/board/memberupdate/{id}', [BoardController::class, 'updateMember'])->name('board.updatemember');
 Route::get('/board/boardreport', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
 Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
-Route::get('/board/financialreport', [BoardController::class, 'editFinancialReport'])->name('board.editfinancialreport');
-Route::post('/board/financialreportupdate/{id}', [BoardController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
+Route::get('/board/financialreport', [FinancialReportController::class, 'editFinancialReport'])->name('board.editfinancialreport');
+Route::post('/board/financialreportupdate/{id}', [FinancialReportController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
 Route::get('/board/reregpayment', [BoardController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
 Route::get('/board/m2mdonation', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
 Route::get('/board/resources', [BoardController::class, 'viewResources'])->name('board.viewresources');

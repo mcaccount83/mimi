@@ -10,7 +10,6 @@ use App\Mail\ProbationReleaseLetter;
 use App\Mail\WarningPartyLetter;
 use App\Models\Documents;
 use App\Models\GoogleDrive;
-use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -111,15 +110,9 @@ class PDFController extends Controller
      */
     public function saveFinalFinancialReport(Request $request, $chapterId)
     {
-        $user = $this->userController->loadUserInformation($request);
-        $userId = $user['userId'];
-
         $googleDrive = GoogleDrive::first();
         $finalFinancialDrive = $googleDrive->final_financial_report;
         $sharedDriveId = $finalFinancialDrive;  // Shared Drive -> EOY Uploads
-
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
-
 
         $result = $this->generateFinancialReport($chapterId);
         $pdf = $result['pdf'];
@@ -309,21 +302,21 @@ class PDFController extends Controller
         $PresDetails = $baseQuery['PresDetails'];
         $emailCCData = $baseQuery['emailCCData'];
 
-        $ccName = $baseQuery['cc_fname'].' '.$baseQuery['cc_lname'];
-        $ccPosition = $baseQuery['cc_pos'];
-        $ccConfName = $baseQuery['cc_conf_name'];
-        $ccConfDescription = $baseQuery['cc_conf_desc'];
+        // $ccName = $baseQuery['cc_fname'].' '.$baseQuery['cc_lname'];
+        // $ccPosition = $baseQuery['cc_pos'];
+        // $ccConfName = $baseQuery['cc_conf_name'];
+        // $ccConfDescription = $baseQuery['cc_conf_desc'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
             $this->baseMailDataController->getCCData($emailCCData),
-            [
-                'ccName' => $ccName,
-                'ccPosition' => $ccPosition,
-                'ccConfName' => $ccConfName,
-                'ccConfDescription' => $ccConfDescription,
-            ],
+            // [
+            //     'ccName' => $ccName,
+            //     'ccPosition' => $ccPosition,
+            //     'ccConfName' => $ccConfName,
+            //     'ccConfDescription' => $ccConfDescription,
+            // ],
         );
 
         $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
@@ -574,25 +567,6 @@ class PDFController extends Controller
                 }
                 Documents::create($newDocData);
             }
-
-            // $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
-            // $chDetails = $baseQuery['chDetails'];
-            // $chDocuments = $baseQuery['chDocuments'];
-            // $stateShortName = $baseQuery['stateShortName'];
-
-            // if ($letterType === 'probation_release') {
-            //     $chDocuments->probation_release_path = $pdfFileId;
-            // } else {
-            //     $chDocuments->probation_path = $pdfFileId;
-            // }
-
-            // $chDocuments->save();
-
-            // $emailListChap = $baseQuery['emailListChap'];
-            // $emailListCoord = $baseQuery['emailListCoord'];
-
-            // //  Load User Information for Signing Email & PDFs
-            // $user = $this->userController->loadUserInformation($request);
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),

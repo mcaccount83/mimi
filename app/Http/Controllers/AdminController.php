@@ -18,7 +18,6 @@ use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
 use App\Models\IncomingBoard;
-use App\Models\Month;
 use App\Models\BoardsOutgoing;
 use App\Models\Resources;
 use App\Models\User;
@@ -821,20 +820,6 @@ class AdminController extends Controller implements HasMiddleware
                 'award_path' => null,
             ]);
 
-            // Get board details where board members are active and insert into outgoing_boards
-            // $boardDetails = Boards::get();
-            // foreach ($boardDetails as $boardDetail) {
-            //     BoardsOutgoing::create([
-            //         // 'board_id' => $boardDetail->id,
-            //         'user_id' => $boardDetail->user_id,
-            //         'chapter_id' => $boardDetail->chapter_id,
-            //         'board_position_id' => $boardDetail->board_position_id,
-            //         'first_name' => $boardDetail->first_name,
-            //         'last_name' => $boardDetail->last_name,
-            //         'email' => $boardDetail->email,
-            //     ]);
-            // }
-
             // Change Year for Google Drive Financial Report Attachmnets
             DB::table('google_drive')->update([
                 'eoy_uploads_year' => $nextYear,
@@ -921,20 +906,6 @@ class AdminController extends Controller implements HasMiddleware
                 'statement_2_path' => null,
                 'award_path' => null,
             ]);
-
-            // Get board details where board members are active and insert into outgoing_boards
-            // $boardDetails = Boards::get();
-            // foreach ($boardDetails as $boardDetail) {
-            //     BoardsOutgoing::create([
-            //         // 'board_id' => $boardDetail->id,
-            //         'user_id' => $boardDetail->user_id,
-            //         'chapter_id' => $boardDetail->chapter_id,
-            //         'board_position_id' => $boardDetail->board_position_id,
-            //         'first_name' => $boardDetail->first_name,
-            //         'last_name' => $boardDetail->last_name,
-            //         'email' => $boardDetail->email,
-            //     ]);
-            // }
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
