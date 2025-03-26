@@ -1,29 +1,36 @@
-@extends('layouts.chapter_theme')
+@extends('layouts.board_theme')
 
 @section('content')
 
-<div class="container">
+<div class="container" id="test">
+    <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="card card-user">
-                    <div class="card-image color_header">
-                    </div>
-                    <div class="card-body">
-                        <div class="author">
-                                <div class="border-gray avatar">
-                                    <img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC">
-                                </div>
-                               <h2 class="moms-c"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h2>
+         <!-- Widget: user widget style 1 -->
+         <div class="card card-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-primary">
+                <div class="widget-user-image">
+                    <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" style="width: 115px; height: 115px;">
+                  </div>
                         </div>
-                        <div class="col-md-12"><center><h4>Thank you for donating to the Mother-to-Mother Fund!</h4></center></div>
-                        </div>
+                        <div class="card-body">
 
-                    <div class="card-body">
-                        <div class="col-md-12"><strong>Mother-to-Mother Fund Information</strong></div>
-                        <div class="col-md-12">The Mother-To-Mother Fund is our ONLY official MOMS Club charity and is supported only by donations from the local chapters.
-                            Because of donations from chapters and volunteers in the past, we have been able to offer grants for emergency expenses to our MOMS Club mothers
-                            suffering from devastating financial and natural disasters.</div>
+
+                            <div class="col-md-12"><br><br></div>
+                        <h2 class="text-center"> MOMS Club of {{ $chDetails->name }}, {{ $stateShortName }} </h2>
+                        <h4 class="text-center"> Mother-to-Mother Fund & Sustaining Chapter Donations</h4>
+
+
+                    </div>
+                    <div class="col-md-12">
+                        The Mother-To-Mother Fund is our ONLY official MOMS Club charity and is supported only by donations from the local chapters.
+                        Because of donations from chapters and volunteers in the past, we have been able to offer grants for emergency expenses to our MOMS Club mothers
+                        suffering from devastating financial and natural disasters.</div>
+
                         <div class="col-md-12"><br></div>
+                    </div>
+                </div>
 
 
 {{-- Start of Payment Form --}}
@@ -49,15 +56,19 @@
                         <?php
                         ?>
                         <div class="form-group row">
-                            <div class="col-md-4">
-                                <label>Mother-to-Mother Fund Donation</label>
-                                <input type="text" name="donation" id="donation" class="form-control" value="$0.00" oninput="formatCurrency(this)">
+                            <div class="col-md-6">
+                                <label>Optional Sustaining Chapter Donation</label>
+                                <input type="text" name="sustaining" id="sustaining" class="form-control" value="$0.00" oninput="formatCurrency(this)">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
+                                <label>Mother-to-Mother Fund Donation</label>
+                                <input type="text" name="m2m" id="m2m" class="form-control" value="$0.00" oninput="formatCurrency(this)">
+                            </div>
+                            <div class="col-md-6">
                                 <label>Online Processing Fee</label>
                                 <input type="text" name="fee" id="fee" class="form-control" value="$5.00" readonly>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label>Total Due</label>
                                 <input type="text" name="total" id="total" class="form-control" readonly>
                             </div>
@@ -166,20 +177,40 @@
 @section('customscript')
 
 <script>
-    document.querySelector('form').addEventListener('submit', function(){
-        document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
-    });
+    /* Disable fields and buttons  */
+    $(document).ready(function () {
+            var userType = @json($userType);
 
-    function formatCurrency(input) {
-        let value = input.value.replace(/\D/g, '');
-        value = (value / 100).toFixed(2);
-        input.value = '$' + value;
-    }
+        if (userType === 'coordinator') {
+            // Disable all input fields, select elements, textareas, and buttons
+            $('button').not('#btn-back').prop('disabled', true);
+            $('input, select, textarea').prop('disabled', true);
+        }
 
+        });
+
+        document.querySelector('form').addEventListener('submit', function(){
+            document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
+        });
+
+        function formatCurrency(input) {
+            let value = input.value.replace(/\D/g, '');
+            value = (value / 100).toFixed(2);
+            input.value = '$' + value;
+        }
 
     // Function to calculate total due
     function calculateTotal() {
-        var donationInput = document.getElementById('donation');
+        var sustainingInput = document.getElementById('sustaining');
+        var sustainingValue = sustainingInput.value.trim();
+        var sustainingFee = parseFloat(sustainingValue.replace('$', ''));
+
+        // Check if sustaining fee is a valid number
+        if (isNaN(sustainingFee)) {
+            sustainingFee = 0; // Set to 0 if input is not a valid number
+        }
+
+        var donationInput = document.getElementById('m2m');
         var donationValue = donationInput.value.trim();
         var donationFee = parseFloat(donationValue.replace('$', ''));
 
@@ -188,16 +219,27 @@
             donationFee = 0; // Set to 0 if input is not a valid number
         }
 
-        var fee = parseFloat(document.getElementById('fee').value.replace('$', ''));
-        var total = donationFee + fee;
+        var feeInput = document.getElementById('fee');
+        var feeValue = feeInput.value.trim();
+        var fee = parseFloat(feeValue.replace('$', ''));
+
+        // Check if fee is a valid number
+        if (isNaN(fee)) {
+            fee = 0; // Set to 0 if input is not a valid number
+        }
+
+        var total = sustainingFee + donationFee + fee;
 
         document.getElementById('total').value = '$' + total.toFixed(2);
     }
 
-    // Call calculateTotal function when the donation donation input changes
-    document.getElementById('donation').addEventListener('input', calculateTotal);
-    // Call calculateTotal function initially to calculate total based on default values
-    calculateTotal();
+// Add event listeners to all input fields that affect the calculation
+document.getElementById('sustaining').addEventListener('input', calculateTotal);
+document.getElementById('m2m').addEventListener('input', calculateTotal);
+document.getElementById('fee').addEventListener('input', calculateTotal);
+
+// Call calculateTotal function initially to calculate total based on default values
+document.addEventListener('DOMContentLoaded', calculateTotal);
 
     // Additional email validation
     document.getElementById('email').addEventListener('blur', function() {

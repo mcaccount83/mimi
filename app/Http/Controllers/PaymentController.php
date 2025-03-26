@@ -86,8 +86,9 @@ class PaymentController extends Controller implements HasMiddleware
             }
 
             // Update Record and Send Chepter email
-            if ($donation) {
-                $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+
+            $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+            if ($donation && $sustaining > 0) {
                 $existingRecord->sustaining_donation = $sustaining;
                 $existingRecord->sustaining_date = Carbon::today();
                 $existingRecord->save();
@@ -97,6 +98,18 @@ class PaymentController extends Controller implements HasMiddleware
                     'chapterState' => $chapterState,
                     'chapterTotal' => $sustaining,
                 ];
+
+            // if ($donation) {
+            //     $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+            //     $existingRecord->sustaining_donation = $sustaining;
+            //     $existingRecord->sustaining_date = Carbon::today();
+            //     $existingRecord->save();
+
+            //     $mailData = [
+            //         'chapterName' => $chapterDetails->name,
+            //         'chapterState' => $chapterState,
+            //         'chapterTotal' => $sustaining,
+            //     ];
 
                 Mail::to($emailListChap)
                     ->cc($pcEmail)
@@ -210,7 +223,7 @@ class PaymentController extends Controller implements HasMiddleware
                 'pres_city' => $presDetails->city,
                 'pres_state' => $presDetails->state,
                 'pres_zip' => $presDetails->zip,
-                'donation' => $request->input('sustaining'),
+                'sustaining' => $request->input('sustaining'),
                 'm2m' => $request->input('m2m'),
                 'processing' => $request->input('fee'),
                 'totalPaid' => $request->input('total'),
