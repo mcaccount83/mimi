@@ -20,6 +20,7 @@ use App\Models\DisbandedChecklist;
 use App\Models\FinancialReport;
 use App\Models\incomingboard;
 use App\Models\Resources;
+use App\Models\ResourceCategory;
 use App\Models\User;
 use App\Models\Website;
 use Illuminate\Http\JsonResponse;
@@ -83,10 +84,11 @@ class FinancialReportController extends Controller implements HasMiddleware
         $allAwards = $baseQuery['allAwards'];
 
         $resources = Resources::with('resourceCategory')->get();
+        $resourceCategories = ResourceCategory::all();
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'awards' => $awards, 'allAwards' => $allAwards, 'chIsActive' => $chIsActive
+            'awards' => $awards, 'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
         ];
 
         return view('boards.financial')->with($data);

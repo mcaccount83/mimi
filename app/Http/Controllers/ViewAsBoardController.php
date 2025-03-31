@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resources;
+use App\Models\ResourceCategory;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -166,10 +167,11 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         $allAwards = $baseQuery['allAwards'];
 
         $resources = Resources::with('resourceCategory')->get();
+        $resourceCategories = ResourceCategory::all();
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'allAwards' => $allAwards, 'chIsActive' => $chIsActive
+            'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
         ];
 
         return view('boards.financial')->with($data);
@@ -198,10 +200,11 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         $chDisbanded = $baseQuery['chDisbanded'];
 
         $resources = Resources::with('resourceCategory')->get();
+        $resourceCategories = ResourceCategory::all();
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'allAwards' => $allAwards, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive
+            'allAwards' => $allAwards, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
         ];
 
         return view('boards.disband')->with($data);
