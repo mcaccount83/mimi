@@ -1,7 +1,7 @@
 @component('mail::message')
 # MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
 
-Your chapter's annual re-registration payment for {{$mailData['chapterMembers']}} members was received on {{$mailData['chapterDate']}} and has been applied to your account.<br>
+Your chapter's annual re-registration payment for <b>{{$mailData['reregMembers']}} members</b> was received on <b>{{$mailData['reregPaid']}}</b> and has been applied to your account.<br>
 <br>
 Thank you for sending it in!<br>
 <br>

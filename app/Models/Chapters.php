@@ -99,6 +99,11 @@ class Chapters extends Model
         return $this->hasOne(Documents::class, 'chapter_id', 'id');  // 'chapter_id' in documents HasOne 'id' in chapters
     }
 
+    public function payments(): HasOne
+    {
+        return $this->hasOne(Payments::class, 'chapter_id', 'id');  // 'chapter_id' in documents HasOne 'id' in chapters
+    }
+
     public function state(): BelongsTo
     {
         return $this->belongsTo(State::class, 'state_id', 'id');  // 'state' in chapters BelongsTo 'id' in state

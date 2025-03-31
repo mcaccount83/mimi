@@ -40,22 +40,22 @@
                   <ul class="list-group list-group-unbordered mb-3">
                       <li class="list-group-item">
                           <b>Re-Registration Dues:</b><span class="float-right">
-                              @if ($chDetails->members_paid_for)
-                                  <b>{{ $chDetails->members_paid_for }} Members</b> on <b><span class="date-mask">{{ $chDetails->dues_last_paid }}</span></b>
+                              @if ($chPayments->rereg_members	)
+                                  <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
                               @else
                                   No Payment Recorded
                               @endif
                           </span><br>
                           <b>M2M Donation:</b><span class="float-right">
-                              @if ($chDetails->m2m_payment)
-                                  <b>${{ $chDetails->m2m_payment }}</b> on <b><span class="date-mask">{{ $chDetails->m2m_date }}</span></b>
+                              @if ($chPayments->m2m_donation)
+                                  <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
                               @else
                                   No Donation Recorded
                               @endif
                           </span><br>
                           <b>Sustaining Chapter Donation: </b><span class="float-right">
-                              @if ($chDetails->sustaining_donation)
-                                  <b>${{ $chDetails->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chDetails->sustaining_date }}</span></b>
+                              @if ($chPayments->sustaining_donation)
+                                  <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
                               @else
                                   No Donation Recorded
                               @endif
@@ -110,7 +110,7 @@
                             <div class="form-group row mb-1">
                                 <label class="col-sm-2 col-form-label">Re-Registration Notes:</label>
                                 <div class="col-sm-8">
-                                  <input type="text" name="ch_regnotes" id="ch_regnotes" class="form-control"  value="{{ $chDetails->reg_notes}}" >
+                                  <input type="text" name="ch_regnotes" id="ch_regnotes" class="form-control"  value="{{ $chPayments->rereg_notes}}" >
                                 </div>
                             </div>
                             <div class="form-group row ">

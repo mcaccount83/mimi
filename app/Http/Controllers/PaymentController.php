@@ -8,6 +8,7 @@ use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
+use App\Models\Payments;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,11 +27,13 @@ class PaymentController extends Controller implements HasMiddleware
 
     protected $baseBoardController;
 
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController)
-    {
+    protected $baseMailDataController;
 
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController)
+    {
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
+        $this->baseMailDataController = $baseMailDataController;
     }
 
     public static function middleware(): array
@@ -51,94 +54,64 @@ class PaymentController extends Controller implements HasMiddleware
             return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
         }
 
+        $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+        $chDetails = $baseQuery['chDetails'];
+        $chId = $chDetails->id;
+        $stateShortName = $baseQuery['stateShortName'];
+        $PresDetails = $baseQuery['PresDetails'];
+
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailCC = $baseQuery['emailCC'];
+        $pcEmail = $baseQuery['pcEmail'];
+        $AdminEmail = 'dragonmom@msn.com';
+
+        $input = $request->all();
+
+        $payment = $request->input('rereg');
+        $rereg = (float) preg_replace('/[^\d.]/', '', $request->input('rereg'));
+        $paymentDate = Carbon::today();
+        $invoice = $paymentResponse['data']['invoiceNumber'];
+        $donation = $request->input('sustaining');
+        $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+
+        $chapter = Chapters::find($chId);
+        $payments = Payments::find($chId);
+
+        DB::beginTransaction();
         try {
-            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-            $chapterDetails = $baseQuery['chDetails'];
-            $chapterState = $baseQuery['stateShortName'];
-            $presDetails = $baseQuery['PresDetails'];
-            $emailListChap = $baseQuery['emailListChap'];
-            $emailCC = $baseQuery['emailCC'];
-            $pcEmail = $baseQuery['pcEmail'];
-            $AdminEmail = 'dragonmom@msn.com';
+            $chapter->next_renewal_year = $chapter->next_renewal_year + 1;
+            $chapter->save();
 
-            $rereg = $request->input('rereg');
-            $donation = $request->input('sustaining');
+            $payments->rereg_members = $request->input('members');
+            $payments->rereg_payment = $rereg;
+            $payments->rereg_date = $paymentDate;
+            $payments->rereg_invoice = $invoice;
+            $payments->save();
 
-            // Update chapter record
-            $existingRecord = Chapters::where('id', $chapterDetails->id)->first();
-            $existingRecord->members_paid_for = $request->input('members');
-            $existingRecord->next_renewal_year = $chapterDetails->next_renewal_year + 1;
-            $existingRecord->dues_last_paid = Carbon::today();
-            $existingRecord->save();
-
-            // Send Chepter email
-            if ($rereg) {
-                $mailData = [
-                    'chapterName' => $chapterDetails->name,
-                    'chapterState' => $chapterState,
-                    'chapterMembers' => $request->input('members'),
-                    'chapterDate' => Carbon::today()->format('m-d-Y'),
-                ];
-
-                Mail::to($emailListChap)
-                    ->cc($pcEmail)
-                    ->queue(new PaymentsReRegChapterThankYou($mailData));
+            if ($donation && $sustaining > 0) {
+                $payments->sustaining_donation = $sustaining;
+                $payments->sustaining_date = $paymentDate;
+                $payments->save();
             }
 
-            // Update Record and Send Chepter email
+            $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+            $chPayments = $baseQueryUpd['chPayments'];
 
-            $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getPresData($PresDetails),
+                $this->baseMailDataController->getPaymentData($chPayments, $input),
+            );
+
+            Mail::to($emailListChap)
+                ->cc($pcEmail)
+                ->queue(new PaymentsReRegChapterThankYou($mailData));
+
             if ($donation && $sustaining > 0) {
-                $existingRecord->sustaining_donation = $sustaining;
-                $existingRecord->sustaining_date = Carbon::today();
-                $existingRecord->save();
-
-                $mailData = [
-                    'chapterName' => $chapterDetails->name,
-                    'chapterState' => $chapterState,
-                    'chapterTotal' => $sustaining,
-                ];
-
-            // if ($donation) {
-            //     $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
-            //     $existingRecord->sustaining_donation = $sustaining;
-            //     $existingRecord->sustaining_date = Carbon::today();
-            //     $existingRecord->save();
-
-            //     $mailData = [
-            //         'chapterName' => $chapterDetails->name,
-            //         'chapterState' => $chapterState,
-            //         'chapterTotal' => $sustaining,
-            //     ];
-
                 Mail::to($emailListChap)
                     ->cc($pcEmail)
                     ->queue(new PaymentsSustainingChapterThankYou($mailData));
             }
-
-            // Send Admin email
-            $mailData = [
-                'chapterName' => $chapterDetails->name,
-                'chapterState' => $chapterState,
-                'pres_fname' => $presDetails->first_name,
-                'pres_lname' => $presDetails->last_name,
-                'pres_street' => $presDetails->street_address,
-                'pres_city' => $presDetails->city,
-                'pres_state' => $presDetails->state,
-                'pres_zip' => $presDetails->zip,
-                'members' => $request->input('members'),
-                'late' => $request->input('late'),
-                'sustaining' => $request->input('sustaining'),
-                'reregTotal' => $request->input('rereg'),
-                'processing' => $request->input('fee'),
-                'totalPaid' => $request->input('total'),
-                'fname' => $request->input('first_name'),
-                'lname' => $request->input('last_name'),
-                'email' => $request->input('email'),
-                'chapterId' => $chapterDetails->id,
-                'invoice' => $paymentResponse['data']['invoiceNumber'],
-                'datePaid' => Carbon::today()->format('m-d-Y'),
-            ];
 
             Mail::to([$emailCC, $AdminEmail])
                 ->queue(new PaymentsReRegOnline($mailData));
@@ -162,87 +135,82 @@ class PaymentController extends Controller implements HasMiddleware
     {
         $paymentResponse = $this->processPayment($request);
 
-        if ($paymentResponse['success']) {
-            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-            $chapterDetails = $baseQuery['chDetails'];
-            $chapterState = $baseQuery['stateShortName'];
-            $presDetails = $baseQuery['PresDetails'];
-            $emailListChap = $baseQuery['emailListChap'];
-            $emailCC = $baseQuery['emailCC'];
-            $pcEmail = $baseQuery['pcEmail'];
-            $AdminEmail = 'dragonmom@msn.com';
+        if (! $paymentResponse['success']) {
+            return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
+        }
 
-            $sustaining = $request->input('donation');
-            $m2m = $request->input('m2mdonation');
+        $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+        $chDetails = $baseQuery['chDetails'];
+        $chId = $chDetails->id;
+        $stateShortName = $baseQuery['stateShortName'];
+        $PresDetails = $baseQuery['PresDetails'];
 
-            // Get chapter record
-            $existingRecord = Chapters::where('id', $chapterDetails->id)->first();
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailCC = $baseQuery['emailCC'];
+        $pcEmail = $baseQuery['pcEmail'];
+        $AdminEmail = 'dragonmom@msn.com';
 
-            // Save Chapter and Send Chepter email
-            if ($sustaining) {
-                $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
-                $existingRecord->sustaining_donation = $sustaining;
-                $existingRecord->sustaining_date = Carbon::today();
-                $existingRecord->save();
+        $input = $request->all();
 
-                $mailData = [
-                    'chapterName' => $chapterDetails->name,
-                    'chapterState' => $chapterState,
-                    'chapterTotal' => $sustaining,
-                ];
+        $m2mDonation = $request->input('m2mdonation');
+        $m2m = (float) preg_replace('/[^\d.]/', '', $request->input('m2mdonation'));
+        $sustainingDonation = $request->input('sustaining');
+        $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+        $paymentDate = Carbon::today();
+        $invoice = $paymentResponse['data']['invoiceNumber'];
 
-                Mail::to($emailListChap)
-                    ->cc($pcEmail)
-                    ->queue(new PaymentsSustainingChapterThankYou($mailData));
+        $chapter = Chapters::find($chId);
+        $payments = Payments::find($chId);
+
+        DB::beginTransaction();
+        try {
+            if ($m2mDonation && $m2m > 0) {
+                $payments->m2m_donation = $m2m;
+                $payments->m2m_date = $paymentDate;
+                $payments->save();
             }
 
-            if ($m2m) {
-                $donation = (float) preg_replace('/[^\d.]/', '', $request->input('donation'));
-                $existingRecord->m2m_payment = $donation;
-                $existingRecord->m2m_date = Carbon::today();
-                $existingRecord->save();
+            if ($sustainingDonation && $sustaining > 0) {
+                $payments->sustaining_donation = $sustaining;
+                $payments->sustaining_date = $paymentDate;
+                $payments->save();
+            }
 
-                $mailData = [
-                    'chapterName' => $chapterDetails->name,
-                    'chapterState' => $chapterState,
-                    'chapterAmount' => $donation,
-                ];
+            $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+            $chPayments = $baseQueryUpd['chPayments'];
 
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getPresData($PresDetails),
+                $this->baseMailDataController->getPaymentData($chPayments, $input),
+            );
+
+            if ($m2mDonation && $m2m > 0) {
                 Mail::to($emailListChap)
                     ->cc($pcEmail)
                     ->queue(new PaymentsM2MChapterThankYou($mailData));
             }
 
-            // Send Admin email
-            $mailData = [
-                'chapterName' => $chapterDetails->name,
-                'chapterState' => $chapterState,
-                'pres_fname' => $presDetails->first_name,
-                'pres_lname' => $presDetails->last_name,
-                'pres_street' => $presDetails->street_address,
-                'pres_city' => $presDetails->city,
-                'pres_state' => $presDetails->state,
-                'pres_zip' => $presDetails->zip,
-                'sustaining' => $request->input('sustaining'),
-                'm2m' => $request->input('m2m'),
-                'processing' => $request->input('fee'),
-                'totalPaid' => $request->input('total'),
-                'fname' => $request->input('first_name'),
-                'lname' => $request->input('last_name'),
-                'email' => $request->input('email'),
-                'chapterId' => $chapterDetails->id,
-                'invoice' => $paymentResponse['data']['invoiceNumber'],
-                'datePaid' => Carbon::today()->format('m-d-Y'),
-            ];
+            if ($sustainingDonation && $sustaining > 0) {
+                Mail::to($emailListChap)
+                    ->cc($pcEmail)
+                    ->queue(new PaymentsSustainingChapterThankYou($mailData));
+            }
 
             Mail::to([$emailCC, $AdminEmail])
                 ->queue(new PaymentsM2MOnline($mailData));
 
-            return redirect()->to('/home')->with('success', 'Donation was successfully processed and profile has been updated!');
-        }
+            DB::commit();
+
+            return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
 
         return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
     }
+}
 
     /**
      * Process payments with Authorize.net
@@ -268,8 +236,8 @@ class PaymentController extends Controller implements HasMiddleware
         $rereg = $request->input('rereg');
         $donation = $request->input('sustaining');
         $sustaining = (float) preg_replace('/[^\d.]/', '', $donation);
-        // $m2mdonation = $request->input('m2m');
-        // $m2m = (float) preg_replace('/[^\d.]/', '', $m2mdonation);
+        $m2mdonation = $request->input('m2m');
+        $m2m = (float) preg_replace('/[^\d.]/', '', $m2mdonation);
         $fee = $request->input('fee');
         $cardNumber = $request->input('card_number');
         $expirationDate = $request->input('expiration_date');
@@ -343,9 +311,9 @@ class PaymentController extends Controller implements HasMiddleware
         $merchantDefinedField2->setName('SustainingDonation');
         $merchantDefinedField2->setValue($sustaining);
 
-        // $merchantDefinedField3 = new AnetAPI\UserFieldType;
-        // $merchantDefinedField3->setName('m2mDonation');
-        // $merchantDefinedField3->setValue($m2m);
+        $merchantDefinedField3 = new AnetAPI\UserFieldType;
+        $merchantDefinedField3->setName('m2mDonation');
+        $merchantDefinedField3->setValue($m2m);
 
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType;

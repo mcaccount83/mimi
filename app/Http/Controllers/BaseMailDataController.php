@@ -167,4 +167,27 @@ class BaseMailDataController extends Controller
             'financialFinalPdfPath' => $chDocuments->final_financial_pdf_path,
         ];
     }
+
+    public function getPaymentData($chPayments, $input)
+    {
+        return [
+            'chapterId' => $chPayments->chapter_id,
+            'reregMembers' => $chPayments->rereg_members,
+            'reregPayment' => $chPayments->rereg_payment,
+            'reregPaid' => \Carbon\Carbon::parse($chPayments->rereg_date)->format('m/d/Y'),
+            'reregInvoice' => $chPayments->rereg_invoice,
+            'sustainingDonation' => $chPayments->sustaining_donation,
+            'sustainingPaid' => \Carbon\Carbon::parse($chPayments->sustaining_date)->format('m/d/Y'),
+            'm2mDonation' => $chPayments->m2m_donation,
+            'm2mPaid' => \Carbon\Carbon::parse($chPayments->m2m_date)->format('m/d/Y'),
+            'donationInvoice' => $chPayments->donation_invoice,
+            'lateFee' => $input['late'] ?? null,
+            'processingFee' => $input['fee'] ?? null,
+            'totalPaid' => $input['total'] ?? null,
+            'fname' => $input['first_name'] ?? null,
+            'lname' => $input['last_name'] ?? null,
+            'email' => $input['email'] ?? null,
+        ];
+    }
+
 }

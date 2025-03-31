@@ -73,7 +73,7 @@
                             </td>
                             <td>{{ $list->state->state_short_name }}</td>
                             <td>{{ $list->name }}</td>
-                            <td>{{ $list->reg_notes }}</td>
+                            <td>{{ $list->payments->rereg_notes }}</td>
                             <td style="
                                 @php
                                     $due = $list->startMonth->month_short_name . ' ' . $list->next_renewal_year;
@@ -87,8 +87,8 @@
                                 " data-sort="{{ $list->next_renewal_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
                                 {{ $due }}
                             </td>
-                            <td><span class="date-mask">{{ $list->dues_last_paid }}</span></td>
-                            <td>{{ $list->members_paid_for }}</td>
+                            <td><span class="date-mask">{{ $list->payments->rereg_date }}</span></td>
+                            <td>{{ $list->payments->rereg_members }}</td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -5,7 +5,7 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
 <br>
 Please follow up with them to ensure they remove their online accounts.  Here is a list of their known online sites.<br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Website: {{$mailData['chapterWebsiteUrl']}}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Website: {{$mailData['chapterWebsiteURL']}}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Online Discussion Group:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Facebook:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Twitter:<br>

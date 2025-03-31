@@ -14,40 +14,40 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
         </tr>
         <tr>
             <td>President Name:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['pres_fname'] }} {{ $mailData['pres_lname'] }}</td>
+            <td>{{ $mailData['presName'] }}</td>
         </tr>
         <tr>
             <td>President Address:&nbsp;&nbsp;<br>
                 &nbsp;&nbsp;</td>
-            <td>{{ $mailData['pres_street'] }}<br>
-                {{ $mailData['pres_city'] }}, {{ $mailData['pres_state'] }} {{ $mailData['pres_zip'] }}</td>
+            <td>{{ $mailData['presAddress'] }}<br>
+                {{ $mailData['presCity'] }}, {{ $mailData['presState'] }} {{ $mailData['presZip'] }}</td>
         </tr>
         <tr>
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Payment Information</strong></center></td>
         </tr>
         <tr>
             <td>Payment Date:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['datePaid'] }}</td>
+            <td>{{ $mailData['reregPaid'] }}</td>
         </tr>
         <tr>
             <td>Number of Members:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['members'] }}</td>
+            <td>{{ $mailData['reregMembers'] }}</td>
         </tr>
         <tr>
             <td>Late Fee:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['late'] }}</td>
+            <td>{{ $mailData['lateFee'] }}</td>
         </tr>
         <tr>
             <td>Total Re-Registration Fees:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['reregTotal'] }}</td>
+            <td>{{ $mailData['reregPayment'] }}</td>
         </tr>
         <tr>
             <td>Sustaining Chapter Donation:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['sustaining'] }}</td>
+            <td>{{ $mailData['sustainingDonation'] }}</td>
         </tr>
         <tr>
             <td>Online Processing Fee:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['processing'] }}</td>
+            <td>{{ $mailData['processingFee'] }}</td>
         </tr>
         <tr>
             <td>Total Paid:&nbsp;&nbsp;</td>
@@ -57,7 +57,7 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
         </tr>
         <tr>
             <td>Invoice Number:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['invoice'] }}</td>
+            <td>{{ $mailData['reregInvoice'] }}</td>
         </tr>
         <tr>
             <td>Customer ID:&nbsp;&nbsp;</td>

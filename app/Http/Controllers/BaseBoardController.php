@@ -24,7 +24,7 @@ class BaseBoardController extends Controller
     public function getChapterDetails($id)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'president',
-            'boards', 'reportReviewer', 'primaryCoordinator', 'disbandCheck'])->find($id);
+            'payments', 'boards', 'reportReviewer', 'primaryCoordinator', 'disbandCheck'])->find($id);
         $chId = $chDetails->id;
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
@@ -36,6 +36,7 @@ class BaseBoardController extends Controller
         $allStates = State::all();  // Full List for Dropdown Menu
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
+        $chPayments = $chDetails->payments;
         $chDocuments = $chDetails->documents;
         $reviewerEmail = $chDetails->reportReviewer?->email;  // Could be null -- no reviewer assigned
         $chFinancialReport = $chDetails->financialReport;
@@ -72,7 +73,7 @@ class BaseBoardController extends Controller
         $emailCC = $ccEmailData['cc_email'];
 
         return ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'cc_id' => $cc_id,
-            'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments,
+            'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,
             'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail, 'displayEOY' => $displayEOY,

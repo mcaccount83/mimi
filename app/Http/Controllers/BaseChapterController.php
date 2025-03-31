@@ -226,7 +226,7 @@ class BaseChapterController extends Controller
     public function getChapterDetails($chId)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator',
-            'disbandCheck', 'boardsDisbanded']) ->find($chId);
+            'payments', 'disbandCheck', 'boardsDisbanded']) ->find($chId);
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
         $regionLongName = $chDetails->region?->long_name;
@@ -239,6 +239,7 @@ class BaseChapterController extends Controller
         $chapterStatus = $chDetails->status?->chapter_status;
         $websiteLink = $chDetails->webLink?->link_status ?? null;
 
+        $chPayments = $chDetails->payments;
         $chDocuments = $chDetails->documents;
         $reviewComplete = $chDetails->documents?->review_complete ?? null;
         $chFinancialReport = $chDetails->financialReport;
@@ -295,7 +296,7 @@ class BaseChapterController extends Controller
 
         return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
-            'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
+            'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards, 'chPayments' => $chPayments,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList, 'emailCCData' => $emailCCData,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,

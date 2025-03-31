@@ -35,7 +35,7 @@ MIMI Database Administrator
                 </tr>
                 <tr style="{{$mailData['chapterInquiriesContact'] != $mailData['inquiriesContactUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Inquiries Contact</td>
-                    <td>{{$mailData['chapterOnquiriesContact']}}</td>
+                    <td>{{$mailData['chapterInquiriesContact']}}</td>
                     <td>{{$mailData['inquiriesContactUpd']}}</td>
                 </tr>
                 <tr style="{{$mailData['chapterEmail'] != $mailData['chapterEmailUpd'] ? 'background-color: yellow;' : ''}}">
