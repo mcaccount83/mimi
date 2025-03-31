@@ -78,6 +78,9 @@
                 </div>
                 <div class="card-body text-center">
                     @if ($regionalCoordinatorCondition)
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="showChapterSetupModal()"><i class="fas fa-ban mr-2"></i>Send Chapter Setup Email</button>
+
+
                         <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Chapter</a>
                         @if ($checkBoxStatus)
                             <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
@@ -114,6 +117,127 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function showChapterSetupModal() {
+    Swal.fire({
+        title: 'Chapter Startup Details',
+        html: `
+            <p>This will send the initial chapter startup email to the potential founder to facilitate the discussion on boundaries and name. This will NOT add the new chapter to MIMI. Please enter the founder's information as well as the additional boundary and name details to include in the email and press OK to send.</p>
+            <div style="display: flex; align-items: center; ">
+                <input type="text" id="founder_first_name" name="founder_first_name" class="swal2-input" placeholder ="Founder's First Name" required style="width: 100%;">
+                <input type="text" id="founder_last_name" name="founder_last_name" class="swal2-input" placeholder ="Founder's Last Name" required style="width: 100%;">
+            </div>
+             <div style="display: flex; align-items: center; ">
+                <input type="text" id="founder_email" name="founder_email" class="swal2-input" placeholder ="Founder Email" required style="width: 100%;">
+            </div>
+            <div style="display: flex; align-items: center; ">
+                <input type="text" id="boundary_details" name="boundary_details" class="swal2-input" placeholder ="Boundary Details" required style="width: 100%;">
+            </div>
+            <div style="display: flex; align-items: center; ">
+                <input type="text" id="name_details" name="name_details" class="swal2-input" placeholder ="Name Details" required style="width: 100%;">
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const founderFirstName = Swal.getPopup().querySelector('#founder_first_name').value;
+            const founderLastName = Swal.getPopup().querySelector('#founder_last_name').value;
+            const founderEmail = Swal.getPopup().querySelector('#founder_email').value;
+            const boundaryDetails = Swal.getPopup().querySelector('#boundary_details').value;
+            const nameDetails = Swal.getPopup().querySelector('#name_details').value;
+
+            if (!founderEmail) {
+                Swal.showValidationMessage('Please enter the founders email address.');
+                return false;
+            }
+            if (!founderFirstName) {
+                Swal.showValidationMessage('Please enter the founders first name.');
+                return false;
+            }
+            if (!founderLastName) {
+                Swal.showValidationMessage('Please enter the founders last name.');
+                return false;
+            }
+            if (!boundaryDetails) {
+                Swal.showValidationMessage('Please enter the boundary details.');
+                return false;
+            }
+            if (!nameDetails) {
+                Swal.showValidationMessage('Please enter the chapter name details.');
+                return false;
+            }
+
+            return {
+                founder_email: founderEmail,
+                founder_first_name: founderFirstName,
+                founder_last_name: founderLastName,
+                boundary_details: boundaryDetails,
+                name_details: nameDetails,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('chapters.sendstartup') }}',
+                        type: 'POST',
+                        data: {
+                            founderEmail: data.founder_email,
+                            founderFirstName: data.founder_first_name,
+                            founderLastName: data.founder_last_name,
+                            boundaryDetails: data.boundary_details,
+                            nameDetails: data.name_details,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
 
 function showPrimary() {
 var base_url = '{{ url("/chapter/chapterlist") }}';

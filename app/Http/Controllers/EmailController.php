@@ -1,0 +1,119 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\AddBugsAdminRequest;
+use App\Http\Requests\AddResourcesAdminRequest;
+use App\Http\Requests\AddToolkitAdminRequest;
+use App\Http\Requests\UpdateBugsAdminRequest;
+use App\Http\Requests\UpdateResourcesAdminRequest;
+use App\Http\Requests\UpdateToolkitAdminRequest;
+use App\Mail\ChapterSetup;
+use App\Models\Boards;
+use App\Models\Chapters;
+use App\Models\EmailFields;
+use App\Models\User;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
+use TeamTeaTime\Forum\Models\Category as ForumCategory;
+
+class EmailController extends Controller implements HasMiddleware
+{
+    protected $userController;
+
+    protected $baseMailDataController;
+
+    public function __construct(UserController $userController, BaseMailDataController $baseMailDataController)
+    {
+        $this->userController = $userController;
+        $this->baseMailDataController = $baseMailDataController;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+        ];
+    }
+
+    /* /Custom Helpers/ */
+    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+
+
+    /**
+     * Update Email Data and Send Chapter Setup Email
+     */
+    public function sendChapterStartup(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $userEmail = $user['user_email'];
+
+        $emailCCData = $this->userController->loadConferenceCoord($userId);
+
+        $input = $request->all();
+        $founderEmail = $input['founderEmail'];
+        $founderFirstName = $input['founderFirstName'];
+        $founderLastName = $input['founderLastName'];
+        $boundaryDetails = $input['boundaryDetails'];
+        $nameDetails = $input['nameDetails'];
+
+        try {
+            DB::beginTransaction();
+
+            EmailFields::create([
+                'to_email' => $founderEmail,
+                'founder_first_name' => $founderFirstName,
+                'founder_last_name' => $founderLastName,
+                'boundary_details' => $boundaryDetails,
+                'name_details' => $nameDetails,
+            ]);
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getFounderData($input),
+                $this->baseMailDataController->getCCData($emailCCData),
+            );
+
+            Mail::to($founderEmail)
+                ->cc($userEmail)
+                ->queue(new ChapterSetup($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Chapter Setup Email successful sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.chaplist'),
+            ]);
+
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.chaplist'),
+            ]);
+        }
+    }
+}

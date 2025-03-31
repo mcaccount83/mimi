@@ -60,26 +60,22 @@
                         <h3 class="card-title">JOB DESCRIPTIONS</h3>
                     </div>
                         <div class="card-body">
-                      @foreach($resources->where('category', 9) as $resourceItem)
-                              <p>
-                                  @if ($resourceItem->link)
-                                  <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                  @if($canEditFiles)
-                                  <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                  @endif
-                                  @elseif ($resourceItem->file_path)
-                                  <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                  @if($canEditFiles)
-                                  <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                  @endif
-                                  @else
-                                  {{ $resourceItem->name }}&nbsp;
-                                  @if($canEditFiles)
-                                  <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                  @endif
-                                  @endif
-                              </p>
-                      @endforeach
+                            @foreach($resources->where('toolkitCategory.category_name', 'JOB DESCRIPTION') as $resourceItem)
+                            <div class="col-md-12" style="margin-bottom: 5px;">
+                                @if ($resourceItem->link)
+                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                @elseif ($resourceItem->file_path)
+                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                </a>
+                                @else
+                                    {{ $resourceItem->name }}
+                                @endif
+                                @if($canEditFiles)
+                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                @endif
+                            </div>
+                            @endforeach
                   </div>
               </div>
           </div>
@@ -90,26 +86,23 @@
                         <h3 class="card-title">NEED BASED FACT SHEETS FOR CHAPTERS</h3>
                     </div>
                         <div class="card-body">
-                        @foreach($resources->where('category', 8) as $resourceItem)
-                                <p>
-                                    @if ($resourceItem->link)
+                            @foreach($resources->where('toolkitCategory.category_name', 'NEED BASED FACT SHEET') as $resourceItem)
+                            <div class="col-md-12" style="margin-bottom: 5px;">
+                                @if ($resourceItem->link)
                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @if($canEditFiles)
+                                @elseif ($resourceItem->file_path)
+                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                </a>
+                                @else
+                                    {{ $resourceItem->name }}
+
+                                @endif
+                                @if($canEditFiles)
                                     <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
                                     @endif
-                                    @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @else
-                                    {{ $resourceItem->name }}&nbsp;
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @endif
-                                </p>
-                        @endforeach
+                            </div>
+                            @endforeach
                     </div>
                 </div>
             </div>
@@ -120,26 +113,23 @@
                         <h3 class="card-title">ADDITIONAL COORDINATOR RESOURCES</h3>
                     </div>
                         <div class="card-body">
-                        @foreach($resources->where('category', 10) as $resourceItem)
-                                <p>
-                                    @if ($resourceItem->link)
+                            @foreach($resources->where('toolkitCategory.category_name', 'RESOURCE FOR COORDINATORS') as $resourceItem)
+                            <div class="col-md-12" style="margin-bottom: 5px;">
+                                @if ($resourceItem->link)
                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @if($canEditFiles)
+                                @elseif ($resourceItem->file_path)
+                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                </a>
+                                @else
+                                    {{ $resourceItem->name }}
+
+                                @endif
+                                @if($canEditFiles)
                                     <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
                                     @endif
-                                    @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @else
-                                    {{ $resourceItem->name }}&nbsp;
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @endif
-                                </p>
-                        @endforeach
+                            </div>
+                            @endforeach
                         <p><a href="javascript:void(0)" onclick="showPositionAbbreviations()">MIMI Position Abbreviations</a></p>
                     </div>
                 </div>
@@ -151,26 +141,23 @@
                         <h3 class="card-title">ADDITIONAL CHAPTER RESOURCES</h3>
                     </div>
                         <div class="card-body">
-                        @foreach($resources->where('category', 11) as $resourceItem)
-                                <p>
-                                    @if ($resourceItem->link)
+                            @foreach($resources->where('toolkitCategory.category_name', 'RESOURCE FOR CHAPTERS') as $resourceItem)
+                            <div class="col-md-12" style="margin-bottom: 5px;">
+                                @if ($resourceItem->link)
                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @else
-                                    {{ $resourceItem->name }}&nbsp;
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @endif
-                                </p>
-                        @endforeach
+                                @elseif ($resourceItem->file_path)
+                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                </a>
+                                @else
+                                    {{ $resourceItem->name }}
+
+                                @endif
+                                @if($canEditFiles)
+                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                @endif
+                            </div>
+                            @endforeach
                     </div>
                 </div>
             </div>
@@ -276,16 +263,16 @@
                         <div class="modal-body">
                             <form>
                                 <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="fileCategory{{ $resourceItem->id }}">Category</label>
-                                    <select name="fileCategory" class="form-control select2-bs4" style="width: 50%;" id="fileCategory{{ $resourceItem->id }}" disabled>
-                                        <option value="8" {{ $resourceItem->category == 8 ? 'selected' : '' }}>Need Based Fact Sheet</option>
-                                        <option value="9" {{ $resourceItem->category == 9 ? 'selected' : '' }}>Job Description</option>
-                                        <option value="10" {{ $resourceItem->category == 10 ? 'selected' : '' }}>Resource for Coordinators</option>
-                                        <option value="11" {{ $resourceItem->category == 11 ? 'selected' : '' }}>Resource for Chapters</option>
-
-                                    </select>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="fileCategory{{ $resourceItem->id }}">Category</label>
+                                        <select name="fileCategory" class="form-control select2-bs4" style="width: 50%;" id="fileCategory{{ $resourceItem->id }}" disabled>
+                                            @foreach($toolkitCategories as $category)
+                                                <option value="{{ $category->id }}" {{ ($resourceItem->toolkitCategory && $resourceItem->toolkitCategory->id == $category->id) ? 'selected' : '' }}>
+                                                    {{ $category->category_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-12">
                                 <div class="form-group">
@@ -306,7 +293,9 @@
                                         <input type="text" class="form-control" id="fileVersion{{ $resourceItem->id }}" name="fileVersion" value="{{ $resourceItem->version }}">
                                     </div>
                                     <div class="form-group filePathField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
-                                        File Path: <a href="{{ $resourceItem->file_path }}">{{ $resourceItem->file_path }}</a>
+                                        File Path: <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                            {{ $resourceItem->file_path }}</a>
+                                        {{-- <a href="{{ $resourceItem->file_path }}">{{ $resourceItem->file_path }}</a> --}}
                                     </div>
                                     <div class="form-group linkField" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
                                         <label for="link{{ $resourceItem->id }}">Link</label>
@@ -345,13 +334,12 @@
                                 <form id="addResourceForm">
                                     <div class="form-group">
                                         <label>Category</label>
-                                        <select name="fileCategoryNew" class="form-control select2-bs4" style="width: 50%;" id="fileCategoryNew" >
-                                            <option value="8" >Need Based Fact Sheet</option>
-                                            <option value="9" >Job Description</option>
-                                            <option value="10" >Resource for Coordinators</option>
-                                            <option value="11" >Resource for Chapters</option>
+                                        <select name="fileCategoryNew" class="form-control select2-bs4" style="width: 50%;" id="fileCategoryNew">
+                                            @foreach($toolkitCategories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                            @endforeach
                                         </select>
-                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label for="fileNameNew">Name</label>
                                         <input type="text" class="form-control" id="fileNameNew" name="fileNameNew">

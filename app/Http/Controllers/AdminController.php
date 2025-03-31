@@ -21,6 +21,8 @@ use App\Models\IncomingBoard;
 use App\Models\Payments;
 use App\Models\BoardsOutgoing;
 use App\Models\Resources;
+use App\Models\ResourceCategory;
+use App\Models\ToolkitCategory;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -184,28 +186,32 @@ class AdminController extends Controller implements HasMiddleware
         $secPositionId = $user['user_secPositionId'];
         $canEditFiles = ($positionId == 7 || $secPositionId == 7);  // CC Coordinator
 
-        $resources = DB::table('resources')
-            ->select('resources.*', 'resources.id as id',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
-                DB::raw('CASE
-                    WHEN category = 1 THEN "BYLAWS"
-                    WHEN category = 2 THEN "FACT SHEETS"
-                    WHEN category = 3 THEN "COPY READY MATERIAL"
-                    WHEN category = 4 THEN "IDEAS AND INSPIRATION"
-                    WHEN category = 5 THEN "CHAPTER RESOURCES"
-                    WHEN category = 6 THEN "SAMPLE CHPATER FILES"
-                    WHEN category = 7 THEN "END OF YEAR"
-                    ELSE "Unknown"
-                END as priority_word'))
-            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-            ->orderBy('name')
-            ->get();
+        $resources = Resources::with('resourceCategory')->get();
+        $resourceCategories = ResourceCategory::all();
+
+
+        // $resources = DB::table('resources')
+        //     ->select('resources.*', 'resources.id as id',
+        //         DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
+        //         DB::raw('CASE
+        //             WHEN category = 1 THEN "BYLAWS"
+        //             WHEN category = 2 THEN "FACT SHEETS"
+        //             WHEN category = 3 THEN "COPY READY MATERIAL"
+        //             WHEN category = 4 THEN "IDEAS AND INSPIRATION"
+        //             WHEN category = 5 THEN "CHAPTER RESOURCES"
+        //             WHEN category = 6 THEN "SAMPLE CHPATER FILES"
+        //             WHEN category = 7 THEN "END OF YEAR"
+        //             ELSE "Unknown"
+        //         END as priority_word'))
+        //     ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+        //     ->orderBy('name')
+        //     ->get();
 
         foreach ($resources as $resource) {
             $id = $resource->id;
         }
 
-        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'id' => $id];
+        $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'canEditFiles' => $canEditFiles, 'id' => $id];
 
         return view('admin.resources')->with($data);
     }
@@ -288,21 +294,25 @@ class AdminController extends Controller implements HasMiddleware
         $secPositionId = $user['user_secPositionId'];
         $canEditFiles = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
 
-        $resources = DB::table('resources')
-            ->select('resources.*',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
-                DB::raw('CASE
-                    WHEN category = 8 THEN "NEED BASED FACT SHEET"
-                    WHEN category = 9 THEN "JOB DESCRIPTION"
-                    WHEN category = 10 THEN "RESOURCE FOR COORDINATORS"
-                    WHEN category = 11 THEN "RESOURCE FOR CHAPTERS"
-                    ELSE "Unknown"
-                END as priority_word'))
-            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-            ->orderBy('name')
-            ->get();
+        $resources = Resources::with('toolkitCategory')->get();
+        $toolkitCategories = ToolkitCategory::all();
 
-        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles];
+
+        // $resources = DB::table('resources')
+        //     ->select('resources.*',
+        //         DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
+        //         DB::raw('CASE
+        //             WHEN category = 8 THEN "NEED BASED FACT SHEET"
+        //             WHEN category = 9 THEN "JOB DESCRIPTION"
+        //             WHEN category = 10 THEN "RESOURCE FOR COORDINATORS"
+        //             WHEN category = 11 THEN "RESOURCE FOR CHAPTERS"
+        //             ELSE "Unknown"
+        //         END as priority_word'))
+        //     ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+        //     ->orderBy('name')
+        //     ->get();
+
+        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'toolkitCategories' => $toolkitCategories];
 
         return view('admin.toolkit')->with($data);
     }

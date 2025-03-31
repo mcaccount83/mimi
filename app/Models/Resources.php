@@ -16,8 +16,13 @@ class Resources extends Authenticatable
         'name', 'description', 'version', 'link', 'file_path',
     ];
 
-    public function categoryName(): BelongsTo
+    public function resourceCategory(): BelongsTo
     {
         return $this->belongsTo(ResourceCategory::class, 'category', 'id');  // 'category' in resrouces belongsTo 'id' in resource_category
+    }
+
+    public function toolkitCategory(): BelongsTo
+    {
+        return $this->belongsTo(ToolkitCategory::class, 'category', 'id');  // 'category' in resrouces belongsTo 'id' in toolkit_category
     }
 }

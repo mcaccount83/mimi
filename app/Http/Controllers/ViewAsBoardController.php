@@ -165,7 +165,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $allAwards = $baseQuery['allAwards'];
 
-        $resources = Resources::with('categoryName')->get();
+        $resources = Resources::with('resourceCategory')->get();
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
@@ -197,7 +197,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $chDisbanded = $baseQuery['chDisbanded'];
 
-        $resources = Resources::with('categoryName')->get();
+        $resources = Resources::with('resourceCategory')->get();
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,

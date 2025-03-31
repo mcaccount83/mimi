@@ -2382,8 +2382,13 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <td>&nbsp;&nbsp;&nbsp;</td>
         @foreach($resources as $resourceItem)
         @if ($resourceItem->name === '990N Filing Instructions')
-            <td><a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing Instructions
-            </a></td>
+            <td>
+                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                    990N Filing Instructions
+                </a>
+                {{-- <a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing Instructions
+            </a> --}}
+        </td>
         @endif
         @endforeach
     </tr>
@@ -2391,8 +2396,13 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <td>&nbsp;&nbsp;&nbsp;</td>
         @foreach($resources as $resourceItem)
         @if ($resourceItem->name === '990N Filing FAQs')
-            <td><a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing FAQs
-            </a></td>
+            <td>
+                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                    990N Filing FAQs
+                </a>
+                {{-- <a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing FAQs
+            </a> --}}
+        </td>
         @endif
         @endforeach
     </tr>

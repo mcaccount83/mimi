@@ -81,7 +81,7 @@ class HomeController extends Controller implements HasMiddleware
             $awards = $baseQuery['awards'];
             $allAwards = $baseQuery['allAwards'];
 
-            $resources = Resources::with('categoryName')->get();
+            $resources = Resources::with('resourceCategory')->get();
 
             $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
                 'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
@@ -108,7 +108,7 @@ class HomeController extends Controller implements HasMiddleware
                 $awards = $baseQuery['awards'];
                 $allAwards = $baseQuery['allAwards'];
 
-                $resources = Resources::with('categoryName')->get();
+                $resources = Resources::with('resourceCategory')->get();
 
                 $chDisbanded = $baseQuery['chDisbanded'];
 

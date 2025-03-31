@@ -27,7 +27,9 @@
                                 @if ($resourceItem->link)
                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                </a>
                                 @else
                                     {{ $resourceItem->name }}
                                 @endif
@@ -54,7 +56,9 @@
                                 @if ($resourceItem->link)
                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                </a>
                                 @else
                                     {{ $resourceItem->name }}
                                 @endif
@@ -81,7 +85,9 @@
                                 @if ($resourceItem->link)
                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                </a>
                                 @else
                                     {{ $resourceItem->name }}
                                 @endif
@@ -111,7 +117,9 @@
                                 @if ($resourceItem->link)
                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                </a>
                                 @else
                                     {{ $resourceItem->name }}
                                 @endif
@@ -142,7 +150,9 @@
                                         @if ($resourceItem->link)
                                             <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                         @elseif ($resourceItem->file_path)
-                                            <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                        <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                            {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                        </a>
                                         @else
                                             {{ $resourceItem->name }}
                                         @endif
@@ -169,7 +179,9 @@
                                         @if ($resourceItem->link)
                                             <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                         @elseif ($resourceItem->file_path)
-                                            <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                        <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                            {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                        </a>
                                         @else
                                             {{ $resourceItem->name }}
                                         @endif
@@ -250,8 +262,13 @@
                                                 <td>&nbsp;&nbsp;&nbsp;</td>
                                                 @foreach($resources as $resourceItem)
                                                 @if ($resourceItem->name === '990N Filing Instructions')
-                                                    <td><a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing Instructions
-                                                    </a></td>
+                                                    <td>
+                                                        <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                                            990N Filing Instructions
+                                                        </a>
+                                                        {{-- <a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing Instructions
+                                                    </a> --}}
+                                                </td>
                                                 @endif
                                                 @endforeach
                                             </tr>
@@ -259,8 +276,13 @@
                                                 <td>&nbsp;&nbsp;&nbsp;</td>
                                                 @foreach($resources as $resourceItem)
                                                 @if ($resourceItem->name === '990N Filing FAQs')
-                                                    <td><a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing FAQs
-                                                    </a></td>
+                                                    <td>
+                                                        <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                                            990N Filing FAQs
+                                                        </a>
+                                                        {{-- <a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing FAQs
+                                                    </a> --}}
+                                                </td>
                                                 @endif
                                                 @endforeach
                                             </tr>

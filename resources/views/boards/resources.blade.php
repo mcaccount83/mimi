@@ -40,12 +40,14 @@
                     <div id="collapseOne" class="collapse" data-parent="#accordion">
                         <div class="card-body">
                             <section>
-                                @foreach($resources->where('categoryName.category_name', 'BYLAWS') as $resourceItem)
+                                @foreach($resources->where('resourceCategory.category_name', 'BYLAWS') as $resourceItem)
                                 <div class="col-md-12" style="margin-bottom: 5px;">
                                     @if ($resourceItem->link)
                                         <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                     @elseif ($resourceItem->file_path)
-                                        <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                    </a>
                                     @else
                                         {{ $resourceItem->name }}
                                     @endif
@@ -67,12 +69,14 @@
                     <div id="collapseTwo" class="collapse" data-parent="#accordion">
                         <div class="card-body">
                             <section>
-                                @foreach($resources->where('categoryName.category_name', 'FACT SHEETS') as $resourceItem)
+                                @foreach($resources->where('resourceCategory.category_name', 'FACT SHEETS') as $resourceItem)
                                 <div class="col-md-12"style="margin-bottom: 5px;">
                                     @if ($resourceItem->link)
                                         <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                     @elseif ($resourceItem->file_path)
-                                        <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                    </a>
                                     @else
                                         {{ $resourceItem->name }}
                                     @endif
@@ -94,12 +98,14 @@
                     <div id="collapseThree" class="collapse" data-parent="#accordion">
                         <div class="card-body">
                             <section>
-                                @foreach($resources->where('categoryName.category_name', 'COPY READY MATERIAL') as $resourceItem)
+                                @foreach($resources->where('resourceCategory.category_name', 'COPY READY MATERIAL') as $resourceItem)
                                 <div class="col-md-12"style="margin-bottom: 5px;">
                                     @if ($resourceItem->link)
                                         <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                     @elseif ($resourceItem->file_path)
-                                        <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                    </a>
                                     @else
                                         {{ $resourceItem->name }}
                                     @endif
@@ -124,12 +130,14 @@
                     <div id="collapseFour" class="collapse" data-parent="#accordion">
                         <div class="card-body">
                             <section>
-                                @foreach($resources->where('categoryName.category_name', 'IDEAS AND INSPIRATION') as $resourceItem)
+                                @foreach($resources->where('resourceCategory.category_name', 'IDEAS AND INSPIRATION') as $resourceItem)
                                 <div class="col-md-12"style="margin-bottom: 5px;">
                                     @if ($resourceItem->link)
                                         <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                     @elseif ($resourceItem->file_path)
-                                        <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                    </a>
                                     @else
                                         {{ $resourceItem->name }}
                                     @endif
@@ -155,12 +163,14 @@
                             <div id="collapseFive" class="collapse" data-parent="#accordion">
                                 <div class="card-body">
                                     <section>
-                                        @foreach($resources->where('categoryName.category_name', 'CHAPTER RESOURCES') as $resourceItem)
+                                        @foreach($resources->where('resourceCategory.category_name', 'CHAPTER RESOURCES') as $resourceItem)
                                         <div class="col-md-12"style="margin-bottom: 5px;">
                                             @if ($resourceItem->link)
                                                 <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                             @elseif ($resourceItem->file_path)
-                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                            <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                                {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                            </a>
                                             @else
                                                 {{ $resourceItem->name }}
                                             @endif
@@ -182,12 +192,14 @@
                             <div id="collapseSix" class="collapse" data-parent="#accordion">
                                 <div class="card-body">
                                     <section>
-                                        @foreach($resources->where('categoryName.category_name', 'SAMPLE CHAPTER FILES') as $resourceItem)
+                                        @foreach($resources->where('resourceCategory.category_name', 'SAMPLE CHAPTER FILES') as $resourceItem)
                                         <div class="col-md-12"style="margin-bottom: 5px;">
                                             @if ($resourceItem->link)
                                                 <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                             @elseif ($resourceItem->file_path)
-                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                            <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                                {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                            </a>
                                             @else
                                                 {{ $resourceItem->name }}
                                             @endif
@@ -268,8 +280,13 @@
                                                     <td>&nbsp;&nbsp;&nbsp;</td>
                                                     @foreach($resources as $resourceItem)
                                                     @if ($resourceItem->name === '990N Filing Instructions')
-                                                        <td><a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing Instructions
-                                                        </a></td>
+                                                        <td>
+                                                            <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                                                990N Filing Instructions
+                                                            </a>
+                                                            {{-- <a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing Instructions
+                                                        </a> --}}
+                                                    </td>
                                                     @endif
                                                     @endforeach
                                                 </tr>
@@ -277,8 +294,13 @@
                                                     <td>&nbsp;&nbsp;&nbsp;</td>
                                                     @foreach($resources as $resourceItem)
                                                     @if ($resourceItem->name === '990N Filing FAQs')
-                                                        <td><a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing FAQs
-                                                        </a></td>
+                                                        <td>
+                                                            <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                                                990N Filing FAQs
+                                                            </a>
+                                                            {{-- <a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing FAQs
+                                                        </a> --}}
+                                                    </td>
                                                     @endif
                                                     @endforeach
                                                 </tr>

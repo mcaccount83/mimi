@@ -9,6 +9,7 @@ use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ChapterReportController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CoordinatorReportController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EOYReportController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\FinancialReportController;
@@ -118,6 +119,7 @@ Route::post('/chapterdetails/updateein', [ChapterController::class, 'updateEIN']
 Route::post('/chapter/sendnewchapter', [ChapterController::class, 'sendNewChapterEmail'])->name('chapters.sendnewchapter');
 Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterDisband'])->name('chapters.updatechapdisband');
 Route::post('/chapter/unzap', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
+Route::post('/chapter/sendstartup', [EmailController::class, 'sendChapterStartup'])->name('chapters.sendstartup');
 Route::get('/chapternew', [ChapterController::class, 'addChapterNew'])->name('chapters.addnew');
 Route::post('/chapternewupdate', [ChapterController::class, 'updateChapterNew'])->name('chapters.updatenew');
 Route::get('/chapterdetailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
