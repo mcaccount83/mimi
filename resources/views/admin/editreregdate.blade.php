@@ -29,22 +29,22 @@
                     </div>
                     <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                         <b>Dues Last Paid:</b> <span class="float-right">
-                            @if($chDetails->dues_last_paid)
-                                {{$chDetails->dues_last_paid }}</span>
+                            @if($chPayments->rereg_date)
+                                {{$chPayments->rereg_date }}</span>
                             @else
                                 No Payment Recorded</span>
                             @endif
                     </div>
                     <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                         <b>Number of Members:</b> <span class="float-right">
-                            @if ($chDetails->members_paid_for)
-                                {{ $chDetails->members_paid_for }}</span>
+                            @if ($chPayments->rereg_members)
+                                {{ $chPayments->rereg_members }}</span>
                             @else
                                 N/A</span>
                             @endif
                     </div>
                     <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Re-Registration Notes:</b> <span class="float-right">{{ $chDetails->reg_notes}}</span>
+                        <b>Re-Registration Notes:</b> <span class="float-right">{{ $chPayments->rereg_notes}}</span>
                     </div>
                 </li>
                 <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
@@ -101,14 +101,14 @@
                 <div class="form-group row">
                     <label class="col-sm-4 mb-1 col-form-label">Dues Last Paid:</label>
                     <div class="col-sm-3 mb-1">
-                        <input type="date" name="ch_duespaid" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chDetails->dues_last_paid}}">
+                        <input type="date" name="ch_duespaid" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chPayments->rereg_date }}">
                     </div>
                 </div>
                 <!-- /.form group -->
                 <div class="form-group row">
                     <label class="col-sm-4 mb-1 col-form-label">Number of Members:</label>
                     <div class="col-sm-3 mb-1">
-                        <input type="text" name="ch_members" class="form-control" value="{{ $chDetails->members_paid_for}}">
+                        <input type="text" name="ch_members" class="form-control" value="{{ $chPayments->rereg_members }}">
                     </div>
                 </div>
 

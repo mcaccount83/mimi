@@ -398,9 +398,10 @@ class AdminController extends Controller implements HasMiddleware
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chPayments = $baseQuery['chPayments'];
         $allMonths = $baseQuery['allMonths'];
 
-        $data = ['id' => $id, 'chDetails' => $chDetails, 'allMonths' => $allMonths];
+        $data = ['id' => $id, 'chDetails' => $chDetails, 'chPayments' => $chPayments, 'allMonths' => $allMonths];
 
         return view('admin.editreregdate')->with($data);
     }
