@@ -31,40 +31,42 @@
             <div class="col-6"  id="accordion">
             <!-- Accordion for Left Column -->
 
-            {{-- @foreach($resourceCategories as $category)
-    <div class="card card-primary">
-        <div class="card-header" id="accordion-header-{{ Str::slug($category->category_name) }}">
-            <h4 class="card-title w-100">
-                <a class="d-block" data-toggle="collapse" href="#collapse-{{ Str::slug($category->category_name) }}" style="width: 100%;">{{ $category->category_name }}</a>
-            </h4>
-        </div>
-        <div id="collapse-{{ Str::slug($category->category_name) }}" class="collapse" data-parent="#accordion">
-            <div class="card-body">
-                <section>
-                    @foreach($resources->where('resourceCategory.category_name', $category->category_name) as $resourceItem)
-                    <div class="col-md-12" style="margin-bottom: 5px;">
-                        @if ($resourceItem->link)
-                            <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                        @elseif ($resourceItem->file_path)
-                            <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                            </a>
-                        @else
-                            {{ $resourceItem->name }}
-                        @endif
+            @foreach($resourceCategories as $category)
+                <div class="card card-primary">
+                    <div class="card-header" id="accordion-header-{{ Str::slug($category->category_name) }}">
+                        <h4 class="card-title w-100">
+                            <a class="d-block" data-toggle="collapse" href="#collapse-{{ Str::slug($category->category_name) }}" style="width: 100%;">{{ $category->category_name }}</a>
+                        </h4>
                     </div>
-                    <div class="col-md-12" style="font-size: smaller; margin-bottom: 10px;">
-                        {{ $resourceItem->description }}
+                    <div id="collapse-{{ Str::slug($category->category_name) }}" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+                            <section>
+                                @foreach($resources->where('resourceCategory.category_name', $category->category_name) as $resourceItem)
+                                <div class="col-md-12" style="margin-bottom: 5px;">
+                                    @if ($resourceItem->link)
+                                        <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    @elseif ($resourceItem->file_path)
+                                        <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                            {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                        </a>
+                                    @else
+                                        {{ $resourceItem->name }}
+                                    @endif
+                                </div>
+                                    @if($category->category_name == "COPY READY MATERIAL")
+                                        <div class="col-md-12" style="font-size: smaller; margin-bottom: 10px;">
+                                            {{ $resourceItem->description }}
+                                        </div>
+                                    @endif
+                                @endforeach
+                                <div class="col-md-12"><br></div>
+                            </section>
+                        </div>
                     </div>
-                    @endforeach
-                    <div class="col-md-12"><br></div>
-                </section>
-            </div>
-        </div>
-    </div>
-@endforeach --}}
+                </div>
+            @endforeach
 
-                <!------Start Bylaws ------>
+                {{-- <!------Start Bylaws ------>
                 <div class="card card-primary ">
                     <div class="card-header" id="accordion-header-bylaws">
                         <h4 class="card-title w-100">
@@ -181,14 +183,14 @@
                             </section>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                     <!------End Ideas & Inspirations ------>
             </div>
 
                 <div class="col-6"  id="accordion">
                     <!-- Accordion for Right Column -->
                         <!------Start Resources ------>
-                        <div class="card card-primary ">
+                        {{-- <div class="card card-primary ">
                             <div class="card-header" id="accordion-header-resources">
                                 <h4 class="card-title w-100">
                                     <a class="d-block" data-toggle="collapse" href="#collapseFive" style="width: 100%;">CHAPTER RESOURCES</a>
@@ -244,7 +246,7 @@
                                 </div>
                             </div>
                         </div>
-                            <!------End Samples ------>
+                            <!------End Samples ------> --}}
                             <!------Start End of Year ------>
                         <div class="card card-primary ">
                             <div class="card-header" id="accordion-header-materials">
