@@ -18,6 +18,7 @@ use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
 use App\Models\IncomingBoard;
+use App\Models\Payments;
 use App\Models\BoardsOutgoing;
 use App\Models\Resources;
 use App\Models\User;
@@ -413,16 +414,21 @@ class AdminController extends Controller implements HasMiddleware
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $chapter = Chapters::find($id);
+        $payments = Payments::find($id);
+
         DB::beginTransaction();
         try {
             $chapter->start_month_id = $request->input('ch_founddate');
             $chapter->next_renewal_year = $request->input('ch_renewyear');
-            $chapter->dues_last_paid = $request->input('ch_duespaid');
-            $chapter->members_paid_for = $request->input('ch_members');
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = $lastupdatedDate;
 
             $chapter->save();
+
+            $payments->rereg_date = $request->input('ch_duespaid');
+            $payments->rereg_members = $request->input('ch_members');
+
+            $payments->save();
 
             DB::commit();
         } catch (\Exception $e) {
