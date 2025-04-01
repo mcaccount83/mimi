@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateBugsAdminRequest;
 use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\ChapterSetup;
-use App\Models\Boards;
+use App\Models\Resources;
 use App\Models\Chapters;
 use App\Models\EmailFields;
 use App\Models\User;
@@ -58,8 +58,17 @@ class EmailController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
         $userEmail = $user['user_email'];
+        $userConfId = $user['user_confId'];
 
         $emailCCData = $this->userController->loadConferenceCoord($userId);
+
+        $resources = Resources::with('resourceCategory')->get();
+        $applicationName = 'EIN Application Conference '.$userConfId;
+        $matchingApplication = $resources->where('name', $applicationName)->first();
+        $pdfPath = 'https://drive.google.com/uc?export=download&id='.$matchingApplication->file_path;
+        $instructionsName = 'EIN Application Instructions';
+        $matchingInstructions = $resources->where('name', $instructionsName)->first();
+        $pdfPath2 = 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path;
 
         $input = $request->all();
         $founderEmail = $input['founderEmail'];
@@ -87,7 +96,7 @@ class EmailController extends Controller implements HasMiddleware
 
             Mail::to($founderEmail)
                 ->cc($userEmail)
-                ->queue(new ChapterSetup($mailData));
+                ->queue(new ChapterSetup($mailData, $pdfPath, $pdfPath2));
 
             // Commit the transaction
             DB::commit();

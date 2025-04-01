@@ -16,14 +16,20 @@ class ChapterSetup extends Mailable implements ShouldQueue
 
     public $mailData;
 
+    protected $pdfPath;
+
+    protected $pdfPath2;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($mailData)
+    public function __construct($mailData, $pdfPath, $pdfPath2)
     {
         $this->mailData = $mailData;
+        $this->pdfPath = $pdfPath;
+        $this->pdfPath2 = $pdfPath2;
     }
 
     /**
@@ -31,8 +37,19 @@ class ChapterSetup extends Mailable implements ShouldQueue
      */
     public function build(): static
     {
+        // Download the Google Drive file first
+        $content = file_get_contents($this->pdfPath);
+        $content2 = file_get_contents($this->pdfPath2);
+
         return $this
             ->subject('Chapter Setup')
-            ->markdown('emails.chapter.chaptersetup');
+            ->replyTo($this->mailData['userEmail'])
+            ->markdown('emails.chapter.chaptersetup')
+            ->attachData($content, 'EINApplication.pdf', [
+                'mime' => 'application/pdf',
+            ])
+            ->attachData($content2, 'EINInstructions.pdf', [
+                'mime' => 'application/pdf',
+            ]);
     }
 }

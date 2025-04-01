@@ -78,7 +78,7 @@
                 </div>
                 <div class="card-body text-center">
                     @if ($regionalCoordinatorCondition)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="showChapterSetupModal()"><i class="fas fa-ban mr-2"></i>Send Chapter Setup Email</button>
+                        <button type="button" class="btn bg-gradient-primary" onclick="showChapterSetupModal()"><i class="fas fa-envelope mr-2"></i>Send Chapter Startup Email</button>
 
 
                         <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Chapter</a>
@@ -123,18 +123,18 @@ function showChapterSetupModal() {
         title: 'Chapter Startup Details',
         html: `
             <p>This will send the initial chapter startup email to the potential founder to facilitate the discussion on boundaries and name. This will NOT add the new chapter to MIMI. Please enter the founder's information as well as the additional boundary and name details to include in the email and press OK to send.</p>
-            <div style="display: flex; align-items: center; ">
-                <input type="text" id="founder_first_name" name="founder_first_name" class="swal2-input" placeholder ="Founder's First Name" required style="width: 100%;">
-                <input type="text" id="founder_last_name" name="founder_last_name" class="swal2-input" placeholder ="Founder's Last Name" required style="width: 100%;">
+            <div class="name-fields-container" style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <input type="text" id="founder_first_name" name="founder_first_name" class="swal2-input" placeholder="Founder's First Name" required style="width: calc(50% - 3px); margin: 0 5px 0 0 !important; box-sizing: border-box;">
+                <input type="text" id="founder_last_name" name="founder_last_name" class="swal2-input" placeholder="Founder's Last Name" required style="width: calc(50% - 3px); margin: 0 !important; box-sizing: border-box;">
             </div>
-             <div style="display: flex; align-items: center; ">
-                <input type="text" id="founder_email" name="founder_email" class="swal2-input" placeholder ="Founder Email" required style="width: 100%;">
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <input type="text" id="founder_email" name="founder_email" class="swal2-input" placeholder="Founder Email" required style="width: 100%; margin: 0 !important; box-sizing: border-box;">
             </div>
-            <div style="display: flex; align-items: center; ">
-                <input type="text" id="boundary_details" name="boundary_details" class="swal2-input" placeholder ="Boundary Details" required style="width: 100%;">
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <textarea id="boundary_details" name="boundary_details" class="swal2-textarea" placeholder="Boundary Details" required style="width: 100%; height: 80px; margin: 0 !important; box-sizing: border-box;"></textarea>
             </div>
-            <div style="display: flex; align-items: center; ">
-                <input type="text" id="name_details" name="name_details" class="swal2-input" placeholder ="Name Details" required style="width: 100%;">
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <textarea id="name_details" name="name_details" class="swal2-textarea" placeholder="Name Details" required style="width: 100%; height: 80px; margin: 0 !important; box-sizing: border-box;"></textarea>
             </div>
         `,
         showCancelButton: true,
