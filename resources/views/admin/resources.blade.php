@@ -141,7 +141,6 @@
                         <div class="form-group filePathField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
                             File Path: <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                 {{ $resourceItem->file_path }}</a>
-                                {{-- <a href="{{ $resourceItem->file_path }}">{{ $resourceItem->file_path }}</a> --}}
                         </div>
                         <div class="form-group linkField" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
                             <label for="link{{ $resourceItem->id }}">Link</label>

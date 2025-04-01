@@ -55,7 +55,7 @@
             <div class="grid">
                 <!-- Grid item -->
                 @foreach($toolkitCategories as $category)
-                    @if($category->category_name != "NEW CHPATER FILES")
+                    {{-- @if($category->category_name != "NEW CHPATER FILES") --}}
                         <div class="grid-item">
                             <div class="card card-secondary">
                             <div class="card-header">
@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    {{-- @endif --}}
                 @endforeach
             </div>
         </div>
