@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Resources;
+use App\Models\ResourceCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -51,24 +53,19 @@ class PublicController extends Controller
         return view('public.chapterlinks', ['chapters' => $chapters, 'international' => $international]);
     }
 
+       /**
+     * Show the Chapter Resources Page
+     */
     public function chapterResources(): View
     {
-        $resources = DB::table('resources')
-            ->select('resources.*',
-                DB::raw('CASE
-                    WHEN category = 1 THEN "BYLAWS"
-                    WHEN category = 2 THEN "FACT SHEETS"
-                    WHEN category = 3 THEN "COPY READY MATERIAL"
-                    WHEN category = 4 THEN "IDEAS AND INSPIRATION"
-                    WHEN category = 5 THEN "CHAPTER RESOURCES"
-                    WHEN category = 6 THEN "SAMPLE CHPATER FILES"
-                    WHEN category = 7 THEN "END OF YEAR"
-                    ELSE "Unknown"
-                END as priority_word'))
-            ->orderBy('name')
-            ->get();
 
-        return view('public.resources', ['resources' => $resources]);
+        $resources = Resources::with('resourceCategory')->get();
+        $resourceCategories = ResourceCategory::all();
+
+            $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories,];
+
+            return view('public.resources')->with($data);
+
     }
 
     /**

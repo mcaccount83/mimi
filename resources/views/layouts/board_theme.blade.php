@@ -72,7 +72,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ route('board.resources')}}" >
+            <a class="nav-link" href="{{ route('board.viewresources')}}" >
                 <span class="no-icon">Chapter Resources</span>
             </a>
           </li>

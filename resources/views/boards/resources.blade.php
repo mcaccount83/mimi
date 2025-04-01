@@ -21,243 +21,95 @@
                     <div class="col-md-12"><br><br></div>
                         <h2 class="text-center"> MOMS Club of {{ $chDetails->name }}, {{ $stateShortName }} </h2>
                         <h4 class="text-center"> General Chapter Resources</h4>
-
                         </div>
                     </div>
                 </div>
 
         <div class="container-fluid">
         <div class="row">
-            <div class="col-6"  id="accordion">
-            <!-- Accordion for Left Column -->
+            <!-- Left Column -->
+            <div class="col-md-6" id="accordion-left">
+                @php
+                    $totalCategories = count($resourceCategories);
+                    $halfCount = ceil($totalCategories / 2);
+                    $counter = 0;
+                @endphp
 
-            @foreach($resourceCategories as $category)
-                <div class="card card-primary">
-                    <div class="card-header" id="accordion-header-{{ Str::slug($category->category_name) }}">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapse-{{ Str::slug($category->category_name) }}" style="width: 100%;">{{ $category->category_name }}</a>
-                        </h4>
-                    </div>
-                    <div id="collapse-{{ Str::slug($category->category_name) }}" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            <section>
-                                @foreach($resources->where('resourceCategory.category_name', $category->category_name) as $resourceItem)
-                                <div class="col-md-12" style="margin-bottom: 5px;">
-                                    @if ($resourceItem->link)
-                                        <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @elseif ($resourceItem->file_path)
-                                        <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                            {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                        </a>
-                                    @else
-                                        {{ $resourceItem->name }}
-                                    @endif
-                                </div>
-                                    @if($category->category_name == "COPY READY MATERIAL")
-                                        <div class="col-md-12" style="font-size: smaller; margin-bottom: 10px;">
-                                            {{ $resourceItem->description }}
+                @foreach($resourceCategories as $category)
+                    @php $counter++; @endphp
+                    @if($counter <= $halfCount)
+                        <div class="card card-primary">
+                            <div class="card-header" id="accordion-header-left-{{ Str::slug($category->category_name) }}">
+                                <h4 class="card-title w-100">
+                                    <a class="d-block" data-toggle="collapse" href="#collapse-left-{{ Str::slug($category->category_name) }}" style="width: 100%;">{{ $category->category_name }}</a>
+                                </h4>
+                            </div>
+                            <div id="collapse-left-{{ Str::slug($category->category_name) }}" class="collapse" data-parent="#accordion-left">
+                                <div class="card-body">
+                                    <section>
+                                        @foreach($resources->where('resourceCategory.category_name', $category->category_name) as $resourceItem)
+                                        <div class="col-md-12" style="margin-bottom: 5px;">
+                                            @if ($resourceItem->link)
+                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                            @elseif ($resourceItem->file_path)
+                                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                                </a>
+                                            @else
+                                                {{ $resourceItem->name }}
+                                            @endif
                                         </div>
-                                    @endif
-                                @endforeach
-                                <div class="col-md-12"><br></div>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-
-                {{-- <!------Start Bylaws ------>
-                <div class="card card-primary ">
-                    <div class="card-header" id="accordion-header-bylaws">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseOne" style="width: 100%;">BYLAWS</a>
-                        </h4>
-                    </div>
-                    <div id="collapseOne" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            <section>
-                                @foreach($resources->where('resourceCategory.category_name', 'BYLAWS') as $resourceItem)
-                                <div class="col-md-12" style="margin-bottom: 5px;">
-                                    @if ($resourceItem->link)
-                                        <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @elseif ($resourceItem->file_path)
-                                    <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                    </a>
-                                    @else
-                                        {{ $resourceItem->name }}
-                                    @endif
+                                            @if($category->category_name == "COPY READY MATERIAL")
+                                                <div class="col-md-12" style="font-size: smaller; margin-bottom: 10px;">
+                                                    {{ $resourceItem->description }}
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </section>
                                 </div>
-                                @endforeach
-                                <div class="col-md-12"><br></div>
-                            </section>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                    <!------End Bylaws ------>
-                    <!------Start Fact Sheets ------>
-                <div class="card card-primary ">
-                    <div class="card-header" id="accordion-header-factsheets">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseTwo" style="width: 100%;">FACT SHEETS</a>
-                        </h4>
-                    </div>
-                    <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            <section>
-                                @foreach($resources->where('resourceCategory.category_name', 'FACT SHEETS') as $resourceItem)
-                                <div class="col-md-12"style="margin-bottom: 5px;">
-                                    @if ($resourceItem->link)
-                                        <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @elseif ($resourceItem->file_path)
-                                    <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                    </a>
-                                    @else
-                                        {{ $resourceItem->name }}
-                                    @endif
-                                </div>
-                                @endforeach
-                                <div class="col-md-12"><br></div>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-                    <!------End Fact Sheets ------>
-                    <!------Start Copy Ready Materials ------>
-                <div class="card card-primary ">
-                    <div class="card-header" id="accordion-header-materials">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseThree" style="width: 100%;">COPY READY MATERIAL</a>
-                        </h4>
-                    </div>
-                    <div id="collapseThree" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            <section>
-                                @foreach($resources->where('resourceCategory.category_name', 'COPY READY MATERIAL') as $resourceItem)
-                                <div class="col-md-12"style="margin-bottom: 5px;">
-                                    @if ($resourceItem->link)
-                                        <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @elseif ($resourceItem->file_path)
-                                    <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                    </a>
-                                    @else
-                                        {{ $resourceItem->name }}
-                                    @endif
-                                </div>
-                                <div class="col-md-12" style="font-size: smaller; margin-bottom: 10px;">
-                                    {{ $resourceItem->description }}
-                                </div>
-                                @endforeach
-                                <div class="col-md-12"><br></div>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-                    <!------End Copy Ready Materials ------>
-                    <!------Start Ideas & Inspirations ------>
-                <div class="card card-primary ">
-                    <div class="card-header" id="accordion-header-inspiration">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseFour" style="width: 100%;">IDEAS AND INSPIRATIONS</a>
-                        </h4>
-                    </div>
-                    <div id="collapseFour" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            <section>
-                                @foreach($resources->where('resourceCategory.category_name', 'IDEAS AND INSPIRATION') as $resourceItem)
-                                <div class="col-md-12"style="margin-bottom: 5px;">
-                                    @if ($resourceItem->link)
-                                        <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @elseif ($resourceItem->file_path)
-                                    <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                    </a>
-                                    @else
-                                        {{ $resourceItem->name }}
-                                    @endif
-                                </div>
-                                @endforeach
-                                <div class="col-md-12"><br></div>
-                            </section>
-                        </div>
-                    </div>
-                </div> --}}
-                    <!------End Ideas & Inspirations ------>
+                    @endif
+                @endforeach
             </div>
 
-                <div class="col-6"  id="accordion">
-                    <!-- Accordion for Right Column -->
-                        <!------Start Resources ------>
-                        {{-- <div class="card card-primary ">
-                            <div class="card-header" id="accordion-header-resources">
+            <!-- Right Column -->
+            <div class="col-md-6" id="accordion-right">
+                @php $counter = 0; @endphp
+                @foreach($resourceCategories as $category)
+                    @php $counter++; @endphp
+                    @if($counter > $halfCount)
+                        <div class="card card-primary">
+                            <div class="card-header" id="accordion-header-right-{{ Str::slug($category->category_name) }}">
                                 <h4 class="card-title w-100">
-                                    <a class="d-block" data-toggle="collapse" href="#collapseFive" style="width: 100%;">CHAPTER RESOURCES</a>
+                                    <a class="d-block" data-toggle="collapse" href="#collapse-right-{{ Str::slug($category->category_name) }}" style="width: 100%;">{{ $category->category_name }}</a>
                                 </h4>
                             </div>
-                            <div id="collapseFive" class="collapse" data-parent="#accordion">
+                            <div id="collapse-right-{{ Str::slug($category->category_name) }}" class="collapse" data-parent="#accordion-right">
                                 <div class="card-body">
                                     <section>
-                                        @foreach($resources->where('resourceCategory.category_name', 'CHAPTER RESOURCES') as $resourceItem)
-                                        <div class="col-md-12"style="margin-bottom: 5px;">
-                                            @if ($resourceItem->link)
-                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                            @elseif ($resourceItem->file_path)
-                                            <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                                {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                            </a>
-                                            @else
-                                                {{ $resourceItem->name }}
-                                            @endif
-                                        </div>
+                                        @foreach($resources->where('resourceCategory.category_name', $category->category_name) as $resourceItem)
+                                        @if($category->category_name != "END OF YEAR")
+                                            <div class="col-md-12" style="margin-bottom: 5px;">
+                                                @if ($resourceItem->link)
+                                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                @elseif ($resourceItem->file_path)
+                                                    <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                                    </a>
+                                                @else
+                                                    {{ $resourceItem->name }}
+                                                @endif
+                                            </div>
+                                                @if($category->category_name == "COPY READY MATERIAL")
+                                                    <div class="col-md-12" style="font-size: smaller; margin-bottom: 10px;">
+                                                        {{ $resourceItem->description }}
+                                                    </div>
+                                                @endif
+                                        @endif
                                         @endforeach
-                                        <div class="col-md-12"><br></div>
-                                    </section>
-                                </div>
-                            </div>
-                        </div>
-                            <!------End Resources ------>
-                            <!------Start Samples ------>
-                        <div class="card card-primary ">
-                            <div class="card-header" id="accordion-header-factsheets">
-                                <h4 class="card-title w-100">
-                                    <a class="d-block" data-toggle="collapse" href="#collapseSix" style="width: 100%;">SAMPLE CHAPTER FILES</a>
-                                </h4>
-                            </div>
-                            <div id="collapseSix" class="collapse" data-parent="#accordion">
-                                <div class="card-body">
-                                    <section>
-                                        @foreach($resources->where('resourceCategory.category_name', 'SAMPLE CHAPTER FILES') as $resourceItem)
-                                        <div class="col-md-12"style="margin-bottom: 5px;">
-                                            @if ($resourceItem->link)
-                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                            @elseif ($resourceItem->file_path)
-                                            <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                                {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                            </a>
-                                            @else
-                                                {{ $resourceItem->name }}
-                                            @endif
-                                        </div>
-                                        @endforeach
-                                        <div class="col-md-12"><br></div>
-                                    </section>
-                                </div>
-                            </div>
-                        </div>
-                            <!------End Samples ------> --}}
-                            <!------Start End of Year ------>
-                        <div class="card card-primary ">
-                            <div class="card-header" id="accordion-header-materials">
-                                <h4 class="card-title w-100">
-                                    <a class="d-block" data-toggle="collapse" href="#collapseSeven" style="width: 100%;">END OF YEAR</a>
-                                </h4>
-                            </div>
-                            <div id="collapseSeven" class="collapse" data-parent="#accordion">
-                                <div class="card-body">
-                                    <section>
-                                        <div class="col-md-12">
+                                        @if($category->category_name == "END OF YEAR")
+                                            <div class="col-md-12" style="margin-bottom: 5px;">
                                             <h4><u>Read carefully before starting!</u></h4>
                                             All chapters must complete the <?php echo date('Y')-1 .'-'.date('Y');?> End of Year Reports.<br>
                                             <br>
@@ -320,9 +172,7 @@
                                                             <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                                                 990N Filing Instructions
                                                             </a>
-                                                            {{-- <a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing Instructions
-                                                        </a> --}}
-                                                    </td>
+                                                        </td>
                                                     @endif
                                                     @endforeach
                                                 </tr>
@@ -334,9 +184,7 @@
                                                             <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                                                 990N Filing FAQs
                                                             </a>
-                                                            {{-- <a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing FAQs
-                                                        </a> --}}
-                                                    </td>
+                                                        </td>
                                                     @endif
                                                     @endforeach
                                                 </tr>
@@ -353,12 +201,14 @@
                                             <br>
                                             <br>
                                         </div>
+                                    @endif
                                     </section>
                                 </div>
                             </div>
                         </div>
-                            <!------End End of Year ------>
-                    </div>
+                    @endif
+                @endforeach
+            </div>
 
                 <br>
                 <div class="card-body text-center">
