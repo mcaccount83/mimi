@@ -50,98 +50,18 @@
             </div>
             <div class="row">&nbsp;</div>
         @endif
+
         <div class="row">
-
-        <div class="grid">
-            <!-- Grid item -->
-            <div class="grid-item">
-                <div class="card card-secondary">
+            <div class="grid">
+                <!-- Grid item -->
+                @foreach($toolkitCategories as $category)
+                <div class="grid-item">
+                    <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">JOB DESCRIPTIONS</h3>
+                        <h3 class="card-title">{{ $category->category_name }}</h3>
                     </div>
                         <div class="card-body">
-                            @foreach($resources->where('toolkitCategory.category_name', 'JOB DESCRIPTION') as $resourceItem)
-                            <div class="col-md-12" style="margin-bottom: 5px;">
-                                @if ($resourceItem->link)
-                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                @elseif ($resourceItem->file_path)
-                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                </a>
-                                @else
-                                    {{ $resourceItem->name }}
-                                @endif
-                                @if($canEditFiles)
-                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                @endif
-                            </div>
-                            @endforeach
-                  </div>
-              </div>
-          </div>
-            <!-- Grid item -->
-            <div class="grid-item">
-                <div class="card card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title">NEED BASED FACT SHEETS FOR CHAPTERS</h3>
-                    </div>
-                        <div class="card-body">
-                            @foreach($resources->where('toolkitCategory.category_name', 'NEED BASED FACT SHEET') as $resourceItem)
-                            <div class="col-md-12" style="margin-bottom: 5px;">
-                                @if ($resourceItem->link)
-                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                @elseif ($resourceItem->file_path)
-                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                </a>
-                                @else
-                                    {{ $resourceItem->name }}
-
-                                @endif
-                                @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                            </div>
-                            @endforeach
-                    </div>
-                </div>
-            </div>
-            <!-- Grid item -->
-            <div class="grid-item">
-                <div class="card card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title">ADDITIONAL COORDINATOR RESOURCES</h3>
-                    </div>
-                        <div class="card-body">
-                            @foreach($resources->where('toolkitCategory.category_name', 'RESOURCE FOR COORDINATORS') as $resourceItem)
-                            <div class="col-md-12" style="margin-bottom: 5px;">
-                                @if ($resourceItem->link)
-                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                @elseif ($resourceItem->file_path)
-                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                </a>
-                                @else
-                                    {{ $resourceItem->name }}
-
-                                @endif
-                                @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                            </div>
-                            @endforeach
-                        <p><a href="javascript:void(0)" onclick="showPositionAbbreviations()">MIMI Position Abbreviations</a></p>
-                    </div>
-                </div>
-            </div>
-            <!-- Grid item -->
-            <div class="grid-item">
-                <div class="card card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title">ADDITIONAL CHAPTER RESOURCES</h3>
-                    </div>
-                        <div class="card-body">
-                            @foreach($resources->where('toolkitCategory.category_name', 'RESOURCE FOR CHAPTERS') as $resourceItem)
+                            @foreach($resources->where('toolkitCategory.category_name', $category->category_name) as $resourceItem)
                             <div class="col-md-12" style="margin-bottom: 5px;">
                                 @if ($resourceItem->link)
                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
@@ -158,18 +78,23 @@
                                 @endif
                             </div>
                             @endforeach
+                            @if( $category->category_name == "RESOURCE FOR COORDINATORS")
+                            <div class="col-md-12" style="margin-bottom: 5px;">
+                                <a href="javascript:void(0)" onclick="showPositionAbbreviations()">MIMI Position Abbreviations</a>
+                            </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
+                @endforeach
 
-        </div>
             </div>
         </div>
+    </div>
 
     </div>
 </div>
 </div>
-
 
             <!-- Modal for MIMI Position Abriviations task -->
             <div class="modal fade" id="modal-positions">
