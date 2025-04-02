@@ -25,6 +25,10 @@
                 <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                 <br>
                 EIN: {{$chDetails->ein}}
+                @if ( $chDetails->ein == null && $conferenceCoordinatorCondition)
+                    <br>
+                    <button class="btn bg-gradient-primary btn-xs ml-2" type="button" id="apply-ein" onclick="openPdfViewer('{{ $matchingResource->file_path }}')">Instuctions: Applying for a Chapter's EIN</button>
+                @endif
                 </p>
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
