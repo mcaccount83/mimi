@@ -55,38 +55,38 @@
             <div class="grid">
                 <!-- Grid item -->
                 @foreach($toolkitCategories as $category)
-                    {{-- @if($category->category_name != "NEW CHPATER FILES") --}}
+                    @if($category->category_name != "NEW CHPATER FILES" || $conferenceCoordinatorCondition || $einCondition)
                         <div class="grid-item">
                             <div class="card card-secondary">
-                            <div class="card-header">
-                                <h3 class="card-title">{{ $category->category_name }}</h3>
-                            </div>
+                                <div class="card-header">
+                                    <h3 class="card-title">{{ $category->category_name }}</h3>
+                                </div>
                                 <div class="card-body">
                                     @foreach($resources->where('toolkitCategory.category_name', $category->category_name) as $resourceItem)
                                         <div class="col-md-12" style="margin-bottom: 5px;">
                                             @if ($resourceItem->link)
                                                 <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                             @elseif ($resourceItem->file_path)
-                                            <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
-                                                {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                            </a>
+                                                <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                                </a>
                                             @else
                                                 {{ $resourceItem->name }}
                                             @endif
                                             @if($canEditFiles)
-                                            <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
                                             @endif
                                         </div>
                                     @endforeach
-                                    @if( $category->category_name == "RESOURCE FOR COORDINATORS")
-                                    <div class="col-md-12" style="margin-bottom: 5px;">
-                                        <a href="javascript:void(0)" onclick="showPositionAbbreviations()">MIMI Position Abbreviations</a>
-                                    </div>
+                                    @if($category->category_name == "RESOURCE FOR COORDINATORS")
+                                        <div class="col-md-12" style="margin-bottom: 5px;">
+                                            <a href="javascript:void(0)" onclick="showPositionAbbreviations()">MIMI Position Abbreviations</a>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
                         </div>
-                    {{-- @endif --}}
+                    @endif
                 @endforeach
             </div>
         </div>
