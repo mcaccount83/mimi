@@ -55,7 +55,7 @@
             <div class="grid">
                 <!-- Grid item -->
                 @foreach($toolkitCategories as $category)
-                    @if($category->category_name != "NEW CHPATER FILES" || $conferenceCoordinatorCondition || $einCondition)
+                    @if($category->category_name != "EIN FILES (CC ONLY)" || $conferenceCoordinatorCondition || $einCondition)
                         <div class="grid-item">
                             <div class="card card-secondary">
                                 <div class="card-header">
