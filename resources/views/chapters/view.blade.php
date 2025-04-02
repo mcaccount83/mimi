@@ -27,7 +27,13 @@
                 EIN: {{$chDetails->ein}}
                 @if ( $chDetails->ein == null && $conferenceCoordinatorCondition)
                     <br>
-                    <button class="btn bg-gradient-primary btn-xs ml-2" type="button" id="apply-ein" onclick="openPdfViewer('{{ $matchingResource->file_path }}')">Instuctions: Applying for a Chapter's EIN</button>
+                    Apply for an EIN:
+                    <button class="btn bg-gradient-primary btn-xs ml-1" type="button" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</button>
+                    @foreach($resources as $resourceItem)
+                    @if ($resourceItem->name === 'Applying for a Chapter EIN')
+                        <button class="btn bg-gradient-primary btn-xs ml-1" type="button" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</button>
+                    @endif
+                    @endforeach
                 @endif
                 </p>
                 <ul class="list-group list-group-unbordered mb-3">

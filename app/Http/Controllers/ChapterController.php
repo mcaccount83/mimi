@@ -244,8 +244,6 @@ class ChapterController extends Controller implements HasMiddleware
         $SECDisbandedDetails = $baseQuery['SECDisbandedDetails'];
 
         $resources = Resources::with('resourceCategory')->get();
-        $resourceName = 'Applying for a Chapter EIN';
-        $matchingResource = $resources->where('name', $resourceName)->first();
 
         $now = Carbon::now();
         $threeMonthsAgo = $now->copy()->subMonths(3);
@@ -259,7 +257,7 @@ class ChapterController extends Controller implements HasMiddleware
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded'=> $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
             'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
-            'matchingResource' => $matchingResource
+            'resources' => $resources
         ];
 
         return view('chapters.view')->with($data);
