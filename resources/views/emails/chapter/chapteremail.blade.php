@@ -1,8 +1,8 @@
 @component('mail::message')
-<center>
+{{-- <center>
     <img src="https://momsclub.org/mimi/images/LOGO-W-MOMS-CLUB-old.jpg" alt="MC" style="width: 125px;">
 </center>
-<br>
+<br> --}}
 <p><b>{{ $mailData['chapterName'] }}:</b></p>
 <p>{{ $mailData['message'] }}</p>
 
