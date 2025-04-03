@@ -146,6 +146,7 @@ Route::get('/chapterreports/coordinators', [ChapterReportController::class, 'sho
 // Email Controller Routes...Coordinator Login Required
 Route::post('/chapter/sendstartup', [EmailController::class, 'sendChapterStartup'])->name('chapters.sendstartup');
 Route::post('/chapter/sendnewchapter', [EmailController::class, 'sendNewChapterEmail'])->name('chapters.sendnewchapter');
+Route::post('/chapter/sendchapter', [EmailController::class, 'sendChapterEmail'])->name('chapters.sendchapter');
 
 // Coordinator Controller Routes...Coordinator Login Required
 Route::get('/coordinator/coordlist', [CoordinatorController::class, 'showCoordinators'])->name('coordinators.coordlist');

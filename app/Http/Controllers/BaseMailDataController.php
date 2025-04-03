@@ -28,14 +28,15 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getFounderData($input)
+    public function getMessageData($input)
     {
         return [
-            'founderEmail' => $input['founderEmail'],
-            'founderFirstName' => $input['founderFirstName'],
-            'founderLastName' => $input['founderLastName'],
-            'boundaryDetails' => $input['boundaryDetails'],
-            'nameDetails' => $input['nameDetails'],
+            'founderEmail' => $input['founderEmail'] ?? null,
+            'founderFirstName' => $input['founderFirstName'] ?? null,
+            'founderLastName' => $input['founderLastName'] ?? null,
+            'boundaryDetails' => $input['boundaryDetails'] ?? null,
+            'nameDetails' => $input['nameDetails'] ?? null,
+            'message' => $input['message'] ?? null,
         ];
     }
 

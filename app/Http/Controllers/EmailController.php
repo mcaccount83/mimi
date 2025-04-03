@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\ChapterSetup;
 use App\Mail\ChapterEIN;
+use App\Mail\ChapterEmail;
 use App\Mail\NewChapterWelcome;
 use App\Models\Resources;
 use App\Models\Chapters;
@@ -99,7 +100,7 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData = array_merge(
                 $this->baseMailDataController->getUserData($user),
-                $this->baseMailDataController->getFounderData($input),
+                $this->baseMailDataController->getMessageData($input),
                 $this->baseMailDataController->getCCData($emailCCData),
             );
 
@@ -110,7 +111,7 @@ class EmailController extends Controller implements HasMiddleware
             // Commit the transaction
             DB::commit();
 
-            $message = 'Chapter Setup Email successful sent';
+            $message = 'Email successful sent';
 
             // Return JSON response
             return response()->json([
@@ -163,7 +164,7 @@ class EmailController extends Controller implements HasMiddleware
             // Commit the transaction
             DB::commit();
 
-            $message = 'Chapter Setup Email successful sent';
+            $message = 'Email successful sent';
 
             // Return JSON response
             return response()->json([
@@ -226,7 +227,7 @@ class EmailController extends Controller implements HasMiddleware
             // Commit the transaction
             DB::commit();
 
-            $message = 'New Chapter email successfully sent';
+            $message = 'Email successfully sent';
 
             // Return JSON response
             return response()->json([
@@ -247,6 +248,69 @@ class EmailController extends Controller implements HasMiddleware
                 'status' => 'error',
                 'message' => $message,
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
+            ]);
+        }
+    }
+
+    /**
+     * Send Chapter EIN Number Notification Email
+     */
+    public function sendChapterEmail(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+
+        $input = $request->all();
+        $message = $input['message'];
+        $chapterId = $input['chapterId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $emailListChap = $baseQuery['emailListChap'];  // Full Board
+        $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+
+        try {
+            DB::beginTransaction();
+
+            EmailFields::create([
+                'message' => $message,
+                'chapter_id' => $chapterId,
+            ]);
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getMessageData($input),
+            );
+
+            Mail::to($emailListChap)
+                ->cc($emailListCoord)
+                ->queue(new ChapterEmail($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successful sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
+            ]);
+
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
             ]);
         }
     }

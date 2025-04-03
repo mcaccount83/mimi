@@ -37,16 +37,17 @@
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
-                    @php
+                    {{-- @php
                         $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
                         $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
                         $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
-                    @endphp
+                    @endphp --}}
 
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                             <td class="text-center align-middle">
-                                <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $list->name . ', ' . $list->state->state_short_name) }}"><i class="far fa-envelope"></i></a></td>
+                                <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="far fa-envelope text-primary"></i></a>
+                                {{-- <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $list->name . ', ' . $list->state->state_short_name) }}"><i class="far fa-envelope"></i></a></td> --}}
                            </td>
                             <td>
                                 @if ($list->region->short_name != "None")
@@ -238,6 +239,7 @@ function showChapterSetupModal() {
         }
     });
 }
+
 
 function showPrimary() {
 var base_url = '{{ url("/chapter/chapterlist") }}';
