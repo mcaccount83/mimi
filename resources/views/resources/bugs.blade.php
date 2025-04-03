@@ -428,7 +428,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Send an AJAX request to Laravel backend to create a new task
     $.ajax({
-        url: '{{ route('admin.addbugs') }}',
+        url: '{{ route('resources.addbugs') }}',
         method: 'POST',
             data: formData,
             processData: false, // Required for FormData
@@ -477,7 +477,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Send an AJAX request to update the task
     $.ajax({
-        url: '{{ route('admin.updatebugs', '') }}' + '/' + id,
+        url: '{{ route('resources.updatebugs', '') }}' + '/' + id,
         method: 'POST',
                     data: formData,
                     processData: false,

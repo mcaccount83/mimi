@@ -445,7 +445,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Send an AJAX request to Laravel backend to create a new toolkit
         $.ajax({
-            url: '{{ route('admin.addtoolkit') }}',
+            url: '{{ route('resources.addtoolkit') }}',
             method: 'POST',
             data: formData,
             processData: false, // Required for FormData
@@ -570,7 +570,7 @@ function updateFile(id) {
 
     // Send an AJAX request to update the toolkit
     $.ajax({
-        url: '{{ route('admin.updatetoolkit', '') }}' + '/' + id,
+        url: '{{ route('resources.updatetoolkit', '') }}' + '/' + id,
         method: 'POST',
         data: formData,
         processData: false,

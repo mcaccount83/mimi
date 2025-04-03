@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\ChapterSetup;
 use App\Mail\ChapterEIN;
+use App\Mail\NewChapterWelcome;
 use App\Models\Resources;
 use App\Models\Chapters;
 use App\Models\EmailFields;
@@ -31,13 +32,17 @@ class EmailController extends Controller implements HasMiddleware
 {
     protected $userController;
 
+    protected $pdfController;
+
     protected $baseMailDataController;
 
     protected $baseChapterController;
 
-    public function __construct(UserController $userController, BaseMailDataController $baseMailDataController, BaseChapterController $baseChapterController)
+    public function __construct(UserController $userController, PDFController $pdfController, BaseMailDataController $baseMailDataController,
+        BaseChapterController $baseChapterController)
     {
         $this->userController = $userController;
+        $this->pdfController = $pdfController;
         $this->baseMailDataController = $baseMailDataController;
         $this->baseChapterController = $baseChapterController;
     }
@@ -130,7 +135,6 @@ class EmailController extends Controller implements HasMiddleware
         }
     }
 
-
     /**
      * Send Chapter EIN Number Notification Email
      */
@@ -160,6 +164,69 @@ class EmailController extends Controller implements HasMiddleware
             DB::commit();
 
             $message = 'Chapter Setup Email successful sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
+            ]);
+
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
+            ]);
+        }
+    }
+
+    /**
+     * Function for sending New Chapter Email with Attachments
+     */
+    public function sendNewChapterEmail(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+
+        $input = $request->all();
+        $chapterid = $input['chapterid'];
+
+        try {
+            DB::beginTransaction();
+
+            // Load Chapter MailData//
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $pcDetails = $baseQuery['pcDetails'];
+            $PresDetails = $baseQuery['PresDetails'];
+            $emailListChap = $baseQuery['emailListChap'];
+            $emailListCoord = $baseQuery['emailListCoord'];
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getPresData($PresDetails),
+                $this->baseMailDataController->getPCData($pcDetails),
+            );
+
+            $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
+            $pdfPath = $this->pdfController->saveGoodStandingLetter($chapterid);   // Generate and save the PDF
+            Mail::to($emailListChap)
+                ->cc($emailListCoord)
+                ->queue(new NewChapterWelcome($mailData, $pdfPath, $pdfPath2));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'New Chapter email successfully sent';
 
             // Return JSON response
             return response()->json([

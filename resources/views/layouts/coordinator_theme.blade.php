@@ -417,7 +417,7 @@ window.onload = function () {
 
                         <!-- Resources Reports Menu Item -->
                         @php
-                            $resourcesRoute = route('admin.toolkit');
+                            $resourcesRoute = route('resources.toolkit');
                             $activeResourcesRoutes = [
                                 'resources/*'
                             ];

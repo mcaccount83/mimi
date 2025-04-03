@@ -72,13 +72,18 @@ class User extends Authenticatable
                 : ', '.$this->coordinator->conference->conference_description;
 
             return $this->first_name.' '.$this->last_name.', '.
-                   $this->coordinator->displayPosition->long_title.' <br> '.
-                   $this->coordinator->conference->conference_name.$regionText;
+                   $this->coordinator?->displayPosition->long_title.' <br> '.
+                   $this->coordinator?->conference->conference_name.$regionText;
         } elseif ($this->user_type == 'board') {
             return $this->first_name.' '.$this->last_name.', '.
-                   $this->board->position->position.' <br> '.
-                   $this->board->chapters->name.', '.
-                   $this->board->chapters->state->state_short_name;
+                   $this->board?->position->position.' <br> '.
+                   $this->board?->chapters->name.', '.
+                   $this->board?->chapters->state->state_short_name;
+        } elseif ($this->user_type == 'disbanded') {
+            return $this->first_name.' '.$this->last_name.', '.
+                $this->boardDisbanded?->position->position.' <br> '.
+                $this->boardDisbanded?->chapters->name.', '.
+                $this->boardDisbanded?->chapters->state->state_short_name;
         }
 
         return $this->first_name.' '.$this->last_name;

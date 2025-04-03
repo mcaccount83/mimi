@@ -293,45 +293,31 @@ class ChapterController extends Controller implements HasMiddleware
         $ein = $input['ein'];
         $chapterEIN = $input['notify'];
 
-        // $ein = $request->input('ein');
-        // $chapterid = $request->input('chapter_id');
-
         $chapter = Chapters::find($chapterid);
 
         try {
             DB::beginTransaction();
-
-            // DB::table('chapters')
-            //     ->where('id', $chapterid)
-            //     ->update(['ein' => $ein,
-            //         'last_updated_by' => $lastUpdatedBy,
-            //         'last_updated_date' => $lastupdatedDate,
-            //     ]);
 
             $chapter->ein = $ein;
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
-            // Generate and Send the Notification to President//
             if ($chapterEIN == 1) {
                 $this->emailController->sendChapterEIN($request, $chapterid);
             }
 
             DB::commit();
 
-            // Return JSON response
             return response()->json([
                 'status' => 'success', 'message' => 'Chapter EIN successfully updated',
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
             DB::rollback();
             Log::error($e);
 
-            // Return JSON error response
             return response()->json([
                 'status' => 'error', 'message' => 'Something went wrong, Please try again.',
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
@@ -342,65 +328,65 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      * Function for sending New Chapter Email with Attachments
      */
-    public function sendNewChapterEmail(Request $request): JsonResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
+    // public function sendNewChapterEmail(Request $request): JsonResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
 
-        $input = $request->all();
-        $chapterid = $input['chapterid'];
+    //     $input = $request->all();
+    //     $chapterid = $input['chapterid'];
 
-        try {
-            DB::beginTransaction();
+    //     try {
+    //         DB::beginTransaction();
 
-            // Load Chapter MailData//
-            $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
-            $chDetails = $baseQuery['chDetails'];
-            $stateShortName = $baseQuery['stateShortName'];
-            $pcDetails = $baseQuery['pcDetails'];
-            $PresDetails = $baseQuery['PresDetails'];
-            $emailListChap = $baseQuery['emailListChap'];
-            $emailListCoord = $baseQuery['emailListCoord'];
+    //         // Load Chapter MailData//
+    //         $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
+    //         $chDetails = $baseQuery['chDetails'];
+    //         $stateShortName = $baseQuery['stateShortName'];
+    //         $pcDetails = $baseQuery['pcDetails'];
+    //         $PresDetails = $baseQuery['PresDetails'];
+    //         $emailListChap = $baseQuery['emailListChap'];
+    //         $emailListCoord = $baseQuery['emailListCoord'];
 
-            $mailData = array_merge(
-                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getUserData($user),
-                $this->baseMailDataController->getPresData($PresDetails),
-                $this->baseMailDataController->getPCData($pcDetails),
-            );
+    //         $mailData = array_merge(
+    //             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+    //             $this->baseMailDataController->getUserData($user),
+    //             $this->baseMailDataController->getPresData($PresDetails),
+    //             $this->baseMailDataController->getPCData($pcDetails),
+    //         );
 
-            $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
-            $pdfPath = $this->pdfController->saveGoodStandingLetter($chapterid);   // Generate and save the PDF
-            Mail::to($emailListChap)
-                ->cc($emailListCoord)
-                ->queue(new NewChapterWelcome($mailData, $pdfPath, $pdfPath2));
+    //         $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
+    //         $pdfPath = $this->pdfController->saveGoodStandingLetter($chapterid);   // Generate and save the PDF
+    //         Mail::to($emailListChap)
+    //             ->cc($emailListCoord)
+    //             ->queue(new NewChapterWelcome($mailData, $pdfPath, $pdfPath2));
 
-            // Commit the transaction
-            DB::commit();
+    //         // Commit the transaction
+    //         DB::commit();
 
-            $message = 'New Chapter email successfully sent';
+    //         $message = 'New Chapter email successfully sent';
 
-            // Return JSON response
-            return response()->json([
-                'status' => 'success',
-                'message' => $message,
-                'redirect' => route('chapters.view', ['id' => $chapterid]),
-            ]);
+    //         // Return JSON response
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => $message,
+    //             'redirect' => route('chapters.view', ['id' => $chapterid]),
+    //         ]);
 
-        } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+    //     } catch (\Exception $e) {
+    //         // Rollback transaction on exception
+    //         DB::rollback();
+    //         Log::error($e);
 
-            $message = 'Something went wrong, Please try again.';
+    //         $message = 'Something went wrong, Please try again.';
 
-            // Return JSON error response
-            return response()->json([
-                'status' => 'error',
-                'message' => $message,
-                'redirect' => route('chapters.view', ['id' => $chapterid]),
-            ]);
-        }
-    }
+    //         // Return JSON error response
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => $message,
+    //             'redirect' => route('chapters.view', ['id' => $chapterid]),
+    //         ]);
+    //     }
+    // }
 
     public function updateChapterDisband(Request $request): JsonResponse
     {

@@ -368,7 +368,7 @@ $(document).ready(function() {
 
     // Send an AJAX request to Laravel backend to create a new toolkit
     $.ajax({
-            url: '{{ route('admin.addresources') }}',
+            url: '{{ route('resources.addresources') }}',
             method: 'POST',
             data: formData,
             processData: false, // Required for FormData
@@ -493,7 +493,7 @@ function updateFile(id) {
 
     // Send an AJAX request to update the task
     $.ajax({
-        url: '{{ route('admin.updateresources', '') }}' + '/' + id,
+        url: '{{ route('resources.updateresources', '') }}' + '/' + id,
         method: 'POST',
         data: formData,
         processData: false,

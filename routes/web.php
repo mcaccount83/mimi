@@ -16,6 +16,7 @@ use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\ForumSubscriptionController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentReportController;
 use App\Http\Controllers\PDFController;
@@ -74,7 +75,12 @@ Route::get('/pdf-viewer', [PublicController::class, 'showPdf'])->name('pdf-viewe
 Route::get('/pdf-proxy', [PublicController::class, 'proxyGoogleDriveFile'])->name('pdf-proxy');
 
 // Admin Controller Routes...Coordinator Login Required
+Route::get('/admin/reregdate', [AdminController::class, 'showReRegDate'])->name('admin.reregdate');
+Route::get('/admin/reregdate/{id}', [AdminController::class, 'EditReRegDate'])->name('admin.editreregdate');
+Route::post('/admin/updatereregdate/{id}', [AdminController::class, 'UpdateReRegDate'])->name('admin.updatereregdate');
 Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
+Route::post('/admin/resetdisbandedusers', [AdminController::class, 'resetDisbandedUsers'])->name('admin.resetdisbandedusers');
+Route::post('/admin/resetoutgoingusers', [AdminController::class, 'resetOutgoingUsers'])->name('admin.resetoutgoingusers');
 Route::post('/admin/resetyear', [AdminController::class, 'resetYear'])->name('resetyear');
 Route::post('/admin/updateeoydatabase', [AdminController::class, 'updateEOYDatabase'])->name('admin.updateeoydatabase');
 Route::post('/admin/updateeoydatabaseafter', [AdminController::class, 'updateEOYDatabaseAFTERTesting'])->name('admin.updateeoydatabaseafter');
@@ -83,28 +89,25 @@ Route::post('/admin/updateeoytesting', [AdminController::class, 'updateEOYTestin
 Route::post('/admin/updateeoylive', [AdminController::class, 'updateEOYLive'])->name('admin.updateeoylive');
 Route::post('/admin/updatesubscribelists', [AdminController::class, 'updateSubscribeLists'])->name('admin.updatesubscribelists');
 Route::post('/admin/updateunsubscribelists', [AdminController::class, 'updateUnsubscribeLists'])->name('admin.updateunsubscribelists');
-Route::get('/admin/reregdate', [AdminController::class, 'showReRegDate'])->name('admin.reregdate');
-Route::get('/admin/reregdate/{id}', [AdminController::class, 'EditReRegDate'])->name('admin.editreregdate');
-Route::post('/admin/updatereregdate/{id}', [AdminController::class, 'UpdateReRegDate'])->name('admin.updatereregdate');
-Route::get('/resources/bugs', [AdminController::class, 'showBugs'])->name('admin.bugs');
-Route::post('/resources/addbugs', [AdminController::class, 'addBugs'])->name('admin.addbugs');
-Route::post('/resources/updatebugs/{id}', [AdminController::class, 'updateBugs'])->name('admin.updatebugs');
-Route::get('/resources/downloads', [AdminController::class, 'showDownloads'])->name('admin.downloads');
-Route::get('/resources/resources', [AdminController::class, 'showResources'])->name('admin.resources');
-Route::post('/resources/addresources', [AdminController::class, 'addResources'])->name('admin.addresources');
-Route::post('/resources/updateresources/{id}', [AdminController::class, 'updateResources'])->name('admin.updateresources');
-Route::get('/resources/toolkit', [AdminController::class, 'showToolkit'])->name('admin.toolkit');
-Route::post('/resources/addtoolkit', [AdminController::class, 'addToolkit'])->name('admin.addtoolkit');
-Route::post('/resources/updatetoolkit/{id}', [AdminController::class, 'updateToolkit'])->name('admin.updatetoolkit');
+Route::get('/admin/duplicateuser', [AdminController::class, 'showDuplicate'])->name('admin.duplicateuser');
+Route::get('/admin/duplicateboardid', [AdminController::class, 'showDuplicateId'])->name('admin.duplicateboardid');
+Route::get('/admin/nopresident', [AdminController::class, 'showNoPresident'])->name('admin.nopresident');
+Route::get('/admin/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('admin.outgoingboard');
+Route::get('/admin/disbandedboard', [AdminController::class, 'showDisbandedBoard'])->name('admin.disbandedboard');
 Route::get('/admin/googledrive', [AdminController::class, 'showGoogleDrive'])->name('admin.googledrive');
 Route::post('/admin/updategoogledrive', [AdminController::class, 'updateGoogleDrive'])->name('admin.updategoogledrive');
-Route::get('/adminreports/duplicateuser', [AdminController::class, 'showDuplicate'])->name('admin.duplicateuser');
-Route::get('/adminreports/duplicateboardid', [AdminController::class, 'showDuplicateId'])->name('admin.duplicateboardid');
-Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresident'])->name('admin.nopresident');
-Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('admin.outgoingboard');
-Route::post('/admin/resetoutgoingusers', [AdminController::class, 'resetOutgoingUsers'])->name('admin.resetoutgoingusers');
-Route::get('/adminreports/disbandedboard', [AdminController::class, 'showDisbandedBoard'])->name('admin.disbandedboard');
-Route::post('/admin/resetdisbandedusers', [AdminController::class, 'resetDisbandedUsers'])->name('admin.resetdisbandedusers');
+
+// Resources Controller Routes...Coordinator Login Required
+Route::get('/resources/bugs', [ResourcesController::class, 'showBugs'])->name('resources.bugs');
+Route::post('/resources/addbugs', [ResourcesController::class, 'addBugs'])->name('resources.addbugs');
+Route::post('/resources/updatebugs/{id}', [ResourcesController::class, 'updateBugs'])->name('resources.updatebugs');
+Route::get('/resources/downloads', [ResourcesController::class, 'showDownloads'])->name('resources.downloads');
+Route::get('/resources/resources', [ResourcesController::class, 'showResources'])->name('resources.resources');
+Route::post('/resources/addresources', [ResourcesController::class, 'addResources'])->name('resources.addresources');
+Route::post('/resources/updateresources/{id}', [ResourcesController::class, 'updateResources'])->name('resources.updateresources');
+Route::get('/resources/toolkit', [ResourcesController::class, 'showToolkit'])->name('resources.toolkit');
+Route::post('/resources/addtoolkit', [ResourcesController::class, 'addToolkit'])->name('resources.addtoolkit');
+Route::post('/resources/updatetoolkit/{id}', [ResourcesController::class, 'updateToolkit'])->name('resources.updatetoolkit');
 
 // Chapter Controller Routes...Coordinator Login Required
 Route::get('/chapter/chapterlist', [ChapterController::class, 'showChapters'])->name('chapters.chaplist');
@@ -116,10 +119,8 @@ Route::get('/international/chapterzapped', [ChapterController::class, 'showIntZa
 Route::get('/chapterdetails/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
 Route::get('/chapters/checkein', [ChapterController::class, 'checkEIN'])->name('chapters.checkein');
 Route::post('/chapterdetails/updateein', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
-Route::post('/chapter/sendnewchapter', [ChapterController::class, 'sendNewChapterEmail'])->name('chapters.sendnewchapter');
 Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterDisband'])->name('chapters.updatechapdisband');
 Route::post('/chapter/unzap', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
-Route::post('/chapter/sendstartup', [EmailController::class, 'sendChapterStartup'])->name('chapters.sendstartup');
 Route::get('/chapternew', [ChapterController::class, 'addChapterNew'])->name('chapters.addnew');
 Route::post('/chapternewupdate', [ChapterController::class, 'updateChapterNew'])->name('chapters.updatenew');
 Route::get('/chapterdetailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
@@ -131,6 +132,7 @@ Route::get('/chapter/socialmedia', [ChapterController::class, 'showRptSocialMedi
 Route::get('/chapterwebsiteedit/{id}', [ChapterController::class, 'editChapterWebsite'])->name('chapters.editwebsite');
 Route::post('/chapterwebsiteupdate/{id}', [ChapterController::class, 'updateChapterWebsite'])->name('chapters.updatewebsite');
 Route::get('/chapter/boardlist', [ChapterController::class, 'showChapterBoardlist'])->name('chapters.chapboardlist');
+// ChapterReport Controller Routes...Coordinator Login Required
 Route::get('/chapterreports/chapterstatus', [ChapterReportController::class, 'showRptChapterStatus'])->name('chapreports.chaprptchapterstatus');
 Route::get('/chapterreports/einstatus', [ChapterReportController::class, 'showRptEINstatus'])->name('chapreports.chaprpteinstatus');
 Route::get('/chapterreports/inteinstatus', [ChapterReportController::class, 'showIntEINstatus'])->name('international.inteinstatus');
@@ -140,6 +142,10 @@ Route::get('/chapterreports/newchapters', [ChapterReportController::class, 'show
 Route::get('/chapterreports/largechapters', [ChapterReportController::class, 'showRptLargeChapters'])->name('chapreports.chaprptlargechapters');
 Route::get('/chapterreports/probation', [ChapterReportController::class, 'showRptProbation'])->name('chapreports.chaprptprobation');
 Route::get('/chapterreports/coordinators', [ChapterReportController::class, 'showRptChapterCoordinators'])->name('chapreports.chaprptcoordinators');
+
+// Email Controller Routes...Coordinator Login Required
+Route::post('/chapter/sendstartup', [EmailController::class, 'sendChapterStartup'])->name('chapters.sendstartup');
+Route::post('/chapter/sendnewchapter', [EmailController::class, 'sendNewChapterEmail'])->name('chapters.sendnewchapter');
 
 // Coordinator Controller Routes...Coordinator Login Required
 Route::get('/coordinator/coordlist', [CoordinatorController::class, 'showCoordinators'])->name('coordinators.coordlist');
@@ -164,6 +170,7 @@ Route::post('/coorddetailsupdaterecognition/{id}', [CoordinatorController::class
 Route::get('/coordviewprofile', [CoordinatorController::class, 'viewCoordProfile'])->name('coordinators.viewprofile');
 Route::get('/coordprofile', [CoordinatorController::class, 'editCoordProfile'])->name('coordinators.profile');
 Route::post('/coordprofileupdate', [CoordinatorController::class, 'updateCoordProfile'])->name('coordinators.profileupdate');
+// CoordinatorReport Controller Routes...Coordinator Login Required
 Route::get('/coordreports/volunteerutilization', [CoordinatorReportController::class, 'showRptVolUtilization'])->name('coordreports.coordrptvolutilization');
 Route::get('/coordreports/appreciation', [CoordinatorReportController::class, 'showRptAppreciation'])->name('coordreports.coordrptappreciation');
 Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
