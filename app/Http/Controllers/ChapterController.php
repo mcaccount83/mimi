@@ -58,8 +58,10 @@ class ChapterController extends Controller implements HasMiddleware
 
     protected $baseMailDataController;
 
+    protected $emailController;
+
     public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
-        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController)
+        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, EmailController $emailController)
     {
 
         $this->userController = $userController;
@@ -67,6 +69,7 @@ class ChapterController extends Controller implements HasMiddleware
         $this->baseChapterController = $baseChapterController;
         $this->forumSubscriptionController = $forumSubscriptionController;
         $this->baseMailDataController = $baseMailDataController;
+        $this->emailController = $emailController;
     }
 
     public static function middleware(): array
@@ -285,25 +288,42 @@ class ChapterController extends Controller implements HasMiddleware
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $ein = $request->input('ein');
-        $chapterId = $request->input('chapter_id');
+        $input = $request->all();
+        $chapterid = $input['chapterid'];
+        $ein = $input['ein'];
+        $chapterEIN = $input['notify'];
+
+        // $ein = $request->input('ein');
+        // $chapterid = $request->input('chapter_id');
+
+        $chapter = Chapters::find($chapterid);
 
         try {
             DB::beginTransaction();
 
-            DB::table('chapters')
-                ->where('id', $chapterId)
-                ->update(['ein' => $ein,
-                    'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => $lastupdatedDate,
-                ]);
+            // DB::table('chapters')
+            //     ->where('id', $chapterid)
+            //     ->update(['ein' => $ein,
+            //         'last_updated_by' => $lastUpdatedBy,
+            //         'last_updated_date' => $lastupdatedDate,
+            //     ]);
+
+            $chapter->ein = $ein;
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->save();
+
+            // Generate and Send the Notification to President//
+            if ($chapterEIN == 1) {
+                $this->emailController->sendChapterEIN($request, $chapterid);
+            }
 
             DB::commit();
 
             // Return JSON response
             return response()->json([
                 'status' => 'success', 'message' => 'Chapter EIN successfully updated',
-                'redirect' => route('chapters.view', ['id' => $chapterId]),
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
             ]);
 
         } catch (\Exception $e) {
@@ -314,7 +334,7 @@ class ChapterController extends Controller implements HasMiddleware
             // Return JSON error response
             return response()->json([
                 'status' => 'error', 'message' => 'Something went wrong, Please try again.',
-                'redirect' => route('chapters.view', ['id' => $chapterId]),
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
             ]);
         }
     }

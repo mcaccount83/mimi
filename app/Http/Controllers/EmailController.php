@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateBugsAdminRequest;
 use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\ChapterSetup;
+use App\Mail\ChapterEIN;
 use App\Models\Resources;
 use App\Models\Chapters;
 use App\Models\EmailFields;
@@ -32,10 +33,13 @@ class EmailController extends Controller implements HasMiddleware
 
     protected $baseMailDataController;
 
-    public function __construct(UserController $userController, BaseMailDataController $baseMailDataController)
+    protected $baseChapterController;
+
+    public function __construct(UserController $userController, BaseMailDataController $baseMailDataController, BaseChapterController $baseChapterController)
     {
         $this->userController = $userController;
         $this->baseMailDataController = $baseMailDataController;
+        $this->baseChapterController = $baseChapterController;
     }
 
     public static function middleware(): array
@@ -125,4 +129,60 @@ class EmailController extends Controller implements HasMiddleware
             ]);
         }
     }
+
+
+    /**
+     * Send Chapter EIN Number Notification Email
+     */
+    public function sendChapterEIN(Request $request, $chapterid): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $emailListChap = $baseQuery['emailListChap'];  // Full Board
+        $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+
+        try {
+            DB::beginTransaction();
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+            );
+
+            Mail::to($emailListChap)
+                ->cc($emailListCoord)
+                ->queue(new ChapterEIN($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Chapter Setup Email successful sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
+            ]);
+
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
+            ]);
+        }
+    }
+
+
 }

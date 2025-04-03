@@ -43,7 +43,7 @@ class NewChapterWelcome extends Mailable implements ShouldQueue
         return $this
             ->subject('Congratulations on your New Chapter!')
             ->replyTo($this->mailData['userEmail'])
-            ->markdown('emails.chapterupdate.newchapterwelcome')
+            ->markdown('emails.chapter.newchapterwelcome')
             ->attach($this->pdfPath, [
                 'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterName'].'_ChapterInGoodStanding.pdf',
                 'mime' => 'application/pdf',
