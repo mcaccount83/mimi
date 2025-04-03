@@ -8,7 +8,7 @@
 <p>Below are the steps that I'll be helping you work through. A Getting Started Guide (with the steps outlined below) as well as the EIN Application and Instructions are also attached for your reference.</p>
 <hr>
 <b>Step 1 -  Establish your Boundaries</b>
-<p>Choosing the right boundaries are important. Your area should cover what potential members consider to be “local”, allowing a large enough area to sustain a chapter and small enough that members are willing to drive to events in all areas of your boundaries.</p>
+<p>Choosing the right boundaries is important. Your area should cover what potential members consider to be “local”, allowing a large enough area to sustain a chapter and small enough that members are willing to drive to events in all areas of your boundaries.</p>
 <p>{{ $mailData['boundaryDetails'] }}</p>
 <hr>
 <b>Step 2 - Choose a Name</b>
@@ -17,7 +17,7 @@
 <hr>
 <b>Step 3 - File for an EIN</b>
 <p>Once you have your Chapter Name, you can apply for your EIN.  You’ll want to establish your EIN as quickly as possible so that you can be included in our master filings, can open a checking account and begin accepting donations as a 501(C)(3) nonprofit.</p>
-<p>Complete the EIN Application and following the attached instructions, emailing the completed form back to {{ $mailData['ccEmail'] }}.</p>
+<p>Complete the EIN Application and follow the attached instructions, emailing the completed form back to {{ $mailData['ccEmail'] }}.</p>
 <p>Once you have your EIN, you will be an official MOMS Club Chapter!</p>
 <hr>
 <b>Step 4 - Review your Manual</b>
