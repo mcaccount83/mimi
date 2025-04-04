@@ -232,6 +232,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $baseQuery['chapterStatus'];
+        $probationReason = $baseQuery['probationReason'];
         $websiteLink = $baseQuery['websiteLink'];
 
         $PresDetails = $baseQuery['PresDetails'];
@@ -256,7 +257,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionId' => $positionId, 'coorId' => $coorId, 'reviewComplete' => $reviewComplete, 'threeMonthsAgo' => $threeMonthsAgo,
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
-            'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate,
+            'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate, 'probationReason' => $probationReason,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded'=> $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
             'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
@@ -990,16 +991,18 @@ class ChapterController extends Controller implements HasMiddleware
 
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $baseQuery['chapterStatus'];
+        $probationReason = $baseQuery['probationReason'];
         $websiteLink = $baseQuery['websiteLink'];
 
         $allStatuses = $baseQuery['allStatuses'];
+        $allProbation = $baseQuery['allProbation'];
         $allWebLinks = $baseQuery['allWebLinks'];
 
         $pcList = $baseQuery['pcList'];
 
         $data = ['id' => $id, 'chIsActive' => $chIsActive, 'reviewComplete' => $reviewComplete,
-            'chDetails' => $chDetails, 'websiteLink' => $websiteLink, 'chDocuments' => $chDocuments,
-            'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
+            'chDetails' => $chDetails, 'websiteLink' => $websiteLink, 'chDocuments' => $chDocuments, 'allProbation' =>$allProbation,
+            'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'probationReason' => $probationReason,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'allStatuses' => $allStatuses, 'allWebLinks' => $allWebLinks,
             'pcList' => $pcList,
@@ -1038,6 +1041,14 @@ class ChapterController extends Controller implements HasMiddleware
             $website = 'http://'.$website;
         }
 
+        $status_id = $request->filled('ch_status') ? $request->input('ch_status') : $request->input('ch_hid_status');
+        if ($status_id == 1){
+            $probation_id = null;
+        }
+        else {
+            $probation_id = $request->filled('ch_probation') ? $request->input('ch_probation') : $request->input('ch_hid_probation');
+        }
+
         $chapter = Chapters::find($id);
 
         DB::beginTransaction();
@@ -1050,7 +1061,8 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
             $chapter->sistered_by = $request->filled('ch_sistered') ? $request->input('ch_sistered') : $request->input('ch_hid_sistered');
             $chapter->territory = $request->filled('ch_boundariesterry') ? $request->input('ch_boundariesterry') : $request->input('ch_hid_boundariesterry');
-            $chapter->status_id = $request->filled('ch_status') ? $request->input('ch_status') : $request->input('ch_hid_status');
+            $chapter->status_id = $status_id;
+            $chapter->probation_id = $probation_id;
             $chapter->notes = $request->input('ch_notes');
             $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
             $chapter->inquiries_note = $request->input('ch_inqnote');

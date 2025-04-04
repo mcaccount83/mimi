@@ -116,6 +116,10 @@
                                 <label>Boundaries:</label> {{ $chDetails->territory}}
                         <br>
                         <label>Status:</label> {{$chapterStatus}}
+                        @if ($chDetails->status_id != 1)
+                            <br>
+                            <label>Probation Reason:</label> {{$probationReason}}
+                        @endif
                         <br>
                         <label>Status Notes (not visible to board members):</label> {{ $chDetails->notes}}
                         <br><br>
@@ -271,6 +275,14 @@
                         @if($chDetails->is_active == '1')
                         <div class="col-md-6">
                             <h3 class="profile-username">Preset Emails</h3>
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Custom Message:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Board in MIMI</button>
+                                </div>
+                            </div>
                             @php
                                 $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($chDetails->id);
                                 $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
@@ -281,43 +293,39 @@
                                     <label>Blank Email:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">Email Board</button>
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">Blank Email to Board</button>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-6 mb-2">
-                                    <label>New Chapter Email:</label>
+                            @if ($startDate->greaterThanOrEqualTo($threeMonthsAgo))
+                                <div class="row">
+                                    <div class="col-sm-6 mb-2">
+                                        <label>New Chapter Email:</label>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        @if ($chDetails->ein != null)
+                                            <button id="NewChapter" type="button" class="btn bg-primary mb-1 btn-sm" onclick="showNewChapterEmailModal()">Send New Chapter Email</button>
+                                        @else
+                                            <button type="button" class="btn bg-primary mb-1 btn-sm" disabled>Must have EIN Number</button>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="col-sm-6 mb-2">
-                                    @if ($chDetails->ein != null && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
-                                        <button id="NewChapter" type="button" class="btn bg-primary mb-1 btn-sm" onclick="showNewChapterEmailModal()">Send New Chapter Email</button>
-                                    @elseif ($chDetails->ein == null && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
-                                        <button type="button" class="btn bg-primary mb-1 btn-sm" disabled>Must have EIN Number</button>
-                                    @else
-                                        <button type="button" class="btn bg-primary mb-1 btn-sm" disabled>Must be Newer than 3 Months</button>
-                                    @endif
-                                </div>
-                            </div>
+                            @endif
 
-                            @php
-                                $mimiUrl = 'https://example.com/mimi';
-                                $reRegMessage = "Your chapter's re-registration payment is due at this time and has not yet been received.\n\n";
-                                $reRegMessage .= "Calculate your payment:\n";
-                                $reRegMessage .= "- Determine how many people paid dues to your chapter since your last re-registration payment through today.\n";
-                                $reRegMessage .= "- Add in any people who paid reduced dues or had their dues waived due to financial hardship.\n";
-                                $reRegMessage .= "- If this total amount of members is less than 10, make your check for the amount of $50.\n";
-                                $reRegMessage .= "- If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due.\n";
-                                $reRegMessage .= "- Payments received after the last day of your renewal month should include a late fee of $10.\n\n";
-                                $reRegMessage .= "Make your payment:\n";
-                                $reRegMessage .= "- Pay Online: $mimiUrl\n";
-                                $reRegMessage .= "- Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712\n";
-                            @endphp
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Re-Registration Reminder:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Re-Registration Payment Reminder | MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}&body={{ rawurlencode($reRegMessage) }}'">Email Re-Registration</button>
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showChapterReRegModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Re-Registration</button>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Re-Registration Late Reminder:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showChapterReRegLateModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Late Notice</button>
                                 </div>
                             </div>
 
@@ -1918,6 +1926,159 @@ function showNewChapterEmailModal() {
         }
     });
 }
+
+function showChapterReRegModal(chapterName, chapterId) {
+    Swal.fire({
+        title: 'Chapter Re-Registration Reminder',
+        html: `
+            <p>This will send the regular re-registration reminder for <b>${chapterName}</b> to the full board and all coordinators.</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+            return {
+                chapter_id: chapterId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('chapters.sendchapterrereg') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapter_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showChapterReRegLateModal(chapterName, chapterId) {
+    Swal.fire({
+        title: 'Chapter Re-Registration Late Notice',
+        html: `
+            <p>This will send the regular re-registration late notice for <b>${chapterName}</b> to the full board and all coordinators.</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+            return {
+                chapter_id: chapterId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('chapters.sendchapterrereglate') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapter_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
 
 </script>
 @endsection

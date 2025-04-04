@@ -139,6 +139,11 @@ class Chapters extends Model
         return $this->belongsTo(Status::class, 'status_id', 'id');  // 'status_id' in chapters BelongsTo 'id' in status
     }
 
+    public function probation(): BelongsTo
+    {
+        return $this->belongsTo(Probation::class, 'probation_id', 'id');  // 'proation_id' in chapters BelongsTo 'id' in probation
+    }
+
     public function primaryCoordinator(): BelongsTo
     {
         return $this->belongsTo(Coordinators::class, 'primary_coordinator_id', 'id');  // 'primary_coordinator_id' in chapters BelongsTo 'id' in coordinators
@@ -152,6 +157,11 @@ class Chapters extends Model
     public function disbandCheck(): HasOne
     {
         return $this->hasOne(DisbandedChecklist::class, 'chapter_id', 'id');  // 'chapter_id' in documents HasOne 'id' in chapters
+    }
+
+    public function probationSubmit(): HasOne
+    {
+        return $this->hasOne(ProbationSubmission::class, 'chapter_id', 'id');  // 'chapter_id' in pobation_submission HasOne 'id' in chapters
     }
 
 

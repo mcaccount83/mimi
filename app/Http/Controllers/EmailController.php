@@ -12,6 +12,8 @@ use App\Mail\ChapterSetup;
 use App\Mail\ChapterEIN;
 use App\Mail\ChapterEmail;
 use App\Mail\NewChapterWelcome;
+use App\Mail\PaymentsReRegReminder;
+use App\Mail\PaymentsReRegLate;
 use App\Models\Resources;
 use App\Models\Chapters;
 use App\Models\EmailFields;
@@ -314,6 +316,124 @@ class EmailController extends Controller implements HasMiddleware
             ]);
         }
     }
+
+     /**
+     * Send Chapter Re-Registration Reminder
+     */
+    public function sendChapterReReg(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+
+        $input = $request->all();
+        $chapterId = $input['chapterId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $startMonthId = $chDetails->start_month_id;
+        $emailListChap = $baseQuery['emailListChap'];  // Full Board
+        $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+
+        try {
+            DB::beginTransaction();
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getReRegData($startMonthId),
+            );
+
+            Mail::to($emailListChap)
+                ->cc($emailListCoord)
+                ->queue(new PaymentsReRegReminder($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successful sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
+            ]);
+
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
+            ]);
+        }
+    }
+
+    /**
+     * Send Chapter Re-Registration Late Notice
+     */
+    public function sendChapterReRegLate(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+
+        $input = $request->all();
+        $chapterId = $input['chapterId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $startMonthId = $chDetails->start_month_id;
+        $emailListChap = $baseQuery['emailListChap'];  // Full Board
+        $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+
+        try {
+            DB::beginTransaction();
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getReRegData($startMonthId),
+            );
+
+            Mail::to($emailListChap)
+                ->cc($emailListCoord)
+                ->queue(new PaymentsReRegLate($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successful sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
+            ]);
+
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
+            ]);
+        }
+
+    }
+
 
 
 }

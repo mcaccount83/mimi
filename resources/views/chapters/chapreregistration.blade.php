@@ -24,7 +24,7 @@
                     <thead>
                         <tr>
                             <th>Payment</th>
-                            <th>Email</th>
+                            <th>Send</th>
                             <th>Conf/Reg</th>
                             <th>State</th>
                             <th>Name</th>
@@ -37,22 +37,8 @@
                     <tbody>
                         @foreach($reChapterList as $list)
                         @php
-                            $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                            $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
-                            $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
-
-                            // Define the message body with a link
-                            $mimiUrl = 'https://example.com/mimi';
-                            $mailMessage = "Your chapter's re-registration payment is due at this time and has not yet been received.\n\n";
-                            $mailMessage .= "Calculate your payment:\n";
-                            $mailMessage .= "- Determine how many people paid dues to your chapter since your last re-registration payment through today.\n";
-                            $mailMessage .= "- Add in any people who paid reduced dues or had their dues waived due to financial hardship.\n";
-                            $mailMessage .= "- If this total amount of members is less than 10, make your check for the amount of $50.\n";
-                            $mailMessage .= "- If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due.\n";
-                            $mailMessage .= "- Payments received after the last day of your renewal month should include a late fee of $10.\n\n";
-                            $mailMessage .= "Make your payment:\n";
-                            $mailMessage .= "- Pay Online: $mimiUrl\n";
-                            $mailMessage .= "- Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712\n";
+                            $due = $list->startMonth->month_short_name . ' ' . $list->next_renewal_year;
+                            $overdue = (date('Y') * 12 + date('m')) - ($list->next_renewal_year * 12 + $list->start_month_id);
                         @endphp
                         <tr>
                             <td class="text-center align-middle">
@@ -60,9 +46,16 @@
                                     <a href="{{ url("/chapterpaymentedit/{$list->id}") }}"><i class="far fa-credit-card"></i></a>
                                 @endif
                             </td>
-
                             <td class="text-center align-middle">
-                                <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Re-Registration Payment Reminder | MOMS Club of ' . $list->name . ', ' . $list->state_short_name) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
+                                @if ($due && !$overdue)
+                                    <a onclick="showChapterReRegModal('{{ $list->name }}', {{ $list->id }})"><i class="far fa-envelope text-primary"></i></a>
+                                @endif
+                                @if ($overdue == 1)
+                                    <a onclick="showChapterReRegLateModal('{{ $list->name }}', {{ $list->id }})"><i class="far fa-envelope text-primary"></i></a>
+                                @endif
+                                @if ($overdue > 1)
+                                    {{-- <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="far fa-envelope text-primary"></i></a> --}}
+                                @endif
                             </td>
                             <td>
                                 @if ($list->region->short_name != "None")
@@ -74,17 +67,10 @@
                             <td>{{ $list->state->state_short_name }}</td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->payments->rereg_notes }}</td>
-                            <td style="
-                                @php
-                                    $due = $list->startMonth->month_short_name . ' ' . $list->next_renewal_year;
-                                    $overdue = (date('Y') * 12 + date('m')) - ($list->next_renewal_year * 12 + $list->start_month_id);
-                                    if ($overdue > 1) {
-                                        echo 'background-color: #dc3545; color: #ffffff;';
-                                    } elseif ($overdue == 1) {
-                                        echo 'background-color: #ffc107;';
-                                    }
-                                @endphp
-                                " data-sort="{{ $list->next_renewal_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
+                            <td @if ($overdue > 1) style="background-color: #dc3545; color: #ffffff;"
+                                @elseif ($overdue == 1) style="background-color: #ffc107;"
+                                @endif
+                                data-sort="{{ $list->next_renewal_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
                                 {{ $due }}
                             </td>
                             <td><span class="date-mask">{{ $list->payments->rereg_date }}</span></td>
@@ -159,7 +145,6 @@ var base_url = '{{ url("/chapter/reregistration") }}';
     }
 }
 
-
 function showAll() {
     var base_url = '{{ url("/chapter/reregistration") }}';
     if ($("#showAll").prop("checked") == true) {
@@ -168,6 +153,159 @@ function showAll() {
         window.location.href = base_url;
     }
 }
+
+function showChapterReRegModal(chapterName, chapterId) {
+    Swal.fire({
+        title: 'Chapter Re-Registration Reminder',
+        html: `
+            <p>This will send the regular re-registration reminder for <b>${chapterName}</b> to the full board and all coordinators.</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+            return {
+                chapter_id: chapterId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('chapters.sendchapterrereg') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapter_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showChapterReRegLateModal(chapterName, chapterId) {
+    Swal.fire({
+        title: 'Chapter Re-Registration Late Notice',
+        html: `
+            <p>This will send the regular re-registration late notice for <b>${chapterName}</b> to the full board and all coordinators.</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+            return {
+                chapter_id: chapterId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('chapters.sendchapterrereglate') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapter_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
 
 </script>
 @endsection

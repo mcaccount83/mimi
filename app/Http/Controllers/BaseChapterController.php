@@ -7,6 +7,7 @@ use App\Models\Conference;
 use App\Models\Coordinators;
 use App\Models\FinancialReportAwards;
 use App\Models\Month;
+use App\Models\Probation;
 use App\Models\Region;
 use App\Models\State;
 use App\Models\Status;
@@ -226,7 +227,7 @@ class BaseChapterController extends Controller
     public function getChapterDetails($chId)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator',
-            'payments', 'disbandCheck', 'boardsDisbanded']) ->find($chId);
+            'payments', 'disbandCheck', 'probation', 'boardsDisbanded']) ->find($chId);
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
         $regionLongName = $chDetails->region?->long_name;
@@ -237,6 +238,7 @@ class BaseChapterController extends Controller
 
         $startMonthName = $chDetails->startMonth?->month_long_name;
         $chapterStatus = $chDetails->status?->chapter_status;
+        $probationReason = $chDetails->probation?->probation_reason;
         $websiteLink = $chDetails->webLink?->link_status ?? null;
 
         $chPayments = $chDetails->payments;
@@ -246,6 +248,7 @@ class BaseChapterController extends Controller
         $displayEOY = getEOYDisplay();  // Conditions to Show EOY Items
 
         $allStatuses = Status::all();  // Full List for Dropdown Menu
+        $allProbation = Probation::all();  // Full List for Dropdown Menu
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
@@ -300,8 +303,8 @@ class BaseChapterController extends Controller
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList, 'emailCCData' => $emailCCData,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
-            'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY,
-            'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
+            'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'displayEOY' => $displayEOY, 'probationReason' => $probationReason,
+            'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails, 'allProbation' => $allProbation,
             'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
         ];
     }

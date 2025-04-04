@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Carbon;
+
 class BaseMailDataController extends Controller
 {
     protected $userController;
@@ -199,6 +201,29 @@ class BaseMailDataController extends Controller
             'fname' => $input['first_name'] ?? null,
             'lname' => $input['last_name'] ?? null,
             'email' => $input['email'] ?? null,
+        ];
+    }
+
+    public function getReRegData($startMonthId)
+    {
+        $startDate = Carbon::createFromDate(null, $startMonthId, 1);
+        $year = $startDate->year;
+        $monthInWords = $startDate->format('F');
+
+        $rangeEndDate = $startDate->copy()->subMonth()->endOfMonth();
+        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
+
+        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
+        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
+
+        $now = Carbon::now();
+        $currentMonthInWords = $now->format('F');
+
+        return [
+            'startRange' => $rangeStartDateFormatted,
+            'endRange' => $rangeEndDateFormatted,
+            'startMonth' => $monthInWords,
+            'dueMonth' => $currentMonthInWords,
         ];
     }
 

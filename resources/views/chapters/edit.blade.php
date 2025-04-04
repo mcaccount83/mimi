@@ -34,6 +34,7 @@
             <input type="hidden" name="ch_hid_sistered" value="{{$chDetails->sistered_by}}">
             <input type="hidden" name="ch_hid_primarycor" value="{{$chDetails->primary_coordinator_id}}">
             <input type="hidden" name="ch_hid_status" value="{{ $chapterStatus }}">
+            <input type="hidden" name="ch_hid_probation" value="{{ $probationReason }}">
             <input type="hidden" name="ch_hid_boundariesterry" value="{{ $chDetails->territory}}" >
 
             <!-- Profile Image -->
@@ -149,9 +150,26 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-7">
-                                <input type="text" name="ch_notes" id="ch_notes" class="form-control" value="{{ $chDetails->notes }}"  placeholder="Status Notes" >
+                                <label class="col-sm-2 col-form-label ml-5" id="probationLabel" style="{{ $chDetails->status_id != 1 ? '' : 'display: none;' }}">Probation Reason:</label>
+                                <div class="col-sm-3" id="probationField" style="{{ $chDetails->status_id != 1 ? '' : 'display: none;' }}">
+                                    <select name="ch_probation" id="ch_probation" class="form-control" style="width: 100%;" {{ $chDetails->status_id != 1 ? 'required' : '' }}>
+                                        <option value="">Select Reason</option>
+                                        @foreach($allProbation as $probation)
+                                            <option value="{{$probation->id}}"
+                                                @if($chDetails->probation_id == $probation->id) selected @endif>
+                                                {{$probation->probation_reason}}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
+                            </div>
+                            <!-- /.form group -->
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Status Notes:</label>
+
+                                <div class="col-sm-8">
+                                    <input type="text" name="ch_notes" id="ch_notes" class="form-control" value="{{ $chDetails->notes }}"  placeholder="Status Notes" >
+                                    </div>
                             </div>
                              <!-- /.form group -->
                              <div class="form-group row">
@@ -185,14 +203,9 @@
                                 <label class="col-sm-2 col-form-label">Website:</label>
                                 <div class="col-sm-7">
                                     <input type="text" name="ch_website" id="ch_website" class="form-control"
-                                           {{-- data-inputmask='"mask": "http://*{1,250}"' data-mask --}}
-                                           {{-- value="{{ strpos($chDetails->website_url, 'http://') === 0 ? substr($chDetails->website_url, 7) : $chDetails->website_url }}" --}}
                                            value="{{$chDetails->website_url}}"
                                            onchange="updateWebsiteStatus()" placeholder="Chapter Website">
                                 </div>
-                                {{-- <div class="col-sm-7">
-                                    <input type="text" name="ch_website" id="ch_website" class="form-control" data-inputmask='"mask": "http://*{1,250}.*{2,6}"' data-mask  value="{{ strpos($chDetails->website_url, 'http://') === 0 ? substr($chDetails->website_url, 7) : $chDetails->website_url }}"
-                                        onchange="updateWebsiteStatus()" placeholder="Chapter Website">                                </div> --}}
                                 <div class="col-sm-3">
                                     <select name="ch_webstatus" id="ch_webstatus"class="form-control" style="width: 100%;" required>
                                         <option value="">Select Status</option>
@@ -307,6 +320,33 @@ $(document).ready(function() {
             var selectedValue = $(this).val();
             loadCoordinatorList(selectedValue);
     });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.getElementById('ch_status');
+    const probationLabel = document.getElementById('probationLabel');
+    const probationField = document.getElementById('probationField');
+    const probationSelect = document.getElementById('ch_probation');
+
+    // Function to toggle probation section visibility
+    function toggleProbationSection() {
+        const selectedStatusId = parseInt(statusSelect.value);
+        if (selectedStatusId !== 1 && selectedStatusId !== '') {
+            probationLabel.style.display = '';
+            probationField.style.display = '';
+            probationSelect.setAttribute('required', 'required');
+        } else {
+            probationLabel.style.display = 'none';
+            probationField.style.display = 'none';
+            probationSelect.removeAttribute('required');
+        }
+    }
+
+    // Initial toggle based on current value
+    toggleProbationSection();
+
+    // Add event listener for future changes
+    statusSelect.addEventListener('change', toggleProbationSection);
 });
 
 </script>
