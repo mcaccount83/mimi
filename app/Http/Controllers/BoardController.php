@@ -109,9 +109,12 @@ class BoardController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
+        $chPayments = $baseQuery['chPayments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $chDocuments = $baseQuery['chDocuments'];
+        $probationReason = $baseQuery['probationReason'];
 
+        $allProbation = $baseQuery['allProbation'];
         $allWebLinks = $baseQuery['allWebLinks'];
         $allStates = $baseQuery['allStates'];
 
@@ -141,8 +144,8 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
-            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
-            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments,
+            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation,
+            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments
         ];
 
         return view('boards.president')->with($data);
@@ -163,9 +166,12 @@ class BoardController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
+        $chPayments = $baseQuery['chPayments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $chDocuments = $baseQuery['chDocuments'];
+        $probationReason = $baseQuery['probationReason'];
 
+        $allProbation = $baseQuery['allProbation'];
         $allWebLinks = $baseQuery['allWebLinks'];
         $allStates = $baseQuery['allStates'];
 
@@ -200,8 +206,8 @@ class BoardController extends Controller implements HasMiddleware
         $display_live = ($admin->display_live == 1);
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
-            'borDetails' => $borDetails, 'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
-            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments,
+            'borDetails' => $borDetails, 'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation,
+            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments
         ];
 
         return view('boards.member')->with($data);
@@ -881,6 +887,42 @@ class BoardController extends Controller implements HasMiddleware
 
         return view('boards.payment')->with($data);
     }
+
+     /**
+     * Show Probation Submission Form All Board Members
+     */
+    public function editProbationSubmission(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $chId = $user['user_chapterId'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $startMonthName = $baseQuery['startMonthName'];
+
+        $now = Carbon::now();
+        $month = $now->month;
+        $year = $now->year;
+        $start_month = $chDetails->start_month_id;
+        $next_renewal_year = $chDetails->next_renewal_year;
+        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
+        $rangeEndDate = $due_date->copy()->subMonth()->endOfMonth();
+        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
+
+        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
+        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
+            'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
+            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
+        ];
+
+        return view('boards.probation')->with($data);
+    }
+
+
 
     /**
      * Show M2M Donation Form All Board Members

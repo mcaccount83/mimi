@@ -7,6 +7,7 @@ use App\Models\Coordinators;
 use App\Models\FinancialReportAwards;
 use App\Models\State;
 use App\Models\Website;
+use App\Models\Probation;
 
 class BaseBoardController extends Controller
 {
@@ -24,14 +25,16 @@ class BaseBoardController extends Controller
     public function getChapterDetails($id)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'president',
-            'payments', 'boards', 'reportReviewer', 'primaryCoordinator', 'disbandCheck'])->find($id);
+            'payments', 'boards', 'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck'])->find($id);
         $chId = $chDetails->id;
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
         $chConfId = $chDetails->conference_id;
         $chPcId = $chDetails->primary_coordinator_id;
+        $probationReason = $chDetails->probation?->probation_reason;
         $startMonthName = $chDetails->startMonth->month_long_name;
 
+        $allProbation = Probation::all();  // Full List for Dropdown Menu
         $allWebLinks = Website::all(); // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
@@ -77,7 +80,7 @@ class BaseBoardController extends Controller
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,
             'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail, 'displayEOY' => $displayEOY,
-            'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive
+            'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'allProbation' => $allProbation, 'probationReason' => $probationReason
         ];
     }
 }

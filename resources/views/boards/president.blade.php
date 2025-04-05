@@ -431,8 +431,8 @@
                             <label class="col-sm-4 col-form-label">Dues Paid:</label>
                             <div class="col-sm-8">
                                 <span class="float-right">
-                                    @if ($chDetails->members_paid_for)
-                                        <b>{{ $chDetails->members_paid_for }} Members</b> on <b><span class="date-mask">{{ $chDetails->dues_last_paid }}</span></b>
+                                    @if ($chPayments->rereg_members)
+                                        <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_payment }}</span></b>
                                     @else
                                         N/A
                                     @endif
@@ -444,8 +444,8 @@
                             <label class="col-sm-4 col-form-label">M2M Donation:</label>
                             <div class="col-sm-8">
                                 <span class="float-right">
-                                    @if ($chDetails->m2m_payment)
-                                        <b>${{ $chDetails->m2m_payment }}</b> on <b><span class="date-mask">{{ $chDetails->m2m_date }}</span></b>
+                                    @if ($chPayments->m2m_donation)
+                                        <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
                                     @else
                                         N/A
                                     @endif
@@ -457,8 +457,8 @@
                             <label class="col-sm-4 col-form-label">Sustaining Donation:</label>
                             <div class="col-sm-8">
                                 <span class="float-right">
-                                    @if ($chDetails->sustaining_donation)
-                                        <b>${{ $chDetails->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chDetails->sustaining_date }}</span></b>
+                                    @if ($chPayments->sustaining_donation)
+                                        <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
                                     @else
                                         N/A
                                     @endif
@@ -498,19 +498,30 @@
                         </li>
 
                       <li class="list-group-item">
-                        <h5>Resources</h5>
+                        <h5>Document Center</h5>
                             @if($chDocuments->ein_letter_path != null)
-                                {{-- <button type="button" class="btn bg-primary btn-sm mb-1" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->ein_letter_path }}'">Download EIN Letter</button><br> --}}
-                                <button type="button" class="btn bg-primary btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">View/Download EIN Letter</button>
-
-<br>
-                                @else
+                                <button type="button" class="btn bg-primary btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter</button><br>
+                            @else
                                 <button type="button" class="btn bg-primary btn-sm mb-1 disabled">No EIN Letter on File</button><br>
                             @endif
-                            <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
-                            <button id="eLearning" type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn bg-primary mb-1 btn-sm">eLearning Library</button><br>
-                            <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.viewresources') }}'">Chapter Resources</button>
+                            <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Chapter in Good Standing</button><br>
+                            @if($chDocuments->probation_path != null)
+                                <button type="button" class="btn bg-primary btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button><br>
+                            @endif
+                            @if($chDocuments->probation_release_path != null)
+                                <button type="button" class="btn bg-primary btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button><br>
+                            @endif
                       </li>
+
+                      <li class="list-group-item">
+                        <h5>Resources</h5>
+                            <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.viewresources') }}'">Chapter Resources</button><br>
+                            <button id="eLearning" type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn bg-primary mb-1 btn-sm">eLearning Library</button><br>
+                            @if($probationReason == 3)
+
+                            @endif
+                      </li>
+
                       <li class="list-group-item">
                             <h5>End of year Filing</h5>
 

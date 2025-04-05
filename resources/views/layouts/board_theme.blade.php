@@ -254,13 +254,35 @@
 <script src="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 
 <script>
-    //Datemask dd/mm/yyyy
-    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-    //Datemask2 mm/dd/yyyy
-    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-    //databask
+     //Datemask dd/mm/yyyy
+     $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy hh:mm:ss
+    $('#datemask2').inputmask('mm/dd/yyyy hh:mm:ss', { 'placeholder': 'mm/dd/yyyy hh:mm:ss' })
+    //Money Euro
     $('[data-mask]').inputmask()
 
+    //Date picker
+    $('#datepicker').datetimepicker({
+        format: 'L'
+    });
+     //Date picker
+     $('#datepicker1').datetimepicker({
+        format: 'L'
+    });
+
+    //Date and time picker
+    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+    //Date range picker
+    $('#reservation').daterangepicker()
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({
+      timePicker: true,
+      timePickerIncrement: 30,
+      locale: {
+        format: 'MM/DD/YYYY hh:mm A'
+      }
+    })
 </script>
 
 <script>
@@ -271,35 +293,41 @@
 </script>
 
 <script>
-    function applyPhoneMask() {
-            Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
-        }
+  function convertDateFormat(dateString) {
+        var parts = dateString.split('-');
+        return parts[1] + '/' + parts[2] + '/' + parts[0];
+    }
 
-        // Currency mask
-        function applyCurrencyMask() {
-        Inputmask({
-            alias: 'currency',
-            rightAlign: false,
-            groupSeparator: ',',
-            digits: 2,
-            digitsOptional: false,
-            placeholder: '0'
-        }).mask(".currency-mask");
-        }
+    function applyDateMask() {
+        $('.date-mask').each(function() {
+            var originalDate = $(this).text();
+            var formattedDate = convertDateFormat(originalDate);
+            $(this).text(formattedDate);
+        });
+        Inputmask({"mask": "99/99/9999"}).mask(".date-mask");
+    }
 
-        //Cusotmize AJAX Popups to Match Theme
+  function applyPhoneMask() {
+        Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
+    }
+
+    function applyHttpMask() {
+        Inputmask({"mask": "http://*{1,250}"}).mask(".http-mask");
+    }
+
+    //Cusotmize AJAX Popups to Match Theme
     function customSuccessAlert(message) {
-            Swal.fire({
-                title: 'Success',
-                html: message,
-                icon: 'success',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn-sm btn-success', // Match your theme button class
-                },
-                buttonsStyling: false // Disable default button styling
-            });
-        }
+        Swal.fire({
+            title: 'Success',
+            html: message,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'btn-sm btn-success', // Match your theme button class
+            },
+            buttonsStyling: false // Disable default button styling
+        });
+    }
 
     function customWarningAlert(message) {
         Swal.fire({
