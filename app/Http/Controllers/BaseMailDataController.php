@@ -51,7 +51,7 @@ class BaseMailDataController extends Controller
             'chapterConf' => $chDetails->conference_id,
             'chapterEIN' => $chDetails->ein,
             'chapterBoundaries' => $chDetails->territory,
-            'chapterStatus' => $chDetails->status_id,
+            'chapterStatus' => $chDetails->status->chapter_status,
             'chapterNotes' => $chDetails->notes,
             'chapterInquiriesContact' => $chDetails->inquiries_contact,
             'chapterInquiriesNotes' => $chDetails->inquiries_note,
@@ -59,7 +59,11 @@ class BaseMailDataController extends Controller
             'chapterPOBox' => $chDetails->po_box,
             'chapterAdditionalInfo' => $chDetails->additional_info,
             'chapterWebsiteURL' => $chDetails->website_url,
-            'chapterWebsiteStatus' => $chDetails->website_status,
+            'chapterWebsiteStatus' => $chDetails->website?->link_status,
+            'egroup' => $chDetails->egroup,
+            'facebook' => $chDetails->social1,
+            'twitter' => $chDetails->social2,
+            'instagram' => $chDetails->social3,
         ];
     }
 
@@ -113,7 +117,7 @@ class BaseMailDataController extends Controller
         return [
             'chapterNameUpd' => $chDetailsUpd->name,
             'boundariesUpd' => $chDetailsUpd->territory,
-            'statusUpd' => $chDetailsUpd->status_id,
+            'statusUpd' => $chDetailsUpd->status->chapter_status,
             'notesUpd' => $chDetailsUpd->notes,
             'inquiriesContactUpd' => $chDetailsUpd->inquiries_contact,
             'inquiriesNotesUpd' => $chDetailsUpd->inquiries_note,
@@ -121,7 +125,11 @@ class BaseMailDataController extends Controller
             'poBoxUpd' => $chDetailsUpd->po_box,
             'additionalInfoUpd' => $chDetailsUpd->additional_info,
             'websiteURLUpd' => $chDetailsUpd->website_url,
-            'websiteStatusUpd' => $chDetailsUpd->website_status,
+            'websiteStatusUpd' => $chDetailsUpd->website?->link_status,
+            'egroupUpd' => $chDetailsUpd->egroup,
+            'facebookUpd' => $chDetailsUpd->social1,
+            'twitterUpd' => $chDetailsUpd->social2,
+            'instagramUpd' => $chDetailsUpd->social3,
             'pcNameUpd' => $pcDetailsUpd->first_name.' '.$pcDetailsUpd->last_name,
             'pcEmailUpd' => $pcDetailsUpd->email,
         ];
@@ -222,6 +230,29 @@ class BaseMailDataController extends Controller
             'endRange' => $rangeEndDateFormatted,
             'startMonth' => $monthInWords,
             'dueMonth' => $currentMonthInWords,
+        ];
+    }
+
+    public function getProbationData($input)
+    {
+        return [
+            'q1_dues' => $input['q1_dues'] ?? null,
+            'q1_benefit' => $input['q1_benefit'] ?? null,
+            'q2_dues' => $input['q2_dues'] ?? null,
+            'q2_benefit' => $input['q2_benefit'] ?? null,
+            'q3_dues' => $input['q3_dues'] ?? null,
+            'q3_benefit' => $input['q3_benefit'] ?? null,
+            'q4_dues' => $input['q4_dues'] ?? null,
+            'q4_benefit' => $input['q4_benefit'] ?? null,
+
+            'q1_percentage' => $input['q1_percentage'] ?? null,
+            'q2_percentage' => $input['q2_percentage'] ?? null,
+            'q3_percentage' => $input['q3_percentage'] ?? null,
+            'q4_percentage' => $input['q4_percentage'] ?? null,
+
+            'TotalDues' => $input['TotalDues'] ?? null,
+            'TotalBenefit' => $input['TotalBenefit'] ?? null,
+            'TotalPercentage' => $input['TotalPercentage'] ?? null,
         ];
     }
 

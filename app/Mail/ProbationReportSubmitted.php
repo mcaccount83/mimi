@@ -10,23 +10,20 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class ProbationNoRptLetter extends Mailable implements ShouldQueue
+class ProbationReportSubmitted extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
     public $mailData;
-
-    protected $pdfPath;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($mailData, $pdfPath)
+    public function __construct($mailData)
     {
         $this->mailData = $mailData;
-        $this->pdfPath = $pdfPath;
     }
 
     /**
@@ -35,12 +32,7 @@ class ProbationNoRptLetter extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject("Probation No Report Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->replyTo($this->mailData['userEmail'])
-            ->markdown('emails.chapter.probationnorptletter')
-            ->attach($this->pdfPath, [
-                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Probation_No_Report.pdf',
-                'mime' => 'application/pdf',
-            ]);
+            ->subject("Quarterly Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
+            ->markdown('emails.chapter.probationreportsubmitted');
     }
 }

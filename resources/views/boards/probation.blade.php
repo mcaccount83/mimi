@@ -5,9 +5,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <form method="POST" action='{{ route("board.updatepresident", $chDetails->id) }}' autocomplete="off">
+                    <form method="POST" action='{{ route("board.updateprobation", $chDetails->id) }}' autocomplete="off">
                         @csrf
-
 
                         <div class="col-md-12">
                             <div class="card card-widget widget-user">
@@ -40,7 +39,7 @@
                 <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
                          <!-- /.card-header -->
-                         <p class="description text-center">
+                         <p >
                             Enter Dues Income and Member Benefit Expenses for each Quarter Below.
                         </p>
 
@@ -52,7 +51,7 @@
                                     <div class="form-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
-                                        <input type="text" class="form-control " name="q1_dues" id="q1_dues" value="{{ $chDetails->probation?->q1_dues }}"
+                                        <input type="text" class="form-control " name="q1_dues" id="q1_dues" value="{{ $chDetails->probationSubmit?->q1_dues }}"
                                             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                         </div>
                                     </div>
@@ -64,21 +63,21 @@
                                     <div class="form-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
-                                        <input type="text" class="form-control " name="q1_benefit" id="q1_benefit" value="{{ $chDetails->probation?->q1_benefit }}"
+                                        <input type="text" class="form-control " name="q1_benefit" id="q1_benefit" value="{{ $chDetails->probationSubmit?->q1_benefit }}"
                                             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4 float-left nopadding">
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label for="Q1Percentage">Q1 Party %</label>
                                     <div class="form-group">
                                         <div class="input-group-prepend">
                                            <input type="text" class="form-control" name="q1_percentage" id="q1_percentage" value="0%" readonly>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                             </div>
                         </div>
@@ -91,7 +90,7 @@
                                         <div class="form-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
-                                            <input type="text" class="form-control " name="q1_dues" id="q1_dues" value="{{ $chDetails->probation?->q1_dues }}"
+                                            <input type="text" class="form-control " name="q2_dues" id="q2_dues" value="{{ $chDetails->probationSubmit?->q2_dues }}"
                                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                             </div>
                                         </div>
@@ -103,21 +102,21 @@
                                         <div class="form-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
-                                            <input type="text" class="form-control " name="q1_benefit" id="q1_benefit" value="{{ $chDetails->probation?->q1_benefit }}"
+                                            <input type="text" class="form-control " name="q2_benefit" id="q2_benefit" value="{{ $chDetails->probationSubmit?->q2_benefit }}"
                                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4 float-left nopadding">
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="Q1Percentage">Q2 Party %</label>
                                         <div class="form-group">
                                             <div class="input-group-prepend">
-                                               <input type="text" class="form-control" name="q1_percentage" id="q1_percentage" value="0%" readonly>
+                                               <input type="text" class="form-control" name="q2_percentage" id="q2_percentage" value="0%" readonly>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 </div>
                             </div>
@@ -130,7 +129,7 @@
                                             <div class="form-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">$</span>
-                                                <input type="text" class="form-control " name="q1_dues" id="q1_dues" value="{{ $chDetails->probation?->q1_dues }}"
+                                                <input type="text" class="form-control " name="q3_dues" id="q3_dues" value="{{ $chDetails->probationSubmit?->q3_dues }}"
                                                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                                 </div>
                                             </div>
@@ -142,21 +141,21 @@
                                             <div class="form-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">$</span>
-                                                <input type="text" class="form-control " name="q1_benefit" id="q1_benefit" value="{{ $chDetails->probation?->q1_benefit }}"
+                                                <input type="text" class="form-control " name="q3_benefit" id="q3_benefit" value="{{ $chDetails->probationSubmit?->q3_benefit }}"
                                                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-4 float-left nopadding">
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="Q1Percentage">Q3 Party %</label>
                                             <div class="form-group">
                                                 <div class="input-group-prepend">
-                                                   <input type="text" class="form-control" name="q1_percentage" id="q1_percentage" value="0%" readonly>
+                                                   <input type="text" class="form-control" name="q3_percentage" id="q3_percentage" value="0%" readonly>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     </div>
                                 </div>
@@ -169,7 +168,7 @@
                                                 <div class="form-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control " name="q1_dues" id="q1_dues" value="{{ $chDetails->probation?->q1_dues }}"
+                                                    <input type="text" class="form-control " name="q4_dues" id="q4_dues" value="{{ $chDetails->probationSubmit?->q4_dues }}"
                                                         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                                     </div>
                                                 </div>
@@ -181,21 +180,21 @@
                                                 <div class="form-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control " name="q1_benefit" id="q1_benefit" value="{{ $chDetails->probation?->q1_benefit }}"
+                                                    <input type="text" class="form-control " name="q4_benefit" id="q4_benefit" value="{{ $chDetails->probationSubmit?->q4_benefit }}"
                                                         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4 float-left nopadding">
-                                            <div class="form-group">
+                                            {{-- <div class="form-group">
                                                 <label for="Q1Percentage">Q4 Party %</label>
                                                 <div class="form-group">
                                                     <div class="input-group-prepend">
-                                                       <input type="text" class="form-control" name="q1_percentage" id="q1_percentage" value="0%" readonly>
+                                                       <input type="text" class="form-control" name="q4_percentage" id="q4_percentage" value="0%" readonly>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         </div>
                                     </div>
@@ -208,7 +207,7 @@
                                                     <div class="form-group">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">$</span>
-                                                        <input type="text" class="form-control " name="q1_dues" id="q1_dues" readonly
+                                                        <input type="text" class="form-control " name="TotalDues" id="TotalDues" readonly
                                                             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                                         </div>
                                                     </div>
@@ -220,7 +219,7 @@
                                                     <div class="form-group">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">$</span>
-                                                        <input type="text" class="form-control " name="q1_benefit" id="q1_benefit" readonly
+                                                        <input type="text" class="form-control " name="TotalBenefit" id="TotalBenefit" readonly
                                                             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                                         </div>
                                                     </div>
@@ -228,10 +227,10 @@
                                             </div>
                                             <div class="col-md-4 float-left nopadding">
                                                 <div class="form-group">
-                                                    <label for="Q1Percentage">YTD Party %</label>
+                                                    <label for="Q1Percentage">YTD Benefit %</label>
                                                     <div class="form-group">
                                                         <div class="input-group-prepend">
-                                                           <input type="text" class="form-control" name="q1_percentage" id="q1_percentage" value="0%" readonly>
+                                                           <input type="text" class="form-control" name="TotalPercentage" id="TotalPercentage" value="0%" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -254,10 +253,13 @@
                 </div>
 
             <div class="card-body text-center">
-                <button id="Save" type="submit" class="btn btn-primary" onclick="return validateEmailsBeforeSubmit()"><i class="fas fa-save" ></i>&nbsp; Save</button>
+                <button id="Save" type="submit" class="btn btn-primary" onclick="return validateEmailsBeforeSubmit()"><i class="fas fa-share" ></i>&nbsp; Submit</button>
 
-            </form>
-                <button id="Password" type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
+            @if($userType === 'coordinator')
+            <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a>
+        @else
+        <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
+        @endif
                 <button id="logout-btn" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
@@ -271,67 +273,91 @@
 @section('customscript')
 
 <script>
-/* Curency Mask */
 document.addEventListener("DOMContentLoaded", function() {
+    // Set up Inputmask
     Inputmask().mask(document.querySelectorAll('[data-inputmask]'));
 
+    // Correctly get the input elements for all quarters
     var q1DuesInput = document.getElementById("q1_dues");
     var q1BenefitInput = document.getElementById("q1_benefit");
-    var q1DuesInput = document.getElementById("q2_dues");
-    var q1BenefitInput = document.getElementById("q2_benefit");
-    var q1DuesInput = document.getElementById("q3_dues");
-    var q1BenefitInput = document.getElementById("q3_benefit");
-    var q1DuesInput = document.getElementById("q4_dues");
-    var q1BenefitInput = document.getElementById("q4_benefit");
+    var q2DuesInput = document.getElementById("q2_dues");
+    var q2BenefitInput = document.getElementById("q2_benefit");
+    var q3DuesInput = document.getElementById("q3_dues");
+    var q3BenefitInput = document.getElementById("q3_benefit");
+    var q4DuesInput = document.getElementById("q4_dues");
+    var q4BenefitInput = document.getElementById("q4_benefit");
 
-    q1DuesInput.addEventListener("input", ChangeQ1Fees);
-    q1DuesInput.addEventListener("blur", ChangeQ1Fees);
-    q1DuesInput.addEventListener("change", ChangeQ1Fees);
-    q1BenefitInput.addEventListener("input", ChangeQ1Fees);
-    q1BenefitInput.addEventListener("blur", ChangeQ1Fees);
-    q1BenefitInput.addEventListener("change", ChangeQ1Fees);
+    // Add event listeners for Q1
+    if (q1DuesInput) {
+        q1DuesInput.addEventListener("input", ChangeQ1Fees);
+        q1DuesInput.addEventListener("blur", ChangeQ1Fees);
+        q1DuesInput.addEventListener("change", ChangeQ1Fees);
+    }
+    if (q1BenefitInput) {
+        q1BenefitInput.addEventListener("input", ChangeQ1Fees);
+        q1BenefitInput.addEventListener("blur", ChangeQ1Fees);
+        q1BenefitInput.addEventListener("change", ChangeQ1Fees);
+    }
 
-    q2DuesInput.addEventListener("input", ChangeQ2Fees);
-    q2DuesInput.addEventListener("blur", ChangeQ2Fees);
-    q2DuesInput.addEventListener("change", ChangeQ2Fees);
-    q2BenefitInput.addEventListener("input", ChangeQ2Fees);
-    q2BenefitInput.addEventListener("blur", ChangeQ2Fees);
-    q2BenefitInput.addEventListener("change", ChangeQ2Fees);
+    // Add event listeners for Q2
+    if (q2DuesInput) {
+        q2DuesInput.addEventListener("input", ChangeQ2Fees);
+        q2DuesInput.addEventListener("blur", ChangeQ2Fees);
+        q2DuesInput.addEventListener("change", ChangeQ2Fees);
+    }
+    if (q2BenefitInput) {
+        q2BenefitInput.addEventListener("input", ChangeQ2Fees);
+        q2BenefitInput.addEventListener("blur", ChangeQ2Fees);
+        q2BenefitInput.addEventListener("change", ChangeQ2Fees);
+    }
 
-    q3DuesInput.addEventListener("input", ChangeQ3Fees);
-    q3DuesInput.addEventListener("blur", ChangeQ3Fees);
-    q3DuesInput.addEventListener("change", ChangeQ3Fees);
-    q3BenefitInput.addEventListener("input", ChangeQ3Fees);
-    q3BenefitInput.addEventListener("blur", ChangeQ3Fees);
-    q3BenefitInput.addEventListener("change", ChangeQ3Fees);
+    // Add event listeners for Q3
+    if (q3DuesInput) {
+        q3DuesInput.addEventListener("input", ChangeQ3Fees);
+        q3DuesInput.addEventListener("blur", ChangeQ3Fees);
+        q3DuesInput.addEventListener("change", ChangeQ3Fees);
+    }
+    if (q3BenefitInput) {
+        q3BenefitInput.addEventListener("input", ChangeQ3Fees);
+        q3BenefitInput.addEventListener("blur", ChangeQ3Fees);
+        q3BenefitInput.addEventListener("change", ChangeQ3Fees);
+    }
 
-    q4DuesInput.addEventListener("input", ChangeQ4Fees);
-    q4DuesInput.addEventListener("blur", ChangeQ4Fees);
-    q4DuesInput.addEventListener("change", ChangeQ4Fees);
-    q4BenefitInput.addEventListener("input", ChangeQ4Fees);
-    q4BenefitInput.addEventListener("blur", ChangeQ4Fees);
-    q4BenefitInput.addEventListener("change", ChangeQ4Fees);
+    // Add event listeners for Q4
+    if (q4DuesInput) {
+        q4DuesInput.addEventListener("input", ChangeQ4Fees);
+        q4DuesInput.addEventListener("blur", ChangeQ4Fees);
+        q4DuesInput.addEventListener("change", ChangeQ4Fees);
+    }
+    if (q4BenefitInput) {
+        q4BenefitInput.addEventListener("input", ChangeQ4Fees);
+        q4BenefitInput.addEventListener("blur", ChangeQ4Fees);
+        q4BenefitInput.addEventListener("change", ChangeQ4Fees);
+    }
 
-    setTimeout(ChangeQ1Fees, 500);
-    setTimeout(ChangeQ2Fees, 500);
-    setTimeout(ChangeQ3Fees, 500);
-    setTimeout(ChangeQ4Fees, 500);
+    // Run initial calculations with delay to ensure DOM is fully loaded
+    setTimeout(function() {
+        if (q1DuesInput) ChangeQ1Fees();
+        if (q2DuesInput) ChangeQ2Fees();
+        if (q3DuesInput) ChangeQ3Fees();
+        if (q4DuesInput) ChangeQ4Fees();
+    }, 500);
 });
 
 function ChangeQ1Fees() {
     var q1DuesInput = document.getElementById("q1_dues");
     var q1BenefitInput = document.getElementById("q1_benefit");
-    var q1PercentageInput = document.getElementById("q1_percentage");
+    // var q1PercentageInput = document.getElementById("q1_percentage");
 
     var q1Dues = parseNumericValue(q1DuesInput.value);
     var q1Benefit = parseNumericValue(q1BenefitInput.value);
 
-    var percentage = 0;
-    if (q1Dues > 0) {
-        percentage = ( q1Benefit / q1Dues) * 100;
-    }
+    // var percentage = 0;
+    // if (q1Dues > 0) {
+    //     percentage = (q1Benefit / q1Dues) * 100;
+    // }
 
-    q1PercentageInput.value = percentage.toFixed(2) + "%";
+    // q1PercentageInput.value = percentage.toFixed(2) + "%";
 
     ReCalculateTotal();
 }
@@ -339,17 +365,17 @@ function ChangeQ1Fees() {
 function ChangeQ2Fees() {
     var q2DuesInput = document.getElementById("q2_dues");
     var q2BenefitInput = document.getElementById("q2_benefit");
-    var q2PercentageInput = document.getElementById("q2_percentage");
+    // var q2PercentageInput = document.getElementById("q2_percentage");
 
     var q2Dues = parseNumericValue(q2DuesInput.value);
     var q2Benefit = parseNumericValue(q2BenefitInput.value);
 
-    var percentage = 0;
-    if (q2Dues > 0) {
-        percentage = ( q2Benefit/ q2Dues) * 100;
-    }
+    // var percentage = 0;
+    // if (q2Dues > 0) {
+    //     percentage = (q2Benefit / q2Dues) * 100;
+    // }
 
-    q2PercentageInput.value = percentage.toFixed(2) + "%";
+    // q2PercentageInput.value = percentage.toFixed(2) + "%";
 
     ReCalculateTotal();
 }
@@ -357,17 +383,17 @@ function ChangeQ2Fees() {
 function ChangeQ3Fees() {
     var q3DuesInput = document.getElementById("q3_dues");
     var q3BenefitInput = document.getElementById("q3_benefit");
-    var q3PercentageInput = document.getElementById("q3_percentage");
+    // var q3PercentageInput = document.getElementById("q3_percentage");
 
     var q3Dues = parseNumericValue(q3DuesInput.value);
     var q3Benefit = parseNumericValue(q3BenefitInput.value);
 
-    var percentage = 0;
-    if (q3Dues > 0) {
-        percentage = ( q3Benefit/ q3Dues) * 100;
-    }
+    // var percentage = 0;
+    // if (q3Dues > 0) {
+    //     percentage = (q3Benefit / q3Dues) * 100;
+    // }
 
-    q3PercentageInput.value = percentage.toFixed(2) + "%";
+    // q3PercentageInput.value = percentage.toFixed(2) + "%";
 
     ReCalculateTotal();
 }
@@ -375,29 +401,30 @@ function ChangeQ3Fees() {
 function ChangeQ4Fees() {
     var q4DuesInput = document.getElementById("q4_dues");
     var q4BenefitInput = document.getElementById("q4_benefit");
-    var q4PercentageInput = document.getElementById("q4_percentage");
+    // var q4PercentageInput = document.getElementById("q4_percentage");
 
-    var q3Dues = parseNumericValue(q4DuesInput.value);
-    var q3Benefit = parseNumericValue(q4BenefitInput.value);
+    var q4Dues = parseNumericValue(q4DuesInput.value);
+    var q4Benefit = parseNumericValue(q4BenefitInput.value);
 
-    var percentage = 0;
-    if (q4Dues > 0) {
-        percentage = ( q4Benefit/ q4Dues) * 100;
-    }
+    // var percentage = 0;
+    // if (q4Dues > 0) {
+    //     percentage = (q4Benefit / q4Dues) * 100;
+    // }
 
-    q4PercentageInput.value = percentage.toFixed(2) + "%";
+    // q4PercentageInput.value = percentage.toFixed(2) + "%";
 
     ReCalculateTotal();
 }
+
 function ReCalculateTotal() {
-    var totalQ1Dues = parseNumericValue(document.getElementById("q1_dues").value);
-    var totalQ1Benefit = parseNumericValue(document.getElementById("q1_benefit").value);
-    var totalQ2Dues = parseNumericValue(document.getElementById("q2_dues").value);
-    var totalQ2Benefit = parseNumericValue(document.getElementById("q2_benefit").value);
-    var totalQ3Dues = parseNumericValue(document.getElementById("q3_dues").value);
-    var totalQ3Benefit = parseNumericValue(document.getElementById("q3_benefit").value);
-    var totalQ4Dues = parseNumericValue(document.getElementById("q4_dues").value);
-    var totalQ4Benefit = parseNumericValue(document.getElementById("q4_benefit").value);
+    var totalQ1Dues = parseNumericValue(document.getElementById("q1_dues")?.value || "0");
+    var totalQ1Benefit = parseNumericValue(document.getElementById("q1_benefit")?.value || "0");
+    var totalQ2Dues = parseNumericValue(document.getElementById("q2_dues")?.value || "0");
+    var totalQ2Benefit = parseNumericValue(document.getElementById("q2_benefit")?.value || "0");
+    var totalQ3Dues = parseNumericValue(document.getElementById("q3_dues")?.value || "0");
+    var totalQ3Benefit = parseNumericValue(document.getElementById("q3_benefit")?.value || "0");
+    var totalQ4Dues = parseNumericValue(document.getElementById("q4_dues")?.value || "0");
+    var totalQ4Benefit = parseNumericValue(document.getElementById("q4_benefit")?.value || "0");
 
     var totalDues = totalQ1Dues + totalQ2Dues + totalQ3Dues + totalQ4Dues;
     var totalBenefit = totalQ1Benefit + totalQ2Benefit + totalQ3Benefit + totalQ4Benefit;
@@ -407,14 +434,18 @@ function ReCalculateTotal() {
         totalPercentage = (totalBenefit / totalDues) * 100;
     }
 
-    if (document.getElementById("TotalDues")) {
-        document.getElementById("TotalDues").value = formatCurrency(totalDues);
+    var totalDuesElement = document.getElementById("TotalDues");
+    var totalBenefitElement = document.getElementById("TotalBenefit");
+    var totalPercentageElement = document.getElementById("TotalPercentage");
+
+    if (totalDuesElement) {
+        totalDuesElement.value = formatCurrency(totalDues);
     }
-    if (document.getElementById("TotalBenefit")) {
-        document.getElementById("TotalBenefit").value = formatCurrency(totalBenefit);
+    if (totalBenefitElement) {
+        totalBenefitElement.value = formatCurrency(totalBenefit);
     }
-    if (document.getElementById("TotalPercentage")) {
-        document.getElementById("TotalPercentage").value = totalPercentage.toFixed(2) + "%";
+    if (totalPercentageElement) {
+        totalPercentageElement.value = totalPercentage.toFixed(2) + "%";
     }
 }
 

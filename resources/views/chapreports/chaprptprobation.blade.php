@@ -29,7 +29,8 @@
 				  <th>State</th>
                   <th>Name</th>
                  <th>Status</th>
-				 <th>Status/Re-Reg Notes</th>
+                 <th>Reason</th>
+				 <th>Notes</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,6 +50,7 @@
                             @elseif ( $list->status_id == 5) style="background-color: #ffc107;"
                             @endif>
                         {{ $list->status->chapter_status }}</td>
+                        <td>{{ $list->probation?->probation_reason }}</td>
 						<td>{{ $list->notes }}</td>
 			        </tr>
                   @endforeach

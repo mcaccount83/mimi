@@ -58,10 +58,13 @@ class ChapterController extends Controller implements HasMiddleware
 
     protected $baseMailDataController;
 
+    protected $emailTableController;
+
     protected $emailController;
 
     public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
-        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, EmailController $emailController)
+        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, EmailController $emailController,
+        EmailTableController $emailTableController)
     {
 
         $this->userController = $userController;
@@ -69,6 +72,7 @@ class ChapterController extends Controller implements HasMiddleware
         $this->baseChapterController = $baseChapterController;
         $this->forumSubscriptionController = $forumSubscriptionController;
         $this->baseMailDataController = $baseMailDataController;
+        $this->emailTableController = $emailTableController;
         $this->emailController = $emailController;
     }
 
@@ -325,69 +329,6 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
         }
     }
-
-    /**
-     * Function for sending New Chapter Email with Attachments
-     */
-    // public function sendNewChapterEmail(Request $request): JsonResponse
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-
-    //     $input = $request->all();
-    //     $chapterid = $input['chapterid'];
-
-    //     try {
-    //         DB::beginTransaction();
-
-    //         // Load Chapter MailData//
-    //         $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
-    //         $chDetails = $baseQuery['chDetails'];
-    //         $stateShortName = $baseQuery['stateShortName'];
-    //         $pcDetails = $baseQuery['pcDetails'];
-    //         $PresDetails = $baseQuery['PresDetails'];
-    //         $emailListChap = $baseQuery['emailListChap'];
-    //         $emailListCoord = $baseQuery['emailListCoord'];
-
-    //         $mailData = array_merge(
-    //             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-    //             $this->baseMailDataController->getUserData($user),
-    //             $this->baseMailDataController->getPresData($PresDetails),
-    //             $this->baseMailDataController->getPCData($pcDetails),
-    //         );
-
-    //         $pdfPath2 = 'https://drive.google.com/uc?export=download&id=1A3Z-LZAgLm_2dH5MEQnBSzNZEhKs5FZ3';
-    //         $pdfPath = $this->pdfController->saveGoodStandingLetter($chapterid);   // Generate and save the PDF
-    //         Mail::to($emailListChap)
-    //             ->cc($emailListCoord)
-    //             ->queue(new NewChapterWelcome($mailData, $pdfPath, $pdfPath2));
-
-    //         // Commit the transaction
-    //         DB::commit();
-
-    //         $message = 'New Chapter email successfully sent';
-
-    //         // Return JSON response
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => $message,
-    //             'redirect' => route('chapters.view', ['id' => $chapterid]),
-    //         ]);
-
-    //     } catch (\Exception $e) {
-    //         // Rollback transaction on exception
-    //         DB::rollback();
-    //         Log::error($e);
-
-    //         $message = 'Something went wrong, Please try again.';
-
-    //         // Return JSON error response
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => $message,
-    //             'redirect' => route('chapters.view', ['id' => $chapterid]),
-    //         ]);
-    //     }
-    // }
 
     public function updateChapterDisband(Request $request): JsonResponse
     {
@@ -1107,6 +1048,12 @@ class ChapterController extends Controller implements HasMiddleware
                 ]
             );
 
+            $mailTablePrimary = $this->emailTableController->createPrimaryUpdateChapterInfoTable($mailData);
+
+            $mailData = array_merge($mailData, [
+                'mailTablePrimary' => $mailTablePrimary,
+            ]);
+
             // Primary Coordinator Notification//
             if ($chDetailsUpd->name != $chDetails->name || $chDetailsUpd->inquiries_contact != $chDetails->inquiries_contact || $chDetailsUpd->inquiries_note != $chDetails->inquiries_note ||
                     $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
@@ -1677,94 +1624,102 @@ class ChapterController extends Controller implements HasMiddleware
 
             $mailData = array_merge($mailDataPres);
             if ($AVPDetailsUpd !== null) {
-                $mailDataAvp = ['avpfnameUpd' => $AVPDetailsUpd->first_name,
-                    'avplnameUpd' => $AVPDetailsUpd->last_name,
+                $mailDataAvp = ['avpNameUpd' => $AVPDetailsUpd->first_name.' '.$AVPDetailsUpd->last_name,
+                    // 'avplnameUpd' => $AVPDetailsUpd->last_name,
                     'avpemailUpd' => $AVPDetailsUpd->email, ];
                 $mailData = array_merge($mailData, $mailDataAvp);
             } else {
-                $mailDataAvp = ['avpfnameUpd' => '',
-                    'avplnameUpd' => '',
+                $mailDataAvp = ['avpNameUpd' => '',
+                    // 'avplnameUpd' => '',
                     'avpemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataAvp);
             }
             if ($MVPDetailsUpd !== null) {
-                $mailDataMvp = ['mvpfnameUpd' => $MVPDetailsUpd->first_name,
-                    'mvplnameUpd' => $MVPDetailsUpd->last_name,
+                $mailDataMvp = ['mvpNameUpd' => $MVPDetailsUpd->first_name.' '.$MVPDetailsUpd->last_name,
+                    // 'mvplnameUpd' => $MVPDetailsUpd->last_name,
                     'mvpemailUpd' => $MVPDetailsUpd->email, ];
                 $mailData = array_merge($mailData, $mailDataMvp);
             } else {
-                $mailDataMvp = ['mvpfnameUpd' => '',
-                    'mvplnameUpd' => '',
+                $mailDataMvp = ['mvpNameUpd' => '',
+                    // 'mvplnameUpd' => '',
                     'mvpemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataMvp);
             }
             if ($TRSDetailsUpd !== null) {
-                $mailDatatres = ['tresfnameUpd' => $TRSDetailsUpd->first_name,
-                    'treslnameUpd' => $TRSDetailsUpd->last_name,
+                $mailDatatres = ['tresNameUpd' => $TRSDetailsUpd->first_name.' '.$TRSDetailsUpd->last_name,
+                    // 'treslnameUpd' => $TRSDetailsUpd->last_name,
                     'tresemailUpd' => $TRSDetailsUpd->email, ];
                 $mailData = array_merge($mailData, $mailDatatres);
             } else {
-                $mailDatatres = ['tresfnameUpd' => '',
-                    'treslnameUpd' => '',
+                $mailDatatres = ['tresNameUpd' => '',
+                    // 'treslnameUpd' => '',
                     'tresemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDatatres);
             }
             if ($SECDetailsUpd !== null) {
-                $mailDataSec = ['secfnameUpd' => $SECDetailsUpd->first_name,
-                    'seclnameUpd' => $SECDetailsUpd->last_name,
+                $mailDataSec = ['secNameUpd' => $SECDetailsUpd->first_name.' '.$SECDetailsUpd->last_name,
+                    // 'seclnameUpd' => $SECDetailsUpd->last_name,
                     'secemailUpd' => $SECDetailsUpd->email, ];
                 $mailData = array_merge($mailData, $mailDataSec);
             } else {
-                $mailDataSec = ['secfnameUpd' => '',
-                    'seclnameUpd' => '',
+                $mailDataSec = ['secNameUpd' => '',
+                    // 'seclnameUpd' => '',
                     'secemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataSec);
             }
 
             if ($AVPDetails !== null) {
-                $mailDataAvpp = ['avpfname' => $AVPDetails->first_name,
-                    'avplname' => $AVPDetails->last_name,
+                $mailDataAvpp = ['avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
+                    // 'avplname' => $AVPDetails->last_name,
                     'avpemail' => $AVPDetails->email, ];
                 $mailData = array_merge($mailData, $mailDataAvpp);
             } else {
-                $mailDataAvpp = ['avpfname' => '',
-                    'avplname' => '',
+                $mailDataAvpp = ['avpName' => '',
+                    // 'avplname' => '',
                     'avpemail' => '', ];
                 $mailData = array_merge($mailData, $mailDataAvpp);
             }
             if ($MVPDetails !== null) {
-                $mailDataMvpp = ['mvpfname' => $MVPDetails->first_name,
-                    'mvplname' => $MVPDetails->last_name,
+                $mailDataMvpp = ['mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
+                    // 'mvplname' => $MVPDetails->last_name,
                     'mvpemail' => $MVPDetails->email, ];
                 $mailData = array_merge($mailData, $mailDataMvpp);
             } else {
-                $mailDataMvpp = ['mvpfname' => '',
-                    'mvplname' => '',
+                $mailDataMvpp = ['mvpName' => '',
+                    // 'mvplname' => '',
                     'mvpemail' => '', ];
                 $mailData = array_merge($mailData, $mailDataMvpp);
             }
             if ($TRSDetails !== null) {
-                $mailDatatresp = ['tresfname' => $TRSDetails->first_name,
-                    'treslname' => $TRSDetails->last_name,
+                $mailDatatresp = ['tresName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
+                    // 'treslname' => $TRSDetails->last_name,
                     'tresemail' => $TRSDetails->email, ];
                 $mailData = array_merge($mailData, $mailDatatresp);
             } else {
-                $mailDatatresp = ['tresfname' => '',
-                    'treslname' => '',
+                $mailDatatresp = ['tresName' => '',
+                    // 'treslname' => '',
                     'tresemail' => '', ];
                 $mailData = array_merge($mailData, $mailDatatresp);
             }
             if ($SECDetails !== null) {
-                $mailDataSecp = ['secfname' => $SECDetails->first_name,
-                    'seclname' => $SECDetails->last_name,
+                $mailDataSecp = ['secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
+                    // 'seclname' => $SECDetails->last_name,
                     'secemail' => $SECDetails->email, ];
                 $mailData = array_merge($mailData, $mailDataSecp);
             } else {
-                $mailDataSecp = ['secfname' => '',
-                    'seclname' => '',
+                $mailDataSecp = ['secName' => '',
+                    // 'seclname' => '',
                     'secemail' => '', ];
                 $mailData = array_merge($mailData, $mailDataSecp);
             }
+
+            $mailTableListAdmin = $this->emailTableController->createListAdminUpdateBoardTable($mailData);
+            $mailTablePrimary = $this->emailTableController->createPrimaryUpdateBoardInfoTable($mailData);
+
+            $mailData = array_merge($mailData, [
+                'mailTableListAdmin' => $mailTableListAdmin,
+                'mailTablePrimary' => $mailTablePrimary,
+            ]);
 
             if ($chDetailsUpd->name != $chDetails->name || $PresDetailsUpd->bor_email != $PresDetails->bor_email || $PresDetailsUpd->street_address != $PresDetails->street_address || $PresDetailsUpd->city != $PresDetails->city ||
                     $PresDetailsUpd->state != $PresDetails->state || $PresDetailsUpd->first_name != $PresDetails->first_name || $PresDetailsUpd->last_name != $PresDetails->last_name ||
@@ -1773,13 +1728,14 @@ class ChapterController extends Controller implements HasMiddleware
                     $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
                     $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup || $chDetailsUpd->territory != $chDetails->territory ||
                     $chDetailsUpd->additional_info != $chDetails->additional_info || $chDetailsUpd->status_id != $chDetails->status_id || $chDetailsUpd->notes != $chDetails->notes ||
-                    $mailDataAvpp['avpfname'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplname'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemail'] != $mailDataAvp['avpemailUpd'] ||
-                    $mailDataMvpp['mvpfname'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplname'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemail'] != $mailDataMvp['mvpemailUpd'] ||
-                    $mailDatatresp['tresfname'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslname'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemail'] != $mailDatatres['tresemailUpd'] ||
-                    $mailDataSecp['secfname'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclname'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
+                    $mailDataAvpp['avpName'] != $mailDataAvp['avpNameUpd'] || $mailDataAvpp['avpemail'] != $mailDataAvp['avpemailUpd'] ||
+                    $mailDataMvpp['mvpName'] != $mailDataMvp['mvpNameUpd'] || $mailDataMvpp['mvpemail'] != $mailDataMvp['mvpemailUpd'] ||
+                    $mailDatatresp['tresName'] != $mailDatatres['tresNameUpd'] || $mailDatatresp['tresemail'] != $mailDatatres['tresemailUpd'] ||
+                    $mailDataSecp['secName'] != $mailDataSec['secNameUpd'] || $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
 
                 Mail::to($emailPC)
                     ->queue(new ChaptersUpdatePrimaryCoorBoard($mailData));
+                    // ->queue(new ChaptersUpdatePrimaryCoorPresident($mailData));
             }
 
             // //List Admin Notification//
@@ -2001,6 +1957,12 @@ class ChapterController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
                 $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
             );
+
+            $mailTablePrimary = $this->emailTableController->createPrimaryUpdateWebsiteTable($mailData);
+
+            $mailData = array_merge($mailData, [
+                'mailTablePrimary' => $mailTablePrimary,
+            ]);
 
             if ($chDetailsUpd->website_url != $chDetails->website_url || $chDetailsUpd->website_status != $chDetails->website_status) {
                 Mail::to($emailPC)

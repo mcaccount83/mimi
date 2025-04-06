@@ -13,6 +13,8 @@ class ProbationSubmission extends Model
 
     protected $primaryKey = 'chapter_id';
 
+    protected $table = 'probation_submission';
+
     protected $fillable = [
         'chapter_id',
         'q1_dues',
