@@ -472,7 +472,7 @@
                         <ul class="list-group list-group-unbordered mt-2 mb-3">
                             <li class="list-group-item">
 
-                        <h5>Re-Registration Dues</h5>
+                        <h5>Payments/Donations</h5>
 
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Anniversary Month</label>
@@ -495,6 +495,14 @@
                         @else
                             Your Re-registration payment is not due at this time.
                         @endif
+                        <br>
+                        <br>
+                            You can make a Mother-To-Mother Fund or Sustaining Chapter donation at any time.<br>
+                        @if($userType === 'coordinator')
+                            <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterdonation', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
+                        @else
+                            <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editdonate') }}'">DONATE HERE</button>
+                        @endif
                         </li>
 
                       <li class="list-group-item">
@@ -511,6 +519,13 @@
                             @if($chDocuments->probation_release_path != null)
                                 <button type="button" class="btn bg-primary btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button><br>
                             @endif
+                            @if($chDetails->probation_id == '3')
+                                @if($userType === 'coordinator')
+                                    <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
+                                @else
+                                    <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.updateprobation') }}'">Quarterly Financial Submission</button>
+                                @endif
+                            @endif
                       </li>
 
                       <li class="list-group-item">
@@ -523,7 +538,7 @@
                       </li>
 
                       <li class="list-group-item">
-                            <h5>End of year Filing</h5>
+                            <h5>End of Year Filing</h5>
 
                             @if($userType === 'coordinator' && $chDocuments->new_board_active!='1')
                                 @if($displayTESTING)

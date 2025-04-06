@@ -273,6 +273,29 @@
 @section('customscript')
 
 <script>
+    /* Disable fields and buttons  */
+$(document).ready(function () {
+        var userType = @json($userType);
+
+    if (userType === 'coordinator') {
+        // Disable all input fields, select elements, textareas, and buttons
+        $('button').not('#btn-back').prop('disabled', true);
+        $('input, select, textarea').prop('disabled', true);
+    }
+
+    });
+
+    document.querySelector('form').addEventListener('submit', function(){
+        document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
+    });
+
+    function formatCurrency(input) {
+        let value = input.value.replace(/\D/g, '');
+        value = (value / 100).toFixed(2);
+        input.value = '$' + value;
+    }
+
+
 document.addEventListener("DOMContentLoaded", function() {
     // Set up Inputmask
     Inputmask().mask(document.querySelectorAll('[data-inputmask]'));

@@ -206,6 +206,7 @@ Route::post('/board/memberupdate/{id}', [BoardController::class, 'updateMember']
 Route::get('/board/boardreport', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
 Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
 Route::get('/board/reregpayment', [BoardController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
+Route::get('/board/donation', [BoardController::class, 'editM2MDonationForm'])->name('board.editdonate');
 Route::get('/board/probation', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
 Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
 Route::get('/board/m2mdonation', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
@@ -216,6 +217,8 @@ Route::get('/view/chapter/{id}', [ViewAsBoardController::class, 'showChapterView
 Route::get('/view/chapterfinancial/{id}', [ViewAsBoardController::class, 'showChapterFinancialView'])->name('viewas.viewchapterfinancial');
 Route::get('/view/chapterboardinfo/{id}', [ViewAsBoardController::class, 'showChapterBoardInfoView'])->name('viewas.viewchapterboardinfo');
 Route::get('/view/chapterreregistration/{id}', [ViewAsBoardController::class, 'showChapterReregistrationView'])->name('viewas.viewchapterreregistration');
+Route::get('/view/chapterdonation/{id}', [ViewAsBoardController::class, 'showChapterM2MDonationView'])->name('viewas.viewchapterdonation');
+Route::get('/view/chapterprobation/{id}', [ViewAsBoardController::class, 'showProbationSubmissionView'])->name('viewas.viewchapterprobation');
 Route::get('/view/chapterdisband/{id}', [ViewAsBoardController::class, 'showDisbandChecklistView'])->name('viewas.viewchapterdisbandchecklist');
 
 // Financial Report Controller Routes...Board Login Required

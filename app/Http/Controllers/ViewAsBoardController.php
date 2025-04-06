@@ -44,7 +44,9 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chPayments = $baseQuery['chPayments'];
         $chDocuments = $baseQuery['chDocuments'];
+        $probationReason = $baseQuery['probationReason'];
 
         $allWebLinks = $baseQuery['allWebLinks'];
         $allStates = $baseQuery['allStates'];
@@ -67,8 +69,8 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
-            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
-            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments,
+            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'probationReason' => $probationReason,
+            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments
         ];
 
         return view('boards.president')->with($data);
@@ -114,6 +116,61 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         ];
 
         return view('boards.payment')->with($data);
+    }
+
+    /**
+     * View the Chapter M2M & Sustaining Donation Info Report View
+     */
+    public function showChapterM2MDonationView(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+
+        $now = Carbon::now();
+        $month = $now->month;
+        $year = $now->year;
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType,
+        ];
+
+        return view('boards.donation')->with($data);
+    }
+
+     /**
+     * View the Chapter Probation Submission View
+     */
+    public function showProbationSubmissionView(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $startMonthName = $baseQuery['startMonthName'];
+
+        $now = Carbon::now();
+        $month = $now->month;
+        $year = $now->year;
+        $start_month = $chDetails->start_month_id;
+        $next_renewal_year = $chDetails->next_renewal_year;
+        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
+        $rangeEndDate = $due_date->copy()->subMonth()->endOfMonth();
+        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
+
+        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
+        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
+            'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
+            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
+        ];
+
+        return view('boards.probation')->with($data);
     }
 
     /**
