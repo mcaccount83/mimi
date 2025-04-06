@@ -30,6 +30,7 @@ use App\Models\Region;
 use App\Models\State;
 use App\Models\Status;
 use App\Models\Payments;
+use App\Models\ProbationSubmission;
 use App\Models\Resources;
 use App\Models\ToolkitCategory;
 use App\Models\User;
@@ -991,6 +992,7 @@ class ChapterController extends Controller implements HasMiddleware
         }
 
         $chapter = Chapters::find($id);
+        $probation = ProbationSubmission::find($id);
 
         DB::beginTransaction();
         try {
@@ -1022,6 +1024,12 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->last_updated_date = $lastupdatedDate;
 
             $chapter->save();
+
+            if ($chapter->probation_id == 3 && !$probation) {
+                ProbationSubmission::create([
+                    'chapter_id' => $id,
+                ]);
+            }
 
             // Update Chapter MailData//
             $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);

@@ -1008,18 +1008,6 @@ class BoardController extends Controller implements HasMiddleware
                     $probation->q4_dues = $input['q4_dues'] ?? null,
                     $probation->q4_benefit = $input['q4_benefit'] ?? null,
                 ]);
-            } else {
-                $probation = ProbationSubmission::create([
-                    'chapter_id' => $chId,
-                    'q1_dues' => $input['q1_dues'] ?? null,
-                    'q1_benefit' => $input['q1_benefit'] ?? null,
-                    'q2_dues' => $input['q2_dues'] ?? null,
-                    'q2_benefit' => $input['q2_benefit'] ?? null,
-                    'q3_dues' => $input['q3_dues'] ?? null,
-                    'q3_benefit' => $input['q3_benefit'] ?? null,
-                    'q4_dues' => $input['q4_dues'] ?? null,
-                    'q4_benefit' => $input['q4_benefit'] ?? null,
-                ]);
             }
 
             $mailTable = $this->emailTableController->createProbationSubmissionTable($input);
