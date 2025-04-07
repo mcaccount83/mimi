@@ -119,7 +119,7 @@
     <nav class="v-navbar navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a href="{{ route('home') }}" class="band-link">
-                <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" style="width: 75px; height: 75px; margin-right: 10px">
+                <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 75px; height: 75px; margin-right: 10px">
             </a>
             @php
                 $currentUrl = request()->url();
