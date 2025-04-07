@@ -262,7 +262,8 @@ class EmailController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
 
         $input = $request->all();
-        $message = $input['message'];
+        $emailSubject = $input['subject'];
+        $emailMessage = $input['message'];
         $chapterId = $input['chapterId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
@@ -274,10 +275,10 @@ class EmailController extends Controller implements HasMiddleware
         try {
             DB::beginTransaction();
 
-            EmailFields::create([
-                'message' => $message,
-                'chapter_id' => $chapterId,
-            ]);
+            // EmailFields::create([
+            //     'message' => $message,
+            //     'chapter_id' => $chapterId,
+            // ]);
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),

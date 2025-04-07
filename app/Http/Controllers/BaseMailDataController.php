@@ -39,6 +39,7 @@ class BaseMailDataController extends Controller
             'boundaryDetails' => $input['boundaryDetails'] ?? null,
             'nameDetails' => $input['nameDetails'] ?? null,
             'message' => $input['message'] ?? null,
+            'subject'=> $input['subject'] ?? null,
         ];
     }
 

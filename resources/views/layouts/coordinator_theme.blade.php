@@ -540,7 +540,7 @@ window.onload = function () {
                             </script>
                         @endif
 
-                        {{-- @if ($errors->any())
+                        @if(View::shared('errors', false) !== false && $errors->any())
                             <script>
                                 document.addEventListener("DOMContentLoaded", function() {
                                     Swal.fire({
@@ -552,21 +552,7 @@ window.onload = function () {
                                     });
                                 });
                             </script>
-                        @endif --}}
-
-                        @if(View::shared('errors', false) !== false && $errors->any())
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                position: 'top-end',
-                icon: 'error',
-                title: 'There were some errors!',
-                html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
-                showConfirmButton: true,
-            });
-        });
-    </script>
-@endif
+                        @endif
 
                         <section class="content-header">
                             <div class="container-fluid">
@@ -974,6 +960,9 @@ function showChapterEmailModal(chapterName, chapterId) {
         html: `
             <p>This will send your message to the full board and full coordinator list for <b>${chapterName}</b>.</p>
             <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <input type="text" id="email_subject" name="email_subjet" class="swal2-input" placeholder ="Enter Subject" required style="width: 100%; margin: 0 !important; ">
+            </div>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
                 <textarea id="email_message" name="email_message" class="swal2-textarea" placeholder="Email Message" required style="width: 100%; height: 80px; margin: 0 !important; box-sizing: border-box;"></textarea>
             </div>
             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
@@ -986,8 +975,14 @@ function showChapterEmailModal(chapterName, chapterId) {
             cancelButton: 'btn-sm btn-danger'
         },
         preConfirm: () => {
+            const subject = Swal.getPopup().querySelector('#email_subject').value;
             const message = Swal.getPopup().querySelector('#email_message').value;
             const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+            if (!subject) {
+                Swal.showValidationMessage('Please enter subject.');
+                return false;
+            }
 
             if (!message) {
                 Swal.showValidationMessage('Please enter message.');
@@ -995,6 +990,7 @@ function showChapterEmailModal(chapterName, chapterId) {
             }
 
             return {
+                email_subject: subject,
                 email_message: message,
                 chapter_id: chapterId,
             };
@@ -1019,6 +1015,7 @@ function showChapterEmailModal(chapterName, chapterId) {
                         url: '{{ route('chapters.sendchapter') }}',
                         type: 'POST',
                         data: {
+                            subject: data.email_subject,
                             message: data.email_message,
                             chapterId: data.chapter_id,
                             _token: '{{ csrf_token() }}'
