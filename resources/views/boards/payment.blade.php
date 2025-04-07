@@ -224,21 +224,15 @@
         </div>
     </div>
 </div>
-{{-- End of Payment Form --}}
-@if(app()->environment('local'))
-    <img src="/uploads/authorize-net-seal.png" alt="authorizze-net-seal" style="float: left; margin-right: 20px;">
-@else
-    <img src="/mimi/uploads/authorize-net-seal.png" alt="authorizze-net-seal" style="float: left; margin-right: 20px;">
-@endif
 <div class="col-md-12" style="font-size: 0.8em"></div>
 <div class="col-md-12" style="font-size: 0.8em">
-    You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
-    to accept credit cards and electronic check payments safely and securely for our chapters.</div>
-    <div class="col-md-12" style="font-size: 0.8em"><br></div>
-<div class="col-md-12" style="font-size: 0.8em">The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
-    See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</div>
+    <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
+    <p>You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
+    to accept credit cards and electronic check payments safely and securely for our chapters.<br>
+    <br>
+    The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
+    See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
 </div>
-<div class="col-md-12"><br></div>
 
 </div>
 </div>
