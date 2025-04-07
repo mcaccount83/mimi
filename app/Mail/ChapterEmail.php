@@ -32,7 +32,7 @@ class ChapterEmail extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject("{$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
+            ->subject("MOMS Club of {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->replyTo($this->mailData['userEmail'])
             ->markdown('emails.chapter.chapteremail');
     }
