@@ -1,6 +1,6 @@
 @component('mail::message')
 
-<p><b>{{ $mailData['chapterName'] }}:</b></p>
+<p><b>MOMS Club of {{ $mailData['chapterName'] }}:</b></p>
 <p>{{ $mailData['message'] }}</p>
 
 <br>
