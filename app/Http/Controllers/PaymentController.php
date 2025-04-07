@@ -317,8 +317,11 @@ class PaymentController extends Controller implements HasMiddleware
 
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType;
-        // $transactionRequestType->setTransactionType('authOnlyTransaction');
-        $transactionRequestType->setTransactionType('authCaptureTransaction');
+        if(app()->environment('local')){
+            $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
+        }else{
+            $transactionRequestType->setTransactionType('authCaptureTransaction');  // Caputre Payment for Live Traansactions
+        }
         $transactionRequestType->setAmount($amount);
         $transactionRequestType->setOrder($order);
         $transactionRequestType->setPayment($paymentOne);
@@ -327,6 +330,7 @@ class PaymentController extends Controller implements HasMiddleware
         $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
         $transactionRequestType->addToUserFields($merchantDefinedField1);
         $transactionRequestType->addToUserFields($merchantDefinedField2);
+        $transactionRequestType->addToUserFields($merchantDefinedField3);
 
         // Assemble the complete transaction request
         $request = new AnetAPI\CreateTransactionRequest;

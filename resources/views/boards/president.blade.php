@@ -432,7 +432,7 @@
                             <div class="col-sm-8">
                                 <span class="float-right">
                                     @if ($chPayments->rereg_members)
-                                        <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
+                                        <b>{{ $chPayments->rereg_members }} Members</b> on <b>{{\Illuminate\Support\Carbon::parse($chPayments->rereg_date)->format('m/d/Y')}}</b>
                                     @else
                                         N/A
                                     @endif
@@ -445,7 +445,7 @@
                             <div class="col-sm-8">
                                 <span class="float-right">
                                     @if ($chPayments->m2m_donation)
-                                        <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
+                                        <b>${{ $chPayments->m2m_donation }}</b> on <b>{{\Illuminate\Support\Carbon::parse($chPayments->m2m_date)->format('m/d/Y')}}</b>
                                     @else
                                         N/A
                                     @endif
@@ -458,7 +458,7 @@
                             <div class="col-sm-8">
                                 <span class="float-right">
                                     @if ($chPayments->sustaining_donation)
-                                        <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
+                                        <b>${{ $chPayments->sustaining_donation }}</b> on <b>{{\Illuminate\Support\Carbon::parse($chPayments->sustaining_date)->format('m/d/Y')}}</b>
                                     @else
                                         N/A
                                     @endif

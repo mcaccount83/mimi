@@ -52,13 +52,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>RE-REGISTRATION DUES LAST PAID</label>
-                                    <p>{{\Illuminate\Support\Carbon::parse($chDetails->dues_last_paid)->format('m-d-Y')}}</p>
+                                    <p>{{\Illuminate\Support\Carbon::parse($chDetails->payments->rereg_date)->format('m/d/Y')}}</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>LAST NUMBER OF MEMBERS REGISTERED</label>
-                                    <p>{{ $chDetails->members_paid_for}}</p>
+                                    <p>{{ $chDetails->payments->rereg_members}}</p>
                                 </div>
                             </div>
                         </div>
