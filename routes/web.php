@@ -78,6 +78,7 @@ Route::get('/pdf-proxy', [PublicController::class, 'proxyGoogleDriveFile'])->nam
 Route::get('/admin/reregdate', [AdminController::class, 'showReRegDate'])->name('admin.reregdate');
 Route::get('/admin/reregdate/{id}', [AdminController::class, 'EditReRegDate'])->name('admin.editreregdate');
 Route::post('/admin/updatereregdate/{id}', [AdminController::class, 'UpdateReRegDate'])->name('admin.updatereregdate');
+Route::post('/admin/resetProbationSubmission', [AdminController::class, 'resetProbationSubmission'])->name('admin.resetProbationSubmission');
 Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
 Route::post('/admin/resetdisbandedusers', [AdminController::class, 'resetDisbandedUsers'])->name('admin.resetdisbandedusers');
 Route::post('/admin/resetoutgoingusers', [AdminController::class, 'resetOutgoingUsers'])->name('admin.resetoutgoingusers');

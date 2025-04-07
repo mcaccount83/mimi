@@ -25,6 +25,7 @@
               <thead>
 			    <tr>
 				  <th>Details</th>
+                  <th>QTR Report</th>
                   <th>Conf/Reg</th>
 				  <th>State</th>
                   <th>Name</th>
@@ -37,6 +38,12 @@
                 @foreach($chapterList as $list)
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle">
+                        @if ($list->probation_id == '3')
+                            <a href="{{ url("/view/chapterprobation/{$list->id}") }}"><i class="fas fa-file"></i></a>
+                        @else
+                        @endif
+                    </td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -64,17 +71,21 @@
                         <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
-                <div class="card-body text-center">&nbsp;</div>
+                <div class="card-body text-center">
+                    @if ($adminReportCondition)
+                        <button type="button" id="reset-probation" class="btn bg-gradient-primary"><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
+                    @endif
+                </div>
+
             </div>
-
-           </div>
-          <!-- /.box -->
         </div>
-      </div>
-    </section>
-    <!-- Main content -->
+    </div>
+    <!-- /.box -->
+    </div>
+</section>
+<!-- Main content -->
 
-    <!-- /.content -->
+<!-- /.content -->
 
 @endsection
 @section('customscript')
@@ -102,6 +113,46 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+$(document).ready(function() {
+    var resetBaseUrl = '{{ url("/admin/resetProbationSubmission") }}';
+
+    function handleAjaxRequest(baseUrl) {
+        $.ajax({
+            url: baseUrl,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+            },
+            success: function(response) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Success!",
+                    text: response.success,
+                    timer: 2000, // Auto-close after 2 seconds
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload(); // Reload AFTER SweetAlert message
+                });
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: xhr.responseJSON?.fail || "An unexpected error occurred.",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    }
+
+    // Attach the function to all buttons
+    $("#reset-probation").click(function() {
+        handleAjaxRequest(resetBaseUrl);
+    });
+});
+
 
 
 </script>

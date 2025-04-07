@@ -20,6 +20,7 @@ use App\Models\GoogleDrive;
 use App\Models\IncomingBoard;
 use App\Models\Payments;
 use App\Models\BoardsOutgoing;
+use App\Models\ProbationSubmission;
 use App\Models\Resources;
 use App\Models\ResourceCategory;
 use App\Models\ToolkitCategory;
@@ -508,6 +509,35 @@ class AdminController extends Controller implements HasMiddleware
     }
 
     /**
+     * Reset Quarterly Report Data
+     */
+    public function resetProbationSubmission(): JsonResponse
+    {
+        try {
+            ProbationSubmission::query()->delete();
+
+            $probationPartyChapters = Chapters::with('probation')
+                ->where('is_active', 1)
+                ->where('probation_id', 3)
+                ->get();
+            foreach ($probationPartyChapters as $chapter) {
+                ProbationSubmission::create([
+                    'chapter_id' => $chapter->id,
+                ]);
+            }
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'Quarterly Report Data reset successfully.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+    /**
      * Show EOY Procedures
      */
     public function showEOY(Request $request): View
@@ -692,6 +722,7 @@ class AdminController extends Controller implements HasMiddleware
             ]);
         }
     }
+
     /**
      * Reset EOY Procedurles for New year
      */
