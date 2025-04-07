@@ -232,7 +232,7 @@
                             <div class="col-sm-8">
                                 <span class="float-right">
                                     @if ($chPayments->rereg_members)
-                                        <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_payment }}</span></b>
+                                        <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
                                     @else
                                         N/A
                                     @endif
