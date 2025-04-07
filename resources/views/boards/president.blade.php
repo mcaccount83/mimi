@@ -523,7 +523,7 @@
                                 @if($userType === 'coordinator')
                                     <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
                                 @else
-                                    <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.updateprobation') }}'">Quarterly Financial Submission</button>
+                                    <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editprobation') }}'">Quarterly Financial Submission</button>
                                 @endif
                             @endif
                       </li>
