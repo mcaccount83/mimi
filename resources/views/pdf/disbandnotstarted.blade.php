@@ -13,7 +13,7 @@
 </head>
 <body>
     <center>
-        <img src="https://momsclub.org/mimi/theme/dist/img/logo-old.jpg" alt="MC" style="width: 125px;">
+        <img src="{{ config('settings.base_url') }}images/logo.png" alt="MC" style="width: 125px;">
     </center>
 <br>
 {{-- <div class="keep-together" style="page-break-inside: avoid;"> --}}

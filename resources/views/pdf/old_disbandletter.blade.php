@@ -4,19 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }} | Disband Letter</title>
-        {{-- @php
-        $todayDate = date('F j, Y'); // e.g., July 9, 2024
-        $date = new DateTime();
-        $date->modify('+1 month');
-        $nextMonthDate = $date->format('F j, Y'); // e.g., August 9, 2024
-        @endphp --}}
 </head>
 <body>
     <center>
-        <img src="https://momsclub.org/mimi/theme/dist/img/logo-old.jpg" alt="MC" style="width: 125px;">
+        <img src="{{ config('settings.base_url') }}images/logo-mc.png" alt="MC" style="width: 125px;">
     </center>
 <br>
-{{-- <div class="keep-together" style="page-break-inside: avoid;"> --}}
     <p>{{ $pdfData['today'] }}</p>
     <br>
     <p>MOMS Club of {{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }}<br>

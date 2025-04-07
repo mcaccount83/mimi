@@ -1,6 +1,6 @@
 @component('mail::message')
 <center>
-    <img src="https://momsclub.org/mimi/images/LOGO-W-MOMS-CLUB-old.jpg" alt="MC" style="width: 125px;">
+    <img src="{{ config('settings.base_url') }}images/logo-mc.png" alt="MC" style="width: 125px;">
 </center>
 <br>
 <p><b>{{ $mailData['founderFirstName'] }}:</b></p>

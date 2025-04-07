@@ -10,7 +10,7 @@
 </head>
 <body>
     <center>
-        <img src="theme/dist/img/logo-old.jpg" alt="MC" style="width: 125px;">
+        <img src="{{ config('settings.base_url') }}images/logo-mc.png" alt="MC" style="width: 125px;">
     </center>
 <br>
 <div class="keep-together" style="page-break-inside: avoid;">
