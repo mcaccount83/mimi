@@ -47,8 +47,8 @@
                     </td>
                     <td>{{ $list->state->state_short_name }}</td>
                         <td>{{ $list->name }}</td>
-                        <td>{{ $list->members_paid_for }}</td>
-						<td><span class="date-mask">{{ $list->dues_last_paid }}</span></td>
+                        <td>{{ $list->payments->rereg_members }}</td>
+						<td><span class="date-mask">{{ $list->payments->rereg_date }}</span></td>
 					   </tr>
                   @endforeach
                   </tbody>

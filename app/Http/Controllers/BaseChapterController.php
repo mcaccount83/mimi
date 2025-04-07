@@ -61,7 +61,7 @@ class BaseChapterController extends Controller
      */
     private function getBaseQueryWithRelations($isActive = 1)
     {
-        return Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth', 'primaryCoordinator'])
+        return Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'payments','avp', 'mvp', 'treasurer', 'secretary', 'startMonth', 'primaryCoordinator'])
             ->where('is_active', $isActive);
     }
 

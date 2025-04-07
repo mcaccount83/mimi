@@ -71,8 +71,8 @@
                         </td>
                         <td>{{ $list->state->state_short_name }}</td>
                         <td>{{ $list->name }}</td>
-                        <td data-sort="{{ $list->start_year . '-' . str_pad($list->start_month, 2, '0', STR_PAD_LEFT) }}">
-                            {{ $list->start_month }} {{ $list->start_year }}
+                        <td data-sort="{{ $list->start_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
+                            {{ $list->startMonth->month_short_name }} {{ $list->start_year }}
                         </td>
 						<td>{{ $list->ein }}</td>
                         <td @if($list->documents->ein_letter_path != null)style="background-color: transparent;"
