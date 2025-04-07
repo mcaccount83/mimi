@@ -15,12 +15,15 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 {
     protected $userController;
 
+    protected $baseChapterController;
+
     protected $baseCoordinatorController;
 
-    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController)
+    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, BaseChapterController $baseChapterController)
     {
 
         $this->userController = $userController;
+        $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
@@ -51,7 +54,13 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $coordinatorList = $baseQuery['query']->get();
 
         foreach ($coordinatorList as $list) {
-            $reportingData = $this->calculateReporting($list->id, $list->layer_id, $coordinatorList);
+            $cdCoorId = $list->id;
+            $cdConfId = $list->conference_id;
+            $cdRegId = $list->region_id;
+            $cdPositionId = $list->position_id;
+            $cdSecPositionId = $list->sec_position_id;
+
+            $reportingData = $this->calculateReporting($cdCoorId, $cdConfId, $cdRegId, $cdPositionId, $cdSecPositionId);
 
             $list->direct_report = $reportingData['direct_report'];
             $list->indirect_report = $reportingData['indirect_report'];
@@ -66,36 +75,26 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     /**
      * Calculate Direct/Indirect Reports
      */
-    private function calculateReporting($coordinatorId, $corlayerId, $inQryArr)
+    private function calculateReporting($coorId, $confId, $regId, $positionId, $secPositionId)
     {
-        // Calculate direct chapter report
-        $coordinator_options = Chapters::where('primary_coordinator_id', $coordinatorId)
-            ->where('is_active', '1')
-            ->get();
-        $direct_report = count($coordinator_options);
+        $baseDirectQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $directReportList = $baseDirectQuery['query']->where('primary_coordinator_id', $coorId)->get();
+        $direct_report = count($directReportList);
 
-        // Calculate indirect chapter report
-        $sqlLayerId = 'layer'.$corlayerId;
-        $reportIdList = CoordinatorTree::where($sqlLayerId, '=', $coordinatorId)->get();
+        $coordinatorData = $this->userController->loadReportingTree($coorId);
+        $inQryArr = $coordinatorData['inQryArr'];
+        $inQryArr = array_filter($inQryArr, fn($id) => $id != $coorId);
 
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
-        $inQryArr = explode(',', $inQryStr);
+        $baseIndirectQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $indirectReportList = $baseIndirectQuery['query']->whereIn('primary_coordinator_id', $inQryArr)->get();
 
-        $indirectChapterReport = Chapters::whereIn('primary_coordinator_id', $inQryArr)
-            ->where('is_active', '1')
-            ->get();
+        $indirect_report = count($indirectReportList);
 
-        $indirect_report = count($indirectChapterReport) - $direct_report;
-
-        // Calculate Ttoal chapter report
         $total_report = $direct_report + $indirect_report;
 
         return ['direct_report' => $direct_report, 'indirect_report' => $indirect_report, 'total_report' => $total_report];
     }
+
 
     /**
      * Coordiantor Appreciation List
