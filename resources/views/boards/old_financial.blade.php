@@ -3480,7 +3480,7 @@
                 @if($userType === 'board')
                     <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
                 @endif
-                @if($userType === 'coordinator')
+                @if($userType === 'coordinator' && $userAdmin != '1')
                     <a href="{{ route('viewas.viewchapterpresident', $financial_report_array['chapter_id']) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
                 @endif
                 @if($chDocuments->financial_report_received !='1')
@@ -3600,8 +3600,9 @@
     $(document).ready(function () {
         var submitted = @json($chapterDetails[0]->financial_report_received);
         var userType = @json($userType);
+        var userAdmin = @json($userAdmin);
 
-    if (userType === 'coordinator') {
+    if (userType === 'coordinator' && userAdmin !== 1) {
         // Disable all input fields, select elements, textareas, and buttons
         $('button').not('#btn-back').prop('disabled', true);
         $('input, select, textarea').prop('disabled', true);

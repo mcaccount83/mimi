@@ -38,6 +38,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -70,7 +71,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'probationReason' => $probationReason,
-            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments
+            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments, 'userAdmin' => $userAdmin
         ];
 
         return view('boards.president')->with($data);
@@ -84,6 +85,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -112,7 +114,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
+            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'userAdmin' => $userAdmin
         ];
 
         return view('boards.payment')->with($data);
@@ -125,6 +127,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -134,7 +137,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         $month = $now->month;
         $year = $now->year;
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin
         ];
 
         return view('boards.donation')->with($data);
@@ -147,6 +150,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -167,7 +171,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
+            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'userAdmin' => $userAdmin
         ];
 
         return view('boards.probation')->with($data);
@@ -180,6 +184,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -197,7 +202,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'allStates' => $allStates, 'SECDetails' => $SECDetails,
             'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'userType' => $userType,
-            'allWebLinks' => $allWebLinks,
+            'allWebLinks' => $allWebLinks, 'userAdmin' => $userAdmin
         ];
 
         return view('boards.boardinfo')->with($data);
@@ -210,6 +215,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
         $loggedInName = $user['user_name'];
@@ -228,7 +234,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
+            'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin
         ];
 
         return view('boards.financial')->with($data);
@@ -241,6 +247,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
         $loggedInName = $user['user_name'];
@@ -261,7 +268,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'allAwards' => $allAwards, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
+            'allAwards' => $allAwards, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin
         ];
 
         return view('boards.disband')->with($data);

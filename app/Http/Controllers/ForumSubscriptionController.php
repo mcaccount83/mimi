@@ -89,17 +89,14 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
      */
     public function showChapterListSubscriptions(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
@@ -114,17 +111,14 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
      */
     public function showCoordinatorListSubscriptions(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
@@ -141,17 +135,10 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
      */
     public function showInternationalChapterListSubscriptions(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
         $chapterList = $baseQuery['query']->get();
 
         $countList = count($chapterList);
@@ -165,17 +152,10 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
      */
     public function showInternationalCoordinatorListSubscriptions(Request $request): View
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
-        $cdSecPositionid = $cdDetails->sec_position_id;
-
-        $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($coorId);
         $coordinatorList = $baseQuery['query']->get();
 
         $data = ['coordinatorList' => $coordinatorList];

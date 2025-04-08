@@ -212,7 +212,10 @@
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Payment') }}</button>
-                            @if($userType === 'coordinator')
+                                @if ($userAdmin == '1')
+                                <a href="{{ route('admin.board.editpresident', ['chapter_id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+
+                            @elseif($userType === 'coordinator' && $userAdmin != '1')
                                 <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a>
                             @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
@@ -244,8 +247,11 @@
 /* Disable fields and buttons  */
 $(document).ready(function () {
         var userType = @json($userType);
+        var userAdmin = @json($userAdmin);
 
-    if (userType === 'coordinator') {
+    if (userAdmin === 1) {
+        $('button').not('#btn-back').prop('disabled', true);
+    }else if (userType === 'coordinator' && userAdmin !== 1) {
         // Disable all input fields, select elements, textareas, and buttons
         $('button').not('#btn-back').prop('disabled', true);
         $('input, select, textarea').prop('disabled', true);

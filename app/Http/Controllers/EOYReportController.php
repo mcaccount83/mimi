@@ -62,10 +62,13 @@ class EOYReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
+        $userAdmin = $user['userAdmin'];
 
         $conditions = getPositionConditions($positionId, $secPositionId);
-        $adminReportCondition = $conditions['adminReportCondition'];
+        // $userAdmin = $conditions['userAdmin'];
         $eoyTestCondition = $conditions['eoyTestCondition'];
+
+        $userAdmin = getUserAdmin($userAdmin);
 
         $displayEOY = getEOYDisplay();
         $displayTESTING = $displayEOY['displayTESTING'];
@@ -76,7 +79,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'eoy_details' => 'EOY Details',
         ];
 
-        if ($adminReportCondition && ! $displayTESTING && ! $displayLIVE) {
+        if ($userAdmin && ! $displayTESTING && ! $displayLIVE) {
             $titles['eoy_reports'] .= ' *ADMIN*';
             $titles['eoy_details'] .= ' *ADMIN*';
         }

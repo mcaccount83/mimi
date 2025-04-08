@@ -107,11 +107,17 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * View Board Details President Login
      */
-    public function editPresident(Request $request): View
+    public function editPresident(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
-        $chId = $user['user_chapterId'];
+        $userAdmin = $user['userAdmin'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -152,7 +158,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
-            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation,
+            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
             'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments
         ];
 
@@ -162,13 +168,19 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * View Board Details President Login
      */
-    public function editMember(Request $request): View
+    public function editMember(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
         $bdPositionId = $user['user_bdPositionId'];
-        $chId = $user['user_chapterId'];
         $borDetails = $user['user_bdDetails'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -215,7 +227,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'borDetails' => $borDetails, 'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation,
-            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments
+            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments,  'userAdmin' => $userAdmin,
         ];
 
         return view('boards.member')->with($data);
@@ -881,11 +893,17 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show Re-Registrstion Payment Form All Board Members
      */
-    public function editReregistrationPaymentForm(Request $request): View
+    public function editReregistrationPaymentForm(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
-        $chId = $user['user_chapterId'];
+        $userAdmin = $user['userAdmin'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -904,7 +922,7 @@ class BoardController extends Controller implements HasMiddleware
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
             'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
         ];
@@ -916,11 +934,17 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show M2M Donation Form All Board Members
      */
-    public function editM2MDonationForm(Request $request): View
+    public function editM2MDonationForm(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
-        $chId = $user['user_chapterId'];
+        $userAdmin = $user['userAdmin'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -930,7 +954,7 @@ class BoardController extends Controller implements HasMiddleware
         $month = $now->month;
         $year = $now->year;
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.donation')->with($data);
@@ -939,11 +963,17 @@ class BoardController extends Controller implements HasMiddleware
       /**
      * Show Probation Submission Form All Board Members
      */
-    public function editProbationSubmission(Request $request): View
+    public function editProbationSubmission(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
-        $chId = $user['user_chapterId'];
+        $userAdmin = $user['userAdmin'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -962,7 +992,7 @@ class BoardController extends Controller implements HasMiddleware
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
             'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType,
         ];
@@ -1043,10 +1073,16 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show Chater Resources
      */
-    public function viewResources(Request $request): View
+    public function viewResources(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $chId = $user['user_chapterId'];
+        $userAdmin = $user['userAdmin'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -1055,7 +1091,9 @@ class BoardController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails, 'resources' => $resources, 'resourceCategories' => $resourceCategories,];
+        $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails, 'resources' => $resources, 'resourceCategories' => $resourceCategories,
+                'userAdmin' => $userAdmin,
+            ];
 
         return view('boards.resources')->with($data);
     }
@@ -1063,11 +1101,17 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show EOY BoardInfo All Board Members
      */
-    public function editBoardReport(Request $request): View
+    public function editBoardReport(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
-        $chId = $user['user_chapterId'];
+        $userAdmin = $user['userAdmin'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -1083,7 +1127,7 @@ class BoardController extends Controller implements HasMiddleware
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
 
-        $data = ['stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'allStates' => $allStates, 'SECDetails' => $SECDetails,
+        $data = ['stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'allStates' => $allStates, 'SECDetails' => $SECDetails, 'userAdmin' => $userAdmin,
             'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'userType' => $userType,
             'allWebLinks' => $allWebLinks,
         ];
@@ -1409,13 +1453,19 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show EOY Financial Report All Board Members
      */
-    public function editFinancialReport(Request $request): View
+    public function editFinancialReport(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userName = $loggedInName = $user['user_name'];
         $userEmail = $user['user_email'];
-        $chId = $user['user_chapterId'];
+        $userAdmin = $user['userAdmin'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -1429,7 +1479,7 @@ class BoardController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType, 'userAdmin' => $userAdmin,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'awards' => $awards, 'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
         ];

@@ -213,6 +213,35 @@ Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProba
 Route::get('/board/m2mdonation', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
 Route::get('/board/resources', [BoardController::class, 'viewResources'])->name('board.viewresources');
 
+// Financial Report Controller Routes...Board Login Required
+Route::get('/board/financialreport', [FinancialReportController::class, 'editFinancialReport'])->name('board.editfinancialreport');
+Route::post('/board/financialreportupdate/{id}', [FinancialReportController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
+Route::get('/board/disbandchecklist', [FinancialReportController::class, 'editDisbandChecklist'])->name('board.editdisbandchecklist');
+Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
+Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
+
+// Admin routes with chapter_id parameter
+Route::prefix('admin/board')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/president/{chapter_id}', [BoardController::class, 'editPresident'])->name('admin.board.editpresident');
+    Route::post('/presidentupdate/{id}/{chapter_id}', [BoardController::class, 'updatePresident'])->name('admin.board.updatepresident');
+    Route::get('/member/{chapter_id}', [BoardController::class, 'editMember'])->name('admin.board.editmember');
+    Route::post('/memberupdate/{id}/{chapter_id}', [BoardController::class, 'updateMember'])->name('admin.board.updatemember');
+    Route::get('/boardreport/{chapter_id}', [BoardController::class, 'editBoardReport'])->name('admin.board.editboardreport');
+    Route::post('/boardreportupatea/{id}/{chapter_id}', [BoardController::class, 'updateBoardReport'])->name('admin.board.updateboardreport');
+    Route::get('/reregpayment/{chapter_id}', [BoardController::class, 'editReregistrationPaymentForm'])->name('admin.board.editreregpayment');
+    Route::get('/donation/{chapter_id}', [BoardController::class, 'editM2MDonationForm'])->name('admin.board.editdonate');
+    Route::get('/probation/{chapter_id}', [BoardController::class, 'editProbationSubmission'])->name('admin.board.editprobation');
+    Route::post('/probationupdate/{id}/{chapter_id}', [BoardController::class, 'updateProbationSubmission'])->name('admin.board.updateprobation');
+    Route::get('/m2mdonation/{chapter_id}', [BoardController::class, 'editM2MDonationForm'])->name('admin.board.editm2mdonation');
+    Route::get('/resources/{chapter_id}', [BoardController::class, 'viewResources'])->name('admin.board.viewresources');
+    Route::get('/board/financialreport/{chapter_id}', [FinancialReportController::class, 'editFinancialReport'])->name('admin.board.editfinancialreport');
+    Route::get('/board/disbandchecklist/{chapter_id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('admin.board.editdisbandchecklist');
+});
+
+Route::get('/admin/chapterlist', [AdminController::class, 'listActiveChapters'])->name('admin.chapterlist');
+Route::get('/admin/chapterlistzapped', [AdminController::class, 'listZappedChapters'])->name('admin.chapterlistzapped');
+
+
 // ViewAsBoard Controller Routes...Coordinator Login Required  These pages do not have their own resourse/views, they use the board view pages
 Route::get('/view/chapter/{id}', [ViewAsBoardController::class, 'showChapterView'])->name('viewas.viewchapterpresident');
 Route::get('/view/chapterfinancial/{id}', [ViewAsBoardController::class, 'showChapterFinancialView'])->name('viewas.viewchapterfinancial');
@@ -221,12 +250,6 @@ Route::get('/view/chapterreregistration/{id}', [ViewAsBoardController::class, 's
 Route::get('/view/chapterdonation/{id}', [ViewAsBoardController::class, 'showChapterM2MDonationView'])->name('viewas.viewchapterdonation');
 Route::get('/view/chapterprobation/{id}', [ViewAsBoardController::class, 'showProbationSubmissionView'])->name('viewas.viewchapterprobation');
 Route::get('/view/chapterdisband/{id}', [ViewAsBoardController::class, 'showDisbandChecklistView'])->name('viewas.viewchapterdisbandchecklist');
-
-// Financial Report Controller Routes...Board Login Required
-Route::get('/board/financialreport', [FinancialReportController::class, 'editFinancialReport'])->name('board.editfinancialreport');
-Route::post('/board/financialreportupdate/{id}', [FinancialReportController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
-Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
-Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
 
 // EOYReports Controller Routes...Coordinator Login Required
 Route::get('/eoy/status', [EOYReportController::class, 'showEOYStatus'])->name('eoyreports.eoystatus');

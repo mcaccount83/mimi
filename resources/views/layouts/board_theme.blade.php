@@ -128,7 +128,7 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container">
-        @if($userType === 'coordinator')
+        @if($userType === 'coordinator' && $userAdmin != '1')
         <p class="description text-center"><span style="color: red;">You are Viewing Chapter Pages as a Coordinator -- All Information is READ ONLY.</p>
         @endif
       </div><!-- /.container-fluid -->

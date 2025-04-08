@@ -59,7 +59,7 @@
                 @if($userType === 'board')
                     <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
                 @endif
-                @if($userType === 'coordinator')
+                @if($userType === 'coordinator' && $userAdmin != '1')
                     <a href="{{ route('viewas.viewchapterpresident', $chFinancialReport['chapter_id']) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
                 @endif
                 @if($chDocuments->financial_report_received !='1')

@@ -3,7 +3,7 @@
     @if ($supervisingCoordinatorCondition)
         <a class="dropdown-item" href="{{ route('forum.coordinatorsubscriptionlist') }}">Coordinator Subscription List</a>
     @endif
-    @if (($listAdminCondition) || ($adminReportCondition))
+    @if (($listAdminCondition) || ($userAdmin))
         <a class="dropdown-item" href="{{ route('forum.internationalchaptersubscriptionlist') }}">International Chapter Subscription List</a>
         <a class="dropdown-item" href="{{ route('forum.internationalcoordinatorsubscriptionlist') }}">International Coordinator Subscription List</a>
     @endif

@@ -208,7 +208,7 @@ window.onload = function () {
                                 $chaptersRoute = route('chapters.chaplist');
                             } elseif ($inquiriesCondition) {
                                 $chaptersRoute = route('chapters.chapinquiries');
-                            } elseif ($einCondition || $adminReportCondition) {
+                            } elseif ($einCondition || $userAdmin) {
                                 $chaptersRoute = route('international.intchapter');
                             }
                             $activeChpaterRoutes = [
@@ -229,7 +229,7 @@ window.onload = function () {
                         @php
                             if ($supervisingCoordinatorCondition) {
                                 $coordinatorsRoute = route('coordinators.coordlist');
-                            } elseif ($einCondition || $adminReportCondition) {
+                            } elseif ($einCondition || $userAdmin) {
                                 $coordinatorsRoute = route('international.intcoord');
                             }
                             $activeCoordinatorsRoutes = [
@@ -251,7 +251,7 @@ window.onload = function () {
                         @php
                             if ($regionalCoordinatorCondition) {
                                 $paymentsRoute = route('chapters.chapreregistration');
-                            } elseif ($m2mCondition || $adminReportCondition) {
+                            } elseif ($m2mCondition || $userAdmin) {
                                 $paymentsRoute = route('international.intdonation');
                             }
                             $activePaymentsRoutes = [
@@ -292,9 +292,9 @@ window.onload = function () {
 
                         <!-- List Subscription Menu Item -->
                         @php
-                            if ($adminReportCondition) {
+                            if ($coordinatorCondition) {
                                 $chaptersRoute = route('forum.chaptersubscriptionlist');
-                            } elseif ($listAdminCondition || $adminReportCondition) {
+                            } elseif ($listAdminCondition || $userAdmin) {
                                 $chaptersRoute = route('forum.internationalchaptersubscriptionlist');
                             }
                             $activeChpaterRoutes = [
@@ -313,7 +313,7 @@ window.onload = function () {
 
                         <!-- BoardList Email Menu Item -->
                         @php
-                            if ($listAdminCondition || $adminReportCondition) {
+                            if ($listAdminCondition || $userAdmin) {
                                 $boardlistRoute = route('chapters.chapboardlist');
                             }
                             $activeBoardlistRoutes = [
@@ -378,7 +378,7 @@ window.onload = function () {
 
                         <!-- End of Year Reports Menu Item-->
                             @php
-                                if ($adminReportCondition || ($eoyTestCondition && $displayTESTING) || ($eoyReportCondition && $displayLIVE)) {
+                                if ($userAdmin || ($eoyTestCondition && $displayTESTING) || ($eoyReportCondition && $displayLIVE)) {
                                     $eoyReportsRoute = route('eoyreports.eoystatus');
                                 }
                                 $activeEOYReportsRoutes = [
@@ -390,7 +390,7 @@ window.onload = function () {
                                     <a href="{{ $eoyReportsRoute }}" class="nav-link {{ isActiveRoute($activeEOYReportsRoutes) }}">
                                         <i class="nav-icon fas fa-chart-line"></i>
                                         <p>EOY Reports
-                                            @if ($adminReportCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
+                                            @if ($userAdmin && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                                             @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
                                         </p>
                                     </a>
@@ -399,7 +399,7 @@ window.onload = function () {
 
                         <!-- Admin Reports Menu Item -->
                         @php
-                            if ($adminReportCondition) {
+                            if ($userAdmin) {
                                 $adminReportsRoute = route('admin.reregdate');
                             }
                             $activeAdminReportsRoutes = [

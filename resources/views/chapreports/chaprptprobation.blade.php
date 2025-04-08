@@ -72,7 +72,7 @@
                     </div>
                 </div>
                 <div class="card-body text-center">
-                    @if ($adminReportCondition)
+                    @if ($userAdmin)
                         <button type="button" id="reset-probation" class="btn bg-gradient-primary"><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
                     @endif
                 </div>

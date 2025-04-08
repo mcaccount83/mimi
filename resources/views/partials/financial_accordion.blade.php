@@ -1,12 +1,11 @@
 <div class="col-12"  id="accordion">
     <input type="hidden" id="chapter_id" name="id" value="{{ Session::get('chapterid') }}">
-    @if ($userType != 'disbanded')
-        <input type="hidden" name="submitted" id="submitted" value="<?php echo $chDocuments['financial_report_received']; ?>" />
+    @if ($userType != 'disbanded'  || $chIsActive != '1')
+        <input type="hidden" name="submitted" id="submitted" value="{{ $chDocuments['financial_report_received'] ?? '' }}" />
     @else
-        <input type="hidden" name="submitted" id="submitted" value="<?php echo $chDocuments['final_report_received']; ?>" />
+        <input type="hidden" name="submitted" id="submitted" value="{{ $chDocuments['final_report_received'] ?? '' }}" />
     @endif
-    <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($chFinancialReport['farthest_step_visited'] > 0) echo $chFinancialReport['farthest_step_visited']; else echo "0"; ?>" />
-
+        <input type="hidden" name="FurthestStep" id="FurthestStep" value="{{ $chFinancialReport['farthest_step_visited'] > 0 ? $chFinancialReport['farthest_step_visited'] : '0' }}" />
     <!------Start Step 1 ------>
     <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '1' ? 'active' : '' }}">
         <div class="card-header" id="accordion-header-members">
@@ -3044,10 +3043,11 @@ $(document).ready(function () {
         var submitted = @json($chDocuments->financial_report_received);
         var submittedfinal = @json($chDocuments->final_report_received);
         var userType = @json($userType);
+        var userAdmin = @json($userAdmin);
 
         var effectiveSubmitted = (userType === 'disbanded') ? submittedfinal : submitted;
 
-        if (userType === 'coordinator') {
+        if (userType === 'coordinator' && userAdmin !== 1) {
             $('button').not('#btn-back').prop('disabled', true);
             $('input, select, textarea').prop('disabled', true);
 

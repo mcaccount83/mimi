@@ -411,7 +411,10 @@
             @endif
 
                 <div class="card-body text-center">
-                    @if($userType === 'coordinator')
+                    @if ($userAdmin == '1')
+                    <a href="{{ route('admin.board.editpresident', ['chapter_id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+
+                    @elseif($userType === 'coordinator' && $userAdmin != '1')
                             <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply mr-2"></i>Back to Chapter Profile</a>
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply mr-2"></i>Back to Chapter Profile</a>
@@ -429,12 +432,14 @@
 <script>
 $(document).ready(function() {
     var userType = @json($userType);
+    var userAdmin = @json($userAdmin);
 
   $('#add_link_req').parent().hide();
   $('#not_link').parent().hide();
 
-  // Disable all input fields, select elements, textareas, and submit button if the condition is met
-  if (userType === 'coordinator') {
+  if (userAdmin === 1) {
+    $('button').not('#btn-back').prop('disabled', true);
+}else if (userType === 'coordinator' && userAdmin !== 1) {
         // Disable all input fields, select elements, textareas, and buttons
         $('button').not('#btn-back').prop('disabled', true);
         $('input, select, textarea').prop('disabled', true);

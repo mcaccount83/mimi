@@ -32,7 +32,7 @@
         are simple: </p>
         <ul>
             <li>Submit quarterly Financial Reports to your Primary Coordiator outlining the amount of dues received both during that quarter and year-to-date, and the amount of
-                funds spent on parties or other related activities, both during the quarter and year-to-date.</li>
+                funds spent on parties or other related activities. This can be submitted directly through your MIMI login.</li>
                 <br>
             <li>Submit a budget for each individual party or event held by your chapter, for which the chapter pays more than $25.  This budget is due to the Primary Coordinator
                 at least 2 weeks prior to the planned activity or party.</li>

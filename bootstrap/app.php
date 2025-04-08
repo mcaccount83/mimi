@@ -29,6 +29,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'coordinatorlistC.access' => CoordinatorListAccessCMiddleware::class,
             'coordinatorlistT.access' => CoordinatorListAccessTMiddleware::class,
             'coordinatorlistP.access' => CoordinatorListAccessPMiddleware::class,
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+
         ]);
 
     })

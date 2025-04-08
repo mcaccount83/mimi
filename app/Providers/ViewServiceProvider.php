@@ -31,6 +31,8 @@ class ViewServiceProvider extends ServiceProvider
                 // Additional conditions for other user types can be handled here
             }
 
+            $userAdmin = $user->is_admin == '1';
+
             // Define conditions
             $ITCondition = ($positionid == 13 || $secpositionid == 13); // IT Coordinator
             $coordinatorCondition = ($positionid >= 1 && $positionid <= 8); // BS-Founder
@@ -90,7 +92,8 @@ class ViewServiceProvider extends ServiceProvider
                 'm2mCondition',
                 'listAdminCondition',
                 'displayTESTING',
-                'displayLIVE'
+                'displayLIVE',
+                'userAdmin'
             ));
         });
     }

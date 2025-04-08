@@ -66,13 +66,19 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Show EOY Financial Report All Board Members
      */
-    public function editFinancialReport(Request $request): View
+    public function editFinancialReport(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userName = $loggedInName = $user['user_name'];
         $userEmail = $user['user_email'];
-        $chId = $user['user_chapterId'];
+        $userAdmin = $user['userAdmin'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -88,7 +94,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'awards' => $awards, 'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
+            'awards' => $awards, 'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin
         ];
 
         return view('boards.financial')->with($data);
@@ -445,104 +451,6 @@ class FinancialReportController extends Controller implements HasMiddleware
         }
     }
 
-
-
-
-
-
-    /**
-     * Save EOY Financial Report Active Board Members
-     */
-    // public function updateFinancialReport(Request $request, $chapterId): RedirectResponse
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $userName = $user['user_name'];
-    //     $userEmail = $user['user_email'];
-    //     $lastUpdatedBy = $user['user_name'];
-    //     $lastupdatedDate = date('Y-m-d H:i:s');
-
-    //     $input = $request->all();
-    //     $reportReceived = $input['submitted']?? null;
-
-    //     $financialReport = FinancialReport::find($chapterId);
-    //     $documents = Documents::find($chapterId);
-    //     $chapter = Chapters::find($chapterId);
-
-    //     DB::beginTransaction();
-    //     try{
-    //         $this->saveAccordionFields($financialReport, $input);
-
-    //         if ($reportReceived == 1) {
-    //             $financialReport->completed_name = $userName;
-    //             $financialReport->completed_email = $userEmail;
-    //             $financialReport->submitted = $lastupdatedDate;
-    //         }
-
-    //         $financialReport->save();
-
-    //         if ($reportReceived == 1) {
-    //             $documents->financial_report_received = 1;
-    //             $documents->report_received = $lastupdatedDate;
-
-    //             $documents->save();
-    //         }
-
-    //         $chapter->last_updated_by = $lastUpdatedBy;
-    //         $chapter->last_updated_date = $lastupdatedDate;
-
-    //         $chapter->save();
-
-    //         $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
-    //         $chDetails = $baseQuery['chDetails'];
-    //         $stateShortName = $baseQuery['stateShortName'];
-    //         $chDocuments = $baseQuery['chDocuments'];
-    //         $chFinancialReport = $baseQuery['chFinancialReport'];
-    //         $emailListChap = $baseQuery['emailListChap'];
-    //         $emailListCoord = $baseQuery['emailListCoord'];
-    //         $pcDetails = $baseQuery['pcDetails'];
-    //         $emailCC = $baseQuery['emailCC'];
-    //         $cc_id = $baseQuery['cc_id'];
-    //         $reviewerEmail = $baseQuery['reviewerEmail'];
-
-    //         $mailData = array_merge(
-    //             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-    //             $this->baseMailDataController->getPCData($pcDetails),
-    //             $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
-    //         );
-
-    //         if ($reportReceived == 1) {
-    //             $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
-    //             Mail::to($userEmail)
-    //                 ->cc($emailListChap)
-    //                 ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
-
-    //             if ($chFinancialReport->reviewer_id == null) {
-    //                 DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
-    //                 Mail::to($emailCC)
-    //                     ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
-    //             }
-
-    //             if ($chFinancialReport->reviewer_id != null) {
-    //                 Mail::to($reviewerEmail)
-    //                     ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
-    //             }
-    //         }
-
-    //         DB::commit();
-    //         if ($reportReceived == 1) {
-    //             return redirect()->back()->with('success', 'Report has been successfully Submitted');
-    //         } else {
-    //             return redirect()->back()->with('success', 'Report has been successfully updated');
-    //         }
-
-    //     } catch (\Exception $e) {
-    //         DB::rollback();  // Rollback Transaction
-    //         Log::error($e);  // Log the error
-
-    //         return redirect()->back()->with('fail', 'Something went wrong Please try again.');
-    //     }
-    // }
-
     public function getRosterfile(): BinaryFileResponse
     {
         $filename = 'roster_template.xlsx';
@@ -552,6 +460,48 @@ class FinancialReportController extends Controller implements HasMiddleware
         return Response::download($file_path, $filename, [
             'Content-Length: '.filesize($file_path),
         ]);
+    }
+
+
+    /**
+     * Show Disband Checklist andEOY Financial Report for Disbanded Chapters
+     */
+    public function editDisbandChecklist(Request $request, $chapter_id = null): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userName = $loggedInName = $user['user_name'];
+        $userEmail = $user['user_email'];
+        $userAdmin = $user['userAdmin'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_disChapterId'];
+        }
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $chIsActive = $baseQuery['chIsActive'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $chDocuments = $baseQuery['chDocuments'];
+        // $submitted = $baseQuery['submitted'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $awards = $baseQuery['awards'];
+        $allAwards = $baseQuery['allAwards'];
+
+        $resources = Resources::with('resourceCategory')->get();
+        $resourceCategories = ResourceCategory::all();
+
+        $chDisbanded = $baseQuery['chDisbanded'];
+
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+            'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin
+        ];
+
+        return view('boards.disband')->with($data);
+
     }
 
     /**

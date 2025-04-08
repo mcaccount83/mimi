@@ -425,10 +425,10 @@
                   <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
                         <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information
-                            @if ($adminReportCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
+                            @if ($userAdmin && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                             @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
                         </h3>
-                        @if($adminReportCondition || $eoyTestCondition && $displayTESTING || $displayLIVE)
+                        @if($userAdmin || $eoyTestCondition && $displayTESTING || $displayLIVE)
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label>Boundary Issues:</label>
@@ -951,9 +951,9 @@
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
                 @endif
 
-                @if ( $adminReportCondition || $eoyTestCondition && $displayTESTING || $regionalCoordinatorCondition && $displayLIVE )
+                @if ( $userAdmin || $eoyTestCondition && $displayTESTING || $regionalCoordinatorCondition && $displayLIVE )
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information
-                        @if ($adminReportCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
+                        @if ($userAdmin && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                         @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
                     </button>
                 @endif
@@ -986,7 +986,7 @@
                                 <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
                             @endif
                         @endif
-                    @elseif ($einCondition && ($confId != $chConfId) || $inquiriesCondition  && ($confId != $chConfId) || $adminReportCondition  && ($confId != $chConfId))
+                    @elseif ($einCondition && ($confId != $chConfId) || $inquiriesCondition  && ($confId != $chConfId) || $userAdmin  && ($confId != $chConfId))
                         @if ($chIsActive == 1)
                             <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-reply mr-2"></i>Back to International Chapter List</button>
                         @else

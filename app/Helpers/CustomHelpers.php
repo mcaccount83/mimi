@@ -35,6 +35,15 @@ if (! function_exists('getPositionConditions')) {
     }
 }
 
+if (! function_exists('getUserAdmin')) {
+    function getUserAdmin($userAdmin)
+    {
+        return [
+            'userAdmin' => ($userAdmin == '1'),  // isActive
+        ];
+    }
+}
+
 if (! function_exists('getUserType')) {
     function getUserType($userType)
     {

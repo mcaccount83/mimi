@@ -79,6 +79,42 @@ class AdminController extends Controller implements HasMiddleware
         return $titles;
     }
 
+     /**
+     * Admin Choose Active Chapter for Viewing
+     */
+    public function listActiveChapters(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $chapters = $baseQuery['query']->get();
+
+        $countList = count($chapters);
+        $data = ['countList' => $countList, 'chapters' => $chapters];
+
+        return view('admin.chapterlist')->with($data);
+
+    }
+
+    /**
+     * Admin Choose Zapped Chapter for Viewing
+     */
+    public function listZappedChapters(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+
+        $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
+        $chapters = $baseQuery['query']->get();
+
+        $countList = count($chapters);
+        $data = ['countList' => $countList, 'chapters' => $chapters];
+
+        return view('admin.chapterlistzapped')->with($data);
+
+    }
+
     /**
      * View Tasks on Bugs & Enhancements List
      */

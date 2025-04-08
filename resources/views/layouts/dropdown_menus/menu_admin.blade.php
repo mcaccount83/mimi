@@ -6,6 +6,8 @@
       <a class="dropdown-item" href="{{ route('admin.nopresident') }}">Chapters with No President</a>
       <a class="dropdown-item" href="{{ route('admin.outgoingboard') }}">Outgoing Board Members</a>
       <a class="dropdown-item" href="{{ route('admin.disbandedboard') }}">Disbanded Board Members</a>
+      <a class="dropdown-item" href="{{ route('admin.chapterlist') }}">Admin Active Board Pages</a>
+      <a class="dropdown-item" href="{{ route('admin.chapterlistzapped') }}">Admin Zapped Board Pages</a>
       <a class="dropdown-item" href="{{ route('admin.googledrive') }}">Google Drive Settings</a>
       <a class="dropdown-item" href="{{ url(config('queue-monitor.ui.route.prefix')) }}">Mail Queue</a>
       <a class="dropdown-item" href="{{ url(config('sentemails.routepath')) }}">Sent Mail Log</a>

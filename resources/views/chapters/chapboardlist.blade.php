@@ -64,7 +64,7 @@
                 </table>
             </div>
                 <div class="card-body text-center">
-                    <a href="{{ route('export.boardlist','0') }}"><button class="btn bg-gradient-primary"><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export BoardList</button></a>
+                    {{-- <a href="{{ route('export.boardlist','0') }}"><button class="btn bg-gradient-primary"><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export BoardList</button></a> --}}
                 </div>
             </div>
            </div>

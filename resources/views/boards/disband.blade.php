@@ -128,6 +128,7 @@
     <div class="card card-primary card-outline">
         <div class="card-body">
 
+
      {{-- Financial Report Form --}}
      {{-- <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatedisbandreport", $chDetails->id) }}'> --}}
         <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatefinancialreport", $chDetails->id) }}'>
@@ -148,10 +149,16 @@
                                 </div>
 
                                 @if ($chDocuments->final_financial_pdf_path === null)
-                                    @include('partials.financial_accordion', [
-                                        'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType, 'userName' => $userName,
-                                        'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'chIsActive' => $chIsActive
-                                    ])
+                                    @if ($chFinancialReport)
+                                        @include('partials.financial_accordion', [
+                                            'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType, 'userName' => $userName,
+                                            'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'chIsActive' => $chIsActive
+                                        ])
+                                    @else
+                                        <div class="col-md-12 float-left">
+                                            <h4>No Financial Report Available.</h4>
+                                        </div>
+                                    @endif
                                 @endif
                             </div>
 

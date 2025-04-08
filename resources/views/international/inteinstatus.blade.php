@@ -18,7 +18,7 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="{{ route('chapreports.chaprptchapterstatus') }}">Chapter Status Report</a>
                             <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus') }}">IRS Status Report</a>
-                            @if ($adminReportCondition)
+                            @if ($userAdmin)
                                 <a class="dropdown-item" href="{{ route('international.intchapter') }}">International IRS Status Report</a>
                             @endif
                             <a class="dropdown-item" href="{{ route('chapreports.chaprptnewchapters') }}">New Chapter Report</a>

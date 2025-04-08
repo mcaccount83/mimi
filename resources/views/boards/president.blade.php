@@ -52,7 +52,7 @@
                                     @endphp
                                     <div class="col-md-12"><br><br></div>
                                     <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-                                    <h2 class="text-center">{{$PresDetails->first_name}} {{$PresDetails->last_name}}, {{$PresDetails->position->position}}</h2>
+                                    <h2 class="text-center">{{$PresDetails->first_name}} {{$PresDetails->last_name}}, {{$PresDetails->position?->position}}</h2>
                                     <p class="description text-center">
                                         Welcome to the MOMS information Management Interface, affectionately called MIMI!
                                         <br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
@@ -483,11 +483,13 @@
 
                         @if ($thisDate->gte($due_date))
                             @if ($due_date->month === $thisDate->month)
-                                <span style="color: green;">Your Re-registration payment is due now.<br>
+                                <span style="color: green;">Your Re-registration payment is due now.</span><br>
                             @else
-                                <span style="color: red;">Your Re-registration payment is now considered overdue.<br>
+                                <span style="color: red;">Your Re-registration payment is now considered overdue.</span><br>
                             @endif
-                            @if($userType === 'coordinator')
+                            @if ($userAdmin == '1')
+                                <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('admin.board.editreregpayment', ['chapter_id' => $chDetails->id]) }}'">PAY HERE</button>
+                            @elseif($userType === 'coordinator' && $userAdmin != '1')
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterreregistration', ['id' => $chDetails->id]) }}'">PAY HERE</button>
                             @else
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editreregpayment') }}'">PAY HERE</button>
@@ -498,7 +500,9 @@
                         <br>
                         <br>
                             You can make a Mother-To-Mother Fund or Sustaining Chapter donation at any time.<br>
-                        @if($userType === 'coordinator')
+                        @if ($userAdmin == '1')
+                            <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('admin.board.editdonate', ['chapter_id' => $chDetails->id]) }}'">DONATE HERE</button>
+                        @elseif($userType === 'coordinator' && $userAdmin != '1')
                             <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterdonation', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
                         @else
                             <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editdonate') }}'">DONATE HERE</button>
@@ -520,7 +524,7 @@
                                 <button type="button" class="btn bg-primary btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button><br>
                             @endif
                             @if($chDetails->probation_id == '3')
-                                @if($userType === 'coordinator')
+                                @if($userType === 'coordinator' && $userAdmin != '1')
                                     <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
                                 @else
                                     <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editprobation') }}'">Quarterly Financial Submission</button>
@@ -530,14 +534,18 @@
 
                       <li class="list-group-item">
                         <h5>Resources</h5>
+                        @if($userAdmin == '1' )
+                            <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('admin.board.viewresources', ['chapter_id' => $chDetails->id]) }}'">Chapter Resources</button><br>
+                        @else
                             <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.viewresources') }}'">Chapter Resources</button><br>
+                        @endif
                             <button id="eLearning" type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn bg-primary mb-1 btn-sm">eLearning Library</button><br>
                       </li>
 
                       <li class="list-group-item">
                             <h5>End of Year Filing</h5>
 
-                            @if($userType === 'coordinator' && $chDocuments->new_board_active!='1')
+                            @if($userType === 'coordinator' && $userAdmin != '1' && $chDocuments->new_board_active!='1')
                                 @if($displayTESTING)
                                     <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y') . '-' . (date('Y') + 1) }} Board Report *TESTING*
@@ -549,7 +557,7 @@
                                 @else
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                                 @endif
-                            @elseif($userType === 'coordinator' && $chDocuments->new_board_active =='1')
+                            @elseif($userType === 'coordinator' && $userAdmin != '1' && $chDocuments->new_board_active =='1')
                                 @if($displayTESTING)
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated *TESTING*</button><br>
                                 @else
@@ -567,7 +575,7 @@
                                 <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                             @endif
 
-                            @if($userType === 'coordinator')
+                            @if($userType === 'coordinator' && $userAdmin != '1')
                                 @if($displayTESTING)
                                     <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y')-1 .'-'.date('Y') }} Financial Report *TESTING*
@@ -629,8 +637,11 @@ $(document).ready(function () {
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
     var userType = @json($userType);
+    var userAdmin = @json($userAdmin);
 
-    if (userType === 'coordinator') {
+    if (userAdmin === 1) {
+        $('#Save, #Password, #logout-btn').prop('disabled', true);
+    }else if (userType === 'coordinator' && userAdmin !== 1) {
         // Disable all input fields, select elements, textareas, and buttons
         $('input, select, textarea').prop('disabled', true);
         $('#Save, #Password, #logout-btn, #eLearning, #Resources').prop('disabled', true);

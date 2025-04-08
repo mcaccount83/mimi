@@ -212,7 +212,11 @@
 
                 <br>
                 <div class="card-body text-center">
-                        <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+                        @if ($userAdmin == '1')
+                            <a href="{{ route('admin.board.editpresident', ['chapter_id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+                        @else
+                            <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+                        @endif
                         <button type="button" onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-primary"><i class="fas fa-graduation" ></i>&nbsp; eLearning Library</button>
                     </div>
                 </div>
