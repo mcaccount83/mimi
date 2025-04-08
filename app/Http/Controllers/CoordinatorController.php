@@ -272,6 +272,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $mimiPosition = $baseQuery['mimiPosition'];
         $secondaryPosition = $baseQuery['secondaryPosition'];
         $cdLeave = $baseQuery['cdDetails']->on_leave;
+        $cdUserAdmin = $baseQuery['cdUserAdmin'];
 
         $now = Carbon::now();
         $threeMonthsAgo = $now->copy()->subMonths(3);
@@ -289,7 +290,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             ->get();
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdIsActive' => $cdIsActive, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
+            'cdIsActive' => $cdIsActive, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
             'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid,
         ];
@@ -694,6 +695,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdConfId = $baseQuery['cdConfId'];
         $cdRegId = $baseQuery['cdConfId'];
         $cdLeave = $baseQuery['cdDetails']->on_leave;
+        $cdUserAdmin = $baseQuery['cdUserAdmin'];
 
         $allRegions = $baseQuery['allRegions'];
         $allPositions = $baseQuery['allPositions'];
@@ -749,7 +751,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'drOptions' => $drOptions, 'rcDetails' => $rcDetails, 'allRegions' => $allRegions,
             'chList' => $chList, 'drList' => $drList, 'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
-            'pcOptions' => $pcOptions, 'cdId' => $cdId, 'allPositions' => $allPositions, 'chDetails' => $chDetails, 'drDetails' => $drDetails,
+            'pcOptions' => $pcOptions, 'cdId' => $cdId, 'allPositions' => $allPositions, 'chDetails' => $chDetails, 'drDetails' => $drDetails, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName, 'pcRowCount' => $pcRowCount, 'drRowCount' => $drRowCount,
         ];
 
@@ -867,6 +869,9 @@ class CoordinatorController extends Controller implements HasMiddleware
      */
     public function updateCoordRole(Request $request, $id): RedirectResponse
     {
+        $admin = $this->userController->loadUserInformation($request);
+        $userAdmin = $admin['userAdmin'];
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
@@ -908,6 +913,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
 
         $coordinator = Coordinators::find($id);
+        $userIsAdmin = User::find($id);
 
         DB::beginTransaction();
         try {
@@ -919,6 +925,15 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->last_updated_date = date('Y-m-d H:i:s');
 
             $coordinator->save();
+
+            if ($userAdmin){
+                $userIsAdmin->is_admin = $request->input('is_admin');
+            }
+            else{
+                $userIsAdmin->is_admin = $request->input('OldAdmin');
+            }
+
+            $userIsAdmin->save();
 
             DB::commit();
         } catch (\Exception $e) {
@@ -961,12 +976,13 @@ class CoordinatorController extends Controller implements HasMiddleware
         $mimiPosition = $baseQuery['mimiPosition'];
         $secondaryPosition = $baseQuery['secondaryPosition'];
         $cdLeave = $baseQuery['cdDetails']->on_leave;
+        $cdUserAdmin = $baseQuery['cdUserAdmin'];
 
         $allStates = $baseQuery['allStates'];
         $allMonths = $baseQuery['allMonths'];
 
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
+            'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
             'allStates' => $allStates, 'allMonths' => $allMonths,
         ];
@@ -1058,9 +1074,10 @@ class CoordinatorController extends Controller implements HasMiddleware
         $mimiPosition = $baseQuery['mimiPosition'];
         $secondaryPosition = $baseQuery['secondaryPosition'];
         $cdLeave = $baseQuery['cdDetails']->on_leave;
+        $cdUserAdmin = $baseQuery['cdUserAdmin'];
 
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo,
+            'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
         ];
 

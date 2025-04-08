@@ -25,6 +25,7 @@
             <input type="hidden" name="OldPosition" value="{{ $cdDetails->position_id }}">
             <input type="hidden" name="OldDisplayPosition" value="{{ $cdDetails->display_position_id }}">
             <input type="hidden" name="OldSecPosition" value="{{$cdDetails->sec_position_id}}">
+            <input type="hidden" name="OldAdmin" value="{{$cdUserAdmin}}">
             <input type="hidden" name="CoordinatorPromoteDateNew" id="CoordinatorPromoteDateNew" value="{{$cdDetails->last_promoted}}"/>
 
             <!-- Profile Image -->
@@ -131,6 +132,20 @@
                                 <input type="date" name="CoordinatorPromoteDate" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $cdDetails->last_promoted }}">
                             </div>
                         </div>
+
+                        @if ($userAdmin)
+                            <div class="row align-items-center">
+                                <div class="col-sm-6 mt-1">
+                                    <label class="col-form-label">MIMI Admin:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <select name="is_admin" id="is_admin" class="form-control select2-sb4" style="width: 100%;" required>
+                                        <option value="1" {{ $cdUserAdmin == 1 ? 'selected' : '' }}>Yes</option>
+                                        <option value="0" {{ $cdUserAdmin == 0 ? 'selected' : '' }}>No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
 
                     </li>
 

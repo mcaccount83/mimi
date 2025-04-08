@@ -8,6 +8,7 @@ use App\Models\Coordinators;
 use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class BaseCoordinatorController extends Controller
@@ -205,6 +206,10 @@ class BaseCoordinatorController extends Controller
         $mimiPosition = $cdDetails->mimiPosition;
         $secondaryPosition = $cdDetails->secondaryPosition;
 
+        $cdUserId = $cdDetails->user_id;
+        $cdUser = User::find($cdUserId);
+        $cdUserAdmin = $cdUser->is_admin;
+
         $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
             ->where('conference_id', $cdConfId)
             ->orwhere('id', '0')
@@ -220,7 +225,7 @@ class BaseCoordinatorController extends Controller
         // Load ReportsTo Coordinator Dropdown List
         $rcDetails = $this->userController->loadReportsToList($cdId, $cdConfId, $cdPositionid);
 
-        return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdIsActive' => $cdIsActive, 'regionLongName' => $regionLongName,
+        return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdIsActive' => $cdIsActive, 'regionLongName' => $regionLongName, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId,
             'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition,
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths,

@@ -40,6 +40,10 @@
                         <b>Primary Positon for MIMI Purposes:</b> <span class="float-right">{{ $mimiPosition?->long_title }}</span>
                         <br>
                         <b>Secondary Position:</b> <span class="float-right">{{ $secondaryPosition?->long_title }}</span>
+                        @if ($userAdmin)
+                            <br>
+                            <b>MIMI Admin:</b> <span class="float-right">{{ $cdUserAdmin == 1 ? 'Yes' : 'No' }}</span>
+                            @endif
 
                     </li>
                     <li class="list-group-item">
