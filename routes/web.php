@@ -90,13 +90,17 @@ Route::post('/admin/updateeoytesting', [AdminController::class, 'updateEOYTestin
 Route::post('/admin/updateeoylive', [AdminController::class, 'updateEOYLive'])->name('admin.updateeoylive');
 Route::post('/admin/updatesubscribelists', [AdminController::class, 'updateSubscribeLists'])->name('admin.updatesubscribelists');
 Route::post('/admin/updateunsubscribelists', [AdminController::class, 'updateUnsubscribeLists'])->name('admin.updateunsubscribelists');
-Route::get('/admin/duplicateuser', [AdminController::class, 'showDuplicate'])->name('admin.duplicateuser');
-Route::get('/admin/duplicateboardid', [AdminController::class, 'showDuplicateId'])->name('admin.duplicateboardid');
-Route::get('/admin/nopresident', [AdminController::class, 'showNoPresident'])->name('admin.nopresident');
-Route::get('/admin/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('admin.outgoingboard');
-Route::get('/admin/disbandedboard', [AdminController::class, 'showDisbandedBoard'])->name('admin.disbandedboard');
 Route::get('/admin/googledrive', [AdminController::class, 'showGoogleDrive'])->name('admin.googledrive');
 Route::post('/admin/updategoogledrive', [AdminController::class, 'updateGoogleDrive'])->name('admin.updategoogledrive');
+
+// Admin Controller Routes...Coordinator Login Required
+Route::get('/adminreports/useradmin', [AdminController::class, 'showUserAdmin'])->name('adminreports.useradmin');
+Route::get('/adminreports/duplicateuser', [AdminController::class, 'showDuplicate'])->name('adminreports.duplicateuser');
+Route::get('/adminreports/duplicateboardid', [AdminController::class, 'showDuplicateId'])->name('adminreports.duplicateboardid');
+Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresident'])->name('adminreports.nopresident');
+Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('adminreports.outgoingboard');
+Route::get('/adminreports/disbandedboard', [AdminController::class, 'showDisbandedBoard'])->name('adminreports.disbandedboard');
+
 
 // Resources Controller Routes...Coordinator Login Required
 Route::get('/resources/bugs', [ResourcesController::class, 'showBugs'])->name('resources.bugs');

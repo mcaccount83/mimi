@@ -115,283 +115,283 @@ class AdminController extends Controller implements HasMiddleware
 
     }
 
-    /**
-     * View Tasks on Bugs & Enhancements List
-     */
-    public function showBugs(Request $request): View
-    {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['resource_reports'];
-        $breadcrumb = 'MIMI Bugs & Wishes';
+    // /**
+    //  * View Tasks on Bugs & Enhancements List
+    //  */
+    // public function showBugs(Request $request): View
+    // {
+    //     $titles = $this->getPageTitle($request);
+    //     $title = $titles['resource_reports'];
+    //     $breadcrumb = 'MIMI Bugs & Wishes';
 
-        $user = $this->userController->loadUserInformation($request);
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $canEditDetails = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $positionId = $user['user_positionId'];
+    //     $secPositionId = $user['user_secPositionId'];
+    //     $canEditDetails = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
 
-        $admin = DB::table('bugs')
-            ->select('bugs.*',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS reported_by'),
-                DB::raw('CASE
-                    WHEN priority = 1 THEN "LOW"
-                    WHEN priority = 2 THEN "NORMAL"
-                    WHEN priority = 3 THEN "HIGH"
-                    ELSE "Unknown"
-                END as priority_word'))
-            ->leftJoin('coordinators as cd', 'bugs.reported_id', '=', 'cd.id')
-            ->orderByDesc('priority')
-            ->get();
+    //     $admin = DB::table('bugs')
+    //         ->select('bugs.*',
+    //             DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS reported_by'),
+    //             DB::raw('CASE
+    //                 WHEN priority = 1 THEN "LOW"
+    //                 WHEN priority = 2 THEN "NORMAL"
+    //                 WHEN priority = 3 THEN "HIGH"
+    //                 ELSE "Unknown"
+    //             END as priority_word'))
+    //         ->leftJoin('coordinators as cd', 'bugs.reported_id', '=', 'cd.id')
+    //         ->orderByDesc('priority')
+    //         ->get();
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'admin' => $admin, 'canEditDetails' => $canEditDetails];
+    //     $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'admin' => $admin, 'canEditDetails' => $canEditDetails];
 
-        return view('admin.bugs')->with($data);
-    }
+    //     return view('admin.bugs')->with($data);
+    // }
 
-    /**
-     * Add New Task to Bugs & Enhancements List
-     */
-    public function addBugs(AddBugsAdminRequest $request)
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+    // /**
+    //  * Add New Task to Bugs & Enhancements List
+    //  */
+    // public function addBugs(AddBugsAdminRequest $request)
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
+    //     $lastUpdatedBy = $user['user_name'];
+    //     $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $validatedData = $request->validated();
+    //     $validatedData = $request->validated();
 
-        $task = new Bugs;
-        $task->task = $validatedData['taskNameNew'];
-        $task->details = $validatedData['taskDetailsNew'];
-        $task->priority = $validatedData['taskPriorityNew'];
-        $task->reported_id = $coorId;
-        $task->reported_date = $lastupdatedDate;
+    //     $task = new Bugs;
+    //     $task->task = $validatedData['taskNameNew'];
+    //     $task->details = $validatedData['taskDetailsNew'];
+    //     $task->priority = $validatedData['taskPriorityNew'];
+    //     $task->reported_id = $coorId;
+    //     $task->reported_date = $lastupdatedDate;
 
-        $mailData = [
-            'taskNameNew' => $task->task,
-            'taskDetailsNew' => $task->details,
-            'ReportedId' => $coorId,
-            'ReportedDate' => $task->reported_date,
-        ];
+    //     $mailData = [
+    //         'taskNameNew' => $task->task,
+    //         'taskDetailsNew' => $task->details,
+    //         'ReportedId' => $coorId,
+    //         'ReportedDate' => $task->reported_date,
+    //     ];
 
-        $to_email = 'jackie.mchenry@momsclub.org';
-        Mail::to($to_email)->queue(new AdminNewMIMIBugWish($mailData));
+    //     $to_email = 'jackie.mchenry@momsclub.org';
+    //     Mail::to($to_email)->queue(new AdminNewMIMIBugWish($mailData));
 
-        $task->save();
-    }
+    //     $task->save();
+    // }
 
-    /**
-     * Update Task on Bugs & Enhancements List
-     */
-    public function updateBugs(UpdateBugsAdminRequest $request, $id)
-    {
-        $validatedData = $request->validated();
+    // /**
+    //  * Update Task on Bugs & Enhancements List
+    //  */
+    // public function updateBugs(UpdateBugsAdminRequest $request, $id)
+    // {
+    //     $validatedData = $request->validated();
 
-        $task = Bugs::findOrFail($id);
-        $task->details = $validatedData['taskDetails'];
-        $task->notes = $validatedData['taskNotes'];
-        $task->status = $validatedData['taskStatus'];
-        $task->priority = $validatedData['taskPriority'];
+    //     $task = Bugs::findOrFail($id);
+    //     $task->details = $validatedData['taskDetails'];
+    //     $task->notes = $validatedData['taskNotes'];
+    //     $task->status = $validatedData['taskStatus'];
+    //     $task->priority = $validatedData['taskPriority'];
 
-        if ($validatedData['taskStatus'] == 3) {
-            $task->completed_date = Carbon::today();
-        }
+    //     if ($validatedData['taskStatus'] == 3) {
+    //         $task->completed_date = Carbon::today();
+    //     }
 
-        $task->save();
-    }
+    //     $task->save();
+    // }
 
-    /**
-     * View the Downloads List
-     */
-    public function showDownloads(Request $request): View
-    {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['resource_reports'];
-        $breadcrumb = 'Download Reports';
+    // /**
+    //  * View the Downloads List
+    //  */
+    // public function showDownloads(Request $request): View
+    // {
+    //     $titles = $this->getPageTitle($request);
+    //     $title = $titles['resource_reports'];
+    //     $breadcrumb = 'Download Reports';
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb];
+    //     $data = ['title' => $title, 'breadcrumb' => $breadcrumb];
 
-        return view('admin.downloads')->with($data);
-    }
+    //     return view('admin.downloads')->with($data);
+    // }
 
-    /**
-     * View Resources List
-     */
-    public function showResources(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 7 || $secPositionId == 7);  // CC Coordinator
+    // /**
+    //  * View Resources List
+    //  */
+    // public function showResources(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $positionId = $user['user_positionId'];
+    //     $secPositionId = $user['user_secPositionId'];
+    //     $canEditFiles = ($positionId == 7 || $secPositionId == 7);  // CC Coordinator
 
-        $resources = Resources::with('resourceCategory')->get();
-        $resourceCategories = ResourceCategory::all();
+    //     $resources = Resources::with('resourceCategory')->get();
+    //     $resourceCategories = ResourceCategory::all();
 
-        foreach ($resources as $resource) {
-            $id = $resource->id;
-        }
+    //     foreach ($resources as $resource) {
+    //         $id = $resource->id;
+    //     }
 
-        $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'canEditFiles' => $canEditFiles, 'id' => $id];
+    //     $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'canEditFiles' => $canEditFiles, 'id' => $id];
 
-        return view('admin.resources')->with($data);
-    }
+    //     return view('admin.resources')->with($data);
+    // }
 
-    /**
-     * Add New Files or Links to the Resources List
-     */
-    public function addResources(AddResourcesAdminRequest $request): JsonResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+    // /**
+    //  * Add New Files or Links to the Resources List
+    //  */
+    // public function addResources(AddResourcesAdminRequest $request): JsonResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
+    //     $lastUpdatedBy = $user['user_name'];
+    //     $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $validatedData = $request->validated();
+    //     $validatedData = $request->validated();
 
-        $file = new Resources;
-        $file->category = $validatedData['fileCategoryNew'];
-        $file->name = $validatedData['fileNameNew'];
-        $file->description = $validatedData['fileDescriptionNew'];
-        $file->file_type = $validatedData['fileTypeNew'];
-        $file->version = $validatedData['fileVersionNew'] ?? null;
-        $file->link = $validatedData['LinkNew'] ?? null;
-        $file->file_path = $validatedData['filePathNew'] ?? null;
-        $file->updated_id = $coorId;
-        $file->updated_date = $lastupdatedDate;
+    //     $file = new Resources;
+    //     $file->category = $validatedData['fileCategoryNew'];
+    //     $file->name = $validatedData['fileNameNew'];
+    //     $file->description = $validatedData['fileDescriptionNew'];
+    //     $file->file_type = $validatedData['fileTypeNew'];
+    //     $file->version = $validatedData['fileVersionNew'] ?? null;
+    //     $file->link = $validatedData['LinkNew'] ?? null;
+    //     $file->file_path = $validatedData['filePathNew'] ?? null;
+    //     $file->updated_id = $coorId;
+    //     $file->updated_date = $lastupdatedDate;
 
-        $file->save();
+    //     $file->save();
 
-        $id = $file->id;
-        $fileType = $file->file_type;
+    //     $id = $file->id;
+    //     $fileType = $file->file_type;
 
-        return response()->json(['id' => $id, 'file_type' => $fileType]);
-    }
+    //     return response()->json(['id' => $id, 'file_type' => $fileType]);
+    // }
 
-    /**
-     * Update Files or Links on the Resources List
-     */
-    public function updateResources(UpdateResourcesAdminRequest $request, $id)
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+    // /**
+    //  * Update Files or Links on the Resources List
+    //  */
+    // public function updateResources(UpdateResourcesAdminRequest $request, $id)
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
+    //     $lastUpdatedBy = $user['user_name'];
+    //     $lastupdatedDate = date('Y-m-d H:i:s');
 
-        // Fetch admin details
-        $file = DB::table('resources')
-            ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-            ->first(); // Fetch only one record
-        $validatedData = $request->validated();
+    //     // Fetch admin details
+    //     $file = DB::table('resources')
+    //         ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+    //         ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+    //         ->first(); // Fetch only one record
+    //     $validatedData = $request->validated();
 
-        $file = Resources::findOrFail($id);
-        $file->description = $validatedData['fileDescription'];
-        $file->file_type = $validatedData['fileType'];
+    //     $file = Resources::findOrFail($id);
+    //     $file->description = $validatedData['fileDescription'];
+    //     $file->file_type = $validatedData['fileType'];
 
-        // Check file_type value and set version and link accordingly
-        if ($validatedData['fileType'] == 1) {
-            $file->link = null;
-            $file->version = $validatedData['fileVersion'] ?? null;
-        } elseif ($validatedData['fileType'] == 2) {
-            $file->version = null;
-            $file->file_path = null;
-            $file->link = $validatedData['link'] ?? null;
-        }
+    //     // Check file_type value and set version and link accordingly
+    //     if ($validatedData['fileType'] == 1) {
+    //         $file->link = null;
+    //         $file->version = $validatedData['fileVersion'] ?? null;
+    //     } elseif ($validatedData['fileType'] == 2) {
+    //         $file->version = null;
+    //         $file->file_path = null;
+    //         $file->link = $validatedData['link'] ?? null;
+    //     }
 
-        $file->updated_id = $coorId;
-        $file->updated_date = $lastupdatedDate;
+    //     $file->updated_id = $coorId;
+    //     $file->updated_date = $lastupdatedDate;
 
-        $file->save();
-    }
+    //     $file->save();
+    // }
 
-    /**
-     * View Toolkit List
-     */
-    public function showToolkit(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
+    // /**
+    //  * View Toolkit List
+    //  */
+    // public function showToolkit(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $positionId = $user['user_positionId'];
+    //     $secPositionId = $user['user_secPositionId'];
+    //     $canEditFiles = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
 
-        $resources = Resources::with('toolkitCategory')->get();
-        $toolkitCategories = ToolkitCategory::all();
+    //     $resources = Resources::with('toolkitCategory')->get();
+    //     $toolkitCategories = ToolkitCategory::all();
 
-        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'toolkitCategories' => $toolkitCategories];
+    //     $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'toolkitCategories' => $toolkitCategories];
 
-        return view('admin.toolkit')->with($data);
-    }
+    //     return view('admin.toolkit')->with($data);
+    // }
 
-    /**
-     * Add New Files or Links to the Toolkit List
-     */
-    public function addToolkit(AddToolkitAdminRequest $request): JsonResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+    // /**
+    //  * Add New Files or Links to the Toolkit List
+    //  */
+    // public function addToolkit(AddToolkitAdminRequest $request): JsonResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
+    //     $lastUpdatedBy = $user['user_name'];
+    //     $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $validatedData = $request->validated();
+    //     $validatedData = $request->validated();
 
-        $file = new Resources;
-        $file->category = $request->fileCategoryNew;
-        $file->name = $request->fileNameNew;
-        $file->description = $request->fileDescriptionNew;
-        $file->file_type = $request->fileTypeNew;
+    //     $file = new Resources;
+    //     $file->category = $request->fileCategoryNew;
+    //     $file->name = $request->fileNameNew;
+    //     $file->description = $request->fileDescriptionNew;
+    //     $file->file_type = $request->fileTypeNew;
 
-        if ($request->fileTypeNew == 1) {
-            $file->link = null;
-            $file->version = $request->fileVersionNew ?? null;
-        } elseif ($request->fileTypeNew == 2) {
-            $file->version = null;
-            $file->file_path = null;
-            $file->link = $request->linkNew ?? null;
-        }
+    //     if ($request->fileTypeNew == 1) {
+    //         $file->link = null;
+    //         $file->version = $request->fileVersionNew ?? null;
+    //     } elseif ($request->fileTypeNew == 2) {
+    //         $file->version = null;
+    //         $file->file_path = null;
+    //         $file->link = $request->linkNew ?? null;
+    //     }
 
-        $file->updated_id = $coorId;
-        $file->updated_date = $lastupdatedDate;
+    //     $file->updated_id = $coorId;
+    //     $file->updated_date = $lastupdatedDate;
 
-        $file->save();
+    //     $file->save();
 
-        return response()->json(['id' => $file->id, 'file_type' => $file->file_type]);
-    }
+    //     return response()->json(['id' => $file->id, 'file_type' => $file->file_type]);
+    // }
 
-    /**
-     * Update Files or Links on the Toolkit List
-     */
-    public function updateToolkit(UpdateToolkitAdminRequest $request, $id)
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+    // /**
+    //  * Update Files or Links on the Toolkit List
+    //  */
+    // public function updateToolkit(UpdateToolkitAdminRequest $request, $id)
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
+    //     $lastUpdatedBy = $user['user_name'];
+    //     $lastupdatedDate = date('Y-m-d H:i:s');
 
-        // Fetch admin details
-        $file = DB::table('resources')
-            ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-            ->first(); // Fetch only one record
-        $validatedData = $request->validated();
+    //     // Fetch admin details
+    //     $file = DB::table('resources')
+    //         ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+    //         ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+    //         ->first(); // Fetch only one record
+    //     $validatedData = $request->validated();
 
-        $file = Resources::findOrFail($id);
-        $file->description = $validatedData['fileDescription'];
-        $file->file_type = $validatedData['fileType'];
+    //     $file = Resources::findOrFail($id);
+    //     $file->description = $validatedData['fileDescription'];
+    //     $file->file_type = $validatedData['fileType'];
 
-        // Check file_type value and set version and link accordingly
-        if ($validatedData['fileType'] == 1) {
-            $file->link = null;
-            $file->version = $validatedData['fileVersion'] ?? null;
-        } elseif ($validatedData['fileType'] == 2) {
-            $file->version = null;
-            $file->file_path = null;
-            $file->link = $validatedData['link'] ?? null;
-        }
+    //     // Check file_type value and set version and link accordingly
+    //     if ($validatedData['fileType'] == 1) {
+    //         $file->link = null;
+    //         $file->version = $validatedData['fileVersion'] ?? null;
+    //     } elseif ($validatedData['fileType'] == 2) {
+    //         $file->version = null;
+    //         $file->file_path = null;
+    //         $file->link = $validatedData['link'] ?? null;
+    //     }
 
-        $file->updated_id = $coorId;
-        $file->updated_date = $lastupdatedDate;
+    //     $file->updated_id = $coorId;
+    //     $file->updated_date = $lastupdatedDate;
 
-        $file->save();
-    }
+    //     $file->save();
+    // }
 
     /**
      * View List of ReReg Payments if Dates Need to be Udpated
@@ -458,6 +458,21 @@ class AdminController extends Controller implements HasMiddleware
     }
 
     /**
+     * User Admins
+     */
+    public function showUserAdmin(): View
+    {
+        $adminList = User::where('is_admin', '1')
+            ->where('is_active', '1')
+            ->get();
+
+        $countList = count($adminList);
+        $data = ['countList' => $countList, 'adminList' => $adminList];
+
+        return view('adminreports.useradmin')->with($data);
+    }
+
+    /**
      * List of Duplicate Users
      */
     public function showDuplicate(): View
@@ -473,7 +488,7 @@ class AdminController extends Controller implements HasMiddleware
 
         $data = ['userList' => $userList];
 
-        return view('admin.duplicateuser')->with($data);
+        return view('adminreports.duplicateuser')->with($data);
     }
 
     /**
@@ -490,7 +505,7 @@ class AdminController extends Controller implements HasMiddleware
 
         $data = ['userList' => $userList];
 
-        return view('admin.duplicateboardid')->with($data);
+        return view('adminreports.duplicateboardid')->with($data);
     }
 
     /**
@@ -509,7 +524,7 @@ class AdminController extends Controller implements HasMiddleware
 
         $data = ['ChapterPres' => $ChapterPres];
 
-        return view('admin.nopresident')->with($data);
+        return view('adminreports.nopresident')->with($data);
     }
 
     /**
@@ -525,7 +540,7 @@ class AdminController extends Controller implements HasMiddleware
         $countList = count($outgoingList);
         $data = ['countList' => $countList, 'outgoingList' => $outgoingList];
 
-        return view('admin.outgoingboard')->with($data);
+        return view('adminreports.outgoingboard')->with($data);
     }
 
     /**
@@ -541,7 +556,7 @@ class AdminController extends Controller implements HasMiddleware
         $countList = count($disbandedList);
         $data = ['countList' => $countList, 'disbandedList' => $disbandedList];
 
-        return view('admin.disbandedboard')->with($data);
+        return view('adminreports.disbandedboard')->with($data);
     }
 
     /**

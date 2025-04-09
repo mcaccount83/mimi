@@ -1,7 +1,7 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin Tasks/Reports')
-@section('breadcrumb', 'Chapters with No President')
+@section('page_title', 'Admin Reports')
+@section('breadcrumb', 'User Admins')
 
 @section('content')
     <!-- Main content -->
@@ -13,9 +13,9 @@
                         <div class="card-header">
                             <div class="dropdown">
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Chapters with No President
+                                    User Admins
                                 </h3>
-                                @include('layouts.dropdown_menus.menu_admin')
+                                @include('layouts.dropdown_menus.menu_reports_admin')
                             </div>
                         </div>
                      <!-- /.card-header -->
@@ -23,28 +23,50 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-                  <th>Chapter ID</th>
-                  <th>Chapter Name</th>
-                <th>Conference</th>
+                    <th>Admin</th>
+                    <th>Name</th>
+                    <th>Position</th>
 
+                  <th>Email Address</th>
+                  <th>User Type</th>
+				  <th>Active</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($ChapterPres as $list)
+                @foreach($adminList as $list)
                   <tr>
-                        <td>{{ $list->id }}</td>
-                        <td>{{ $list->name }}</td>
-                        <td>{{ $list->conference_id }}</td>
+                    <td>
+                        @if($list->is_admin=='1')
+                        YES
+                        @else
+                            NO
+                        @endif
+                    </td>
+                    <td>{{ $list->first_name }} {{ $list->last_name }}</td>
+                    <td>@if ($list->user_type == 'coordinator'){{{ $list->coordinator->displayPosition->long_title }}}
+                        @else {{{ $list->board->position->position }}}
+                        @endif</td>
+                        <td>{{ $list->email }}</td>
+                        <td>{{ $list->user_type }}</td>
+
+
+						<td>
+							@if($list->is_active=='1')
+							YES
+							@else
+								NO
+							@endif
+						</td>
 			        </tr>
                   @endforeach
                   </tbody>
                 </table>
             </div>
-        </div>
            </div>
           <!-- /.box -->
         </div>
       </div>
+    </div>
     </section>
     <!-- /.content -->
 @endsection

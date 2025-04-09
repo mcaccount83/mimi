@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin Tasks/Reports')
+@section('page_title', 'Admin')
 @section('breadcrumb', 'EOY Procedures')
 
 <style>

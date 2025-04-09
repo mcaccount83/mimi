@@ -397,20 +397,38 @@ window.onload = function () {
                                 </li>
                             @endif
 
-                        <!-- Admin Reports Menu Item -->
+                        <!-- Admin Menu Item -->
                         @php
                             if ($userAdmin) {
                                 $adminReportsRoute = route('admin.reregdate');
                             }
                             $activeAdminReportsRoutes = [
-                                'admin/*', 'adminreports/*'
+                                'admin/*'
                             ];
                         @endphp
                         @if (isset($adminReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $adminReportsRoute }}" class="nav-link {{ isActiveRoute($activeAdminReportsRoutes) }}">
                                     <i class="nav-icon fas fa-unlock-keyhole"></i>
-                                    <p>Admin Tasks/Reports</p>
+                                    <p>Admin</p>
+                                </a>
+                            </li>
+                        @endif
+
+                        <!-- Admin Reports Menu Item -->
+                        @php
+                            if ($userAdmin) {
+                                $adminReportsRoute = route('adminreports.useradmin');
+                            }
+                            $activeAdminReportsRoutes = [
+                                'adminreports/*'
+                            ];
+                        @endphp
+                        @if (isset($adminReportsRoute))
+                            <li class="nav-item">
+                                <a href="{{ $adminReportsRoute }}" class="nav-link {{ isActiveRoute($activeAdminReportsRoutes) }}">
+                                    <i class="nav-icon fas fa-unlock-keyhole"></i>
+                                    <p>Admin Reports</p>
                                 </a>
                             </li>
                         @endif
