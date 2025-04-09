@@ -28,5 +28,4 @@ class ProbationSubmission extends Model
         'created_at',
         'updated_at',
     ];
-
 }

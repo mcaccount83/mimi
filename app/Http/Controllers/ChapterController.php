@@ -12,27 +12,25 @@ use App\Mail\ChaptersPrimaryCoordinatorChange;
 use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
 use App\Mail\ChaptersUpdatePrimaryCoorBoard;
 use App\Mail\ChaptersUpdatePrimaryCoorChapter;
-use App\Mail\NewChapterWelcome;
 use App\Mail\WebsiteAddNoticeAdmin;
 use App\Mail\WebsiteAddNoticeChapter;
 use App\Mail\WebsiteReviewNotice;
 use App\Mail\WebsiteUpdatePrimaryCoor;
 use App\Models\Boards;
 use App\Models\BoardsDisbanded;
-use App\Models\Chapters;
 use App\Models\BoardsOutgoing;
-use App\Models\DisbandedChecklist;
+use App\Models\Chapters;
 use App\Models\Coordinators;
+use App\Models\DisbandedChecklist;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
-use App\Models\Region;
-use App\Models\State;
-use App\Models\Status;
 use App\Models\Payments;
 use App\Models\ProbationSubmission;
+use App\Models\Region;
 use App\Models\Resources;
-use App\Models\ToolkitCategory;
+use App\Models\State;
+use App\Models\Status;
 use App\Models\User;
 use App\Models\Website;
 use Illuminate\Http\JsonResponse;
@@ -264,9 +262,9 @@ class ChapterController extends Controller implements HasMiddleware
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate, 'probationReason' => $probationReason,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
-            'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded'=> $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
+            'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
             'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
-            'resources' => $resources
+            'resources' => $resources,
         ];
 
         return view('chapters.view')->with($data);
@@ -943,7 +941,7 @@ class ChapterController extends Controller implements HasMiddleware
         $pcList = $baseQuery['pcList'];
 
         $data = ['id' => $id, 'chIsActive' => $chIsActive, 'reviewComplete' => $reviewComplete,
-            'chDetails' => $chDetails, 'websiteLink' => $websiteLink, 'chDocuments' => $chDocuments, 'allProbation' =>$allProbation,
+            'chDetails' => $chDetails, 'websiteLink' => $websiteLink, 'chDocuments' => $chDocuments, 'allProbation' => $allProbation,
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'probationReason' => $probationReason,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'allStatuses' => $allStatuses, 'allWebLinks' => $allWebLinks,
@@ -984,10 +982,9 @@ class ChapterController extends Controller implements HasMiddleware
         }
 
         $status_id = $request->filled('ch_status') ? $request->input('ch_status') : $request->input('ch_hid_status');
-        if ($status_id == 1){
+        if ($status_id == 1) {
             $probation_id = null;
-        }
-        else {
+        } else {
             $probation_id = $request->filled('ch_probation') ? $request->input('ch_probation') : $request->input('ch_hid_probation');
         }
 
@@ -1025,7 +1022,7 @@ class ChapterController extends Controller implements HasMiddleware
 
             $chapter->save();
 
-            if ($chapter->probation_id == 3 && !$probation) {
+            if ($chapter->probation_id == 3 && ! $probation) {
                 ProbationSubmission::create([
                     'chapter_id' => $id,
                 ]);
@@ -1743,7 +1740,7 @@ class ChapterController extends Controller implements HasMiddleware
 
                 Mail::to($emailPC)
                     ->queue(new ChaptersUpdatePrimaryCoorBoard($mailData));
-                    // ->queue(new ChaptersUpdatePrimaryCoorPresident($mailData));
+                // ->queue(new ChaptersUpdatePrimaryCoorPresident($mailData));
             }
 
             // //List Admin Notification//
@@ -2008,6 +2005,4 @@ class ChapterController extends Controller implements HasMiddleware
 
         return view('chapters.chapboardlist')->with($data);
     }
-
-
 }

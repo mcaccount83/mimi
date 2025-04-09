@@ -208,9 +208,9 @@ class PaymentController extends Controller implements HasMiddleware
             DB::rollback();
             Log::error($e);
 
-        return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
+            return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
+        }
     }
-}
 
     /**
      * Process payments with Authorize.net
@@ -317,9 +317,9 @@ class PaymentController extends Controller implements HasMiddleware
 
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType;
-        if(app()->environment('local')){
+        if (app()->environment('local')) {
             $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
-        }else{
+        } else {
             $transactionRequestType->setTransactionType('authCaptureTransaction');  // Caputre Payment for Live Traansactions
         }
         $transactionRequestType->setAmount($amount);

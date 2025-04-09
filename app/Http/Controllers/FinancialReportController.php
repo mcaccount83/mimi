@@ -2,35 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CheckCurrentPasswordBoardRequest;
-use App\Http\Requests\UpdatePasswordBoardRequest;
-use App\Mail\EOYElectionReportSubmitted;
-use App\Mail\EOYElectionReportThankYou;
-use App\Mail\EOYFinancialReportThankYou;
-use App\Mail\EOYFinancialSubmitted;
 use App\Mail\DisbandChecklistComplete;
 use App\Mail\DisbandChecklistThankYou;
-use App\Mail\DisbandFinancialReportThankYou;
 use App\Mail\DisbandFinalReportSubmit;
-use App\Models\Admin;
-use App\Models\Boards;
+use App\Mail\DisbandFinancialReportThankYou;
+use App\Mail\EOYFinancialReportThankYou;
+use App\Mail\EOYFinancialSubmitted;
 use App\Models\Chapters;
-use App\Models\Documents;
 use App\Models\DisbandedChecklist;
+use App\Models\Documents;
 use App\Models\FinancialReport;
-use App\Models\incomingboard;
-use App\Models\Resources;
 use App\Models\ResourceCategory;
-use App\Models\User;
-use App\Models\Website;
-use Illuminate\Http\JsonResponse;
+use App\Models\Resources;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
@@ -82,7 +70,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
-        $chIsActive =  $baseQuery['chIsActive'];
+        $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
@@ -94,7 +82,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'awards' => $awards, 'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin
+            'awards' => $awards, 'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.financial')->with($data);
@@ -172,7 +160,6 @@ class FinancialReportController extends Controller implements HasMiddleware
             $PartyExpenseFields[$i]['party_expense_expenses'] = $input['PartyExpenses'.$i] ?? null;
         }
         $financialReport->party_expense_array = base64_encode(serialize($PartyExpenseFields));
-
 
         // OFFICE & OPERATING EXPENSES
         $financialReport->office_printing_costs = $input['PrintingCosts'] ?? null;
@@ -320,7 +307,6 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->chapter_awards = base64_encode(serialize($ChapterAwards));
     }
 
-
     /**
      * Save EOY Financial Report All Board Members
      */
@@ -334,7 +320,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
-        $reportReceived = $input['submitted']?? null;
+        $reportReceived = $input['submitted'] ?? null;
 
         $financialReport = FinancialReport::find($chapterId);
         $documents = Documents::find($chapterId);
@@ -345,13 +331,12 @@ class FinancialReportController extends Controller implements HasMiddleware
             $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
                 $disbandChecklist->destroy_manual == '1' && $disbandChecklist->remove_online == '1' &&
                 $disbandChecklist->file_irs == '1' && $disbandChecklist->file_financial == '1');
-        }
-        else {
+        } else {
             $checklistComplete = null;
         }
 
         DB::beginTransaction();
-        try{
+        try {
             $this->saveAccordionFields($financialReport, $input);
 
             if ($reportReceived == 1) {
@@ -396,7 +381,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             if ($reportReceived == 1) {
                 $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
 
-                if ($userType != 'disbanded'){
+                if ($userType != 'disbanded') {
                     Mail::to($userEmail)
                         ->cc($emailListChap)
                         ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
@@ -413,7 +398,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                     }
                 }
 
-                if ($userType == 'disbanded'){
+                if ($userType == 'disbanded') {
                     Mail::to($userEmail)
                         ->cc($emailListChap)
                         ->queue(new DisbandFinancialReportThankYou($mailData, $pdfPath));
@@ -427,7 +412,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                 }
             }
 
-            if ($documents->final_report_received == '1' && $checklistComplete){
+            if ($documents->final_report_received == '1' && $checklistComplete) {
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new DisbandChecklistThankYou($mailData));
@@ -461,7 +446,6 @@ class FinancialReportController extends Controller implements HasMiddleware
             'Content-Length: '.filesize($file_path),
         ]);
     }
-
 
     /**
      * Show Disband Checklist andEOY Financial Report for Disbanded Chapters
@@ -497,7 +481,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin
+            'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.disband')->with($data);
@@ -528,7 +512,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $disbandChecklist->file_irs == '1' && $disbandChecklist->file_financial == '1');
 
         DB::beginTransaction();
-        try{
+        try {
             $this->saveAccordionFields($financialReport, $input);
 
             if ($reportReceived == 1) {
@@ -583,7 +567,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                     ->queue(new DisbandFinalReportSubmit($mailData, $pdfPath));
             }
 
-            if ($documents->final_report_received == '1' && $checklistComplete){
+            if ($documents->final_report_received == '1' && $checklistComplete) {
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new DisbandChecklistThankYou($mailData));
@@ -607,7 +591,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      * Save Disbanded Checklsit Questions
      */
     public function updateDisbandChecklist(Request $request, $chapterId): RedirectResponse
@@ -623,7 +607,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $disbandChecklist = DisbandedChecklist::find($chapterId);
 
         DB::beginTransaction();
-        try{
+        try {
             $disbandChecklist->final_payment = $request->has('FinalPayment') ? 1 : 0;
             $disbandChecklist->donate_funds = $request->has('DonateFunds') ? 1 : 0;
             $disbandChecklist->destroy_manual = $request->has('DestroyManual') ? 1 : 0;
@@ -658,7 +642,6 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );
 
-
             if ($documents->final_financial_report_received == '1' && $checklistComplete) {
                 Mail::to($userEmail)
                     ->cc($emailListChap)
@@ -669,7 +652,8 @@ class FinancialReportController extends Controller implements HasMiddleware
             }
 
             DB::commit();
-                return redirect()->back()->with('success', 'Checklist has been successfully updated');
+
+            return redirect()->back()->with('success', 'Checklist has been successfully updated');
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
@@ -678,5 +662,4 @@ class FinancialReportController extends Controller implements HasMiddleware
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         }
     }
-
 }

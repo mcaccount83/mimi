@@ -12,9 +12,9 @@ use App\Mail\EOYElectionReportSubmitted;
 use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
-use App\Mail\WebsiteReviewNotice;
 use App\Mail\ProbationReportSubmitted;
 use App\Mail\ProbationReportThankYou;
+use App\Mail\WebsiteReviewNotice;
 use App\Models\Admin;
 use App\Models\Boards;
 use App\Models\Chapters;
@@ -23,8 +23,8 @@ use App\Models\FinancialReport;
 use App\Models\incomingboard;
 use App\Models\Probation;
 use App\Models\ProbationSubmission;
-use App\Models\Resources;
 use App\Models\ResourceCategory;
+use App\Models\Resources;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -54,7 +54,7 @@ class BoardController extends Controller implements HasMiddleware
 
     protected $financialReportController;
 
-        public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController,
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController,
         BaseMailDataController $baseMailDataController, FinancialReportController $financialReportController, EmailTableController $emailTableController)
     {
         $this->userController = $userController;
@@ -159,7 +159,7 @@ class BoardController extends Controller implements HasMiddleware
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
-            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments
+            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments,
         ];
 
         return view('boards.president')->with($data);
@@ -930,7 +930,6 @@ class BoardController extends Controller implements HasMiddleware
         return view('boards.payment')->with($data);
     }
 
-
     /**
      * Show M2M Donation Form All Board Members
      */
@@ -960,7 +959,7 @@ class BoardController extends Controller implements HasMiddleware
         return view('boards.donation')->with($data);
     }
 
-      /**
+    /**
      * Show Probation Submission Form All Board Members
      */
     public function editProbationSubmission(Request $request, $chapter_id = null): View
@@ -1028,7 +1027,7 @@ class BoardController extends Controller implements HasMiddleware
             $chapter->save();
 
             if ($probation) {
-                    $probation->update([
+                $probation->update([
                     $probation->q1_dues = $input['q1_dues'] ?? null,
                     $probation->q1_benefit = $input['q1_benefit'] ?? null,
                     $probation->q2_dues = $input['q2_dues'] ?? null,
@@ -1049,7 +1048,6 @@ class BoardController extends Controller implements HasMiddleware
                     'mailTable' => $mailTable,
                 ]
             );
-
 
             Mail::to($emailCC)
                 ->queue(new ProbationReportSubmitted($mailData));
@@ -1092,8 +1090,8 @@ class BoardController extends Controller implements HasMiddleware
         $resourceCategories = ResourceCategory::all();
 
         $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails, 'resources' => $resources, 'resourceCategories' => $resourceCategories,
-                'userAdmin' => $userAdmin,
-            ];
+            'userAdmin' => $userAdmin,
+        ];
 
         return view('boards.resources')->with($data);
     }
@@ -1469,7 +1467,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
-        $chIsActive =  $baseQuery['chIsActive'];
+        $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
@@ -1500,14 +1498,14 @@ class BoardController extends Controller implements HasMiddleware
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
-        $reportReceived = $input['submitted']?? null;
+        $reportReceived = $input['submitted'] ?? null;
 
         $financialReport = FinancialReport::find($chapterId);
         $documents = Documents::find($chapterId);
         $chapter = Chapters::find($chapterId);
 
         DB::beginTransaction();
-        try{
+        try {
             $this->financialReportController->saveAccordionFields($financialReport, $input);
 
             if ($reportReceived == 1) {
@@ -1591,5 +1589,4 @@ class BoardController extends Controller implements HasMiddleware
             'Content-Length: '.filesize($file_path),
         ]);
     }
-
 }

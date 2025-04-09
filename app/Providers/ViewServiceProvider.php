@@ -18,7 +18,6 @@ class ViewServiceProvider extends ServiceProvider
             $loggedIn = null;
             $userAdmin = false; // Initialize with a default value
 
-
             if (Auth::check()) {
                 $user = Auth::user();
 

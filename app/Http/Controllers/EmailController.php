@@ -2,34 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddBugsAdminRequest;
-use App\Http\Requests\AddResourcesAdminRequest;
-use App\Http\Requests\AddToolkitAdminRequest;
-use App\Http\Requests\UpdateBugsAdminRequest;
-use App\Http\Requests\UpdateResourcesAdminRequest;
-use App\Http\Requests\UpdateToolkitAdminRequest;
-use App\Mail\ChapterSetup;
 use App\Mail\ChapterEIN;
 use App\Mail\ChapterEmail;
+use App\Mail\ChapterSetup;
 use App\Mail\NewChapterWelcome;
-use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsReRegLate;
-use App\Models\Resources;
-use App\Models\Chapters;
+use App\Mail\PaymentsReRegReminder;
 use App\Models\EmailFields;
-use App\Models\User;
+use App\Models\Resources;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\View\View;
-use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
 class EmailController extends Controller implements HasMiddleware
 {
@@ -60,7 +48,6 @@ class EmailController extends Controller implements HasMiddleware
 
     /* /Custom Helpers/ */
     // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
-
 
     /**
      * Update Email Data and Send Chapter Setup Email
@@ -318,7 +305,7 @@ class EmailController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      * Send Chapter Re-Registration Reminder
      */
     public function sendChapterReReg(Request $request): JsonResponse
@@ -434,7 +421,4 @@ class EmailController extends Controller implements HasMiddleware
         }
 
     }
-
-
-
 }

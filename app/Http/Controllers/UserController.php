@@ -158,10 +158,11 @@ class UserController extends Controller implements HasMiddleware
         $stateShortName = $chDetails->state->state_short_name ?? '';
         $documents = $chDetails->documents()->first();
 
-        if ($chIsActive == '1')
+        if ($chIsActive == '1') {
             $boards = $chDetails->boards()->pluck('email')->filter()->toArray();
-        else
+        } else {
             $boards = $chDetails->boardsDisbanded()->pluck('email')->filter()->toArray();
+        }
 
         $coordiantors = $chDetails->coordinatorTree()->get();
 
@@ -415,7 +416,6 @@ class UserController extends Controller implements HasMiddleware
         return $rcDetails; // Return all coordinators as a collection
     }
 
-
     /**
      * Update User to Outgoing when replaced on board
      */
@@ -446,8 +446,4 @@ class UserController extends Controller implements HasMiddleware
         ]);
 
     }
-
-
-
-
 }

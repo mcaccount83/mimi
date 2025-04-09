@@ -19,7 +19,7 @@ class EnsureUserIsActiveAndCoordinator
         // Check if the user is active AND (is a coordinator OR is an admin)
         if (! $user ||
             $user->is_active != 1 ||
-            !($user->user_type == 'coordinator' || $user->is_admin == 1)) {
+            ! ($user->user_type == 'coordinator' || $user->is_admin == 1)) {
             Auth::logout();
             $request->session()->flush();
 

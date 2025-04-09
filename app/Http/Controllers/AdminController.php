@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
 use App\Models\Boards;
+use App\Models\BoardsOutgoing;
 use App\Models\Bugs;
 use App\Models\Chapters;
 use App\Models\Coordinators;
@@ -19,10 +20,9 @@ use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
 use App\Models\IncomingBoard;
 use App\Models\Payments;
-use App\Models\BoardsOutgoing;
 use App\Models\ProbationSubmission;
-use App\Models\Resources;
 use App\Models\ResourceCategory;
+use App\Models\Resources;
 use App\Models\ToolkitCategory;
 use App\Models\User;
 use Exception;
@@ -79,7 +79,7 @@ class AdminController extends Controller implements HasMiddleware
         return $titles;
     }
 
-     /**
+    /**
      * Admin Choose Active Chapter for Viewing
      */
     public function listActiveChapters(Request $request): View
@@ -690,7 +690,7 @@ class AdminController extends Controller implements HasMiddleware
         return view('admin.eoy')->with($data);
     }
 
-     /**
+    /**
      * Reset Disbanded Users to NOT active
      */
     public function resetDisbandedUsers(): JsonResponse
@@ -699,13 +699,13 @@ class AdminController extends Controller implements HasMiddleware
         try {
             // Make disbanded users inactive
             DB::table('users')
-            ->where('user_type', 'disbanded')
-            ->where('is_active', '1')
-            ->update([
-                'is_active' => '0',
-            ]);
+                ->where('user_type', 'disbanded')
+                ->where('is_active', '1')
+                ->update([
+                    'is_active' => '0',
+                ]);
 
-        DB::commit();
+            DB::commit();
 
             $message = 'Disbanded users successfully updated';
 
@@ -741,11 +741,11 @@ class AdminController extends Controller implements HasMiddleware
         try {
             // Make outgoing users inactive
             DB::table('users')
-            ->where('user_type', 'outgoing')
-            ->where('is_active', '1')
-            ->update([
-                'is_active' => '0',
-            ]);
+                ->where('user_type', 'outgoing')
+                ->where('is_active', '1')
+                ->update([
+                    'is_active' => '0',
+                ]);
 
             DB::commit();
 
