@@ -9,8 +9,6 @@ class EmailFields extends Model
 {
     use HasFactory;
 
-    protected $table = 'email_fields';
-
     protected $primaryKey = 'id';
 
     protected $fillable = [

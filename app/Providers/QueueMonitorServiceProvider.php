@@ -19,4 +19,3 @@ class QueueMonitorServiceProvider extends ServiceProvider
         view()->addNamespace('queue-monitor', resource_path('views/vendor/queue-monitor'));
     }
 }
-

@@ -108,7 +108,7 @@ class PublicController extends Controller
             // Handle different content types appropriately
             if (strpos($contentType, 'text/html') !== false) {
                 // Google sometimes returns HTML for large files with a download prompt
-                return redirect("https://drive.google.com/file/d/{$fileId}/view");
+                return redirect()->to("https://drive.google.com/file/d/{$fileId}/view");
             }
 
             // Stream the file back to the client
