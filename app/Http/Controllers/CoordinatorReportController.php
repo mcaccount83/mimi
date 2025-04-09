@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chapters;
-use App\Models\CoordinatorTree;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -83,7 +81,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $coordinatorData = $this->userController->loadReportingTree($coorId);
         $inQryArr = $coordinatorData['inQryArr'];
-        $inQryArr = array_filter($inQryArr, fn($id) => $id != $coorId);
+        $inQryArr = array_filter($inQryArr, fn ($id) => $id != $coorId);
 
         $baseIndirectQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $indirectReportList = $baseIndirectQuery['query']->whereIn('primary_coordinator_id', $inQryArr)->get();
@@ -94,7 +92,6 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         return ['direct_report' => $direct_report, 'indirect_report' => $indirect_report, 'total_report' => $total_report];
     }
-
 
     /**
      * Coordiantor Appreciation List

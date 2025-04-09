@@ -9,7 +9,7 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user() || $request->user()->is_admin != 1) {
+        if (! $request->user() || $request->user()->is_admin != 1) {
             return redirect('/login')->with('error', 'You need admin privileges to access this page.');
         }
 

@@ -16,11 +16,11 @@ use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\ForumSubscriptionController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentReportController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewAsBoardController;
 use Illuminate\Support\Facades\Route;
@@ -61,12 +61,24 @@ Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinat
 Route::get('admin/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
 
 // Error Pages Test Routes...Public, No login required
-Route::get('/test-500', function () {abort(500);});
-Route::get('/test-404', function () {abort(404);});
-Route::get('/test-403', function () {abort(403);});
-Route::get('/test-401', function () {abort(401);});
-Route::get('/test-419', function () {abort(419);});
-Route::get('/test-429', function () {abort(429);});
+Route::get('/test-500', function () {
+    abort(500);
+});
+Route::get('/test-404', function () {
+    abort(404);
+});
+Route::get('/test-403', function () {
+    abort(403);
+});
+Route::get('/test-401', function () {
+    abort(401);
+});
+Route::get('/test-419', function () {
+    abort(419);
+});
+Route::get('/test-429', function () {
+    abort(429);
+});
 
 // Public Page Routes...Public, No login required
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
@@ -100,7 +112,6 @@ Route::get('/adminreports/duplicateboardid', [AdminController::class, 'showDupli
 Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresident'])->name('adminreports.nopresident');
 Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('adminreports.outgoingboard');
 Route::get('/adminreports/disbandedboard', [AdminController::class, 'showDisbandedBoard'])->name('adminreports.disbandedboard');
-
 
 // Resources Controller Routes...Coordinator Login Required
 Route::get('/resources/bugs', [ResourcesController::class, 'showBugs'])->name('resources.bugs');
@@ -244,7 +255,6 @@ Route::prefix('admin/board')->middleware(['auth', 'admin'])->group(function () {
 
 Route::get('/admin/chapterlist', [AdminController::class, 'listActiveChapters'])->name('admin.chapterlist');
 Route::get('/admin/chapterlistzapped', [AdminController::class, 'listZappedChapters'])->name('admin.chapterlistzapped');
-
 
 // ViewAsBoard Controller Routes...Coordinator Login Required  These pages do not have their own resourse/views, they use the board view pages
 Route::get('/view/chapter/{id}', [ViewAsBoardController::class, 'showChapterView'])->name('viewas.viewchapterpresident');

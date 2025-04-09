@@ -10,8 +10,8 @@ use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Bugs;
-use App\Models\Resources;
 use App\Models\ResourceCategory;
+use App\Models\Resources;
 use App\Models\ToolkitCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,7 +19,6 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
@@ -27,7 +26,7 @@ class ResourcesController extends Controller implements HasMiddleware
 {
     protected $userController;
 
-    public function __construct( UserController $userController)
+    public function __construct(UserController $userController)
     {
         $this->userController = $userController;
 
@@ -336,6 +335,4 @@ class ResourcesController extends Controller implements HasMiddleware
 
         $file->save();
     }
-
-
 }

@@ -43,7 +43,7 @@ class PaymentReportController extends Controller implements HasMiddleware
         ];
     }
 
-     /**
+    /**
      * ReRegistration List
      */
     public function showChapterReRegistration(Request $request): View
@@ -345,59 +345,59 @@ class PaymentReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-                $payments->rereg_notes = $input['ch_regnotes'];
-                $payments->save();
+            $payments->rereg_notes = $input['ch_regnotes'];
+            $payments->save();
 
-                $chapter->last_updated_by = $lastUpdatedBy;
-                $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->save();
+
+            if ($rereg_date != null) {
+                $chapter->next_renewal_year = $nextRenewalYear + 1;
                 $chapter->save();
 
-                if ($rereg_date != null) {
-                    $chapter->next_renewal_year = $nextRenewalYear + 1;
-                    $chapter->save();
+                $payments->rereg_date = $rereg_date;
+                $payments->rereg_members = $input['MembersPaidFor'];
+                $payments->save();
+            }
 
-                    $payments->rereg_date = $rereg_date;
-                    $payments->rereg_members = $input['MembersPaidFor'];
-                    $payments->save();
-                }
+            if ($m2m_date != null) {
+                $payments->m2m_date = $m2m_date;
+                $payments->m2m_donation = $input['M2MPayment'];
+                $payments->save();
+            }
 
-                if ($m2m_date != null) {
-                    $payments->m2m_date = $m2m_date;
-                    $payments->m2m_donation = $input['M2MPayment'];
-                    $payments->save();
-                }
+            if ($sustaining_date != null) {
+                $payments->sustaining_date = $sustaining_date;
+                $payments->sustaining_donation = $input['SustainingPayment'];
+                $payments->save();
+            }
 
-                if ($sustaining_date != null) {
-                    $payments->sustaining_date = $sustaining_date;
-                    $payments->sustaining_donation = $input['SustainingPayment'];
-                    $payments->save();
-                }
+            $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
+            $chPayments = $baseQueryUpd['chPayments'];
 
-                $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
-                $chPayments = $baseQueryUpd['chPayments'];
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getPaymentData($chPayments, $input),
+            );
 
-                $mailData = array_merge(
-                    $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPaymentData($chPayments, $input),
-                );
+            if ($request->input('ch_notify') == 'on' && $rereg_date != null) {
+                Mail::to($emailListChap)
+                    ->cc($emailPC)
+                    ->queue(new PaymentsReRegChapterThankYou($mailData));
+            }
 
-                if ($request->input('ch_notify') == 'on' && $rereg_date != null) {
-                    Mail::to($emailListChap)
-                        ->cc($emailPC)
-                        ->queue(new PaymentsReRegChapterThankYou($mailData));
-                }
+            if ($request->input('ch_thanks') == 'on' && $m2m_date != null) {
+                Mail::to($emailListChap)
+                    ->cc($emailPC)
+                    ->queue(new PaymentsM2MChapterThankYou($mailData));
+            }
 
-                if ($request->input('ch_thanks') == 'on' && $m2m_date != null) {
-                    Mail::to($emailListChap)
-                        ->cc($emailPC)
-                        ->queue(new PaymentsM2MChapterThankYou($mailData));
-                }
-
-                if ($request->input('ch_sustaining') == 'on' && $sustaining_date != null) {
-                    Mail::to($emailListChap)
-                        ->cc($emailPC)
-                        ->queue(new PaymentsSustainingChapterThankYou($mailData));
-                }
+            if ($request->input('ch_sustaining') == 'on' && $sustaining_date != null) {
+                Mail::to($emailListChap)
+                    ->cc($emailPC)
+                    ->queue(new PaymentsSustainingChapterThankYou($mailData));
+            }
 
             DB::commit();
         } catch (\Exception $e) {
@@ -411,5 +411,4 @@ class PaymentReportController extends Controller implements HasMiddleware
 
         return to_route('chapters.editpayment', ['id' => $id])->with('success', 'Chapter Payments/Donations have been updated');
     }
-
 }

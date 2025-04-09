@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Resources;
 use App\Models\ResourceCategory;
+use App\Models\Resources;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -93,36 +93,36 @@ class HomeController extends Controller implements HasMiddleware
             return view('boards.financial')->with($data);
         }
 
-            if ($userType == 'disbanded') {
-                // Send Disbanded Chapter Board Members to Disbanded Checklist and Financial Report
-                return redirect()->to('board/disbandchecklist');
+        if ($userType == 'disbanded') {
+            // Send Disbanded Chapter Board Members to Disbanded Checklist and Financial Report
+            return redirect()->to('board/disbandchecklist');
 
-                // $userName = $user['user_name'];
-                // $userEmail = $user['user_email'];
-                // $loggedInName = $user['user_name'];
-                // $chId = $user['user_disChapterId'];
+            // $userName = $user['user_name'];
+            // $userEmail = $user['user_email'];
+            // $loggedInName = $user['user_name'];
+            // $chId = $user['user_disChapterId'];
 
-                // $baseQuery = $this->baseBoardController->getChapterDetails($chId);
-                // $chDetails = $baseQuery['chDetails'];
-                // $chIsActive = $baseQuery['chIsActive'];
-                // $stateShortName = $baseQuery['stateShortName'];
-                // $chDocuments = $baseQuery['chDocuments'];
-                // // $submitted = $baseQuery['submitted'];
-                // $chFinancialReport = $baseQuery['chFinancialReport'];
-                // $awards = $baseQuery['awards'];
-                // $allAwards = $baseQuery['allAwards'];
+            // $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+            // $chDetails = $baseQuery['chDetails'];
+            // $chIsActive = $baseQuery['chIsActive'];
+            // $stateShortName = $baseQuery['stateShortName'];
+            // $chDocuments = $baseQuery['chDocuments'];
+            // // $submitted = $baseQuery['submitted'];
+            // $chFinancialReport = $baseQuery['chFinancialReport'];
+            // $awards = $baseQuery['awards'];
+            // $allAwards = $baseQuery['allAwards'];
 
-                // $resources = Resources::with('resourceCategory')->get();
-                // $resourceCategories = ResourceCategory::all();
+            // $resources = Resources::with('resourceCategory')->get();
+            // $resourceCategories = ResourceCategory::all();
 
-                // $chDisbanded = $baseQuery['chDisbanded'];
+            // $chDisbanded = $baseQuery['chDisbanded'];
 
-                // $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
-                //     'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-                //    'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
-                // ];
+            // $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+            //     'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+            //    'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
+            // ];
 
-                // return view('boards.disband')->with($data);
+            // return view('boards.disband')->with($data);
 
         } else {
             Auth::logout(); // logout non-user

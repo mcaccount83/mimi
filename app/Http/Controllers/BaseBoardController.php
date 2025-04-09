@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\FinancialReportAwards;
+use App\Models\Probation;
 use App\Models\State;
 use App\Models\Website;
-use App\Models\Probation;
 
 class BaseBoardController extends Controller
 {
@@ -80,7 +80,7 @@ class BaseBoardController extends Controller
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,
             'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail, 'displayEOY' => $displayEOY,
-            'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'allProbation' => $allProbation, 'probationReason' => $probationReason
+            'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'allProbation' => $allProbation, 'probationReason' => $probationReason,
         ];
     }
 }

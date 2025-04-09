@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Resources;
 use App\Models\ResourceCategory;
+use App\Models\Resources;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use GuzzleHttp\Client;
-use App\Models\GoogleDrive;
-use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Facades\Http;
-
 
 class PublicController extends Controller
 {
@@ -53,7 +49,7 @@ class PublicController extends Controller
         return view('public.chapterlinks', ['chapters' => $chapters, 'international' => $international]);
     }
 
-       /**
+    /**
      * Show the Chapter Resources Page
      */
     public function chapterResources(): View
@@ -62,9 +58,9 @@ class PublicController extends Controller
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-            $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories,];
+        $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories];
 
-            return view('public.resources')->with($data);
+        return view('public.resources')->with($data);
 
     }
 
@@ -94,7 +90,7 @@ class PublicController extends Controller
         }
 
         try {
-            $client = new Client();
+            $client = new Client;
 
             // Use the Google Drive API URL format for direct download
             $googleDriveUrl = "https://drive.google.com/uc?export=download&id={$fileId}";
@@ -103,7 +99,7 @@ class PublicController extends Controller
             $response = $client->get($googleDriveUrl, [
                 'stream' => true,
                 'timeout' => 30,
-                'connect_timeout' => 30
+                'connect_timeout' => 30,
             ]);
 
             // Get the content type from the response
@@ -119,7 +115,7 @@ class PublicController extends Controller
             return response()->stream(
                 function () use ($response) {
                     $body = $response->getBody();
-                    while (!$body->eof()) {
+                    while (! $body->eof()) {
                         echo $body->read(1024);
                     }
                 },
@@ -127,14 +123,14 @@ class PublicController extends Controller
                 [
                     'Content-Type' => $contentType ?: 'application/pdf',
                     'Content-Disposition' => 'inline; filename="document.pdf"',
-                    'Cache-Control' => 'public, max-age=3600'
+                    'Cache-Control' => 'public, max-age=3600',
                 ]
             );
 
         } catch (GuzzleException $e) {
             return response()->json([
                 'error' => 'Failed to fetch file from Google Drive',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

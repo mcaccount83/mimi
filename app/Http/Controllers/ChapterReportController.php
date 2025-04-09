@@ -137,7 +137,7 @@ class ChapterReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->whereHas('payments', function($query) {
+            ->whereHas('payments', function ($query) {
                 $query->where('rereg_members', '>=', 75);
             })
             ->get();

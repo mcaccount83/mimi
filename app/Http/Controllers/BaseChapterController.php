@@ -61,7 +61,7 @@ class BaseChapterController extends Controller
      */
     private function getBaseQueryWithRelations($isActive = 1)
     {
-        return Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'payments','avp', 'mvp', 'treasurer', 'secretary', 'startMonth', 'primaryCoordinator'])
+        return Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'payments', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth', 'primaryCoordinator'])
             ->where('is_active', $isActive);
     }
 
@@ -227,7 +227,7 @@ class BaseChapterController extends Controller
     public function getChapterDetails($chId)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'boards', 'primaryCoordinator',
-            'payments', 'disbandCheck', 'probation', 'boardsDisbanded']) ->find($chId);
+            'payments', 'disbandCheck', 'probation', 'boardsDisbanded'])->find($chId);
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
         $regionLongName = $chDetails->region?->long_name;

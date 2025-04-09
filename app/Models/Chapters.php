@@ -163,6 +163,4 @@ class Chapters extends Model
     {
         return $this->hasOne(ProbationSubmission::class, 'chapter_id', 'id');  // 'chapter_id' in pobation_submission HasOne 'id' in chapters
     }
-
-
 }

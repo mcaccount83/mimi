@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Resources;
 use App\Models\ResourceCategory;
+use App\Models\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -71,7 +71,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'probationReason' => $probationReason,
-            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments, 'userAdmin' => $userAdmin
+            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.president')->with($data);
@@ -114,7 +114,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'userAdmin' => $userAdmin
+            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.payment')->with($data);
@@ -137,13 +137,13 @@ class ViewAsBoardController extends Controller implements HasMiddleware
         $month = $now->month;
         $year = $now->year;
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.donation')->with($data);
     }
 
-     /**
+    /**
      * View the Chapter Probation Submission View
      */
     public function showProbationSubmissionView(Request $request, $id): View
@@ -171,7 +171,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'userAdmin' => $userAdmin
+            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.probation')->with($data);
@@ -202,7 +202,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'allStates' => $allStates, 'SECDetails' => $SECDetails,
             'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'userType' => $userType,
-            'allWebLinks' => $allWebLinks, 'userAdmin' => $userAdmin
+            'allWebLinks' => $allWebLinks, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.boardinfo')->with($data);
@@ -234,7 +234,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin
+            'allAwards' => $allAwards, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.financial')->with($data);
@@ -268,7 +268,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail,  'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'allAwards' => $allAwards, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin
+            'allAwards' => $allAwards, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.disband')->with($data);

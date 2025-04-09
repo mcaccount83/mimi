@@ -926,10 +926,9 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             $coordinator->save();
 
-            if ($userAdmin){
+            if ($userAdmin) {
                 $userIsAdmin->is_admin = $request->input('is_admin');
-            }
-            else{
+            } else {
                 $userIsAdmin->is_admin = $request->input('OldAdmin');
             }
 
@@ -1263,5 +1262,4 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
     }
-
 }
