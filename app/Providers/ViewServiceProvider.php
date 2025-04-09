@@ -29,9 +29,7 @@ class ViewServiceProvider extends ServiceProvider
                     $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
                 }
 
-                // Move this line inside the Auth::check() block
                 $userAdmin = $user->is_admin == '1';
-
                 // Additional conditions for other user types can be handled here
             }
 
