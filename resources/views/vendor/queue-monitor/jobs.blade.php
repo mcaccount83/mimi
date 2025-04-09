@@ -29,7 +29,7 @@
 
         <nav class="flex items-center py-4 border-b border-gray-100 dark:border-gray-600">
             <h1 class="px-4 w-full font-semibold text-lg">
-                @lang('Queue Monitor')
+                {{ __('Queue Monitor') }}
             </h1>
             <div class="w-[24rem] px-4 text-sm text-gray-700 font-light">
                 Statistics
@@ -40,7 +40,7 @@
 
             <article class="w-full p-4">
                 <h2 class="mb-4 text-gray-800 text-sm font-medium">
-                    @lang('Filter')
+                    {{ __('Filter') }}
                 </h2>
 
                 @include('queue-monitor::partials.filter', [
@@ -48,7 +48,7 @@
                 ])
 
                 <h2 class="mb-4 text-gray-800 text-sm font-medium">
-                    @lang('Jobs')
+                    {{ __('Jobs') }}
                 </h2>
 
                 @include('queue-monitor::partials.table', [
@@ -61,7 +61,7 @@
                             @csrf
                             @method('delete')
                             <button class="py-2 px-4 bg-red-50 dark:bg-red-200 hover:dark:bg-red-300 hover:bg-red-100 text-red-800 text-xs font-medium rounded-md transition-colors duration-150">
-                                @lang('Delete all entries')
+                                {{ __('Delete all entries') }}
                             </button>
                         </form>
                     </div>
