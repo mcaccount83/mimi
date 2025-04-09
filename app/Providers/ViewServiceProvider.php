@@ -16,6 +16,8 @@ class ViewServiceProvider extends ServiceProvider
             $positionid = null;
             $secpositionid = null;
             $loggedIn = null;
+            $userAdmin = false; // Initialize with a default value
+
 
             if (Auth::check()) {
                 $user = Auth::user();
@@ -28,10 +30,11 @@ class ViewServiceProvider extends ServiceProvider
                     $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
                 }
 
+                // Move this line inside the Auth::check() block
+                $userAdmin = $user->is_admin == '1';
+
                 // Additional conditions for other user types can be handled here
             }
-
-            $userAdmin = $user->is_admin == '1';
 
             // Define conditions
             $ITCondition = ($positionid == 13 || $secpositionid == 13); // IT Coordinator
