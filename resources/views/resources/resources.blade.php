@@ -396,7 +396,7 @@ $(document).ready(function() {
 
                     // Send an AJAX request to upload the file to Google Drive
                     $.ajax({
-                        url: '{{ route('store.resources', '') }}' + '/' + id,
+                        url: '{{ route('store.resources', ':id') }}'.replace(':id', id),
                         method: 'POST',
                         data: formData,
                         processData: false,
@@ -493,7 +493,7 @@ function updateFile(id) {
 
     // Send an AJAX request to update the task
     $.ajax({
-        url: '{{ route('resources.updateresources', '') }}' + '/' + id,
+        url: '{{ route('resources.updateresources', ':id') }}'.replace(':id', id),
         method: 'POST',
         data: formData,
         processData: false,
@@ -515,7 +515,7 @@ function updateFile(id) {
             });
             // Send an AJAX request to upload the file to Google Drive
             $.ajax({
-                    url: '{{ route('store.resources', '') }}' + '/' + id,
+                    url: '{{ route('store.resources', ':id') }}'.replace(':id', id),
                     method: 'POST',
                     data: formData,
                     processData: false,

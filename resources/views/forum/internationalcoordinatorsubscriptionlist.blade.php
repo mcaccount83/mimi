@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin Tasks/Reports')
+@section('page_title', 'List Subscriptions')
 @section('breadcrumb', 'International Coordinator Subscription List')
 
 @section('content')
@@ -44,6 +44,7 @@
         <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
       			    <tr>
+                        <th>Details</th>
                     <th>Conf/Reg</th>
                     <th>Coordinator Name</th>
                     <th>Primary Position</th>
@@ -55,6 +56,8 @@
                 <tbody>
                     @foreach($coordinatorList as $list)
                   <tr>
+                    <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+
                         <td>
                             @if ($list->region?->short_name != "None" )
                                 {{ $list->conference->short_name }} / {{ $list->region?->short_name }}

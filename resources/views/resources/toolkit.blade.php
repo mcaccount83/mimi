@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     // Send an AJAX request to upload the file to Google Drive
                     $.ajax({
-                        url: '{{ route('store.toolkit', '') }}' + '/' + id,
+                        url: '{{ route('store.toolkit', ':id') }}'.replace(':id', id),
                         method: 'POST',
                         data: formData,
                         processData: false,
@@ -570,7 +570,7 @@ function updateFile(id) {
 
     // Send an AJAX request to update the toolkit
     $.ajax({
-        url: '{{ route('resources.updatetoolkit', '') }}' + '/' + id,
+        url: '{{ route('resources.updatetoolkit', ':id') }}'.replace(':id', id),
         method: 'POST',
         data: formData,
         processData: false,
@@ -592,7 +592,7 @@ function updateFile(id) {
                 });
                 // Send an AJAX request to upload the file to Google Drive
                 $.ajax({
-                    url: '{{ route('store.toolkit', '') }}' + '/' + id,
+                    url: '{{ route('store.toolkit', ':id') }}'.replace(':id', id),
                     method: 'POST',
                     data: formData,
                     processData: false,

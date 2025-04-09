@@ -227,7 +227,6 @@ Route::get('/board/probation', [BoardController::class, 'editProbationSubmission
 Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
 Route::get('/board/m2mdonation', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
 Route::get('/board/resources', [BoardController::class, 'viewResources'])->name('board.viewresources');
-
 // Financial Report Controller Routes...Board Login Required
 Route::get('/board/financialreport', [FinancialReportController::class, 'editFinancialReport'])->name('board.editfinancialreport');
 Route::post('/board/financialreportupdate/{id}', [FinancialReportController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
@@ -235,7 +234,7 @@ Route::get('/board/disbandchecklist', [FinancialReportController::class, 'editDi
 Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
 Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
 
-// Admin routes with chapter_id parameter
+// Admin Board Page Routes with chapter_id parameter...Coordinator Login who is userAdmin
 Route::prefix('admin/board')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/president/{chapter_id}', [BoardController::class, 'editPresident'])->name('admin.board.editpresident');
     Route::post('/presidentupdate/{id}/{chapter_id}', [BoardController::class, 'updatePresident'])->name('admin.board.updatepresident');

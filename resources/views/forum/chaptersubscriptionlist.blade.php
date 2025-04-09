@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin Tasks/Reports')
+@section('page_title', 'List Subscriptions')
 @section('breadcrumb', 'Chapter Subscription List')
 
 @section('content')
@@ -46,6 +46,7 @@
               {{-- <table id="chapterlist_reRegDate" class="table table-bordered table-hover"> --}}
               <thead>
       			    <tr>
+                    <th>Details</th>
                     <th>Conf/Reg</th>
           			<th>State</th>
                     <th>Chapter</th>
@@ -64,7 +65,10 @@
                 <tbody>
                     @foreach($chapterList as $list)
                   <tr>
+                    <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+
                         <td>
+
                             @if ($list->region?->short_name != "None" )
                                 {{ $list->conference->short_name }} / {{ $list->region?->short_name }}
                             @else

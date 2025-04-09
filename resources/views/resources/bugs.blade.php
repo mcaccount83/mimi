@@ -477,7 +477,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Send an AJAX request to update the task
     $.ajax({
-        url: '{{ route('resources.updatebugs', '') }}' + '/' + id,
+        url: '{{ route('resources.updatebugs', ':id') }}'.replace(':id', id),
         method: 'POST',
                     data: formData,
                     processData: false,

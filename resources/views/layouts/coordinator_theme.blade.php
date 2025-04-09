@@ -305,7 +305,7 @@ window.onload = function () {
                         @if (isset($chaptersRoute))
                             <li class="nav-item">
                                 <a href="{{ $chaptersRoute }}" class="nav-link {{ isActiveRoute($activeChpaterRoutes) }}">
-                                    <i class="nav-icon fas fa-list-check"></i>
+                                    <i class="nav-icon fas fa-rectangle-list"></i>
                                     <p>List Subscriptions</p>
                                 </a>
                             </li>
@@ -323,8 +323,8 @@ window.onload = function () {
                         @if (isset($boardlistRoute))
                             <li class="nav-item">
                                 <a href="{{ $boardlistRoute }}" class="nav-link {{ isActiveRoute($activeBoardlistRoutes) }}">
-                                    <i class="nav-icon fas fa-list-check"></i>
-                                    <p>BoardList Emails</p>
+                                    <i class="nav-icon fas fa-rectangle-list"></i>
+                                    <p>BoardList Emails - OLD</p>
                                 </a>
                             </li>
                         @endif
@@ -427,7 +427,7 @@ window.onload = function () {
                         @if (isset($adminReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $adminReportsRoute }}" class="nav-link {{ isActiveRoute($activeAdminReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-unlock-keyhole"></i>
+                                    <i class="nav-icon fas fa-clipboard-check"></i>
                                     <p>Admin Reports</p>
                                 </a>
                             </li>
@@ -453,7 +453,7 @@ window.onload = function () {
                          <li class="nav-item position-relative">
                             {{-- <a href="{{ url(config('forum.frontend.router.prefix') . '/c/2-coordinatorlist') }}" target="_blank" class="nav-link"> --}}
                             <a href="{{ url(config('forum.frontend.router.prefix') . '/unread') }}" target="_blank" class="nav-link">
-                                <i class="nav-icon fas fa-list"></i>
+                                <i class="nav-icon fas fa-comments"></i>
                                 <p>
                                     CoordinatorList
                                     @if(getUnreadForumCount() > 0)
