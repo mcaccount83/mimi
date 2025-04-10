@@ -1285,78 +1285,6 @@ function updateEIN() {
     });
 }
 
-// Function to prompt the user for a new EIN
-function promptForNewEINOLD(chapterId) {
-    Swal.fire({
-        title: 'Enter EIN',
-        html: `
-            <p>Please enter the EIN for the chapter.</p>
-            <div style="display: flex; align-items: center;">
-                <input type="text" id="ein" name="ein" class="swal2-input" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask placeholder="Enter EIN" required style="width: 100%;">
-            </div>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-            <br>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const ein = Swal.getPopup().querySelector('#ein').value;
-
-            return {
-                chapter_id: chapterId,
-                ein: ein,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request to update the EIN
-            $.ajax({
-                url: '{{ route('chapters.updateein') }}',
-                type: 'POST',
-                data: {
-                    chapter_id: data.chapter_id,
-                    ein: data.ein,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
 function promptForNewEIN() {
     Swal.fire({
         title: 'Enter EIN',
@@ -1369,7 +1297,7 @@ function promptForNewEIN() {
             <br>
             <div class="custom-control custom-switch">
                 <input type="checkbox" id="chapter_ein" class="custom-control-input">
-                <label class="custom-control-label" for="chapter_ein">Send EIN Notificaiton to Chapter</label>
+                <label class="custom-control-label" for="chapter_ein">Send EIN Notification to Chapter</label>
             </div>
             <br>
         `,
