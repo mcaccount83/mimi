@@ -292,19 +292,20 @@ window.onload = function () {
 
                         <!-- List Subscription Menu Item -->
                         @php
-                            if ($coordinatorCondition) {
-                                $chaptersRoute = route('forum.chaptersubscriptionlist');
+                            // if ($coordinatorCondition) {
+                            if ($listAdminCondition || $userAdmin) {
+                                $listSubscriptionRoute = route('forum.chaptersubscriptionlist');
                             } elseif ($listAdminCondition || $userAdmin) {
-                                $chaptersRoute = route('forum.internationalchaptersubscriptionlist');
+                                $listSubscriptionRoute = route('forum.internationalchaptersubscriptionlist');
                             }
                             $activeChpaterRoutes = [
                                 'forum/chaptersubscriptionlist', 'forum/coordinatorsubscriptionlist',
                                 'forum/internationalchaptersubscriptionlist', 'forum/internationalcoordinatorsubscriptionlist'
                             ];
                         @endphp
-                        @if (isset($chaptersRoute))
+                        @if (isset($listSubscriptionRoute))
                             <li class="nav-item">
-                                <a href="{{ $chaptersRoute }}" class="nav-link {{ isActiveRoute($activeChpaterRoutes) }}">
+                                <a href="{{ $listSubscriptionRoute }}" class="nav-link {{ isActiveRoute($activeChpaterRoutes) }}">
                                     <i class="nav-icon fas fa-rectangle-list"></i>
                                     <p>List Subscriptions</p>
                                 </a>
