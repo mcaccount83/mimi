@@ -9,8 +9,6 @@ use TeamTeaTime\Forum\Models\Thread;
 
 class ForumConditions
 {
-    /* /Custom Helpers/ */
-    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
     public function canAccessCoordinatorList(User $user, Category $category): bool
     {
@@ -32,9 +30,11 @@ class ForumConditions
     public function canManageLists($user): bool
     {
         $userType = $this->checkUserType($user);
+        $userAdmin = $this->checkUserAdmin($user);
         $position = $this->checkPosition($user, $userType);
 
-        return $userType['isCoordinator'] && ($position['isITCondition'] || $position['isListAdminCondition']);
+        return $userType['isCoordinator'] && ($userAdmin['userAdmin'] || $userAdmin['userModerator']);
+        // return $userType['isCoordinator'] && ($position['isITCondition'] || $position['isListAdminCondition']);
         // return $userType['isCoordinator'] && $position['isFounderCondition']; //use this line for TESTING a false return
     }
 
@@ -64,6 +64,16 @@ class ForumConditions
             'isBoard' => $userTypes['board'],
             'isOutgoing' => $userTypes['outgoing'],
             'isDisbanded' => $userTypes['disbanded'],
+        ];
+    }
+
+    public function checkUserAdmin($user): array
+    {
+        $userTypes = getUserAdmin($user->is_admin);
+
+        return [
+            'userAdmin' => $userTypes['userAdmin'],
+            'userModerator' => $userTypes['userModerator'],
         ];
     }
 

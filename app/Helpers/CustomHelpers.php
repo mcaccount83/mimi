@@ -28,7 +28,7 @@ if (! function_exists('getPositionConditions')) {
             'inquiriesConferneceCondition' => ($positionId == 15 || $secPositionId == 15),
             'webReviewCondition' => ($positionId == 9 || $secPositionId == 9),
             'einCondition' => ($positionId == 12 || $secPositionId == 12),
-            'adminReportCondition' => ($positionId == 13 || $secPositionId == 13),
+            // 'adminReportCondition' => ($positionId == 13 || $secPositionId == 13),
             'm2mCondition' => ($positionId == 21 || $secPositionId == 21 || $positionId == 20 || $secPositionId == 20),
             'listAdminCondition' => ($positionId == 23 || $secPositionId == 23),
         ];
@@ -39,7 +39,8 @@ if (! function_exists('getUserAdmin')) {
     function getUserAdmin($userAdmin)
     {
         return [
-            'userAdmin' => ($userAdmin == '1'),  // isActive
+            'userAdmin' => ($userAdmin == '1'),
+            'userModerator' => ($userAdmin == '2'),
         ];
     }
 }

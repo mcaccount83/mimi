@@ -16,7 +16,8 @@ class ViewServiceProvider extends ServiceProvider
             $positionid = null;
             $secpositionid = null;
             $loggedIn = null;
-            $userAdmin = false; // Initialize with a default value
+            $userAdmin = false;
+            $userModerator = false;
 
             if (Auth::check()) {
                 $user = Auth::user();
@@ -30,6 +31,7 @@ class ViewServiceProvider extends ServiceProvider
                 }
 
                 $userAdmin = $user->is_admin == '1';
+                $userModerator = $user->is_admin == '2';
                 // Additional conditions for other user types can be handled here
             }
 
@@ -53,7 +55,7 @@ class ViewServiceProvider extends ServiceProvider
             $inquiriesConferneceCondition = ($positionid == 15 || $secpositionid == 15);  // *Conference Inquiries Coordinator
             $webReviewCondition = ($positionid == 9 || $secpositionid == 9);  // *Website Reviewer
             $einCondition = ($positionid == 12 || $secpositionid == 12);  // *EIN Coordinator
-            $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  // *IT Coordinator
+            // $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  // *IT Coordinator
             $m2mCondition = ($positionid == 21 || $secpositionid == 21 || $positionid == 20 || $secpositionid == 20);  // *M2M Committee
             $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  // *ListAdmin
 
@@ -88,12 +90,12 @@ class ViewServiceProvider extends ServiceProvider
                 'inquiriesCondition',
                 'webReviewCondition',
                 'einCondition',
-                'adminReportCondition',
                 'm2mCondition',
                 'listAdminCondition',
                 'displayTESTING',
                 'displayLIVE',
-                'userAdmin'
+                'userAdmin',
+                'userModerator'
             ));
         });
     }
