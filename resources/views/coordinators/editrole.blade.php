@@ -140,8 +140,11 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <select name="is_admin" id="is_admin" class="form-control select2-sb4" style="width: 100%;" required>
-                                        <option value="1" {{ $cdUserAdmin == 1 ? 'selected' : '' }}>Yes</option>
-                                        <option value="0" {{ $cdUserAdmin == 0 ? 'selected' : '' }}>No</option>
+                                        @foreach($allAdminRoles as $admin)
+                                                <option value="{{$admin->id}}" {{$cdUserAdmin == $admin->id  ? 'selected' : ''}}>
+                                                    {{$admin->admin_role}}
+                                                </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

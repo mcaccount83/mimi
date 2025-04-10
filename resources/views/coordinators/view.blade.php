@@ -39,7 +39,8 @@
                         <b>Secondary Position:</b> <span class="float-right">{{ $secondaryPosition?->long_title }}</span>
                         @if ($userAdmin)
                         <br>
-                        <b>MIMI Admin:</b> <span class="float-right">{{ $cdUserAdmin == 1 ? 'Yes' : 'No' }}</span>
+                        <b>MIMI Admin:</b> <span class="float-right">{{ $cdAdminRole->admin_role }}</span>
+                        {{-- <b>MIMI Admin:</b> <span class="float-right">{{ $cdUserAdmin == 1 ? 'Yes' : 'No' }}</span> --}}
                         @endif
 
                     </li>

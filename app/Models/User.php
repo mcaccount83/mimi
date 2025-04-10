@@ -51,7 +51,7 @@ class User extends Authenticatable
 
     public function adminRole(): HasOne
     {
-        return $this->hasOne(AdminRole::class, 'is_admin', 'id');  // 'is_admin' in users HasOne 'id' in admin_roles
+        return $this->hasOne(AdminRole::class, 'id', 'is_admin');  // 'is_admin' in users HasOne 'id' in admin_roles
     }
 
     // public function outgoing(): HasOne

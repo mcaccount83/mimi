@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Conference;
 use App\Models\CoordinatorPosition;
 use App\Models\Coordinators;
+use App\Models\AdminRole;
 use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
@@ -22,16 +23,6 @@ class BaseCoordinatorController extends Controller
         $this->userController = $userController;
         $this->baseConditionsController = $baseConditionsController;
     }
-
-    /* /Custom Helpers/ */
-    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
-
-    /* /User Controller/ */
-    // $this->userController->loadReportingTree($cdId);
-
-    /* /Base Coditions Controller/ */
-    // $this->baseConditionsController->getConditions($cdId, $cdPositionid, $cdSecPositionid);
-    // $this->baseConditionsController->applyPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
 
     /**
      * Apply checkbox filters to the query
@@ -207,8 +198,10 @@ class BaseCoordinatorController extends Controller
         $secondaryPosition = $cdDetails->secondaryPosition;
 
         $cdUserId = $cdDetails->user_id;
-        $cdUser = User::find($cdUserId);
+        $cdUser = User::with(['adminRole'])
+            ->find($cdUserId);
         $cdUserAdmin = $cdUser->is_admin;
+        $cdAdminRole = $cdUser->adminRole;
 
         $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
             ->where('conference_id', $cdConfId)
@@ -216,6 +209,7 @@ class BaseCoordinatorController extends Controller
             ->get();
         $allStates = State::all();  // Full List for Dropdown Menu
         $allMonths = Month::all();  // Full List for Dropdown Menu
+        $allAdminRoles = AdminRole::all();  // Full List for Dropdown Menu
         $allPositions = CoordinatorPosition::all();  // Full List for Dropdown Menu
         $allCoordinators = Coordinators::with('conference')  // Full List for Dropdown Menu based on Conference
             ->where('conference_id', $cdConfId)
@@ -226,8 +220,8 @@ class BaseCoordinatorController extends Controller
         $rcDetails = $this->userController->loadReportsToList($cdId, $cdConfId, $cdPositionid);
 
         return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdIsActive' => $cdIsActive, 'regionLongName' => $regionLongName, 'cdUserAdmin' => $cdUserAdmin,
-            'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId,
-            'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition,
+            'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId, 'allAdminRoles' => $allAdminRoles,
+            'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'cdAdminRole' => $cdAdminRole,
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths,
             'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid,
         ];

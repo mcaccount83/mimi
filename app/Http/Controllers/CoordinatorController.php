@@ -273,6 +273,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $secondaryPosition = $baseQuery['secondaryPosition'];
         $cdLeave = $baseQuery['cdDetails']->on_leave;
         $cdUserAdmin = $baseQuery['cdUserAdmin'];
+        $cdAdminRole = $baseQuery['cdAdminRole'];
 
         $now = Carbon::now();
         $threeMonthsAgo = $now->copy()->subMonths(3);
@@ -292,7 +293,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
-            'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid,
+            'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole
         ];
 
         return view('coordinators.view')->with($data);
@@ -699,6 +700,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $allRegions = $baseQuery['allRegions'];
         $allPositions = $baseQuery['allPositions'];
+        $allAdminRoles = $baseQuery['allAdminRoles'];
 
         $rcDetails = $baseQuery['rcDetails'];  // ReportsTo Dropdown List
 
@@ -753,6 +755,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'chList' => $chList, 'drList' => $drList, 'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
             'pcOptions' => $pcOptions, 'cdId' => $cdId, 'allPositions' => $allPositions, 'chDetails' => $chDetails, 'drDetails' => $drDetails, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName, 'pcRowCount' => $pcRowCount, 'drRowCount' => $drRowCount,
+            'allAdminRoles' => $allAdminRoles
         ];
 
         return view('coordinators.editrole')->with($data);
@@ -913,7 +916,8 @@ class CoordinatorController extends Controller implements HasMiddleware
         $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
 
         $coordinator = Coordinators::find($id);
-        $userIsAdmin = User::find($id);
+        $coorUserId = $coordinator->user_id;
+        $userIsAdmin = User::find($coorUserId);
 
         DB::beginTransaction();
         try {
