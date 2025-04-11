@@ -34,7 +34,16 @@
                           <br>
                           <b>Primary Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
                           <br>
-                          <b>Secondary Position:</b> <span class="float-right">{{ $secondaryPosition?->long_title }}</span>
+                          <div style="display: flex; justify-content: space-between;">
+                            <b>Secondary Positions:</b>
+                            <span style="text-align: right;">
+                                @forelse($cdDetails->secondaryPosition as $position)
+                                    {{ $position->long_title }}@if(!$loop->last)<br>@endif
+                                @empty
+                                    None
+                                @endforelse
+                            </span>
+                        </div>
 
                       </li>
                       <li class="list-group-item">
@@ -102,10 +111,13 @@
                                                 <td>{{ $coordinator->last_name }}</td>
                                                 @if ( $coordinator->on_leave == 1 )
                                                     <td style="background-color: #ffc107;">ON LEAVE</td>
-                                                @elseif ( $coordinator->sec_position_id != null )
-                                                    <td>{{ $coordinator->displayPosition->short_title }}/{{ $coordinator->secondaryPosition?->short_title }}</td>
                                                 @else
-                                                    <td>{{ $coordinator->displayPosition->short_title }}</td>
+                                                <td>
+                                                    {{ $coordinator->displayPosition->short_title }}
+                                                    @if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0)
+                                                        /{{ $coordinator->secondaryPosition->pluck('short_title')->implode('/') }}
+                                                    @endif
+                                                </td>
                                                 @endif
                                             </tr>
                                         @endforeach

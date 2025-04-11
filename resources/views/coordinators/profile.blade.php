@@ -36,7 +36,16 @@
                         <br>
                         <b>Primary Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
                         <br>
-                        <b>Secondary Position:</b> <span class="float-right">{{ $secondaryPosition?->long_title }}</span>
+                        <div style="display: flex; justify-content: space-between;">
+                            <b>Secondary Positions:</b>
+                            <span style="text-align: right;">
+                                @forelse($cdDetails->secondaryPosition as $position)
+                                    {{ $position->long_title }}@if(!$loop->last)<br>@endif
+                                @empty
+                                    None
+                                @endforelse
+                            </span>
+                        </div>
 
                     </li>
                     <li class="list-group-item">
@@ -114,10 +123,6 @@
                                                     {{$state->state_long_name}}
                                                 </option>
                                             @endforeach
-
-                                                {{-- @foreach($stateArr as $state)
-                                                    <option value="{{$state->state_short_name}}" {{$cdDetails->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                                @endforeach --}}
                                         </select>
                                     </div>
                                     <div class="col-sm-2">
@@ -136,10 +141,6 @@
                                                     {{$month->month_long_name}}
                                                 </option>
                                             @endforeach
-{{--
-                                                @foreach($monthArr as $month)
-                                                    <option value="{{$month->id}}" {{$cdDetails->birthday_month_id == $month->id  ? 'selected' : ''}}>{{$month->month_long_name}}</option>
-                                                @endforeach --}}
                                         </select>
                                     </div>
                                     <div class="col-sm-2">

@@ -26,9 +26,9 @@
                     <th>Details</th>
                     <th>Conf/Reg</th>
                     <th>Coordinator Name</th>
-					<th>Primary (Display) Position</th>
-                    <th>Secondary Position</th>
-                    {{-- <th>Primary (MIMI) Position</th> --}}
+					<th>Display Position</th>
+                    {{-- <th>MIMI Position</th> --}}
+                    <th>Secondary Positions</th>
 					<th>Hire Date</th>
                     <th>Email</th>
                     <th>Reports To</th>
@@ -50,9 +50,14 @@
                             <td @if ( $list->on_leave == 1 ) style="background-color: #ffc107;" @endif>ON LEAVE</td><td></td>
                         @else
                             <td>{{ $list->displayPosition->long_title }}</td>
-                            <td>{{ $list->secondaryPosition?->long_title }} </td>
+                            {{-- <td>{{ $list->mimiPosition->short_title }}</td> --}}
+                            <td>
+                                @forelse($list->secondaryPosition as $position)
+                                    {{ $position->long_title }}@if(!$loop->last)<br>@endif
+                                @empty
+                                @endforelse
+                            </td>
                         @endif
-                         {{-- <td>{{ $list->mimiPosition->short_title }}</td> --}}
                 	  <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
                       <td><a href="mailto:{{ $list->email }}">{{ $list->email }}</a></td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>

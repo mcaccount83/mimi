@@ -923,12 +923,17 @@ class CoordinatorController extends Controller implements HasMiddleware
         try {
             $coordinator->position_id = $request->input('cord_pos');
             $coordinator->display_position_id = $request->input('cord_disp_pos');
-            $coordinator->sec_position_id = $request->input('cord_sec_pos');
             $coordinator->last_promoted = $request->input('CoordinatorPromoteDate');
             $coordinator->last_updated_by = $lastUpdatedBy;
             $coordinator->last_updated_date = date('Y-m-d H:i:s');
 
             $coordinator->save();
+
+            if ($request->has('cord_sec_pos')) {
+                $coordinator->secondaryPosition()->sync($request->cord_sec_pos);
+            } else {
+                $coordinator->secondaryPosition()->detach();
+            }
 
             if ($userAdmin) {
                 $userIsAdmin->is_admin = $request->input('is_admin');

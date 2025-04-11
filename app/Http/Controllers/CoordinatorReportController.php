@@ -138,53 +138,39 @@ class CoordinatorReportController extends Controller implements HasMiddleware
      */
     public function showRptReportingTree(Request $request): View
     {
-        $coordinator_array = [];
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
         $request->session()->put('positionid', $positionId);
         $cord_pos_id = $request->session()->get('positionid');
 
-        // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
+        $coordinator_array = [];
 
-        $baseQuery = DB::table('coordinators')
-            ->select('coordinators.id AS id', 'coordinators.first_name', 'coordinators.last_name', 'pos1.short_title AS position_title',
-                'pos2.short_title AS sec_position_title', 'pos3.short_title AS display_position_title', 'coordinators.layer_id', 'coordinators.report_id',
-                'coordinators.report_id AS tree_id', 'region.short_name AS region', 'conference.short_name as conference')
-            ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinators.position_id')
-            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinators.sec_position_id')
-            ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'coordinators.display_position_id')
-            ->join('region', 'coordinators.region_id', '=', 'region.id')
-            ->join('conference', 'coordinators.conference_id', '=', 'conference.id')
-            ->where('coordinators.on_leave', 0)
-            ->where('coordinators.is_active', 1)
-            ->orderBy('coordinators.region_id')
-            ->orderBy('coordinators.conference_id');
+        $baseQueryArray = $this->baseCoordinatorController->getActiveInternationalBaseQuery($coorId);
+        $baseQuery = $baseQueryArray['query'];
 
         if ($conditions['founderCondition']) {
-
+            $baseQuery->where('on_leave', '!=', '1');
         } else {
-            $baseQuery->where('coordinators.conference_id', '=', $corConfId);
+            $baseQuery->where('on_leave', '!=', '1')
+                ->where('conference_id', $confId);
         }
 
         $coordinatorDetails = $baseQuery->get();
 
         foreach ($coordinatorDetails as $key => $value) {
-            $coordinator_array[$key] = (array) $value;
+            $coordinator_array[$key] = $value->toArray();
         }
 
         return view('coordreports.coordrptreportingtree', [
-            'coordinator_array' => $coordinator_array,
+            'coordinator_array' => $coordinatorDetails,
             'cord_pos_id' => $cord_pos_id,
         ]);
     }
+
 }

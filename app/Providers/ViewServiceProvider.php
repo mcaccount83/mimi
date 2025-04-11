@@ -14,7 +14,7 @@ class ViewServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $corId = null;
             $positionid = null;
-            $secpositionid = null;
+            $secpositionid = []; // Changed to an array
             $loggedIn = null;
             $userAdmin = false;
             $userModerator = false;
@@ -26,7 +26,7 @@ class ViewServiceProvider extends ServiceProvider
                     $corDetails = $user->coordinator;
                     $corId = $corDetails['coordinator_id'];
                     $positionid = $corDetails['position_id'];
-                    $secpositionid = $corDetails['sec_position_id'];
+                    $secpositionid = $corDetails->secondaryPosition->pluck('id')->toArray(); // Get all secondary position IDs
                     $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
                 }
 

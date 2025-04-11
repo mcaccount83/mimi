@@ -89,7 +89,7 @@
                                 @foreach($pcList as $coordinator)
                                     <option value="{{ $coordinator['cid'] }}"
                                         {{ isset($chDetails->primary_coordinator_id) && $chDetails->primary_coordinator_id == $coordinator['cid'] ? 'selected' : '' }}>
-                                        {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
+                                        {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
                                     </option>
                                 @endforeach
                             </select>

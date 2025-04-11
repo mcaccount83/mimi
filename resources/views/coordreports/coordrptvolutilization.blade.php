@@ -49,7 +49,12 @@
                         <td @if ( $list->on_leave == 1 ) style="background-color: #ffc107;" @endif>ON LEAVE</td><td></td>
                     @else
                         <td>{{ $list->displayPosition->long_title }}</td>
-                        <td>{{ $list->secondaryPosition?->long_title }} </td>
+                        <td>
+                            @forelse($list->secondaryPosition as $position)
+                                {{ $position->long_title }}@if(!$loop->last)<br>@endif
+                            @empty
+                            @endforelse
+                        </td>
                     @endif
                     <td>{{ $list->direct_report }}</td>
                     <td>{{ $list->indirect_report }}</td>

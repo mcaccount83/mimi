@@ -113,12 +113,12 @@
                                 <label class="col-form-label">Secondary Position:</label>
                             </div>
                             <div class="col-sm-6">
-                                <select name="cord_sec_pos" id="cord_sec_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" >
+                                <select name="cord_sec_pos[]" id="cord_sec_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" multiple>
                                     <option value=""></option>
                                     @foreach($allPositions as $pos)
-                                    @if($positionid == 8 || $pos->level_id == 2)  <!-- Show all if position_id is 8, otherwise restrict to level_id == 2 -->
-                                    <option value="{{$pos->id}}" {{$cdDetails->sec_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
-                                      @endif
+                                        @if($pos->id >= 9)
+                                            <option value="{{$pos->id}}" {{ in_array($pos->id, $secpositionid) ? 'selected' : '' }}>{{$pos->long_title}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

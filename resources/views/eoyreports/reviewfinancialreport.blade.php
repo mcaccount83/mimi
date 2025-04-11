@@ -287,7 +287,7 @@
                         @foreach($rrList as $coordinator)
                             <option value="{{ $coordinator['cid'] }}"
                                 {{ isset($chFinancialReport->reviewer_id) && $chFinancialReport->reviewer_id == $coordinator['cid'] ? 'selected' : '' }}>
-                                {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
+                                {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
                             </option>
                         @endforeach
                 </select>

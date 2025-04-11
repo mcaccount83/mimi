@@ -254,8 +254,10 @@ class EOYReportController extends Controller implements HasMiddleware
         $financial_review_complete = ! isset($input['financial_review_complete']) ? null : ($input['financial_review_complete'] === 'on' ? 1 : 0);
         $report_extension = ! isset($input['report_extension']) ? null : ($input['report_extension'] === 'on' ? 1 : 0);
         $irs_verified = ! isset($input['irs_verified']) ? null : ($input['irs_verified'] === 'on' ? 1 : 0);
-        $extension_notes = $input['extension_notes'];
-        $irs_notes = $input['irs_notes'];
+        // $extension_notes = $input['extension_notes'];
+        $extension_notes = $request->filled('extension_notes') ? $request->input('extension_notes') : $request->input('hid_extension_notes');
+        // $irs_notes = $input['irs_notes'];
+        $irs_notes = $request->filled('irs_notes') ? $request->input('irs_notes') : $request->input('hid_irs_notes');
         $reviewer_id = isset($input['ch_reportrev']) && ! empty($input['ch_reportrev']) ? $input['ch_reportrev'] : $userId;
 
         $chapter = Chapters::find($id);

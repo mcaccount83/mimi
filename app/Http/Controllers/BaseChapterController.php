@@ -25,10 +25,6 @@ class BaseChapterController extends Controller
         $this->baseConditionsController = $baseConditionsController;
     }
 
-    /* /Custom Helpers/ */
-    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
-    // $displayEOY = getEOYDisplay();
-
     /**
      * Apply checkbox filters to the query
      */
@@ -114,7 +110,7 @@ class BaseChapterController extends Controller
                 $conditionsData = $this->baseConditionsController->getConditions(
                     $params['coorId'],
                     $params['positionId'],
-                    $params['secPositionId']
+                    $params['secPositionIds']
                 );
 
                 $positionMethod = $params['queryType'] === 'inquiries'
@@ -145,7 +141,7 @@ class BaseChapterController extends Controller
     /**
      * Public methods for different query types
      */
-    public function getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
+    public function getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionIds)
     {
         return $this->buildChapterQuery([
             'isActive' => 1,
@@ -153,13 +149,13 @@ class BaseChapterController extends Controller
             'confId' => $confId,
             'regId' => $regId,
             'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
+            'secPositionIds' => $secPositionIds,
             'conditions' => true,
             'queryType' => 'regular',
         ]);
     }
 
-    public function getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
+    public function getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionIds)
     {
         return $this->buildChapterQuery([
             'isActive' => 0,
@@ -167,13 +163,13 @@ class BaseChapterController extends Controller
             'confId' => $confId,
             'regId' => $regId,
             'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
+            'secPositionIds' => $secPositionIds,
             'conditions' => true,
             'queryType' => 'regular',
         ]);
     }
 
-    public function getActiveInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
+    public function getActiveInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionIds)
     {
         return $this->buildChapterQuery([
             'isActive' => 1,
@@ -181,13 +177,13 @@ class BaseChapterController extends Controller
             'confId' => $confId,
             'regId' => $regId,
             'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
+            'secPositionIds' => $secPositionIds,
             'conditions' => true,
             'queryType' => 'inquiries',
         ]);
     }
 
-    public function getZappedInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
+    public function getZappedInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionIds)
     {
         return $this->buildChapterQuery([
             'isActive' => 0,
@@ -195,7 +191,7 @@ class BaseChapterController extends Controller
             'confId' => $confId,
             'regId' => $regId,
             'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
+            'secPositionIds' => $secPositionIds,
             'conditions' => true,
             'queryType' => 'inquiries',
         ]);

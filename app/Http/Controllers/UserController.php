@@ -71,7 +71,7 @@ class UserController extends Controller implements HasMiddleware
      */
     public function loadUserInformation(Request $request)
     {
-        $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition',
+        $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition', 'coordinator.secondaryPosition',
             'board', 'board.position', 'boardOutgoing', 'boardDisbanded'])
             ->find($request->user()->id);
 
@@ -86,6 +86,15 @@ class UserController extends Controller implements HasMiddleware
 
         switch ($user->user_type) {
             case 'coordinator':
+                $secondaryPosition = [];
+                $secondaryPositionShort = [];
+                $secondaryPositionId = [];
+                if ($user->secondaryPosition && $user->secondaryPosition->count() > 0) {
+                    $secondaryPosition = $user->secondaryPosition->pluck('long_title')->toArray();
+                    $secondaryPositionShort = $user->secondaryPosition->pluck('short_title')->toArray();
+                    $secondaryPositionId = $user->secondaryPosition->pluck('id')->toArray();
+                }
+
                 $userInfo += [
                     'user_coorId' => $user->coordinator->id,
                     'user_confId' => $user->coordinator->conference_id,
@@ -95,9 +104,9 @@ class UserController extends Controller implements HasMiddleware
                     'user_conf_desc' => $user->coordinator->conference?->conference_description,
                     'user_region' => $user->coordinator->region,
                     'user_position' => $user->coordinator->displayPosition->long_title,
-                    'user_secPositionId' => $user->coordinator->sec_position_id,
+                    'user_secPositionId' => $secondaryPositionId, // Now returns array of IDs
                     'user_positionId' => $user->coordinator->display_position_id,
-                    'user_secPosition' => $user->coordinator->secondaryPosition?->long_title,
+                    'user_secPosition' => $secondaryPosition, // Now returns array of titles
                     'user_layerId' => $user->coordinator->layer_id,
                 ];
                 break;
@@ -227,16 +236,26 @@ class UserController extends Controller implements HasMiddleware
                 $name = $cor->first_name.' '.$cor->last_name;
                 $email = $cor->email;
                 $displayPosition = $cor->displayPosition ? $cor->displayPosition->short_title : '';
-                $secondaryPosition = $cor->secondaryPosition ? $cor->secondaryPosition->short_title : '';
+                $secondaryTitles = '';
+
+                // Handle secondary positions
+                if (!empty($cor->secondaryPosition) && $cor->secondaryPosition->count() > 0) {
+                    $secondaryTitles = $cor->secondaryPosition->pluck('short_title')->implode('/');
+                }
+
+                // Combine primary and secondary positions
                 $position = '';
-                if ($displayPosition || $secondaryPosition) {
-                    $position = '('.$displayPosition;
-                    if ($secondaryPosition) {
-                        $position .= '/'.$secondaryPosition;
+                if ($displayPosition) {
+                    $position = "({$displayPosition}";
+
+                    if (!empty($secondaryTitles)) {
+                        $position .= '/' . $secondaryTitles;
                     }
+
                     $position .= ')';
                 }
 
+                // Set the title based on the iteration index
                 $title = match ($i) {
                     0 => 'Primary Coordinator:',
                     1 => 'Secondary Coordinator:',
@@ -244,6 +263,7 @@ class UserController extends Controller implements HasMiddleware
                     default => ''
                 };
 
+                // Build the final string
                 $str .= "<b>{$title}</b><span class='float-right'><a href='mailto:{$email}' target='_top'>{$name}</a> {$position}</span><br>";
                 $i++;
             }
@@ -251,6 +271,7 @@ class UserController extends Controller implements HasMiddleware
 
         return response()->json($str);
     }
+
 
     /**
      * Load Conference Coordinator Information for each Conference based on the PC selected - used for emails and pdfs
@@ -301,18 +322,24 @@ class UserController extends Controller implements HasMiddleware
         $pcList = $chList->pluck('primaryCoordinator')->filter();
 
         $pcDetails = $pcList->map(function ($coordinator) {
-            $cpos = $coordinator->displayPosition->short_title ?? '';
-            if (isset($coordinator->secondaryPosition->short_title)) {
-                $cpos = "({$cpos}/{$coordinator->secondaryPosition->short_title})";
-            } elseif ($cpos) {
-                $cpos = "({$cpos})";
-            }
+        $mainTitle = $coordinator->displayPosition->short_title ?? '';
+        $secondaryTitles = '';
+
+        if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+            $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
+        }
+
+        $combinedTitle = $mainTitle;
+        if (!empty($secondaryTitles)) {
+            $combinedTitle .= '/' . $secondaryTitles;
+        }
+
+        $cpos = "({$combinedTitle})";
 
             return [
                 'cid' => $coordinator->id,
                 'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'dpos' => $coordinator->displayPosition->short_title ?? '',
-                'spos' => $coordinator->secondaryPosition->short_title ?? '',
+                'dpos' => $mainTitle,
                 'cpos' => $cpos,
                 'regid' => $coordinator->region_id,
             ];
@@ -346,18 +373,24 @@ class UserController extends Controller implements HasMiddleware
         $rrList = $chList->pluck('reportReviewer')->filter();
 
         $rrDetails = $rrList->map(function ($coordinator) {
-            $cpos = $coordinator->displayPosition->short_title ?? '';
-            if (isset($coordinator->secondaryPosition->short_title)) {
-                $cpos = "({$cpos}/{$coordinator->secondaryPosition->short_title})";
-            } elseif ($cpos) {
-                $cpos = "({$cpos})";
-            }
+        $mainTitle = $coordinator->displayPosition->short_title ?? '';
+        $secondaryTitles = '';
+
+        if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+            $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
+        }
+
+        $combinedTitle = $mainTitle;
+        if (!empty($secondaryTitles)) {
+            $combinedTitle .= '/' . $secondaryTitles;
+        }
+
+        $cpos = "({$combinedTitle})";
 
             return [
                 'cid' => $coordinator->id,
                 'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'dpos' => $coordinator->displayPosition->short_title ?? '',
-                'spos' => $coordinator->secondaryPosition->short_title ?? '',
+                'dpos' => $mainTitle,
                 'cpos' => $cpos,
                 'regid' => $coordinator->region_id,
             ];
@@ -393,19 +426,24 @@ class UserController extends Controller implements HasMiddleware
         }
 
         $rcDetails = $rcList->map(function ($coordinator) {
-            $cpos = $coordinator->displayPosition->short_title ?? '';
-            if (isset($coordinator->secondaryPosition->short_title)) {
-                $cpos = "({$cpos}/{$coordinator->secondaryPosition->short_title})";
-            } elseif ($cpos) {
-                $cpos = "({$cpos})";
-            }
+        $mainTitle = $coordinator->displayPosition->short_title ?? '';
+        $secondaryTitles = '';
+
+        if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+            $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
+        }
+
+        $combinedTitle = $mainTitle;
+        if (!empty($secondaryTitles)) {
+            $combinedTitle .= '/' . $secondaryTitles;
+        }
+
+        $cpos = "({$combinedTitle})";
 
             return [
                 'cid' => $coordinator->id,
                 'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'dpos' => $coordinator->displayPosition->short_title ?? '',
-                'spos' => $coordinator->secondaryPosition->short_title ?? '',
-                'posid' => $coordinator->position_id,
+                'dpos' => $mainTitle,
                 'cpos' => $cpos,
                 'regid' => $coordinator->region_id,
             ];

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 
 class Coordinators extends Model
@@ -41,9 +42,14 @@ class Coordinators extends Model
         return $this->belongsTo(CoordinatorPosition::class, 'position_id', 'id');   // 'position_id' in coordinators BelongsTo 'id' in coordinator_position
     }
 
-    public function secondaryPosition(): BelongsTo
+    // public function secondaryPosition(): BelongsTo
+    // {
+    //     return $this->belongsTo(CoordinatorPosition::class, 'sec_position_id', 'id');  // 'sec_position_id' in coordinators BelongsTo 'id' in coordinator_position
+    // }
+
+    public function secondaryPosition(): BelongsToMany
     {
-        return $this->belongsTo(CoordinatorPosition::class, 'sec_position_id', 'id');  // 'sec_position_id' in coordinators BelongsTo 'id' in coordinator_position
+        return $this->belongsToMany(CoordinatorPosition::class, 'coordinator_secondary_positions', 'coordinator_id', 'position_id');
     }
 
     public function state(): BelongsTo

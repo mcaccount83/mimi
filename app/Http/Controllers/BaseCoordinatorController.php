@@ -101,7 +101,7 @@ class BaseCoordinatorController extends Controller
                 $conditionsData = $this->baseConditionsController->getConditions(
                     $params['coorId'],
                     $params['positionId'],
-                    $params['secPositionId']
+                    $params['secPositionId'] // ✅ use passed param, not from $baseQuery
                 );
 
                 $baseQuery = $this->baseConditionsController->applyPositionConditions(
@@ -195,7 +195,15 @@ class BaseCoordinatorController extends Controller
         $RptLName = $cdDetails->reportsTo?->last_name;
         $displayPosition = $cdDetails->displayPosition;
         $mimiPosition = $cdDetails->mimiPosition;
-        $secondaryPosition = $cdDetails->secondaryPosition;
+
+        $secondaryPosition = [];
+        $secondaryPositionShort = [];
+        $secondaryPositionId = [];
+        if ($cdDetails->secondaryPosition && $cdDetails->secondaryPosition->count() > 0) {
+            $secondaryPosition = $cdDetails->secondaryPosition->pluck('long_title')->toArray();
+            $secondaryPositionShort = $cdDetails->secondaryPosition->pluck('short_title')->toArray();
+            $secondaryPositionId = $cdDetails->secondaryPosition->pluck('id')->toArray();
+        }
 
         $cdUserId = $cdDetails->user_id;
         $cdUser = User::with(['adminRole'])
@@ -222,8 +230,8 @@ class BaseCoordinatorController extends Controller
         return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdIsActive' => $cdIsActive, 'regionLongName' => $regionLongName, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId, 'allAdminRoles' => $allAdminRoles,
             'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'cdAdminRole' => $cdAdminRole,
-            'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths,
-            'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid,
+            'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths, 'secondaryPositionId' => $secondaryPositionId,
+            'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid, 'secondaryPositionShort' => $secondaryPositionShort,
         ];
     }
 }

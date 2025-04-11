@@ -27,6 +27,7 @@
 			      <th>Conf/Reg</th>
 				  <th>Name</th>
                   <th>Position</th>
+                  <th>Secondary Positions</th>
                   <th>Retired Date</th>
                   <th>Reason</th>
                 </tr>
@@ -44,6 +45,12 @@
                         </td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td>{{ $list->displayPosition->long_title }}</td>
+                        <td>
+                            @forelse($list->secondaryPosition as $position)
+                                {{ $position->long_title }}@if(!$loop->last)<br>@endif
+                            @empty
+                            @endforelse
+                        </td>
                         <td><span class="date-mask">{{ $list->zapped_date }}</span></td>
                         <td>{{ $list->reason_retired }}</td>
                   </tr>

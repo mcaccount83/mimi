@@ -35,7 +35,8 @@
                 @foreach($coordinatorList as $list)
                   <tr>
                       <td class="text-center align-middle">
-                        <a href="{{ url("/coorddetails/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
+                        <a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                    </td>
                         <td>
                             @if ($list->region->short_name != "None")
                                 {{ $list->conference->short_name }} / {{ $list->region->short_name }}

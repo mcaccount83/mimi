@@ -26,19 +26,24 @@
         <div class="mermaid flowchart" id="mermaid-chart">
             flowchart TD
             @foreach ($coordinator_array as $coordinator)
-                @php
-                $id = $coordinator['id'];
-                $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                $position = htmlspecialchars($coordinator['display_position_title']);
-                $sec_position = htmlspecialchars($coordinator['sec_position_title']);
-                $region = htmlspecialchars($coordinator['region']);
-                $conf = htmlspecialchars($coordinator['conference']);
+            @php
+                $id = $coordinator['id'] ?? '';
+                $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
+                $position = htmlspecialchars($coordinator['displayPosition']['short_title'] ?? '');
+                $sec_titles = '';
+                if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                    $sec_titles_array = $coordinator->secondaryPosition->pluck('short_title')->toArray();
+                    $sec_titles = htmlspecialchars(implode('/', $sec_titles_array));
+                }
+                $region = htmlspecialchars($coordinator['region']['short_name'] ?? '');
+                $conf = htmlspecialchars($coordinator['conference']['short_name'] ?? '');
+
                 $node_label = "$name<br>$position";
-                if ($sec_position) $node_label .= " / $sec_position";
-                if ($region != "None") $node_label .= "<br>$region";
-                if ($region == "None") $node_label .= "<br>$conf";
-                @endphp
-                {{ $id }}["{{ $node_label }}"]
+                if ($sec_titles) $node_label .= "/$sec_titles";
+                if ($region !== "None") $node_label .= "<br>$region";
+                if ($region === "None") $node_label .= "<br>$conf";
+            @endphp
+                {{ $id }}["{!! $node_label !!}"]
             @endforeach
 
             %% Connect Coordinators %%
@@ -60,18 +65,18 @@
 
                 foreach ($coordinator_array as $coordinator) {
                     if ($founderCondition) {
-                        $conf = $coordinator['conference'];
+                        $conf = $coordinator['conference']['short_name'];
                         if ($conf !== "Intl") {
                             if (!isset($conference_groups[$conf])) {
                                 $conference_groups[$conf] = [];
                             }
-                            $region = $coordinator['region'];
+                            $region = $coordinator['region']['short_name'];
                             if ($region !== "None") {
                                 $conference_groups[$conf][$region][] = $coordinator;
                             }
                         }
                     } else {
-                        $region = $coordinator['region'];
+                        $region = $coordinator['region']['short_name'];
                         if ($region !== "None") {
                             if (!isset($region_groups[$region])) {
                                 $region_groups[$region] = [];
@@ -97,20 +102,24 @@
 
                                 %% Add coordinators for this region
                                 @foreach ($coordinators as $coordinator)
-                                    @php
-                                        $id = $coordinator['id'];
-                                        $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                                        $position = htmlspecialchars($coordinator['display_position_title']);
-                                        $sec_position = htmlspecialchars($coordinator['sec_position_title']);
-                                        $node_label = "$name<br>$position";
-                                        if ($sec_position) {
-                                            $node_label .= " / $sec_position";
-                                        }
-                                        if ($coordinator['region'] != "None") {
-                                            $node_label .= "<br>" . htmlspecialchars($coordinator['region']);
-                                        }
-                                    @endphp
-                                    {{ $id }}["{{ $node_label }}"]
+                                @php
+                                    $id = $coordinator['id'] ?? '';
+                                    $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
+                                    $position = htmlspecialchars($coordinator['displayPosition']['short_title'] ?? '');
+                                    $sec_titles = '';
+                                    if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                                        $sec_titles_array = $coordinator->secondaryPosition->pluck('short_title')->toArray();
+                                        $sec_titles = htmlspecialchars(implode('/', $sec_titles_array));
+                                    }
+                                    $region = htmlspecialchars($coordinator['region']['short_name'] ?? '');
+                                    $conf = htmlspecialchars($coordinator['conference']['short_name'] ?? '');
+
+                                    $node_label = "$name<br>$position";
+                                    if ($sec_titles) $node_label .= "/$sec_titles";
+                                    if ($region !== "None") $node_label .= "<br>$region";
+                                    if ($region === "None") $node_label .= "<br>$conf";
+                                @endphp
+                                    {{ $id }}["{!! $node_label !!}"]
                                 @endforeach
                             end
                         @endforeach
@@ -126,20 +135,24 @@
 
                     %% Add coordinators for this region
                     @foreach ($coordinators as $coordinator)
-                        @php
-                            $id = $coordinator['id'];
-                            $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                            $position = htmlspecialchars($coordinator['display_position_title']);
-                            $sec_position = htmlspecialchars($coordinator['sec_position_title']);
-                            $node_label = "$name<br>$position";
-                            if ($sec_position) {
-                                $node_label .= " / $sec_position";
-                            }
-                            if ($coordinator['region'] != "None") {
-                                $node_label .= "<br>" . htmlspecialchars($coordinator['region']);
-                            }
-                        @endphp
-                        {{ $id }}["{{ $node_label }}"]
+                    @php
+                        $id = $coordinator['id'] ?? '';
+                        $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
+                        $position = htmlspecialchars($coordinator['displayPosition']['short_title'] ?? '');
+                        $sec_titles = '';
+                        if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                            $sec_titles_array = $coordinator->secondaryPosition->pluck('short_title')->toArray();
+                            $sec_titles = htmlspecialchars(implode('/', $sec_titles_array));
+                        }
+                        $region = htmlspecialchars($coordinator['region']['short_name'] ?? '');
+                        $conf = htmlspecialchars($coordinator['conference']['short_name'] ?? '');
+
+                        $node_label = "$name<br>$position";
+                        if ($sec_titles) $node_label .= "/$sec_titles";
+                        if ($region !== "None") $node_label .= "<br>$region";
+                        if ($region === "None") $node_label .= "<br>$conf";
+                    @endphp
+                        {{ $id }}["{!! $node_label !!}"]
                     @endforeach
                 end
             @endforeach
