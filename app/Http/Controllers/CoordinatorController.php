@@ -697,6 +697,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdRegId = $baseQuery['cdConfId'];
         $cdLeave = $baseQuery['cdDetails']->on_leave;
         $cdUserAdmin = $baseQuery['cdUserAdmin'];
+        $cdAdminRole = $baseQuery['cdAdminRole'];
 
         $allRegions = $baseQuery['allRegions'];
         $allPositions = $baseQuery['allPositions'];
@@ -755,7 +756,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'chList' => $chList, 'drList' => $drList, 'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
             'pcOptions' => $pcOptions, 'cdId' => $cdId, 'allPositions' => $allPositions, 'chDetails' => $chDetails, 'drDetails' => $drDetails, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName, 'pcRowCount' => $pcRowCount, 'drRowCount' => $drRowCount,
-            'allAdminRoles' => $allAdminRoles
+            'allAdminRoles' => $allAdminRoles, 'cdAdminRole' => $cdAdminRole
         ];
 
         return view('coordinators.editrole')->with($data);
@@ -985,6 +986,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $secondaryPosition = $baseQuery['secondaryPosition'];
         $cdLeave = $baseQuery['cdDetails']->on_leave;
         $cdUserAdmin = $baseQuery['cdUserAdmin'];
+        $cdAdminRole = $baseQuery['cdAdminRole'];
 
         $allStates = $baseQuery['allStates'];
         $allMonths = $baseQuery['allMonths'];
@@ -992,7 +994,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
-            'allStates' => $allStates, 'allMonths' => $allMonths,
+            'allStates' => $allStates, 'allMonths' => $allMonths, 'cdAdminRole' => $cdAdminRole
         ];
 
         return view('coordinators.editdetails')->with($data);
@@ -1083,10 +1085,11 @@ class CoordinatorController extends Controller implements HasMiddleware
         $secondaryPosition = $baseQuery['secondaryPosition'];
         $cdLeave = $baseQuery['cdDetails']->on_leave;
         $cdUserAdmin = $baseQuery['cdUserAdmin'];
+        $cdAdminRole = $baseQuery['cdAdminRole'];
 
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
-            'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
+            'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition, 'cdAdminRole' => $cdAdminRole
         ];
 
         return view('coordinators.editrecognition')->with($data);

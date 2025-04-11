@@ -35,9 +35,9 @@
                     <li class="list-group-item">
                         <b>Supervising Coordinator:</b> <span class="float-right">{{ $ReportTo }}</span>
                         <br>
-                        <b>Primary/Display Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
+                        <b>Display Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
                         <br>
-                        <b>Primary Positon for MIMI Purposes:</b> <span class="float-right">{{ $mimiPosition?->long_title }}</span>
+                        <b>MIMI Position:</b> <span class="float-right">{{ $mimiPosition?->long_title }}</span>
                         <br>
                         <div style="display: flex; justify-content: space-between;">
                             <b>Secondary Positions:</b>
@@ -50,9 +50,8 @@
                             </span>
                         </div>
                         @if ($userAdmin)
-                            <br>
-                            <b>MIMI Admin:</b> <span class="float-right">{{ $cdUserAdmin == 1 ? 'Yes' : 'No' }}</span>
-                            @endif
+                        <b>MIMI Admin:</b> <span class="float-right">{{ $cdAdminRole->admin_role }}</span>
+                        @endif
 
                     </li>
                     <li class="list-group-item">
