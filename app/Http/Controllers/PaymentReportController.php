@@ -363,13 +363,13 @@ class PaymentReportController extends Controller implements HasMiddleware
 
             if ($m2m_date != null) {
                 $payments->m2m_date = $m2m_date;
-                $payments->m2m_donation = $input['M2MPayment'];
+                $payments->m2m_donation = $input['m2m'];
                 $payments->save();
             }
 
             if ($sustaining_date != null) {
                 $payments->sustaining_date = $sustaining_date;
-                $payments->sustaining_donation = $input['SustainingPayment'];
+                $payments->sustaining_donation = $input['sustaining'];
                 $payments->save();
             }
 

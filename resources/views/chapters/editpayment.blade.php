@@ -138,7 +138,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
                                         </div>
-                                        <input type="text" name="M2MPayment" id="M2MPayment" class="form-control"/>
+                                        <input type="text" name="m2m" id="m2m" class="form-control"/>
                                     </div>
                                 </div>
                             </div>
@@ -167,7 +167,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
                                         </div>
-                                        <input type="text" name="SustainingPayment" id="SustainingPayment" class="form-control" />
+                                        <input type="text" name="sustaining" id="sustaining" class="form-control" />
                                     </div>
                                 </div>
                             </div>
