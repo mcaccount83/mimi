@@ -608,22 +608,28 @@ class ChapterController extends Controller implements HasMiddleware
             ->get();
 
         $pcDetails = $pcList->map(function ($coordinator) {
-            $cpos = $coordinator->displayPosition->short_title ?? '';
-            if (isset($coordinator->secondaryPosition->short_title)) {
-                $cpos = "({$cpos}/{$coordinator->secondaryPosition->short_title})";
-            } elseif ($cpos) {
-                $cpos = "({$cpos})";
+            $mainTitle = $coordinator->displayPosition->short_title ?? '';
+            $secondaryTitles = '';
+
+            if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
             }
 
-            return [
-                'cid' => $coordinator->id,
-                'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'dpos' => $coordinator->displayPosition->short_title ?? '',
-                'spos' => $coordinator->secondaryPosition->short_title ?? '',
-                'cpos' => $cpos,
-                'regid' => $coordinator->region_id,
-            ];
-        });
+            $combinedTitle = $mainTitle;
+            if (!empty($secondaryTitles)) {
+                $combinedTitle .= '/' . $secondaryTitles;
+            }
+
+            $cpos = "({$combinedTitle})";
+
+                return [
+                    'cid' => $coordinator->id,
+                    'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
+                    'dpos' => $mainTitle,
+                    'cpos' => $cpos,
+                    'regid' => $coordinator->region_id,
+                ];
+            });
 
         $pcDetails = $pcDetails->unique('cid');  // Remove duplicates based on the 'cid' field
 
