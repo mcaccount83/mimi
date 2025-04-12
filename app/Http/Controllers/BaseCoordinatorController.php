@@ -96,12 +96,12 @@ class BaseCoordinatorController extends Controller
         $baseQuery = $this->getBaseQueryWithRelations($params['cdIsActive']);
 
         if (isset($params['coorId'])) {
-            // Only apply position conditions if this is not an international query
+            // Only apply position conditions if this is not an international or tree query
             if (isset($params['conditions']) && $params['conditions']) {
                 $conditionsData = $this->baseConditionsController->getConditions(
                     $params['coorId'],
                     $params['positionId'],
-                    $params['secPositionId'] // ✅ use passed param, not from $baseQuery
+                    $params['secPositionId']
                 );
 
                 $baseQuery = $this->baseConditionsController->applyPositionConditions(
@@ -111,11 +111,28 @@ class BaseCoordinatorController extends Controller
                     $params['regId'] ?? null,
                     $conditionsData['inQryArr']
                 );
-            }
 
             $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
             $baseQuery = $checkboxResults['query'];
             $checkboxStatus = $checkboxResults['status'];
+
+            }
+
+            // Only apply position conditions if this is tree query
+            if (isset($params['treeConditions']) && $params['treeConditions']) {
+                $conditionsData = $conditionsData ?? $this->baseConditionsController->getConditions(
+                    $params['coorId'],
+                    $params['positionId'],
+                    $params['secPositionId']
+                );
+
+                $baseQuery->where('on_leave', '!=', '1');
+                $conditions = $conditionsData['conditions'] ?? [];
+
+                if (!($conditions['founderCondition'] ?? false)) {
+                    $baseQuery->where('conference_id', $params['confId']);
+                }
+            }
         }
 
         $sortingResults = $this->applySorting($baseQuery, $params['cdIsActive'] ? 'active' : 'retired');
@@ -138,6 +155,7 @@ class BaseCoordinatorController extends Controller
             'regId' => $regId,
             'positionId' => $positionId,
             'secPositionId' => $secPositionId,
+            'treeConditions' => false,
             'conditions' => true,
             'queryType' => 'regular',
         ]);
@@ -152,6 +170,7 @@ class BaseCoordinatorController extends Controller
             'regId' => $regId,
             'positionId' => $positionId,
             'secPositionId' => $secPositionId,
+            'treeConditions' => false,
             'conditions' => true,
             'queryType' => 'regular',
         ]);
@@ -162,6 +181,7 @@ class BaseCoordinatorController extends Controller
         return $this->buildCoordinatorQuery([
             'cdIsActive' => 1,
             'coorId' => $coorId,
+            'treeConditions' => false,
             'conditions' => false,
             'queryType' => 'international',
         ]);
@@ -172,8 +192,23 @@ class BaseCoordinatorController extends Controller
         return $this->buildCoordinatorQuery([
             'cdIsActive' => 0,
             'coorId' => $coorId,
+            'treeConditions' => false,
             'conditions' => false,
             'queryType' => 'international',
+        ]);
+    }
+
+    public function getReportingTreeBaseQuery($coorId, $confId, $positionId, $secPositionId)
+    {
+        return $this->buildCoordinatorQuery([
+            'cdIsActive' => 1,
+            'coorId' => $coorId,
+            'confId' => $confId,
+            'positionId' => $positionId,
+            'secPositionId' => $secPositionId,
+            'treeConditions' => true,
+            'conditions' => false,
+            'queryType' => 'conference',
         ]);
     }
 

@@ -144,33 +144,13 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $regId = $user['user_regId'];
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $request->session()->put('positionid', $positionId);
-        $cord_pos_id = $request->session()->get('positionid');
 
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getReportingTreeBaseQuery($coorId, $confId, $positionId, $secPositionId);
+        $coordinatorList = $baseQuery['query']->get();
 
-        $coordinator_array = [];
+        $data = ['coordinatorList' => $coordinatorList];
 
-        $baseQueryArray = $this->baseCoordinatorController->getActiveInternationalBaseQuery($coorId);
-        $baseQuery = $baseQueryArray['query'];
-
-        if ($conditions['founderCondition']) {
-            $baseQuery->where('on_leave', '!=', '1');
-        } else {
-            $baseQuery->where('on_leave', '!=', '1')
-                ->where('conference_id', $confId);
-        }
-
-        $coordinatorDetails = $baseQuery->get();
-
-        foreach ($coordinatorDetails as $key => $value) {
-            $coordinator_array[$key] = $value->toArray();
-        }
-
-        return view('coordreports.coordrptreportingtree', [
-            'coordinator_array' => $coordinatorDetails,
-            'cord_pos_id' => $cord_pos_id,
-        ]);
+        return view('coordreports.coordrptreportingtree')->with($data);
     }
 
 }

@@ -27,7 +27,7 @@
             flowchart TD
 
             %% Define all nodes first
-            @foreach ($coordinator_array as $coordinator)
+            @foreach ($coordinatorList as $coordinator)
             @php
                 $id = $coordinator['id'] ?? '';
                 $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
@@ -53,7 +53,7 @@
                 $conference_groups = [];
                 $region_groups = [];
 
-                foreach ($coordinator_array as $coordinator) {
+                foreach ($coordinatorList as $coordinator) {
                     $id = $coordinator['id'] ?? '';
 
                     if ($founderCondition) {
@@ -133,7 +133,7 @@
             @endif
 
             %% Connect Coordinators - AFTER all subgraphs are defined
-            @foreach ($coordinator_array as $coordinator)
+            @foreach ($coordinatorList as $coordinator)
                 @php
                     $report_id = $coordinator['report_id'];
                     $id = $coordinator['id'];
