@@ -104,7 +104,7 @@
                                 </div>
                                 <label class="col-sm-2 ml-1 col-form-label">Members Paid For:</label>
                                 <div class="col-sm-3">
-                                    <input type="number" name="MembersPaidFor" id="MembersPaidFor" onKeyPress="if(this.value.length==9) return false;" class="form-control"  />
+                                    <input type="number" name="members" id="members" onKeyPress="if(this.value.length==9) return false;" class="form-control"  />
                                 </div>
                             </div>
                             <div class="form-group row mb-1">

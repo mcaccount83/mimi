@@ -357,7 +357,7 @@ class PaymentReportController extends Controller implements HasMiddleware
                 $chapter->save();
 
                 $payments->rereg_date = $rereg_date;
-                $payments->rereg_members = $input['MembersPaidFor'];
+                $payments->rereg_members = $input['members'];
                 $payments->save();
             }
 
