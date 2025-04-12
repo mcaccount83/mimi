@@ -34,7 +34,9 @@
                         <br>
                         <b>Display Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
                         <br>
-                        <b>MIMI Position:</b> <span class="float-right">{{ $mimiPosition?->long_title }}</span>
+                        <b>MIMI Position:</b><a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
+                            <i class="fas fa-circle-question text-primary"></i></a>
+                        <span class="float-right">{{ $mimiPosition?->long_title }}</span>
                         <br>
                         <div style="display: flex; justify-content: space-between;">
                             <b>Secondary Positions:</b>
@@ -353,6 +355,30 @@ $(document).ready(function () {
         $('#unretire').prop('disabled', false);
 
 });
+
+function showPositionInformation() {
+    Swal.fire({
+        title: '<strong>Position Information</strong>',
+        html: `
+            <h4>Display Position</h4>
+            <p>The Display Position will be used in areas that are publically visible. Examples: MIMI chpater screens, emails, pdf letters, forum signature, etc.</p>
+            <br>
+            <h4>MIMI Position</h4>
+            <p>The MIMI Position is used for chapter hierarchy/level purposes and is required for anyone who oversees chapters. Even if this is not their role title, one of
+                these needs to be selected for MIMI to function properly.</p>
+            <br>
+            <h4>Secondary Positions</h4>
+            <p>Multiple Secondary Positions may be chosen. Secondary Posistions may allow additional access outside of normal chapter/coordinator menus/screens based on the
+                job requirements while others may be for information/visual purposes only and will not affect MIMI interaction.</p>
+            `,
+        focusConfirm: false,
+        confirmButtonText: 'Close',
+        customClass: {
+            popup: 'swal-wide',
+            confirmButton: 'btn btn-danger'
+        }
+    });
+}
 
 document.querySelectorAll('.reset-password-btn').forEach(button => {
     button.addEventListener('click', function (e) {
