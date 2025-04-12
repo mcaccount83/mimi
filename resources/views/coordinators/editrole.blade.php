@@ -114,10 +114,13 @@
                             </div>
                             <div class="col-sm-6">
                                 <select name="cord_sec_pos[]" id="cord_sec_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" multiple>
-                                    <option value=""></option>
+                                    <option value="" {{ (!isset($cdDetails->secondaryPositions) || $cdDetails->secondaryPositions->isEmpty()) ? 'selected' : '' }}>None</option>
                                     @foreach($allPositions as $pos)
                                         @if($pos->id >= 9)
-                                            <option value="{{$pos->id}}" {{ in_array($pos->id, $secpositionid) ? 'selected' : '' }}>{{$pos->long_title}}</option>
+                                            <option value="{{$pos->id}}"
+                                                {{ isset($cdDetails->secondaryPositions) && $cdDetails->secondaryPositions->contains('id', $pos->id) ? 'selected' : '' }}>
+                                                {{$pos->long_title}}
+                                            </option>
                                         @endif
                                     @endforeach
                                 </select>

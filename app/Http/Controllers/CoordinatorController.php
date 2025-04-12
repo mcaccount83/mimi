@@ -930,8 +930,17 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             $coordinator->save();
 
-            if ($request->has('cord_sec_pos')) {
-                $coordinator->secondaryPosition()->sync($request->cord_sec_pos);
+            if ($request->has('cord_sec_pos') && is_array($request->cord_sec_pos)) {
+                // Filter out any empty values
+                $validPositionIds = array_filter($request->cord_sec_pos, function($value) {
+                    return !empty($value) && is_numeric($value);
+                });
+
+                if (!empty($validPositionIds)) {
+                    $coordinator->secondaryPosition()->sync($validPositionIds);
+                } else {
+                    $coordinator->secondaryPosition()->detach();
+                }
             } else {
                 $coordinator->secondaryPosition()->detach();
             }
