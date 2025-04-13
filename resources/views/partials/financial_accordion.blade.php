@@ -2088,8 +2088,9 @@
             <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
-                    <input type="text" class="form-control" oninput="TreasuryBalanceChange()" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear" value="{{ $chFinancialReport->amount_reserved_from_previous_year }}"
-                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                    <input type="text" class="form-control" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear" onchange="TreasuryBalanceChange()"
+                           value="{{ $chFinancialReport->amount_reserved_from_previous_year }}"
+                           data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                 </div>
             </div>
         </div>
@@ -3858,6 +3859,7 @@ function DeleteChapterAwardsRow() {
 
     function TreasuryBalanceChange() {
         var TreasuryBalance = parseFloat(document.getElementById("AmountReservedFromLastYear").value.replace(/,/g, '')) || 0;
+
         document.getElementById("AmountReservedFromLastYear").value = TreasuryBalance.toFixed(2);
 
         ReCalculateSummaryTotal();
@@ -4184,12 +4186,12 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="SisterChapter"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null;
 
-        if (selectedValue === "0") {
+        if (selectedValue === "1") {
             $('#SisterChapterExplanation').addClass('tx-cls');
-            document.getElementById("divSisterChapterExplanation").style.display = 'none';
+            document.getElementById("divSisterChapterExplanation").style.display = 'block';
         } else {
             $('#SisterChapterExplanation').removeClass('tx-cls');
-            document.getElementById("divSisterChapterExplanation").style.display = 'block';
+            document.getElementById("divSisterChapterExplanation").style.display = 'none';
         }
     }
 

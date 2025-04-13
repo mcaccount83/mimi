@@ -211,7 +211,7 @@
                 $noBackground = '#dc3545';   // Red background for "NO"
             @endphp
 
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
+            {{-- <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Award #1 Status:</b> <span class="float-right" style="background-color: {{ is_null($chFinancialReport['check_award_1_approved']) ? '#FFFFFF' : ($chFinancialReport['check_award_1_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($chFinancialReport['check_award_1_approved']) ? '#000000' : '#FFFFFF' }};">
                     {{ is_null($chFinancialReport['award_1_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                     : ($chFinancialReport['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
@@ -249,7 +249,7 @@
                         : ($chFinancialReport['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
                         : ($chFinancialReport['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                 </span>
-            </div>
+            </div> --}}
 
             </li>
             <li class="list-group-item">
