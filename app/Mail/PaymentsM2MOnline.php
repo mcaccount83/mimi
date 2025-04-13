@@ -32,7 +32,7 @@ class PaymentsM2MOnline extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject("M2M Donation Received | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
+            ->subject("Donation Received | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.payments.m2monline');
     }
 }

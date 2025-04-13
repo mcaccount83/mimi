@@ -33,7 +33,7 @@ class PaymentsM2MChapterThankYou extends Mailable implements ShouldQueue
     {
         return $this
             ->from('support@momsclub.org', 'MOMS Club')
-            ->subject('Thank You for Your Mother-to-Mother Fund Payment')
+            ->subject('Thank You for Your Mother-to-Mother Fund Donation')
             ->markdown('emails.payments.m2mchapterthankyou');
     }
 }
