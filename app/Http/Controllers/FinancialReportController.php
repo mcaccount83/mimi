@@ -339,6 +339,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         try {
             $this->saveAccordionFields($financialReport, $input);
 
+            $financialReport->save();
+
             if ($reportReceived == 1) {
                 $financialReport->completed_name = $userName;
                 $financialReport->completed_email = $userEmail;
