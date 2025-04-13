@@ -60,6 +60,11 @@ Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinat
 // Error Log Routes...Public, No login required
 Route::get('admin/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/payment-logs', [PaymentController::class, 'index'])->name('payment-logs.index');
+    Route::get('/payment-logs/{id}', [PaymentController::class, 'show'])->name('payment-logs.show');
+});
+
 // Error Pages Test Routes...Public, No login required
 Route::get('/test-500', function () {
     abort(500);

@@ -9,6 +9,7 @@ use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
 use App\Models\Payments;
+use App\Models\PaymentLog;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -253,7 +254,7 @@ class PaymentController extends Controller implements HasMiddleware
         $amount = (float) preg_replace('/[^\d.]/', '', $total);
         $today = Carbon::today()->format('m-d-Y');
 
-        /* Create a merchantAuthenticationType object with authentication details
+         /* Create a merchantAuthenticationType object with authentication details
             retrieved from the constants file */
         /** @var \net\authorize\api\contract\v1\MerchantAuthenticationType $merchantAuthentication */
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType;
@@ -315,6 +316,29 @@ class PaymentController extends Controller implements HasMiddleware
         $merchantDefinedField3->setName('m2mDonation');
         $merchantDefinedField3->setValue($m2m);
 
+        // Create payment log data
+        $logData = [
+            'customer_id' => $userId,
+            'amount' => $amount,
+            'status' => 'pending',
+            'request_data' => [
+                'chapter' => $chapterName,
+                'members' => $members,
+                'late' => $late,
+                'rereg' => $rereg,
+                'sustaining_donation' => $sustaining,
+                'm2m_donation' => $m2m,
+                'fee' => $fee,
+                'invoice' => $randomInvoiceNumber,
+                'company' => $company,
+                'email' => $email,
+                'total' => $amount
+            ]
+        ];
+
+        // Create initial log entry before processing
+        $paymentLog = PaymentLog::create($logData);
+
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType;
         if (app()->environment('local')) {
@@ -342,11 +366,27 @@ class PaymentController extends Controller implements HasMiddleware
         $controller = new AnetController\CreateTransactionController($request);
         $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
 
+        // After processing, update the log with the response
         if ($response != null) {
             if ($response->getMessages()->getResultCode() == 'Ok') {
-                /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
+            /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
                 $tresponse = $response->getTransactionResponse();
                 if ($tresponse != null && $tresponse->getMessages() != null) {
+                    // Update log with success response
+                    $paymentLog->update([
+                        'transaction_id' => $tresponse->getTransId(),
+                        'status' => 'success',
+                        'response_code' => $tresponse->getResponseCode(),
+                        'response_message' => $tresponse->getMessages()[0]->getDescription(),
+                        'response_data' => [
+                            'auth_code' => $tresponse->getAuthCode(),
+                            'avs_result_code' => $tresponse->getAvsResultCode(),
+                            'cvv_result_code' => $tresponse->getCvvResultCode(),
+                            'account_number' => $tresponse->getAccountNumber(),
+                            'transaction_hash' => $tresponse->getTransHashSha2()
+                        ]
+                    ]);
+
                     return [
                         'success' => true,
                         'data' => [
@@ -364,18 +404,235 @@ class PaymentController extends Controller implements HasMiddleware
                 $error_message = 'Transaction Failed';
                 $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
                 $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
+
+                // Update log with error response
+                $paymentLog->update([
+                    'status' => 'failed',
+                    'response_code' => $tresponse->getErrors()[0]->getErrorCode(),
+                    'response_message' => $tresponse->getErrors()[0]->getErrorText(),
+                    'response_data' => [
+                        'error_details' => $error_message
+                    ]
+                ]);
             } else {
                 $error_message = 'Transaction Failed';
                 $error_message .= "\n Error Code: ".$response->getMessages()->getMessage()[0]->getCode();
                 $error_message .= "\n Error Message: ".$response->getMessages()->getMessage()[0]->getText();
+
+                // Update log with error response
+                $paymentLog->update([
+                    'status' => 'failed',
+                    'response_code' => $response->getMessages()->getMessage()[0]->getCode(),
+                    'response_message' => $response->getMessages()->getMessage()[0]->getText(),
+                    'response_data' => [
+                        'error_details' => $error_message
+                    ]
+                ]);
             }
         } else {
             $error_message = 'No response returned';
+
+            // Update log with no response
+            $paymentLog->update([
+                'status' => 'failed',
+                'response_message' => 'No response returned',
+                'response_data' => [
+                    'error_details' => 'No response was received from the payment gateway'
+                ]
+            ]);
         }
 
         return [
             'success' => false,
             'error' => $error_message,
         ];
+    }
+
+    // public function processPayment(Request $request): array
+    // {
+    //     $user = User::find($request->user()->id);
+    //     $userId = $user->id;
+
+    //     $bdDetails = $request->user()->board;
+    //     $bdId = $bdDetails->id;
+    //     $chapterId = $bdDetails->chapter_id;
+
+    //     $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
+    //     $chapterDetails = $baseQuery['chDetails'];
+    //     $chapterState = $baseQuery['stateShortName'];
+    //     $chapterName = $chapterDetails->name;
+
+    //     $company = $chapterName.', '.$chapterState;
+
+    //     $members = $request->input('members');
+    //     $late = $request->input('late');
+    //     $rereg = $request->input('rereg');
+    //     $donation = $request->input('sustaining');
+    //     $sustaining = (float) preg_replace('/[^\d.]/', '', $donation);
+    //     $m2mdonation = $request->input('m2m');
+    //     $m2m = (float) preg_replace('/[^\d.]/', '', $m2mdonation);
+    //     $fee = $request->input('fee');
+    //     $cardNumber = $request->input('card_number');
+    //     $expirationDate = $request->input('expiration_date');
+    //     $cvv = $request->input('cvv');
+    //     $first = $request->input('first_name');
+    //     $last = $request->input('last_name');
+    //     $address = $request->input('address');
+    //     $city = $request->input('city');
+    //     $state = $request->input('state');
+    //     $zip = $request->input('zip');
+    //     $email = $request->input('email');
+    //     $total = $request->input('total');
+    //     $amount = (float) preg_replace('/[^\d.]/', '', $total);
+    //     $today = Carbon::today()->format('m-d-Y');
+
+    //     /* Create a merchantAuthenticationType object with authentication details
+    //         retrieved from the constants file */
+    //     /** @var \net\authorize\api\contract\v1\MerchantAuthenticationType $merchantAuthentication */
+    //     $merchantAuthentication = new AnetAPI\MerchantAuthenticationType;
+    //     $merchantAuthentication->setName(config('settings.authorizenet_api_login_id'));
+    //     $merchantAuthentication->setTransactionKey(config('settings.authorizenet_transaction_key'));
+
+    //     // Set the transaction's refId
+    //     $refId = 'ref'.time();
+
+    //     // Create the payment data for a credit card
+    //     $creditCard = new AnetAPI\CreditCardType;
+    //     $creditCard->setCardNumber($cardNumber);
+    //     $creditCard->setExpirationDate($expirationDate);
+    //     $creditCard->setCardCode($cvv);
+
+    //     // Add the payment data to a paymentType object
+    //     $paymentOne = new AnetAPI\PaymentType;
+    //     $paymentOne->setCreditCard($creditCard);
+
+    //     // Generate a random invoice number
+    //     $randomInvoiceNumber = mt_rand(100000, 999999);
+    //     // Create order information
+    //     $order = new AnetAPI\OrderType;
+    //     $order->setInvoiceNumber($randomInvoiceNumber);
+    //     $order->setDescription('Re-Registration Payment');
+
+    //     // Set the customer's Bill To address
+    //     $customerAddress = new AnetAPI\CustomerAddressType;
+    //     $customerAddress->setFirstName($first);
+    //     $customerAddress->setLastName($last);
+    //     $customerAddress->setCompany($company);
+    //     $customerAddress->setAddress($address);
+    //     $customerAddress->setCity($city);
+    //     $customerAddress->setState($state);
+    //     $customerAddress->setZip($zip);
+    //     $customerAddress->setCountry('USA');
+
+    //     // Set the customer's identifying information
+    //     $customerData = new AnetAPI\CustomerDataType;
+    //     $customerData->setType('individual');
+    //     $customerData->setId($chapterId);
+    //     $customerData->setEmail($email);
+
+    //     // Add values for transaction settings
+    //     $duplicateWindowSetting = new AnetAPI\SettingType;
+    //     $duplicateWindowSetting->setSettingName('duplicateWindow');
+    //     $duplicateWindowSetting->setSettingValue('60');
+
+    //     // Add some merchant defined fields. These fields won't be stored with the transaction, but will be echoed back in the response.
+    //     $merchantDefinedField1 = new AnetAPI\UserFieldType;
+    //     $merchantDefinedField1->setName('MemberCount');
+    //     $merchantDefinedField1->setValue($members);
+
+    //     $merchantDefinedField2 = new AnetAPI\UserFieldType;
+    //     $merchantDefinedField2->setName('SustainingDonation');
+    //     $merchantDefinedField2->setValue($sustaining);
+
+    //     $merchantDefinedField3 = new AnetAPI\UserFieldType;
+    //     $merchantDefinedField3->setName('m2mDonation');
+    //     $merchantDefinedField3->setValue($m2m);
+
+    //     // Create a TransactionRequestType object and add the previous objects to it
+    //     $transactionRequestType = new AnetAPI\TransactionRequestType;
+    //     if (app()->environment('local')) {
+    //         $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
+    //     } else {
+    //         $transactionRequestType->setTransactionType('authCaptureTransaction');  // Caputre Payment for Live Traansactions
+    //     }
+    //     $transactionRequestType->setAmount($amount);
+    //     $transactionRequestType->setOrder($order);
+    //     $transactionRequestType->setPayment($paymentOne);
+    //     $transactionRequestType->setBillTo($customerAddress);
+    //     $transactionRequestType->setCustomer($customerData);
+    //     $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
+    //     $transactionRequestType->addToUserFields($merchantDefinedField1);
+    //     $transactionRequestType->addToUserFields($merchantDefinedField2);
+    //     $transactionRequestType->addToUserFields($merchantDefinedField3);
+
+    //     // Assemble the complete transaction request
+    //     $request = new AnetAPI\CreateTransactionRequest;
+    //     $request->setMerchantAuthentication($merchantAuthentication);
+    //     $request->setRefId($refId);
+    //     $request->setTransactionRequest($transactionRequestType);
+
+    //     // Create the controller and get the response
+    //     $controller = new AnetController\CreateTransactionController($request);
+    //     $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
+
+    //     if ($response != null) {
+    //         if ($response->getMessages()->getResultCode() == 'Ok') {
+    //             /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
+    //             $tresponse = $response->getTransactionResponse();
+    //             if ($tresponse != null && $tresponse->getMessages() != null) {
+    //                 return [
+    //                     'success' => true,
+    //                     'data' => [
+    //                         'transactionId' => $tresponse->getTransId(),
+    //                         'invoiceNumber' => $randomInvoiceNumber,
+    //                     ],
+    //                 ];
+    //             }
+    //         }
+
+    //         // Handle errors
+    //         /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
+    //         $tresponse = $response->getTransactionResponse();
+    //         if ($tresponse != null && $tresponse->getErrors() != null) {
+    //             $error_message = 'Transaction Failed';
+    //             $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
+    //             $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
+    //         } else {
+    //             $error_message = 'Transaction Failed';
+    //             $error_message .= "\n Error Code: ".$response->getMessages()->getMessage()[0]->getCode();
+    //             $error_message .= "\n Error Message: ".$response->getMessages()->getMessage()[0]->getText();
+    //         }
+    //     } else {
+    //         $error_message = 'No response returned';
+    //     }
+
+    //     return [
+    //         'success' => false,
+    //         'error' => $error_message,
+    //     ];
+    // }
+
+    public function index(Request $request)
+    {
+        $query = PaymentLog::query();
+
+        // Add filters if needed
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('date')) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(20);
+
+        return view('payment-logs.index', compact('paymentLogs'));
+    }
+
+    public function show($id)
+    {
+        $log = PaymentLog::findOrFail($id);
+        return view('payment-logs.show', compact('log'));
     }
 }
