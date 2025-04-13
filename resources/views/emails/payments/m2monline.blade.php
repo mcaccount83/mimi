@@ -1,5 +1,5 @@
 @component('mail::message')
-# M2M Admin Payment Notification
+# Admin Donation Notification
 
 The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has made a Donation to the Mother-to-Mother Fund through the MOMS Information Management Interface.<br>
 <br>
@@ -28,6 +28,10 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
         <tr>
             <td>Mother-to-Mother Fund Donation:&nbsp;&nbsp;</td>
             <td>{{ $mailData['m2mDonation'] }}</td>
+        </tr>
+        <tr>
+            <td>Sustaining Chapter Donation:&nbsp;&nbsp;</td>
+            <td>{{ $mailData['sustainingDonation'] }}</td>
         </tr>
         <tr>
             <td>Online Processing Fee:&nbsp;&nbsp;</td>
