@@ -50,10 +50,6 @@ class EOYReportController extends Controller implements HasMiddleware
         ];
     }
 
-    /* /Custom Helpers/ */
-    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
-    // $displayEOY = getEOYDisplay();
-
     /**
      * View the EOY Report Title
      */

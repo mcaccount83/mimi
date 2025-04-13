@@ -849,9 +849,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
                             </div>
-                            <input type="text" class="form-control" name="PartyExpenses{{ $row }}" id="PartyExpenses{{ $row }}" oinput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_expenses'] ?? '' }}"
+                            <input type="text" class="form-control" name="PartyIncome{{ $row }}" id="PartyIncome{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_expenses'] ?? '' }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                        </div>
                     </div>
                 </td>
             </tr>
