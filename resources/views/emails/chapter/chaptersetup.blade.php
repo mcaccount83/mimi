@@ -22,9 +22,6 @@
 <hr>
 <p><b>Step 4 - Review your Manual</b></p>
 <p>You’ll receive a manual in the mail shortly after your new chapter has been approved. While there is a lot of information in the manual, do not feel overwhelmed and do not feel like you need to read it all right away. All of our “first steps” are listed right here in this guide. The additional information in the manual will be helpful as your chapter grows.</p>
-<hr>
-<p><b>Step 5 - Additional Resources</b></p>
-<p>Additional resources can be found on our website: https://momsclub.org/resources/. The password is “daytime support”. You’ll find FACT Sheets on various topics, sample files, logo downloads, and more.</p>
 
 <br>
 <p><strong>MCL</strong>,<br>
