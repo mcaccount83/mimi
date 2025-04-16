@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f448810ffcc608b8213300bc72645bdc",
+    "content-hash": "6d39d8e5696c6b3c5c04fbcf331bcfdc",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -148,16 +148,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.342.24",
+            "version": "3.342.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "cd7e1cbed4cb52c3aad31a647d1645594ff208eb"
+                "reference": "4c18299000c34ab4903100fe68721d6f26c7cdf2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cd7e1cbed4cb52c3aad31a647d1645594ff208eb",
-                "reference": "cd7e1cbed4cb52c3aad31a647d1645594ff208eb",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4c18299000c34ab4903100fe68721d6f26c7cdf2",
+                "reference": "4c18299000c34ab4903100fe68721d6f26c7cdf2",
                 "shasum": ""
             },
             "require": {
@@ -239,9 +239,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.342.24"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.342.27"
             },
-            "time": "2025-04-09T18:22:32+00:00"
+            "time": "2025-04-14T18:08:09+00:00"
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -1450,16 +1450,16 @@
         },
         {
             "name": "google/auth",
-            "version": "v1.46.0",
+            "version": "v1.47.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-auth-library-php.git",
-                "reference": "7fafae99a41984cbfb92508174263cf7bf3049b9"
+                "reference": "d6389aae7c009daceaa8da9b7942d8df6969f6d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/7fafae99a41984cbfb92508174263cf7bf3049b9",
-                "reference": "7fafae99a41984cbfb92508174263cf7bf3049b9",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/d6389aae7c009daceaa8da9b7942d8df6969f6d9",
+                "reference": "d6389aae7c009daceaa8da9b7942d8df6969f6d9",
                 "shasum": ""
             },
             "require": {
@@ -1505,9 +1505,9 @@
             "support": {
                 "docs": "https://cloud.google.com/php/docs/reference/auth/latest",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
-                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.46.0"
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.47.0"
             },
-            "time": "2025-02-12T22:21:37+00:00"
+            "time": "2025-04-15T21:47:20+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -2047,16 +2047,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.8.1",
+            "version": "v12.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d1ea3566f6e0cad34834c6d18db0bf995438eb87"
+                "reference": "3db59aa0f382c349c78a92f3e5b5522e00e3301b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d1ea3566f6e0cad34834c6d18db0bf995438eb87",
-                "reference": "d1ea3566f6e0cad34834c6d18db0bf995438eb87",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3db59aa0f382c349c78a92f3e5b5522e00e3301b",
+                "reference": "3db59aa0f382c349c78a92f3e5b5522e00e3301b",
                 "shasum": ""
             },
             "require": {
@@ -2165,7 +2165,7 @@
                 "league/flysystem-sftp-v3": "^3.25.1",
                 "mockery/mockery": "^1.6.10",
                 "orchestra/testbench-core": "^10.0.0",
-                "pda/pheanstalk": "^5.0.6",
+                "pda/pheanstalk": "^5.0.6|^7.0.0",
                 "php-http/discovery": "^1.15",
                 "phpstan/phpstan": "^2.0",
                 "phpunit/phpunit": "^10.5.35|^11.5.3|^12.0.1",
@@ -2258,7 +2258,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-04-08T19:58:59+00:00"
+            "time": "2025-04-16T15:44:19+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -3181,16 +3181,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.6.2",
+            "version": "v3.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "8f8914731f5eb43b6bb145d87c8d5a9edfc89313"
+                "reference": "56aa1bb63a46e06181c56fa64717a7287e19115e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/8f8914731f5eb43b6bb145d87c8d5a9edfc89313",
-                "reference": "8f8914731f5eb43b6bb145d87c8d5a9edfc89313",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/56aa1bb63a46e06181c56fa64717a7287e19115e",
+                "reference": "56aa1bb63a46e06181c56fa64717a7287e19115e",
                 "shasum": ""
             },
             "require": {
@@ -3245,7 +3245,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.6.2"
+                "source": "https://github.com/livewire/livewire/tree/v3.6.3"
             },
             "funding": [
                 {
@@ -3253,7 +3253,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-12T20:24:15+00:00"
+            "time": "2025-04-12T22:26:52+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -8463,16 +8463,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.23",
+            "version": "1.12.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "29201e7a743a6ab36f91394eab51889a82631428"
+                "reference": "338b92068f58d9f8035b76aed6cf2b9e5624c025"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/29201e7a743a6ab36f91394eab51889a82631428",
-                "reference": "29201e7a743a6ab36f91394eab51889a82631428",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/338b92068f58d9f8035b76aed6cf2b9e5624c025",
+                "reference": "338b92068f58d9f8035b76aed6cf2b9e5624c025",
                 "shasum": ""
             },
             "require": {
@@ -8517,7 +8517,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-23T14:57:32+00:00"
+            "time": "2025-04-16T13:01:53+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -10434,6 +10434,6 @@
     "platform": {
         "php": "^8.3"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
