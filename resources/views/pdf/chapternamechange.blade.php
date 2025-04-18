@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $mailData['chapterNameUpd'] }}, {{ $mailData['chapterState'] }} | Chapter Name Change</title>
-        @php
-        $todayDate = date('F j, Y');
-        $twoMonthsDate = date('F j, Y', strtotime('+2 months'));
-        @endphp
+    <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Chapter Name Change</title>
 </head>
 <body>
     <center>
@@ -16,7 +12,7 @@
 <br>
 <div class="keep-together" style="page-break-inside: avoid;">
     <br>
-    <p>{{ $todayDate }}</p>
+    <p>{{ $pdfData['todayDate'] }}</p>
     <br>
     <p>Internal Revenue Service<br>
         Ogden, UT  84201</p>
@@ -24,14 +20,14 @@
         Taxpayer ID: 77-0125681<br>
         Gen Number: 3706</p>
     <p>The below subordinate has changed their name and contact. Their IRS records need to be updated so they can request a new EIN verification letter. Below is their updated information:</p>
-    <p><b>{{ $pdfData['chapterEIN'] }}/b><br>
-        MOMS Club of {{ $mailData['chapterNameUpd'] }}, {{ $mailData['chapterState'] }}<br>
-        (formerly known as MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }})<br>
-        c/o {{$mailData['presName']}}<br>
-        {{$mailData['presAddress']}}<br>
-        {{$mailData['presCity']}}, {{$mailData['presState']}} {{$mailData['presZip']}}</p>
+    <p><b>{{ $pdfData['chapterEIN'] }}</b><br>
+        MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
+        (formerly known as MOMS Club of {{ $pdfData['chNamePrev'] }}, {{ $pdfData['chapterState'] }})<br>
+        c/o {{$pdfData['presName']}}<br>
+        {{$pdfData['presAddress']}}<br>
+        {{$pdfData['presCity']}}, {{$pdfData['presState']}} {{$pdfData['presZip']}}</p>
     <p>Thank you for your assistance in this matter.  If you have any questions, please contact me by phone or email.  Unless I receive information from your office
-        to the contrary, I will instruct our subordinate to contact the IRS for a new EIN verification letter after {{ $twoMonthsDate }}.</p>
+        to the contrary, I will instruct our subordinate to contact the IRS for a new EIN verification letter after {{ $pdfData['twoMonthsDate'] }}.</p>
     <br>
     <p>Sincerely,</p>
     <br>

@@ -8,6 +8,7 @@ use App\Mail\ProbationNoRptLetter;
 use App\Mail\ProbationPartyLetter;
 use App\Mail\ProbationReleaseLetter;
 use App\Mail\WarningPartyLetter;
+use App\Mail\ChapersUpdateEINCoor;
 use App\Models\Documents;
 use App\Models\GoogleDrive;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -662,6 +663,111 @@ class PDFController extends Controller
         $pdf = Pdf::loadView($view, compact('pdfData'));
 
         $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized']."_{$type}_Letter.pdf";
+
+        return [
+            'pdf' => $pdf,
+            'filename' => $filename,
+        ];
+    }
+
+     /**
+     * Save & Send IRS Name Change Letter
+     */
+    public function saveNameChangeLetter(Request $request, $chapterId, $chNamePrev): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+
+        $baseQueryUpd = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetailsUpd = $baseQueryUpd['chDetails'];
+        $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
+        $stateShortName = $baseQueryUpd['stateShortName'];
+
+        $disbandDrive = DB::table('google_drive')->value('disband_letter');
+        $sharedDriveId = $disbandDrive;
+
+        $result = $this->generateNameChangeLetter($request, $chapterId, $chNamePrev, $chDetailsUpd, $pcDetailsUpd);
+        $pdf = $result['pdf'];
+        $name = $result['filename'];
+
+        $pdfPath = storage_path('app/pdf_reports/'.$name);
+        $pdf->save($pdfPath);
+
+        $filename = basename($pdfPath);
+        $mimetype = 'application/pdf';
+        $filecontent = file_get_contents($pdfPath);
+
+        if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+            $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
+            if ($existingDocRecord) {
+                $existingDocRecord->disband_letter_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for chapter_id {$chapterId} not found");
+                $newDocData = ['chapter_id' => $chapterId];
+                $newDocData['disband_letter_path'] = $file_id;
+                Documents::create($newDocData);
+            }
+
+            $emailEINCoorData = $this->userController->loadEINCoord();
+            $eincoorEmail = $emailEINCoorData['ein_email'];
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
+            );
+
+            Mail::to($eincoorEmail)
+            ->queue(new ChapersUpdateEINCoor($mailData, $pdfPath));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Letter emailed successfully.',
+                'pdf_path' => $pdfPath,
+                'google_drive_id' => $file_id,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to successfully generate letter.',
+        ], 500);
+    }
+
+    /**
+     * Generate IRS Name Change Letter
+     */
+    public function generateNameChangeLetter(Request $request, $chapterId, $chNamePrev)
+    {
+        $baseQueryUpd = $this->baseChapterController->getChapterDetails($chapterId, $request);
+        $chDetailsUpd = $baseQueryUpd['chDetails'];
+        $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
+        $chId = $baseQueryUpd['chId'];
+        $stateShortName = $baseQueryUpd['stateShortName'];
+        $PresDetails = $baseQueryUpd['PresDetails'];
+
+        //  Load User Information for Signing Email & PDFs
+        $user = $this->userController->loadUserInformation($request);
+
+        $emailEINCoorData = $this->userController->loadEINCoord();
+
+        $todayDate = date('F j, Y');
+        $twoMonthsDate = date('F j, Y', strtotime('+2 months'));
+
+        $pdfData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
+                $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
+                $this->baseMailDataController->getPresData($PresDetails),
+                $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+            [
+                'todayDate' => $todayDate,
+                'twoMonthsDate' => $twoMonthsDate,
+                'chNamePrev' => $chNamePrev,
+            ]
+        );
+
+        $pdf = Pdf::loadView('pdf.chapternamechange', compact('pdfData'));
+
+        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized']."_NameChangeLetter.pdf";
 
         return [
             'pdf' => $pdf,

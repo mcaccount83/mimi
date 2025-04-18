@@ -104,7 +104,7 @@ class BaseCoordinatorController extends Controller
                     $params['secPositionId']
                 );
 
-                $baseQuery = $this->baseConditionsController->applyPositionConditions(
+                $baseQuery = $this->baseConditionsController->applyPositionCoordConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
                     $params['confId'] ?? null,

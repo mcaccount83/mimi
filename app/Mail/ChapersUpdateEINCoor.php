@@ -16,14 +16,17 @@ class ChapersUpdateEINCoor extends Mailable implements ShouldQueue
 
     public $mailData;
 
+    protected $pdfPath;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($mailData)
+    public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
+        $this->pdfPath = $pdfPath;
     }
 
     /**
@@ -32,7 +35,11 @@ class ChapersUpdateEINCoor extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject("Chapter Name Change Notification | {$this->mailData['chapterNameUpd']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.chapterupdate.eincoor');
+            ->subject("Chapter Name Change Notification | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
+            ->markdown('emails.chapterupdate.eincoor')
+            ->attach($this->pdfPath, [
+                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_ChapterNameChange.pdf',
+                'mime' => 'application/pdf',
+            ]);;
     }
 }

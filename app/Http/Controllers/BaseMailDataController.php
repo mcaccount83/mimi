@@ -114,12 +114,12 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getEINData($emailEINData)
+    public function getEINCoorData($emailEINCoorData)
     {
         return [
-            'einEmail' => $emailEINData['ein_email'],
-            'einName' => $emailEINData['ein_fname'].' '.$emailEINData['ein_lname'],
-            'einPhone' => $emailEINData['ein_phone']
+            'einEmail' => $emailEINCoorData['ein_email'],
+            'einName' => $emailEINCoorData['ein_fname'].' '.$emailEINCoorData['ein_lname'],
+            'einPhone' => $emailEINCoorData['ein_phone']
         ];
     }
 

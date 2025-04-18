@@ -995,6 +995,7 @@ class ChapterController extends Controller implements HasMiddleware
         }
 
         $chapter = Chapters::find($id);
+        $chapterId = $id;
         $probation = ProbationSubmission::find($id);
 
         DB::beginTransaction();
@@ -1054,7 +1055,6 @@ class ChapterController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getPCUpdatedData($pcDetailsUpd),
-                $this->baseMailDataController->getEINData($pcDetailsUpd),
                 [
                     'chapterWebsiteUrl' => $website,
                 ]
@@ -1077,8 +1077,8 @@ class ChapterController extends Controller implements HasMiddleware
 
             // Name Change Notification//
             if ($chDetailsUpd->name != $chDetails->name) {
-                Mail::to($EINCordEmail)
-                    ->queue(new ChapersUpdateEINCoor($mailData));
+                $chNamePrev = $chDetails->name;
+                $pdfPath = $this->pdfController->saveNameChangeLetter($request, $chapterId, $chNamePrev);
             }
 
             // PC Change Notification//

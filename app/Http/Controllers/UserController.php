@@ -304,20 +304,32 @@ class UserController extends Controller implements HasMiddleware
      */
     public function loadEINCoord()
     {
-        $ccDetails = Coordinators::with(['displayPosition'])
-            ->where('position_id', '12')
-            ->orwhere('sec_position_id', '12')
-            ->where('is_active', 1)
-            ->first(); // Fetch only the first record directly
+        $query = Coordinators::with(['displayPosition', 'secondaryPosition'])
+        ->where('coordinators.is_active', 1)
+        ->where(function($q) {
+            $q->where('coordinators.position_id', '12')
+              ->orWhereHas('secondaryPosition', function($subQuery) {
+                  $subQuery->where('coordinator_position.id', '12'); // Assuming positions is your positions table
+              });
+        })
+        ->first();
 
-        $ein_id = $ccDetails?->id;
-        $ein_fname = $ccDetails?->first_name;
-        $ein_lname = $ccDetails?->last_name;
-        $ein_email = $ccDetails?->email;
-        $ein_phone = $ccDetails?->phone;
+    $ccDetails = $query;
 
-        return ['ein_id' => $ein_id, 'ein_fname' => $ein_fname, 'ein_lname' => $ein_lname, 'ein_email' => $ein_email, 'ein_phone' => $ein_phone,
-        ];
+
+    $ein_id = $ccDetails?->id;
+    $ein_fname = $ccDetails?->first_name;
+    $ein_lname = $ccDetails?->last_name;
+    $ein_email = $ccDetails?->email;
+    $ein_phone = $ccDetails?->phone;
+
+    return [
+        'ein_id' => $ein_id,
+        'ein_fname' => $ein_fname,
+        'ein_lname' => $ein_lname,
+        'ein_email' => $ein_email,
+        'ein_phone' => $ein_phone,
+    ];
     }
 
     /**
