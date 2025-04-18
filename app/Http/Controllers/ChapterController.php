@@ -1054,6 +1054,7 @@ class ChapterController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getPCUpdatedData($pcDetailsUpd),
+                $this->baseMailDataController->getEINData($pcDetailsUpd),
                 [
                     'chapterWebsiteUrl' => $website,
                 ]

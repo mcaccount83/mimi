@@ -110,6 +110,16 @@ class BaseMailDataController extends Controller
             'ccPosition' => $emailCCData['cc_pos'],
             'ccConfName' => $emailCCData['cc_conf_name'],
             'ccConfDescription' => $emailCCData['cc_conf_desc'],
+            'ccPhone' => $emailCCData['cc_phone']
+        ];
+    }
+
+    public function getEINData($emailEINData)
+    {
+        return [
+            'einEmail' => $emailEINData['ein_email'],
+            'einName' => $emailEINData['ein_fname'].' '.$emailEINData['ein_lname'],
+            'einPhone' => $emailEINData['ein_phone']
         ];
     }
 

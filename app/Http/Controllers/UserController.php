@@ -272,7 +272,6 @@ class UserController extends Controller implements HasMiddleware
         return response()->json($str);
     }
 
-
     /**
      * Load Conference Coordinator Information for each Conference based on the PC selected - used for emails and pdfs
      */
@@ -290,12 +289,34 @@ class UserController extends Controller implements HasMiddleware
         $cc_fname = $ccDetails?->first_name;
         $cc_lname = $ccDetails?->last_name;
         $cc_email = $ccDetails?->email;
+        $cc_phone = $ccDetails?->phone;
         $cc_conf_name = $ccDetails?->conference->conference_name;
         $cc_conf_desc = $ccDetails?->conference->conference_description;
         $cc_pos = $ccDetails?->displayPosition->long_title;
 
         return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email,
-            'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id,
+            'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id, 'cc_phone' => $cc_phone,
+        ];
+    }
+
+     /**
+     * Load EIN Coordinator Information  - used for emails and pdfs
+     */
+    public function loadEINCoord()
+    {
+        $ccDetails = Coordinators::with(['displayPosition'])
+            ->where('position_id', '12')
+            ->orwhere('sec_position_id', '12')
+            ->where('is_active', 1)
+            ->first(); // Fetch only the first record directly
+
+        $ein_id = $ccDetails?->id;
+        $ein_fname = $ccDetails?->first_name;
+        $ein_lname = $ccDetails?->last_name;
+        $ein_email = $ccDetails?->email;
+        $ein_phone = $ccDetails?->phone;
+
+        return ['ein_id' => $ein_id, 'ein_fname' => $ein_fname, 'ein_lname' => $ein_lname, 'ein_email' => $ein_email, 'ein_phone' => $ein_phone,
         ];
     }
 
