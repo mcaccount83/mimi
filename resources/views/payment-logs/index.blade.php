@@ -83,7 +83,9 @@
                                             {{ ucfirst($log->status) }}
                                         </span>
                                     </td>
-                                    <td>{{ $log->response_message ?? 'N/A' }}</td>
+                                    <td style="white-space: normal; word-wrap: break-word; max-width: 200px;">
+                                        {{ $log->response_message ?? 'N/A' }}
+                                    </td>
                                     <td>{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
                                 </tr>
                             @endforeach
