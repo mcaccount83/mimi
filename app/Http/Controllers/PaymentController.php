@@ -449,7 +449,7 @@ class PaymentController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
-        $query = PaymentLog::query();
+        $query = PaymentLog::with('board');
 
         // Add filters if needed
         if ($request->has('status')) {

@@ -51,7 +51,8 @@
                         <thead>
                           <tr>
                             <th>Details</th>
-                            <th>ID</th>
+                            <th>Conf/Reg</th>
+                            <th>Chapter</th>
                             <th>Transaction ID</th>
                             <th>Amount</th>
                             <th>Status</th>
@@ -62,9 +63,16 @@
                             @foreach ($paymentLogs as $log)
                             <tr>
                                 <td><a href="{{ route('payment-logs.show', $log->id) }}"><i class="far fa-eye"></i></a></td>
-                                    <td>{{ $log->id }}</td>
+                                <td>
+                                    @if ($log->board->chapters->region->short_name != "None")
+                                        {{ $log->board->chapters->conference->short_name ?? 'N/A'}} / {{ $log->board->chapters->region->short_name ?? 'N/A'}}
+                                    @else
+                                        {{ $log->board->chapters->conference->short_name ?? 'N/A'}}
+                                    @endif
+                                </td>
+                                <td>{{ $log->board->chapters->name ?? 'N/A' }}, {{ $log->board->chapters->state->state_short_name ?? 'N/A' }}</td>
                                     <td>{{ $log->transaction_id ?? 'N/A' }}</td>
-                                    <td>${{ number_format($log->amount, 2) }}</td>
+                                     <td>${{ number_format($log->amount, 2) }}</td>
                                     <td>
                                         @if($log->status == 'success')
                                             <span class="badge bg-success text-white">

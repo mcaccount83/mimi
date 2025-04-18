@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PaymentLog extends Model
 {
@@ -21,4 +22,9 @@ class PaymentLog extends Model
         'request_data' => 'array',
         'response_data' => 'array',
     ];
+
+    public function board(): HasOne
+    {
+        return $this->hasOne(Boards::class, 'user_id', 'customer_id');
+    }
 }
