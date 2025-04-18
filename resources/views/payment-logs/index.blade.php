@@ -53,9 +53,9 @@
                             <th>Details</th>
                             <th>Conf/Reg</th>
                             <th>Chapter</th>
-                            <th>Transaction ID</th>
                             <th>Amount</th>
                             <th>Status</th>
+                            <th>Response</th>
                             <th>Date</th>
                           </tr>
                         </thead>
@@ -71,7 +71,6 @@
                                     @endif
                                 </td>
                                 <td>{{ $log->board->chapters->name ?? 'N/A' }}, {{ $log->board->chapters->state->state_short_name ?? 'N/A' }}</td>
-                                    <td>{{ $log->transaction_id ?? 'N/A' }}</td>
                                      <td>${{ number_format($log->amount, 2) }}</td>
                                     <td>
                                         @if($log->status == 'success')
@@ -84,7 +83,7 @@
                                             {{ ucfirst($log->status) }}
                                         </span>
                                     </td>
-
+                                    <td>{{ $log->response_message ?? 'N/A' }}</td>
                                     <td>{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
                                 </tr>
                             @endforeach
