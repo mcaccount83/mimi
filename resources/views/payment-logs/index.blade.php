@@ -62,7 +62,7 @@
                         <tbody>
                             @foreach ($paymentLogs as $log)
                             <tr>
-                                <td><a href="{{ route('payment-logs.show', $log->id) }}"><i class="far fa-eye"></i></a></td>
+                                <td  class="text-center align-middle"><a href="{{ route('payment-logs.show', $log->id) }}"><i class="fas fa-eye"></i></a></td>
                                 <td>
                                     @if ($log->board->chapters->region->short_name != "None")
                                         {{ $log->board->chapters->conference->short_name ?? 'N/A'}} / {{ $log->board->chapters->region->short_name ?? 'N/A'}}
