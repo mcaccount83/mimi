@@ -114,9 +114,10 @@
                     </div>
                 </div>
               <div class="card-body text-center">
-                {{-- <p>**Known issue - may not send more than 10 messages before returning 500 error.**</p> --}}
-              <a href="{{ route('eoyreports.eoyfinancialreportreminder') }}" onclick="return confirmSendReminder();"><button class="btn bg-gradient-primary"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Financial Report Reminders</button></a>
-           </div>
+                @if ($regionalCoordinatorCondition)
+                    <a href="{{ route('eoyreports.eoyfinancialreportreminder') }}" onclick="return confirmSendReminder();"><button class="btn bg-gradient-primary"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Financial Report Reminders</button></a>
+                @endif
+            </div>
         </div>
 
           <!-- /.box -->

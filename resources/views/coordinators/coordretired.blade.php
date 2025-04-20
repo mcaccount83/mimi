@@ -61,7 +61,9 @@
             </div>
               <!-- /.card-body -->
               <div class="card-body text-center">
-                <button class="btn bg-gradient-primary" onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Retired Coordinator List</button>
+                @if ($assistConferenceCoordinatorCondition)
+                    <button class="btn bg-gradient-primary" onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Retired Coordinator List</button>
+                @endif
             </div>
             </div>
 

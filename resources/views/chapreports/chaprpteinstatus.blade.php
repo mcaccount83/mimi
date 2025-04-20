@@ -86,8 +86,10 @@
                 </div>
             </div>
                 <div class="card-body text-center">
-                    <button class="btn bg-gradient-primary" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
-                </div>
+                    @if ($assistConferenceCoordinatorCondition)
+                        <button class="btn bg-gradient-primary" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
+                    @endif
+                    </div>
 
               </div>
             </div>

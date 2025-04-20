@@ -77,13 +77,15 @@
                 <div class="card-body text-center">
                 @if($conferenceCoordinatorCondition)
                     <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Coordinator</a>
+                @endif
+                @if ($assistConferenceCoordinatorCondition)
                     @if($checkBoxStatus == null)
-                    <button class="btn bg-gradient-primary" onclick="startExport('coordinator', 'Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
+                        <button class="btn bg-gradient-primary" onclick="startExport('coordinator', 'Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
                     @else
                         <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button></a>
                     @endif
-                    <a class="btn bg-gradient-primary" href="mailto:{{ $emailListCord }}"><i class="fas fa-envelope mr-2" ></i>E-mail Listed Coordinators</a>
                 @endif
+                <a class="btn bg-gradient-primary" href="mailto:{{ $emailListCord }}"><i class="fas fa-envelope mr-2" ></i>E-mail Listed Coordinators</a>
             </div>
          </div>
           <!-- /.box -->

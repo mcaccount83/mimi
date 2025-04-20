@@ -116,10 +116,13 @@
                 </div>
             </div>
                 <div class="card-body text-center">
-                {{-- <p>**Known issue - may not send more than 10 messages before returning 500 error.**</p> --}}
-                <a href="{{ route('eoyreports.eoystatusreminder') }}" onclick="return confirmSendReminder();"> <button class="btn bg-gradient-primary"><i class="fas fa-envelope"></i>&nbsp;&nbsp;&nbsp;Send EOY Late Notices </button> </a>
-                <button class="btn bg-gradient-primary" onclick="startExport('eoystatus', 'EOY Status List')"><i class="fas fa-download mr-2" ></i>Export EOY Status List</button>
-           </div>
+                @if ($regionalCoordinatorCondition)
+                    <a href="{{ route('eoyreports.eoystatusreminder') }}" onclick="return confirmSendReminder();"> <button class="btn bg-gradient-primary"><i class="fas fa-envelope"></i>&nbsp;&nbsp;&nbsp;Send EOY Late Notices </button> </a>
+                @endif
+                @if ($assistConferenceCoordinatorCondition)
+                    <button class="btn bg-gradient-primary" onclick="startExport('eoystatus', 'EOY Status List')"><i class="fas fa-download mr-2" ></i>Export EOY Status List</button>
+                @endif
+                </div>
           <!-- /.box -->
         </div>
       </div>

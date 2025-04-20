@@ -341,7 +341,7 @@ window.onload = function () {
 
                         <!-- Chapter Reports Menu Item -->
                         @php
-                            if ($assistConferenceCoordinatorCondition) {
+                            if ($coordinatorCondition) {
                                 $chapterReportsRoute = route('chapreports.chaprptchapterstatus');
                             }
                             $activeChapterReportsRoutes = [
