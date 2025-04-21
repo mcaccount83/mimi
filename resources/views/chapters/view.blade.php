@@ -268,6 +268,17 @@
                                 </div>
                             </div>
 
+                            @if($chDocuments->name_change_letter_path != null)
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Name Change Letter:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button>
+                                </div>
+                            </div>
+                            @endif
+
                         @endif
 
                         </div>

@@ -8,14 +8,37 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+
+const client_id = 'YOUR_CLIENT_ID';
+const client_secret = 'YOUR_CLIENT_SECRET';
 
 class PublicController extends Controller
 {
     public function __construct()
     {
         // $this->middleware('auth')->except('logout');
+    }
+
+    private function token()
+    {
+        $client_id = config('services.google.client_id');
+        $client_secret = config('services.google.client_secret');
+        $refresh_token = config('services.google.refresh_token');
+        $response = Http::post('https://oauth2.googleapis.com/token', [
+            'client_id' => $client_id,
+            'client_secret' => $client_secret,
+            'refresh_token' => $refresh_token,
+            'grant_type' => 'refresh_token',
+            'scope' => 'https://www.googleapis.com/auth/drive', // Add the necessary scope for Shared Drive access
+        ]);
+
+        $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
+
+        return $accessToken;
     }
 
     public function chapterLinks(): View
@@ -82,56 +105,58 @@ class PublicController extends Controller
      * Proxy for Google Drive files to avoid CORS issues
      */
     public function proxyGoogleDriveFile(Request $request)
-    {
-        $fileId = $request->query('id');
+{
+    $fileId = $request->query('id');
 
-        if (empty($fileId)) {
-            return abort(404, 'File ID is required');
-        }
-
-        try {
-            $client = new Client;
-
-            // Use the Google Drive API URL format for direct download
-            $googleDriveUrl = "https://drive.google.com/uc?export=download&id={$fileId}";
-
-            // Fetch the file from Google Drive
-            $response = $client->get($googleDriveUrl, [
-                'stream' => true,
-                'timeout' => 30,
-                'connect_timeout' => 30,
-            ]);
-
-            // Get the content type from the response
-            $contentType = $response->getHeaderLine('Content-Type');
-
-            // Handle different content types appropriately
-            if (strpos($contentType, 'text/html') !== false) {
-                // Google sometimes returns HTML for large files with a download prompt
-                return redirect()->to("https://drive.google.com/file/d/{$fileId}/view");
-            }
-
-            // Stream the file back to the client
-            return response()->stream(
-                function () use ($response) {
-                    $body = $response->getBody();
-                    while (! $body->eof()) {
-                        echo $body->read(1024);
-                    }
-                },
-                200,
-                [
-                    'Content-Type' => $contentType ?: 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="document.pdf"',
-                    'Cache-Control' => 'public, max-age=3600',
-                ]
-            );
-
-        } catch (GuzzleException $e) {
-            return response()->json([
-                'error' => 'Failed to fetch file from Google Drive',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+    if (empty($fileId)) {
+        return abort(404, 'File ID is required');
     }
+
+    try {
+        // Use your existing token method that's already working for uploads
+        $accessToken = $this->token();
+
+        $client = new Client();
+
+        // Use the Google Drive API directly with your auth token
+        $response = $client->get("https://www.googleapis.com/drive/v3/files/{$fileId}?alt=media&supportsAllDrives=true", [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+            'stream' => true,
+            'timeout' => 30,
+        ]);
+
+        // Get content type from response headers
+        $contentType = $response->getHeaderLine('Content-Type');
+
+        // Stream the response back to the client
+        return response()->stream(
+            function () use ($response) {
+                $body = $response->getBody();
+                while (!$body->eof()) {
+                    echo $body->read(1024);
+                }
+            },
+            200,
+            [
+                'Content-Type' => $contentType ?: 'application/pdf',
+                'Content-Disposition' => 'inline; filename="document.pdf"',
+                'Cache-Control' => 'no-cache',
+            ]
+        );
+
+    } catch (\Exception $e) {
+        // Log the error for debugging
+        Log::error('Google Drive API error', [
+            'message' => $e->getMessage(),
+            'file_id' => $fileId,
+        ]);
+
+        return response()->json([
+            'error' => 'Failed to fetch file from Google Drive',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+}
 }
