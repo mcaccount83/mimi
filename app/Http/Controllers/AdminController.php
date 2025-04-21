@@ -996,6 +996,7 @@ class AdminController extends Controller implements HasMiddleware
             $drive->final_financial_report = $request->input('finalReportDrive');
             $drive->good_standing_letter = $request->input('goodStandingDrive');
             $drive->probation_letter = $request->input('probationDrive');
+            $drive->irs_letter = $request->input('irsDrive');
 
             $drive->save();
 

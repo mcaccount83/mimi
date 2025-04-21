@@ -44,6 +44,9 @@
                     <div class="form-group">
                         <label>Probation Letters:</label>&nbsp;{{ $googleDrive[0]->probation_letter }}
                     </div>
+                    <div class="form-group">
+                        <label>IRS Letters:</label>&nbsp;{{ $googleDrive[0]->irs_letter }}
+                    </div>
                     </div>
 
                     <div class="card-body text-center">
@@ -111,6 +114,12 @@
                                         <input type="text" class="form-control" id="probationDrive" value="{{ $googleDrive[0]->probation_letter }}">
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="irsDrive">Shared Drive ID for IRS Letters</label>
+                                        <input type="text" class="form-control" id="irsDrive" value="{{ $googleDrive[0]->irs_letter }}">
+                                    </div>
+                                </div>
                             </form>
                             <div class="col-md-12"><br></div>
                         </div>
@@ -145,9 +154,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-// document.addEventListener('DOMContentLoaded', function () {
-//     document.getElementById('saveChanges').addEventListener('click', updateDrive);
-// });
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('saveChanges').addEventListener('click', updateDrive);
+});
 
 function updateDrive() {
     console.log('Save button clicked');  // For debugging
@@ -160,6 +169,7 @@ function updateDrive() {
     var finalReportDrive = document.getElementById('finalReportDrive').value;
     var goodStandingDrive = document.getElementById('goodStandingDrive').value;
     var probationDrive = document.getElementById('probationDrive').value;
+    var irsDrive = document.getElementById('irsDrive').value;
 
     var formData = new FormData();
     formData.append('einLetterDrive', einLetterDrive);
@@ -170,6 +180,7 @@ function updateDrive() {
     formData.append('finalReportDrive', finalReportDrive);
     formData.append('goodStandingDrive', goodStandingDrive);
     formData.append('probationDrive', probationDrive);
+    formData.append('irsDrive', irsDrive);
 
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
