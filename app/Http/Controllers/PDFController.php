@@ -683,8 +683,8 @@ class PDFController extends Controller
         $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
         $stateShortName = $baseQueryUpd['stateShortName'];
 
-        $disbandDrive = DB::table('google_drive')->value('disband_letter');
-        $sharedDriveId = $disbandDrive;
+        $irsDrive = DB::table('google_drive')->value('irs_letter');
+        $sharedDriveId = $irsDrive;
 
         $result = $this->generateNameChangeLetter($request, $chapterId, $chNamePrev, $chDetailsUpd, $pcDetailsUpd);
         $pdf = $result['pdf'];
@@ -700,12 +700,12 @@ class PDFController extends Controller
         if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
             $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
             if ($existingDocRecord) {
-                $existingDocRecord->disband_letter_path = $file_id;
+                $existingDocRecord->name_change_letter_path	= $file_id;
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
                 $newDocData = ['chapter_id' => $chapterId];
-                $newDocData['disband_letter_path'] = $file_id;
+                $newDocData['name_change_letter_path'] = $file_id;
                 Documents::create($newDocData);
             }
 
