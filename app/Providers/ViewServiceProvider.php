@@ -35,29 +35,28 @@ class ViewServiceProvider extends ServiceProvider
                 // Additional conditions for other user types can be handled here
             }
 
-            // Define conditions
-            $ITCondition = ($positionid == 13 || $secpositionid == 13); // IT Coordinator
-            $coordinatorCondition = ($positionid >= 1 && $positionid <= 8); // BS-Founder
-            $founderCondition = $positionid == 8; // Founder
-            $conferenceCoordinatorCondition = ($positionid >= 7 && $positionid <= 8); // CC-Founder
-            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 8); // ACC-Founder
-            $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 8); // RC-Founder
-            $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 8); // ARC-Founder
-            $supervisingCoordinatorCondition = ($positionid >= 3 && $positionid <= 8); // SC-Founder
-            $areaCoordinatorCondition = ($positionid >= 2 && $positionid <= 8); // AC-Founder
-            $bigSisterCondition = ($positionid >= 1 && $positionid <= 8); // BS-Founder
+            // Define conditions using in_array() to check array values
+            $ITCondition = ($positionid == 13 || in_array(13, $secpositionid));
+            $coordinatorCondition = ($positionid >= 1 && $positionid <= 8);
+            $founderCondition = $positionid == 8;
+            $conferenceCoordinatorCondition = ($positionid >= 7 && $positionid <= 8);
+            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 8);
+            $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 8);
+            $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 8);
+            $supervisingCoordinatorCondition = ($positionid >= 3 && $positionid <= 8);
+            $areaCoordinatorCondition = ($positionid >= 2 && $positionid <= 8);
+            $bigSisterCondition = ($positionid >= 1 && $positionid <= 8);
 
-            $eoyTestCondition = ($positionid >= 6 && $positionid <= 8) || ($positionid == 29 || $secpositionid == 29);  // ACC-Founder, AR Tester
-            $eoyReportCondition = ($positionid >= 1 && $positionid <= 8) || ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  // *BS-Founder, AR Reviewer, AR Tester
-            $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  // *IT Coordinator
-            $inquiriesCondition = ($positionid == 15 || $secpositionid == 15 || $positionid == 18 || $secpositionid == 18);  // *Inquiries Coordinator
-            $inquiriesInternationalCondition = ($positionid == 18 || $secpositionid == 18);  // *International Inquiries Coordinator
-            $inquiriesConferneceCondition = ($positionid == 15 || $secpositionid == 15);  // *Conference Inquiries Coordinator
-            $webReviewCondition = ($positionid == 9 || $secpositionid == 9);  // *Website Reviewer
-            $einCondition = ($positionid == 12 || $secpositionid == 12);  // *EIN Coordinator
-            // $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  // *IT Coordinator
-            $m2mCondition = ($positionid == 21 || $secpositionid == 21 || $positionid == 20 || $secpositionid == 20);  // *M2M Committee
-            $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  // *ListAdmin
+            $eoyTestCondition = ($positionid >= 6 && $positionid <= 8) || ($positionid == 29 || in_array(29, $secpositionid));
+            $eoyReportCondition = ($positionid >= 1 && $positionid <= 8) || ($positionid == 19 || in_array(19, $secpositionid)) || ($positionid == 29 || in_array(29, $secpositionid));
+            $eoyReportConditionDISABLED = ($positionid == 13 || in_array(13, $secpositionid));
+            $inquiriesCondition = ($positionid == 15 || in_array(15, $secpositionid) || $positionid == 18 || in_array(18, $secpositionid));
+            $inquiriesInternationalCondition = ($positionid == 18 || in_array(18, $secpositionid));
+            $inquiriesConferneceCondition = ($positionid == 15 || in_array(15, $secpositionid));
+            $webReviewCondition = ($positionid == 9 || in_array(9, $secpositionid));
+            $einCondition = ($positionid == 12 || in_array(12, $secpositionid));
+            $m2mCondition = ($positionid == 21 || in_array(21, $secpositionid) || $positionid == 20 || in_array(20, $secpositionid));
+            $listAdminCondition = ($positionid == 23 || in_array(23, $secpositionid));
 
             // Fetch the 'admin' record
             $admin = Admin::orderByDesc('id')
