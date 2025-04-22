@@ -105,7 +105,7 @@ class UserController extends Controller implements HasMiddleware
                     'user_region' => $user->coordinator->region,
                     'user_position' => $user->coordinator->displayPosition->long_title,
                     'user_secPositionId' => $secondaryPositionId, // Now returns array of IDs
-                    'user_positionId' => $user->coordinator->display_position_id,
+                    'user_positionId' => $user->coordinator->position_id,
                     'user_secPosition' => $secondaryPosition, // Now returns array of titles
                     'user_layerId' => $user->coordinator->layer_id,
                 ];

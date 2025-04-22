@@ -9,6 +9,9 @@ use TeamTeaTime\Forum\Support\Access\CategoryAccess;
 if (! function_exists('getPositionConditions')) {
     function getPositionConditions($positionId, $secPositionId)
     {
+        $secPositionId = is_array($secPositionId) ? $secPositionId : [$secPositionId];
+
+
         return [
             'ITCondition' => ($positionId == 13 || $secPositionId == 13),  // IT Coordinator
             'coordinatorCondition' => ($positionId >= 1 && $positionId <= 8),  // BS-Founder
