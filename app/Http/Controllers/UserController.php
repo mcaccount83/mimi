@@ -89,10 +89,10 @@ class UserController extends Controller implements HasMiddleware
                 $secondaryPosition = [];
                 $secondaryPositionShort = [];
                 $secondaryPositionId = [];
-                if ($user->secondaryPosition && $user->secondaryPosition->count() > 0) {
-                    $secondaryPosition = $user->secondaryPosition->pluck('long_title')->toArray();
-                    $secondaryPositionShort = $user->secondaryPosition->pluck('short_title')->toArray();
-                    $secondaryPositionId = $user->secondaryPosition->pluck('id')->toArray();
+                if ($user->coordinator->secondaryPosition && $user->coordinator->secondaryPosition->count() > 0) {
+                    $secondaryPosition = $user->coordinator->secondaryPosition->pluck('long_title')->toArray();
+                    $secondaryPositionShort = $user->coordinator->secondaryPosition->pluck('short_title')->toArray();
+                    $secondaryPositionId = $user->coordinator->secondaryPosition->pluck('id')->toArray();
                 }
 
                 $userInfo += [
@@ -103,10 +103,10 @@ class UserController extends Controller implements HasMiddleware
                     'user_conf_name' => $user->coordinator->conference?->conference_name,
                     'user_conf_desc' => $user->coordinator->conference?->conference_description,
                     'user_region' => $user->coordinator->region,
-                    'user_position' => $user->coordinator->displayPosition->long_title,
-                    'user_secPositionId' => $secondaryPositionId, // Now returns array of IDs
-                    'user_positionId' => $user->coordinator->position_id,
-                    'user_secPosition' => $secondaryPosition, // Now returns array of titles
+                    'user_positionId' => $user->coordinator->position_id, // Returns position_id
+                    'user_position' => $user->coordinator->displayPosition->long_title,  // Returns display title
+                    'user_secPositionId' => $secondaryPositionId, // Returns array of secondary ids
+                    'user_secPosition' => $secondaryPosition, // Returns array of secondary titles
                     'user_layerId' => $user->coordinator->layer_id,
                 ];
                 break;

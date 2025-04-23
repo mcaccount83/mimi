@@ -61,8 +61,6 @@ class AdminController extends Controller implements HasMiddleware
         ];
     }
 
-    /* /Custom Helpers/ */
-    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
     /**
      * View the EOY Report Title

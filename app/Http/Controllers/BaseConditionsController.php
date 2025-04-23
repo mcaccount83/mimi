@@ -2,25 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PositionConditionsService;
+
+
 class BaseConditionsController extends Controller
 {
+    protected $positionConditionsService;
+
     protected $userController;
 
-    public function __construct(UserController $userController)
+    public function __construct(PositionConditionsService $positionConditionsService, UserController $userController)
     {
+        $this->positionConditionsService = $positionConditionsService;
         $this->userController = $userController;
     }
-
-    /* /Custom Helpers/ */
-    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
-    // $displayEOY = getEOYDisplay();
 
     /**
      * Get conditions and reporting tree data based on coordinator position
      */
     public function getConditions($cdId, $cdPositionid, $cdSecPositionid)
     {
-        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+        $conditions = $this->positionConditionsService->getConditionsForUser($cdPositionid, $cdSecPositionid);
         $inQryArr = [];
 
         if ($conditions['coordinatorCondition']) {
@@ -38,7 +40,7 @@ class BaseConditionsController extends Controller
     {
         if ($conditions['founderCondition']) {
             // No restrictions for founder
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+        } elseif ($conditions['assistConferenceCoordinatorCondition'] ) {
             $baseQuery->where('conference_id', '=', $cdConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('region_id', '=', $cdRegId);
@@ -51,7 +53,7 @@ class BaseConditionsController extends Controller
 
     public function applyPositionCoordConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
     {
-        if ($conditions['founderCondition']) {
+        if ($conditions['founderCondition'] ) {
             // No restrictions for founder
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('conference_id', '=', $cdConfId);
@@ -67,12 +69,13 @@ class BaseConditionsController extends Controller
     /**
      * Apply position-based inquiries conditions to the query
      */
-    public function applyInquiriesPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArrrr)
+    public function applyInquiriesPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
     {
         if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
-        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
+            // No restrictions for founder
+        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferenceCondition']) {
             $baseQuery->where('conference_id', '=', $cdConfId);
-        } else {
+        } else  {
             $baseQuery->where('region_id', '=', $cdRegId);
         }
 

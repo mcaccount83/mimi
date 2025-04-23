@@ -33,8 +33,6 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    /* /Custom Helpers/ */
-    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
     /**
      * Export Chapter List

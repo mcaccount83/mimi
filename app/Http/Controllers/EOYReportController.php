@@ -16,6 +16,7 @@ use App\Models\IncomingBoard;
 use App\Models\State;
 use App\Models\User;
 use App\Models\Website;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -28,15 +29,17 @@ use Illuminate\View\View;
 
 class EOYReportController extends Controller implements HasMiddleware
 {
+    protected $positionConditionsService;
+
     protected $userController;
 
     protected $baseChapterController;
 
     protected $baseMailDataController;
 
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseMailDataController $baseMailDataController)
+    public function __construct(PositionConditionsService $positionConditionsService, UserController $userController, BaseChapterController $baseChapterController, BaseMailDataController $baseMailDataController)
     {
-
+        $this->positionConditionsService = $positionConditionsService;
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
@@ -60,7 +63,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $secPositionId = $user['user_secPositionId'];
         $userAdmin = $user['userAdmin'];
 
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = $this->positionConditionsService->getConditionsForUser($positionId, $secPositionId);
         // $userAdmin = $conditions['userAdmin'];
         $eoyTestCondition = $conditions['eoyTestCondition'];
 

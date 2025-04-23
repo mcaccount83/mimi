@@ -12,6 +12,8 @@ use App\Models\Region;
 use App\Models\State;
 use App\Models\Status;
 use App\Models\Website;
+use Illuminate\Support\Facades\Log;
+
 
 class BaseChapterController extends Controller
 {
@@ -103,21 +105,50 @@ class BaseChapterController extends Controller
     private function buildChapterQuery($params)
     {
         $baseQuery = $this->getBaseQueryWithRelations($params['isActive']);
+        $checkboxStatus = [];
+
+        Log::debug('All params in buildChapterQuery:', $params);
+
 
         if (isset($params['coorId'])) {
-            // Only apply position conditions if this is not an international query
+            // Only apply position conditions if this is not an international or inquiries
             if (isset($params['conditions']) && $params['conditions']) {
+                $secPositionId = is_array($params['secPositionId']) ? array_map('intval', $params['secPositionId']) : [intval($params['secPositionId'])];
+
                 $conditionsData = $this->baseConditionsController->getConditions(
                     $params['coorId'],
                     $params['positionId'],
-                    $params['secPositionIds']
+                    $secPositionId  // Use the formatted variable here instead of $params['secPositionId']
                 );
 
-                $positionMethod = $params['queryType'] === 'inquiries'
-                    ? 'applyInquiriesPositionConditions'
-                    : 'applyPositionConditions';
+                $baseQuery = $this->baseConditionsController->applyPositionConditions(
+                    $baseQuery,
+                    $conditionsData['conditions'],
+                    $params['confId'] ?? null,
+                    $params['regId'] ?? null,
+                    $conditionsData['inQryArr']
+                );
 
-                $baseQuery = $this->baseConditionsController->$positionMethod(
+            $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
+            $baseQuery = $checkboxResults['query'];
+            $checkboxStatus = $checkboxResults['status'];
+
+            }
+
+            if (isset($params['inquiriesConditions']) && $params['inquiriesConditions']) {
+                $secPositionId = isset($params['secPositionId']) ? $params['secPositionId'] : [];
+                $secPositionId = is_array($secPositionId) ? array_map('intval', $secPositionId) : [intval($secPositionId)];
+
+                Log::debug('After formatting:', ['secPositionId' => $secPositionId]);
+
+
+                $conditionsData = $this->baseConditionsController->getConditions(
+                    $params['coorId'],
+                    $params['positionId'],
+                    $secPositionId  // Use the formatted variable here instead of $params['secPositionId']
+                );
+
+                $baseQuery = $this->baseConditionsController->applyInquiriesPositionConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
                     $params['confId'] ?? null,
@@ -125,23 +156,23 @@ class BaseChapterController extends Controller
                     $conditionsData['inQryArr']
                 );
             }
-
-            $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
-            $baseQuery = $checkboxResults['query'];
-            $checkboxStatus = $checkboxResults['status'];
         }
 
         $sortingResults = $this->applySorting($baseQuery, $params['isActive'] ? 'active' : 'zapped');
 
-        return ['query' => $sortingResults['query'], 'checkBoxStatus' => $checkboxStatus['checkBoxStatus'] ?? '', 'checkBox2Status' => $checkboxStatus['checkBox2Status'] ?? '',
-            'checkBox3Status' => $sortingResults['checkBox3Status'], 'checkBox4Status' => $checkboxStatus['checkBox4Status'] ?? '',
+        return [
+            'query' => $sortingResults['query'],
+            'checkBoxStatus' => $checkboxStatus['checkBoxStatus'] ?? '',
+            'checkBox2Status' => $checkboxStatus['checkBox2Status'] ?? '',
+            'checkBox3Status' => $sortingResults['checkBox3Status'],
+            'checkBox4Status' => $checkboxStatus['checkBox4Status'] ?? '',
         ];
     }
 
     /**
      * Public methods for different query types
      */
-    public function getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionIds)
+    public function getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildChapterQuery([
             'isActive' => 1,
@@ -149,13 +180,14 @@ class BaseChapterController extends Controller
             'confId' => $confId,
             'regId' => $regId,
             'positionId' => $positionId,
-            'secPositionIds' => $secPositionIds,
+            'secPositionId' => $secPositionId,
+            'inquiriesConditions' => false,
             'conditions' => true,
             'queryType' => 'regular',
         ]);
     }
 
-    public function getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionIds)
+    public function getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildChapterQuery([
             'isActive' => 0,
@@ -163,13 +195,14 @@ class BaseChapterController extends Controller
             'confId' => $confId,
             'regId' => $regId,
             'positionId' => $positionId,
-            'secPositionIds' => $secPositionIds,
+            'secPositionId' => $secPositionId,
+            'inquiriesConditions' => false,
             'conditions' => true,
             'queryType' => 'regular',
         ]);
     }
 
-    public function getActiveInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionIds)
+    public function getActiveInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildChapterQuery([
             'isActive' => 1,
@@ -177,13 +210,14 @@ class BaseChapterController extends Controller
             'confId' => $confId,
             'regId' => $regId,
             'positionId' => $positionId,
-            'secPositionIds' => $secPositionIds,
-            'conditions' => true,
+            'secPositionId' => $secPositionId,
+            'inquiriesConditions' => true,
+            'conditions' => false,
             'queryType' => 'inquiries',
         ]);
     }
 
-    public function getZappedInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionIds)
+    public function getZappedInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildChapterQuery([
             'isActive' => 0,
@@ -191,8 +225,9 @@ class BaseChapterController extends Controller
             'confId' => $confId,
             'regId' => $regId,
             'positionId' => $positionId,
-            'secPositionIds' => $secPositionIds,
-            'conditions' => true,
+            'secPositionId' => $secPositionId,
+            'inquiriesConditions' => true,
+            'conditions' => false,
             'queryType' => 'inquiries',
         ]);
     }
@@ -202,6 +237,7 @@ class BaseChapterController extends Controller
         return $this->buildChapterQuery([
             'isActive' => 1,
             'coorId' => $coorId,
+            'inquiriesConditions' => false,
             'conditions' => false,
             'queryType' => 'international',
         ]);
@@ -212,6 +248,7 @@ class BaseChapterController extends Controller
         return $this->buildChapterQuery([
             'isActive' => 0,
             'coorId' => $coorId,
+            'inquiriesConditions' => false,
             'conditions' => false,
             'queryType' => 'international',
         ]);

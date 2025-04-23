@@ -83,8 +83,6 @@ class ChapterController extends Controller implements HasMiddleware
         ];
     }
 
-    /* /Custom Helpers/ */
-    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
     /**
      * Display the Active chapter list mapped with login coordinator

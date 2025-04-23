@@ -46,8 +46,6 @@ class EmailController extends Controller implements HasMiddleware
         ];
     }
 
-    /* /Custom Helpers/ */
-    // $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
 
     /**
      * Update Email Data and Send Chapter Setup Email

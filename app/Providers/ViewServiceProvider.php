@@ -6,6 +6,7 @@ use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use App\Services\PositionConditionsService;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -35,28 +36,9 @@ class ViewServiceProvider extends ServiceProvider
                 // Additional conditions for other user types can be handled here
             }
 
-            // Define conditions using in_array() to check array values
-            $ITCondition = ($positionid == 13 || in_array(13, $secpositionid));
-            $coordinatorCondition = ($positionid >= 1 && $positionid <= 8);
-            $founderCondition = $positionid == 8;
-            $conferenceCoordinatorCondition = ($positionid >= 7 && $positionid <= 8);
-            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 8);
-            $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 8);
-            $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 8);
-            $supervisingCoordinatorCondition = ($positionid >= 3 && $positionid <= 8);
-            $areaCoordinatorCondition = ($positionid >= 2 && $positionid <= 8);
-            $bigSisterCondition = ($positionid >= 1 && $positionid <= 8);
-
-            $eoyTestCondition = ($positionid >= 6 && $positionid <= 8) || ($positionid == 29 || in_array(29, $secpositionid));
-            $eoyReportCondition = ($positionid >= 1 && $positionid <= 8) || ($positionid == 19 || in_array(19, $secpositionid)) || ($positionid == 29 || in_array(29, $secpositionid));
-            $eoyReportConditionDISABLED = ($positionid == 13 || in_array(13, $secpositionid));
-            $inquiriesCondition = ($positionid == 15 || in_array(15, $secpositionid) || $positionid == 18 || in_array(18, $secpositionid));
-            $inquiriesInternationalCondition = ($positionid == 18 || in_array(18, $secpositionid));
-            $inquiriesConferneceCondition = ($positionid == 15 || in_array(15, $secpositionid));
-            $webReviewCondition = ($positionid == 9 || in_array(9, $secpositionid));
-            $einCondition = ($positionid == 12 || in_array(12, $secpositionid));
-            $m2mCondition = ($positionid == 21 || in_array(21, $secpositionid) || $positionid == 20 || in_array(20, $secpositionid));
-            $listAdminCondition = ($positionid == 23 || in_array(23, $secpositionid));
+            // Use the service to get conditions
+            $conditionsService = app(PositionConditionsService::class);
+            $conditions = $conditionsService->getConditionsForUser($positionid, $secpositionid);
 
             // Fetch the 'admin' record
             $admin = Admin::orderByDesc('id')
@@ -67,35 +49,20 @@ class ViewServiceProvider extends ServiceProvider
             $displayTESTING = ($display_testing == true && $display_live != true);
             $displayLIVE = ($display_live == true);
 
-            // Pass conditions and other variables to views
-            $view->with(compact(
-                'corId',
-                'positionid',
-                'secpositionid',
-                'loggedIn',
-                'ITCondition',
-                'coordinatorCondition',
-                'founderCondition',
-                'conferenceCoordinatorCondition',
-                'assistConferenceCoordinatorCondition',
-                'regionalCoordinatorCondition',
-                'assistRegionalCoordinatorCondition',
-                'supervisingCoordinatorCondition',
-                'areaCoordinatorCondition',
-                'bigSisterCondition',
-                'eoyTestCondition',
-                'eoyReportCondition',
-                'eoyReportConditionDISABLED',
-                'inquiriesCondition',
-                'webReviewCondition',
-                'einCondition',
-                'm2mCondition',
-                'listAdminCondition',
-                'displayTESTING',
-                'displayLIVE',
-                'userAdmin',
-                'userModerator'
-            ));
+            // Merge all variables
+            $viewVariables = array_merge([
+                'corId' => $corId,
+                'positionid' => $positionid,
+                'secpositionid' => $secpositionid,
+                'loggedIn' => $loggedIn,
+                'userAdmin' => $userAdmin,
+                'userModerator' => $userModerator,
+                'displayTESTING' => $displayTESTING,
+                'displayLIVE' => $displayLIVE,
+            ], $conditions);
+
+            // Pass all variables to views
+            $view->with($viewVariables);
         });
     }
 
