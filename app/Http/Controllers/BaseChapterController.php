@@ -107,9 +107,6 @@ class BaseChapterController extends Controller
         $baseQuery = $this->getBaseQueryWithRelations($params['isActive']);
         $checkboxStatus = [];
 
-        Log::debug('All params in buildChapterQuery:', $params);
-
-
         if (isset($params['coorId'])) {
             // Only apply position conditions if this is not an international or inquiries
             if (isset($params['conditions']) && $params['conditions']) {
@@ -138,9 +135,6 @@ class BaseChapterController extends Controller
             if (isset($params['inquiriesConditions']) && $params['inquiriesConditions']) {
                 $secPositionId = isset($params['secPositionId']) ? $params['secPositionId'] : [];
                 $secPositionId = is_array($secPositionId) ? array_map('intval', $secPositionId) : [intval($secPositionId)];
-
-                Log::debug('After formatting:', ['secPositionId' => $secPositionId]);
-
 
                 $conditionsData = $this->baseConditionsController->getConditions(
                     $params['coorId'],
