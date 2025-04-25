@@ -88,6 +88,15 @@
                 <div class="card-body box-profile">
                 <h3 class="profile-username">Appreciation & Recognition Information</h3>
                     <!-- /.card-header -->
+                    <div class="form-group row" style="margin-bottom: 0;">
+                        <div class="col-md-12 d-flex align-items-center">
+                            <label class="col-sm-1 col-form-label"></label>
+                            <label class="col-sm-3 col-form-label">Recognition Gift</label>
+                            <label class="col-sm-2 mr-5 col-form-label">Year Given</label>
+                            <label class="col-sm-3 col-form-label">Recognition Gift</label>
+                            <label class="col-sm-2 col-form-label">Year Given</label>
+                        </div>
+                    </div>
 
                     <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
