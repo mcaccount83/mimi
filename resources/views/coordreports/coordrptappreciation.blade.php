@@ -145,11 +145,11 @@
 					<td>{{ $list->recognition_year7 }}</td>
 					<td>{{ $list->recognition_year8 }}</td>
 					<td>{{ $list->recognition_year9 }}</td> --}}
-					<td>@if($list->recognition_necklace=='1')
+					<td>@if($list->recognition->recognition_necklace=='1')
 							YES
 							@endif
 						</td>
-					<td>{{ $list->recognition_toptier }}</td>
+					<td>{{ $list->recognition->recognition_toptier }}</td>
                     </tr>
                   @endforeach
                   </tbody>
