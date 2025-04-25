@@ -7,6 +7,7 @@ use App\Models\CoordinatorPosition;
 use App\Models\Coordinators;
 use App\Models\AdminRole;
 use App\Models\Month;
+use App\Models\RecognitionGifts;
 use App\Models\Region;
 use App\Models\State;
 use App\Models\User;
@@ -44,7 +45,7 @@ class BaseCoordinatorController extends Controller
      */
     private function getBaseQueryWithRelations($cdIsActive = 1)
     {
-        return Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth'])
+        return Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth', 'recognition'])
             ->where('is_active', $cdIsActive);
     }
 
@@ -218,7 +219,7 @@ class BaseCoordinatorController extends Controller
     public function getCoordinatorDetails($cdId)
     {
         $cdDetails = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth',
-            'reportsTo'])->find($cdId);
+            'reportsTo', 'recognition'])->find($cdId);
         $cdIsActive = $cdDetails->is_active;
         $cdPositionid = $cdDetails->position_id;
         $regionLongName = $cdDetails->region?->long_name;
@@ -252,6 +253,7 @@ class BaseCoordinatorController extends Controller
             ->get();
         $allStates = State::all();  // Full List for Dropdown Menu
         $allMonths = Month::all();  // Full List for Dropdown Menu
+        $allRecognitionGifts = RecognitionGifts::all();  // Full List for Dropdown Menu
         $allAdminRoles = AdminRole::all();  // Full List for Dropdown Menu
         $allPositions = CoordinatorPosition::all();  // Full List for Dropdown Menu
         $allCoordinators = Coordinators::with('conference')  // Full List for Dropdown Menu based on Conference
@@ -267,6 +269,7 @@ class BaseCoordinatorController extends Controller
             'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'cdAdminRole' => $cdAdminRole,
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths, 'secondaryPositionId' => $secondaryPositionId,
             'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid, 'secondaryPositionShort' => $secondaryPositionShort,
+            'allRecognitionGifts' => $allRecognitionGifts,
         ];
     }
 }

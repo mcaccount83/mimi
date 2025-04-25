@@ -67,9 +67,9 @@ class EOYReportController extends Controller implements HasMiddleware
         // $userAdmin = $conditions['userAdmin'];
         $eoyTestCondition = $conditions['eoyTestCondition'];
 
-        $userAdmin = getUserAdmin($userAdmin);
+        $userAdmin = $this->positionConditionsService->getUserAdmin($userAdmin);
 
-        $displayEOY = getEOYDisplay();
+        $displayEOY = $this->positionConditionsService->getEOYDisplay();
         $displayTESTING = $displayEOY['displayTESTING'];
         $displayLIVE = $displayEOY['displayLIVE'];
 

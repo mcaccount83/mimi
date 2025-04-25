@@ -218,7 +218,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($chaptersRoute))
                             <li class="nav-item">
-                                <a href="{{ $chaptersRoute }}" class="nav-link {{ isActiveRoute($activeChpaterRoutes) }}">
+                                <a href="{{ $chaptersRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChpaterRoutes) }}">
                                     <i class="nav-icon fas fa-home"></i>
                                     <p>Chapters</p>
                                 </a>
@@ -240,7 +240,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($coordinatorsRoute))
                             <li class="nav-item">
-                                <a href="{{ $coordinatorsRoute }}" class="nav-link {{ isActiveRoute($activeCoordinatorsRoutes) }}">
+                                <a href="{{ $coordinatorsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeCoordinatorsRoutes) }}">
                                     <i class="nav-icon fas fa-user-friends"></i>
                                     <p>Coordinators</p>
                                 </a>
@@ -260,7 +260,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($paymentsRoute))
                             <li class="nav-item">
-                                <a href="{{ $paymentsRoute }}" class="nav-link {{ isActiveRoute($activePaymentsRoutes) }}">
+                                <a href="{{ $paymentsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activePaymentsRoutes) }}">
                                     <i class="nav-icon fas fa-dollar-sign"></i>
                                     <p>Payments/Donations</p>
                                 </a>
@@ -283,7 +283,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($websiteRoute))
                             <li class="nav-item">
-                                <a href="{{ $websiteRoute }}" class="nav-link {{ isActiveRoute($activeWebsiteRoutes) }}">
+                                <a href="{{ $websiteRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeWebsiteRoutes) }}">
                                     <i class="nav-icon fas fa-laptop"></i>
                                     <p>Website/Social Media</p>
                                 </a>
@@ -305,7 +305,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($listSubscriptionRoute))
                             <li class="nav-item">
-                                <a href="{{ $listSubscriptionRoute }}" class="nav-link {{ isActiveRoute($activeChpaterRoutes) }}">
+                                <a href="{{ $listSubscriptionRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChpaterRoutes) }}">
                                     <i class="nav-icon fas fa-rectangle-list"></i>
                                     <p>List Subscriptions</p>
                                 </a>
@@ -323,7 +323,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($boardlistRoute))
                             <li class="nav-item">
-                                <a href="{{ $boardlistRoute }}" class="nav-link {{ isActiveRoute($activeBoardlistRoutes) }}">
+                                <a href="{{ $boardlistRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardlistRoutes) }}">
                                     <i class="nav-icon fas fa-rectangle-list"></i>
                                     <p>BoardList Emails - OLD</p>
                                 </a>
@@ -350,7 +350,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($chapterReportsRoute))
                             <li class="nav-item">
-                                <a href="{{ $chapterReportsRoute }}" class="nav-link {{ isActiveRoute($activeChapterReportsRoutes) }}">
+                                <a href="{{ $chapterReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterReportsRoutes) }}">
                                     <i class="nav-icon fas fa-clipboard-list"></i>
                                     <p>Chapter Reports</p>
                                 </a>
@@ -370,7 +370,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($coordReportsRoute))
                             <li class="nav-item">
-                                <a href="{{ $coordReportsRoute }}" class="nav-link {{ isActiveRoute($activeCoordReportsRoutes) }}">
+                                <a href="{{ $coordReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeCoordReportsRoutes) }}">
                                     <i class="nav-icon fas fa-clipboard-user"></i>
                                     <p>Coordinator Reports</p>
                                 </a>
@@ -388,7 +388,7 @@ window.onload = function () {
                             @endphp
                             @if (isset($eoyReportsRoute))
                                 <li class="nav-item">
-                                    <a href="{{ $eoyReportsRoute }}" class="nav-link {{ isActiveRoute($activeEOYReportsRoutes) }}">
+                                    <a href="{{ $eoyReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeEOYReportsRoutes) }}">
                                         <i class="nav-icon fas fa-chart-line"></i>
                                         <p>EOY Reports
                                             @if ($userAdmin && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
@@ -409,7 +409,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($adminReportsRoute))
                             <li class="nav-item">
-                                <a href="{{ $adminReportsRoute }}" class="nav-link {{ isActiveRoute($activeAdminReportsRoutes) }}">
+                                <a href="{{ $adminReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeAdminReportsRoutes) }}">
                                     <i class="nav-icon fas fa-unlock-keyhole"></i>
                                     <p>Admin</p>
                                 </a>
@@ -427,7 +427,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($adminReportsRoute))
                             <li class="nav-item">
-                                <a href="{{ $adminReportsRoute }}" class="nav-link {{ isActiveRoute($activeAdminReportsRoutes) }}">
+                                <a href="{{ $adminReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeAdminReportsRoutes) }}">
                                     <i class="nav-icon fas fa-clipboard-check"></i>
                                     <p>Admin Reports</p>
                                 </a>
@@ -443,7 +443,7 @@ window.onload = function () {
                         @endphp
                         @if (isset($resourcesRoute))
                             <li class="nav-item">
-                                <a href="{{ $resourcesRoute }}" class="nav-link {{ isActiveRoute($activeResourcesRoutes) }}">
+                                <a href="{{ $resourcesRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeResourcesRoutes) }}">
                                     <i class="nav-icon fas fa-toolbox"></i>
                                     <p>Resources</p>
                                 </a>
@@ -457,9 +457,9 @@ window.onload = function () {
                                 <i class="nav-icon fas fa-comments"></i>
                                 <p>
                                     CoordinatorList
-                                    @if(getUnreadForumCount() > 0)
+                                    {{-- @if( $forumCount->getUnreadForumCount() > 0) --}}
+                                    @if( $unreadForumCount > 0)
                                         <span class="badge badge-danger badge-pill notification-badge">
-                                            {{-- {{ getUnreadForumCount() }} UNREAD --}}
                                             UNREAD
                                         </span>
                                     @endif

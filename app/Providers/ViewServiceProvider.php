@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Services\PositionConditionsService;
+use App\Services\ForumConditionsService;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,7 @@ class ViewServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $corId = null;
             $positionid = null;
-            $secpositionid = []; // Changed to an array
+            $secpositionid = []; // Array for secondary positions
             $loggedIn = null;
             $userAdmin = false;
             $userModerator = false;
@@ -33,21 +34,14 @@ class ViewServiceProvider extends ServiceProvider
 
                 $userAdmin = $user->is_admin == '1';
                 $userModerator = $user->is_admin == '2';
-                // Additional conditions for other user types can be handled here
             }
 
-            // Use the service to get conditions
-            $conditionsService = app(PositionConditionsService::class);
-            $conditions = $conditionsService->getConditionsForUser($positionid, $secpositionid);
+            $positionConditionsService = app(PositionConditionsService::class);
+            $forumConditionsService = app(ForumConditionsService::class);
 
-            // Fetch the 'admin' record
-            $admin = Admin::orderByDesc('id')
-                ->limit(1)
-                ->first();
-            $display_testing = ($admin->display_testing == 1);
-            $display_live = ($admin->display_live == 1);
-            $displayTESTING = ($display_testing == true && $display_live != true);
-            $displayLIVE = ($display_live == true);
+            $positionConditions = $positionConditionsService->getConditionsForUser($positionid, $secpositionid);
+            $eoyDisplay = $positionConditionsService->getEOYDisplay();
+            $forumCount = $forumConditionsService->getUnreadForumCount();
 
             // Merge all variables
             $viewVariables = array_merge([
@@ -57,9 +51,12 @@ class ViewServiceProvider extends ServiceProvider
                 'loggedIn' => $loggedIn,
                 'userAdmin' => $userAdmin,
                 'userModerator' => $userModerator,
-                'displayTESTING' => $displayTESTING,
-                'displayLIVE' => $displayLIVE,
-            ], $conditions);
+                'unreadForumCount' => $forumCount,
+                'positionService' => $positionConditionsService,
+            ],
+                $positionConditions,
+                $eoyDisplay,
+                );
 
             // Pass all variables to views
             $view->with($viewVariables);
@@ -68,6 +65,12 @@ class ViewServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        //
+        // Register as a singleton
+        $this->app->singleton(PositionConditionsService::class, function ($app) {
+            return new PositionConditionsService();
+        });
+        $this->app->singleton(ForumConditionsService::class, function ($app) {
+            return new ForumConditionsService();
+        });
     }
 }

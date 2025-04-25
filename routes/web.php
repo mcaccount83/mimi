@@ -200,6 +200,9 @@ Route::get('/coordreports/appreciation', [CoordinatorReportController::class, 's
 Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
 Route::get('/coordreports/reportingtree', [CoordinatorReportController::class, 'showRptReportingTree'])->name('coordreports.coordrptreportingtree');
 
+Route::get('/coordreports/oldappreciation', [CoordinatorReportController::class, 'showRptAppreciationOLD'])->name('coordreports.old_coordrptappreciation');
+
+
 // Export Controller Routes...Coordinator Login Required
 Route::get('/export/chapter', [ExportController::class, 'indexChapter'])->name('export.chapter');
 Route::get('/export/zapchapter', [ExportController::class, 'indexZappedChapter'])->name('export.zapchapter');

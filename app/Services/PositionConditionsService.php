@@ -2,14 +2,27 @@
 
 namespace App\Services;
 
+use App\Models\Admin;
+use Illuminate\Support\Facades\Request;
+
 class PositionConditionsService
 {
     /**
+     * Check if route is active
+     */
+    public function isActiveRoute(array $routes): string
+    {
+        foreach ($routes as $route) {
+            if (Request::is($route)) {
+                return 'active';
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * Get all position-based conditions for a user
-     *
-     * @param int|null $positionId The primary position ID
-     * @param array $secPositionId Array of secondary position IDs
-     * @return array All position conditions
      */
     public function getConditionsForUser($positionId, $secPositionId = [])
     {
@@ -41,36 +54,46 @@ class PositionConditionsService
         ];
     }
 
-    /**
-     * Get conditions for a specific use case
-     *
-     * @param array $conditions The full conditions array
-     * @param string $type The type of conditions to get (e.g., 'inquiries', 'coord')
-     * @return array Filtered conditions
+     /**
+     * Get user admin status
      */
-    // public function getConditionsForType(array $conditions, string $type)
-    // {
-    //     switch ($type) {
-    //         case 'inquiries':
-    //             return [
-    //                 'founderCondition' => $conditions['founderCondition'],
-    //                 'inquiriesInternationalCondition' => $conditions['inquiriesInternationalCondition'],
-    //                 'assistConferenceCoordinatorCondition' => $conditions['assistConferenceCoordinatorCondition'],
-    //                 'inquiriesConferenceCondition' => $conditions['inquiriesConferenceCondition'],
-    //                 'regionalCoordinatorCondition' => $conditions['regionalCoordinatorCondition'],
-    //             ];
+    public function getUserAdmin(string $userAdmin): array
+    {
+        return [
+            'userAdmin' => ($userAdmin == '1'),
+            'userModerator' => ($userAdmin == '2'),
+        ];
+    }
 
-    //         case 'coord':
-    //             return [
-    //                 'founderCondition' => $conditions['founderCondition'],
-    //                 'conferenceCoordinatorCondition' => $conditions['conferenceCoordinatorCondition'],
-    //                 'assistConferenceCoordinatorCondition' => $conditions['assistConferenceCoordinatorCondition'],
-    //                 'regionalCoordinatorCondition' => $conditions['regionalCoordinatorCondition'],
-    //                 'assistRegionalCoordinatorCondition' => $conditions['assistRegionalCoordinatorCondition'],
-    //             ];
+    /**
+     * Get user type flags
+     */
+    public function getUserType(string $userType): array
+    {
+        return [
+            'coordinator' => ($userType == 'coordinator'),  // Coordinator
+            'board' => ($userType == 'board'),  // Current Board Member
+            'outgoing' => $userType == 'outgoing',  // Outgoing Board Member
+            'disbanded' => $userType == 'disbanded',  // Disbanded Chapter Board Member
+        ];
+    }
 
-    //         default:
-    //             return $conditions;
-    //     }
-    // }
+   /**
+     * Get EOY display flags
+     */
+    public function getEOYDisplay(): array
+    {
+        $admin = Admin::orderByDesc('id')
+            ->limit(1)
+            ->first();
+        $display_testing = ($admin->display_testing == 1);
+        $display_live = ($admin->display_live == 1);
+
+        return [
+            'display_testing' => $display_testing,
+            'display_live' => $display_live,
+            'displayTESTING' => ($display_testing == true && $display_live != true),
+            'displayLIVE' => ($display_live == true),
+        ];
+    }
 }

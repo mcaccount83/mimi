@@ -111,6 +111,23 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         return view('coordreports.coordrptappreciation')->with($data);
     }
 
+    public function showRptAppreciationOLD(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $coordinatorList = $baseQuery['query']->get();
+
+        $data = ['coordinatorList' => $coordinatorList];
+
+        return view('coordreports.old_coordrptappreciation')->with($data);
+    }
+
     /**
      * View the Volunteer Birthday list
      */

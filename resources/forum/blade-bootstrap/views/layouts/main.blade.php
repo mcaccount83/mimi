@@ -27,7 +27,7 @@
         <div class="wrapper">
             @php
                 $user = Auth::user();
-                $userTypes = $user ? getUserType($user->user_type) : [
+                $userTypes = $user ? $positionService->getUserType($user->user_type) : [
                     'coordinator' => false,
                     'board' => false,
                     'outgoing' => false,

@@ -3,12 +3,19 @@
 namespace App\Policies\Forum;
 
 use App\Models\Coordinators;
+use App\Services\PositionConditionsService;
 use Illuminate\Foundation\Auth\User;
 use TeamTeaTime\Forum\Models\Category;
 use TeamTeaTime\Forum\Models\Thread;
 
 class ForumConditions
 {
+    protected $positionService;
+
+    public function __construct(PositionConditionsService $positionService)
+    {
+        $this->positionService = $positionService;
+    }
 
     public function canAccessCoordinatorList(User $user, Category $category): bool
     {
@@ -34,7 +41,6 @@ class ForumConditions
         $position = $this->checkPosition($user, $userType);
 
         return $userType['isCoordinator'] && ($userAdmin['userAdmin'] || $userAdmin['userModerator']);
-        // return $userType['isCoordinator'] && ($position['isITCondition'] || $position['isListAdminCondition']);
         // return $userType['isCoordinator'] && $position['isFounderCondition']; //use this line for TESTING a false return
     }
 
@@ -57,7 +63,7 @@ class ForumConditions
 
     public function checkUserType($user): array
     {
-        $userTypes = getUserType($user->user_type);
+        $userTypes = $this->positionService->getUserType($user->user_type);
 
         return [
             'isCoordinator' => $userTypes['coordinator'],
@@ -69,7 +75,7 @@ class ForumConditions
 
     public function checkUserAdmin($user): array
     {
-        $userTypes = getUserAdmin($user->is_admin);
+        $userTypes = $this->positionService->getUserAdmin($user->is_admin);
 
         return [
             'userAdmin' => $userTypes['userAdmin'],
@@ -92,7 +98,7 @@ class ForumConditions
             }
         }
 
-        $positions = getPositionConditions($cdPositionid, $cdSecPositionid);
+        $positions = $this->positionService->getConditionsForUser($cdPositionid, $cdSecPositionid);
 
         return [
             'isITCondition' => $positions['ITCondition'],

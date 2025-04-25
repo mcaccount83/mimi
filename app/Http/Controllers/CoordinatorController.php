@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\BigSisterWelcome;
 use App\Mail\CoordinatorRetireAdmin;
 use App\Models\Chapters;
+use App\Models\CoordinatorRecognition;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\ForumCategorySubscription;
@@ -1096,9 +1097,12 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdUserAdmin = $baseQuery['cdUserAdmin'];
         $cdAdminRole = $baseQuery['cdAdminRole'];
 
+        $allRecognitionGifts = $baseQuery['allRecognitionGifts'];
+
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
-            'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition, 'cdAdminRole' => $cdAdminRole
+            'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition, 'cdAdminRole' => $cdAdminRole,
+            'allRecognitionGifts' => $allRecognitionGifts,
         ];
 
         return view('coordinators.editrecognition')->with($data);
@@ -1117,25 +1121,40 @@ class CoordinatorController extends Controller implements HasMiddleware
         $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $coordinator = Coordinators::find($id);
+        $coordinatorRecognition = CoordinatorRecognition::find($id);
 
         DB::beginTransaction();
         try {
-            $coordinator->recognition_year0 = $request->input('recognition_year0');
-            $coordinator->recognition_year1 = $request->input('recognition_year1');
-            $coordinator->recognition_year2 = $request->input('recognition_year2');
-            $coordinator->recognition_year3 = $request->input('recognition_year3');
-            $coordinator->recognition_year4 = $request->input('recognition_year4');
-            $coordinator->recognition_year5 = $request->input('recognition_year5');
-            $coordinator->recognition_year6 = $request->input('recognition_year6');
-            $coordinator->recognition_year7 = $request->input('recognition_year7');
-            $coordinator->recognition_year8 = $request->input('recognition_year8');
-            $coordinator->recognition_year9 = $request->input('recognition_year9');
-            $coordinator->recognition_toptier = $request->input('recognition_toptier');
-            $coordinator->recognition_necklace = (int) $request->has('recognition_necklace');
+
             $coordinator->last_updated_by = $lastUpdatedBy;
             $coordinator->last_updated_date = now();
 
             $coordinator->save();
+
+            $coordinatorRecognition->recognition0 = $request->input('recognition0');
+            $coordinatorRecognition->recognition1 = $request->input('recognition1');
+            $coordinatorRecognition->recognition2 = $request->input('recognition2');
+            $coordinatorRecognition->recognition3 = $request->input('recognition3');
+            $coordinatorRecognition->recognition4 = $request->input('recognition4');
+            $coordinatorRecognition->recognition5 = $request->input('recognition5');
+            $coordinatorRecognition->recognition6 = $request->input('recognition6');
+            $coordinatorRecognition->recognition7 = $request->input('recognition7');
+            $coordinatorRecognition->recognition8 = $request->input('recognition8');
+            $coordinatorRecognition->recognition9 = $request->input('recognition9');
+            $coordinatorRecognition->year0 = $request->input('year0');
+            $coordinatorRecognition->year1 = $request->input('year1');
+            $coordinatorRecognition->year2 = $request->input('year2');
+            $coordinatorRecognition->year3 = $request->input('year3');
+            $coordinatorRecognition->year4 = $request->input('year4');
+            $coordinatorRecognition->year5 = $request->input('year5');
+            $coordinatorRecognition->year6 = $request->input('year6');
+            $coordinatorRecognition->year7 = $request->input('year7');
+            $coordinatorRecognition->year8 = $request->input('year8');
+            $coordinatorRecognition->year9 = $request->input('year9');
+            $coordinatorRecognition->recognition_toptier = $request->input('recognition_toptier');
+            $coordinatorRecognition->recognition_necklace = (int) $request->has('recognition_necklace');
+
+            $coordinatorRecognition->save();
 
             DB::commit();
         } catch (\Exception $e) {
@@ -1147,6 +1166,48 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
     }
+
+
+    // public function updateCoordRecognition(Request $request, $id): RedirectResponse
+    // {
+    //     $user = User::find($request->user()->id);
+    //     $userId = $user->id;
+
+    //     $cdDetailsUser = $user->coordinator;
+    //     $cdIdUser = $cdDetailsUser->id;
+    //     $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+
+    //     $coordinator = Coordinators::find($id);
+
+    //     DB::beginTransaction();
+    //     try {
+    //         $coordinator->recognition_year0 = $request->input('recognition_year0');
+    //         $coordinator->recognition_year1 = $request->input('recognition_year1');
+    //         $coordinator->recognition_year2 = $request->input('recognition_year2');
+    //         $coordinator->recognition_year3 = $request->input('recognition_year3');
+    //         $coordinator->recognition_year4 = $request->input('recognition_year4');
+    //         $coordinator->recognition_year5 = $request->input('recognition_year5');
+    //         $coordinator->recognition_year6 = $request->input('recognition_year6');
+    //         $coordinator->recognition_year7 = $request->input('recognition_year7');
+    //         $coordinator->recognition_year8 = $request->input('recognition_year8');
+    //         $coordinator->recognition_year9 = $request->input('recognition_year9');
+    //         $coordinator->recognition_toptier = $request->input('recognition_toptier');
+    //         $coordinator->recognition_necklace = (int) $request->has('recognition_necklace');
+    //         $coordinator->last_updated_by = $lastUpdatedBy;
+    //         $coordinator->last_updated_date = now();
+
+    //         $coordinator->save();
+
+    //         DB::commit();
+    //     } catch (\Exception $e) {
+    //         DB::rollback();  // Rollback Transaction
+    //         Log::error($e);  // Log the error
+
+    //         return to_route('coordinators.editrecognition', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+    //     }
+
+    //     return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
+    // }
 
     /**
      * View Coordiantor Profile

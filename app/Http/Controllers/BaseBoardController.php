@@ -8,13 +8,18 @@ use App\Models\FinancialReportAwards;
 use App\Models\Probation;
 use App\Models\State;
 use App\Models\Website;
+use App\Services\PositionConditionsService;
+
 
 class BaseBoardController extends Controller
 {
+    protected $positionConditionsService;
+
     protected $userController;
 
-    public function __construct(UserController $userController)
+    public function __construct(PositionConditionsService $positionConditionsService, UserController $userController)
     {
+        $this->positionConditionsService = $positionConditionsService;
         $this->userController = $userController;
     }
 
@@ -43,7 +48,7 @@ class BaseBoardController extends Controller
         $chDocuments = $chDetails->documents;
         $reviewerEmail = $chDetails->reportReviewer?->email;  // Could be null -- no reviewer assigned
         $chFinancialReport = $chDetails->financialReport;
-        $displayEOY = getEOYDisplay();
+        $displayEOY = $this->positionConditionsService->getEOYDisplay();
 
         $awards = $chDetails->financialReport;
 

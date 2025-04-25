@@ -12,17 +12,22 @@ use App\Models\Region;
 use App\Models\State;
 use App\Models\Status;
 use App\Models\Website;
+use App\Services\PositionConditionsService;
+
 use Illuminate\Support\Facades\Log;
 
 
 class BaseChapterController extends Controller
 {
+    protected $positionConditionsService;
+
     protected $userController;
 
     protected $baseConditionsController;
 
-    public function __construct(UserController $userController, BaseConditionsController $baseConditionsController)
+    public function __construct(PositionConditionsService $positionConditionsService, UserController $userController, BaseConditionsController $baseConditionsController)
     {
+        $this->positionConditionsService = $positionConditionsService;
         $this->userController = $userController;
         $this->baseConditionsController = $baseConditionsController;
     }
@@ -272,7 +277,7 @@ class BaseChapterController extends Controller
         $chDocuments = $chDetails->documents;
         $reviewComplete = $chDetails->documents?->review_complete ?? null;
         $chFinancialReport = $chDetails->financialReport;
-        $displayEOY = getEOYDisplay();  // Conditions to Show EOY Items
+        $displayEOY = $this->positionConditionsService->getEOYDisplay();  // Conditions to Show EOY Items
 
         $allStatuses = Status::all();  // Full List for Dropdown Menu
         $allProbation = Probation::all();  // Full List for Dropdown Menu

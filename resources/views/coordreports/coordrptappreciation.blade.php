@@ -55,7 +55,87 @@
                         </td>
                     <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                     <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
-                    <td>{{ $list->recognition_year0 }}</td>
+                    <td>
+                        @if($list->recognition && $list->recognition->recognitionGift0)
+                            {{ $list->recognition->recognitionGift0->recognition_gift }}
+                            @if($list->recognition->year0 != null)
+                                ({{$list->recognition->year0}})
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if($list->recognition && $list->recognition->recognitionGift1)
+                            {{ $list->recognition->recognitionGift1->recognition_gift }}
+                            @if($list->recognition->year1 != null)
+                                ({{$list->recognition->year1}})
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if($list->recognition && $list->recognition->recognitionGift2)
+                            {{ $list->recognition->recognitionGift2->recognition_gift }}
+                            @if($list->recognition->year2 != null)
+                                ({{$list->recognition->year2}})
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if($list->recognition && $list->recognition->recognitionGift3)
+                            {{ $list->recognition->recognitionGift3->recognition_gift }}
+                            @if($list->recognition->year3 != null)
+                                ({{$list->recognition->year3}})
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if($list->recognition && $list->recognition->recognitionGift4)
+                            {{ $list->recognition->recognitionGift4->recognition_gift }}
+                            @if($list->recognition->year4 != null)
+                                ({{$list->recognition->year4}})
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if($list->recognition && $list->recognition->recognitionGift5)
+                            {{ $list->recognition->recognitionGift5->recognition_gift }}
+                            @if($list->recognition->year5 != null)
+                                ({{$list->recognition->year5}})
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if($list->recognition && $list->recognition->recognitionGift6)
+                            {{ $list->recognition->recognitionGift6->recognition_gift }}
+                            @if($list->recognition->year6 != null)
+                                ({{$list->recognition->year6}})
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if($list->recognition && $list->recognition->recognitionGift7)
+                            {{ $list->recognition->recognitionGift7->recognition_gift }}
+                            @if($list->recognition->year7 != null)
+                                ({{$list->recognition->year7}})
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if($list->recognition && $list->recognition->recognitionGift8)
+                            {{ $list->recognition->recognitionGift8->recognition_gift }}
+                            @if($list->recognition->year8 != null)
+                                ({{$list->recognition->year8}})
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if($list->recognition && $list->recognition->recognitionGift9)
+                            {{ $list->recognition->recognitionGift9->recognition_gift }}
+                            @if($list->recognition->year9 != null)
+                                ({{$list->recognition->year9}})
+                            @endif
+                        @endif
+                    </td>
+                    {{-- <td>{{ $list->recognition_year0 }}</td>
 					<td>{{ $list->recognition_year1 }}</td>
 					<td>{{ $list->recognition_year2 }}</td>
 					<td>{{ $list->recognition_year3 }}</td>
@@ -64,7 +144,7 @@
 					<td>{{ $list->recognition_year6 }}</td>
 					<td>{{ $list->recognition_year7 }}</td>
 					<td>{{ $list->recognition_year8 }}</td>
-					<td>{{ $list->recognition_year9 }}</td>
+					<td>{{ $list->recognition_year9 }}</td> --}}
 					<td>@if($list->recognition_necklace=='1')
 							YES
 							@endif

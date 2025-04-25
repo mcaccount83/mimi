@@ -92,13 +92,35 @@
                     <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">&lt; 1 Year:</label>
-                            <div class="col-sm-4 mr-5">
-                                <input type="text" name="recognition_year0"class="form-control" value="{{ $cdDetails->recognition_year0 }}" >
+                            <div class="col-sm-3">
+                                <select name="recognition0" class="form-control" style="width: 100%;" >
+                                    <option value="">Select Recognition</option>
+                                        @foreach($allRecognitionGifts as $recognition)
+                                        <option value="{{$recognition->id}}"
+                                            @if($cdDetails->recognition->recognition0 == $recognition->id) selected @endif>
+                                            {{$recognition->recognition_gift}}
+                                        </option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mr-5">
+                                <input type="text" name="year0"class="form-control" value="{{ $cdDetails->recognition->year0 }}" >
                             </div>
 
                             <label class="col-sm-1 col-form-label">1 Year:</label>
-                            <div class="col-sm-4">
-                                <input type="text" name="recognition_year1"class="form-control" value="{{ $cdDetails->recognition_year1 }}" >
+                            <div class="col-sm-3">
+                                <select name="recognition1" class="form-control" style="width: 100%;" >
+                                    <option value="">Select Recognition</option>
+                                        @foreach($allRecognitionGifts as $recognition)
+                                        <option value="{{$recognition->id}}"
+                                            @if($cdDetails->recognition->recognition1 == $recognition->id) selected @endif>
+                                            {{$recognition->recognition_gift}}
+                                        </option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mr-5">
+                                <input type="text" name="year1"class="form-control" value="{{ $cdDetails->recognition->year1 }}" >
                             </div>
 
                         </div>
@@ -106,13 +128,35 @@
                     <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">2 Years:</label>
-                            <div class="col-sm-4 mr-5">
-                                <input type="text" name="recognition_year2"class="form-control" value="{{ $cdDetails->recognition_year2 }}" >
+                            <div class="col-sm-3">
+                                <select name="recognition2" class="form-control" style="width: 100%;" >
+                                    <option value="">Select Recognition</option>
+                                        @foreach($allRecognitionGifts as $recognition)
+                                        <option value="{{$recognition->id}}"
+                                            @if($cdDetails->recognition->recognition2 == $recognition->id) selected @endif>
+                                            {{$recognition->recognition_gift}}
+                                        </option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mr-5">
+                                <input type="text" name="year2"class="form-control" value="{{ $cdDetails->recognition->year2 }}" >
                             </div>
 
                             <label class="col-sm-1 col-form-label">3 Years:</label>
-                            <div class="col-sm-4">
-                                <input type="text" name="recognition_year3"class="form-control" value="{{ $cdDetails->recognition_year3 }}" >
+                            <div class="col-sm-3">
+                                <select name="recognition3" class="form-control" style="width: 100%;" >
+                                    <option value="">Select Recognition</option>
+                                        @foreach($allRecognitionGifts as $recognition)
+                                        <option value="{{$recognition->id}}"
+                                            @if($cdDetails->recognition->recognition3 == $recognition->id) selected @endif>
+                                            {{$recognition->recognition_gift}}
+                                        </option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mr-5">
+                                <input type="text" name="year3"class="form-control" value="{{ $cdDetails->recognition->year3 }}" >
                             </div>
 
                         </div>
@@ -120,13 +164,35 @@
                     <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">4 Years:</label>
-                            <div class="col-sm-4 mr-5">
-                                <input type="text" name="recognition_year4"class="form-control" value="{{ $cdDetails->recognition_year4 }}" >
+                            <div class="col-sm-3">
+                                <select name="recognition4" class="form-control" style="width: 100%;" >
+                                    <option value="">Select Recognition</option>
+                                        @foreach($allRecognitionGifts as $recognition)
+                                        <option value="{{$recognition->id}}"
+                                            @if($cdDetails->recognition->recognition4 == $recognition->id) selected @endif>
+                                            {{$recognition->recognition_gift}}
+                                        </option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mr-5">
+                                <input type="text" name="year4"class="form-control" value="{{ $cdDetails->recognition->year4 }}" >
                             </div>
 
                             <label class="col-sm-1 col-form-label">5 Years:</label>
-                            <div class="col-sm-4">
-                                <input type="text" name="recognition_year5"class="form-control" value="{{ $cdDetails->recognition_year5 }}" >
+                            <div class="col-sm-3">
+                                <select name="recognition4" class="form-control" style="width: 100%;" >
+                                    <option value="">Select Recognition</option>
+                                        @foreach($allRecognitionGifts as $recognition)
+                                        <option value="{{$recognition->id}}"
+                                            @if($cdDetails->recognition->recognition5 == $recognition->id) selected @endif>
+                                            {{$recognition->recognition_gift}}
+                                        </option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mr-5">
+                                <input type="text" name="year5"class="form-control" value="{{ $cdDetails->recognition->year5 }}" >
                             </div>
 
                         </div>
@@ -134,13 +200,35 @@
                     <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">6 Years:</label>
-                            <div class="col-sm-4 mr-5">
-                                <input type="text" name="recognition_year6"class="form-control" value="{{ $cdDetails->recognition_year6 }}" >
+                            <div class="col-sm-3">
+                                <select name="recognition6" class="form-control" style="width: 100%;" >
+                                    <option value="">Select Recognition</option>
+                                        @foreach($allRecognitionGifts as $recognition)
+                                        <option value="{{$recognition->id}}"
+                                            @if($cdDetails->recognition->recognition6 == $recognition->id) selected @endif>
+                                            {{$recognition->recognition_gift}}
+                                        </option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mr-5">
+                                <input type="text" name="year6"class="form-control" value="{{ $cdDetails->recognition->year6 }}" >
                             </div>
 
                             <label class="col-sm-1 col-form-label">7 Years:</label>
-                            <div class="col-sm-4">
-                                <input type="text" name="recognition_year7"class="form-control" value="{{ $cdDetails->recognition_year7 }}" >
+                            <div class="col-sm-3">
+                                <select name="recognition7" class="form-control" style="width: 100%;" >
+                                    <option value="">Select Recognition</option>
+                                        @foreach($allRecognitionGifts as $recognition)
+                                        <option value="{{$recognition->id}}"
+                                            @if($cdDetails->recognition->recognition7 == $recognition->id) selected @endif>
+                                            {{$recognition->recognition_gift}}
+                                        </option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mr-5">
+                                <input type="text" name="year7"class="form-control" value="{{ $cdDetails->recognition->year7 }}" >
                             </div>
 
                         </div>
@@ -148,33 +236,64 @@
                     <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">8 Years:</label>
-                            <div class="col-sm-4 mr-5">
-                                <input type="text" name="recognition_year8"class="form-control" value="{{ $cdDetails->recognition_year8 }}" >
+                            <div class="col-sm-3">
+                                <select name="recognition8" class="form-control" style="width: 100%;" >
+                                    <option value="">Select Recognition</option>
+                                        @foreach($allRecognitionGifts as $recognition)
+                                        <option value="{{$recognition->id}}"
+                                            @if($cdDetails->recognition->recognition8 == $recognition->id) selected @endif>
+                                            {{$recognition->recognition_gift}}
+                                        </option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mr-5">
+                                <input type="text" name="year8"class="form-control" value="{{ $cdDetails->recognition->year8 }}" >
                             </div>
 
                             <label class="col-sm-1 col-form-label">9 Years:</label>
-                            <div class="col-sm-4">
-                                <input type="text" name="recognition_year9"class="form-control" value="{{ $cdDetails->recognition_year9 }}" >
+                            <div class="col-sm-3">
+                                <select name="recognition9" class="form-control" style="width: 100%;" >
+                                    <option value="">Select Recognition</option>
+                                        @foreach($allRecognitionGifts as $recognition)
+                                        <option value="{{$recognition->id}}"
+                                            @if($cdDetails->recognition->recognition9 == $recognition->id) selected @endif>
+                                            {{$recognition->recognition_gift}}
+                                        </option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-1 mr-5">
+                                <input type="text" name="year9"class="form-control" value="{{ $cdDetails->recognition->year9 }}" >
                             </div>
 
                         </div>
                     </div>
+
+                    {{-- <div class="form-group row">
+                        <div class="col-md-12 d-flex align-items-center">
+                            <label class="col-sm-2 col-form-label">10 Years+ or Top Tier:</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="recognition_toptier"class="form-control" value="{{ $cdDetails->recognition->recognition_toptier }}" >
+                            </div>
+                        </div>
+                    </div> --}}
 
                     <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-2 col-form-label">10 Years+ or Top Tier:</label>
                             <div class="col-sm-9">
-                                <input type="text" name="recognition_toptier"class="form-control" value="{{ $cdDetails->recognition_toptier }}" >
-                            </div>
+                                <textarea name="recognition_toptier" class="form-control" rows="4" >{{ $cdDetails->recognition->recognition_toptier }}</textarea>
                         </div>
                     </div>
+                </div>
 
                     <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="ml-2 col-form-label mr-2">MC Necklace:</label>
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="recognition_necklace" id="recognition_necklace" class="custom-control-input"
-                                    {{$cdDetails->recognition_necklace == 1 ? 'checked' : ''}}>
+                                    {{$cdDetails->recognition->recognition_necklace == 1 ? 'checked' : ''}}>
                                     <label class="custom-control-label" for="recognition_necklace"></label>
                                 </div>
                             </div>
