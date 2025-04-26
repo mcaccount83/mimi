@@ -405,7 +405,7 @@ class ExportController extends Controller implements HasMiddleware
                     'Birthday' => $cdDetails->birthday_month_id.' / '.$cdDetails->birthday_day,
                     'Coordinator Start' => $cdDetails->coordinator_start_date,
                     'Last Promoted' => $cdDetails->last_promoted,
-                    'Leave of Absense' => ($cdLeave == 1) ? 'YES' : 'NO',
+                    'Leave of Absense' => ($cdDetails->on_leave == 1) ? 'YES' : 'NO',
                     'Leave Date' => $cdDetails->leave_date,
                     'Retire Date' => $cdDetails->zapped_date,
                     'Reason' => $cdDetails->reason_retired,
@@ -497,7 +497,7 @@ class ExportController extends Controller implements HasMiddleware
                     '9 Years' => $cdDetails->recognition_year9,
                     'Necklace' => ($necklace == 1) ? 'YES' : 'NO',
                     'Top Tier/Other' => $cdDetails->recognition_toptier,
-                    'Leave of Absense' => ($cdLeave == 1) ? 'YES' : 'NO',
+                    'Leave of Absense' => ($cdDetails->on_leave == 1) ? 'YES' : 'NO',
                     'Leave Date' => $cdDetails->last_updated_date,
                 ];
 
