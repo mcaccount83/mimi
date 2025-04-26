@@ -385,7 +385,6 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
-                $cdLeave = $baseQuery['cdLeave'];
 
                 $rowData = [
                     'Conference' => $cdConfId,
@@ -475,7 +474,6 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
-                $cdLeave = $baseQuery['cdLeave'];
                 $necklace = $cdDetails->recognition_necklace;
 
                 $rowData = [
