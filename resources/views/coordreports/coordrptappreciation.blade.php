@@ -135,16 +135,7 @@
                             @endif
                         @endif
                     </td>
-                    {{-- <td>{{ $list->recognition_year0 }}</td>
-					<td>{{ $list->recognition_year1 }}</td>
-					<td>{{ $list->recognition_year2 }}</td>
-					<td>{{ $list->recognition_year3 }}</td>
-					<td>{{ $list->recognition_year4 }}</td>
-					<td>{{ $list->recognition_year5 }}</td>
-					<td>{{ $list->recognition_year6 }}</td>
-					<td>{{ $list->recognition_year7 }}</td>
-					<td>{{ $list->recognition_year8 }}</td>
-					<td>{{ $list->recognition_year9 }}</td> --}}
+
 					<td>@if($list->recognition->recognition_necklace=='1')
 							YES
 							@endif
