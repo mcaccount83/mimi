@@ -244,8 +244,8 @@ class BaseCoordinatorController extends Controller
         $cdUserId = $cdDetails->user_id;
         $cdUser = User::with(['adminRole'])
             ->find($cdUserId);
-        $cdUserAdmin = $cdUser->is_admin;
-        $cdAdminRole = $cdUser->adminRole;
+        $cdUserAdmin = $cdUser->is_admin ?? null;
+        $cdAdminRole = $cdUser->adminRole ?? null;
 
         $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
             ->where('conference_id', $cdConfId)
