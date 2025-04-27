@@ -74,8 +74,6 @@ class PaymentReportController extends Controller implements HasMiddleware
                                 ->where('start_month_id', '<=', $currentMonth);
                         });
                 })
-                ->orderByDesc('start_month_id')
-                ->orderByDesc('next_renewal_year')
                 ->get();
         }
 
@@ -92,37 +90,23 @@ class PaymentReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
 
         $currentYear = date('Y');
         $currentMonth = date('m');
 
         $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
-        $checkBox3Status = $baseQuery['checkBox3Status'];
 
-        if ($checkBox3Status) {
-            $reChapterList = $baseQuery['query']
-                ->get();
-        } else {
-            $reChapterList = $baseQuery['query']
-                ->where(function ($query) use ($currentYear, $currentMonth) {
-                    $query->where('next_renewal_year', '<', $currentYear)
-                        ->orWhere(function ($query) use ($currentYear, $currentMonth) {
-                            $query->where('next_renewal_year', '=', $currentYear)
-                                ->where('start_month_id', '<=', $currentMonth);
-                        });
-                })
-                ->orderByDesc('start_month_id')
-                ->orderByDesc('next_renewal_year')
-                ->get();
-        }
+        $reChapterList = $baseQuery['query']
+            ->where(function ($query) use ($currentYear, $currentMonth) {
+                $query->where('next_renewal_year', '<', $currentYear)
+                    ->orWhere(function ($query) use ($currentYear, $currentMonth) {
+                        $query->where('next_renewal_year', '=', $currentYear)
+                            ->where('start_month_id', '<=', $currentMonth);
+                    });
+            })
+            ->get();
 
-        $countList = count($reChapterList);
-        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
+        $data = ['reChapterList' => $reChapterList];
 
         return view('international.intregistration')->with($data);
     }
@@ -146,7 +130,6 @@ class PaymentReportController extends Controller implements HasMiddleware
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         try {
-
             $chapters = Chapters::with(['state', 'conference', 'region'])
                 ->where('conference_id', $confId)
                 ->where('start_month_id', $month)
@@ -235,7 +218,6 @@ class PaymentReportController extends Controller implements HasMiddleware
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         try {
-
             $chapters = Chapters::with(['state', 'conference', 'region'])
                 ->where('chapters.conference_id', $confId)
                 ->where('chapters.start_month_id', $lastMonth)

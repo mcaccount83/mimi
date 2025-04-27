@@ -1848,6 +1848,22 @@ class ChapterController extends Controller implements HasMiddleware
     }
 
     /**
+     * Display the Website Details
+     */
+    public function showIntWebsite(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $websiteList = $baseQuery['query']->get();
+
+        $data = ['websiteList' => $websiteList];
+
+        return view('international.intchapwebsite')->with($data);
+    }
+
+    /**
      * Display the Social Media Information
      */
     public function showRptSocialMedia(Request $request): View
@@ -1865,6 +1881,22 @@ class ChapterController extends Controller implements HasMiddleware
         $data = ['chapterList' => $chapterList];
 
         return view('chapreports.chaprptsocialmedia')->with($data);
+    }
+
+     /**
+     * Display the Social Media Information
+     */
+    public function showIntSocialMedia(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $chapterList = $baseQuery['query']->get();
+
+        $data = ['chapterList' => $chapterList];
+
+        return view('international.intchapsocialmedia')->with($data);
     }
 
     /**

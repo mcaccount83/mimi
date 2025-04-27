@@ -277,7 +277,7 @@ window.onload = function () {
                             } elseif ($regionalCoordinatorCondition) {
                                 $websiteRoute = route('chapters.chapwebsite');
                                 $activeWebsiteRoutes = [
-                                    'chapter/website', 'chapter/socialmedia', 'chapterwebsiteedit/*'
+                                    'chapter/website', 'international/website', 'chapter/socialmedia', 'international/socialmedia', 'chapterwebsiteedit/*'
                                 ];
                             }
                         @endphp

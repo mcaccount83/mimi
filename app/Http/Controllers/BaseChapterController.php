@@ -74,9 +74,17 @@ class BaseChapterController extends Controller
     private function applySorting($baseQuery, $queryType)
     {
         $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';
+        $isIntReregPage = request()->route()->getName() === 'international.intregistration';
 
         if ($queryType === 'zapped') {
             return ['query' => $baseQuery->orderByDesc('chapters.zap_date'), 'checkBox3Status' => ''];
+        }
+
+        if ($isIntReregPage) {
+            $baseQuery->orderByDesc('next_renewal_year')
+                ->orderByDesc('start_month_id');
+
+            return ['query' => $baseQuery, 'checkBox3Status' => ''];
         }
 
         if ($isReregPage) {
@@ -163,7 +171,7 @@ class BaseChapterController extends Controller
             'query' => $sortingResults['query'],
             'checkBoxStatus' => $checkboxStatus['checkBoxStatus'] ?? '',
             'checkBox2Status' => $checkboxStatus['checkBox2Status'] ?? '',
-            'checkBox3Status' => $sortingResults['checkBox3Status'],
+            'checkBox3Status' => $sortingResults['checkBox3Status'] ,
             'checkBox4Status' => $checkboxStatus['checkBox4Status'] ?? '',
         ];
     }
