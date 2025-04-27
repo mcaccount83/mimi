@@ -297,14 +297,39 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
-                $cdLeave = $baseQuery['cdDetails']->on_leave == 1;
+                $cdAdminRole = $baseQuery['cdAdminRole'];
+
+                $secPositionValue = null;
+
+                // Check what type of data $secondaryPosition is
+                if ($secondaryPosition) {
+                    if (is_object($secondaryPosition)) {
+                        // If it's a single object
+                        $secPositionValue = $secondaryPosition->long_title ?? null;
+                    } elseif (is_array($secondaryPosition) || $secondaryPosition instanceof \Traversable) {
+                        // If it's a collection or array
+                        $secondaryPositionTitles = [];
+                        foreach ($secondaryPosition as $position) {
+                            if (is_object($position)) {
+                                $secondaryPositionTitles[] = $position->long_title ?? '';
+                            } elseif (is_string($position)) {
+                                $secondaryPositionTitles[] = $position;
+                            }
+                        }
+                        $secPositionValue = !empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
+                    } elseif (is_string($secondaryPosition)) {
+                        // If it's already a string
+                        $secPositionValue = $secondaryPosition;
+                    }
+                }
 
                 $rowData = [
                     'Conference' => $cdConfId,
                     'Region' => $regionLongName,
                     'Coordinator Name' => $cdDetails->first_name.' '.$cdDetails->last_name,
                     'Position' => $displayPosition->long_title,
-                    'Sec Position' => $secondaryPosition->long_title ?? null,
+                    'Sec Position' => $secPositionValue,
+                    'Admin' => $cdAdminRole->admin_role,
                     'Email' => $cdDetails->email,
                     'Email2' => $cdDetails->sec_email,
                     'Report To' => $ReportTo,
@@ -317,7 +342,7 @@ class ExportController extends Controller implements HasMiddleware
                     'Birthday' => $cdDetails->birthday_month_id.' / '.$cdDetails->birthday_day,
                     'Coordinator Start' => $cdDetails->coordinator_start_date,
                     'Last Promoted' => $cdDetails->last_promoted,
-                    'Leave of Absense' => ($cdLeave == 1) ? 'YES' : 'NO',
+                    'Leave of Absense' => ($cdDetails->on_leave == 1) ? 'YES' : 'NO',
                     'Leave Date' => $cdDetails->leave_date,
                     'Last UpdatedBy' => $cdDetails->last_updated_by,
                     'Last UpdatedDate' => $cdDetails->last_updated_date,
@@ -385,13 +410,39 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
+                $cdAdminRole = $baseQuery['cdAdminRole'];
+
+                $secPositionValue = null;
+
+                // Check what type of data $secondaryPosition is
+                if ($secondaryPosition) {
+                    if (is_object($secondaryPosition)) {
+                        // If it's a single object
+                        $secPositionValue = $secondaryPosition->long_title ?? null;
+                    } elseif (is_array($secondaryPosition) || $secondaryPosition instanceof \Traversable) {
+                        // If it's a collection or array
+                        $secondaryPositionTitles = [];
+                        foreach ($secondaryPosition as $position) {
+                            if (is_object($position)) {
+                                $secondaryPositionTitles[] = $position->long_title ?? '';
+                            } elseif (is_string($position)) {
+                                $secondaryPositionTitles[] = $position;
+                            }
+                        }
+                        $secPositionValue = !empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
+                    } elseif (is_string($secondaryPosition)) {
+                        // If it's already a string
+                        $secPositionValue = $secondaryPosition;
+                    }
+                }
 
                 $rowData = [
                     'Conference' => $cdConfId,
                     'Region' => $regionLongName,
                     'Coordinator Name' => $cdDetails->first_name.' '.$cdDetails->last_name,
                     'Position' => $displayPosition->long_title,
-                    'Sec Position' => $secondaryPosition->long_title ?? null,
+                    'Sec Position' => $secPositionValue,
+                    'Admin' => $cdAdminRole->admin_role,
                     'Email' => $cdDetails->email,
                     'Email2' => $cdDetails->sec_email,
                     'Report To' => $ReportTo,
@@ -476,12 +527,36 @@ class ExportController extends Controller implements HasMiddleware
                 $secondaryPosition = $baseQuery['secondaryPosition'];
                 $necklace = $cdDetails->recognition_necklace;
 
+                $secPositionValue = null;
+
+                // Check what type of data $secondaryPosition is
+                if ($secondaryPosition) {
+                    if (is_object($secondaryPosition)) {
+                        // If it's a single object
+                        $secPositionValue = $secondaryPosition->long_title ?? null;
+                    } elseif (is_array($secondaryPosition) || $secondaryPosition instanceof \Traversable) {
+                        // If it's a collection or array
+                        $secondaryPositionTitles = [];
+                        foreach ($secondaryPosition as $position) {
+                            if (is_object($position)) {
+                                $secondaryPositionTitles[] = $position->long_title ?? '';
+                            } elseif (is_string($position)) {
+                                $secondaryPositionTitles[] = $position;
+                            }
+                        }
+                        $secPositionValue = !empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
+                    } elseif (is_string($secondaryPosition)) {
+                        // If it's already a string
+                        $secPositionValue = $secondaryPosition;
+                    }
+                }
+
                 $rowData = [
                     'Conference' => $cdConfId,
                     'Region' => $regionLongName,
                     'Coordinator Name' => $cdDetails->first_name.' '.$cdDetails->last_name,
                     'Position' => $displayPosition->long_title,
-                    'Sec Position' => $secondaryPosition->long_title ?? null,
+                    'Sec Position' => $secPositionValue,
                     'Start Date' => $cdDetails->coordinator_start_date,
                     '<1 Year' => $cdDetails->recognition_year0,
                     '1 Year' => $cdDetails->recognition_year1,
@@ -1121,14 +1196,39 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
-                $cdLeave = $baseQuery['cdDetails']->on_leave;
+                $cdAdminRole = $baseQuery['cdAdminRole'];
+
+                $secPositionValue = null;
+
+                // Check what type of data $secondaryPosition is
+                if ($secondaryPosition) {
+                    if (is_object($secondaryPosition)) {
+                        // If it's a single object
+                        $secPositionValue = $secondaryPosition->long_title ?? null;
+                    } elseif (is_array($secondaryPosition) || $secondaryPosition instanceof \Traversable) {
+                        // If it's a collection or array
+                        $secondaryPositionTitles = [];
+                        foreach ($secondaryPosition as $position) {
+                            if (is_object($position)) {
+                                $secondaryPositionTitles[] = $position->long_title ?? '';
+                            } elseif (is_string($position)) {
+                                $secondaryPositionTitles[] = $position;
+                            }
+                        }
+                        $secPositionValue = !empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
+                    } elseif (is_string($secondaryPosition)) {
+                        // If it's already a string
+                        $secPositionValue = $secondaryPosition;
+                    }
+                }
 
                 $rowData = [
                     'Conference' => $cdConfId,
                     'Region' => $regionLongName,
                     'Coordinator Name' => $cdDetails->first_name.' '.$cdDetails->last_name,
                     'Position' => $displayPosition->long_title,
-                    'Sec Position' => $secondaryPosition->long_title ?? null,
+                    'Sec Position' => $secPositionValue,
+                    'Admin' => $cdAdminRole->admin_role,
                     'Email' => $cdDetails->email,
                     'Email2' => $cdDetails->sec_email,
                     'Report To' => $ReportTo,
@@ -1141,7 +1241,7 @@ class ExportController extends Controller implements HasMiddleware
                     'Birthday' => $cdDetails->birthday_month_id.' / '.$cdDetails->birthday_day,
                     'Coordinator Start' => $cdDetails->coordinator_start_date,
                     'Last Promoted' => $cdDetails->last_promoted,
-                    'Leave of Absense' => ($cdLeave == 1) ? 'YES' : 'NO',
+                    'Leave of Absense' => ($cdDetails->on_leave == 1) ? 'YES' : 'NO',
                     'Leave Date' => $cdDetails->leave_date,
                     'Last UpdatedBy' => $cdDetails->last_updated_by,
                     'Last UpdatedDate' => $cdDetails->last_updated_date,
@@ -1205,14 +1305,39 @@ class ExportController extends Controller implements HasMiddleware
                 $ReportTo = $RptFName.' '.$RptLName;
                 $displayPosition = $baseQuery['displayPosition'];
                 $secondaryPosition = $baseQuery['secondaryPosition'];
-                $cdLeave = $baseQuery['cdDetails'];
+                $cdAdminRole = $baseQuery['cdAdminRole'];
+
+                $secPositionValue = null;
+
+                // Check what type of data $secondaryPosition is
+                if ($secondaryPosition) {
+                    if (is_object($secondaryPosition)) {
+                        // If it's a single object
+                        $secPositionValue = $secondaryPosition->long_title ?? null;
+                    } elseif (is_array($secondaryPosition) || $secondaryPosition instanceof \Traversable) {
+                        // If it's a collection or array
+                        $secondaryPositionTitles = [];
+                        foreach ($secondaryPosition as $position) {
+                            if (is_object($position)) {
+                                $secondaryPositionTitles[] = $position->long_title ?? '';
+                            } elseif (is_string($position)) {
+                                $secondaryPositionTitles[] = $position;
+                            }
+                        }
+                        $secPositionValue = !empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
+                    } elseif (is_string($secondaryPosition)) {
+                        // If it's already a string
+                        $secPositionValue = $secondaryPosition;
+                    }
+                }
 
                 $rowData = [
                     'Conference' => $cdConfId,
                     'Region' => $regionLongName,
                     'Coordinator Name' => $cdDetails->first_name.' '.$cdDetails->last_name,
                     'Position' => $displayPosition->long_title,
-                    'Sec Position' => $secondaryPosition->long_title ?? null,
+                    'Sec Position' => $secPositionValue,
+                    'Admin' => $cdAdminRole->admin_role,
                     'Email' => $cdDetails->email,
                     'Email2' => $cdDetails->sec_email,
                     'Report To' => $ReportTo,
@@ -1225,7 +1350,7 @@ class ExportController extends Controller implements HasMiddleware
                     'Birthday' => $cdDetails->birthday_month_id.' / '.$cdDetails->birthday_day,
                     'Coordinator Start' => $cdDetails->coordinator_start_date,
                     'Last Promoted' => $cdDetails->last_promoted,
-                    'Leave of Absense' => ($cdLeave == 1) ? 'YES' : 'NO',
+                    'Leave of Absense' => ($cdDetails->on_leave == 1) ? 'YES' : 'NO',
                     'Leave Date' => $cdDetails->leave_date,
                     'Retire Date' => $cdDetails->zapped_date,
                     'Reason' => $cdDetails->reason_retired,

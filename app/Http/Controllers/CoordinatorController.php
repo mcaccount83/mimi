@@ -180,6 +180,7 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'email' => $input['cord_email'],
                     'password' => Hash::make('TempPass4You'),
                     'user_type' => 'coordinator',
+                    'is_admin' => 0,
                     'is_active' => 1]
             );
 
@@ -210,6 +211,10 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'last_updated_date' => $lastupdatedDate,
                     'is_active' => 1]
             );
+
+            CoordinatorRecognition::create([
+                'coordinator_id' => $cordId,
+            ]);
 
             $reportingUpline = CoordinatorTree::where('coordinator_id', $reportsTo)->first();  // Get reporting coordinator's upline data
 
