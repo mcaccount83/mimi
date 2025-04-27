@@ -1,7 +1,7 @@
 @extends('layouts.coordinator_theme')
 
 @section('page_title', 'Payments/Donations')
-@section('breadcrumb', 'Re-Registration Payments')
+@section('breadcrumb', 'International Re-Registration Payments')
 
 @section('content')
     <!-- Main content -->
@@ -13,7 +13,7 @@
                     <div class="card-header">
                     <div class="dropdown">
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Re-Registration Payments
+                            International Re-Registration Payments
                     </h3>
                     @include('layouts.dropdown_menus.menu_payment')
                 </div>
@@ -81,29 +81,9 @@
                 </table>
               </div>
           <!-- /.card-body -->
-          <div class="col-sm-12">
-            <div class="custom-control custom-switch">
-                <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
-                <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
-            </div>
-        </div>
-          <div class="col-sm-12">
-            <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox3Status}} onchange="showAll()" />
-                        <label class="custom-control-label" for="showAll">Show All Chapters</label>
-                    </div>
-                </div>
+
                 <div class="card-body text-center">
-                    @if($conferenceCoordinatorCondition)
-                    @if($checkBoxStatus == null && $checkBox3Status == null)
-                        <a class="btn bg-gradient-primary" href="{{ route('chapters.chapreregreminder') }}"><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</a>
-                        <a class="btn bg-gradient-primary" href="{{ route('chapters.chaprereglatereminder') }}"><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</a>
-                    @else
-                        <button class="btn bg-gradient-primary" disabled><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button>
-                        <button class="btn bg-gradient-primary" disabled><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</button>
-                    @endif
-                        <a href="{{ route('export.rereg')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export Overdue Chapter List</button></a>
-                    @endif
+                        <a href="{{ route('export.intrereg')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export Overdue Chapter List</button></a>
             </div>
         </div>
     </div>

@@ -200,9 +200,6 @@ Route::get('/coordreports/appreciation', [CoordinatorReportController::class, 's
 Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
 Route::get('/coordreports/reportingtree', [CoordinatorReportController::class, 'showRptReportingTree'])->name('coordreports.coordrptreportingtree');
 
-Route::get('/coordreports/oldappreciation', [CoordinatorReportController::class, 'showRptAppreciationOLD'])->name('coordreports.old_coordrptappreciation');
-
-
 // Export Controller Routes...Coordinator Login Required
 Route::get('/export/chapter', [ExportController::class, 'indexChapter'])->name('export.chapter');
 Route::get('/export/zapchapter', [ExportController::class, 'indexZappedChapter'])->name('export.zapchapter');
@@ -318,6 +315,7 @@ Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'
 Route::post('/process-payment', [PaymentController::class, 'reRegistrationPayment'])->name('process.payment');
 Route::post('/process-donation', [PaymentController::class, 'm2mPayment'])->name('process.donation');
 Route::get('/chapter/reregistration', [PaymentReportController::class, 'showChapterReRegistration'])->name('chapters.chapreregistration');
+Route::get('/international/reregistration', [PaymentReportController::class, 'showIntReRegistration'])->name('international.intregistration');
 Route::get('/chapter/reregistrationreminder', [PaymentReportController::class, 'createChapterReRegistrationReminder'])->name('chapters.chapreregreminder');
 Route::get('/chapter/reregistrationlatereminder', [PaymentReportController::class, 'createChapterReRegistrationLateReminder'])->name('chapters.chaprereglatereminder');
 Route::get('/chapter/donations', [PaymentReportController::class, 'showRptDonations'])->name('chapreports.chaprptdonations');

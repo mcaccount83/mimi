@@ -88,7 +88,7 @@ class PaymentReportController extends Controller implements HasMiddleware
      /**
      * ReRegistration List
      */
-    public function showIntChapterReRegistration(Request $request): View
+    public function showIntReRegistration(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
@@ -124,7 +124,7 @@ class PaymentReportController extends Controller implements HasMiddleware
         $countList = count($reChapterList);
         $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
 
-        return view('chapters.intchapreregistration')->with($data);
+        return view('international.intregistration')->with($data);
     }
 
     /**
