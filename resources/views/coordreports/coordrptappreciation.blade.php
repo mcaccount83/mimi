@@ -27,6 +27,7 @@
                     <th>Conf/Reg</th>
 					<th>Coordinator Name</th>
 					<th>Start Date</th>
+                    <th>Gold Pin</th>
 					<th>< 1 Year</th>
 					<th>1 Year</th>
 					<th>2 Years</th>
@@ -55,6 +56,12 @@
                         </td>
                     <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                     <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
+
+                    <td>@if($list->recognition->recognition_pin=='1')
+                        YES
+                        @endif
+                    </td>
+
                     <td>
                         @if($list->recognition && $list->recognition->recognitionGift0)
                             {{ $list->recognition->recognitionGift0->recognition_gift }}

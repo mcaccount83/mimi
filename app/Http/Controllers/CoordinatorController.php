@@ -1158,6 +1158,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinatorRecognition->year9 = $request->input('year9');
             $coordinatorRecognition->recognition_toptier = $request->input('recognition_toptier');
             $coordinatorRecognition->recognition_necklace = (int) $request->has('recognition_necklace');
+            $coordinatorRecognition->recognition_pin = (int) $request->has('recognition_pin');
 
             $coordinatorRecognition->save();
 

@@ -297,6 +297,18 @@
                     </div>
                 </div>
 
+                <div class="form-group row">
+                    <div class="col-md-12 d-flex align-items-center">
+                        <label class="ml-2 col-form-label mr-2">MC Gold Pin:</label>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="recognition_pin" id="recognition_pin" class="custom-control-input"
+                                {{$cdDetails->recognition->recognition_pin == 1 ? 'checked' : ''}}>
+                                <label class="custom-control-label" for="recognition_pin"></label>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="ml-2 col-form-label mr-2">MC Necklace:</label>
