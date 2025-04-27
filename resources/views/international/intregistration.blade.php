@@ -23,8 +23,7 @@
                 <table id="chapterlist" class="table table-sm table-hover">
                     <thead>
                         <tr>
-                            <th>Payment</th>
-                            <th>Send</th>
+
                             <th>Conf/Reg</th>
                             <th>State</th>
                             <th>Name</th>
@@ -41,22 +40,7 @@
                             $overdue = (date('Y') * 12 + date('m')) - ($list->next_renewal_year * 12 + $list->start_month_id);
                         @endphp
                         <tr>
-                            <td class="text-center align-middle">
-                                @if ($conferenceCoordinatorCondition)
-                                    <a href="{{ url("/chapterpaymentedit/{$list->id}") }}"><i class="far fa-credit-card"></i></a>
-                                @endif
-                            </td>
-                            <td class="text-center align-middle">
-                                @if ($due && !$overdue)
-                                    <a onclick="showChapterReRegModal('{{ $list->name }}', {{ $list->id }})"><i class="far fa-envelope text-primary"></i></a>
-                                @endif
-                                @if ($overdue == 1)
-                                    <a onclick="showChapterReRegLateModal('{{ $list->name }}', {{ $list->id }})"><i class="far fa-envelope text-primary"></i></a>
-                                @endif
-                                @if ($overdue > 1)
-                                    {{-- <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="far fa-envelope text-primary"></i></a> --}}
-                                @endif
-                            </td>
+
                             <td>
                                 @if ($list->region->short_name != "None")
                                     {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -115,176 +99,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function showPrimary() {
-var base_url = '{{ url("/chapter/reregistration") }}';
-
-    if ($("#showPrimary").prop("checked") == true) {
-        window.location.href = base_url + '?check=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function showAll() {
-    var base_url = '{{ url("/chapter/reregistration") }}';
-    if ($("#showAll").prop("checked") == true) {
-        window.location.href = base_url + '?check3=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function showChapterReRegModal(chapterName, chapterId) {
-    Swal.fire({
-        title: 'Chapter Re-Registration Reminder',
-        html: `
-            <p>This will send the regular re-registration reminder for <b>${chapterName}</b> to the full board and all coordinators.</p>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-
-            return {
-                chapter_id: chapterId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we process your request.',
-                allowOutsideClick: false,
-                customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
-                },
-                didOpen: () => {
-                    Swal.showLoading();
-
-                    // Perform the AJAX request
-                    $.ajax({
-                        url: '{{ route('chapters.sendchapterrereg') }}',
-                        type: 'POST',
-                        data: {
-                            chapterId: data.chapter_id,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: response.message,
-                                icon: 'success',
-                                showConfirmButton: false,  // Automatically close without "OK" button
-                                timer: 1500,
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function(jqXHR, exception) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong, Please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function showChapterReRegLateModal(chapterName, chapterId) {
-    Swal.fire({
-        title: 'Chapter Re-Registration Late Notice',
-        html: `
-            <p>This will send the regular re-registration late notice for <b>${chapterName}</b> to the full board and all coordinators.</p>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-
-            return {
-                chapter_id: chapterId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we process your request.',
-                allowOutsideClick: false,
-                customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
-                },
-                didOpen: () => {
-                    Swal.showLoading();
-
-                    // Perform the AJAX request
-                    $.ajax({
-                        url: '{{ route('chapters.sendchapterrereglate') }}',
-                        type: 'POST',
-                        data: {
-                            chapterId: data.chapter_id,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: response.message,
-                                icon: 'success',
-                                showConfirmButton: false,  // Automatically close without "OK" button
-                                timer: 1500,
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function(jqXHR, exception) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong, Please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
 
 
 </script>

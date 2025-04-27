@@ -255,7 +255,7 @@ window.onload = function () {
                                 $paymentsRoute = route('international.intdonation');
                             }
                             $activePaymentsRoutes = [
-                                'chapter/reregistration', 'chapter/donations', 'international/donation','chapterpaymentedit/*'
+                                'chapter/reregistration', 'international/reregistration', 'chapter/donations', 'international/donation','chapterpaymentedit/*'
                             ];
                         @endphp
                         @if (isset($paymentsRoute))
@@ -330,7 +330,7 @@ window.onload = function () {
                             </li>
                         @endif
 
-                        @if ($einCondition)
+                        @if ($einCondition && !$coordinatorCondition)
                         <li class="nav-item">
                             <a href="{{ route('international.inteinstatus') }}" class="nav-link {{ Request::is('chapterreports/inteinstatus') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-university"></i>
