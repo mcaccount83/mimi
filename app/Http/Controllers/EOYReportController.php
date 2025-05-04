@@ -187,16 +187,17 @@ class EOYReportController extends Controller implements HasMiddleware
         }
 
         try {
+
             DB::commit();
+            return redirect()->to('/eoy/status')->with('success', 'EOY Late Notices have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/eoy/status')->with('success', 'EOY Late Notices have been successfully sent.');
-
     }
 
     /**
@@ -420,15 +421,15 @@ class EOYReportController extends Controller implements HasMiddleware
 
         try {
             DB::commit();
+            return redirect()->to('/eoy/boardreport')->with('success', 'Board Election Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/eoy/boardreport')->with('success', 'Board Election Reminders have been successfully sent.');
-
     }
 
     /**
@@ -982,15 +983,15 @@ class EOYReportController extends Controller implements HasMiddleware
         }
         try {
             DB::commit();
+            return redirect()->to('/eoy/financialreport')->with('success', 'Financial Report Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/eoy/financialreport')->with('success', 'Financial Report Reminders have been successfully sent.');
-
     }
 
     /**
@@ -1194,13 +1195,14 @@ class EOYReportController extends Controller implements HasMiddleware
             } else {
                 return redirect()->back()->with('success', 'Report has been successfully Updated');
             }
-
-        } catch (\Exception $e) {
-            DB::rollback();
+            } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
     }
 
     /**

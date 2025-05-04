@@ -117,16 +117,16 @@ class PaymentController extends Controller implements HasMiddleware
             Mail::to([$emailCC, $AdminEmail])
                 ->queue(new PaymentsReRegOnline($mailData));
 
-            DB::commit();
-
-            return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
-
-            return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
-        }
+                DB::commit();
+                return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
+            } catch (\Exception $e) {
+                DB::rollback();  // Rollback Transaction
+                Log::error($e);  // Log the error
+                return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
+            } finally {
+                // This ensures DB connections are released even if exceptions occur
+                DB::disconnect();
+            }
     }
 
     /**
@@ -201,16 +201,16 @@ class PaymentController extends Controller implements HasMiddleware
             Mail::to([$emailCC, $AdminEmail])
                 ->queue(new PaymentsM2MOnline($mailData));
 
-            DB::commit();
-
-            return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
-
-            return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
-        }
+                DB::commit();
+                return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
+            } catch (\Exception $e) {
+                DB::rollback();  // Rollback Transaction
+                Log::error($e);  // Log the error
+                return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
+            } finally {
+                // This ensures DB connections are released even if exceptions occur
+                DB::disconnect();
+            }
     }
 
     /**

@@ -173,14 +173,14 @@ class PaymentReportController extends Controller implements HasMiddleware
             foreach ($mailData as $chapterName => $data) {
                 $to_email = $chapterEmails[$chapterName] ?? [];
                 $cc_email = $coordinatorEmails[$chapterName] ?? [];
-        
+
                 if (! empty($to_email)) {
                     Mail::to($to_email)
                         ->cc($cc_email)
                         ->queue(new PaymentsReRegReminder($data));
                 }
             }
-        
+
             DB::commit();
             return redirect()->to('/chapter/reregistration')->with('success', 'Re-Registration Reminders have been successfully sent.');
         } catch (\Exception $e) {
@@ -270,16 +270,15 @@ class PaymentReportController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+            return redirect()->to('/chapter/reregistration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/chapter/reregistration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
     }
 
     /**
@@ -423,15 +422,14 @@ class PaymentReportController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+            return to_route('chapters.editpayment', ['id' => $id])->with('success', 'Chapter Payments/Donations have been updated');
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
-            return to_route('chapters.editpayment', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('chapters.editpayment', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('chapters.editpayment', ['id' => $id])->with('success', 'Chapter Payments/Donations have been updated');
     }
 }

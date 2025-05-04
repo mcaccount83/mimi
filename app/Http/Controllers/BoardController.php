@@ -711,14 +711,15 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+            return redirect()->back()->with('success', 'Chapter has successfully updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
     /**
@@ -880,14 +881,15 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+            return redirect()->back()->with('success', 'Chapter has successfully updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
     /**
@@ -1055,17 +1057,17 @@ class BoardController extends Controller implements HasMiddleware
             Mail::to($emailListChap)
                 ->queue(new ProbationReportThankYou($mailData));
 
-            DB::commit();
+
+                DB::commit();
+                return redirect()->back()->with('success', 'Quarterly Report has been Submitted');
         } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            // Log the error
-            Log::error($e);
-
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->back()->with('success', 'Quarterly Report has been Submitted');
     }
 
     /**
@@ -1435,17 +1437,16 @@ class BoardController extends Controller implements HasMiddleware
             Mail::to($emailListChap)
                 ->queue(new EOYElectionReportThankYou($mailData));
 
-            DB::commit();
-        } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            // Log the error
-            Log::error($e);
-
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-        }
-
-        return redirect()->back()->with('success', 'Board Info has been Submitted');
+                DB::commit();
+                return redirect()->back()->with('success', 'Board Info has been Submitted');
+            } catch (\Exception $e) {
+                DB::rollback();  // Rollback Transaction
+                Log::error($e);  // Log the error
+                return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+            } finally {
+                // This ensures DB connections are released even if exceptions occur
+                DB::disconnect();
+            }
     }
 
     /**
@@ -1570,12 +1571,13 @@ class BoardController extends Controller implements HasMiddleware
             } else {
                 return redirect()->back()->with('success', 'Report has been successfully updated');
             }
-
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 

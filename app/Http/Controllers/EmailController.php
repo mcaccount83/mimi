@@ -108,9 +108,8 @@ class EmailController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -120,6 +119,9 @@ class EmailController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('chapters.chaplist'),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -161,9 +163,8 @@ class EmailController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -173,6 +174,9 @@ class EmailController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -224,9 +228,8 @@ class EmailController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -236,6 +239,9 @@ class EmailController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -288,9 +294,8 @@ class EmailController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -300,6 +305,9 @@ class EmailController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('chapters.view', ['id' => $chapterId]),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -346,9 +354,8 @@ class EmailController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -358,6 +365,9 @@ class EmailController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('chapters.view', ['id' => $chapterId]),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -404,9 +414,8 @@ class EmailController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -416,7 +425,9 @@ class EmailController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('chapters.view', ['id' => $chapterId]),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
     }
 }

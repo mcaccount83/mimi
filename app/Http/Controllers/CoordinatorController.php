@@ -383,9 +383,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -395,8 +394,10 @@ class CoordinatorController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('coordinators.view', ['id' => $id]),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
     }
 
     /**
@@ -595,12 +596,15 @@ class CoordinatorController extends Controller implements HasMiddleware
             return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
 
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback transaction on exception
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 

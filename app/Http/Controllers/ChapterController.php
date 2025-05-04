@@ -439,9 +439,8 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -451,6 +450,9 @@ class ChapterController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -567,9 +569,8 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -579,8 +580,10 @@ class ChapterController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
     }
 
     /**
@@ -969,10 +972,6 @@ class ChapterController extends Controller implements HasMiddleware
         $pcDetails = $baseQuery['pcDetails'];
 
         $input = $request->all();
-        $chPcIdPre = $input['ch_hid_primarycor'];
-        $chPcIdUpd = $input['ch_primarycor'];
-        $webStatusPre = $input['ch_hid_webstatus'];
-        $webStatusUpd = $input['ch_webstatus'];
 
         $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
         if (empty(trim($ch_webstatus))) {
@@ -1106,14 +1105,15 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+            return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
-            return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
     }
 
     /**
@@ -1760,14 +1760,15 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+            return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
-            return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
     }
 
     /**
@@ -2012,14 +2013,14 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+            return to_route('chapters.editwebsite', ['id' => $id])->with('success', 'Chapter Website & Social Meida has been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-
-            return to_route('chapters.editwebsite', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('chapters.editwebsite', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('chapters.editwebsite', ['id' => $id])->with('success', 'Chapter Website & Social Meida has been updated');
     }
 
     /**
