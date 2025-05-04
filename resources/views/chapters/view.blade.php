@@ -579,7 +579,7 @@
                                 </div>
                                     @else
                                 <div class="col-sm-9">
-                                    Chatper was not nominated for any awards.
+                                    Chapter was not nominated for any awards.
                                 </div>
                                     @endif
                             </div>
