@@ -185,7 +185,7 @@
 
             if (userAdmin === 1) {
                 $('button').not('#btn-back').prop('disabled', true);
-            }else if (userType === 'coordinator' && userAdmin !== 1) {
+            }else if (userType === 'coordinator' && userAdmin != 1) {
             // Disable all input fields, select elements, textareas, and buttons
             $('button').not('#btn-back').prop('disabled', true);
             $('input, select, textarea').prop('disabled', true);

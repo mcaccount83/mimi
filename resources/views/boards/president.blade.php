@@ -641,7 +641,7 @@ $(document).ready(function () {
 
     if (userAdmin === 1) {
         $('#Save, #Password, #logout-btn').prop('disabled', true);
-    }else if (userType === 'coordinator' && userAdmin !== 1) {
+    }else if (userType === 'coordinator' && userAdmin != 1) {
         // Disable all input fields, select elements, textareas, and buttons
         $('input, select, textarea').prop('disabled', true);
         $('#Save, #Password, #logout-btn, #eLearning, #Resources').prop('disabled', true);
@@ -802,64 +802,6 @@ function validateEmailsBeforeSubmit() {
     }
     return true;
 }
-
-
-
-
-
-
-
-
-
-
-
-// function PreSaveValidate(){
-//     var errMessage="";
-//           if($("#ch_pre_email").val() != ""){
-//             if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
-//               errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-//             }
-//           }
-//           if($("#ch_avp_email").val() != ""){
-//             if($("#ch_avp_email").val() == $("#ch_mvp_email").val() || $("#ch_avp_email").val() == $("#ch_trs_email").val() || $("#ch_avp_email").val() == $("#ch_sec_email").val()) {
-//               errMessage = "The e-mail address provided for the Chapter AVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-//             }
-//           }
-//           if($("#ch_mvp_email").val() != ""){
-//             if($("#ch_mvp_email").val() == $("#ch_trs_email").val() || $("#ch_mvp_email").val() == $("#ch_sec_email").val()) {
-//               errMessage = "The e-mail address provided for the Chapter MVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-//             }
-//           }
-//           if($("#ch_trs_email").val() != ""){
-//             if($("#ch_trs_email").val() == $("#ch_sec_email").val()) {
-//               errMessage = "The e-mail address provided for the Chapter Treasurer was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-//             }
-//           }
-
-//           if(errMessage.length > 0){
-//             alert (errMessage);
-//             return false;
-//           }
-
-//     return true;
-// }
-
-// function checkDuplicateEmail(email, id) {
-//         $.ajax({
-//             url: '{{ url("/checkemail/") }}' + '/' + email,
-//             type: "GET",
-//             success: function(result) {
-//                 if (result.exists) {
-//                     alert('This Email already used in the system. Please try with new one.');
-//                     $("#" + id).val('');
-//                     $("#" + id).focus();
-//                 }
-//             },
-//             error: function(jqXHR, exception) {
-//                 console.error("Error checking email: ", exception);
-//             }
-//         });
-//     }
 
 function showChangePasswordAlert() {
     Swal.fire({

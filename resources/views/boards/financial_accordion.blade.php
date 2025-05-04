@@ -3047,7 +3047,7 @@ $(document).ready(function () {
 
         var effectiveSubmitted = (userType === 'disbanded') ? submittedfinal : submitted;
 
-        if (userType === 'coordinator' && userAdmin !== 1) {
+        if (userType === 'coordinator' && userAdmin != 1) {
             $('button').not('#btn-back').prop('disabled', true);
             $('input, select, textarea').prop('disabled', true);
 
@@ -4319,85 +4319,6 @@ function toggleAwardBlocks() {
         awardSignatureBlock.style.display = hasSelectedAward ? 'block' : 'none';
     }
 }
-
-    // function AddAwardNomination(){
-    //     // Did they say no, if so, we need to mark the explanation field as required
-    //     if (document.getElementById("Award1Panel").style.display === 'none'){
-    //         document.getElementById("Award1Panel").style.display = 'block';
-    //         document.getElementById("AwardSignatureBlock").style.display = 'block';
-    //         document.getElementById("btnDeleteAwardNomination").disabled = false;
-    //         document.getElementById("NominationType1").required = true;
-    //         document.getElementById("AwardsAgree").required = true;
-    //     }
-    //     else if (document.getElementById("Award2Panel").style.display === 'none'){
-    //         document.getElementById("Award2Panel").style.display = 'block';
-    //         document.getElementById("NominationType2").required = true;
-    //     }
-    //     else if (document.getElementById("Award3Panel").style.display === 'none'){
-    //         document.getElementById("Award3Panel").style.display = 'block';
-    //         document.getElementById("NominationType3").required = true;
-    //     }
-    //     else if (document.getElementById("Award4Panel").style.display === 'none'){
-    //         document.getElementById("Award4Panel").style.display = 'block';
-    //         document.getElementById("NominationType4").required = true;
-    //     }
-    //     else if (document.getElementById("Award5Panel").style.display === 'none'){
-    //         document.getElementById("Award5Panel").style.display = 'block';
-    //         document.getElementById("btnAddAwardNomination").disabled = true;
-    //         document.getElementById("NominationType5").required = true;
-    //     }
-    //     document.getElementById("TotalAwardNominations").value = Number(document.getElementById("TotalAwardNominations").value) + 1;
-    // }
-
-    // function DeleteAwardNomination(){
-    //     // Did they say no, if so, we need to mark the explanation field as required
-    //     if (document.getElementById("Award5Panel").style.display === 'block'){
-    //         document.getElementById("Award5Panel").style.display = 'none';
-    //         document.getElementById("btnAddAwardNomination").disabled = false;
-    //         document.getElementById("NominationType5").required = false;
-    //     }
-    //     else if (document.getElementById("Award4Panel").style.display === 'block'){
-    //         document.getElementById("Award4Panel").style.display = 'none';
-    //         document.getElementById("NominationType4").required = false;
-    //     }
-    //     else if (document.getElementById("Award3Panel").style.display === 'block'){
-    //         document.getElementById("Award3Panel").style.display = 'none';
-    //         document.getElementById("NominationType3").required = false;
-    //     }
-    //     else if (document.getElementById("Award2Panel").style.display === 'block'){
-    //         document.getElementById("Award2Panel").style.display = 'none';
-    //         document.getElementById("NominationType2").required = false;
-    //     }
-    //     else if (document.getElementById("Award1Panel").style.display === 'block'){
-    //         document.getElementById("Award1Panel").style.display = 'none';
-    //         document.getElementById("AwardSignatureBlock").style.display = 'none';
-    //         document.getElementById("btnDeleteAwardNomination").disabled = true;
-    //         document.getElementById("NominationType1").required = false;
-    //         document.getElementById("AwardsAgree").required = false;
-    //     }
-    //     document.getElementById("TotalAwardNominations").value = Number(document.getElementById("TotalAwardNominations").value) - 1;
-    // }
-
-    // window.addEventListener('load', function() {
-    //         var awardNumbers = [1, 2, 3, 4, 5]; // Array of AwardNumbers
-
-    //         // Loop through each AwardNumber and call ShowOutstandingCriteria function
-    //         awardNumbers.forEach(function(AwardNumber) {
-    //             ShowOutstandingCriteria(AwardNumber);
-    //         });
-    //     });
-
-    //     function ShowOutstandingCriteria(AwardNumber){
-    //         var NominationElementName = "NominationType" + AwardNumber;
-    //         var CriteriaElementName = "OutstandingCriteria" + AwardNumber;
-
-    //         if (document.getElementById(NominationElementName).value == 5 || document.getElementById(NominationElementName).value == 6){
-    //             document.getElementById(CriteriaElementName).style.display = 'block';
-    //         }
-    //         else{
-    //             document.getElementById(CriteriaElementName).style.display = 'none';
-    //         }
-    //     }
 
 </script>
 

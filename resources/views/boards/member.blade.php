@@ -433,7 +433,7 @@ $(document).ready(function () {
 
     if (userAdmin === 1) {
         $('#Save, #Password, #logout-btn').prop('disabled', true);
-    }else if (userType === 'coordinator' && userAdmin !== 1) {
+    }else if (userType === 'coordinator' && userAdmin != 1) {
         // Disable all input fields, select elements, textareas, and buttons
         $('input, select, textarea').prop('disabled', true);
         $('#Save, #Password, #logout-btn, #eLearning, #Resources').prop('disabled', true);

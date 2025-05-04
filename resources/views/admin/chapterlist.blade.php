@@ -15,6 +15,7 @@
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Admin Acitve Board Pages
                                 </h3>
+                                <span class="ml-2">View Board Pages as President</span>
                                 @include('layouts.dropdown_menus.menu_admin')
                             </div>
                         </div>
