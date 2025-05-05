@@ -103,7 +103,7 @@
 
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left d-flex">
-                                        <label style="margin-right: 20px;">Our final 990N has been filed with the IRS, being sure to mark that the chapter has closed.</label>
+                                        <label style="margin-right: 20px;">Our final 990N has been filed with the IRS, being sure to check the box that the chapter has terminated.</label>
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" id="FileIRS" name="FileIRS" class="custom-control-input" {{$chDisbanded?->file_irs == '1' ? 'checked' : ''}}>
                                             <label class="custom-control-label" for="FileIRS">YES</label>
