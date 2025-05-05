@@ -59,6 +59,15 @@
                                             <input type="checkbox" id="FinalPayment" name="FinalPayment" class="custom-control-input" {{$chDisbanded?->final_payment == '1' ? 'checked' : ''}} >
                                             <label class="custom-control-label" for="FinalPayment">YES</label>
                                         </div>
+                                        @if ($chDisbanded?->final_payment != '1')
+                                            @if ($userAdmin == '1')
+                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('admin.board.editreregpayment', ['chapter_id' => $chDetails->id]) }}'">PAY HERE</button>
+                                            @elseif($userType === 'coordinator' && $userAdmin != '1')
+                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterreregistration', ['id' => $chDetails->id]) }}'">PAY HERE</button>
+                                            @else
+                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editreregpayment') }}'">PAY HERE</button>
+                                            @endif
+                                        @endif
                                     </div>
                                 </div>
 
@@ -94,11 +103,19 @@
 
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left d-flex">
-                                        <label style="margin-right: 20px;">Our final 990N has been filed with the IRS.</label>
+                                        <label style="margin-right: 20px;">Our final 990N has been filed with the IRS, being sure to mark that the chapter has closed.</label>
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" id="FileIRS" name="FileIRS" class="custom-control-input" {{$chDisbanded?->file_irs == '1' ? 'checked' : ''}}>
                                             <label class="custom-control-label" for="FileIRS">YES</label>
                                         </div>
+                                        @if ($chDisbanded?->file_financial != '1')
+                                            @if($thisDate->month >= 7 && $thisDate->month <= 12)
+                                                <a href="https://sa.www4.irs.gov/sso/ial1?resumePath=%2Fas%2F5Ad0mGlkzW%2Fresume%2Fas%2Fauthorization.ping&allowInteraction=true&reauth=false&connectionId=SADIPACLIENT&REF=3C53421849B7D5B806E50960DF0AC7530889D9ADE9238D5D3B8B00000069&vnd_pi_requested_resource=https%3A%2F%2Fsa.www4.irs.gov%2Fepostcard%2F&vnd_pi_application_name=EPOSTCARD"
+                                                    class="btn btn-primary btn-xs ml-3 mb-1" target="_blank" >FILE HERE</a>
+                                            @else
+                                                <button id="990NLink" class="btn btn-primary btn-xs ml-3 mb-1 disabled">Not Available Until July 1st</button>
+                                            @endif
+                                        @endif
                                     </div>
                                 </div>
 
