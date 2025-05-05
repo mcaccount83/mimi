@@ -2997,7 +2997,6 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 <!------End Step 13 ------>
 
 <!------Start Step 14 ------>
-@if ($userType != 'coordinator')
 <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='14') echo "active";?>">
 <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
@@ -3006,7 +3005,10 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 </div>
 <div id="collapseFourteen" class="collapse {{ $chFinancialReport->farthest_step_visited == '14' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
+
     <section>
+        @if ($userType != 'coordinator')
+
         <div class="form-row form-group">
             <div class="col-sm-12">
                 <strong>Contact information for the person who completed the report.</strong></div>
@@ -3017,11 +3019,12 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                 <strong>Email: </strong><a href="mailto:{{ $userEmail }}">{{ $userEmail }}</a>
                 </div>
         </div>
+        @endif
+
         <div class="card-body text-center">
             <button type="button" class="btn btn-primary" id="btn-step-14" ><i class="fas fa-save" ></i>&nbsp; Save</button>
             @if($thisDate->month >= 3 && $thisDate->month <= 12)
             <button type="button" class="btn btn-success" id="final-submit" ><i class="fas fa-share-square" ></i>&nbsp; Submit Report</button>
-            @endif
         </div>
     </section>
 </div><!-- end of accordion body -->
