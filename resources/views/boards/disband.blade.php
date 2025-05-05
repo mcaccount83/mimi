@@ -78,6 +78,15 @@
                                             <input type="checkbox" id="DonateFunds" name="DonateFunds" class="custom-control-input" {{$chDisbanded?->donate_funds == '1' ? 'checked' : ''}}>
                                             <label class="custom-control-label" for="DonateFunds">YES</label>
                                         </div>
+                                        @if ($chDisbanded?->donate_funds != '1')
+                                            @if ($userAdmin == '1')
+                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('admin.board.editdonate', ['chapter_id' => $chDetails->id]) }}'">DONATE HERE</button>
+                                            @elseif($userType === 'coordinator' && $userAdmin != '1')
+                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterdonation', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
+                                            @else
+                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editdonate') }}'">DONATE HERE</button>
+                                            @endif
+                                        @endif
                                     </div>
                                 </div>
 
