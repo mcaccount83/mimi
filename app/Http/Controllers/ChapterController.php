@@ -342,6 +342,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $chapter = Chapters::find($chapterid);
         $documents = Documents::find($chapterid);
+        $preBalance = $documents->balance ?? null;
 
         try {
             DB::beginTransaction();
@@ -362,6 +363,7 @@ class ChapterController extends Controller implements HasMiddleware
 
             FinancialReportFinal::create([
                 'chapter_id' => $chapterid,
+                'pre_balance' => $preBalance,
             ]);
 
             $boardDetails = Boards::where('chapter_id', $chapterid)->get();
