@@ -259,6 +259,8 @@ Route::prefix('admin/board')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/resources/{chapter_id}', [BoardController::class, 'viewResources'])->name('admin.board.viewresources');
     Route::get('/board/financialreport/{chapter_id}', [FinancialReportController::class, 'editFinancialReport'])->name('admin.board.editfinancialreport');
     Route::get('/board/disbandchecklist/{chapter_id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('admin.board.editdisbandchecklist');
+    Route::post('/board/disbandchecklistupdate/{chapter_id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('admin.board.updatedisbandchecklist');
+Route::post('/board/disbandreportupdate/{chapter_id}', [FinancialReportController::class, 'updateDisbandReport'])->name('admin.board.updatedisbandreport');
 });
 
 Route::get('/admin/chapterlist', [AdminController::class, 'listActiveChapters'])->name('admin.chapterlist');

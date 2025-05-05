@@ -48,6 +48,7 @@ class BaseBoardController extends Controller
         $chDocuments = $chDetails->documents;
         $reviewerEmail = $chDetails->reportReviewer?->email;  // Could be null -- no reviewer assigned
         $chFinancialReport = $chDetails->financialReport;
+        $chFinancialReportFinal = $chDetails->financialReportFinal;
         $displayEOY = $this->positionConditionsService->getEOYDisplay();
 
         $awards = $chDetails->financialReport;
@@ -80,7 +81,7 @@ class BaseBoardController extends Controller
         $cc_id = $ccEmailData['cc_id'];
         $emailCC = $ccEmailData['cc_email'];
 
-        return ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'cc_id' => $cc_id,
+        return ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'cc_id' => $cc_id, 'chFinancialReportFinal' => $chFinancialReportFinal,
             'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,

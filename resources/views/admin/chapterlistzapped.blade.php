@@ -27,6 +27,7 @@
                                     <th>State</th>
                                     <th>Chapter Name</th>
                                     <th>View Board Pages</th>
+                                    <th>Disband Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -39,6 +40,7 @@
                                                 <a href="{{ route('admin.board.editdisbandchecklist', ['chapter_id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Disband Checklist & Financial Report</a>
                                             </div>
                                         </td>
+                                        <td><span class="date-mask">{{ $chapter->zap_date }}</span></td>
                                     </tr>
                                 @endforeach
                             </tbody>

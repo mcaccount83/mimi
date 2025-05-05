@@ -12,6 +12,7 @@ use App\Models\Chapters;
 use App\Models\DisbandedChecklist;
 use App\Models\Documents;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportFinal;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use Illuminate\Http\RedirectResponse;
@@ -313,7 +314,6 @@ class FinancialReportController extends Controller implements HasMiddleware
     public function updateFinancialReport(Request $request, $chapterId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
         $lastUpdatedBy = $user['user_name'];
@@ -325,15 +325,6 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport = FinancialReport::find($chapterId);
         $documents = Documents::find($chapterId);
         $chapter = Chapters::find($chapterId);
-
-        if ($userType == 'disbanded') {
-            $disbandChecklist = DisbandedChecklist::find($chapterId);
-            $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
-                $disbandChecklist->destroy_manual == '1' && $disbandChecklist->remove_online == '1' &&
-                $disbandChecklist->file_irs == '1' && $disbandChecklist->file_financial == '1');
-        } else {
-            $checklistComplete = null;
-        }
 
         DB::beginTransaction();
         try {
@@ -349,11 +340,6 @@ class FinancialReportController extends Controller implements HasMiddleware
 
                 $documents->financial_report_received = 1;
                 $documents->report_received = $lastupdatedDate;
-                $documents->save();
-            }
-
-            if ($reportReceived == 1 && $userType == 'disbanded') {
-                $documents->final_report_received = 1;
                 $documents->save();
             }
 
@@ -382,45 +368,21 @@ class FinancialReportController extends Controller implements HasMiddleware
 
             if ($reportReceived == 1) {
                 $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
-
-                if ($userType != 'disbanded') {
-                    Mail::to($userEmail)
-                        ->cc($emailListChap)
-                        ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
-
-                    if ($chFinancialReport->reviewer_id == null) {
-                        DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
-                        Mail::to($emailCC)
-                            ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
-                    }
-
-                    if ($chFinancialReport->reviewer_id != null) {
-                        Mail::to($reviewerEmail)
-                            ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
-                    }
-                }
-
-                if ($userType == 'disbanded') {
-                    Mail::to($userEmail)
-                        ->cc($emailListChap)
-                        ->queue(new DisbandFinancialReportThankYou($mailData, $pdfPath));
-
-                    if ($chFinancialReport->reviewer_id == null) {
-                        DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
-                    }
-
-                    Mail::to($emailCC)
-                        ->queue(new DisbandFinalReportSubmit($mailData, $pdfPath));
-                }
-            }
-
-            if ($documents->final_report_received == '1' && $checklistComplete) {
                 Mail::to($userEmail)
                     ->cc($emailListChap)
-                    ->queue(new DisbandChecklistThankYou($mailData));
+                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
 
-                Mail::to($emailCC)
-                    ->queue(new DisbandChecklistComplete($mailData));
+                if ($chFinancialReport->reviewer_id == null) {
+                    DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
+                    Mail::to($emailCC)
+                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+                }
+
+                if ($chFinancialReport->reviewer_id != null) {
+                    Mail::to($reviewerEmail)
+                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+                }
+
             }
 
             DB::commit();
@@ -473,7 +435,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         // $submitted = $baseQuery['submitted'];
-        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReport = $baseQuery['chFinancialReportFinal'];
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
 
@@ -505,7 +467,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $input = $request->all();
         $reportReceived = $input['submitted'] ?? null;
 
-        $financialReport = FinancialReport::find($chapterId);
+        $financialReport = FinancialReportFinal::find($chapterId);
         $documents = Documents::find($chapterId);
         $chapter = Chapters::find($chapterId);
 
@@ -518,19 +480,16 @@ class FinancialReportController extends Controller implements HasMiddleware
         try {
             $this->saveAccordionFields($financialReport, $input);
 
+            $financialReport->save();
+
             if ($reportReceived == 1) {
                 $financialReport->completed_name = $userName;
                 $financialReport->completed_email = $userEmail;
                 $financialReport->submitted = $lastupdatedDate;
-            }
+                $financialReport->save();
 
-            $financialReport->save();
-
-            if ($reportReceived == 1) {
-                $documents->financial_report_received = 1;
                 $documents->final_report_received = 1;
                 $documents->report_received = $lastupdatedDate;
-
                 $documents->save();
             }
 
@@ -543,7 +502,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
-            $chFinancialReport = $baseQuery['chFinancialReport'];
+            $chFinancialReport = $baseQuery['chFinancialReportFinal'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
             $pcDetails = $baseQuery['pcDetails'];

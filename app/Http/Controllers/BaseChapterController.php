@@ -285,6 +285,7 @@ class BaseChapterController extends Controller
         $chDocuments = $chDetails->documents;
         $reviewComplete = $chDetails->documents?->review_complete ?? null;
         $chFinancialReport = $chDetails->financialReport;
+        $chFinancialReportFinal = $chDetails->financialReportFinal;
         $displayEOY = $this->positionConditionsService->getEOYDisplay();  // Conditions to Show EOY Items
 
         $allStatuses = Status::all();  // Full List for Dropdown Menu
@@ -338,7 +339,7 @@ class BaseChapterController extends Controller
         $rrList = $this->userController->loadReviewerList($chRegId, $chConfId) ?? null;
 
         return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
-            'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId,
+            'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId, 'chFinancialReportFinal' => $chFinancialReportFinal,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards, 'chPayments' => $chPayments,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList, 'emailCCData' => $emailCCData,

@@ -24,6 +24,7 @@ use App\Models\Coordinators;
 use App\Models\DisbandedChecklist;
 use App\Models\Documents;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportFinal;
 use App\Models\ForumCategorySubscription;
 use App\Models\Payments;
 use App\Models\ProbationSubmission;
@@ -359,6 +360,10 @@ class ChapterController extends Controller implements HasMiddleware
                 'chapter_id' => $chapterid,
             ]);
 
+            FinancialReportFinal::create([
+                'chapter_id' => $chapterid,
+            ]);
+
             $boardDetails = Boards::where('chapter_id', $chapterid)->get();
             $userIds = $boardDetails->pluck('user_id')->toArray();
 
@@ -482,9 +487,11 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->save();
 
             $documents->disband_letter = null;
+            $documents->final_report_received = null;
             $documents->save();
 
             DisbandedChecklist::where('chapter_id', $chapterid)->delete();
+            FinancialReportFinal::where('chapter_id', $chapterid)->delete();
 
             $boardDetails = BoardsDisbanded::where('chapter_id', $chapterid)->get();
             $userIds = $boardDetails->pluck('user_id')->toArray();
