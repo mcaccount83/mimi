@@ -3005,22 +3005,25 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 </div>
 <div id="collapseFourteen" class="collapse {{ $chFinancialReport->farthest_step_visited == '14' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
-
     <section>
-        @if ($userType != 'coordinator')
-
         <div class="form-row form-group">
             <div class="col-sm-12">
                 <strong>Contact information for the person who completed the report.</strong></div>
                 <div class="col-md-12 float-left">
-                <strong>Name: </strong>{{ $userName }}
-                </div>
-                <div class="col-md-12 float-left">
-                <strong>Email: </strong><a href="mailto:{{ $userEmail }}">{{ $userEmail }}</a>
-                </div>
+                    @if ($userType != 'coordinator')
+                        <strong>Name: </strong>{{ $userName }}
+                        </div>
+                        <div class="col-md-12 float-left">
+                        <strong>Email: </strong><a href="mailto:{{ $userEmail }}">{{ $userEmail }}</a>
+                        </div>
+                    @else
+                        <strong>Name: </strong>
+                        </div>
+                        <div class="col-md-12 float-left">
+                        <strong>Email: </strong>
+                        </div>
+                    @endif
         </div>
-        @endif
-
         <div class="card-body text-center">
             <button type="button" class="btn btn-primary" id="btn-step-14" ><i class="fas fa-save" ></i>&nbsp; Save</button>
             @if($thisDate->month >= 3 && $thisDate->month <= 12)
