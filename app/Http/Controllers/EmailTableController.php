@@ -12,6 +12,26 @@ class EmailTableController extends Controller
     }
 
     /**
+     * List Admin Notification -- Founder Information
+     * When new chapter is moved from Pending to Active by Coordinator
+     */
+    public function createNewChapterTable($mailData)
+    {
+        $cellStyle = 'text-align: center; padding: 6px;';
+        $cellLeftStyle = 'padding: 6px;';
+        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+
+        $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+            <tbody>';
+
+        $tableHtml = $this->createFounderRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+
+        $tableHtml .= '</tbody></table>';
+
+        return $tableHtml;
+    }
+
+    /**
      * List Admin Notification -- Full Board Update
      */
     public function createListAdminBoardTable($mailData)
@@ -176,6 +196,27 @@ class EmailTableController extends Controller
         $tableHtml = $this->createWebstieUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
         $tableHtml .= '</tbody></table>';
+
+        return $tableHtml;
+    }
+
+    /**
+     * Create Rows for Founder
+     */
+    public function createFounderRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    {
+        $tableHtml .= '<tr>
+            <td style="'.$headerStyle.'"></td>
+            <td colspan="2" style="'.$headerStyle.'">Founder Information</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$headerStyle.'">Name</td>
+            <td style="'.$headerStyle.'">Email</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellStyle.'">'.$mailData['presName'].'</td>
+            <td style="'.$cellStyle.'">'.$mailData['presEmail'].'</td>
+        </tr>';
 
         return $tableHtml;
     }

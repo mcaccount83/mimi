@@ -325,7 +325,6 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         // Get board members from active chapters using with()
         $boardUserIds = Chapters::with('boards')
-            // ->where('is_active', true)
             ->get()
             ->pluck('boards')
             ->flatten()
@@ -390,7 +389,6 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         // Get board members from active chapters using with()
         $boardUserIds = Chapters::with('boards')
-            // ->where('is_active', true)
             ->get()
             ->pluck('boards')
             ->flatten()
@@ -446,7 +444,6 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         // Get board members from active chapters using with()
         $boardUserIds = Chapters::with('boards')
-            // ->where('is_active', true)
             ->get()
             ->pluck('boards')
             ->flatten()
@@ -496,7 +493,6 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         // Get board members from active chapters using with()
         $boardUserIds = Chapters::with('boards')
-            // ->where('is_active', true)
             ->get()
             ->pluck('boards')
             ->flatten()

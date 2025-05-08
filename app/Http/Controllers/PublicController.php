@@ -2,25 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewChapterThankYou;
+use App\Mail\PaymentsNewChapOnline;
+use App\Models\Admin;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
+use App\Models\State;
+use App\Models\Chapters;
+use App\Models\Coordinators;
+use App\Models\User;
+use App\Models\BoardsPending;
+use App\Models\PaymentLog;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;use Illuminate\Support\Str;
 use Illuminate\View\View;
-
-const client_id = 'YOUR_CLIENT_ID';
-const client_secret = 'YOUR_CLIENT_SECRET';
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
 
 class PublicController extends Controller
 {
-    public function __construct()
+    protected $userController;
+
+    protected $baseBoardController;
+
+    protected $baseChapterController;
+
+    protected $baseMailDataController;
+
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController,
+        BaseChapterController $baseChapterController)
     {
-        // $this->middleware('auth')->except('logout');
+        $this->userController = $userController;
+        $this->baseBoardController = $baseBoardController;
+        $this->baseChapterController = $baseChapterController;
+        $this->baseMailDataController = $baseMailDataController;
     }
 
     private function token()
@@ -47,7 +70,7 @@ class PublicController extends Controller
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
             ->join('state', 'chapters.state_id', '=', 'state.id')
             ->where('state_id', '=', '52')
-            ->where('is_active', '1')
+            ->where('active_status', '1')
             ->where('name', 'not like', '%test%')
             ->orderBy('name')
             ->get();
@@ -56,7 +79,7 @@ class PublicController extends Controller
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
             ->join('state', 'chapters.state_id', '=', 'state.id')
             ->where('chapters.state_id', '<>', 52)
-            ->where('is_active', '1')
+            ->where('active_status', '1')
             ->where('name', 'not like', '%test%')
             ->orderBy('state_id')
             ->orderBy('name')
@@ -159,4 +182,369 @@ class PublicController extends Controller
         ], 500);
     }
 }
+
+    /**
+     * Show New Chapter Registration
+     */
+    public function editNewChapter(Request $request): View
+    {
+        $allStates = State::all();  // Full List for Dropdown Menu
+
+        $data = ['allStates' => $allStates,
+        ];
+
+        return view('public.newchapter')->with($data);
+    }
+
+    /**
+     * Show New Chapter Registration Success Message
+     */
+    public function viewNewChapter(Request $request): View
+    {
+        $allStates = State::all();  // Full List for Dropdown Menu
+
+        $data = ['allStates' => $allStates,
+        ];
+
+        return view('public.newchaptersuccess')->with($data);
+    }
+
+    /**
+     * Update New Chapter Registration
+     */
+    public function updateNewChapter(Request $request): RedirectResponse
+    {
+        $input = $request->all();
+        $description = "New Chapter Application";
+        $name =  $input['ch_name'];
+        $founder = $input['ch_pre_fname'].' '.$input['ch_pre_lname'];
+
+        $paymentResponse = $this->processPublicPayment($request, $name, $description);
+
+        if (! $paymentResponse['success']) {
+            return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
+        }
+
+        $lastupdatedDate = date('Y-m-d H:i:s');
+        $country = 'USA';
+        $regId = '0';
+        $statusId = '1';
+        $activeStatus = '2';
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
+        $input = $request->all();
+        $stateId = $input['ch_state'];
+
+        $state = State::find($stateId);
+        $stateShortName = $state->state_short_name;
+
+        $confId = null;
+
+        if (in_array($stateShortName, ['AK', 'HI', 'ID', 'MN', 'MT', 'ND', 'OR', 'SD', 'WA', 'WI', 'WY', '**','AA', 'AE', 'AP'])) {
+            $confId = '1';
+        }
+        elseif (in_array($stateShortName, ['AZ', 'CA', 'CO', 'NM', 'NV', 'OK', 'TX', 'UT'])) {
+            $confId = '2';
+        }
+        elseif (in_array($stateShortName, ['AL', 'AR', 'DC', 'FL', 'GA', 'KY', 'LA', 'MD', 'MS', 'NC', 'SC', 'TN', 'VA', 'WV'])) {
+            $confId = '3';
+        }
+        elseif (in_array($stateShortName, ['CT', 'DE', 'MA', 'ME', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT'])) {
+            $confId = '4';
+        }
+        elseif (in_array($stateShortName, ['IA', 'IL', 'IN', 'KS', 'MI', 'MO', 'NE', 'OH'])) {
+            $confId = '5';
+        }
+
+        $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
+        ->where('conference_id', $confId)
+        ->where('position_id', 7)
+        ->where('is_active', 1)
+        ->where('on_leave', '!=', '1')
+        ->first();
+
+        $pcId = $ccDetails ? $ccDetails->id : null; // Add a check in case no coordinator is found
+
+        $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
+
+        DB::beginTransaction();
+        try {
+            $chapterId = Chapters::create([
+                'name' => $input['ch_name'],
+                'sanitized_name' => $sanitizedName,
+                'state_id' => $stateId,
+                'country_short_name' => $country,
+                'conference_id' => $confId,
+                'region_id' => $regId,
+                'status_id' => $statusId,
+                'territory' => $input['ch_boundariesterry'],
+                'inquiries_contact' => $input['ch_inqemailcontact'],
+                'start_month_id' => $currentMonth,
+                'start_year' => $currentYear,
+                'next_renewal_year' => $currentYear + 1,
+                'primary_coordinator_id' => $pcId,
+                'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
+                'last_updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
+                'last_updated_date' => $lastupdatedDate,
+                'created_at' => $lastupdatedDate,
+                'active_status' => $activeStatus,
+            ])->id;
+
+            // Foundrer Info
+            if (isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email'])) {
+                $userId = User::create([
+                    'first_name' => $input['ch_pre_fname'],
+                    'last_name' => $input['ch_pre_lname'],
+                    'email' => $input['ch_pre_email'],
+                    'password' => Hash::make($input['password']),
+                    'user_type' => 'pending',
+                    'is_active' => 1,
+                ])->id;
+                BoardsPending::create([
+                    'user_id' => $userId,
+                    'first_name' => $input['ch_pre_fname'],
+                    'last_name' => $input['ch_pre_lname'],
+                    'email' => $input['ch_pre_email'],
+                    'board_position_id' => 1,
+                    'chapter_id' => $chapterId,
+                    'street_address' => $input['ch_pre_street'],
+                    'city' => $input['ch_pre_city'],
+                    'state' => $input['ch_pre_state'],
+                    'zip' => $input['ch_pre_zip'],
+                    'country' => $country,
+                    'phone' => $input['ch_pre_phone'],
+                    'last_updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
+                    'last_updated_date' => $lastupdatedDate,
+                ])->id;
+
+            }
+
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+            $chDetails = $baseQuery['chDetails'];
+            $emailListChap = $baseQuery['emailListChap'];  // Full Board
+            $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+            $emailCC = $baseQuery['emailCC'];  // CC Email
+            $AdminEmail = 'dragonmom@msn.com';
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getNewChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getPublicPaymentData($input),
+            );
+
+            Mail::to($emailListChap)
+                ->cc($emailCC)
+                ->queue(new NewChapterThankYou($mailData));
+
+            Mail::to([$emailCC, $AdminEmail])
+                ->queue(new PaymentsNewChapOnline($mailData));
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->to('/newchapter')->with('fail', 'Something went wrong, Please try again...');
+        }
+
+        return redirect()->to('/newchaptersuccess')->with('success', 'Chapter created successfully');
+    }
+
+    public function processPublicPayment(Request $request, $name, $description)
+    {
+        $newchap = $request->input('newchap');
+        $fee = $request->input('fee');
+        $cardNumber = $request->input('card_number');
+        $expirationDate = $request->input('expiration_date');
+        $cvv = $request->input('cvv');
+        $first = $request->input('first_name');
+        $last = $request->input('last_name');
+        $address = $request->input('address');
+        $city = $request->input('city');
+        $state = $request->input('state');
+        $zip = $request->input('zip');
+        $email = $request->input('email');
+        $total = $request->input('total');
+        $amount = (float) preg_replace('/[^\d.]/', '', $total);
+        $today = Carbon::today()->format('m-d-Y');
+
+         /* Create a merchantAuthenticationType object with authentication details
+            retrieved from the constants file */
+        /** @var \net\authorize\api\contract\v1\MerchantAuthenticationType $merchantAuthentication */
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType;
+        $merchantAuthentication->setName(config('settings.authorizenet_api_login_id'));
+        $merchantAuthentication->setTransactionKey(config('settings.authorizenet_transaction_key'));
+
+        // Set the transaction's refId
+        $refId = 'ref'.time();
+
+        // Create the payment data for a credit card
+        $creditCard = new AnetAPI\CreditCardType;
+        $creditCard->setCardNumber($cardNumber);
+        $creditCard->setExpirationDate($expirationDate);
+        $creditCard->setCardCode($cvv);
+
+        // Add the payment data to a paymentType object
+        $paymentOne = new AnetAPI\PaymentType;
+        $paymentOne->setCreditCard($creditCard);
+
+        // Generate a random invoice number
+        $randomInvoiceNumber = mt_rand(100000, 999999);
+        // Create order information
+        $order = new AnetAPI\OrderType;
+        $order->setInvoiceNumber($randomInvoiceNumber);
+        $order->setDescription($description);
+
+        // Set the customer's Bill To address
+        $customerAddress = new AnetAPI\CustomerAddressType;
+        $customerAddress->setFirstName($first);
+        $customerAddress->setLastName($last);
+        $customerAddress->setCompany($name);
+        $customerAddress->setAddress($address);
+        $customerAddress->setCity($city);
+        $customerAddress->setState($state);
+        $customerAddress->setZip($zip);
+        $customerAddress->setCountry('USA');
+
+        // Set the customer's identifying information
+        $customerData = new AnetAPI\CustomerDataType;
+        $customerData->setType('individual');
+        $customerData->setEmail($email);
+
+        // Add values for transaction settings
+        $duplicateWindowSetting = new AnetAPI\SettingType;
+        $duplicateWindowSetting->setSettingName('duplicateWindow');
+        $duplicateWindowSetting->setSettingValue('60');
+
+        // Add some merchant defined fields. These fields won't be stored with the transaction, but will be echoed back in the response.
+        // $merchantDefinedField1 = new AnetAPI\UserFieldType;
+        // $merchantDefinedField1->setName('Founder Name');
+        // $merchantDefinedField1->setValue($founder);
+
+        // Create payment log data
+        $logData = [
+            'amount' => $amount,
+            'status' => 'pending',
+            'request_data' => [
+                'newchap' => $newchap,
+                'fee' => $fee,
+                'invoice' => $randomInvoiceNumber,
+                'company' => $name,
+                // 'founder' => $founder,
+                'email' => $email,
+                'total' => $amount
+            ]
+        ];
+
+        // Create initial log entry before processing
+        $paymentLog = PaymentLog::create($logData);
+
+        // Create a TransactionRequestType object and add the previous objects to it
+        $transactionRequestType = new AnetAPI\TransactionRequestType;
+        $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for New Chapters
+        // if (app()->environment('local')) {
+        //     $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
+        // } else {
+        //     $transactionRequestType->setTransactionType('authCaptureTransaction');  // Caputre Payment for Live Traansactions
+        // }
+        $transactionRequestType->setAmount($amount);
+        $transactionRequestType->setOrder($order);
+        $transactionRequestType->setPayment($paymentOne);
+        $transactionRequestType->setBillTo($customerAddress);
+        $transactionRequestType->setCustomer($customerData);
+        $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
+        // $transactionRequestType->addToUserFields($merchantDefinedField1);
+
+        // Assemble the complete transaction request
+        $request = new AnetAPI\CreateTransactionRequest;
+        $request->setMerchantAuthentication($merchantAuthentication);
+        $request->setRefId($refId);
+        $request->setTransactionRequest($transactionRequestType);
+
+        // Create the controller and get the response
+        $controller = new AnetController\CreateTransactionController($request);
+        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
+
+        // After processing, update the log with the response
+        if ($response != null) {
+            if ($response->getMessages()->getResultCode() == 'Ok') {
+            /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
+                $tresponse = $response->getTransactionResponse();
+                if ($tresponse != null && $tresponse->getMessages() != null) {
+                    // Update log with success response
+                    $paymentLog->update([
+                        'transaction_id' => $tresponse->getTransId(),
+                        'status' => 'success',
+                        'response_code' => $tresponse->getResponseCode(),
+                        'response_message' => $tresponse->getMessages()[0]->getDescription(),
+                        'response_data' => [
+                            'auth_code' => $tresponse->getAuthCode(),
+                            'avs_result_code' => $tresponse->getAvsResultCode(),
+                            'cvv_result_code' => $tresponse->getCvvResultCode(),
+                            'account_number' => $tresponse->getAccountNumber(),
+                            'transaction_hash' => $tresponse->getTransHashSha2()
+                        ]
+                    ]);
+
+                    return [
+                        'success' => true,
+                        'data' => [
+                            'transactionId' => $tresponse->getTransId(),
+                            'invoiceNumber' => $randomInvoiceNumber,
+                        ],
+                    ];
+                }
+            }
+
+            // Handle errors
+            /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
+            $tresponse = $response->getTransactionResponse();
+            if ($tresponse != null && $tresponse->getErrors() != null) {
+                $error_message = 'Transaction Failed';
+                $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
+                $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
+
+                // Update log with error response
+                $paymentLog->update([
+                    'status' => 'failed',
+                    'response_code' => $tresponse->getErrors()[0]->getErrorCode(),
+                    'response_message' => $tresponse->getErrors()[0]->getErrorText(),
+                    'response_data' => [
+                        'error_details' => $error_message
+                    ]
+                ]);
+            } else {
+                $error_message = 'Transaction Failed';
+                $error_message .= "\n Error Code: ".$response->getMessages()->getMessage()[0]->getCode();
+                $error_message .= "\n Error Message: ".$response->getMessages()->getMessage()[0]->getText();
+
+                // Update log with error response
+                $paymentLog->update([
+                    'status' => 'failed',
+                    'response_code' => $response->getMessages()->getMessage()[0]->getCode(),
+                    'response_message' => $response->getMessages()->getMessage()[0]->getText(),
+                    'response_data' => [
+                        'error_details' => $error_message
+                    ]
+                ]);
+            }
+        } else {
+            $error_message = 'No response returned';
+
+            // Update log with no response
+            $paymentLog->update([
+                'status' => 'failed',
+                'response_message' => 'No response returned',
+                'response_data' => [
+                    'error_details' => 'No response was received from the payment gateway'
+                ]
+            ]);
+        }
+
+        return [
+            'success' => false,
+            'error' => $error_message,
+        ];
+    }
+
 }

@@ -75,9 +75,13 @@
                     <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                 </ul>
                 <div class="text-center">
-                    @if ($chDetails->is_active == 1 )
+                    @if ($chDetails->active_status == 1 )
                         <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                    @else
+                    @elseif ($chDetails->active_status == 2)
+                      <b><span style="color: #ffc107;">Chapter is PENDING</span></b>
+                    @elseif ($chDetails->active_status == 3)
+                      <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b>
+                    @elseif ($chDetails->active_status == 0)
                         <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
                         Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
                         {{ $chDetails->disband_reason }}
@@ -174,7 +178,7 @@
                             <div class="col-md-6">
 
                         <h3 class="profile-username">PDF Letters</h3>
-                        @if($chDetails->is_active != '1')
+                        @if($chDetails->active_status == '0')
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Disband Letter:</label>
@@ -230,7 +234,7 @@
                             </div>
                         </div>
 
-                        @if($chDetails->is_active == '1')
+                        @if($chDetails->active_status == '1')
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Chaper in Good Standing Letter:</label>
@@ -283,7 +287,7 @@
 
                         </div>
 
-                        @if($chDetails->is_active == '1')
+                        @if($chDetails->active_status == '1')
                         <div class="col-md-6">
                             <h3 class="profile-username">Preset Emails</h3>
                             <div class="row">
@@ -361,7 +365,7 @@
                         </div>
                         @endif
 
-                        @if($chDetails->is_active != '1')
+                        @if($chDetails->active_status == '0')
                         <div class="col-md-6">
                             <h3 class="profile-username">Disband Checklist
                                 @if (isset($chDisbanded))

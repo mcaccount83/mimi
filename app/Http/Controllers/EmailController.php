@@ -68,6 +68,81 @@ class EmailController extends Controller implements HasMiddleware
         $pdfPath2 = 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path;
 
         $input = $request->all();
+        $chapterId = $input['chapterId'];
+        $boundaryDetails = $input['boundaryDetails'];
+        $nameDetails = $input['nameDetails'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $founderEmail = $chDetails->pendingPresident->email;
+
+        try {
+            DB::beginTransaction();
+
+            EmailFields::create([
+                'boundary_details' => $boundaryDetails,
+                'name_details' => $nameDetails,
+            ]);
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getMessageData($input),
+                $this->baseMailDataController->getCCData($emailCCData),
+            );
+
+            Mail::to($founderEmail)
+                ->cc($userEmail)
+                ->queue(new ChapterSetup($mailData, $pdfPath, $pdfPath2));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successful sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.chaplist'),
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.chaplist'),
+            ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+    public function sendChapterStartupOLD(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $userEmail = $user['user_email'];
+        $userConfId = $user['user_confId'];
+
+        $emailCCData = $this->userController->loadConferenceCoord($userId);
+
+        $resources = Resources::with('resourceCategory')->get();
+        $applicationName = 'EIN Application Conference '.$userConfId;
+        $matchingApplication = $resources->where('name', $applicationName)->first();
+        $pdfPath = 'https://drive.google.com/uc?export=download&id='.$matchingApplication->file_path;
+        $instructionsName = 'EIN Application Instructions';
+        $matchingInstructions = $resources->where('name', $instructionsName)->first();
+        $pdfPath2 = 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path;
+
+        $input = $request->all();
         $founderEmail = $input['founderEmail'];
         $founderFirstName = $input['founderFirstName'];
         $founderLastName = $input['founderLastName'];
@@ -124,6 +199,7 @@ class EmailController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
+
 
     /**
      * Send Chapter EIN Number Notification Email

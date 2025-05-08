@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\BoardPendingController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ChapterReportController;
 use App\Http\Controllers\CoordinatorController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentReportController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\PublicPaymentController;
 use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewAsBoardController;
@@ -90,6 +92,10 @@ Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('c
 Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])->name('board.resources');
 Route::get('/pdf-viewer', [PublicController::class, 'showPdf'])->name('pdf-viewer');
 Route::get('/pdf-proxy', [PublicController::class, 'proxyGoogleDriveFile'])->name('pdf-proxy');
+Route::get('/newchapter', [PublicController::class, 'editNewChapter'])->name('public.newchapter');
+Route::post('/updatenewchapter', [PublicController::class, 'updateNewChapter'])->name('public.updatenewchapter');
+Route::get('/newchaptersuccess', [PublicController::class, 'viewNewChapter'])->name('public.newchaptersuccess');
+Route::post('/public-payment', [PublicController::class, 'processPublicPayment'])->name('public.payment');
 
 // Admin Controller Routes...Coordinator Login Required
 Route::get('/admin/reregdate', [AdminController::class, 'showReRegDate'])->name('admin.reregdate');
@@ -131,6 +137,10 @@ Route::post('/resources/addtoolkit', [ResourcesController::class, 'addToolkit'])
 Route::post('/resources/updatetoolkit/{id}', [ResourcesController::class, 'updateToolkit'])->name('resources.updatetoolkit');
 
 // Chapter Controller Routes...Coordinator Login Required
+Route::get('/chapter/pendingchapterlist', [ChapterController::class, 'showPendingChapters'])->name('chapters.chaplistpending');
+Route::get('/pendingchapterdetailsedit/{id}', [ChapterController::class, 'editPendingChapterDetails'])->name('chapters.editpending');
+Route::post('/pendingchapterdetailsupdate/{id}', [ChapterController::class, 'updatePendingChapterDetails'])->name('chapters.updatepending');
+Route::get('/chapter/declinedchapterlist', [ChapterController::class, 'showNotApprovedChapters'])->name('chapters.chaplistdeclined');
 Route::get('/chapter/chapterlist', [ChapterController::class, 'showChapters'])->name('chapters.chaplist');
 Route::get('/chapter/zapped', [ChapterController::class, 'showZappedChapter'])->name('chapters.chapzapped');
 Route::get('/chapter/inquiries', [ChapterController::class, 'showChapterInquiries'])->name('chapters.chapinquiries');
@@ -224,6 +234,7 @@ Route::get('/export/intirsfiling', [ExportController::class, 'indexInternational
 Route::get('/export/inteoystatus', [ExportController::class, 'indexIntEOYStatus'])->name('export.inteoystatus');
 
 // Board Controller Routes...Board Login Required
+Route::get('/board/newchapterstatus', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
 Route::get('/board/president', [BoardController::class, 'editPresident'])->name('board.editpresident');
 Route::post('/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('board.updatepresident');
 Route::get('/board/member', [BoardController::class, 'editMember'])->name('board.editmember');
@@ -260,7 +271,8 @@ Route::prefix('admin/board')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/board/financialreport/{chapter_id}', [FinancialReportController::class, 'editFinancialReport'])->name('admin.board.editfinancialreport');
     Route::get('/board/disbandchecklist/{chapter_id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('admin.board.editdisbandchecklist');
     Route::post('/board/disbandchecklistupdate/{chapter_id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('admin.board.updatedisbandchecklist');
-Route::post('/board/disbandreportupdate/{chapter_id}', [FinancialReportController::class, 'updateDisbandReport'])->name('admin.board.updatedisbandreport');
+    Route::post('/board/disbandreportupdate/{chapter_id}', [FinancialReportController::class, 'updateDisbandReport'])->name('admin.board.updatedisbandreport');
+    Route::get('/board/newchapterstatus/{chapter_id}', [PublicController::class, 'showNewChapterStatus'])->name('admin.board.newchapterstatus');
 });
 
 Route::get('/admin/chapterlist', [AdminController::class, 'listActiveChapters'])->name('admin.chapterlist');

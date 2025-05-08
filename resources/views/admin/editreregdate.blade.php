@@ -53,7 +53,7 @@
             </ul>
 
             <div class="text-center">
-                @if ($chDetails->is_active == 1 )
+                @if ($chDetails->active_status == 1 )
                     <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                 @else
                     <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>

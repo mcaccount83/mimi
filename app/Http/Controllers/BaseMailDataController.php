@@ -266,4 +266,34 @@ class BaseMailDataController extends Controller
             'TotalPercentage' => $input['TotalPercentage'] ?? null,
         ];
     }
+
+    public function getPublicPaymentData($input)
+    {
+        return [
+            'invoice' => $input['invoice'] ?? null,
+            'newchap' => $input['newchap'] ?? null,
+            'processingFee' => $input['fee'] ?? null,
+            'totalPaid' => $input['total'] ?? null,
+            'fname' => $input['first_name'] ?? null,
+            'lname' => $input['last_name'] ?? null,
+            'email' => $input['email'] ?? null,
+        ];
+    }
+
+    public function getNewChapterData($chDetails, $stateShortName)
+    {
+        return [
+            'chapterName' => $chDetails->name,
+            'chapterNameSanitized' => $chDetails->sanitized_name,
+            'chapterState' => $stateShortName,
+            'chapterConf' => $chDetails->conference_id,
+            'chapterBoundaries' => $chDetails->territory,
+            'chapterInquiriesContact' => $chDetails->inquiries_contact,
+            'chapterStatus' => $chDetails->status->chapter_status,
+            'founderName' => $chDetails->pendingPresident->first_name.' '.$chDetails->pendingPresident->last_name,
+            'founderEmail' => $chDetails->pendingPresident->email,
+            'founderPhone' => $chDetails->pendingPresident->phone,
+        ];
+    }
+
 }

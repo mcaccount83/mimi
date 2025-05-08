@@ -412,7 +412,7 @@
         <button id="Save" type="submit" class="btn btn-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp; Save</button>
 
     </form>
-        <button id="Password" type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
+        <button id="Password" type="button" class="btn btn-primary" onclick="showChangePasswordAlert('{{ $borDetails->user_id }}')"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
         <button id="logout-btn" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
@@ -561,7 +561,7 @@ function checkDuplicateEmail(email, id) {
         });
     }
 
-function showChangePasswordAlert() {
+function showChangePasswordAlert(user_id) {
     Swal.fire({
         title: 'Change Password',
         html: `
@@ -578,6 +578,7 @@ function showChangePasswordAlert() {
                     <label for="new_password_confirmation">Confirm New Password</label>
                     <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="swal2-input" required>
                 </div>
+            <input type="hidden" id="user_id" name="user_id" value="${user_id}">
             </form>
         `,
         confirmButtonText: 'Update Password',
@@ -588,6 +589,7 @@ function showChangePasswordAlert() {
             cancelButton: 'btn-sm btn-danger'
         },
         preConfirm: () => {
+            const user_id = Swal.getPopup().querySelector('#user_id').value;
             const currentPassword = Swal.getPopup().querySelector('#current_password').value;
             const newPassword = Swal.getPopup().querySelector('#new_password').value;
             const confirmNewPassword = Swal.getPopup().querySelector('#new_password_confirmation').value;
@@ -617,6 +619,7 @@ function showChangePasswordAlert() {
                     return false;
                 }
                 return {
+                    user_id: user_id,
                     current_password: currentPassword,
                     new_password: newPassword,
                     new_password_confirmation: confirmNewPassword
@@ -644,6 +647,7 @@ function showChangePasswordAlert() {
                 type: 'PUT',
                 data: {
                     _token: '{{ csrf_token() }}',
+                    user_id: result.value.user_id,
                     current_password: result.value.current_password,
                     new_password: result.value.new_password,
                     new_password_confirmation: result.value.new_password_confirmation

@@ -54,6 +54,11 @@ class HomeController extends Controller implements HasMiddleware
             return redirect()->to('coordviewprofile');
         }
 
+        if ($userType == 'pending') {
+            // Send to Pending Founders to Status Inquiry Screen
+            return redirect()->to('board/newchapterstatus');
+        }
+
         if ($userType == 'board') {
             // Send to President or Member Profile Screen
             $user_bdPositionId = $user['user_bdPositionId'];
@@ -96,33 +101,6 @@ class HomeController extends Controller implements HasMiddleware
         if ($userType == 'disbanded') {
             // Send Disbanded Chapter Board Members to Disbanded Checklist and Financial Report
             return redirect()->to('board/disbandchecklist');
-
-            // $userName = $user['user_name'];
-            // $userEmail = $user['user_email'];
-            // $loggedInName = $user['user_name'];
-            // $chId = $user['user_disChapterId'];
-
-            // $baseQuery = $this->baseBoardController->getChapterDetails($chId);
-            // $chDetails = $baseQuery['chDetails'];
-            // $chIsActive = $baseQuery['chIsActive'];
-            // $stateShortName = $baseQuery['stateShortName'];
-            // $chDocuments = $baseQuery['chDocuments'];
-            // // $submitted = $baseQuery['submitted'];
-            // $chFinancialReport = $baseQuery['chFinancialReport'];
-            // $awards = $baseQuery['awards'];
-            // $allAwards = $baseQuery['allAwards'];
-
-            // $resources = Resources::with('resourceCategory')->get();
-            // $resourceCategories = ResourceCategory::all();
-
-            // $chDisbanded = $baseQuery['chDisbanded'];
-
-            // $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
-            //     'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            //    'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
-            // ];
-
-            // return view('boards.disband')->with($data);
 
         } else {
             Auth::logout(); // logout non-user

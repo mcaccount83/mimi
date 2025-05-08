@@ -104,7 +104,7 @@ class AdminController extends Controller implements HasMiddleware
         $coorId = $user['user_coorId'];
 
         $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
-        $chapters = $baseQuery['query']->get();
+        $chapters = $baseQuery['query']->orderByDesc('chapters.zap_date')->get();
 
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
@@ -238,7 +238,7 @@ class AdminController extends Controller implements HasMiddleware
             ->pluck('chapter_id');
 
         $ChapterPres = DB::table('chapters')
-            ->where('is_active', '=', '1')
+            ->where('active_status', '=', '1')
             ->whereNotIn('id', $PresId)
             ->get();
 
@@ -288,7 +288,7 @@ class AdminController extends Controller implements HasMiddleware
             ProbationSubmission::query()->delete();
 
             $probationPartyChapters = Chapters::with('probation')
-                ->where('is_active', 1)
+                ->where('active_status', 1)
                 ->where('probation_id', 3)
                 ->get();
             foreach ($probationPartyChapters as $chapter) {
@@ -526,7 +526,7 @@ class AdminController extends Controller implements HasMiddleware
     }
 
     /**
-     * Udate EOY Database Tables
+     * Udate EOY Database Tables  // Step
      */
     public function updateEOYDatabase(Request $request): JsonResponse
     {
@@ -571,7 +571,7 @@ class AdminController extends Controller implements HasMiddleware
             FinancialReport::query()->delete();
 
             // Fetch all active chapters and insert each chapter's balance into financial_report
-            $activeChapters = Chapters::with('documents')->where('is_active', 1)->get();
+            $activeChapters = Chapters::with('documents')->where('active_status', 1)->get();
             foreach ($activeChapters as $chapter) {
                 FinancialReport::create([
                     'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
@@ -658,7 +658,7 @@ class AdminController extends Controller implements HasMiddleware
             FinancialReport::query()->delete();
 
             // Fetch all active chapters and add balance into financial_report
-            $activeChapters = Chapters::with('documents')->where('is_active', 1)->get();
+            $activeChapters = Chapters::with('documents')->where('active_status', 1)->get();
             foreach ($activeChapters as $chapter) {
                 FinancialReport::create([
                     'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
@@ -858,7 +858,8 @@ class AdminController extends Controller implements HasMiddleware
 
             // Get board members from active chapters using with()
             $boardUserIds = Chapters::with('boards')
-                ->where('is_active', true)
+                // ->where('is_active', true)
+                ->where('active_status', 1)
                 ->get()
                 ->pluck('boards')
                 ->flatten()

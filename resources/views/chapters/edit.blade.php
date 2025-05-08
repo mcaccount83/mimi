@@ -96,18 +96,23 @@
                             <span id="display_corlist" style="display: block; margin-top: 10px;"></span>
                         </li>
                         @else
-                        <li class="list-group-item" id="display_corlist" ></li>
-                        @endif
+                        <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                        <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
+                    @endif
                   </ul>
                   <div class="text-center">
-                      @if ($chDetails->is_active == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @else
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                  </div>
+                    @if ($chDetails->active_status == 1 )
+                        <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
+                    @elseif ($chDetails->active_status == 2)
+                      <b><span style="color: #ffc107;">Chapter is PENDING</span></b>
+                    @elseif ($chDetails->active_status == 3)
+                      <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b>
+                    @elseif ($chDetails->active_status == 0)
+                        <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
+                        Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
+                        {{ $chDetails->disband_reason }}
+                    @endif
+                </div>
                 </div>
               <!-- /.card-body -->
             </div>

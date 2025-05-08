@@ -8,16 +8,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
-class Boards extends Model
+class BoardsPending extends Model
 {
     use HasFactory;
     use Notifiable;
+
+    protected $table = 'boards_pending';
 
     public $timestamps = false;
 
     protected $fillable = [
         'user_id', 'first_name', 'last_name', 'email', 'board_position_id', 'chapter_id', 'street_address', 'city', 'state', 'zip', 'country',
-        'phone', 'last_updated_by', 'last_updated_date',
+        'phone', 'last_updated_by', 'last_updated_date', 'is_active',
     ];
 
     public function user(): BelongsTo

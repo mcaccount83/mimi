@@ -290,6 +290,27 @@ window.onload = function () {
                             </li>
                         @endif
 
+                          <!-- New Menu Item -->
+                          @php
+                            if ($conferenceCoordinatorCondition) {
+                                $newChaptersRoute = route('chapters.chaplistpending');
+                            } elseif ($userAdmin) {
+                                $newChaptersRoute = route('international.intchapterpending');
+                            }
+                            $activeNewChpaterRoutes = [
+                                'chapter/pendingchapterlist', 'chapter/declinedchapterlist',
+                                'international/pendingchapterlist', 'international/declinedchapterlist'
+                            ];
+                        @endphp
+                        @if (isset($newChaptersRoute))
+                            <li class="nav-item">
+                                <a href="{{ $newChaptersRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeNewChpaterRoutes) }}">
+                                    <i class="nav-icon fas fa-home"></i>
+                                    <p>New Chapters</p>
+                                </a>
+                            </li>
+                        @endif
+
                         <!-- List Subscription Menu Item -->
                         @php
                             // if ($coordinatorCondition) {

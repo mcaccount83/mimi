@@ -293,7 +293,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $chList = Chapters::with('state')
             ->where('primary_coordinator_id', $cdId)  // Chapter Harcoaded List
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->get();
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
@@ -1253,7 +1253,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $chList = Chapters::with('state')
             ->where('primary_coordinator_id', $cdId)  // Chapter Harcoaded List
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->get();
 
         $data = ['cdDetails' => $cdDetails, 'drList' => $drList, 'chList' => $chList,

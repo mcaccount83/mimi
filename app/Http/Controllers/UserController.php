@@ -72,7 +72,7 @@ class UserController extends Controller implements HasMiddleware
     public function loadUserInformation(Request $request)
     {
         $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference', 'coordinator.displayPosition', 'coordinator.secondaryPosition',
-            'board', 'board.position', 'boardOutgoing', 'boardDisbanded'])
+            'board', 'board.position', 'boardOutgoing', 'boardDisbanded', 'boardPending'])
             ->find($request->user()->id);
 
         $userInfo = [
@@ -108,6 +108,13 @@ class UserController extends Controller implements HasMiddleware
                     'user_secPositionId' => $secondaryPositionId, // Returns array of secondary ids
                     'user_secPosition' => $secondaryPosition, // Returns array of secondary titles
                     'user_layerId' => $user->coordinator->layer_id,
+                ];
+                break;
+
+            case 'pending':
+                $userInfo += [
+                    'user_bdPendId' => $user->boardPending->id,
+                    'user_pendChapterId' => $user->boardPending->chapter_id,
                 ];
                 break;
 
@@ -162,7 +169,7 @@ class UserController extends Controller implements HasMiddleware
     public function loadEmailDetails($chId)
     {
         $chDetails = Chapters::with(['state', 'documents', 'boards', 'coordinatorTree', 'boardsDisbanded'])->find($chId);
-        $chIsActive = $chDetails->is_active;
+        $chIsActive = $chDetails->active_status;
         $chEmail = trim($chDetails->email);
         $stateShortName = $chDetails->state->state_short_name ?? '';
         $documents = $chDetails->documents()->first();

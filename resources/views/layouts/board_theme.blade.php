@@ -46,6 +46,14 @@
         };
 
     </script>
+    <style>
+            .disabled-link {
+    pointer-events: none; /* Prevent click events */
+    cursor: default; /* Change cursor to default */
+    color: #6c757d; /* Muted color */
+}
+</style>
+
 </head>
 
 <body style="background-color: #f0f0f0 !important;" class="hold-transition layout-top-nav">

@@ -7,6 +7,7 @@ use App\Models\Coordinators;
 use App\Models\FinancialReportAwards;
 use App\Models\Probation;
 use App\Models\State;
+use App\Models\ActiveStatus;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
 
@@ -32,13 +33,16 @@ class BaseBoardController extends Controller
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'president',
             'payments', 'boards', 'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck'])->find($id);
         $chId = $chDetails->id;
-        $chIsActive = $chDetails->is_active;
+        $chIsActive = $chDetails->active_status;
+        $chActiveId = $chDetails->active_status;
+        $chActiveStatus = $chDetails->activeStatus->active_status;
         $stateShortName = $chDetails->state->state_short_name;
         $chConfId = $chDetails->conference_id;
         $chPcId = $chDetails->primary_coordinator_id;
         $probationReason = $chDetails->probation?->probation_reason;
         $startMonthName = $chDetails->startMonth->month_long_name;
 
+        $allActive = ActiveStatus::all();  // Full List for Dropdown Menu
         $allProbation = Probation::all();  // Full List for Dropdown Menu
         $allWebLinks = Website::all(); // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
@@ -82,9 +86,9 @@ class BaseBoardController extends Controller
         $emailCC = $ccEmailData['cc_email'];
 
         return ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'cc_id' => $cc_id, 'chFinancialReportFinal' => $chFinancialReportFinal,
-            'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments,
-            'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,
+            'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments, 'allActive' => $allActive,
+            'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails, 'chActiveId' => $chActiveId,
+            'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus,
             'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail, 'displayEOY' => $displayEOY,
             'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'allProbation' => $allProbation, 'probationReason' => $probationReason,
         ];

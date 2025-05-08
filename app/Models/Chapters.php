@@ -20,7 +20,8 @@ class Chapters extends Model
     protected $fillable = [
         'name', 'sanitized_name', 'state_id', 'country_short_name', 'conference_id', 'region_id', 'ein', 'status_id', 'territory', 'inquiries_contact',
         'start_month_id', 'start_year', 'next_renewal_year', 'primary_coordinator_id', 'founders_name', 'last_updated_by', 'last_updated_date',
-        'created_at', 'is_active',
+        'created_at', 'is_active', 'active_status',
+
     ];
 
     public function boards(): HasMany
@@ -37,6 +38,12 @@ class Chapters extends Model
     {
         return $this->hasMany(BoardsOutgoing::class, 'chapter_id', 'id');
     }
+
+    public function boardsPending(): HasMany
+    {
+        return $this->hasMany(BoardsPending::class, 'chapter_id', 'id');
+    }
+
 
     // public function boardsOutgoing(): HasMany
     // {
@@ -75,6 +82,36 @@ class Chapters extends Model
     public function secretary(): HasOne
     {
         return $this->hasOne(Boards::class, 'chapter_id', 'id')
+            ->where('board_position_id', 5);
+    }
+
+    public function pendingPresident(): HasOne
+    {
+        return $this->hasOne(BoardsPending::class, 'chapter_id', 'id')
+            ->where('board_position_id', 1);
+    }
+
+    public function pendingAvp(): HasOne
+    {
+        return $this->hasOne(BoardsPending::class, 'chapter_id', 'id')
+            ->where('board_position_id', 2);
+    }
+
+    public function pendingMvp(): HasOne
+    {
+        return $this->hasOne(BoardsPending::class, 'chapter_id', 'id')
+            ->where('board_position_id', 3);
+    }
+
+    public function pendingTreasurer(): HasOne
+    {
+        return $this->hasOne(BoardsPending::class, 'chapter_id', 'id')
+            ->where('board_position_id', 4);
+    }
+
+    public function pendingSecretary(): HasOne
+    {
+        return $this->hasOne(BoardsPending::class, 'chapter_id', 'id')
             ->where('board_position_id', 5);
     }
 
@@ -142,6 +179,11 @@ class Chapters extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(Status::class, 'status_id', 'id');  // 'status_id' in chapters BelongsTo 'id' in status
+    }
+
+    public function activeStatus(): BelongsTo
+    {
+        return $this->belongsTo(ActiveStatus::class, 'active_status', 'id');  // 'active_status' in chapters BelongsTo 'id' in probation
     }
 
     public function probation(): BelongsTo

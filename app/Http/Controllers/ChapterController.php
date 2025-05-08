@@ -19,6 +19,7 @@ use App\Mail\WebsiteUpdatePrimaryCoor;
 use App\Models\Boards;
 use App\Models\BoardsDisbanded;
 use App\Models\BoardsOutgoing;
+use App\Models\BoardsPending;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\DisbandedChecklist;
@@ -82,6 +83,48 @@ class ChapterController extends Controller implements HasMiddleware
             new Middleware('auth', except: ['logout']),
             \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
         ];
+    }
+
+    /**
+     * Display the Pending New chapter list mapped with login coordinator
+     */
+    public function showPendingChapters(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseChapterController->getPendingBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']->get();
+
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+
+        return view('chapters.chaplistpending')->with($data);
+    }
+
+    /**
+     * Display the Pending New chapter list mapped with login coordinator
+     */
+    public function showNotApprovedChapters(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseChapterController->getNotApprovedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']->get();
+
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+
+        return view('chapters.chaplistdeclined')->with($data);
     }
 
 
@@ -347,7 +390,7 @@ class ChapterController extends Controller implements HasMiddleware
         try {
             DB::beginTransaction();
 
-            $chapter->is_active = '0';
+            $chapter->active_status = '0';
             $chapter->disband_reason = $disbandReason;
             $chapter->zap_date = date('Y-m-d');
             $chapter->last_updated_by = $lastUpdatedBy;
@@ -481,7 +524,7 @@ class ChapterController extends Controller implements HasMiddleware
         try {
             DB::beginTransaction();
 
-            $chapter->is_active = '1';
+            $chapter->active_status = '1';
             $chapter->disband_reason = null;
             $chapter->zap_date = null;
             $chapter->last_updated_by = $lastUpdatedBy;
@@ -691,7 +734,7 @@ class ChapterController extends Controller implements HasMiddleware
                 'last_updated_by' => $lastUpdatedBy,
                 'last_updated_date' => $lastupdatedDate,
                 'created_at' => $lastupdatedDate,
-                'is_active' => 1,
+                'active_status' => 1,
             ])->id;
 
             FinancialReport::create([
@@ -1310,7 +1353,6 @@ class ChapterController extends Controller implements HasMiddleware
                         'phone' => $request->input('ch_avp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
-                        // 'is_active' => 1,
                     ]);
                     foreach ($defaultBoardCategories as $categoryId) {
                         ForumCategorySubscription::create([
@@ -1409,7 +1451,6 @@ class ChapterController extends Controller implements HasMiddleware
                         'phone' => $request->input('ch_mvp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
-                        // 'is_active' => 1,
                     ]);
 
                     foreach ($defaultBoardCategories as $categoryId) {
@@ -1509,7 +1550,6 @@ class ChapterController extends Controller implements HasMiddleware
                         'phone' => $request->input('ch_trs_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
-                        // 'is_active' => 1,
                     ]);
 
                     foreach ($defaultBoardCategories as $categoryId) {
@@ -1610,7 +1650,6 @@ class ChapterController extends Controller implements HasMiddleware
                         'phone' => $request->input('ch_sec_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
-                        // 'is_active' => 1,
                     ]);
 
                     foreach ($defaultBoardCategories as $categoryId) {
@@ -2051,5 +2090,225 @@ class ChapterController extends Controller implements HasMiddleware
         $data = ['countList' => $countList, 'activeChapterList' => $activeChapterList];
 
         return view('chapters.chapboardlist')->with($data);
+    }
+
+     /**
+     *Edit Pending New Chapter Information
+     */
+    public function editPendingChapterDetails(Request $request, $id): View
+    {
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $chIsActive = $baseQuery['chIsActive'];
+        $chConfId = $baseQuery['chConfId'];
+
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $chPcId = $baseQuery['chPcId'];
+
+        $startMonthName = $baseQuery['startMonthName'];
+        $chapterStatus = $baseQuery['chapterStatus'];
+
+        $allActive = $baseQuery['allActive'];
+        $allStates = $baseQuery['allStates'];  // Full List for Dropdown Menu
+        $allRegions = $baseQuery['allRegions'];
+
+        $pcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
+        ->where('conference_id', $chConfId)
+        ->whereBetween('position_id', [1, 7])
+        ->where('is_active', 1)
+        ->where('on_leave', '!=', '1')
+        ->get();
+
+        $pcDetails = $pcList->map(function ($coordinator) {
+            $mainTitle = $coordinator->displayPosition->short_title ?? '';
+            $secondaryTitles = '';
+
+            if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
+            }
+
+            $combinedTitle = $mainTitle;
+            if (!empty($secondaryTitles)) {
+                $combinedTitle .= '/' . $secondaryTitles;
+            }
+
+            $cpos = "({$combinedTitle})";
+
+                return [
+                    'cid' => $coordinator->id,
+                    'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
+                    'dpos' => $mainTitle,
+                    'cpos' => $cpos,
+                    'regid' => $coordinator->region_id,
+                ];
+            });
+
+        $pcDetails = $pcDetails->unique('cid');
+
+        $data = ['id' => $id, 'chIsActive' => $chIsActive,
+            'chDetails' => $chDetails, 'allActive' => $allActive,
+            'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
+            'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+            'conferenceDescription' => $conferenceDescription, 'allStates' => $allStates,
+            'pcList' => $pcList, 'allRegions' => $allRegions, 'pcDetails' => $pcDetails
+        ];
+
+        return view('chapters.editpending')->with($data);
+    }
+
+    /**
+     *Update Pending New Chapter Information
+     */
+    public function updatePendingChapterDetails(Request $request, $id): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $pcDetails = $baseQuery['pcDetails'];
+
+        $input = $request->all();
+        $chapterName = $request->input('ch_name');
+
+        $chapter = Chapters::with('pendingPresident')->find($id);
+        $chapterId = $id;
+        $president = $chapter->pendingPresident;
+        $user = $president->user;
+        $userId = $president->id;
+
+        $defaultCategories = $this->forumSubscriptionController->defaultCategories();
+        $defaultBoardCategories = $defaultCategories['boardCategories'];
+
+        DB::beginTransaction();
+        try {
+            $chapter->name = $chapterName;
+            $chapter->sanitized_name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $chapterName);
+            $chapter->territory = $request->input('ch-territory');
+            $chapter->state_id = $request->input('ch_state');
+            $chapter->region_id = $request->input('ch_region');
+            $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
+            $chapter->inquiries_note = $request->input('ch_inqnote');
+            $chapter->email = $request->input('ch_email');
+            $chapter->po_box = $request->input('ch_pobox');
+            $chapter->primary_coordinator_id = $request->filled('ch_primarycor') ? $request->input('ch_primarycor') : $request->input('ch_hid_primarycor');
+            $chapter->active_status = $request->input('ch_active');
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+
+            $chapter->save();
+
+            $user->update([   // Update user details
+                'first_name' => $request->input('ch_pre_fname'),
+                'last_name' => $request->input('ch_pre_lname'),
+                'email' => $request->input('ch_pre_email'),
+                'updated_at' => now(),
+            ]);
+
+            $president->update([   // Update board details
+                'first_name' => $request->input('ch_pre_fname'),
+                'last_name' => $request->input('ch_pre_lname'),
+                'email' => $request->input('ch_pre_email'),
+                'street_address' => $request->input('ch_pre_street'),
+                'city' => $request->input('ch_pre_city'),
+                'state' => $request->input('ch_pre_state'),
+                'zip' => $request->input('ch_pre_zip'),
+                'country' => 'USA',
+                'phone' => $request->input('ch_pre_phone'),
+                'last_updated_by' => $lastUpdatedBy,
+                'last_updated_date' => now(),
+            ]);
+
+            if ($chapter->active_status == 1 ) {
+                FinancialReport::create([
+                    'chapter_id' => $chapterId,
+                ]);
+
+                Documents::create([
+                    'chapter_id' => $chapterId,
+                ]);
+
+                Payments::create([
+                    'chapter_id' => $chapterId,
+                ]);
+
+                foreach ($defaultBoardCategories as $categoryId) {
+                    ForumCategorySubscription::create([
+                        'user_id' => $user->id,
+                        'category_id' => $categoryId,
+                    ]);
+                }
+
+                User::where('id', $user->id)->update([
+                    'user_type' => 'board',
+                ]);
+                Boards::create([
+                    'user_id' => $user->id,
+                    'chapter_id' => $president->chapter_id,
+                    'board_position_id' => $president->board_position_id,
+                    'first_name' => $president->first_name,
+                    'last_name' => $president->last_name,
+                    'email' => $president->email,
+                    'phone' => $president->phone,
+                    'street_address' => $president->street_address,
+                    'city' => $president->city,
+                    'state' => $president->state,
+                    'zip' => $president->zip,
+                    'country' => $president->country,
+                    'last_updated_by' => $lastUpdatedBy,
+                    'last_updated_date' => $lastupdatedDate,
+                ]);
+                BoardsPending::where('user_id', $user->id)->delete();
+
+
+                // Load Chapter MailData//
+                $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+                $chDetails = $baseQuery['chDetails'];
+                $stateShortName = $baseQuery['stateShortName'];
+                $pcDetails = $baseQuery['pcDetails'];
+                $PresDetails = $baseQuery['PresDetails'];
+
+                //  Load User Information for Signing Email & PDFs
+                $user = $this->userController->loadUserInformation($request);
+
+                $mailData = array_merge(
+                    $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                    $this->baseMailDataController->getUserData($user),
+                    $this->baseMailDataController->getPCData($pcDetails),
+                    $this->baseMailDataController->getPresData($PresDetails),
+                );
+
+                $mailTableNewChapter = $this->emailTableController->createNewChapterTable($mailData);
+
+                $mailData = array_merge($mailData, [
+                    'mailTableNewChapter' => $mailTableNewChapter,
+                ]);
+
+                // Primary Coordinator Notification//
+                Mail::to($pcDetails->email)
+                    ->queue(new ChapterAddPrimaryCoor($mailData));
+
+                // List Admin Notification//
+                $listAdminEmail = 'listadmin@momsclub.org';
+                Mail::to($listAdminEmail)
+                    ->queue(new ChapterAddListAdmin($mailData));
+            }
+
+            DB::commit();
+            if ($chapter->active_status == 1)
+                return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
+            else
+                return to_route('chapters.editpending', ['id' => $id])->with('success', 'Chapter Details have been updated');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+            return to_route('chapters.editpending', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
     }
 }

@@ -471,4 +471,5 @@ class PaymentController extends Controller implements HasMiddleware
         $log = PaymentLog::findOrFail($id);
         return view('payment-logs.show', compact('log'));
     }
+
 }
