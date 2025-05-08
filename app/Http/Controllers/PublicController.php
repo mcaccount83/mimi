@@ -234,6 +234,7 @@ class PublicController extends Controller
         $currentYear = date('Y');
 
         $input = $request->all();
+        $invoice = $paymentResponse['data']['invoiceNumber'];
         $stateId = $input['ch_state'];
 
         $state = State::find($stateId);
@@ -322,17 +323,16 @@ class PublicController extends Controller
 
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
             $chDetails = $baseQuery['chDetails'];
-            $emailListChap = $baseQuery['emailListChap'];  // Full Board
-            $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
             $emailCC = $baseQuery['emailCC'];  // CC Email
             $AdminEmail = 'dragonmom@msn.com';
+            $founerEmail = $input['ch_pre_email'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getNewChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getPublicPaymentData($input),
+                $this->baseMailDataController->getPublicPaymentData($input, $invoice),
             );
 
-            Mail::to($emailListChap)
+            Mail::to($founerEmail)
                 ->cc($emailCC)
                 ->queue(new NewChapterThankYou($mailData));
 
