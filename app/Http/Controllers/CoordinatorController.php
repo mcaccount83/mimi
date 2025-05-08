@@ -742,12 +742,12 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $chList = Chapters::with('state')
             ->where('primary_coordinator_id', $cdId)  // Chapter Harcoaded List
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->get();
 
         $chDetails = Chapters::with('state')   // Chapter Selection List
             ->where('conference_id', $cdConfId)
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->orderBy('state_id')
             ->orderBy('name')
             ->get();
