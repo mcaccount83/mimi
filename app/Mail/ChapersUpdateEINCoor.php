@@ -40,6 +40,6 @@ class ChapersUpdateEINCoor extends Mailable implements ShouldQueue
             ->attach($this->pdfPath, [
                 'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_ChapterNameChange.pdf',
                 'mime' => 'application/pdf',
-            ]);;
+            ]);
     }
 }

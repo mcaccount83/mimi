@@ -44,7 +44,6 @@ class Chapters extends Model
         return $this->hasMany(BoardsPending::class, 'chapter_id', 'id');
     }
 
-
     // public function boardsOutgoing(): HasMany
     // {
     //     return $this->hasMany(OutgoingBoard::class, 'chapter_id', 'id');

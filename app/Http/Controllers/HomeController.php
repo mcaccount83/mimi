@@ -46,6 +46,7 @@ class HomeController extends Controller implements HasMiddleware
             Auth::logout();  // logout inactive user
             $request->session()->flush();
             $request->session()->flash('error', 'User does not have an active profile');
+
             return redirect()->to('/login');
         }
 

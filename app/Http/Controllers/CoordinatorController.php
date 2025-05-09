@@ -299,7 +299,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
-            'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole
+            'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
         ];
 
         return view('coordinators.view')->with($data);
@@ -766,7 +766,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'chList' => $chList, 'drList' => $drList, 'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
             'pcOptions' => $pcOptions, 'cdId' => $cdId, 'allPositions' => $allPositions, 'chDetails' => $chDetails, 'drDetails' => $drDetails, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName, 'pcRowCount' => $pcRowCount, 'drRowCount' => $drRowCount,
-            'allAdminRoles' => $allAdminRoles, 'cdAdminRole' => $cdAdminRole
+            'allAdminRoles' => $allAdminRoles, 'cdAdminRole' => $cdAdminRole,
         ];
 
         return view('coordinators.editrole')->with($data);
@@ -942,11 +942,11 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             if ($request->has('cord_sec_pos') && is_array($request->cord_sec_pos)) {
                 // Filter out any empty values
-                $validPositionIds = array_filter($request->cord_sec_pos, function($value) {
-                    return !empty($value) && is_numeric($value);
+                $validPositionIds = array_filter($request->cord_sec_pos, function ($value) {
+                    return ! empty($value) && is_numeric($value);
                 });
 
-                if (!empty($validPositionIds)) {
+                if (! empty($validPositionIds)) {
                     $coordinator->secondaryPosition()->sync($validPositionIds);
                 } else {
                     $coordinator->secondaryPosition()->detach();
@@ -1013,7 +1013,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
-            'allStates' => $allStates, 'allMonths' => $allMonths, 'cdAdminRole' => $cdAdminRole
+            'allStates' => $allStates, 'allMonths' => $allMonths, 'cdAdminRole' => $cdAdminRole,
         ];
 
         return view('coordinators.editdetails')->with($data);
@@ -1176,7 +1176,6 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
     }
-
 
     // public function updateCoordRecognition(Request $request, $id): RedirectResponse
     // {

@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CoordinatorReportController extends Controller implements HasMiddleware
@@ -32,7 +30,6 @@ class CoordinatorReportController extends Controller implements HasMiddleware
             \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
         ];
     }
-
 
     /**
      * View the Volunteer Utilization list
@@ -167,5 +164,4 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         return view('coordreports.coordrptreportingtree')->with($data);
     }
-
 }

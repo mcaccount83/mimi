@@ -33,7 +33,6 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-
     /**
      * Export Chapter List
      */
@@ -316,7 +315,7 @@ class ExportController extends Controller implements HasMiddleware
                                 $secondaryPositionTitles[] = $position;
                             }
                         }
-                        $secPositionValue = !empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
+                        $secPositionValue = ! empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
                     } elseif (is_string($secondaryPosition)) {
                         // If it's already a string
                         $secPositionValue = $secondaryPosition;
@@ -429,7 +428,7 @@ class ExportController extends Controller implements HasMiddleware
                                 $secondaryPositionTitles[] = $position;
                             }
                         }
-                        $secPositionValue = !empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
+                        $secPositionValue = ! empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
                     } elseif (is_string($secondaryPosition)) {
                         // If it's already a string
                         $secPositionValue = $secondaryPosition;
@@ -544,7 +543,7 @@ class ExportController extends Controller implements HasMiddleware
                                 $secondaryPositionTitles[] = $position;
                             }
                         }
-                        $secPositionValue = !empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
+                        $secPositionValue = ! empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
                     } elseif (is_string($secondaryPosition)) {
                         // If it's already a string
                         $secPositionValue = $secondaryPosition;
@@ -1215,7 +1214,7 @@ class ExportController extends Controller implements HasMiddleware
                                 $secondaryPositionTitles[] = $position;
                             }
                         }
-                        $secPositionValue = !empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
+                        $secPositionValue = ! empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
                     } elseif (is_string($secondaryPosition)) {
                         // If it's already a string
                         $secPositionValue = $secondaryPosition;
@@ -1324,7 +1323,7 @@ class ExportController extends Controller implements HasMiddleware
                                 $secondaryPositionTitles[] = $position;
                             }
                         }
-                        $secPositionValue = !empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
+                        $secPositionValue = ! empty($secondaryPositionTitles) ? implode(', ', $secondaryPositionTitles) : null;
                     } elseif (is_string($secondaryPosition)) {
                         // If it's already a string
                         $secPositionValue = $secondaryPosition;

@@ -10,7 +10,6 @@ use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Models\EmailFields;
 use App\Models\Resources;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -45,7 +44,6 @@ class EmailController extends Controller implements HasMiddleware
             \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
         ];
     }
-
 
     /**
      * Update Email Data and Send Chapter Setup Email
@@ -199,7 +197,6 @@ class EmailController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
-
 
     /**
      * Send Chapter EIN Number Notification Email

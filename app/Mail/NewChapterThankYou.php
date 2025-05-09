@@ -8,7 +8,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Carbon;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class NewChapterThankYou extends Mailable implements ShouldQueue

@@ -4,25 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Mail\NewChapterThankYou;
 use App\Mail\PaymentsNewChapOnline;
-use App\Models\Admin;
+use App\Models\BoardsPending;
+use App\Models\Chapters;
+use App\Models\Coordinators;
+use App\Models\PaymentLog;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\State;
-use App\Models\Chapters;
-use App\Models\Coordinators;
 use App\Models\User;
-use App\Models\BoardsPending;
-use App\Models\PaymentLog;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
@@ -128,60 +127,60 @@ class PublicController extends Controller
      * Proxy for Google Drive files to avoid CORS issues
      */
     public function proxyGoogleDriveFile(Request $request)
-{
-    $fileId = $request->query('id');
+    {
+        $fileId = $request->query('id');
 
-    if (empty($fileId)) {
-        return abort(404, 'File ID is required');
+        if (empty($fileId)) {
+            return abort(404, 'File ID is required');
+        }
+
+        try {
+            // Use your existing token method that's already working for uploads
+            $accessToken = $this->token();
+
+            $client = new Client;
+
+            // Use the Google Drive API directly with your auth token
+            $response = $client->get("https://www.googleapis.com/drive/v3/files/{$fileId}?alt=media&supportsAllDrives=true", [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                ],
+                'stream' => true,
+                'timeout' => 30,
+            ]);
+
+            // Get content type from response headers
+            $contentType = $response->getHeaderLine('Content-Type');
+
+            // Stream the response back to the client
+            return response()->stream(
+                function () use ($response) {
+                    $body = $response->getBody();
+                    while (! $body->eof()) {
+                        echo $body->read(1024);
+                    }
+                },
+                200,
+                [
+                    'Content-Type' => $contentType ?: 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="document.pdf"',
+                    'Cache-Control' => 'no-cache',
+                ]
+            );
+
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Google Drive API error', [
+                'message' => $e->getMessage(),
+                'file_id' => $fileId,
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to fetch file from Google Drive',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
-
-    try {
-        // Use your existing token method that's already working for uploads
-        $accessToken = $this->token();
-
-        $client = new Client();
-
-        // Use the Google Drive API directly with your auth token
-        $response = $client->get("https://www.googleapis.com/drive/v3/files/{$fileId}?alt=media&supportsAllDrives=true", [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
-            ],
-            'stream' => true,
-            'timeout' => 30,
-        ]);
-
-        // Get content type from response headers
-        $contentType = $response->getHeaderLine('Content-Type');
-
-        // Stream the response back to the client
-        return response()->stream(
-            function () use ($response) {
-                $body = $response->getBody();
-                while (!$body->eof()) {
-                    echo $body->read(1024);
-                }
-            },
-            200,
-            [
-                'Content-Type' => $contentType ?: 'application/pdf',
-                'Content-Disposition' => 'inline; filename="document.pdf"',
-                'Cache-Control' => 'no-cache',
-            ]
-        );
-
-    } catch (\Exception $e) {
-        // Log the error for debugging
-        Log::error('Google Drive API error', [
-            'message' => $e->getMessage(),
-            'file_id' => $fileId,
-        ]);
-
-        return response()->json([
-            'error' => 'Failed to fetch file from Google Drive',
-            'message' => $e->getMessage(),
-        ], 500);
-    }
-}
 
     /**
      * Show New Chapter Registration
@@ -215,8 +214,8 @@ class PublicController extends Controller
     public function updateNewChapter(Request $request): RedirectResponse
     {
         $input = $request->all();
-        $description = "New Chapter Application";
-        $name =  $input['ch_name'];
+        $description = 'New Chapter Application';
+        $name = $input['ch_name'];
         $founder = $input['ch_pre_fname'].' '.$input['ch_pre_lname'];
 
         $paymentResponse = $this->processPublicPayment($request, $name, $description);
@@ -242,28 +241,24 @@ class PublicController extends Controller
 
         $confId = null;
 
-        if (in_array($stateShortName, ['AK', 'HI', 'ID', 'MN', 'MT', 'ND', 'OR', 'SD', 'WA', 'WI', 'WY', '**','AA', 'AE', 'AP'])) {
+        if (in_array($stateShortName, ['AK', 'HI', 'ID', 'MN', 'MT', 'ND', 'OR', 'SD', 'WA', 'WI', 'WY', '**', 'AA', 'AE', 'AP'])) {
             $confId = '1';
-        }
-        elseif (in_array($stateShortName, ['AZ', 'CA', 'CO', 'NM', 'NV', 'OK', 'TX', 'UT'])) {
+        } elseif (in_array($stateShortName, ['AZ', 'CA', 'CO', 'NM', 'NV', 'OK', 'TX', 'UT'])) {
             $confId = '2';
-        }
-        elseif (in_array($stateShortName, ['AL', 'AR', 'DC', 'FL', 'GA', 'KY', 'LA', 'MD', 'MS', 'NC', 'SC', 'TN', 'VA', 'WV'])) {
+        } elseif (in_array($stateShortName, ['AL', 'AR', 'DC', 'FL', 'GA', 'KY', 'LA', 'MD', 'MS', 'NC', 'SC', 'TN', 'VA', 'WV'])) {
             $confId = '3';
-        }
-        elseif (in_array($stateShortName, ['CT', 'DE', 'MA', 'ME', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT'])) {
+        } elseif (in_array($stateShortName, ['CT', 'DE', 'MA', 'ME', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT'])) {
             $confId = '4';
-        }
-        elseif (in_array($stateShortName, ['IA', 'IL', 'IN', 'KS', 'MI', 'MO', 'NE', 'OH'])) {
+        } elseif (in_array($stateShortName, ['IA', 'IL', 'IN', 'KS', 'MI', 'MO', 'NE', 'OH'])) {
             $confId = '5';
         }
 
         $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
-        ->where('conference_id', $confId)
-        ->where('position_id', 7)
-        ->where('is_active', 1)
-        ->where('on_leave', '!=', '1')
-        ->first();
+            ->where('conference_id', $confId)
+            ->where('position_id', 7)
+            ->where('is_active', 1)
+            ->where('on_leave', '!=', '1')
+            ->first();
 
         $pcId = $ccDetails ? $ccDetails->id : null; // Add a check in case no coordinator is found
 
@@ -368,8 +363,8 @@ class PublicController extends Controller
         $amount = (float) preg_replace('/[^\d.]/', '', $total);
         $today = Carbon::today()->format('m-d-Y');
 
-         /* Create a merchantAuthenticationType object with authentication details
-            retrieved from the constants file */
+        /* Create a merchantAuthenticationType object with authentication details
+           retrieved from the constants file */
         /** @var \net\authorize\api\contract\v1\MerchantAuthenticationType $merchantAuthentication */
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType;
         $merchantAuthentication->setName(config('settings.authorizenet_api_login_id'));
@@ -432,8 +427,8 @@ class PublicController extends Controller
                 'company' => $name,
                 // 'founder' => $founder,
                 'email' => $email,
-                'total' => $amount
-            ]
+                'total' => $amount,
+            ],
         ];
 
         // Create initial log entry before processing
@@ -468,7 +463,7 @@ class PublicController extends Controller
         // After processing, update the log with the response
         if ($response != null) {
             if ($response->getMessages()->getResultCode() == 'Ok') {
-            /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
+                /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
                 $tresponse = $response->getTransactionResponse();
                 if ($tresponse != null && $tresponse->getMessages() != null) {
                     // Update log with success response
@@ -482,8 +477,8 @@ class PublicController extends Controller
                             'avs_result_code' => $tresponse->getAvsResultCode(),
                             'cvv_result_code' => $tresponse->getCvvResultCode(),
                             'account_number' => $tresponse->getAccountNumber(),
-                            'transaction_hash' => $tresponse->getTransHashSha2()
-                        ]
+                            'transaction_hash' => $tresponse->getTransHashSha2(),
+                        ],
                     ]);
 
                     return [
@@ -510,8 +505,8 @@ class PublicController extends Controller
                     'response_code' => $tresponse->getErrors()[0]->getErrorCode(),
                     'response_message' => $tresponse->getErrors()[0]->getErrorText(),
                     'response_data' => [
-                        'error_details' => $error_message
-                    ]
+                        'error_details' => $error_message,
+                    ],
                 ]);
             } else {
                 $error_message = 'Transaction Failed';
@@ -524,8 +519,8 @@ class PublicController extends Controller
                     'response_code' => $response->getMessages()->getMessage()[0]->getCode(),
                     'response_message' => $response->getMessages()->getMessage()[0]->getText(),
                     'response_data' => [
-                        'error_details' => $error_message
-                    ]
+                        'error_details' => $error_message,
+                    ],
                 ]);
             }
         } else {
@@ -536,8 +531,8 @@ class PublicController extends Controller
                 'status' => 'failed',
                 'response_message' => 'No response returned',
                 'response_data' => [
-                    'error_details' => 'No response was received from the payment gateway'
-                ]
+                    'error_details' => 'No response was received from the payment gateway',
+                ],
             ]);
         }
 
@@ -546,5 +541,4 @@ class PublicController extends Controller
             'error' => $error_message,
         ];
     }
-
 }

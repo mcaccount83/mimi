@@ -11,8 +11,6 @@ class RecognitionGifts extends Model
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'recognition_gifts';
-
     protected $primaryKey = 'id';
 
     protected $fillable = [

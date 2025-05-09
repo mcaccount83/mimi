@@ -391,9 +391,10 @@ class FinancialReportController extends Controller implements HasMiddleware
             } else {
                 return redirect()->back()->with('success', 'Report has been successfully updated');
             }
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
+
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -547,6 +548,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
+
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -615,10 +617,12 @@ class FinancialReportController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+
             return redirect()->back()->with('success', 'Checklist has been successfully updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
+
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur

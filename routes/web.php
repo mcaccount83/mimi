@@ -21,7 +21,6 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentReportController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicController;
-use App\Http\Controllers\PublicPaymentController;
 use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewAsBoardController;

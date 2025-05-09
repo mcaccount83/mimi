@@ -8,8 +8,8 @@ use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
-use App\Models\Payments;
 use App\Models\PaymentLog;
+use App\Models\Payments;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
 
@@ -117,16 +118,18 @@ class PaymentController extends Controller implements HasMiddleware
             Mail::to([$emailCC, $AdminEmail])
                 ->queue(new PaymentsReRegOnline($mailData));
 
-                DB::commit();
-                return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
-                return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
-            } finally {
-                // This ensures DB connections are released even if exceptions occur
-                DB::disconnect();
-            }
+            DB::commit();
+
+            return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
     }
 
     /**
@@ -201,16 +204,18 @@ class PaymentController extends Controller implements HasMiddleware
             Mail::to([$emailCC, $AdminEmail])
                 ->queue(new PaymentsM2MOnline($mailData));
 
-                DB::commit();
-                return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
-                return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
-            } finally {
-                // This ensures DB connections are released even if exceptions occur
-                DB::disconnect();
-            }
+            DB::commit();
+
+            return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
     }
 
     /**
@@ -254,8 +259,8 @@ class PaymentController extends Controller implements HasMiddleware
         $amount = (float) preg_replace('/[^\d.]/', '', $total);
         $today = Carbon::today()->format('m-d-Y');
 
-         /* Create a merchantAuthenticationType object with authentication details
-            retrieved from the constants file */
+        /* Create a merchantAuthenticationType object with authentication details
+           retrieved from the constants file */
         /** @var \net\authorize\api\contract\v1\MerchantAuthenticationType $merchantAuthentication */
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType;
         $merchantAuthentication->setName(config('settings.authorizenet_api_login_id'));
@@ -331,8 +336,8 @@ class PaymentController extends Controller implements HasMiddleware
                 'invoice' => $randomInvoiceNumber,
                 'company' => $company,
                 'email' => $email,
-                'total' => $amount
-            ]
+                'total' => $amount,
+            ],
         ];
 
         // Create initial log entry before processing
@@ -368,7 +373,7 @@ class PaymentController extends Controller implements HasMiddleware
         // After processing, update the log with the response
         if ($response != null) {
             if ($response->getMessages()->getResultCode() == 'Ok') {
-            /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
+                /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
                 $tresponse = $response->getTransactionResponse();
                 if ($tresponse != null && $tresponse->getMessages() != null) {
                     // Update log with success response
@@ -382,8 +387,8 @@ class PaymentController extends Controller implements HasMiddleware
                             'avs_result_code' => $tresponse->getAvsResultCode(),
                             'cvv_result_code' => $tresponse->getCvvResultCode(),
                             'account_number' => $tresponse->getAccountNumber(),
-                            'transaction_hash' => $tresponse->getTransHashSha2()
-                        ]
+                            'transaction_hash' => $tresponse->getTransHashSha2(),
+                        ],
                     ]);
 
                     return [
@@ -410,8 +415,8 @@ class PaymentController extends Controller implements HasMiddleware
                     'response_code' => $tresponse->getErrors()[0]->getErrorCode(),
                     'response_message' => $tresponse->getErrors()[0]->getErrorText(),
                     'response_data' => [
-                        'error_details' => $error_message
-                    ]
+                        'error_details' => $error_message,
+                    ],
                 ]);
             } else {
                 $error_message = 'Transaction Failed';
@@ -424,8 +429,8 @@ class PaymentController extends Controller implements HasMiddleware
                     'response_code' => $response->getMessages()->getMessage()[0]->getCode(),
                     'response_message' => $response->getMessages()->getMessage()[0]->getText(),
                     'response_data' => [
-                        'error_details' => $error_message
-                    ]
+                        'error_details' => $error_message,
+                    ],
                 ]);
             }
         } else {
@@ -436,8 +441,8 @@ class PaymentController extends Controller implements HasMiddleware
                 'status' => 'failed',
                 'response_message' => 'No response returned',
                 'response_data' => [
-                    'error_details' => 'No response was received from the payment gateway'
-                ]
+                    'error_details' => 'No response was received from the payment gateway',
+                ],
             ]);
         }
 
@@ -447,7 +452,7 @@ class PaymentController extends Controller implements HasMiddleware
         ];
     }
 
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $query = PaymentLog::with('board');
 
@@ -461,15 +466,15 @@ class PaymentController extends Controller implements HasMiddleware
         }
 
         // $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(100);
-        $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(100);
+        $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
 
         return view('payment-logs.index', compact('paymentLogs'));
     }
 
-    public function show($id)
+    public function show($id): View
     {
         $log = PaymentLog::findOrFail($id);
+
         return view('payment-logs.show', compact('log'));
     }
-
 }
