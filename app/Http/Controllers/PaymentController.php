@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsM2MOnline;
 use App\Mail\PaymentsReRegChapterThankYou;
@@ -20,6 +19,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
 
