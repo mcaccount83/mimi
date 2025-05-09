@@ -465,7 +465,7 @@ class PaymentController extends Controller implements HasMiddleware
         }
 
         // $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(100);
-        $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(100);
+        $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
 
         return view('payment-logs.index', compact('paymentLogs'));
     }
