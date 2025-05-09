@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsM2MOnline;
 use App\Mail\PaymentsReRegChapterThankYou;
@@ -451,7 +452,7 @@ class PaymentController extends Controller implements HasMiddleware
         ];
     }
 
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $query = PaymentLog::with('board');
 
@@ -470,7 +471,7 @@ class PaymentController extends Controller implements HasMiddleware
         return view('payment-logs.index', compact('paymentLogs'));
     }
 
-    public function show($id)
+    public function show($id): View
     {
         $log = PaymentLog::findOrFail($id);
 
