@@ -64,13 +64,23 @@
                             <tr>
                                 <td  class="text-center align-middle"><a href="{{ route('payment-logs.show', $log->id) }}"><i class="fas fa-eye"></i></a></td>
                                 <td>
-                                    {{-- @if ($log->board->chapters->region->short_name != "None")
-                                        {{ $log->board->chapters->conference->short_name ?? 'N/A'}} / {{ $log->board->chapters->region->short_name ?? 'N/A'}}
+                                    @if ($log->customer_id)
+                                        @if ($log->board->chapters->region->short_name != "None")
+                                            {{ $log->board->chapters->conference->short_name ?? 'N/A'}} / {{ $log->board->chapters->region->short_name ?? 'N/A'}}
+                                        @else
+                                            {{ $log->board->chapters->conference->short_name ?? 'N/A'}}
+                                        @endif
                                     @else
-                                        {{ $log->board->chapters->conference->short_name ?? 'N/A'}}
-                                    @endif --}}
+                                    @endif
                                 </td>
-                                <td>{{ $log->board->chapters->name ?? 'N/A' }}, {{ $log->board->chapters->state->state_short_name ?? 'N/A' }}</td>
+                                <td>
+                                    @if ($log->customer_id)
+                                        {{ $log->board->chapters->name ?? 'N/A' }}, {{ $log->board->chapters->state->state_short_name ?? 'N/A' }}
+                                    @else
+                                        New Chapter
+                                    @endif
+                                </td>
+
                                      <td>${{ number_format($log->amount, 2) }}</td>
                                     <td>
                                         @if($log->status == 'success')
