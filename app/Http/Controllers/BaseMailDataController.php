@@ -110,7 +110,7 @@ class BaseMailDataController extends Controller
             'ccPosition' => $emailCCData['cc_pos'],
             'ccConfName' => $emailCCData['cc_conf_name'],
             'ccConfDescription' => $emailCCData['cc_conf_desc'],
-            'ccPhone' => $emailCCData['cc_phone']
+            'ccPhone' => $emailCCData['cc_phone'],
         ];
     }
 
@@ -119,7 +119,7 @@ class BaseMailDataController extends Controller
         return [
             'einEmail' => $emailEINCoorData['ein_email'],
             'einName' => $emailEINCoorData['ein_fname'].' '.$emailEINCoorData['ein_lname'],
-            'einPhone' => $emailEINCoorData['ein_phone']
+            'einPhone' => $emailEINCoorData['ein_phone'],
         ];
     }
 
@@ -295,5 +295,4 @@ class BaseMailDataController extends Controller
             'founderPhone' => $chDetails->pendingPresident->phone,
         ];
     }
-
 }

@@ -2,17 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddBugsAdminRequest;
-use App\Http\Requests\AddResourcesAdminRequest;
-use App\Http\Requests\AddToolkitAdminRequest;
-use App\Http\Requests\UpdateBugsAdminRequest;
-use App\Http\Requests\UpdateResourcesAdminRequest;
-use App\Http\Requests\UpdateToolkitAdminRequest;
-use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
 use App\Models\Boards;
 use App\Models\BoardsOutgoing;
-use App\Models\Bugs;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\FinancialReport;
@@ -21,9 +13,6 @@ use App\Models\GoogleDrive;
 use App\Models\IncomingBoard;
 use App\Models\Payments;
 use App\Models\ProbationSubmission;
-use App\Models\ResourceCategory;
-use App\Models\Resources;
-use App\Models\ToolkitCategory;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -34,7 +23,6 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
@@ -60,7 +48,6 @@ class AdminController extends Controller implements HasMiddleware
             \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
         ];
     }
-
 
     /**
      * View the EOY Report Title

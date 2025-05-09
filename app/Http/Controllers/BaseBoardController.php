@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActiveStatus;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\FinancialReportAwards;
 use App\Models\Probation;
 use App\Models\State;
-use App\Models\ActiveStatus;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
-
 
 class BaseBoardController extends Controller
 {

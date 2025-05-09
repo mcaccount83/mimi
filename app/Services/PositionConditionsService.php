@@ -54,7 +54,7 @@ class PositionConditionsService
         ];
     }
 
-     /**
+    /**
      * Get user admin status
      */
     public function getUserAdmin(string $userAdmin): array
@@ -78,7 +78,7 @@ class PositionConditionsService
         ];
     }
 
-   /**
+    /**
      * Get EOY display flags
      */
     public function getEOYDisplay(): array

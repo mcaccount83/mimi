@@ -15,7 +15,7 @@ class PaymentLog extends Model
         'response_code',
         'response_message',
         'request_data',
-        'response_data'
+        'response_data',
     ];
 
     protected $casts = [

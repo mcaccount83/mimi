@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ChapersUpdateEINCoor;
 use App\Mail\ChapterDisbandLetter;
 use App\Mail\ProbationNoPmtLetter;
 use App\Mail\ProbationNoRptLetter;
 use App\Mail\ProbationPartyLetter;
 use App\Mail\ProbationReleaseLetter;
 use App\Mail\WarningPartyLetter;
-use App\Mail\ChapersUpdateEINCoor;
 use App\Models\Documents;
 use App\Models\GoogleDrive;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -670,7 +670,7 @@ class PDFController extends Controller
         ];
     }
 
-     /**
+    /**
      * Save & Send IRS Name Change Letter
      */
     public function saveNameChangeLetter(Request $request, $chapterId, $chNamePrev): JsonResponse
@@ -700,7 +700,7 @@ class PDFController extends Controller
         if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
             $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
             if ($existingDocRecord) {
-                $existingDocRecord->name_change_letter_path	= $file_id;
+                $existingDocRecord->name_change_letter_path = $file_id;
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
@@ -717,7 +717,7 @@ class PDFController extends Controller
             );
 
             Mail::to($eincoorEmail)
-            ->queue(new ChapersUpdateEINCoor($mailData, $pdfPath));
+                ->queue(new ChapersUpdateEINCoor($mailData, $pdfPath));
 
             return response()->json([
                 'status' => 'success',
@@ -754,10 +754,10 @@ class PDFController extends Controller
         $twoMonthsDate = date('F j, Y', strtotime('+2 months'));
 
         $pdfData = array_merge(
-                $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
-                $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
-                $this->baseMailDataController->getPresData($PresDetails),
-                $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+            $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
+            $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
+            $this->baseMailDataController->getPresData($PresDetails),
+            $this->baseMailDataController->getEINCoorData($emailEINCoorData),
             [
                 'todayDate' => $todayDate,
                 'twoMonthsDate' => $twoMonthsDate,
@@ -767,7 +767,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView('pdf.chapternamechange', compact('pdfData'));
 
-        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized']."_NameChangeLetter.pdf";
+        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_NameChangeLetter.pdf';
 
         return [
             'pdf' => $pdf,

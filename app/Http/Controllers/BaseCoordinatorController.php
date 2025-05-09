@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdminRole;
 use App\Models\Conference;
 use App\Models\CoordinatorPosition;
 use App\Models\Coordinators;
-use App\Models\AdminRole;
 use App\Models\Month;
 use App\Models\RecognitionGifts;
 use App\Models\Region;
@@ -113,9 +113,9 @@ class BaseCoordinatorController extends Controller
                     $conditionsData['inQryArr']
                 );
 
-            $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
-            $baseQuery = $checkboxResults['query'];
-            $checkboxStatus = $checkboxResults['status'];
+                $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
+                $baseQuery = $checkboxResults['query'];
+                $checkboxStatus = $checkboxResults['status'];
 
             }
 
@@ -130,7 +130,7 @@ class BaseCoordinatorController extends Controller
                 $baseQuery->where('on_leave', '!=', '1');
                 $conditions = $conditionsData['conditions'] ?? [];
 
-                if (!($conditions['founderCondition'] ?? false)) {
+                if (! ($conditions['founderCondition'] ?? false)) {
                     $baseQuery->where('conference_id', $params['confId']);
                 }
             }

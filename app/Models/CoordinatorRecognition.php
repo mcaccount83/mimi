@@ -75,5 +75,4 @@ class CoordinatorRecognition extends Model
     {
         return $this->belongsTo(RecognitionGifts::class, 'recognition9', 'id');  // 'recognition9' in coordinator_recognition BelongsTo 'id' in recognition_gifts
     }
-
 }

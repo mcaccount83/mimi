@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ChapersUpdateEINCoor;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapterAddListAdmin;
 use App\Mail\ChapterAddPrimaryCoor;
@@ -126,7 +125,6 @@ class ChapterController extends Controller implements HasMiddleware
 
         return view('chapters.chaplistdeclined')->with($data);
     }
-
 
     /**
      * Display the Active chapter list mapped with login coordinator
@@ -664,25 +662,25 @@ class ChapterController extends Controller implements HasMiddleware
             $mainTitle = $coordinator->displayPosition->short_title ?? '';
             $secondaryTitles = '';
 
-            if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+            if (! empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
                 $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
             }
 
             $combinedTitle = $mainTitle;
-            if (!empty($secondaryTitles)) {
-                $combinedTitle .= '/' . $secondaryTitles;
+            if (! empty($secondaryTitles)) {
+                $combinedTitle .= '/'.$secondaryTitles;
             }
 
             $cpos = "({$combinedTitle})";
 
-                return [
-                    'cid' => $coordinator->id,
-                    'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                    'dpos' => $mainTitle,
-                    'cpos' => $cpos,
-                    'regid' => $coordinator->region_id,
-                ];
-            });
+            return [
+                'cid' => $coordinator->id,
+                'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
+                'dpos' => $mainTitle,
+                'cpos' => $cpos,
+                'regid' => $coordinator->region_id,
+            ];
+        });
 
         $pcDetails = $pcDetails->unique('cid');  // Remove duplicates based on the 'cid' field
 
@@ -1157,10 +1155,12 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+
             return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
+
             return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1808,10 +1808,12 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+
             return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
+
             return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1932,7 +1934,7 @@ class ChapterController extends Controller implements HasMiddleware
         return view('chapreports.chaprptsocialmedia')->with($data);
     }
 
-     /**
+    /**
      * Display the Social Media Information
      */
     public function showIntSocialMedia(Request $request): View
@@ -2061,11 +2063,14 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+
             return to_route('chapters.editwebsite', ['id' => $id])->with('success', 'Chapter Website & Social Meida has been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-            return to_route('chapters.editwebsite', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');        } finally {
+
+            return to_route('chapters.editwebsite', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
@@ -2092,7 +2097,7 @@ class ChapterController extends Controller implements HasMiddleware
         return view('chapters.chapboardlist')->with($data);
     }
 
-     /**
+    /**
      *Edit Pending New Chapter Information
      */
     public function editPendingChapterDetails(Request $request, $id): View
@@ -2115,35 +2120,35 @@ class ChapterController extends Controller implements HasMiddleware
         $allRegions = $baseQuery['allRegions'];
 
         $pcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
-        ->where('conference_id', $chConfId)
-        ->whereBetween('position_id', [1, 7])
-        ->where('is_active', 1)
-        ->where('on_leave', '!=', '1')
-        ->get();
+            ->where('conference_id', $chConfId)
+            ->whereBetween('position_id', [1, 7])
+            ->where('is_active', 1)
+            ->where('on_leave', '!=', '1')
+            ->get();
 
         $pcDetails = $pcList->map(function ($coordinator) {
             $mainTitle = $coordinator->displayPosition->short_title ?? '';
             $secondaryTitles = '';
 
-            if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+            if (! empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
                 $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
             }
 
             $combinedTitle = $mainTitle;
-            if (!empty($secondaryTitles)) {
-                $combinedTitle .= '/' . $secondaryTitles;
+            if (! empty($secondaryTitles)) {
+                $combinedTitle .= '/'.$secondaryTitles;
             }
 
             $cpos = "({$combinedTitle})";
 
-                return [
-                    'cid' => $coordinator->id,
-                    'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                    'dpos' => $mainTitle,
-                    'cpos' => $cpos,
-                    'regid' => $coordinator->region_id,
-                ];
-            });
+            return [
+                'cid' => $coordinator->id,
+                'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
+                'dpos' => $mainTitle,
+                'cpos' => $cpos,
+                'regid' => $coordinator->region_id,
+            ];
+        });
 
         $pcDetails = $pcDetails->unique('cid');
 
@@ -2152,7 +2157,7 @@ class ChapterController extends Controller implements HasMiddleware
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'allStates' => $allStates,
-            'pcList' => $pcList, 'allRegions' => $allRegions, 'pcDetails' => $pcDetails
+            'pcList' => $pcList, 'allRegions' => $allRegions, 'pcDetails' => $pcDetails,
         ];
 
         return view('chapters.editpending')->with($data);
@@ -2222,7 +2227,7 @@ class ChapterController extends Controller implements HasMiddleware
                 'last_updated_date' => now(),
             ]);
 
-            if ($chapter->active_status == 1 ) {
+            if ($chapter->active_status == 1) {
                 FinancialReport::create([
                     'chapter_id' => $chapterId,
                 ]);
@@ -2263,7 +2268,6 @@ class ChapterController extends Controller implements HasMiddleware
                 ]);
                 BoardsPending::where('user_id', $user->id)->delete();
 
-
                 // Load Chapter MailData//
                 $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
                 $chDetails = $baseQuery['chDetails'];
@@ -2298,13 +2302,15 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             DB::commit();
-            if ($chapter->active_status == 1)
+            if ($chapter->active_status == 1) {
                 return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
-            else
+            } else {
                 return to_route('chapters.editpending', ['id' => $id])->with('success', 'Chapter Details have been updated');
+            }
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
+
             return to_route('chapters.editpending', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur

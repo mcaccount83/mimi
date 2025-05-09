@@ -254,7 +254,7 @@ class UserController extends Controller implements HasMiddleware
                 $secondaryTitles = '';
 
                 // Handle secondary positions
-                if (!empty($cor->secondaryPosition) && $cor->secondaryPosition->count() > 0) {
+                if (! empty($cor->secondaryPosition) && $cor->secondaryPosition->count() > 0) {
                     $secondaryTitles = $cor->secondaryPosition->pluck('short_title')->implode('/');
                 }
 
@@ -263,8 +263,8 @@ class UserController extends Controller implements HasMiddleware
                 if ($displayPosition) {
                     $position = "({$displayPosition}";
 
-                    if (!empty($secondaryTitles)) {
-                        $position .= '/' . $secondaryTitles;
+                    if (! empty($secondaryTitles)) {
+                        $position .= '/'.$secondaryTitles;
                     }
 
                     $position .= ')';
@@ -314,37 +314,36 @@ class UserController extends Controller implements HasMiddleware
         ];
     }
 
-     /**
+    /**
      * Load EIN Coordinator Information  - used for emails and pdfs
      */
     public function loadEINCoord()
     {
         $query = Coordinators::with(['displayPosition', 'secondaryPosition'])
-        ->where('coordinators.is_active', 1)
-        ->where(function($q) {
-            $q->where('coordinators.position_id', '12')
-              ->orWhereHas('secondaryPosition', function($subQuery) {
-                  $subQuery->where('coordinator_position.id', '12'); // Assuming positions is your positions table
-              });
-        })
-        ->first();
+            ->where('coordinators.is_active', 1)
+            ->where(function ($q) {
+                $q->where('coordinators.position_id', '12')
+                    ->orWhereHas('secondaryPosition', function ($subQuery) {
+                        $subQuery->where('coordinator_position.id', '12'); // Assuming positions is your positions table
+                    });
+            })
+            ->first();
 
-    $ccDetails = $query;
+        $ccDetails = $query;
 
+        $ein_id = $ccDetails?->id;
+        $ein_fname = $ccDetails?->first_name;
+        $ein_lname = $ccDetails?->last_name;
+        $ein_email = $ccDetails?->email;
+        $ein_phone = $ccDetails?->phone;
 
-    $ein_id = $ccDetails?->id;
-    $ein_fname = $ccDetails?->first_name;
-    $ein_lname = $ccDetails?->last_name;
-    $ein_email = $ccDetails?->email;
-    $ein_phone = $ccDetails?->phone;
-
-    return [
-        'ein_id' => $ein_id,
-        'ein_fname' => $ein_fname,
-        'ein_lname' => $ein_lname,
-        'ein_email' => $ein_email,
-        'ein_phone' => $ein_phone,
-    ];
+        return [
+            'ein_id' => $ein_id,
+            'ein_fname' => $ein_fname,
+            'ein_lname' => $ein_lname,
+            'ein_email' => $ein_email,
+            'ein_phone' => $ein_phone,
+        ];
     }
 
     /**
@@ -370,19 +369,19 @@ class UserController extends Controller implements HasMiddleware
         $pcList = $chList->pluck('primaryCoordinator')->filter();
 
         $pcDetails = $pcList->map(function ($coordinator) {
-        $mainTitle = $coordinator->displayPosition->short_title ?? '';
-        $secondaryTitles = '';
+            $mainTitle = $coordinator->displayPosition->short_title ?? '';
+            $secondaryTitles = '';
 
-        if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
-            $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
-        }
+            if (! empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
+            }
 
-        $combinedTitle = $mainTitle;
-        if (!empty($secondaryTitles)) {
-            $combinedTitle .= '/' . $secondaryTitles;
-        }
+            $combinedTitle = $mainTitle;
+            if (! empty($secondaryTitles)) {
+                $combinedTitle .= '/'.$secondaryTitles;
+            }
 
-        $cpos = "({$combinedTitle})";
+            $cpos = "({$combinedTitle})";
 
             return [
                 'cid' => $coordinator->id,
@@ -421,19 +420,19 @@ class UserController extends Controller implements HasMiddleware
         $rrList = $chList->pluck('reportReviewer')->filter();
 
         $rrDetails = $rrList->map(function ($coordinator) {
-        $mainTitle = $coordinator->displayPosition->short_title ?? '';
-        $secondaryTitles = '';
+            $mainTitle = $coordinator->displayPosition->short_title ?? '';
+            $secondaryTitles = '';
 
-        if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
-            $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
-        }
+            if (! empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
+            }
 
-        $combinedTitle = $mainTitle;
-        if (!empty($secondaryTitles)) {
-            $combinedTitle .= '/' . $secondaryTitles;
-        }
+            $combinedTitle = $mainTitle;
+            if (! empty($secondaryTitles)) {
+                $combinedTitle .= '/'.$secondaryTitles;
+            }
 
-        $cpos = "({$combinedTitle})";
+            $cpos = "({$combinedTitle})";
 
             return [
                 'cid' => $coordinator->id,
@@ -474,19 +473,19 @@ class UserController extends Controller implements HasMiddleware
         }
 
         $rcDetails = $rcList->map(function ($coordinator) {
-        $mainTitle = $coordinator->displayPosition->short_title ?? '';
-        $secondaryTitles = '';
+            $mainTitle = $coordinator->displayPosition->short_title ?? '';
+            $secondaryTitles = '';
 
-        if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
-            $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
-        }
+            if (! empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
+            }
 
-        $combinedTitle = $mainTitle;
-        if (!empty($secondaryTitles)) {
-            $combinedTitle .= '/' . $secondaryTitles;
-        }
+            $combinedTitle = $mainTitle;
+            if (! empty($secondaryTitles)) {
+                $combinedTitle .= '/'.$secondaryTitles;
+            }
 
-        $cpos = "({$combinedTitle})";
+            $cpos = "({$combinedTitle})";
 
             return [
                 'cid' => $coordinator->id,

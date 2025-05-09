@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Auth;
 use TeamTeaTime\Forum\Models\Thread;
 use TeamTeaTime\Forum\Support\Access\CategoryAccess;
-use Illuminate\Support\Facades\Auth;
 
 class ForumConditionsService
 {
@@ -13,7 +13,7 @@ class ForumConditionsService
      */
     public function getUnreadForumCount(): int
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return 0;
         }
 

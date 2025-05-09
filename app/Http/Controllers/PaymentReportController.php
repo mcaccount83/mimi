@@ -83,7 +83,7 @@ class PaymentReportController extends Controller implements HasMiddleware
         return view('chapters.chapreregistration')->with($data);
     }
 
-     /**
+    /**
      * ReRegistration List
      */
     public function showIntReRegistration(Request $request): View
@@ -182,10 +182,12 @@ class PaymentReportController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+
             return redirect()->to('/chapter/reregistration')->with('success', 'Re-Registration Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
+
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -270,10 +272,12 @@ class PaymentReportController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+
             return redirect()->to('/chapter/reregistration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
+
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -422,10 +426,12 @@ class PaymentReportController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+
             return to_route('chapters.editpayment', ['id' => $id])->with('success', 'Chapter Payments/Donations have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
+
             return to_route('chapters.editpayment', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur

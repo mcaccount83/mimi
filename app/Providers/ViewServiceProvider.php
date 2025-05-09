@@ -2,12 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\Admin;
+use App\Services\ForumConditionsService;
+use App\Services\PositionConditionsService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use App\Services\PositionConditionsService;
-use App\Services\ForumConditionsService;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -56,7 +55,7 @@ class ViewServiceProvider extends ServiceProvider
             ],
                 $positionConditions,
                 $eoyDisplay,
-                );
+            );
 
             // Pass all variables to views
             $view->with($viewVariables);
@@ -67,10 +66,10 @@ class ViewServiceProvider extends ServiceProvider
     {
         // Register as a singleton
         $this->app->singleton(PositionConditionsService::class, function ($app) {
-            return new PositionConditionsService();
+            return new PositionConditionsService;
         });
         $this->app->singleton(ForumConditionsService::class, function ($app) {
-            return new ForumConditionsService();
+            return new ForumConditionsService;
         });
     }
 }

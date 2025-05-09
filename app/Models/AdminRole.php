@@ -11,7 +11,7 @@ class AdminRole extends Model
     use HasFactory;
     use Notifiable;
 
-protected $table = 'admin_role';
+    protected $table = 'admin_role';
 
     protected $primaryKey = 'id';
 
