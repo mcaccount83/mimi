@@ -34,6 +34,7 @@ use App\Models\State;
 use App\Models\Status;
 use App\Models\User;
 use App\Models\Website;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -50,6 +51,8 @@ class ChapterController extends Controller implements HasMiddleware
 {
     protected $userController;
 
+            protected $positionConditionsService;
+
     protected $pdfController;
 
     protected $baseChapterController;
@@ -64,7 +67,7 @@ class ChapterController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
         ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, EmailController $emailController,
-        EmailTableController $emailTableController)
+        EmailTableController $emailTableController, PositionConditionsService $positionConditionsService,)
     {
 
         $this->userController = $userController;
@@ -74,6 +77,8 @@ class ChapterController extends Controller implements HasMiddleware
         $this->baseMailDataController = $baseMailDataController;
         $this->emailTableController = $emailTableController;
         $this->emailController = $emailController;
+                        $this->positionConditionsService = $positionConditionsService;
+
     }
 
     public static function middleware(): array
@@ -465,8 +470,11 @@ class ChapterController extends Controller implements HasMiddleware
             );
 
             // ListAdmin Notification//
-            $to_email = 'listadmin@momsclub.org';
-            Mail::to($to_email)
+            // $to_email = 'listadmin@momsclub.org';
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $listAdmin = $adminEmail['list_admin'];
+
+            Mail::to($listAdmin)
                 ->queue(new ChapterRemoveListAdmin($mailData));
 
             // Generate and Send the PDF Disbanding Letter & Notification to Board and Coordinators//
@@ -602,8 +610,11 @@ class ChapterController extends Controller implements HasMiddleware
             );
 
             // Primary Coordinator Notification//
-            $to_email = 'listadmin@momsclub.org';
-            Mail::to($to_email)
+            // $to_email = 'listadmin@momsclub.org';
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $listAdmin = $adminEmail['list_admin'];
+
+            Mail::to($listAdmin)
                 ->queue(new ChapterReAddListAdmin($mailData));
 
             // Commit the transaction
@@ -954,8 +965,11 @@ class ChapterController extends Controller implements HasMiddleware
                 ->queue(new ChapterAddPrimaryCoor($mailData));
 
             // List Admin Notification//
-            $listAdminEmail = 'listadmin@momsclub.org';
-            Mail::to($listAdminEmail)
+            // $listAdminEmail = 'listadmin@momsclub.org';
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $listAdmin = $adminEmail['list_admin'];
+
+            Mail::to($listAdmin)
                 ->queue(new ChapterAddListAdmin($mailData));
 
             DB::commit();
@@ -1093,7 +1107,8 @@ class ChapterController extends Controller implements HasMiddleware
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
             $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
             $pcEmail = $pcDetailsUpd->email;  // PC Email
-            $EINCordEmail = 'jackie.mchenry@momsclub.org';  // EIN Coor Email
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $einAdmin = $adminEmail['ein_admin'];  // EIN Coor Email
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -1797,13 +1812,15 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             // //List Admin Notification//
-            $to_email2 = 'listadmin@momsclub.org';
+            // $to_email2 = 'listadmin@momsclub.org';
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $listAdmin = $adminEmail['list_admin'];
 
             if ($PresDetailsUpd->email != $PresDetails->email || $PresDetailsUpd->email != $PresDetails->email || $mailDataAvpp['avpemail'] != $mailDataAvp['avpemailUpd'] ||
                         $mailDataMvpp['mvpemail'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemail'] != $mailDatatres['tresemailUpd'] ||
                         $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
 
-                Mail::to($to_email2)
+                Mail::to($listAdmin)
                     ->queue(new ChapersUpdateListAdmin($mailData));
             }
 
@@ -2308,8 +2325,11 @@ class ChapterController extends Controller implements HasMiddleware
                     ->queue(new ChapterAddPrimaryCoor($mailData));
 
                 // List Admin Notification//
-                $listAdminEmail = 'listadmin@momsclub.org';
-                Mail::to($listAdminEmail)
+                // $listAdminEmail = 'listadmin@momsclub.org';
+                $adminEmail = $this->positionConditionsService->getAdminEmail();
+                $listAdmin = $adminEmail['list_admin'];
+
+                Mail::to($listAdmin)
                     ->queue(new ChapterAddListAdmin($mailData));
             }
 

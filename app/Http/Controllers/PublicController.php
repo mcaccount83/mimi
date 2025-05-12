@@ -15,6 +15,7 @@ use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\State;
 use App\Models\User;
+use App\Services\PositionConditionsService;
 use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,16 +34,19 @@ class PublicController extends Controller
 {
     protected $userController;
 
+    protected $positionConditionsService;
+
     protected $baseBoardController;
 
     protected $baseChapterController;
 
     protected $baseMailDataController;
 
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController,
-        BaseChapterController $baseChapterController)
+    public function __construct(UserController $userController, PositionConditionsService $positionConditionsService, BaseBoardController $baseBoardController,
+        BaseMailDataController $baseMailDataController, BaseChapterController $baseChapterController)
     {
         $this->userController = $userController;
+        $this->positionConditionsService = $positionConditionsService;
         $this->baseBoardController = $baseBoardController;
         $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
@@ -323,7 +327,10 @@ class PublicController extends Controller
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
             $chDetails = $baseQuery['chDetails'];
             $emailCC = $baseQuery['emailCC'];  // CC Email
-            $AdminEmail = 'dragonmom@msn.com';
+            // $AdminEmail = 'dragonmom@msn.com';
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $paymentsAdmin = $adminEmail['payments_admin'];
+
             $founerEmail = $input['ch_pre_email'];
 
             $mailData = array_merge(
@@ -335,7 +342,7 @@ class PublicController extends Controller
                 ->cc($emailCC)
                 ->queue(new NewChapterThankYou($mailData));
 
-            Mail::to([$emailCC, $AdminEmail])
+            Mail::to([$emailCC, $paymentsAdmin])
                 ->queue(new PaymentsNewChapOnline($mailData));
 
             DB::commit();
@@ -380,7 +387,6 @@ class PublicController extends Controller
      */
     public function updateDonation(Request $request): RedirectResponse
     {
-        $input = $request->all();
         $description = 'M2M_Sustaining Donation';
         $transactionType = 'authCaptureTransaction';
         $name = 'N/A';
@@ -392,8 +398,13 @@ class PublicController extends Controller
         }
 
         $input = $request->all();
+        $donarEmail = $request->input('email');
         $invoice = $paymentResponse['data']['invoiceNumber'];
-        $AdminEmail = 'dragonmom@msn.com';
+
+        $adminEmail = $this->positionConditionsService->getAdminEmail();
+        $paymentsAdmin = $adminEmail['payments_admin'];
+
+        // $AdminEmail = 'dragonmom@msn.com';
 
         DB::beginTransaction();
         try {
@@ -401,13 +412,13 @@ class PublicController extends Controller
                 $this->baseMailDataController->getPublicPaymentData($input, $invoice),
             );
 
-            Mail::to($AdminEmail)
+            Mail::to($donarEmail)
                 ->queue(new PaymentsSustainingPublicThankYou($mailData));
 
-            Mail::to($AdminEmail)
+            Mail::to($donarEmail)
                 ->queue(new PaymentsM2MPublicThankYou($mailData));
 
-            Mail::to($AdminEmail)
+            Mail::to($paymentsAdmin)
                 ->queue(new PaymentsPublicDonationOnline($mailData));
 
             DB::commit();

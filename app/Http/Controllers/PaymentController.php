@@ -11,6 +11,7 @@ use App\Models\Chapters;
 use App\Models\PaymentLog;
 use App\Models\Payments;
 use App\Models\User;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -31,11 +32,15 @@ class PaymentController extends Controller implements HasMiddleware
 
     protected $baseMailDataController;
 
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController)
+        protected $positionConditionsService;
+
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController, PositionConditionsService $positionConditionsService, )
     {
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
         $this->baseMailDataController = $baseMailDataController;
+                $this->positionConditionsService = $positionConditionsService;
+
     }
 
     public static function middleware(): array
@@ -65,7 +70,10 @@ class PaymentController extends Controller implements HasMiddleware
         $emailListChap = $baseQuery['emailListChap'];
         $emailCC = $baseQuery['emailCC'];
         $pcEmail = $baseQuery['pcEmail'];
-        $AdminEmail = 'dragonmom@msn.com';
+
+        // $AdminEmail = 'dragonmom@msn.com';
+        $adminEmail = $this->positionConditionsService->getAdminEmail();
+        $paymentsAdmin = $adminEmail['payments_admin'];
 
         $input = $request->all();
 
@@ -115,7 +123,7 @@ class PaymentController extends Controller implements HasMiddleware
                     ->queue(new PaymentsSustainingChapterThankYou($mailData));
             }
 
-            Mail::to([$emailCC, $AdminEmail])
+            Mail::to([$emailCC, $paymentsAdmin])
                 ->queue(new PaymentsReRegOnline($mailData));
 
             DB::commit();
@@ -152,7 +160,10 @@ class PaymentController extends Controller implements HasMiddleware
         $emailListChap = $baseQuery['emailListChap'];
         $emailCC = $baseQuery['emailCC'];
         $pcEmail = $baseQuery['pcEmail'];
-        $AdminEmail = 'dragonmom@msn.com';
+
+        // $AdminEmail = 'dragonmom@msn.com';
+        $adminEmail = $this->positionConditionsService->getAdminEmail();
+        $paymentsAdmin = $adminEmail['payments_admin'];
 
         $input = $request->all();
 
@@ -201,7 +212,7 @@ class PaymentController extends Controller implements HasMiddleware
                     ->queue(new PaymentsSustainingChapterThankYou($mailData));
             }
 
-            Mail::to([$emailCC, $AdminEmail])
+            Mail::to([$emailCC, $paymentsAdmin])
                 ->queue(new PaymentsM2MOnline($mailData));
 
             DB::commit();

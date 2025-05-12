@@ -26,6 +26,7 @@ use App\Models\ProbationSubmission;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\User;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,6 +45,8 @@ class BoardController extends Controller implements HasMiddleware
 {
     protected $userController;
 
+        protected $positionConditionsService;
+
     protected $baseBoardController;
 
     protected $pdfController;
@@ -54,12 +57,13 @@ class BoardController extends Controller implements HasMiddleware
 
     protected $financialReportController;
 
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController,
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController, PositionConditionsService $positionConditionsService,
         BaseMailDataController $baseMailDataController, FinancialReportController $financialReportController, EmailTableController $emailTableController)
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseBoardController = $baseBoardController;
+                $this->positionConditionsService = $positionConditionsService;
         $this->baseMailDataController = $baseMailDataController;
         $this->emailTableController = $emailTableController;
         $this->financialReportController = $financialReportController;
@@ -561,7 +565,8 @@ class BoardController extends Controller implements HasMiddleware
             $pcEmail = $pcDetailsUpd->email;  // PC Email
             // $pcDetails = $baseQueryUpd['chDetails']->primaryCoordinator;
             // $pcEmail = $pcDetails->email;  // PC Email
-            $EINCordEmail = 'jackie.mchenry@momsclub.org';  // EIN Coor Email
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $einAdmin = $adminEmail['ein_admin'];  // EIN Coor Email
 
             $mailDataPres = array_merge(
                 $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
@@ -688,13 +693,15 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             // //List Admin Notification//
-            $to_email2 = 'listadmin@momsclub.org';
+            // $to_email2 = 'listadmin@momsclub.org';
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $listAdmin = $adminEmail['list_admin'];
 
             if ($PresDetailsUpd->email != $PresDetails->email || $PresDetailsUpd->email != $PresDetails->email || $mailDataAvpp['avpemail'] != $mailDataAvp['avpemailUpd'] ||
                         $mailDataMvpp['mvpemail'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemail'] != $mailDatatres['tresemailUpd'] ||
                         $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
 
-                Mail::to($to_email2)
+                Mail::to($listAdmin)
                     ->queue(new ChapersUpdateListAdmin($mailData));
             }
 
@@ -862,11 +869,13 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             // //List Admin Notification//
-            $to_email2 = 'listadmin@momsclub.org';
+            // $to_email2 = 'listadmin@momsclub.org';
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $listAdmin = $adminEmail['list_admin'];
 
             if ($borDetailsUpd->email != $borDetails->email) {
 
-                Mail::to($to_email2)
+                Mail::to($listAdmin)
                     ->queue(new ChapersUpdateListAdminMember($mailData));
             }
 

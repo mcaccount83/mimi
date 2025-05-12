@@ -13,6 +13,7 @@ use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
 use App\Models\User;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,16 +30,21 @@ class CoordinatorController extends Controller implements HasMiddleware
 {
     protected $userController;
 
+    protected $positionConditionsService;
+
     protected $baseCoordinatorController;
 
     protected $forumSubscriptionController;
 
-    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController)
+    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController,
+        PositionConditionsService $positionConditionsService,)
     {
 
         $this->userController = $userController;
         $this->baseCoordinatorController = $baseCoordinatorController;
         $this->forumSubscriptionController = $forumSubscriptionController;
+                        $this->positionConditionsService = $positionConditionsService;
+
     }
 
     public static function middleware(): array
@@ -584,9 +590,11 @@ class CoordinatorController extends Controller implements HasMiddleware
                 'email' => $email,
             ];
 
-            $to_email = 'jackie.mchenry@momsclub.org';
+            // $to_email = 'jackie.mchenry@momsclub.org';
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $gsuiteAdmin = $adminEmail['gsuite_admin'];  // Gsuite Coor Email
 
-            Mail::to($to_email, 'MOMS Club')
+            Mail::to($gsuiteAdmin, 'MOMS Club')
                 ->queue(new CoordinatorRetireAdmin($mailData));
 
             DB::commit();
@@ -664,8 +672,10 @@ class CoordinatorController extends Controller implements HasMiddleware
             // ];
 
             // $to_email = 'jackie.mchenry@momsclub.org';
+            // $adminEmail = $this->positionConditionsService->getAdminEmail();
+            // $gsuiteAdmin = $adminEmail['gsuite_admin'];  // Gsuite Coor Email
 
-            // Mail::to($to_email, 'MOMS Club')
+            // Mail::to($gsuiteAdmin, 'MOMS Club')
             //     ->queue(new CoordinatorRetireAdmin($mailData));
 
             DB::commit();

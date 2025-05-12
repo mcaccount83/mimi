@@ -13,6 +13,7 @@ use App\Models\Bugs;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\ToolkitCategory;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -26,9 +27,13 @@ class ResourcesController extends Controller implements HasMiddleware
 {
     protected $userController;
 
-    public function __construct(UserController $userController)
+            protected $positionConditionsService;
+
+    public function __construct(UserController $userController, PositionConditionsService $positionConditionsService,)
     {
         $this->userController = $userController;
+                        $this->positionConditionsService = $positionConditionsService;
+
 
     }
 
@@ -113,8 +118,11 @@ class ResourcesController extends Controller implements HasMiddleware
             'ReportedDate' => $task->reported_date,
         ];
 
-        $to_email = 'jackie.mchenry@momsclub.org';
-        Mail::to($to_email)->queue(new AdminNewMIMIBugWish($mailData));
+        // $to_email = 'jackie.mchenry@momsclub.org';
+        $adminEmail = $this->positionConditionsService->getAdminEmail();
+        $mimiAdmin = $adminEmail['mimi_admin'];  // Gsuite Coor Email
+
+        Mail::to($mimiAdmin)->queue(new AdminNewMIMIBugWish($mailData));
 
         $task->save();
     }

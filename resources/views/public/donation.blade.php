@@ -24,23 +24,24 @@
                                         $thisDate = \Illuminate\Support\Carbon::now();
                                     @endphp
                                     <div class="col-md-12"><br><br></div>
-                                    <h2 class="text-center"> Mother-to-Mother Fund & Sustaining Chapter Donations</h2>
+                                    <h2 class="text-center">Sustaining Chapter & Mother-to-Mother Fund Donations</h2>
                                     </h2>
                                     <div class="col-md-12" style="color: red;"><center><br>
-                                        <p><b>If you are a making a donation as a chapter,<br>
-                                            you should log into your MIMI account to make your doantion so your chapter can be recognized as the donar!</b>
+                                        <p><b>This page is for making donations as an individual/company not associated with a MOMS Club chapter.<br>
+                                            If you are a making a donation as a chapter,
+                                            login and donate through your MIMI account so your chapter can be recognized as the donar!</b>
                                         </p>
                                     </center></div>
+
+                                     <p class="description">
+                                         Sustaining chapter donations benefits the International MOMS Club, which is a 501 (c)(3) public charity.
+                                         Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.
+                                    </p>
 
                                     <p class="description">
                                          The Mother-To-Mother Fund is our ONLY official MOMS Club charity and is supported only by donations from the local chapters.
                         Because of donations from chapters and volunteers in the past, we have been able to offer grants for emergency expenses to our MOMS Club mothers
                         suffering from devastating financial and natural disasters.
-                                    </p>
-
-                                    <p class="description">
-                                         Sustaining chapter donations benefits the International MOMS Club, which is a 501 (c)(3) public charity.
-                                         Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.
                                     </p>
 
                                 </div>
@@ -71,7 +72,7 @@
 
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label>Optional Sustaining Chapter Donation</label>
+                                <label>Sustaining Chapter Donation</label>
                                 <input type="text" name="sustaining" id="sustaining" class="form-control" value="$0.00" oninput="formatCurrency(this)">
                             </div>
                             <div class="col-md-6">

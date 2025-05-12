@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\AdminEmail;
 use App\Models\Boards;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
@@ -999,6 +1000,49 @@ class AdminController extends Controller implements HasMiddleware
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('admin.googledrive')]);
+        }
+    }
+
+     /**
+     * view Email Addresses not assigned by positionId
+     */
+    public function showAdminEmail(): View
+    {
+        $adminEmail = AdminEmail::get();
+
+        $data = ['adminEmail' => $adminEmail];
+
+        return view('admin.adminemail')->with($data);
+    }
+
+    /**
+     * Update Email Addresses not assigned by positionId
+     */
+    public function updateAdminEmail(Request $request): JsonResponse
+    {
+        try {
+            $email = AdminEmail::firstOrFail();
+            $email->list_admin = $request->input('listAdminEmail');
+            $email->payments_admin = $request->input('paymentAdminEmail');
+            $email->ein_admin = $request->input('einAdminEmail');
+            $email->gsuite_admin = $request->input('gsuiteAdminEmail');
+            $email->mimi_admin = $request->input('mimiAdminEmail');
+
+            $email->save();
+
+            DB::commit();
+
+            $message = 'Admin Emails updated successfully';
+
+            return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('admin.adminemail')]);
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback transaction on exception
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('admin.adminemail')]);
         }
     }
 }

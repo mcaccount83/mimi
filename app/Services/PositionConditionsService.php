@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Admin;
+use App\Models\AdminEmail;
 use Illuminate\Support\Facades\Request;
 
 class PositionConditionsService
@@ -64,6 +65,28 @@ class PositionConditionsService
             'userModerator' => ($userAdmin == '2'),
         ];
     }
+
+    /**
+     * Get Admin Email Addresses
+     */
+    public function getAdminEmail(): array
+        {
+            $adminEmail = AdminEmail::first(); // Returns a single model instead of a collection
+
+            $list_admin = $adminEmail->list_admin;
+            $payments_admin = $adminEmail->payments_admin;
+            $ein_admin = $adminEmail->ein_admin;
+            $gsuite_admin = $adminEmail->gsuite_admin;
+            $mimi_admin = $adminEmail->mimi_admin;
+
+            return [
+                'list_admin' => $list_admin,
+                'payments_admin' => $payments_admin,
+                'ein_admin' => $ein_admin,
+                'gsuite_admin' => $gsuite_admin,
+                'mimi_admin' => $mimi_admin,
+            ];
+        }
 
     /**
      * Get user type flags

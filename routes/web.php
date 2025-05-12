@@ -118,6 +118,8 @@ Route::post('/admin/updatesubscribelists', [AdminController::class, 'updateSubsc
 Route::post('/admin/updateunsubscribelists', [AdminController::class, 'updateUnsubscribeLists'])->name('admin.updateunsubscribelists');
 Route::get('/admin/googledrive', [AdminController::class, 'showGoogleDrive'])->name('admin.googledrive');
 Route::post('/admin/updategoogledrive', [AdminController::class, 'updateGoogleDrive'])->name('admin.updategoogledrive');
+Route::get('/admin/adminemail', [AdminController::class, 'showAdminEmail'])->name('admin.adminemail');
+Route::post('/admin/updateadminemail', [AdminController::class, 'updateAdminEmail'])->name('admin.updateadminemail');
 
 // Admin Controller Routes...Coordinator Login Required
 Route::get('/adminreports/useradmin', [AdminController::class, 'showUserAdmin'])->name('adminreports.useradmin');
