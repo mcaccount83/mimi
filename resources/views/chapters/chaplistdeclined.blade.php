@@ -30,7 +30,7 @@
                     <th>State</th>
                     <th>Name</th>
                     <th>President</th>
-                    <th>Reason</th>
+                    <th>Reason Not Approved</th>
                   </tr>
                 </thead>
                 <tbody>
