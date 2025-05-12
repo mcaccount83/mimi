@@ -13,7 +13,7 @@
                 <div class="card-header">
                     <div class="dropdown">
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           Admin EMail Settings
+                           Admin Email Settings
                         </h3>
                         @include('layouts.dropdown_menus.menu_admin')
                     </div>
