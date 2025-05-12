@@ -11,9 +11,11 @@
                 </a>
                     </div>
                       <!-- /.login-logo -->
-                <div class="card">
-                    <div class="card-body login-card-body">
-                    <p class="login-box-msg">{{ isset($url) ? ucwords($url) : ""}} {{ __('Login') }} to start your session</p>
+
+                     <div class="card">
+                        <div class="card-body login-card-body">
+
+                    <p class="login-box-msg">All Chapters & Coordinators should {{ isset($url) ? ucwords($url) : ""}} {{ __('Login') }} to Access your Account</p>
 
                     @isset($url)
                         <form method="POST" action='{{ url("login/$url") }}' aria-label="{{ __('Login') }}">
@@ -91,6 +93,12 @@
                             </a>
                         @endif
                     </p>
+
+                    <hr>
+                      <p>If you not affiliated with a local MOMS Club chapter, but would like to make a donation to support our 501(c)(3) organization, you can make
+                            a donation here - <a href="{{ config('settings.base_url') }}donation" target="_blank">Donation Link</a><br>
+                       </p>
+
 
                     </div>
                     <!-- /.login-card-body -->

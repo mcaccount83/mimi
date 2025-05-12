@@ -60,18 +60,31 @@
                         <span class="form-control-plaintext float-right col-sm-6 mb-1 text-right custom-span">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
 
                         <label class="col-form-label">Application Status:</label>
-                        <select  id="ch_active" name="ch_active" class="form-control float-right col-sm-6 text-right" required>
-                            <option value="">Select Status</option>
-                            @foreach($allActive as $active)
-                            @if($active->id != 0 )
-                                <option value="{{$active->id}}"
-                                    @if($chDetails->active_status == $active->id) selected @endif>
-                                    {{$active->active_status}}
-                                </option>
-                            @endif
-                        @endforeach
-                        </select>
-                      </li>
+                            <select id="ch_active" name="ch_active" class="form-control float-right col-sm-6 text-right" required>
+                                <option value="">Select Status</option>
+                                @foreach($allActive as $active)
+                                    @if($active->id != 0)
+                                        <option value="{{ $active->id }}"
+                                            @if($chDetails->active_status == $active->id) selected @endif>
+                                            {{ $active->active_status }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+
+                            <div id="disband_reason_container"
+                                style="display: {{ $chDetails->active_status == 3 ? 'block' : 'none' }}">
+                                <label class="col-form-label mb-1">Reason Not Approved:</label>
+                                <input type="text"
+                                    name="disband_reason"
+                                    id="disband_reason"
+                                    class="form-control float-right col-sm-6 text-right"
+                                    value="{{ $chDetails->disband_reason }}"
+                                    {{ $chDetails->active_status == 3 ? 'required' : '' }}>
+                            </div>
+
+                            </li>
+
 
                       @if($regionalCoordinatorCondition)
                       <li class="list-group-item">
@@ -273,6 +286,31 @@ document.addEventListener("DOMContentLoaded", function() {
     // Call the function to actually disable the options
     disableOptions();
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.getElementById('ch_active');
+    const disbandReasonContainer = document.getElementById('disband_reason_container');
+    const disbandReasonInput = document.getElementById('disband_reason');
+
+    function toggleDisbandReason() {
+        // Show/hide the reason field when status is 3
+        if (statusSelect.value === '3') {
+            disbandReasonContainer.style.display = 'block';
+            disbandReasonInput.required = true;
+        } else {
+            disbandReasonContainer.style.display = 'none';
+            disbandReasonInput.required = false;
+            disbandReasonInput.value = ''; // Clear the input when hidden
+        }
+    }
+
+    // Initial check on page load
+    toggleDisbandReason();
+
+    // Add event listener for status change
+    statusSelect.addEventListener('change', toggleDisbandReason);
+});
+
 
 // Function to filter the coordinator dropdown
 function filterCoordinators() {

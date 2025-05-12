@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Mail\NewChapterThankYou;
 use App\Mail\PaymentsNewChapOnline;
+use App\Mail\PaymentsSustainingPublicThankYou;
+use App\Mail\PaymentsM2MPublicThankYou;
+use App\Mail\PaymentsPublicDonationOnline;
 use App\Models\BoardsPending;
 use App\Models\Chapters;
 use App\Models\Coordinators;
@@ -215,10 +218,11 @@ class PublicController extends Controller
     {
         $input = $request->all();
         $description = 'New Chapter Application';
+        $transactionType = 'authOnlyTransaction';
         $name = $input['ch_name'];
         $founder = $input['ch_pre_fname'].' '.$input['ch_pre_lname'];
 
-        $paymentResponse = $this->processPublicPayment($request, $name, $description);
+        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
@@ -345,9 +349,85 @@ class PublicController extends Controller
         return redirect()->to('/newchaptersuccess')->with('success', 'Chapter created successfully');
     }
 
-    public function processPublicPayment(Request $request, $name, $description)
+     /**
+     * Show New Chapter Registration
+     */
+    public function editDonation(Request $request): View
+    {
+        $allStates = State::all();  // Full List for Dropdown Menu
+
+        $data = ['allStates' => $allStates,
+        ];
+
+        return view('public.donation')->with($data);
+    }
+
+     /**
+     * Show New Chapter Registration Success Message
+     */
+    public function viewDonation(Request $request): View
+    {
+        $allStates = State::all();  // Full List for Dropdown Menu
+
+        $data = ['allStates' => $allStates,
+        ];
+
+        return view('public.donationsuccess')->with($data);
+    }
+
+    /**
+     * Update New Chapter Registration
+     */
+    public function updateDonation(Request $request): RedirectResponse
+    {
+        $input = $request->all();
+        $description = 'M2M_Sustaining Donation';
+        $transactionType = 'authCaptureTransaction';
+        $name = 'N/A';
+
+        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType);
+
+        if (! $paymentResponse['success']) {
+            return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
+        }
+
+        $input = $request->all();
+        $invoice = $paymentResponse['data']['invoiceNumber'];
+        $AdminEmail = 'dragonmom@msn.com';
+
+        DB::beginTransaction();
+        try {
+             $mailData = array_merge(
+                $this->baseMailDataController->getPublicPaymentData($input, $invoice),
+            );
+
+            Mail::to($AdminEmail)
+                ->queue(new PaymentsSustainingPublicThankYou($mailData));
+
+            Mail::to($AdminEmail)
+                ->queue(new PaymentsM2MPublicThankYou($mailData));
+
+            Mail::to($AdminEmail)
+                ->queue(new PaymentsPublicDonationOnline($mailData));
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->to('/donation')->with('fail', 'Something went wrong, Please try again...');
+        }
+
+        return redirect()->to('/donationsuccess')->with('success', 'Chapter created successfully');
+    }
+
+    public function processPublicPayment(Request $request, $name, $description, $transactionType)
     {
         $newchap = $request->input('newchap');
+        $donation = $request->input('sustaining');
+        $sustaining = (float) preg_replace('/[^\d.]/', '', $donation);
+        $m2mdonation = $request->input('m2m');
+        $m2m = (float) preg_replace('/[^\d.]/', '', $m2mdonation);
         $fee = $request->input('fee');
         $cardNumber = $request->input('card_number');
         $expirationDate = $request->input('expiration_date');
@@ -412,9 +492,13 @@ class PublicController extends Controller
         $duplicateWindowSetting->setSettingValue('60');
 
         // Add some merchant defined fields. These fields won't be stored with the transaction, but will be echoed back in the response.
-        // $merchantDefinedField1 = new AnetAPI\UserFieldType;
-        // $merchantDefinedField1->setName('Founder Name');
-        // $merchantDefinedField1->setValue($founder);
+        $merchantDefinedField1 = new AnetAPI\UserFieldType;
+        $merchantDefinedField1->setName('SustainingDonation');
+        $merchantDefinedField1->setValue($sustaining);
+
+        $merchantDefinedField2 = new AnetAPI\UserFieldType;
+        $merchantDefinedField2->setName('m2mDonation');
+        $merchantDefinedField2->setValue($m2m);
 
         // Create payment log data
         $logData = [
@@ -422,12 +506,15 @@ class PublicController extends Controller
             'status' => 'pending',
             'request_data' => [
                 'newchap' => $newchap,
+                'sustaining_donation' => $sustaining,
+                'm2m_donation' => $m2m,
                 'fee' => $fee,
                 'invoice' => $randomInvoiceNumber,
                 'company' => $name,
                 // 'founder' => $founder,
                 'email' => $email,
                 'total' => $amount,
+                'transaction' => $transactionType,
             ],
         ];
 
@@ -436,7 +523,13 @@ class PublicController extends Controller
 
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType;
-        $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for New Chapters
+        // $transactionRequestType->setTransactionType($transactionType);
+        if (app()->environment('local')) {
+            $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
+        } else {
+            $transactionRequestType->setTransactionType($transactionType);  // Live Traansactions based on type of transaction
+        }
+        // $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for New Chapters
         // if (app()->environment('local')) {
         //     $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
         // } else {
@@ -448,7 +541,8 @@ class PublicController extends Controller
         $transactionRequestType->setBillTo($customerAddress);
         $transactionRequestType->setCustomer($customerData);
         $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
-        // $transactionRequestType->addToUserFields($merchantDefinedField1);
+        $transactionRequestType->addToUserFields($merchantDefinedField1);
+        $transactionRequestType->addToUserFields($merchantDefinedField2);
 
         // Assemble the complete transaction request
         $request = new AnetAPI\CreateTransactionRequest;

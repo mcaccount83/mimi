@@ -272,6 +272,8 @@ class BaseMailDataController extends Controller
         return [
             'invoice' => $invoice,
             'newchap' => $input['newchap'] ?? null,
+            'sustainingDonation' => $input['sustaining'] ?? null,
+            'm2mDonation' => $input['m2m'] ?? null,
             'processingFee' => $input['fee'] ?? null,
             'totalPaid' => $input['total'] ?? null,
             'fname' => $input['first_name'] ?? null,
