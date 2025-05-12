@@ -59,8 +59,8 @@
                         <label class="col-form-label mb-1">Application Submitted:</label>
                         <span class="form-control-plaintext float-right col-sm-6 mb-1 text-right custom-span">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
 
-                        <label class="col-form-label">Application Status:</label>
-                            <select id="ch_active" name="ch_active" class="form-control float-right col-sm-6 text-right" required>
+                        <label class="col-form-label mb-1">Application Status:</label>
+                            <select id="ch_active" name="ch_active" class="form-control float-right col-sm-6 mb-1 text-right" required>
                                 <option value="">Select Status</option>
                                 @foreach($allActive as $active)
                                     @if($active->id != 0)
@@ -78,7 +78,7 @@
                                 <input type="text"
                                     name="disband_reason"
                                     id="disband_reason"
-                                    class="form-control float-right col-sm-6 text-right"
+                                    class="form-control float-right col-sm-6 mb-1 text-right"
                                     value="{{ $chDetails->disband_reason }}"
                                     {{ $chDetails->active_status == 3 ? 'required' : '' }}>
                             </div>
