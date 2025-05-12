@@ -94,10 +94,10 @@
                         @endif
                     </p>
 
-                    <hr>
+                    {{-- <hr>
                       <p>If you not affiliated with a local MOMS Club chapter, but would like to make a donation to support our 501(c)(3) organization, you can make
                             a donation here - <a href="{{ config('settings.base_url') }}donation" target="_blank">Donation Link</a><br>
-                       </p>
+                       </p> --}}
 
 
                     </div>
