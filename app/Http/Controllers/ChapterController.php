@@ -2212,6 +2212,12 @@ class ChapterController extends Controller implements HasMiddleware
                 $chapter->save();
             }
 
+            if ($chapter->active_status != 3) {
+                $chapter->zap_date = null;
+                $chapter->disband_reason = null;
+                $chapter->save();
+            }
+
             $user->update([   // Update user details
                 'first_name' => $request->input('ch_pre_fname'),
                 'last_name' => $request->input('ch_pre_lname'),

@@ -57,8 +57,7 @@
                             <td>{{ $list->state->state_short_name }}</td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->pendingPresident->first_name }} {{ $list->pendingPresident->last_name }}</td>
-                            <td>
-                                </td>
+                            <td>{{ $list->disband_reason }}</td>
                         </tr>
                     @endforeach
                 </tbody>
