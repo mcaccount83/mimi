@@ -117,7 +117,7 @@
                             @endphp
                             <div class="col-md-4" disabled >
                                 <label>Late Fee</label>
-                                <input type="text" name="late" id="late" class="form-control" value="{{ ($thisDate->gte($due_date) && $due_date->month != $thisDate->month) ? '$10.00' : '$0.00' }}" readonly>
+                                <input type="text" name="late" id="late" class="form-control" value="{{ (($thisDate->gte($due_date) && $due_date->month != $thisDate->month) && $chDetails->payments->rereg_waivelate != '1') ? '$10.00' : '$0.00' }}" readonly>
                             </div>
                             <div class="col-md-4">
                                 <label>Total Re-Registration Fees</label>

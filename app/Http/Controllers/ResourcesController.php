@@ -34,7 +34,6 @@ class ResourcesController extends Controller implements HasMiddleware
         $this->userController = $userController;
                         $this->positionConditionsService = $positionConditionsService;
 
-
     }
 
     public static function middleware(): array

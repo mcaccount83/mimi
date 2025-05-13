@@ -96,6 +96,7 @@ class PaymentController extends Controller implements HasMiddleware
             $payments->rereg_payment = $rereg;
             $payments->rereg_date = $paymentDate;
             $payments->rereg_invoice = $invoice;
+            $chapter->rereg_waivelate = null;
             $payments->save();
 
             if ($donation && $sustaining > 0) {

@@ -70,15 +70,19 @@
                       <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
                       <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                   </ul>
-                  <div class="text-center">
-                      @if ($chDetails->is_active == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @else
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                  </div>
+                   <div class="text-center">
+                    @if ($chDetails->active_status == 1 )
+                        <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
+                    @elseif ($chDetails->active_status == 2)
+                      <b><span style="color: #ffc107;">Chapter is PENDING</span></b>
+                    @elseif ($chDetails->active_status == 3)
+                      <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b>
+                    @elseif ($chDetails->active_status == 0)
+                        <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
+                        Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
+                        {{ $chDetails->disband_reason }}
+                    @endif
+                </div>
                 </div>
               <!-- /.card-body -->
             </div>
@@ -119,6 +123,13 @@
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" name="ch_notify" id="ch_notify" class="custom-control-input" >
                                             <label class="custom-control-label" for="ch_notify"></label>
+                                        </div>
+                                    </div>
+                                <div class="col-md-12 d-flex align-items-center">
+                                    <label class="col-form-label mr-2">Waive Late Fee:</label>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" name="ch_waive_late" id="ch_waive_late" class="custom-control-input" {{$chPayments->rereg_waivelate == 1 ? 'checked' : ''}}>
+                                            <label class="custom-control-label" for="ch_waive_late"></label>
                                         </div>
                                     </div>
                                 </div>
