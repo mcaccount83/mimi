@@ -48,88 +48,86 @@ color: #6c757d; /* Muted color */
 </head>
 <body>
 
-<body class="hold-transition sidebar-mini layout-boxed">
-    <!-- Site wrapper -->
+<body style="background-color: #f0f0f0 !important;" class="hold-transition layout-top-nav">
     <div class="wrapper">
 
-    <div class="container-fluid" id="public">
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
 
- <!-- Main content -->
- <div class="content">
-    @if ($message = Session::get('success'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: @json($message),
-                showConfirmButton: false,
-                timer: 1500
-            });
-        });
-    </script>
-@endif
-
-@if ($message = Session::get('info'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                position: 'top-end',
-                icon: 'info',
-                title: @json($message),
-                showConfirmButton: false,
-                timer: 1500
-            });
-        });
-    </script>
-@endif
-
-@if ($message = Session::get('warning'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                position: 'top-end',
-                icon: 'warning',
-                title: @json($message),
-                showConfirmButton: false,
-                timer: 1500
-            });
-        });
-    </script>
-@endif
-
-@if ($message = Session::get('fail'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                position: 'top-end',
-                icon: 'error',
-                title: @json($message),
-                showConfirmButton: false,
-                timer: 1500
-            });
-        });
-    </script>
-@endif
-
-    @if ($errors->any())
+    <!-- Main content -->
+    <div class="content">
+        @if ($message = Session::get('success'))
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 Swal.fire({
                     position: 'top-end',
-                    icon: 'error',
-                    title: 'There were some errors!',
-                    html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
-                    showConfirmButton: true,
+                    icon: 'success',
+                    title: @json($message),
+                    showConfirmButton: false,
+                    timer: 1500
                 });
             });
         </script>
     @endif
 
+    @if ($message = Session::get('info'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'info',
+                    title: @json($message),
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            });
+        </script>
+    @endif
+
+    @if ($message = Session::get('warning'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: @json($message),
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            });
+        </script>
+    @endif
+
+    @if ($message = Session::get('fail'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: @json($message),
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            });
+        </script>
+    @endif
+
+        @if ($errors->any())
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'There were some errors!',
+                        html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
+                        showConfirmButton: true,
+                    });
+                });
+            </script>
+        @endif
 
         @yield('content')
     </div>
-
 
   <!-- Main Footer -->
   <footer class="main-footer">
@@ -144,8 +142,8 @@ color: #6c757d; /* Muted color */
     <!-- Default to the left -->
 
   </footer>
-
 </div>
+<!-- ./wrapper -->
 
 <!-- jQuery -->
 <script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>

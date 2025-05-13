@@ -28,6 +28,18 @@ A New Chapter Application has been submitted for Conference {{ $mailData['chapte
             <td>Founder Phone:&nbsp;&nbsp;</td>
             <td>{{ $mailData['founderPhone'] }}</td>
         </tr>
+         <tr>
+            <td>Founder Address:&nbsp;&nbsp;</td>
+            <td>{{ $mailData['founderAddress'] }}</td>
+        </tr>
+        <tr>
+            <td>&nbsp;&nbsp;</td>
+            <td>{{ $mailData['founderCity'] }}, {{ $mailData['founderState'] }} {{ $mailData['founderZip'] }}</td>
+        </tr>
+         <tr>
+            <td>&nbsp;&nbsp;</td>
+            <td>{{ $mailData['founderCountry'] }}</td>
+        </tr>
         <tr>
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Payment Information</strong></center></td>
         </tr>

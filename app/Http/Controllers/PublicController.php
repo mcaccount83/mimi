@@ -226,7 +226,15 @@ class PublicController extends Controller
         $name = $input['ch_name'];
         $founder = $input['ch_pre_fname'].' '.$input['ch_pre_lname'];
 
-        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType);
+        $shippingFirst = $input['ch_pre_fname'];
+        $shippingLast = $input['ch_pre_lname'];
+        $shippingAddress = $input['ch_pre_street'];
+        $shippingCity = $input['ch_pre_city'];
+        $shippingState = $input['ch_pre_state'];
+        $shippingZip = $input['ch_pre_zip'];
+
+        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType,
+                        $shippingFirst, $shippingLast, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
@@ -387,17 +395,25 @@ class PublicController extends Controller
      */
     public function updateDonation(Request $request): RedirectResponse
     {
-        $description = 'M2M_Sustaining Donation';
+        $input = $request->all();
+        $description = 'Sustaining Chapter & M2M Fund Donations';
         $transactionType = 'authCaptureTransaction';
         $name = 'N/A';
 
-        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType);
+        $shippingFirst = $input['first_name'];
+        $shippingLast = $input['last_name'];
+        $shippingAddress = $input['address'];
+        $shippingCity = $input['city'];
+        $shippingState = $input['state'];
+        $shippingZip = $input['zip'];
+
+        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType,
+                        $shippingFirst, $shippingLast, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
         }
 
-        $input = $request->all();
         $donarEmail = $request->input('email');
         $invoice = $paymentResponse['data']['invoiceNumber'];
 
@@ -432,7 +448,8 @@ class PublicController extends Controller
         return redirect()->to('/donationsuccess')->with('success', 'Chapter created successfully');
     }
 
-    public function processPublicPayment(Request $request, $name, $description, $transactionType)
+    public function processPublicPayment(Request $request, $name, $description, $transactionType,
+                $shippingFirst, $shippingLast, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
         $newchap = $request->input('newchap');
         $donation = $request->input('sustaining');
@@ -492,6 +509,19 @@ class PublicController extends Controller
         $customerAddress->setZip($zip);
         $customerAddress->setCountry('USA');
 
+        // Create the customer shipping address
+        $customerShipping = new AnetAPI\CustomerAddressType();
+        $customerShipping->setFirstName($shippingFirst);
+        $customerShipping->setLastName($shippingLast);
+        // $customerShipping->setCompany("Addresses R Us");
+        $customerShipping->setAddress($shippingAddress);
+        $customerShipping->setCity($shippingCity);
+        $customerShipping->setState($shippingState);
+        $customerShipping->setZip($shippingZip);
+        $customerShipping->setCountry("USA");
+        // $customerShipping->setPhoneNumber($phoneNumber);
+        // $customerShipping->setFaxNumber("999-999-9999");
+
         // Set the customer's identifying information
         $customerData = new AnetAPI\CustomerDataType;
         $customerData->setType('individual');
@@ -550,6 +580,7 @@ class PublicController extends Controller
         $transactionRequestType->setOrder($order);
         $transactionRequestType->setPayment($paymentOne);
         $transactionRequestType->setBillTo($customerAddress);
+        $transactionRequestType->setShipTo($customerShipping);
         $transactionRequestType->setCustomer($customerData);
         $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
         $transactionRequestType->addToUserFields($merchantDefinedField1);

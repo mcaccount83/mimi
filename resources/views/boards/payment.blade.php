@@ -151,7 +151,7 @@
                             </div>
 
                             <div class="col-md-3">
-                            <label for="expiration_date" >{{ __('Expiration Date (MM/YY)') }}</label> <span class="field-required">*</span>
+                            <label for="expiration_date" >{{ __('Expiration Date (MMYY)') }}</label> <span class="field-required">*</span>
                                 <input id="expiration_date" type="text" class="form-control @error('expiration_date') is-invalid @enderror" name="expiration_date" required autocomplete="off" maxlength="5">
                                 @error('expiration_date')
                                 <span class="invalid-feedback" role="alert">

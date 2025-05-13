@@ -116,7 +116,7 @@
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Contact:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required placeholder="Email Address" >
+                                <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"   required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Additional email validation
-    document.getElementById('email').addEventListener('blur', function() {
+    document.getElementById('ch_pre_email').addEventListener('blur', function() {
         let emailInput = this.value.trim();
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -347,5 +347,24 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('emailHelp').innerHTML = '';
         }
     });
+
+
+    function checkDuplicateEmail(email, id) {
+        $.ajax({
+            url: '{{ url("/checkemail/") }}' + '/' + email,
+            type: "GET",
+            success: function(result) {
+                if (result.exists) {
+                    alert('This Email already used in the system. Please try with new one.');
+                    $("#" + id).val('');
+                    $("#" + id).focus();
+                }
+            },
+            error: function(jqXHR, exception) {
+                console.error("Error checking email: ", exception);
+            }
+        });
+    }
+
 </script>
 @endsection

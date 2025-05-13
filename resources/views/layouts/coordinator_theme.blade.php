@@ -18,6 +18,9 @@
 <!-- Theme style -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
 
+<!-- Summernote CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+
 <!-- SweetAlert2 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
@@ -637,6 +640,9 @@ window.onload = function () {
 <!-- AdminLTE App -->
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
+<!-- Summernote -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -994,16 +1000,114 @@ function customErrorAlert(message) {
     }
 }
 
+// function showChapterEmailModal(chapterName, chapterId) {
+//     Swal.fire({
+//         title: 'Chapter Email Message',
+//         html: `
+//             <p>This will send your message to the full board and full coordinator list for <b>${chapterName}</b>.</p>
+//             <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+//                 <input type="text" id="email_subject" name="email_subjet" class="swal2-input" placeholder ="Enter Subject" required style="width: 100%; margin: 0 !important; ">
+//             </div>
+//             <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+//                 <textarea id="email_message" name="email_message" class="swal2-textarea" placeholder="Email Message" required style="width: 100%; height: 80px; margin: 0 !important; box-sizing: border-box;"></textarea>
+//             </div>
+//             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+//         `,
+//         showCancelButton: true,
+//         confirmButtonText: 'OK',
+//         cancelButtonText: 'Close',
+//         customClass: {
+//             confirmButton: 'btn-sm btn-success',
+//             cancelButton: 'btn-sm btn-danger'
+//         },
+//         preConfirm: () => {
+//             const subject = Swal.getPopup().querySelector('#email_subject').value;
+//             const message = Swal.getPopup().querySelector('#email_message').value;
+//             const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+//             if (!subject) {
+//                 Swal.showValidationMessage('Please enter subject.');
+//                 return false;
+//             }
+
+//             if (!message) {
+//                 Swal.showValidationMessage('Please enter message.');
+//                 return false;
+//             }
+
+//             return {
+//                 email_subject: subject,
+//                 email_message: message,
+//                 chapter_id: chapterId,
+//             };
+//         }
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//             const data = result.value;
+
+//             Swal.fire({
+//                 title: 'Processing...',
+//                 text: 'Please wait while we process your request.',
+//                 allowOutsideClick: false,
+//                 customClass: {
+//                     confirmButton: 'btn-sm btn-success',
+//                     cancelButton: 'btn-sm btn-danger'
+//                 },
+//                 didOpen: () => {
+//                     Swal.showLoading();
+
+//                     // Perform the AJAX request
+//                     $.ajax({
+//                         url: '{{ route('chapters.sendchapter') }}',
+//                         type: 'POST',
+//                         data: {
+//                             subject: data.email_subject,
+//                             message: data.email_message,
+//                             chapterId: data.chapter_id,
+//                             _token: '{{ csrf_token() }}'
+//                         },
+//                         success: function(response) {
+//                             Swal.fire({
+//                                 title: 'Success!',
+//                                 text: response.message,
+//                                 icon: 'success',
+//                                 showConfirmButton: false,  // Automatically close without "OK" button
+//                                 timer: 1500,
+//                                 customClass: {
+//                                     confirmButton: 'btn-sm btn-success'
+//                                 }
+//                             }).then(() => {
+//                                 location.reload(); // Reload the page to reflect changes
+//                             });
+//                         },
+//                         error: function(jqXHR, exception) {
+//                             Swal.fire({
+//                                 title: 'Error!',
+//                                 text: 'Something went wrong, Please try again.',
+//                                 icon: 'error',
+//                                 confirmButtonText: 'OK',
+//                                 customClass: {
+//                                     confirmButton: 'btn-sm btn-success'
+//                                 }
+//                             });
+//                         }
+//                     });
+//                 }
+//             });
+//         }
+//     });
+// }
+
 function showChapterEmailModal(chapterName, chapterId) {
     Swal.fire({
         title: 'Chapter Email Message',
         html: `
             <p>This will send your message to the full board and full coordinator list for <b>${chapterName}</b>.</p>
             <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                <input type="text" id="email_subject" name="email_subjet" class="swal2-input" placeholder ="Enter Subject" required style="width: 100%; margin: 0 !important; ">
+                <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder ="Enter Subject" required style="width: 100%; margin: 0 !important; ">
             </div>
-            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                <textarea id="email_message" name="email_message" class="swal2-textarea" placeholder="Email Message" required style="width: 100%; height: 80px; margin: 0 !important; box-sizing: border-box;"></textarea>
+            <div style="width: 100%; margin-bottom: 10px;">
+                <textarea id="email_message" name="email_message" class="rich-editor" placeholder="Email Message" required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;"></textarea>
             </div>
             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
         `,
@@ -1012,11 +1116,54 @@ function showChapterEmailModal(chapterName, chapterId) {
         cancelButtonText: 'Close',
         customClass: {
             confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            cancelButton: 'btn-sm btn-danger',
+            popup: 'swal-wide-popup' // Add this class for wider popup
+        },
+        didOpen: () => {
+            // Initialize Summernote on the email message textarea
+            $('#email_message').summernote({
+                height: 150,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough']],
+                    ['para', ['ul', 'ol']],
+                    ['insert', ['link']]
+                ],
+                callbacks: {
+                    onChange: function(contents) {
+                        // Update the hidden textarea with the HTML content
+                        $(this).val(contents);
+                    }
+                }
+            });
+
+            // Add some styling for the wider popup
+            if (!document.getElementById('swal-wide-popup-style')) {
+                const style = document.createElement('style');
+                style.id = 'swal-wide-popup-style';
+                style.innerHTML = `
+                    .swal-wide-popup {
+                        width: 80% !important;
+                        max-width: 800px !important;
+                    }
+                    .note-editor {
+                        margin-bottom: 10px !important;
+                        width: 100% !important;
+                    }
+                    .note-editable {
+                        text-align: left !important;
+                    }
+                    .note-editing-area {
+                        width: 100% !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
         },
         preConfirm: () => {
             const subject = Swal.getPopup().querySelector('#email_subject').value;
-            const message = Swal.getPopup().querySelector('#email_message').value;
+            // Get the HTML content from Summernote
+            const message = $('#email_message').summernote('code');
             const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
 
             if (!subject) {
@@ -1091,7 +1238,6 @@ function showChapterEmailModal(chapterName, chapterId) {
         }
     });
 }
-
 
  </script>
  @yield('customscript')

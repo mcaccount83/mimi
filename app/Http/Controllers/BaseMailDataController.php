@@ -295,6 +295,11 @@ class BaseMailDataController extends Controller
             'founderName' => $chDetails->pendingPresident->first_name.' '.$chDetails->pendingPresident->last_name,
             'founderEmail' => $chDetails->pendingPresident->email,
             'founderPhone' => $chDetails->pendingPresident->phone,
+            'founderAddress' => $chDetails->pendingPresident->street_address,
+            'founderCity' => $chDetails->pendingPresident->city,
+            'founderState' => $chDetails->pendingPresident->state,
+            'founderZip' => $chDetails->pendingPresident->zip,
+            'founderCountry' => $chDetails->pendingPresident->country,
         ];
     }
 }
