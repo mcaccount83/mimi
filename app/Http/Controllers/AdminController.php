@@ -827,9 +827,9 @@ class AdminController extends Controller implements HasMiddleware
             $lastupdatedDate = date('Y-m-d H:i:s');
 
             // Get BoardList category
-            $categoryBoardList = ForumCategory::where('title', 'BoardList')
-                ->first();
-            $categoryIdBoardList = $categoryBoardList->id;
+            // $categoryBoardList = ForumCategory::where('title', 'BoardList')
+            //     ->first();
+            // $categoryIdBoardList = $categoryBoardList->id;
 
             // Get Public Announcement category
             $categoryPublic = ForumCategory::where('title', 'Public Announcements')
@@ -861,19 +861,19 @@ class AdminController extends Controller implements HasMiddleware
             // Remove duplicates if a user is both coordinator and board member
             $uniqueUsers = $allUsers->unique('id');
 
-            foreach ($uniqueUsers as $user) {
-                // Check if subscription already exists
-                $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-                    ->where('category_id', $categoryIdBoardList)
-                    ->first();
+            // foreach ($uniqueUsers as $user) {
+            //     // Check if subscription already exists
+            //     $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+            //         ->where('category_id', $categoryIdBoardList)
+            //         ->first();
 
-                if (! $existingSubscription) {
-                    ForumCategorySubscription::create([
-                        'user_id' => $user->id,
-                        'category_id' => $categoryIdBoardList,
-                    ]);
-                }
-            }
+            //     if (! $existingSubscription) {
+            //         ForumCategorySubscription::create([
+            //             'user_id' => $user->id,
+            //             'category_id' => $categoryIdBoardList,
+            //         ]);
+            //     }
+            // }
 
             foreach ($activeBoards as $user) {
                 // Check if subscription already exists
@@ -918,15 +918,15 @@ class AdminController extends Controller implements HasMiddleware
             $lastUpdatedBy = $user['user_name'];
             $lastupdatedDate = date('Y-m-d H:i:s');
 
-            $categoryBoardList = ForumCategory::where('title', 'BoardList')
-                ->first();
+            // $categoryBoardList = ForumCategory::where('title', 'BoardList')
+            //     ->first();
 
             $categoryPublic = ForumCategory::where('title', 'Public Announcements')
                 ->first();
 
             // Delete all subscriptions for this category
-            $unsubscribeBoardList = ForumCategorySubscription::where('category_id', $categoryBoardList->id)
-                ->delete();
+            // $unsubscribeBoardList = ForumCategorySubscription::where('category_id', $categoryBoardList->id)
+            //     ->delete();
 
             // Delete board members for this category
             $unsubscribePublic = ForumCategorySubscription::where('category_id', $categoryPublic->id)
