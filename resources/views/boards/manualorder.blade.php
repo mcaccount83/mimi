@@ -1,65 +1,47 @@
-@extends('layouts.public_theme')
-
-<style>
-
-</style>
+@extends('layouts.board_theme')
 
 @section('content')
 
-<div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <form class="form-horizontal" method="POST" action='{{ route("public.updatedonation") }}'>
-                        @csrf
-
-                        <div class="col-md-12">
-                            <div class="card card-widget widget-user">
-                                <div class="widget-user-header bg-primary">
-                                    <div class="widget-user-image">
-                                        <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    @php
-                                        $thisDate = \Illuminate\Support\Carbon::now();
-                                    @endphp
-                                    <div class="col-md-12"><br><br></div>
-                                    <h2 class="text-center">Sustaining Chapter & Mother-to-Mother Fund Donations</h2>
-                                    </h2>
-                                    <div class="col-md-12" style="color: red;"><center><br>
-                                        <p><b>This page is for making donations as an individual/company not associated with a MOMS Club chapter.<br>
-                                            If you are a making a donation as a chapter,
-                                            login and donate through your MIMI account so your chapter can be recognized as the donar!</b>
-                                        </p>
-                                    </center></div>
-
-                                     <p class="description">
-                                         Sustaining chapter donations benefits the International MOMS Club, which is a 501 (c)(3) public charity.
-                                         Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.
-                                    </p>
-
-                                    <p class="description">
-                                         The Mother-To-Mother Fund is our ONLY official MOMS Club charity and is supported only by donations from the local chapters.
-                        Because of donations from chapters and volunteers in the past, we have been able to offer grants for emergency expenses to our MOMS Club mothers
-                        suffering from devastating financial and natural disasters.
-                                    </p>
-
-                                </div>
-                            </div>
+<div class="container" id="test">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+         <!-- Widget: user widget style 1 -->
+         <div class="card card-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-primary">
+                <div class="widget-user-image">
+                    <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
+                  </div>
                         </div>
-                        <!-- /.card -->
+                        <div class="card-body">
+
+                            <div class="col-md-12"><br><br></div>
+                        <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{ $stateShortName }} </h2>
+                        <h4 class="text-center">Manual Order Form</h4>
+
                     </div>
+                    <div class="col-md-12">
+                        <p class="description"><center>
+                                Submit an online order for an updated copy of the chapter manual.  <br>
+                                <br>
+                                Or, download/mail the PDF order form to:<br>
 
-  <div class="col-md-12">
-                        <div class="card card-primary card-outline">
+                                MOMS Club – Manuals<br>
+                                208 Hewitt Dr., Ste 103 #328<br>
+                                Waco, TX 76712<br>
+                        </center>  </p>
+
+                    </div>
+                </div>
+
+
+{{-- Start of Payment Form --}}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+    <div class="card card-primary card-outline">
                             <div class="card-body box-profile">
-                                 <!-- /.card-header -->
-
- {{-- <h3 class="profile-username">Payment Information</h3>
-                <!-- /.card-header -->
-                <div class="row">
-                    <div class="col-md-12"> --}}
-
                     @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -70,43 +52,44 @@
                     </div>
                     @endif
 
-                     <h3 class="profile-username">Donor Information</h3>
+                    <form method="POST" action="{{ route('process.manual') }}">
+                        @csrf
+                        <?php
+                        ?>
+
+                          <h3 class="profile-username">Shipping Information</h3>
                     <!-- /.card-header -->
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
                             <div class="form-group row">
-                                <label class="col-sm-2 mb-1 col-form-label">Company:</label>
-                                <div class="col-sm-10 mb-1">
-                            <input type="text" name="donor_company" id="donor_company" class="form-control" placeholder="Company Name">
-                                </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Name:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="donor_fname" id="donor_fname" class="form-control" placeholder="First Name" required >
+                                <input type="text" name="ship_fname" id="ship_fname" class="form-control"  required placeholder="First Name" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="donor_lname" id="donor_lname" class="form-control" placeholder="Last Name" required >
+                                <input type="text" name="ship_lname" id="ship_lname" class="form-control" required placeholder="Last Name" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Address:</label>
                                 <div class="col-sm-10 mb-1">
-                                <input type="text" name="donor_address" id="donor_address" class="form-control" placeholder="Street Address" required >
+                                <input type="text" name="ship_street" id="ship_street" class="form-control" placeholder="Address" required >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="donor_city" id="donor_city" class="form-control" placeholder="City" required >
+                                <input type="text" name="ship_city" id="ship_city" class="form-control" placeholder="City" required >
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="donor_state" id="donor_state" class="form-control select2" style="width: 100%;" required >
-                                          <option value="">Select State</option>
+                                    <select name="ship_state" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select State</option>
                                         @foreach($allStates as $state)
                                         <option value="{{$state->id}}">
                                             {{$state->state_long_name}}
                                         </option>
-                                        @endforeach
+                                    @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="donor_zip" id="donor_zip" class="form-control" placeholder="Zip" required>
+                                    <input type="text" name="ship_zip" id="ship_zip" class="form-control" placeholder="Zip" required >
                                 </div>
                             </div>
 
@@ -116,21 +99,16 @@
                     <hr>
 
                 <h3 class="profile-username">Payment Information</h3>
-
                         <div class="form-group row">
-                            <div class="col-md-6">
-                                <label>Sustaining Chapter Donation</label>
-                                <input type="text" name="sustaining" id="sustaining" class="form-control" value="$0.00" oninput="formatCurrency(this)">
+                            <div class="col-md-4">
+                                <label>Chapter Manual</label>
+                                <input type="text" name="manual" id="manual" class="form-control" value="$35.00" readonly>
                             </div>
-                            <div class="col-md-6">
-                                <label>Mother-to-Mother Fund Donation</label>
-                                <input type="text" name="m2m" id="m2m" class="form-control" value="$0.00" oninput="formatCurrency(this)">
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Online Processing Fee</label>
                                 <input type="text" name="fee" id="fee" class="form-control" value="$5.00" readonly>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Total Due</label>
                                 <input type="text" name="total" id="total" class="form-control" readonly>
                             </div>
@@ -204,23 +182,34 @@
                             </div>
                         </div>
 
-                    <div class="card-body text-center">
-                            <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after application submission with success or error message.<br>
+                        <div class="card-body text-center">
+                            <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Order') }}</button>
 
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Application') }}</button>
+                            @if ($userAdmin == '1')
+                                @if ($chIsActive != '1')
+                                    <a href="{{route('admin.board.editdisbandchecklist', ['chapter_id' => $chDetails->id]) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Checklist</a>
+                                @else
+                                    <a href="{{ route('admin.board.editpresident', ['chapter_id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+                                @endif
+                                {{-- @if ($userAdmin == '1')
+                                <a href="{{ route('admin.board.editpresident', ['chapter_id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a> --}}
+                            @elseif($userType === 'coordinator' && $userAdmin != '1')
+                                <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a>
+                            @elseif($chIsActive != '1')
+                                <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Checklist</a>
+                            @else
+                            <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
+                            @endif
                         </div>
                     </form>
                 </div>
             </div>
-    <!-- /.card-body -->
+        </div>
     </div>
-    <!-- /.card -->
-    </div>
-    <!-- /.col -->
-    </div>
-
+</div>
 <div class="col-md-12" style="font-size: 0.8em"></div>
 <div class="col-md-12" style="font-size: 0.8em">
     <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
@@ -232,59 +221,50 @@
 </div>
 
 </div>
-<!-- /.container- -->
+</div>
+</div>
 @endsection
 @section('customscript')
 
 <script>
-    function formatCurrency(input) {
-        let value = input.value.replace(/\D/g, '');
-        value = (value / 100).toFixed(2);
-        input.value = '$' + value;
-    }
+    /* Disable fields and buttons  */
+    $(document).ready(function () {
+            var userType = @json($userType);
+            var userAdmin = @json($userAdmin);
 
+            if (userAdmin === 1) {
+                $('button').not('#btn-back').prop('disabled', true);
+            }else if (userType === 'coordinator' && userAdmin != 1) {
+            // Disable all input fields, select elements, textareas, and buttons
+            $('button').not('#btn-back').prop('disabled', true);
+            $('input, select, textarea').prop('disabled', true);
+        }
 
-    // Function to calculate total due
+        });
+
+        document.querySelector('form').addEventListener('submit', function(){
+            document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
+        });
+
+        function formatCurrency(input) {
+            let value = input.value.replace(/\D/g, '');
+            value = (value / 100).toFixed(2);
+            input.value = '$' + value;
+        }
+
+     // Function to calculate total due
     function calculateTotal() {
-        var sustainingInput = document.getElementById('sustaining');
-        var sustainingValue = sustainingInput.value.trim();
-        var sustainingFee = parseFloat(sustainingValue.replace('$', ''));
-
-        // Check if sustaining fee is a valid number
-        if (isNaN(sustainingFee)) {
-            sustainingFee = 0; // Set to 0 if input is not a valid number
-        }
-
-        var donationInput = document.getElementById('m2m');
-        var donationValue = donationInput.value.trim();
-        var donationFee = parseFloat(donationValue.replace('$', ''));
-
-        // Check if donation fee is a valid number
-        if (isNaN(donationFee)) {
-            donationFee = 0; // Set to 0 if input is not a valid number
-        }
-
-        var feeInput = document.getElementById('fee');
-        var feeValue = feeInput.value.trim();
-        var fee = parseFloat(feeValue.replace('$', ''));
-
-        // Check if fee is a valid number
-        if (isNaN(fee)) {
-            fee = 0; // Set to 0 if input is not a valid number
-        }
-
-        var total = sustainingFee + donationFee + fee;
+        var newchap = parseFloat(document.getElementById('manual').value.replace('$', ''));
+        var fee = parseFloat(document.getElementById('fee').value.replace('$', ''));
+        var total = newchap + fee;
 
         document.getElementById('total').value = '$' + total.toFixed(2);
     }
 
-// Add event listeners to all input fields that affect the calculation
-document.getElementById('sustaining').addEventListener('input', calculateTotal);
-document.getElementById('m2m').addEventListener('input', calculateTotal);
-document.getElementById('fee').addEventListener('input', calculateTotal);
-
-// Call calculateTotal function initially to calculate total based on default values
-document.addEventListener('DOMContentLoaded', calculateTotal);
+    // Call the function when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        calculateTotal();
+    });
 
     // Additional email validation
     document.getElementById('email').addEventListener('blur', function() {

@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Additional email validation
-    document.getElementById('ch_pre_email').addEventListener('blur', function() {
+    document.getElementById('email').addEventListener('blur', function() {
         let emailInput = this.value.trim();
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -347,7 +347,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('emailHelp').innerHTML = '';
         }
     });
-
 
     function checkDuplicateEmail(email, id) {
         $.ajax({

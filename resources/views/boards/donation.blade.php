@@ -16,19 +16,22 @@
                         </div>
                         <div class="card-body">
 
-
                             <div class="col-md-12"><br><br></div>
-                        <h2 class="text-center"> MOMS Club of {{ $chDetails->name }}, {{ $stateShortName }} </h2>
-                        <h4 class="text-center"> Mother-to-Mother Fund & Sustaining Chapter Donations</h4>
-
+                        <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{ $stateShortName }} </h2>
+                        <h4 class="text-center">Sustaining Chapter & Mother-to-Mother Fund Donations</h4>
 
                     </div>
                     <div class="col-md-12">
-                        The Mother-To-Mother Fund is our ONLY official MOMS Club charity and is supported only by donations from the local chapters.
-                        Because of donations from chapters and volunteers in the past, we have been able to offer grants for emergency expenses to our MOMS Club mothers
-                        suffering from devastating financial and natural disasters.</div>
+                        <p class="description">
+                                         Sustaining chapter donations benefits the International MOMS Club, which is a 501 (c)(3) public charity.
+                                         Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.
+                                    </p>
 
-                        <div class="col-md-12"><br></div>
+                                    <p class="description">
+                                         The Mother-To-Mother Fund is our ONLY official MOMS Club charity and is supported only by donations from the local chapters.
+                        Because of donations from chapters and volunteers in the past, we have been able to offer grants for emergency expenses to our MOMS Club mothers
+                        suffering from devastating financial and natural disasters.
+                                    </p>
                     </div>
                 </div>
 
@@ -37,9 +40,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card">
-
-                <div class="card-body">
+            <div class="card card-primary card-outline">
+                            <div class="card-body box-profile">
                     @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -54,9 +56,53 @@
                         @csrf
                         <?php
                         ?>
+
+                        <h3 class="profile-username">Donor Information</h3>
+                    <!-- /.card-header -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- /.form group -->
+                            <div class="form-group row">
+                                <label class="col-sm-2 mb-1 col-form-label">Chapter/President:</label>
+                                <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" value="MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}" readonly>
+                                </div>
+                                <div class="col-sm-5 mb-1">
+                                <input type="text" name="ch_pre_name" id="ch_pre_name" class="form-control" value="{{ $PresDetails->first_name }} {{ $PresDetails->last_name }}" readonly >
+                                </div>
+                                <label class="col-sm-2 mb-1 col-form-label">Address:</label>
+                                <div class="col-sm-10 mb-1">
+                                <input type="text" name="pres_street" id="pres_street" class="form-control" value="{{ $PresDetails->street_address }}" readonly >
+                                </div>
+                                <label class="col-sm-2 mb-1 col-form-label"><br></label>
+                                <div class="col-sm-5 mb-1">
+                                <input type="text" name="pres_city" id="pres_city" class="form-control"  value="{{ $PresDetails->city }}" readonly >
+                                </div>
+                                <div class="col-sm-3 mb-1">
+                                    <select name="pres_state" id="pres_state" class="form-control select2" style="width: 100%;" required >
+                                        <option value="">Select State</option>
+                                        @foreach($allStates as $state)
+                                            <option value="{{$state->state_short_name}}"
+                                                @if($PresDetails->state == $state->state_short_name) selected @endif>
+                                                {{$state->state_long_name}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-2 mb-1">
+                                    <input type="text" name="pres_zip" id="pres_zip" class="form-control"  value="{{ $PresDetails->zip }}" readonly>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <hr>
+
+                <h3 class="profile-username">Payment Information</h3>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label>Optional Sustaining Chapter Donation</label>
+                                <label>Sustaining Chapter Donation</label>
                                 <input type="text" name="sustaining" id="sustaining" class="form-control" value="$0.00" oninput="formatCurrency(this)">
                             </div>
                             <div class="col-md-6">
@@ -188,12 +234,14 @@
 <script>
     /* Disable fields and buttons  */
     $(document).ready(function () {
-            var userType = @json($userType);
-            var userAdmin = @json($userAdmin);
+        var userType = @json($userType);
+        var userAdmin = @json($userAdmin);
 
-            if (userAdmin === 1) {
-                $('button').not('#btn-back').prop('disabled', true);
-            }else if (userType === 'coordinator' && userAdmin != 1) {
+        $('select[name="pres_state"]').prop('disabled', true);
+
+        if (userAdmin === 1) {
+            $('button').not('#btn-back').prop('disabled', true);
+        }else if (userType === 'coordinator' && userAdmin != 1) {
             // Disable all input fields, select elements, textareas, and buttons
             $('button').not('#btn-back').prop('disabled', true);
             $('input, select, textarea').prop('disabled', true);

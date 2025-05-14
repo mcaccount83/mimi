@@ -250,6 +250,7 @@ Route::get('/board/boardreport', [BoardController::class, 'editBoardReport'])->n
 Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
 Route::get('/board/reregpayment', [BoardController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
 Route::get('/board/donation', [BoardController::class, 'editM2MDonationForm'])->name('board.editdonate');
+Route::get('/board/manual', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
 Route::get('/board/probation', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
 Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
 Route::get('/board/m2mdonation', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
@@ -271,6 +272,7 @@ Route::prefix('admin/board')->middleware(['auth', 'admin'])->group(function () {
     Route::post('/boardreportupatea/{id}/{chapter_id}', [BoardController::class, 'updateBoardReport'])->name('admin.board.updateboardreport');
     Route::get('/reregpayment/{chapter_id}', [BoardController::class, 'editReregistrationPaymentForm'])->name('admin.board.editreregpayment');
     Route::get('/donation/{chapter_id}', [BoardController::class, 'editM2MDonationForm'])->name('admin.board.editdonate');
+    Route::get('/manualorder/{chapter_id}', [BoardController::class, 'editManualOrderForm'])->name('admin.board.editmanualorder');
     Route::get('/probation/{chapter_id}', [BoardController::class, 'editProbationSubmission'])->name('admin.board.editprobation');
     Route::post('/probationupdate/{id}/{chapter_id}', [BoardController::class, 'updateProbationSubmission'])->name('admin.board.updateprobation');
     Route::get('/m2mdonation/{chapter_id}', [BoardController::class, 'editM2MDonationForm'])->name('admin.board.editm2mdonation');
@@ -291,6 +293,7 @@ Route::get('/view/chapterfinancial/{id}', [ViewAsBoardController::class, 'showCh
 Route::get('/view/chapterboardinfo/{id}', [ViewAsBoardController::class, 'showChapterBoardInfoView'])->name('viewas.viewchapterboardinfo');
 Route::get('/view/chapterreregistration/{id}', [ViewAsBoardController::class, 'showChapterReregistrationView'])->name('viewas.viewchapterreregistration');
 Route::get('/view/chapterdonation/{id}', [ViewAsBoardController::class, 'showChapterM2MDonationView'])->name('viewas.viewchapterdonation');
+Route::get('/view/chaptermanualorder/{id}', [ViewAsBoardController::class, 'showChapterManualOrderView'])->name('viewas.viewchaptermanualorder');
 Route::get('/view/chapterprobation/{id}', [ViewAsBoardController::class, 'showProbationSubmissionView'])->name('viewas.viewchapterprobation');
 Route::get('/view/chapterdisband/{id}', [ViewAsBoardController::class, 'showDisbandChecklistView'])->name('viewas.viewchapterdisbandchecklist');
 
@@ -339,6 +342,7 @@ Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'
 // Payment Controller Routes...Coordinator Login Required
 Route::post('/process-payment', [PaymentController::class, 'reRegistrationPayment'])->name('process.payment');
 Route::post('/process-donation', [PaymentController::class, 'm2mPayment'])->name('process.donation');
+Route::post('/process-manual', [PaymentController::class, 'manualPayment'])->name('process.manual');
 Route::get('/chapter/reregistration', [PaymentReportController::class, 'showChapterReRegistration'])->name('chapters.chapreregistration');
 Route::get('/international/reregistration', [PaymentReportController::class, 'showIntReRegistration'])->name('international.intregistration');
 Route::get('/chapter/reregistrationreminder', [PaymentReportController::class, 'createChapterReRegistrationReminder'])->name('chapters.chapreregreminder');

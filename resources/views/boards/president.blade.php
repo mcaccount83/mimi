@@ -119,10 +119,7 @@
                                             {{$state->state_long_name}}
                                         </option>
                                     @endforeach
-                                        {{-- @foreach($stateArr as $state)
-                                          <option value="{{$state->state_short_name}}" {{$PresDetails->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                        @endforeach --}}
-                                    </select>
+                                </select>
                             </div>
                             <div class="col-sm-2 mb-1">
                                 <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" value="{{ $PresDetails->zip }}" placeholder="Zip" required >

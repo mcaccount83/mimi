@@ -961,15 +961,50 @@ class BoardController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
+        $allStates = $baseQuery['allStates'];
+        $PresDetails = $baseQuery['PresDetails'];
 
         $now = Carbon::now();
         $month = $now->month;
         $year = $now->year;
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chIsActive' => $chIsActive,
+            'PresDetails' => $PresDetails, 'allStates' => $allStates,
         ];
 
         return view('boards.donation')->with($data);
+    }
+
+    /**
+     * Show Manual Order Form All Board Members
+     */
+    public function editManualOrderForm(Request $request, $chapter_id = null): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
+
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $chIsActive = $baseQuery['chIsActive'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $allStates = $baseQuery['allStates'];
+
+        $now = Carbon::now();
+        $month = $now->month;
+        $year = $now->year;
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chIsActive' => $chIsActive,
+            'allStates' => $allStates,
+        ];
+
+        return view('boards.manualorder')->with($data);
     }
 
     /**

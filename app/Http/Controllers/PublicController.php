@@ -228,13 +228,14 @@ class PublicController extends Controller
 
         $shippingFirst = $input['ch_pre_fname'];
         $shippingLast = $input['ch_pre_lname'];
+        $shippingCompany = $name = $input['ch_name'];
         $shippingAddress = $input['ch_pre_street'];
         $shippingCity = $input['ch_pre_city'];
         $shippingState = $input['ch_pre_state'];
         $shippingZip = $input['ch_pre_zip'];
 
         $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType,
-                        $shippingFirst, $shippingLast, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
@@ -400,15 +401,16 @@ class PublicController extends Controller
         $transactionType = 'authCaptureTransaction';
         $name = 'N/A';
 
-        $shippingFirst = $input['first_name'];
-        $shippingLast = $input['last_name'];
-        $shippingAddress = $input['address'];
-        $shippingCity = $input['city'];
-        $shippingState = $input['state'];
-        $shippingZip = $input['zip'];
+        $shippingFirst = $input['donor_fname'];
+        $shippingLast = $input['donor_lname'];
+        $shippingCompany = $input['donor_company'];
+        $shippingAddress = $input['donor_address'];
+        $shippingCity = $input['donor_city'];
+        $shippingState = $input['donor_state'];
+        $shippingZip = $input['donor_zip'];
 
         $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType,
-                        $shippingFirst, $shippingLast, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
@@ -449,7 +451,7 @@ class PublicController extends Controller
     }
 
     public function processPublicPayment(Request $request, $name, $description, $transactionType,
-                $shippingFirst, $shippingLast, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
+                $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
         $newchap = $request->input('newchap');
         $donation = $request->input('sustaining');
@@ -513,14 +515,12 @@ class PublicController extends Controller
         $customerShipping = new AnetAPI\CustomerAddressType();
         $customerShipping->setFirstName($shippingFirst);
         $customerShipping->setLastName($shippingLast);
-        // $customerShipping->setCompany("Addresses R Us");
+        $customerShipping->setCompany($shippingCompany);
         $customerShipping->setAddress($shippingAddress);
         $customerShipping->setCity($shippingCity);
         $customerShipping->setState($shippingState);
         $customerShipping->setZip($shippingZip);
         $customerShipping->setCountry("USA");
-        // $customerShipping->setPhoneNumber($phoneNumber);
-        // $customerShipping->setFaxNumber("999-999-9999");
 
         // Set the customer's identifying information
         $customerData = new AnetAPI\CustomerDataType;

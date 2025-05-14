@@ -89,6 +89,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
 
@@ -114,7 +115,7 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'userAdmin' => $userAdmin,
+            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chIsActive' => $chIsActive
         ];
 
         return view('boards.payment')->with($data);
@@ -131,16 +132,46 @@ class ViewAsBoardController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
+        $allStates = $baseQuery['allStates'];
+        $PresDetails = $baseQuery['PresDetails'];
 
         $now = Carbon::now();
         $month = $now->month;
         $year = $now->year;
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chIsActive' => $chIsActive,
+            'PresDetails' => $PresDetails, 'allStates' => $allStates,
         ];
 
         return view('boards.donation')->with($data);
+    }
+
+    /**
+     * View the Chapter Manual Order Form
+     */
+    public function showChapterManualOrderView(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $chIsActive = $baseQuery['chIsActive'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $allStates = $baseQuery['allStates'];
+
+        $now = Carbon::now();
+        $month = $now->month;
+        $year = $now->year;
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chIsActive' => $chIsActive,
+            'allStates' => $allStates,
+        ];
+
+        return view('boards.manualorder')->with($data);
     }
 
     /**
