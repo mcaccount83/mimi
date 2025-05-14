@@ -33,6 +33,7 @@
                                         </p>
                                     </center></div>
 
+                                    <div class="col-md-12">
                                      <p class="description">
                                          Sustaining chapter donations benefits the International MOMS Club, which is a 501 (c)(3) public charity.
                                          Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.
