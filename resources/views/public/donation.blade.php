@@ -27,7 +27,7 @@
                                     <h2 class="text-center">Sustaining Chapter & Mother-to-Mother Fund Donations</h2>
                                     </h2>
                                     <div class="col-md-12" style="color: red;"><center><br>
-                                        <p><b>This page is for making donations as an individual/company not associated with a MOMS Club chapter.<br>
+                                        <p><b>This page is for making donations as an individual who is making a donation on their own, or for a company not associated with a MOMS Club chapter.<br>
                                             If you are a making a donation as a chapter,
                                             login and donate through your MIMI account so your chapter can be recognized as the donar!</b>
                                         </p>

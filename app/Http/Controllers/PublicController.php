@@ -546,16 +546,16 @@ class PublicController extends Controller
             'amount' => $amount,
             'status' => 'pending',
             'request_data' => [
+                'transaction_type' => $transactionType,
+                'invoice' => $randomInvoiceNumber,
+                'chapter_company' => $name,
+                'name' => $first.' '.$last,
+                'email' => $email,
                 'newchap' => $newchap,
                 'sustaining_donation' => $sustaining,
                 'm2m_donation' => $m2m,
                 'fee' => $fee,
-                'invoice' => $randomInvoiceNumber,
-                'company' => $name,
-                // 'founder' => $founder,
-                'email' => $email,
                 'total' => $amount,
-                'transaction' => $transactionType,
             ],
         ];
 

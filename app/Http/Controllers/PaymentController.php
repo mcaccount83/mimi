@@ -362,19 +362,12 @@ class PaymentController extends Controller implements HasMiddleware
      public function processPayment(Request $request, $name, $description, $transactionType,
                 $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        // $user = User::find($request->user()->id);
+        // $userId = $user->id;
 
-        $bdDetails = $request->user()->board;
-        $bdId = $bdDetails->id;
-        $chapterId = $bdDetails->chapter_id;
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
-        $chapterDetails = $baseQuery['chDetails'];
-        $chapterState = $baseQuery['stateShortName'];
-        $chapterName = $chapterDetails->name;
-
-        $company = $chapterName.', '.$chapterState;
+        // $bdDetails = $request->user()->board;
+        // $bdId = $bdDetails->id;
+        // $chapterId = $bdDetails->chapter_id;
 
         $members = $request->input('members');
         $late = $request->input('late');
@@ -453,7 +446,7 @@ class PaymentController extends Controller implements HasMiddleware
         // Set the customer's identifying information
         $customerData = new AnetAPI\CustomerDataType;
         $customerData->setType('individual');
-        $customerData->setId($chapterId);
+        // $customerData->setId($chapterId);
         $customerData->setEmail($email);
 
         // Add values for transaction settings
@@ -480,10 +473,15 @@ class PaymentController extends Controller implements HasMiddleware
 
         // Create payment log data
         $logData = [
-            'customer_id' => $userId,
+            // 'customer_id' => $userId,
             'amount' => $amount,
             'status' => 'pending',
             'request_data' => [
+                'transaction_type' => $transactionType,
+                'invoice' => $randomInvoiceNumber,
+                'chapter_company' => $name,
+                'name' => $first.' '.$last,
+                'email' => $email,
                 'members' => $members,
                 'late' => $late,
                 'rereg' => $rereg,
@@ -491,9 +489,6 @@ class PaymentController extends Controller implements HasMiddleware
                 'm2m_donation' => $m2m,
                 'manual_order' => $manual,
                 'fee' => $fee,
-                'invoice' => $randomInvoiceNumber,
-                'company' => $company,
-                'email' => $email,
                 'total' => $amount,
             ],
         ];
