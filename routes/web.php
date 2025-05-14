@@ -143,9 +143,11 @@ Route::post('/resources/updatetoolkit/{id}', [ResourcesController::class, 'updat
 
 // Chapter Controller Routes...Coordinator Login Required
 Route::get('/chapter/pendingchapterlist', [ChapterController::class, 'showPendingChapters'])->name('chapters.chaplistpending');
+Route::get('/international/pendingchapterlist', [ChapterController::class, 'showIntPendingChapters'])->name('international.intchaplistpending');
 Route::get('/pendingchapterdetailsedit/{id}', [ChapterController::class, 'editPendingChapterDetails'])->name('chapters.editpending');
 Route::post('/pendingchapterdetailsupdate/{id}', [ChapterController::class, 'updatePendingChapterDetails'])->name('chapters.updatepending');
 Route::get('/chapter/declinedchapterlist', [ChapterController::class, 'showNotApprovedChapters'])->name('chapters.chaplistdeclined');
+Route::get('/international/declinedchapterlist', [ChapterController::class, 'showIntNotApprovedChapters'])->name('international.intchaplistdeclined');
 Route::get('/chapter/chapterlist', [ChapterController::class, 'showChapters'])->name('chapters.chaplist');
 Route::get('/chapter/zapped', [ChapterController::class, 'showZappedChapter'])->name('chapters.chapzapped');
 Route::get('/chapter/inquiries', [ChapterController::class, 'showChapterInquiries'])->name('chapters.chapinquiries');

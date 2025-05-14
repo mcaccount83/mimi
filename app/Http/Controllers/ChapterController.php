@@ -131,6 +131,40 @@ class ChapterController extends Controller implements HasMiddleware
         return view('chapters.chaplistdeclined')->with($data);
     }
 
+     /**
+     * Display the Pending New chapter list mapped with login coordinator
+     */
+    public function showIntPendingChapters(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+
+        $baseQuery = $this->baseChapterController->getPendingInternationalBaseQuery($coorId);
+        $chapterList = $baseQuery['query']->get();
+
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+
+        return view('international.intchaplistpending')->with($data);
+    }
+
+    /**
+     * Display the Pending New chapter list mapped with login coordinator
+     */
+    public function showIntNotApprovedChapters(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+
+        $baseQuery = $this->baseChapterController->getNotApprovedInternationalBaseQuery($coorId);
+        $chapterList = $baseQuery['query']->get();
+
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+
+        return view('international.intchaplistdeclined')->with($data);
+    }
+
     /**
      * Display the Active chapter list mapped with login coordinator
      */
