@@ -560,6 +560,7 @@ class PublicController extends Controller
         $logData = [
             'amount' => $amount,
             'transaction' => $transactionType,
+            'description' => $description,
             'chapter' => $name,
             'conf' => $confId,
             'status' => 'pending',

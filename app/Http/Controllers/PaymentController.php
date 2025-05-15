@@ -469,6 +469,7 @@ class PaymentController extends Controller implements HasMiddleware
             // 'customer_id' => $userId,
             'amount' => $amount,
             'transaction' => $transactionType,
+            'description' => $description,
             'chapter' => $name,
             'conf' => $confId,
             'status' => 'pending',
