@@ -846,7 +846,6 @@ class AdminController extends Controller implements HasMiddleware
 
             // Get board members from active chapters using with()
             $boardUserIds = Chapters::with('boards')
-                // ->where('is_active', true)
                 ->where('active_status', 1)
                 ->get()
                 ->pluck('boards')

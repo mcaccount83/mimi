@@ -14,13 +14,21 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
         </tr>
         <tr>
             <td>Shipping Name:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['shipName'] }}</td>
+            <td>{{ $mailData['ship_fname'] }} {{ $mailData['ship_lname'] }}</td>
+        </tr>
+        <tr>
+            <td>Shipping Email:&nbsp;&nbsp;</td>
+            <td>{{ $mailData['ship_email'] }} </td>
+        </tr>
+        <tr>
+            <td>Shipping Phone:&nbsp;&nbsp;</td>
+            <td>{{ $mailData['ship_phone'] }} </td>
         </tr>
         <tr>
             <td>Shipping Address:&nbsp;&nbsp;<br>
                 &nbsp;&nbsp;</td>
-            <td>{{ $mailData['shipAddress'] }}<br>
-                {{ $mailData['shipCity'] }}, {{ $mailData['shipState'] }} {{ $mailData['shipZip'] }}</td>
+            <td>{{ $mailData['ship_street'] }}<br>
+                {{ $mailData['ship_city'] }}, {{ $mailData['ship_state'] }} {{ $mailData['ship_zip'] }}</td>
         </tr>
         <tr>
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Payment Information</strong></center></td>
@@ -41,11 +49,7 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
         </tr>
         <tr>
             <td>Invoice Number:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['invoice'] }}</td>
-        </tr>
-        <tr>
-            <td>Customer ID:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['chapterId'] }}</td>
+            <td>{{ $mailData['manualInvoice'] }}</td>
         </tr>
         <tr>
             <td>Cardholder Name:&nbsp;&nbsp;</td>

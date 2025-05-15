@@ -158,15 +158,12 @@
                                 <div class="avp-field col-sm-3 mb-1">
                                     <select name="ch_avp_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                        @foreach($allStates as $state)
-                                            <option value="{{$state->state_short_name}}"
-                                                @if($AVPDetails->state == $state->state_short_name) selected @endif>
-                                                {{$state->state_long_name}}
-                                            </option>
-                                        @endforeach
-                                            {{-- @foreach($stateArr as $state)
-                                                <option value="{{$state->state_short_name}}" {{$AVPDetails->avp_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                            @endforeach --}}
+                                            @foreach($allStates as $state)
+                                                <option value="{{$state->state_short_name}}"
+                                                    @if($AVPDetails->state == $state->state_short_name) selected @endif>
+                                                    {{$state->state_long_name}}
+                                                </option>
+                                            @endforeach
                                     </select>
                                 </div>
                                 <div class="avp-field col-sm-2 mb-1">
@@ -206,15 +203,12 @@
                             <div class="mvp-field col-sm-3 mb-1">
                                 <select name="ch_mvp_state" class="form-control" style="width: 100%;" required>
                                     <option value="">Select State</option>
-                                            @foreach($allStates as $state)
-                                                <option value="{{$state->state_short_name}}"
-                                                    @if($MVPDetails->state == $state->state_short_name) selected @endif>
-                                                    {{$state->state_long_name}}
-                                                </option>
-                                            @endforeach
-                                        {{-- @foreach($stateArr as $state)
-                                        <option value="{{$state->state_short_name}}" {{$MVPDetails->mvp_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                        @endforeach --}}
+                                        @foreach($allStates as $state)
+                                            <option value="{{$state->state_short_name}}"
+                                                @if($MVPDetails->state == $state->state_short_name) selected @endif>
+                                                {{$state->state_long_name}}
+                                            </option>
+                                        @endforeach
                                 </select>
                             </div>
                             <div class="mvp-field col-sm-2 mb-1">
@@ -254,15 +248,12 @@
                             <div class="treas-field col-sm-3 mb-1">
                                 <select name="ch_trs_state" class="form-control" style="width: 100%;" required>
                                     <option value="">Select State</option>
-                                    @foreach($allStates as $state)
-                                        <option value="{{$state->state_short_name}}"
-                                            @if($TRSDetails->state == $state->state_short_name) selected @endif>
-                                            {{$state->state_long_name}}
-                                        </option>
-                                    @endforeach
-                                        {{-- @foreach($stateArr as $state)
-                                        <option value="{{$state->state_short_name}}" {{$TRSDetails->trs_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                        @endforeach --}}
+                                        @foreach($allStates as $state)
+                                            <option value="{{$state->state_short_name}}"
+                                                @if($TRSDetails->state == $state->state_short_name) selected @endif>
+                                                {{$state->state_long_name}}
+                                            </option>
+                                        @endforeach
                                 </select>
                             </div>
                             <div class="treas-field col-sm-2 mb-1">
@@ -302,15 +293,12 @@
                             <div class="sec-field col-sm-3 mb-1">
                                 <select name="ch_sec_state" class="form-control" style="width: 100%;" required>
                                     <option value="">Select State</option>
-                                            @foreach($allStates as $state)
-                                                <option value="{{$state->state_short_name}}"
-                                                    @if($SECDetails->state == $state->state_short_name) selected @endif>
-                                                    {{$state->state_long_name}}
-                                                </option>
-                                            @endforeach
-                                        {{-- @foreach($stateArr as $state)
-                                            <option value="{{$state->state_short_name}}" {{$SECDetails->sec_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                        @endforeach --}}
+                                        @foreach($allStates as $state)
+                                            <option value="{{$state->state_short_name}}"
+                                                @if($SECDetails->state == $state->state_short_name) selected @endif>
+                                                {{$state->state_long_name}}
+                                            </option>
+                                        @endforeach
                                 </select>
                             </div>
                             <div class="sec-field col-sm-2 mb-1">
@@ -389,8 +377,6 @@
 
                     </div>
                 </div>
-
-
 
             </div>
             <!-- /.card-body -->
@@ -631,34 +617,22 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-    var currentDate = new Date();
     var currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
     var userType = @json($userType);
     var userAdmin = @json($userAdmin);
 
+    // Disable all input fields, select elements, textareas, and buttons based on criteria
     if (userAdmin === 1) {
         $('#Save, #Password, #logout-btn').prop('disabled', true);
     }else if (userType === 'coordinator' && userAdmin != 1) {
-        // Disable all input fields, select elements, textareas, and buttons
         $('input, select, textarea').prop('disabled', true);
         $('#Save, #Password, #logout-btn, #eLearning, #Resources').prop('disabled', true);
-        // Disable links by adding a class and modifying their behavior
         $('#display_corlist').addClass('disabled-link').attr('href', '#');
-
     } else if (currentMonth >= 5 && currentMonth <= 7) {
-        // Disable all input fields, select elements, textareas, and Save button
         $('input, select, textarea').prop('disabled', true);
         $('#Save').prop('disabled', true);
-    } else {
-        // If the condition is not met, keep the fields active
-        $('input, select, textarea').prop('disabled', false);
-        $('#Save').prop('disabled', false);
     }
 
-    // Check the disabled status of EOY Buttons and show the "fields are locked" description if necessary
-    if ($('input, select, textarea').prop('disabled')) {
-        $('.description').show();
-    }
 });
 
 document.addEventListener("DOMContentLoaded", function() {

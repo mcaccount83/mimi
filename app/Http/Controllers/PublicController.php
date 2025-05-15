@@ -420,7 +420,7 @@ class PublicController extends Controller
         }
 
         $invoice = $paymentResponse['data']['invoiceNumber'];
-        $donarEmail = $input['email'];
+        $donarEmail = $input['ship_email'];
         $adminEmail = $this->positionConditionsService->getAdminEmail();
         $paymentsAdmin = $adminEmail['payments_admin'];
 
@@ -600,19 +600,6 @@ class PublicController extends Controller
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType;
         $transactionRequestType->setTransactionType($transactionTypeDetail);
-
-        // $transactionRequestType->setTransactionType($transactionType);
-        // if (app()->environment('local')) {
-        //     $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
-        // } else {
-        //     $transactionRequestType->setTransactionType($transactionType);  // Live Traansactions based on type of transaction
-        // }
-        // $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for New Chapters
-        // if (app()->environment('local')) {
-        //     $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
-        // } else {
-        //     $transactionRequestType->setTransactionType('authCaptureTransaction');  // Caputre Payment for Live Traansactions
-        // }
         $transactionRequestType->setAmount($amount);
         $transactionRequestType->setOrder($order);
         $transactionRequestType->setPayment($paymentOne);

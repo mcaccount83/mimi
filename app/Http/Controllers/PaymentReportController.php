@@ -223,7 +223,7 @@ class PaymentReportController extends Controller implements HasMiddleware
                 ->where('chapters.conference_id', $confId)
                 ->where('chapters.start_month_id', $lastMonth)
                 ->where('chapters.next_renewal_year', $year)
-                ->where('chapters.is_active', 1)
+                ->where('chapters.active_status', 1)
                 ->get();
 
             if ($chapters->isEmpty()) {

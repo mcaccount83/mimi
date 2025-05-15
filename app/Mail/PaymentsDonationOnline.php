@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class PaymentsM2MOnline extends Mailable implements ShouldQueue
+class PaymentsDonationOnline extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -33,6 +33,6 @@ class PaymentsM2MOnline extends Mailable implements ShouldQueue
     {
         return $this
             ->subject("Donation Received | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.payments.m2monline');
+            ->markdown('emails.payments.donationonline');
     }
 }
