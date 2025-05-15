@@ -222,6 +222,7 @@ class PublicController extends Controller
     {
         $input = $request->all();
         $description = 'New Chapter Application';
+        $shortDescription = 'New Chapter';
         $transactionType = 'authOnlyTransaction';
         $name = $input['ch_name'];
         $stateId = $input['ch_state'];
@@ -269,7 +270,7 @@ class PublicController extends Controller
         $shippingState = $input['ch_pre_state'];
         $shippingZip = $input['ch_pre_zip'];
 
-        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType, $confId,
+        $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
@@ -398,6 +399,7 @@ class PublicController extends Controller
     {
         $input = $request->all();
         $description = 'Sustaining Chapter & M2M Fund Donations';
+        $shortDescription = 'Donation';
         $transactionType = 'authCaptureTransaction';
         $name = 'N/A';
         $confId = 'N/A';
@@ -410,7 +412,7 @@ class PublicController extends Controller
         $shippingState = $input['ship_state'];
         $shippingZip = $input['ship_zip'];
 
-        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType, $confId,
+        $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
@@ -465,9 +467,22 @@ class PublicController extends Controller
     /**
      * Process payments with Authorize.net
      */
-    public function processPublicPayment(Request $request, $name, $description, $transactionType, $confId,
+    public function processPublicPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId,
                 $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
+        if (app()->environment('local')) {
+            $transactionTypeDetail = 'authOnlyTransaction';  // Auth Only for testing Purposes
+        } else {
+            $transactionTypeDetail = $transactionType;  // Live Traansactions based on type of transaction set from request
+        }
+
+        if ($transactionTypeDetail ==  'authCaptureTransaction'){
+            $shortTransactionType = 'Processed';
+        }
+        if ($transactionTypeDetail ==  'authOnlyTransaction'){
+            $shortTransactionType = 'AuthOnly';
+        }
+
         $newchap = $request->input('newchap');
         $donation = $request->input('sustaining');
         $sustaining = (float) preg_replace('/[^\d.]/', '', $donation);
@@ -559,15 +574,15 @@ class PublicController extends Controller
         // Create payment log data
         $logData = [
             'amount' => $amount,
-            'transaction' => $transactionType,
-            'description' => $description,
+            'transaction' => $shortTransactionType,
+            'description' => $shortDescription,
             'chapter' => $name,
             'conf' => $confId,
             'status' => 'pending',
             'request_data' => [
-                'transaction_type' => $transactionType,
+                'transaction_type' => $shortTransactionType,
                 'invoice' => $randomInvoiceNumber,
-                'description' => $description,
+                'description' => $shortDescription,
                 'chapter_company' => $name,
                 'name' => $first.' '.$last,
                 'email' => $email,
@@ -584,12 +599,14 @@ class PublicController extends Controller
 
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType;
+        $transactionRequestType->setTransactionType($transactionTypeDetail);
+
         // $transactionRequestType->setTransactionType($transactionType);
-        if (app()->environment('local')) {
-            $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
-        } else {
-            $transactionRequestType->setTransactionType($transactionType);  // Live Traansactions based on type of transaction
-        }
+        // if (app()->environment('local')) {
+        //     $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
+        // } else {
+        //     $transactionRequestType->setTransactionType($transactionType);  // Live Traansactions based on type of transaction
+        // }
         // $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for New Chapters
         // if (app()->environment('local')) {
         //     $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes

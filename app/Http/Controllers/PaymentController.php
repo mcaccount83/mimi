@@ -66,6 +66,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         $input = $request->all();
         $description = 'Re-Registration Payment';
+        $shortDescription = 'Re-Registration';
         $transactionType = 'authCaptureTransaction';
         $name = $chDetails->name.', '.$stateShortName;
 
@@ -78,7 +79,7 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingZip = $PresDetails->zip;
 
         // $paymentResponse = $this->processPayment($request);
-        $paymentResponse = $this->processPayment($request, $name, $description, $transactionType, $confId,
+        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
                         $shippingFirst, $shippingLast,$shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
@@ -171,6 +172,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         $input = $request->all();
         $description = 'Sustaining Chapter & M2M Fund Donations';
+        $shortDescription = 'Donation';
         $transactionType = 'authCaptureTransaction';
         $name = $chDetails->name.', '.$stateShortName;
 
@@ -182,7 +184,7 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingState = $PresDetails->state;
         $shippingZip = $PresDetails->zip;
 
-        $paymentResponse = $this->processPayment($request, $name, $description, $transactionType, $confId,
+        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
@@ -272,6 +274,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         $input = $request->all();
         $description = 'Replacement Manual Order';
+        $shortDescription = 'Manual Order';
         $transactionType = 'authCaptureTransaction';
         $name = $chDetails->name.', '.$stateShortName;
 
@@ -284,7 +287,7 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingZip = $input['ship_zip'];
 
         // $paymentResponse = $this->processPayment($request);
-        $paymentResponse = $this->processPayment($request, $name, $description, $transactionType, $confId,
+        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
@@ -352,15 +355,27 @@ class PaymentController extends Controller implements HasMiddleware
     /**
      * Process payments with Authorize.net
      */
-     public function processPayment(Request $request, $name, $description, $transactionType, $confId,
+     public function processPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId,
                 $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
         // $user = User::find($request->user()->id);
         // $userId = $user->id;
-
         // $bdDetails = $request->user()->board;
         // $bdId = $bdDetails->id;
         // $chapterId = $bdDetails->chapter_id;
+
+        if (app()->environment('local')) {
+            $transactionTypeDetail = 'authOnlyTransaction';  // Auth Only for testing Purposes
+        } else {
+            $transactionTypeDetail = $transactionType;  // Live Traansactions based on type of transaction set from request
+        }
+
+         if ($transactionTypeDetail ==  'authCaptureTransaction'){
+            $shortTransactionType = 'Processed';
+        }
+        if ($transactionTypeDetail ==  'authOnlyTransaction'){
+            $shortTransactionType = 'AuthOnly';
+        }
 
         $members = $request->input('members');
         $late = $request->input('late');
@@ -468,15 +483,15 @@ class PaymentController extends Controller implements HasMiddleware
         $logData = [
             // 'customer_id' => $userId,
             'amount' => $amount,
-            'transaction' => $transactionType,
-            'description' => $description,
+            'transaction' => $shortTransactionType,
+            'description' => $shortDescription,
             'chapter' => $name,
             'conf' => $confId,
             'status' => 'pending',
             'request_data' => [
-                'transaction_type' => $transactionType,
+                'transaction_type' => $shortTransactionType,
                 'invoice' => $randomInvoiceNumber,
-                'description' => $description,
+                'description' => $shortDescription,
                 'chapter_company' => $name,
                 'name' => $first.' '.$last,
                 'email' => $email,
@@ -496,11 +511,13 @@ class PaymentController extends Controller implements HasMiddleware
 
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType;
-        if (app()->environment('local')) {
-            $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
-        } else {
-            $transactionRequestType->setTransactionType($transactionType);  // Live Traansactions based on type of transaction
-        }
+        $transactionRequestType->setTransactionType($transactionTypeDetail);
+
+        // if (app()->environment('local')) {
+        //     $transactionRequestType->setTransactionType('authOnlyTransaction');  // Auth Only for testing Purposes
+        // } else {
+        //     $transactionRequestType->setTransactionType($transactionType);  // Live Traansactions based on type of transaction
+        // }
         // } else {
         //     $transactionRequestType->setTransactionType('authCaptureTransaction');  // Caputre Payment for Live Traansactions
         // }

@@ -85,24 +85,10 @@
                                     @endif --}}
                                 </td>
                                 <td>
-                                    @if($log->transaction == 'authCaptureTransaction')
-                                        AuthOnly
-                                    @elseif($log->transaction == 'authOnlyTransaction')
-                                        Processed
-                                    @else
-                                    @endif
+                                    {{ $log->transaction }}
                                 </td>
                                 <td>
-                                    @if($log->description == 'Sustaining Chapter & M2M Fund Donations')
-                                        Donation
-                                    @elseif($log->description == 'New Chapter Application')
-                                        New Chapter
-                                     @elseif($log->description == 'Replacement Manual Order')
-                                        Manual Order
-                                    @elseif($log->description == 'Re-Registration Payment')
-                                        Re-Registration
-                                    @else
-                                    @endif
+                                   {{ $log->description }}
                                 </td>
                                      <td>${{ number_format($log->amount, 2) }}</td>
                                     <td>
