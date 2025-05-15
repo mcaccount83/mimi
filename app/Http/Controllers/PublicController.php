@@ -224,22 +224,9 @@ class PublicController extends Controller
         $description = 'New Chapter Application';
         $transactionType = 'authOnlyTransaction';
         $name = $input['ch_name'];
-        $founder = $input['ch_pre_fname'].' '.$input['ch_pre_lname'];
-
-        $shippingFirst = $input['ch_pre_fname'];
-        $shippingLast = $input['ch_pre_lname'];
-        $shippingCompany = $name = $input['ch_name'];
-        $shippingAddress = $input['ch_pre_street'];
-        $shippingCity = $input['ch_pre_city'];
-        $shippingState = $input['ch_pre_state'];
-        $shippingZip = $input['ch_pre_zip'];
-
-        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType,
-                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
-
-        if (! $paymentResponse['success']) {
-            return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
-        }
+        $stateId = $input['ch_state'];
+        $state = State::find($stateId);
+        $stateShortName = $state->state_short_name;
 
         $lastupdatedDate = date('Y-m-d H:i:s');
         $country = 'USA';
@@ -248,13 +235,6 @@ class PublicController extends Controller
         $activeStatus = '2';
         $currentMonth = date('m');
         $currentYear = date('Y');
-
-        $input = $request->all();
-        $invoice = $paymentResponse['data']['invoiceNumber'];
-        $stateId = $input['ch_state'];
-
-        $state = State::find($stateId);
-        $stateShortName = $state->state_short_name;
 
         $confId = null;
 
@@ -280,6 +260,23 @@ class PublicController extends Controller
         $pcId = $ccDetails ? $ccDetails->id : null; // Add a check in case no coordinator is found
 
         $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
+
+        $shippingFirst = $input['ch_pre_fname'];
+        $shippingLast = $input['ch_pre_lname'];
+        $shippingCompany = $name = $input['ch_name'];
+        $shippingAddress = $input['ch_pre_street'];
+        $shippingCity = $input['ch_pre_city'];
+        $shippingState = $input['ch_pre_state'];
+        $shippingZip = $input['ch_pre_zip'];
+
+        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType, $confId,
+                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+
+        if (! $paymentResponse['success']) {
+            return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
+        }
+
+        $invoice = $paymentResponse['data']['invoiceNumber'];
 
         DB::beginTransaction();
         try {
@@ -354,15 +351,18 @@ class PublicController extends Controller
             Mail::to([$emailCC, $paymentsAdmin])
                 ->queue(new PaymentsNewChapOnline($mailData));
 
-            DB::commit();
+                DB::commit();
+
+        return redirect()->to('/newchaptersuccess')->with('success', 'Application was successfully submitted!');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/newchapter')->with('fail', 'Something went wrong, Please try again...');
+            return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/newchaptersuccess')->with('success', 'Chapter created successfully');
     }
 
      /**
@@ -400,57 +400,74 @@ class PublicController extends Controller
         $description = 'Sustaining Chapter & M2M Fund Donations';
         $transactionType = 'authCaptureTransaction';
         $name = 'N/A';
+        $confId = 'N/A';
 
-        $shippingFirst = $input['donor_fname'];
-        $shippingLast = $input['donor_lname'];
-        $shippingCompany = $input['donor_company'];
-        $shippingAddress = $input['donor_address'];
-        $shippingCity = $input['donor_city'];
-        $shippingState = $input['donor_state'];
-        $shippingZip = $input['donor_zip'];
+        $shippingFirst = $input['ship_fname'];
+        $shippingLast = $input['ship_lname'];
+        $shippingCompany = empty($input['ship_company']) ? 'N/A' : $input['ship_company'];
+        $shippingAddress = $input['ship_street'];
+        $shippingCity = $input['ship_city'];
+        $shippingState = $input['ship_state'];
+        $shippingZip = $input['ship_zip'];
 
-        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType,
+        $paymentResponse = $this->processPublicPayment($request, $name, $description, $transactionType, $confId,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
         }
 
-        $donarEmail = $request->input('email');
+        $donarEmail = $input['email'];
         $invoice = $paymentResponse['data']['invoiceNumber'];
 
         $adminEmail = $this->positionConditionsService->getAdminEmail();
         $paymentsAdmin = $adminEmail['payments_admin'];
 
-        // $AdminEmail = 'dragonmom@msn.com';
+        $m2mDonation = $request->input('m2mdonation');
+        $m2m = (float) preg_replace('/[^\d.]/', '', $request->input('m2mdonation'));
+        $sustainingDonation = $request->input('sustaining');
+        $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+        $paymentDate = Carbon::today();
+        $invoice = $paymentResponse['data']['invoiceNumber'];
 
         DB::beginTransaction();
         try {
              $mailData = array_merge(
                 $this->baseMailDataController->getPublicPaymentData($input, $invoice),
+                $this->baseMailDataController->getShippingData($input),
             );
 
-            Mail::to($donarEmail)
-                ->queue(new PaymentsSustainingPublicThankYou($mailData));
+             if ($m2mDonation && $m2m > 0) {
+                Mail::to($donarEmail)
+                    ->queue(new PaymentsM2MPublicThankYou($mailData));
+            }
 
-            Mail::to($donarEmail)
-                ->queue(new PaymentsM2MPublicThankYou($mailData));
+            if ($sustainingDonation && $sustaining > 0) {
+                Mail::to($donarEmail)
+                    ->queue(new PaymentsSustainingPublicThankYou($mailData));
+            }
 
             Mail::to($paymentsAdmin)
                 ->queue(new PaymentsPublicDonationOnline($mailData));
 
-            DB::commit();
+                DB::commit();
+
+        return redirect()->to('/donationsuccess')->with('success', 'Payment was successfully processed and donation has been submitted!');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/donation')->with('fail', 'Something went wrong, Please try again...');
+            return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/donationsuccess')->with('success', 'Chapter created successfully');
     }
 
-    public function processPublicPayment(Request $request, $name, $description, $transactionType,
+    /**
+     * Process payments with Authorize.net
+     */
+    public function processPublicPayment(Request $request, $name, $description, $transactionType, $confId,
                 $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
         $newchap = $request->input('newchap');
@@ -544,6 +561,9 @@ class PublicController extends Controller
         // Create payment log data
         $logData = [
             'amount' => $amount,
+            'transaction' => $transactionType,
+            'chapter' => $name,
+            'conf' => $confId,
             'status' => 'pending',
             'request_data' => [
                 'transaction_type' => $transactionType,

@@ -79,25 +79,25 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 mb-1 col-form-label">Company:</label>
                                 <div class="col-sm-10 mb-1">
-                            <input type="text" name="donor_company" id="donor_company" class="form-control" placeholder="Company Name">
+                            <input type="text" name="ship_company" id="ship_company" class="form-control" placeholder="Company Name (if applicable)">
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Name:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="donor_fname" id="donor_fname" class="form-control" placeholder="First Name" required >
+                                <input type="text" name="ship_fname" id="ship_fname" class="form-control" placeholder="First Name" required >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="donor_lname" id="donor_lname" class="form-control" placeholder="Last Name" required >
+                                <input type="text" name="ship_lname" id="ship_lname" class="form-control" placeholder="Last Name" required >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Address:</label>
                                 <div class="col-sm-10 mb-1">
-                                <input type="text" name="donor_address" id="donor_address" class="form-control" placeholder="Street Address" required >
+                                <input type="text" name="ship_street" id="ship_street" class="form-control" placeholder="Street Address" required >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="donor_city" id="donor_city" class="form-control" placeholder="City" required >
+                                <input type="text" name="ship_city" id="ship_city" class="form-control" placeholder="City" required >
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="donor_state" id="donor_state" class="form-control select2" style="width: 100%;" required >
+                                    <select name="ship_state" id="ship_state" class="form-control select2" style="width: 100%;" required >
                                           <option value="">Select State</option>
                                         @foreach($allStates as $state)
                                         <option value="{{$state->id}}">
@@ -107,7 +107,7 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="donor_zip" id="donor_zip" class="form-control" placeholder="Zip" required>
+                                    <input type="text" name="ship_zip" id="ship_zip" class="form-control" placeholder="Zip" required>
                                 </div>
                             </div>
 

@@ -60,6 +60,7 @@ class PaymentController extends Controller implements HasMiddleware
         $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
+        $confId = $chDetails->conference_id;
         $stateShortName = $baseQuery['stateShortName'];
         $PresDetails = $baseQuery['PresDetails'];
 
@@ -77,10 +78,8 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingZip = $PresDetails->zip;
 
         // $paymentResponse = $this->processPayment($request);
-        $paymentResponse = $this->processPayment($request, $name, $description, $transactionType,
+        $paymentResponse = $this->processPayment($request, $name, $description, $transactionType, $confId,
                         $shippingFirst, $shippingLast,$shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
-
-        // $paymentResponse = $this->processPayment($request);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
@@ -93,8 +92,6 @@ class PaymentController extends Controller implements HasMiddleware
         // $AdminEmail = 'dragonmom@msn.com';
         $adminEmail = $this->positionConditionsService->getAdminEmail();
         $paymentsAdmin = $adminEmail['payments_admin'];
-
-        $input = $request->all();
 
         $payment = $request->input('rereg');
         $rereg = (float) preg_replace('/[^\d.]/', '', $request->input('rereg'));
@@ -168,6 +165,7 @@ class PaymentController extends Controller implements HasMiddleware
         $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
+        $confId = $chDetails->conference_id;
         $stateShortName = $baseQuery['stateShortName'];
         $PresDetails = $baseQuery['PresDetails'];
 
@@ -184,11 +182,8 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingState = $PresDetails->state;
         $shippingZip = $PresDetails->zip;
 
-        // $paymentResponse = $this->processPayment($request);
-        $paymentResponse = $this->processPayment($request, $name, $description, $transactionType,
+        $paymentResponse = $this->processPayment($request, $name, $description, $transactionType, $confId,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
-
-        // $paymentResponse = $this->processPayment($request);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
@@ -201,8 +196,6 @@ class PaymentController extends Controller implements HasMiddleware
         // $AdminEmail = 'dragonmom@msn.com';
         $adminEmail = $this->positionConditionsService->getAdminEmail();
         $paymentsAdmin = $adminEmail['payments_admin'];
-
-        $input = $request->all();
 
         $m2mDonation = $request->input('m2mdonation');
         $m2m = (float) preg_replace('/[^\d.]/', '', $request->input('m2mdonation'));
@@ -274,6 +267,7 @@ class PaymentController extends Controller implements HasMiddleware
         $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
+                $confId = $chDetails->conference_id;
         $stateShortName = $baseQuery['stateShortName'];
         $PresDetails = $baseQuery['PresDetails'];
 
@@ -291,7 +285,7 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingZip = $input['ship_zip'];
 
         // $paymentResponse = $this->processPayment($request);
-        $paymentResponse = $this->processPayment($request, $name, $description, $transactionType,
+        $paymentResponse = $this->processPayment($request, $name, $description, $transactionType, $confId,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
@@ -359,7 +353,7 @@ class PaymentController extends Controller implements HasMiddleware
     /**
      * Process payments with Authorize.net
      */
-     public function processPayment(Request $request, $name, $description, $transactionType,
+     public function processPayment(Request $request, $name, $description, $transactionType, $confId,
                 $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
         // $user = User::find($request->user()->id);
@@ -475,6 +469,9 @@ class PaymentController extends Controller implements HasMiddleware
         $logData = [
             // 'customer_id' => $userId,
             'amount' => $amount,
+            'transaction' => $transactionType,
+            'chapter' => $name,
+             'conf' => $confId,
             'status' => 'pending',
             'request_data' => [
                 'transaction_type' => $transactionType,

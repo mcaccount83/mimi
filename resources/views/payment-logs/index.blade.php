@@ -51,8 +51,9 @@
                         <thead>
                           <tr>
                             <th>Details</th>
-                            <th>Conf/Reg</th>
+                            <th>Conf</th>
                             <th>Chapter</th>
+                            <th>Type</th>
                             <th>Amount</th>
                             <th>Status</th>
                             <th>Response</th>
@@ -64,20 +65,30 @@
                             <tr>
                                 <td  class="text-center align-middle"><a href="{{ route('payment-logs.show', $log->id) }}"><i class="fas fa-eye"></i></a></td>
                                 <td>
-                                    @if ($log->customer_id)
+                                    {{ $log->conf ?? 'N/A' }}
+                                    {{-- @if ($log->customer_id)
                                         @if ($log->board->chapters->region->short_name != "None")
                                             {{ $log->board->chapters->conference->short_name ?? 'N/A'}} / {{ $log->board->chapters->region->short_name ?? 'N/A'}}
                                         @else
                                             {{ $log->board->chapters->conference->short_name ?? 'N/A'}}
                                         @endif
                                     @else
-                                    @endif
+                                    @endif --}}
                                 </td>
                                 <td>
-                                    @if ($log->customer_id)
+                                    {{ $log->chapter ?? 'N/A' }}
+
+                                    {{-- @if ($log->customer_id)
                                         {{ $log->board->chapters->name ?? 'N/A' }}, {{ $log->board->chapters->state->state_short_name ?? 'N/A' }}
                                     @else
-                                        New Chapter
+                                    @endif --}}
+                                </td>
+                                <td>
+                                    @if($log->transaction == 'authCaptureTransaction')
+                                        AuthOnly
+                                    @elseif($log->transaction == 'authOnlyTransaction')
+                                        Processed
+                                    @else
                                     @endif
                                 </td>
 

@@ -212,7 +212,37 @@ class BaseMailDataController extends Controller
             'sustainingDonation' => $input['sustaining'] ?? null,
             'm2mDonation' => $input['m2m'] ?? null,
             'donationInvoice' => $chPayments->donation_invoice,
+            'manualOrder' => $input['manual'] ?? null,
+            'manualInvoice' => $chPayments->manual_invoice,
             'lateFee' => $input['late'] ?? null,
+            'processingFee' => $input['fee'] ?? null,
+            'totalPaid' => $input['total'] ?? null,
+            'fname' => $input['first_name'] ?? null,
+            'lname' => $input['last_name'] ?? null,
+            'email' => $input['email'] ?? null,
+        ];
+    }
+
+    public function getShippingData($input)
+    {
+        return [
+            'ship_fname' => $input['newchap'] ?? null,
+            'ship_lname' => $input['newchap'] ?? null,
+            'ship_street' => $input['sustaining'] ?? null,
+            'ship_city' => $input['m2m'] ?? null,
+            'ship_state' => $input['fee'] ?? null,
+            'ship_zip' => $input['total'] ?? null,
+            'ship_company' => $input['first_name'] ?? null,
+        ];
+    }
+
+    public function getPublicPaymentData($input, $invoice)
+    {
+        return [
+            'invoice' => $invoice,
+            'newchap' => $input['newchap'] ?? null,
+            'sustainingDonation' => $input['sustaining'] ?? null,
+            'm2mDonation' => $input['m2m'] ?? null,
             'processingFee' => $input['fee'] ?? null,
             'totalPaid' => $input['total'] ?? null,
             'fname' => $input['first_name'] ?? null,
@@ -264,21 +294,6 @@ class BaseMailDataController extends Controller
             'TotalDues' => $input['TotalDues'] ?? null,
             'TotalBenefit' => $input['TotalBenefit'] ?? null,
             'TotalPercentage' => $input['TotalPercentage'] ?? null,
-        ];
-    }
-
-    public function getPublicPaymentData($input, $invoice)
-    {
-        return [
-            'invoice' => $invoice,
-            'newchap' => $input['newchap'] ?? null,
-            'sustainingDonation' => $input['sustaining'] ?? null,
-            'm2mDonation' => $input['m2m'] ?? null,
-            'processingFee' => $input['fee'] ?? null,
-            'totalPaid' => $input['total'] ?? null,
-            'fname' => $input['first_name'] ?? null,
-            'lname' => $input['last_name'] ?? null,
-            'email' => $input['email'] ?? null,
         ];
     }
 
