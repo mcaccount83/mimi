@@ -417,18 +417,16 @@ class PublicController extends Controller
             return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
         }
 
-        $donarEmail = $input['email'];
         $invoice = $paymentResponse['data']['invoiceNumber'];
-
+        $donarEmail = $input['email'];
         $adminEmail = $this->positionConditionsService->getAdminEmail();
         $paymentsAdmin = $adminEmail['payments_admin'];
 
-        $m2mDonation = $request->input('m2mdonation');
-        $m2m = (float) preg_replace('/[^\d.]/', '', $request->input('m2mdonation'));
+        $m2mDonation = $request->input('m2m');
+        $m2m = (float) preg_replace('/[^\d.]/', '', $m2mDonation);
         $sustainingDonation = $request->input('sustaining');
-        $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+        $sustaining = (float) preg_replace('/[^\d.]/', '', $sustainingDonation);
         $paymentDate = Carbon::today();
-        $invoice = $paymentResponse['data']['invoiceNumber'];
 
         DB::beginTransaction();
         try {
@@ -437,14 +435,14 @@ class PublicController extends Controller
                 $this->baseMailDataController->getShippingData($input),
             );
 
-             if ($m2mDonation && $m2m > 0) {
-                Mail::to($donarEmail)
-                    ->queue(new PaymentsM2MPublicThankYou($mailData));
-            }
-
             if ($sustainingDonation && $sustaining > 0) {
                 Mail::to($donarEmail)
                     ->queue(new PaymentsSustainingPublicThankYou($mailData));
+            }
+
+             if ($m2mDonation && $m2m > 0) {
+                Mail::to($donarEmail)
+                    ->queue(new PaymentsM2MPublicThankYou($mailData));
             }
 
             Mail::to($paymentsAdmin)

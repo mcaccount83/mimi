@@ -26,12 +26,12 @@ A public Donation to International MOMS Club has been made through the MOMS Info
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Payment Information</strong></center></td>
         </tr>
         <tr>
-            <td>Mother-to-Mother Fund Donation:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['m2mDonation'] }}</td>
-        </tr>
-        <tr>
             <td>Sustaining Chapter Donation:&nbsp;&nbsp;</td>
             <td>{{ $mailData['sustainingDonation'] }}</td>
+        </tr>
+        <tr>
+            <td>Mother-to-Mother Fund Donation:&nbsp;&nbsp;</td>
+            <td>{{ $mailData['m2mDonation'] }}</td>
         </tr>
         <tr>
             <td>Online Processing Fee:&nbsp;&nbsp;</td>
@@ -45,7 +45,7 @@ A public Donation to International MOMS Club has been made through the MOMS Info
         </tr>
         <tr>
             <td>Invoice Number:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['donationInvoice'] }}</td>
+            <td>{{ $mailData['invoice'] }}</td>
         </tr>
         <tr>
             <td>Cardholder Name:&nbsp;&nbsp;</td>

@@ -226,13 +226,13 @@ class BaseMailDataController extends Controller
     public function getShippingData($input)
     {
         return [
-            'ship_fname' => $input['newchap'] ?? null,
-            'ship_lname' => $input['newchap'] ?? null,
-            'ship_street' => $input['sustaining'] ?? null,
-            'ship_city' => $input['m2m'] ?? null,
-            'ship_state' => $input['fee'] ?? null,
-            'ship_zip' => $input['total'] ?? null,
-            'ship_company' => $input['first_name'] ?? null,
+            'ship_fname' => $input['ship_fname'] ?? null,
+            'ship_lname' => $input['ship_lname'] ?? null,
+            'ship_street' => $input['ship_street'] ?? null,
+            'ship_city' => $input['ship_city'] ?? null,
+            'ship_state' => $input['ship_state'] ?? null,
+            'ship_zip' => $input['ship_zip'] ?? null,
+            'ship_company' => $input['ship_company'] ?? null,
         ];
     }
 

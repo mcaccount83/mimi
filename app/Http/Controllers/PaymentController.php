@@ -189,20 +189,19 @@ class PaymentController extends Controller implements HasMiddleware
             return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
         }
 
+        $invoice = $paymentResponse['data']['invoiceNumber'];
+
         $emailListChap = $baseQuery['emailListChap'];
         $emailCC = $baseQuery['emailCC'];
         $pcEmail = $baseQuery['pcEmail'];
-
-        // $AdminEmail = 'dragonmom@msn.com';
         $adminEmail = $this->positionConditionsService->getAdminEmail();
         $paymentsAdmin = $adminEmail['payments_admin'];
 
-        $m2mDonation = $request->input('m2mdonation');
-        $m2m = (float) preg_replace('/[^\d.]/', '', $request->input('m2mdonation'));
+        $m2mDonation = $request->input('m2m');
+        $m2m = (float) preg_replace('/[^\d.]/', '', $m2mDonation);
         $sustainingDonation = $request->input('sustaining');
-        $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+        $sustaining = (float) preg_replace('/[^\d.]/', '', $sustainingDonation);
         $paymentDate = Carbon::today();
-        $invoice = $paymentResponse['data']['invoiceNumber'];
 
         $chapter = Chapters::find($chId);
         $payments = Payments::find($chId);
@@ -471,7 +470,7 @@ class PaymentController extends Controller implements HasMiddleware
             'amount' => $amount,
             'transaction' => $transactionType,
             'chapter' => $name,
-             'conf' => $confId,
+            'conf' => $confId,
             'status' => 'pending',
             'request_data' => [
                 'transaction_type' => $transactionType,
