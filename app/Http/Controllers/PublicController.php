@@ -567,6 +567,7 @@ class PublicController extends Controller
             'request_data' => [
                 'transaction_type' => $transactionType,
                 'invoice' => $randomInvoiceNumber,
+                'description' => $description,
                 'chapter_company' => $name,
                 'name' => $first.' '.$last,
                 'email' => $email,

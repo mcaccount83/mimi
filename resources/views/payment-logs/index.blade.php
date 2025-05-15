@@ -54,6 +54,7 @@
                             <th>Conf</th>
                             <th>Chapter</th>
                             <th>Type</th>
+                            <th>Description</th>
                             <th>Amount</th>
                             <th>Status</th>
                             <th>Response</th>
@@ -91,7 +92,18 @@
                                     @else
                                     @endif
                                 </td>
-
+                                <td>
+                                    @if($log->description == 'Sustaining Chapter & M2M Fund Donations')
+                                        Donation
+                                    @elseif($log->description == 'New Chapter Application')
+                                        New Chapter
+                                     @elseif($log->description == 'Replacement Manual Order')
+                                        Manual Order
+                                    @elseif($log->description == 'Re-Registration Payment')
+                                        Re-Registration
+                                    @else
+                                    @endif
+                                </td>
                                      <td>${{ number_format($log->amount, 2) }}</td>
                                     <td>
                                         @if($log->status == 'success')

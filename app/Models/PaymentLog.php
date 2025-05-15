@@ -12,6 +12,7 @@ class PaymentLog extends Model
         'customer_id',
         'amount',
         'transaction',
+        'description',
         'chapter',
         'conf',
         'status',
