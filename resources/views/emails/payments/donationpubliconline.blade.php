@@ -17,6 +17,14 @@ A public Donation to International MOMS Club has been made through the MOMS Info
             <td>{{ $mailData['ship_fname'] }} {{ $mailData['ship_lname'] }}</td>
         </tr>
         <tr>
+            <td>Donar Email:&nbsp;&nbsp;</td>
+            <td>{{ $mailData['ship_email'] }}</td>
+        </tr>
+        <tr>
+            <td>Donor Phone:&nbsp;&nbsp;</td>
+            <td>{{ $mailData['ship_phone'] }}</td>
+        </tr>
+        <tr>
             <td>Donor Address:&nbsp;&nbsp;<br>
                 &nbsp;&nbsp;</td>
             <td>{{ $mailData['ship_street'] }}<br>

@@ -79,7 +79,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 mb-1 col-form-label">Company:</label>
                                 <div class="col-sm-10 mb-1">
-                            <input type="text" name="ship_company" id="ship_company" class="form-control" placeholder="Company Name (if applicable)">
+                                <input type="text" name="ship_company" id="ship_company" class="form-control" placeholder="Company Name (if applicable)">
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Name:</label>
                                 <div class="col-sm-5 mb-1">
@@ -87,6 +87,13 @@
                                 </div>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ship_lname" id="ship_lname" class="form-control" placeholder="Last Name" required >
+                                </div>
+                                 <label class="col-sm-2 mb-1 col-form-label">Contact:</label>
+                                <div class="col-sm-5 mb-1">
+                                <input type="text" name="ship_email" id="ship_email" class="form-control" placeholder="Email Address" required >
+                                </div>
+                                <div class="col-sm-5 mb-1">
+                                <input type="text" name="ship_phone" id="ship_phone" class="form-control"  data-inputmask='"mask": "(999) 999-9999"' data-mask placeholder="Phone Number" required >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Address:</label>
                                 <div class="col-sm-10 mb-1">
@@ -289,6 +296,17 @@ document.addEventListener('DOMContentLoaded', calculateTotal);
 
     // Additional email validation
     document.getElementById('email').addEventListener('blur', function() {
+        let emailInput = this.value.trim();
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(emailInput)) {
+            document.getElementById('emailHelp').innerHTML = 'Please enter a valid email address.';
+        } else {
+            document.getElementById('emailHelp').innerHTML = '';
+        }
+    });
+
+     document.getElementById('ship_email').addEventListener('blur', function() {
         let emailInput = this.value.trim();
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

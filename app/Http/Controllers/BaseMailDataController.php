@@ -233,6 +233,8 @@ class BaseMailDataController extends Controller
             'ship_state' => $input['ship_state'] ?? null,
             'ship_zip' => $input['ship_zip'] ?? null,
             'ship_company' => $input['ship_company'] ?? null,
+            'ship_email' => $input['ship_email'] ?? null,
+            'ship_phone' => $input['ship_phone'] ?? null,
         ];
     }
 
