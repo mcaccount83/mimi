@@ -3481,7 +3481,7 @@
                     <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
                 @endif
                 @if($userType === 'coordinator' && $userAdmin != '1')
-                    <a href="{{ route('viewas.viewchapterpresident', $financial_report_array['chapter_id']) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
+                    <a href="{{ route('view.editpresident', $financial_report_array['chapter_id']) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
                 @endif
                 @if($chDocuments->financial_report_received !='1')
                     <button type="button" id="btn-save" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp; Save</button>

@@ -119,6 +119,8 @@ class BoardController extends Controller implements HasMiddleware
 
         if ($userAdmin == 1 && isset($chapter_id)) {
             $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
         } else {
             $chId = $user['user_chapterId'];
         }
@@ -181,6 +183,8 @@ class BoardController extends Controller implements HasMiddleware
         $borDetails = $user['user_bdDetails'];
 
         if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
             $chId = $chapter_id;
         } else {
             $chId = $user['user_chapterId'];
@@ -912,6 +916,8 @@ class BoardController extends Controller implements HasMiddleware
 
         if ($userAdmin == 1 && isset($chapter_id)) {
             $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
         } else {
             $chId = $user['user_chapterId'];
         }
@@ -953,6 +959,8 @@ class BoardController extends Controller implements HasMiddleware
 
         if ($userAdmin == 1 && isset($chapter_id)) {
             $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
         } else {
             $chId = $user['user_chapterId'];
         }
@@ -986,6 +994,8 @@ class BoardController extends Controller implements HasMiddleware
 
         if ($userAdmin == 1 && isset($chapter_id)) {
             $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
         } else {
             $chId = $user['user_chapterId'];
         }
@@ -1004,7 +1014,7 @@ class BoardController extends Controller implements HasMiddleware
             'allStates' => $allStates,
         ];
 
-        return view('boards.manualorder')->with($data);
+            return view('boards.manualorder')->with($data);
     }
 
     /**
@@ -1017,6 +1027,8 @@ class BoardController extends Controller implements HasMiddleware
         $userAdmin = $user['userAdmin'];
 
         if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
             $chId = $chapter_id;
         } else {
             $chId = $user['user_chapterId'];
@@ -1123,9 +1135,12 @@ class BoardController extends Controller implements HasMiddleware
     public function viewResources(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
         if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
             $chId = $chapter_id;
         } else {
             $chId = $user['user_chapterId'];
@@ -1139,7 +1154,7 @@ class BoardController extends Controller implements HasMiddleware
         $resourceCategories = ResourceCategory::all();
 
         $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails, 'resources' => $resources, 'resourceCategories' => $resourceCategories,
-            'userAdmin' => $userAdmin,
+            'userType' => $userType, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.resources')->with($data);
@@ -1155,6 +1170,8 @@ class BoardController extends Controller implements HasMiddleware
         $userAdmin = $user['userAdmin'];
 
         if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
             $chId = $chapter_id;
         } else {
             $chId = $user['user_chapterId'];
@@ -1510,6 +1527,8 @@ class BoardController extends Controller implements HasMiddleware
         $userAdmin = $user['userAdmin'];
 
         if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
             $chId = $chapter_id;
         } else {
             $chId = $user['user_chapterId'];

@@ -213,7 +213,7 @@
                 <br>
                 <div class="card-body text-center">
                         @if ($userAdmin == '1')
-                            <a href="{{ route('admin.board.editpresident', ['chapter_id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+                            <a href="{{ route('view.editpresident', ['id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
                         @endif

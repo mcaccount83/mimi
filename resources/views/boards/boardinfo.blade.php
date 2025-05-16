@@ -411,11 +411,11 @@
             @endif
 
                 <div class="card-body text-center">
-                    @if ($userAdmin == '1')
-                    <a href="{{ route('admin.board.editpresident', ['chapter_id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+                    @if ($userAdmin == '1' || $userType === 'coordinator')
+                    <a href="{{ route('view.editpresident', ['id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
 
-                    @elseif($userType === 'coordinator' && $userAdmin != '1')
-                            <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply mr-2"></i>Back to Chapter Profile</a>
+                    {{-- @elseif($userType === 'coordinator' && $userAdmin != '1')
+                            <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply mr-2"></i>Back to Chapter Profile</a> --}}
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply mr-2"></i>Back to Chapter Profile</a>
                         @endif

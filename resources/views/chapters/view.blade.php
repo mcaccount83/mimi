@@ -113,7 +113,8 @@
                   <div class="active tab-pane" id="general">
                     <div class="general-field">
                         <h3 class="profile-username">General Information
-                        <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('viewas.viewchapterpresident', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
+                            <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('view.editpresident', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
+                            {{-- <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('viewas.viewchapterpresident', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button> --}}
                     </h3>
                     <div class="row">
                             <div class="col-md-12">

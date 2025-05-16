@@ -470,10 +470,10 @@
                             @else
                                 <span style="color: red;">Your Re-registration payment is now considered overdue.</span><br>
                             @endif
-                            @if ($userAdmin == '1')
-                                <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('admin.board.editreregpayment', ['chapter_id' => $chDetails->id]) }}'">PAY HERE</button>
-                            @elseif($userType === 'coordinator' && $userAdmin != '1')
-                                <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterreregistration', ['id' => $chDetails->id]) }}'">PAY HERE</button>
+                            @if ($userAdmin == '1' || $userType === 'coordinator')
+                                <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('view.editreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
+                            {{-- @elseif($userType === 'coordinator' && $userAdmin != '1')
+                                <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterreregistration', ['id' => $chDetails->id]) }}'">PAY HERE</button> --}}
                             @else
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editreregpayment') }}'">PAY HERE</button>
                             @endif
@@ -483,10 +483,10 @@
                         <br>
                         <br>
                             You can make a Mother-To-Mother Fund or Sustaining Chapter donation at any time.<br>
-                        @if ($userAdmin == '1')
-                            <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('admin.board.editdonate', ['chapter_id' => $chDetails->id]) }}'">DONATE HERE</button>
-                        @elseif($userType === 'coordinator' && $userAdmin != '1')
-                            <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterdonation', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
+                        @if ($userAdmin == '1' || $userType === 'coordinator')
+                            <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('view.editdonate', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
+                        {{-- @elseif($userType === 'coordinator' && $userAdmin != '1')
+                            <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('view.viewchapterdonation', ['id' => $chDetails->id]) }}'">DONATE HERE</button> --}}
                         @else
                             <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editdonate') }}'">DONATE HERE</button>
                         @endif
@@ -508,7 +508,7 @@
                             @endif
                             @if($chDetails->probation_id == '3')
                                 @if($userType === 'coordinator' && $userAdmin != '1')
-                                    <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
+                                    <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('view.editprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
                                 @else
                                     <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editprobation') }}'">Quarterly Financial Submission</button>
                                 @endif
@@ -517,8 +517,8 @@
 
                       <li class="list-group-item">
                         <h5>Resources</h5>
-                        @if($userAdmin == '1' )
-                            <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('admin.board.viewresources', ['chapter_id' => $chDetails->id]) }}'">Chapter Resources</button><br>
+                        @if($userAdmin == '1' || $userType === 'coordinator')
+                            <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('view.viewresources', ['id' => $chDetails->id]) }}'">Chapter Resources</button><br>
                         @else
                             <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.viewresources') }}'">Chapter Resources</button><br>
                         @endif
@@ -530,11 +530,11 @@
 
                             @if($userType === 'coordinator' && $userAdmin != '1' && $chDocuments->new_board_active!='1')
                                 @if($displayTESTING)
-                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
+                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('view.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y') . '-' . (date('Y') + 1) }} Board Report *TESTING*
                                     </button><br>
                                 @elseif ($displayLIVE)
-                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
+                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('view.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
                                     </button><br>
                                 @else
@@ -560,11 +560,11 @@
 
                             @if($userType === 'coordinator' && $userAdmin != '1')
                                 @if($displayTESTING)
-                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
+                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('view.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y')-1 .'-'.date('Y') }} Financial Report *TESTING*
                                     </button><br>
                                 @elseif (($displayLIVE))
-                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
+                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('view.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                                     </button><br>
                                 @else
@@ -617,7 +617,7 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-    var currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
+    var currentMonth = {{ $thisDate->month }};
     var userType = @json($userType);
     var userAdmin = @json($userAdmin);
 
@@ -629,7 +629,7 @@ $(document).ready(function () {
         $('#Save, #Password, #logout-btn, #eLearning, #Resources').prop('disabled', true);
         $('#display_corlist').addClass('disabled-link').attr('href', '#');
     } else if (currentMonth >= 5 && currentMonth <= 7) {
-        $('input, select, textarea').prop('disabled', true);
+        $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
         $('#Save').prop('disabled', true);
     }
 

@@ -422,7 +422,7 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-    var currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
+    var currentMonth = {{ $thisDate->month }};
     var userType = @json($userType);
     var userAdmin = @json($userAdmin);
 
@@ -434,7 +434,7 @@ $(document).ready(function () {
         $('#Save, #Password, #logout-btn, #eLearning, #Resources').prop('disabled', true);
         $('#display_corlist').addClass('disabled-link').attr('href', '#');
     } else if (currentMonth >= 5 && currentMonth <= 7) {
-        $('input, select, textarea').prop('disabled', true);
+        $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
         $('#Save').prop('disabled', true);
     }
 

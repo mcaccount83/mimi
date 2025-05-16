@@ -255,11 +255,11 @@
             <div class="card-body text-center">
                 <button id="Save" type="submit" class="btn btn-primary" onclick="return validateEmailsBeforeSubmit()"><i class="fas fa-share" ></i>&nbsp; Submit</button>
 
-                @if ($userAdmin == '1')
-                            <a href="{{ route('admin.board.editpresident', ['chapter_id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+                @if ($userAdmin == '1' || $userType === 'coordinator')
+                            <a href="{{ route('view.editpresident', ['id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
 
-            @elseif($userType === 'coordinator' && $userAdmin != '1')
-            <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a>
+            {{-- @elseif($userType === 'coordinator' && $userAdmin != '1')
+            <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a> --}}
         @else
         <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
         @endif

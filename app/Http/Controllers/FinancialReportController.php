@@ -65,6 +65,8 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         if ($userAdmin == 1 && isset($chapter_id)) {
             $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
         } else {
             $chId = $user['user_chapterId'];
         }
@@ -425,6 +427,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         $userAdmin = $user['userAdmin'];
 
         if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
             $chId = $chapter_id;
         } else {
             $chId = $user['user_disChapterId'];
