@@ -282,7 +282,7 @@
                             @else
                                 <span style="color: red;">Your Re-registration payment is now considered overdue.<br>
                             @endif
-                            @if($userType === 'coordinator' && $userAdmin != '1')
+                            @if($userType === 'coordinator' )
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('chapter.viewreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
                             @else
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editreregpayment') }}'">PAY HERE</button>
@@ -293,7 +293,7 @@
                         <br>
                         <br>
                             You can make a Mother-To-Mother Fund or Sustaining Chapter donation at any time.<br>
-                        @if($userType === 'coordinator' && $userAdmin != '1')
+                        @if($userType === 'coordinator')
                             <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterdonation', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
                         @else
                             <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editdonate') }}'">DONATE HERE</button>
@@ -315,7 +315,7 @@
                                     <button type="button" class="btn bg-primary btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button><br>
                                 @endif
                                 @if($chDetails->probation_id == '3')
-                                    @if($userType === 'coordinator' && $userAdmin != '1')
+                                    @if($userType === 'coordinator' )
                                         <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
                                     @else
                                         <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editprobation') }}'">Quarterly Financial Submission</button>
@@ -332,7 +332,7 @@
                       <li class="list-group-item">
                             <h5>End of year Filing</h5>
 
-                            @if($userType === 'coordinator' && $userAdmin != '1' && $chDocuments->new_board_active!='1')
+                            @if($userType === 'coordinator'  && $chDocuments->new_board_active!='1')
                                 @if($display_testing)
                                     <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y') . '-' . (date('Y') + 1) }} Board Report *TESTING*
@@ -344,7 +344,7 @@
                                 @else
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                                 @endif
-                            @elseif($userType === 'coordinator' && $userAdmin != '1' && $chDocuments->new_board_active =='1')
+                            @elseif($userType === 'coordinator'  && $chDocuments->new_board_active =='1')
                                 @if($display_testing)
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated *TESTING*</button><br>
                                 @else
@@ -362,7 +362,7 @@
                                 <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                             @endif
 
-                            @if($userType === 'coordinator' && $userAdmin != '1')
+                            @if($userType === 'coordinator' )
                                 @if($display_testing)
                                     <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y')-1 .'-'.date('Y') }} Financial Report *TESTING*

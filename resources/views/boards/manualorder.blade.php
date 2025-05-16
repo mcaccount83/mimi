@@ -194,10 +194,6 @@
                                 @else
                                     <a href="{{ route('view.editpresident', ['id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
                                 @endif
-                                {{-- @if ($userAdmin == '1')
-                                <a href="{{ route('view.editpresident', ['id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a> --}}
-                            {{-- @elseif($userType === 'coordinator' && $userAdmin != '1')
-                                <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a> --}}
                             @elseif($chIsActive != '1')
                                 <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Checklist</a>
                             @else

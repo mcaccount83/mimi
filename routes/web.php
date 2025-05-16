@@ -266,7 +266,7 @@ Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class
 
 // Board Page View As Routes with chapterId parameter...Coordinator/Admin Login
 Route::get('/view/board/president/{id}', [BoardController::class, 'editPresident'])->name('view.editpresident');
-Route::post('/view/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('aview.updatepresident');
+Route::post('/view/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('view.updatepresident');
 Route::get('/view/board/member/{id}', [BoardController::class, 'editMember'])->name('view.editmember');
 Route::post('/view/board/memberupdate/{id}}', [BoardController::class, 'updateMember'])->name('view.updatemember');
 Route::get('/view/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('view.editboardreport');

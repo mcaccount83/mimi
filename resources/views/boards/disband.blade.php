@@ -62,8 +62,6 @@
                                         @if ($chDisbanded?->final_payment != '1')
                                             @if ($userAdmin == '1' || $userType === 'coordinator')
                                                 <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('view.editreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
-                                            {{-- @elseif($userType === 'coordinator' && $userAdmin != '1')
-                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterreregistration', ['id' => $chDetails->id]) }}'">PAY HERE</button> --}}
                                             @else
                                                 <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editreregpayment') }}'">PAY HERE</button>
                                             @endif
@@ -81,7 +79,7 @@
                                         @if ($chDisbanded?->donate_funds != '1')
                                             @if ($userAdmin == '1' || $userType === 'coordinator')
                                                 <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('view.editdonate', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
-                                            {{-- @elseif($userType === 'coordinator' && $userAdmin != '1')
+                                            {{-- @elseif($userType === 'coordinator' )
                                                 <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterdonation', ['id' => $chDetails->id]) }}'">DONATE HERE</button> --}}
                                             @else
                                                 <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editdonate') }}'">DONATE HERE</button>

@@ -36,8 +36,7 @@
                                         <td>{{ $chapter->name }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('view.editpresident', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">President</a>
-                                                <a href="{{ route('view.editmember', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Member</a>
+                                                <a href="{{ route('view.editpresident', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">President Profile</a>
                                                 <a href="{{ route('view.editboardreport', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Board Report</a>
                                                 <a href="{{ route('view.editfinancialreport', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Financial Report</a>
                                                 <a href="{{ route('view.editreregpayment', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Re-reg Payment</a>
