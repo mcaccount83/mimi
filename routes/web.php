@@ -242,47 +242,47 @@ Route::get('/export/intirsfiling', [ExportController::class, 'indexInternational
 Route::get('/export/inteoystatus', [ExportController::class, 'indexIntEOYStatus'])->name('export.inteoystatus');
 
 // Board Controller Routes...Board Login Required
-Route::get('/board/newchapterstatus', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
-Route::get('/board/president', [BoardController::class, 'editPresident'])->name('board.editpresident');
+Route::get('/board/newchapterstatus/{id}', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
+Route::get('/board/president/{id}', [BoardController::class, 'editPresident'])->name('board.editpresident');
 Route::post('/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('board.updatepresident');
-Route::get('/board/member', [BoardController::class, 'editMember'])->name('board.editmember');
+Route::get('/board/member/{id}', [BoardController::class, 'editMember'])->name('board.editmember');
 Route::post('/board/memberupdate/{id}', [BoardController::class, 'updateMember'])->name('board.updatemember');
-Route::get('/board/boardreport', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
+Route::get('/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
 Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
-Route::get('/board/reregpayment', [BoardController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
-Route::get('/board/donation', [BoardController::class, 'editM2MDonationForm'])->name('board.editdonate');
-Route::get('/board/manual', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
-Route::get('/board/probation', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
+Route::get('/board/reregpayment/{id}', [BoardController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
+Route::get('/board/donation/{id}', [BoardController::class, 'editDonationForm'])->name('board.editdonate');
+Route::get('/board/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
+Route::get('/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
 Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
-Route::get('/board/m2mdonation', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
-Route::get('/board/resources', [BoardController::class, 'viewResources'])->name('board.viewresources');
+Route::get('/board/m2mdonation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
+Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
 
 // Financial Report Controller Routes...Board Login Required
-Route::get('/board/financialreport', [FinancialReportController::class, 'editFinancialReport'])->name('board.editfinancialreport');
+Route::get('/board/financialreport/{id}', [FinancialReportController::class, 'editFinancialReport'])->name('board.editfinancialreport');
 Route::post('/board/financialreportupdate/{id}', [FinancialReportController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
-Route::get('/board/disbandchecklist', [FinancialReportController::class, 'editDisbandChecklist'])->name('board.editdisbandchecklist');
+Route::get('/board/disbandchecklist/{id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('board.editdisbandchecklist');
 Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
 Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
 
 // Board Page View As Routes with chapterId parameter...Coordinator/Admin Login
-Route::get('/view/board/president/{id}', [BoardController::class, 'editPresident'])->name('view.editpresident');
-Route::post('/view/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('view.updatepresident');
-Route::get('/view/board/member/{id}', [BoardController::class, 'editMember'])->name('view.editmember');
-Route::post('/view/board/memberupdate/{id}}', [BoardController::class, 'updateMember'])->name('view.updatemember');
-Route::get('/view/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('view.editboardreport');
-Route::post('/view/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('view.updateboardreport');
-Route::get('/view/board/reregpayment/{id}', [BoardController::class, 'editReregistrationPaymentForm'])->name('view.editreregpayment');
-Route::get('/view/board/donation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('view.editdonate');
-Route::get('/view/board/manualorder/{id}', [BoardController::class, 'editManualOrderForm'])->name('view.editmanualorder');
-Route::get('/view/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('view.editprobation');
-Route::post('/view/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('view.updateprobation');
-Route::get('/view/board/m2mdonation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('view.editm2mdonation');
-Route::get('/view/board/resources/{id}', [BoardController::class, 'viewResources'])->name('view.viewresources');
-Route::get('/view/board/financialreport/{id}', [FinancialReportController::class, 'editFinancialReport'])->name('view.editfinancialreport');
-Route::get('/view/board/disbandchecklist/{id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('view.editdisbandchecklist');
-Route::post('/view/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('view.updatedisbandchecklist');
-Route::post('/view/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('view.updatedisbandreport');
-Route::get('/view/board/newchapterstatus/{id}', [PublicController::class, 'showNewChapterStatus'])->name('view.newchapterstatus');
+// Route::get('/view/board/president/{id}', [BoardController::class, 'editPresident'])->name('view.editpresident');
+// Route::post('/view/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('view.updatepresident');
+// Route::get('/view/board/member/{id}', [BoardController::class, 'editMember'])->name('view.editmember');
+// Route::post('/view/board/memberupdate/{id}}', [BoardController::class, 'updateMember'])->name('view.updatemember');
+// Route::get('/view/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('view.editboardreport');
+// Route::post('/view/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('view.updateboardreport');
+// Route::get('/view/board/reregpayment/{id}', [BoardController::class, 'editReregistrationPaymentForm'])->name('view.editreregpayment');
+// Route::get('/view/board/donation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('view.editdonate');
+// Route::get('/view/board/manualorder/{id}', [BoardController::class, 'editManualOrderForm'])->name('view.editmanualorder');
+// Route::get('/view/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('view.editprobation');
+// Route::post('/view/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('view.updateprobation');
+// Route::get('/view/board/m2mdonation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('view.editm2mdonation');
+// Route::get('/view/board/resources/{id}', [BoardController::class, 'viewResources'])->name('view.viewresources');
+// Route::get('/view/board/financialreport/{id}', [FinancialReportController::class, 'editFinancialReport'])->name('view.editfinancialreport');
+// Route::get('/view/board/disbandchecklist/{id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('view.editdisbandchecklist');
+// Route::post('/view/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('view.updatedisbandchecklist');
+// Route::post('/view/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('view.updatedisbandreport');
+// Route::get('/view/board/newchapterstatus/{id}', [PublicController::class, 'showNewChapterStatus'])->name('view.newchapterstatus');
 
 // EOYReports Controller Routes...Coordinator Login Required
 Route::get('/eoy/status', [EOYReportController::class, 'showEOYStatus'])->name('eoyreports.eoystatus');

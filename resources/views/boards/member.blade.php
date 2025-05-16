@@ -285,7 +285,7 @@
                             @if($userType === 'coordinator' )
                                 <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('chapter.viewreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
                             @else
-                                <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editreregpayment') }}'">PAY HERE</button>
+                                <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
                             @endif
                         @else
                             Your Re-registration payment is not due at this time.
@@ -296,7 +296,7 @@
                         @if($userType === 'coordinator')
                             <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterdonation', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
                         @else
-                            <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editdonate') }}'">DONATE HERE</button>
+                            <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editdonate', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
                         @endif
                         </li>
 
@@ -318,7 +318,7 @@
                                     @if($userType === 'coordinator' )
                                         <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
                                     @else
-                                        <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editprobation') }}'">Quarterly Financial Submission</button>
+                                        <button type="button" class="btn btn-primary btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
                                     @endif
                                 @endif
                           </li>
@@ -331,28 +331,9 @@
 
                       <li class="list-group-item">
                             <h5>End of year Filing</h5>
-
-                            @if($userType === 'coordinator'  && $chDocuments->new_board_active!='1')
-                                @if($display_testing)
-                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
-                                        {{ date('Y') . '-' . (date('Y') + 1) }} Board Report *TESTING*
-                                    </button><br>
-                                @elseif ($display_live)
-                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chDetails->id]) }}'">
-                                        {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
-                                    </button><br>
-                                @else
-                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
-                                @endif
-                            @elseif($userType === 'coordinator'  && $chDocuments->new_board_active =='1')
-                                @if($display_testing)
-                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated *TESTING*</button><br>
-                                @else
-                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated</button><br>
-                                @endif
-                            @elseif ($thisDate->month >= 5 && $thisDate->month <= 12 && $display_live)
+                            @if ($thisDate->month >= 5 && $thisDate->month <= 12 && $display_live)
                                 @if($chDocuments->new_board_active!='1')
-                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport') }}'">
+                                    <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
                                     </button><br>
                                 @else
@@ -362,20 +343,8 @@
                                 <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                             @endif
 
-                            @if($userType === 'coordinator' )
-                                @if($display_testing)
-                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
-                                        {{ date('Y')-1 .'-'.date('Y') }} Financial Report *TESTING*
-                                    </button><br>
-                                @elseif (($display_live))
-                                    <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $chDetails->id]) }}'">
-                                        {{ date('Y')-1 .'-'.date('Y') }} Financial Report
-                                    </button><br>
-                                @else
-                                    <button id="990NLink" class="btn btn-primary btn-sm mb-1 disabled">Financial Report Not Available</button>
-                                @endif
-                            @elseif($thisDate->month >= 6 && $thisDate->month <= 12 && $display_live)
-                                <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport') }}'">
+                            @if($thisDate->month >= 6 && $thisDate->month <= 12 && $display_live)
+                                <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                     {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                                 </button><br>
                             @else
@@ -427,13 +396,7 @@ $(document).ready(function () {
     var userAdmin = @json($userAdmin);
 
     // Disable all input fields, select elements, textareas, and buttons based on criteria
-    if (userAdmin === 1) {
-        $('#Save, #Password, #logout-btn').prop('disabled', true);
-    }else if (userType === 'coordinator' && userAdmin != 1) {
-        $('input, select, textarea').prop('disabled', true);
-        $('#Save, #Password, #logout-btn, #eLearning, #Resources').prop('disabled', true);
-        $('#display_corlist').addClass('disabled-link').attr('href', '#');
-    } else if (currentMonth >= 5 && currentMonth <= 7) {
+    if (currentMonth >= 5 && currentMonth <= 7) {
         $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
         $('#Save').prop('disabled', true);
     }

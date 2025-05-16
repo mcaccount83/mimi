@@ -218,12 +218,12 @@ $(document).ready(function () {
     var userType = @json($userType);
     var userAdmin = @json($userAdmin);
 
-    if (userAdmin === 1) {
-        $('#Save, #Password, #logout-btn').prop('disabled', true);
-    }else if (userType === 'coordinator' && userAdmin != 1) {
+    if (userAdmin == 1) {
+        $('#Password, #logout-btn').prop('disabled', true);
+    }else if (userType == 'coordinator' && userAdmin != 1) {
         // Disable all input fields, select elements, textareas, and buttons
         $('input, select, textarea').prop('disabled', true);
-        $('#Save, #Password, #logout-btn, #eLearning, #Resources').prop('disabled', true);
+        $('#Save, #Password, #logout-btn').prop('disabled', true);
         // Disable links by adding a class and modifying their behavior
         $('#display_corlist').addClass('disabled-link').attr('href', '#');
     }

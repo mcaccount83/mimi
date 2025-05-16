@@ -75,7 +75,8 @@
                             <div class="col-md-12" style="margin-bottom: 5px;">
                                 @if ($resourceItem->link)
                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                @elseif ($resourceItem->file_path)
+
+                                    @elseif ($resourceItem->file_path)
                                 <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                     {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
                                 </a>

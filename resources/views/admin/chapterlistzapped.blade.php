@@ -37,7 +37,7 @@
                                         <td>{{ $chapter->name }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('view.editdisbandchecklist', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Disband Checklist & Financial Report</a>
+                                                <a href="{{ route('board.editdisbandchecklist', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Disband Checklist & Financial Report</a>
                                             </div>
                                         </td>
                                         <td><span class="date-mask">{{ $chapter->zap_date }}</span></td>

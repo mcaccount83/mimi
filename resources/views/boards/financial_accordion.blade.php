@@ -3053,9 +3053,8 @@ $(document).ready(function () {
 
         var effectiveSubmitted = (userType === 'disbanded') ? submittedfinal : submitted;
 
-        if (userType === 'coordinator' && userAdmin != 1) {
-            $('button').not('#btn-back').prop('disabled', true);
-            $('input, select, textarea').prop('disabled', true);
+       if (userType == 'coordinator' && userAdmin != 1) {
+        $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
 
         } else if (effectiveSubmitted == '1') {
             $('button').not('#btn-back, #btn-download-pdf').prop('disabled', true);
@@ -3072,12 +3071,6 @@ $(document).ready(function () {
                 return false; // Exit loop early if any field is enabled
             }
         });
-
-        if (allDisabled) {
-            $('.description').show();
-        } else {
-            $('.description').hide();
-        }
 
     }, 1000); // 1-second delay
 });

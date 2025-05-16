@@ -70,14 +70,6 @@
                                 </div>
                             </div>
                             <div class="col-md-4 float-left nopadding">
-                                {{-- <div class="form-group">
-                                    <label for="Q1Percentage">Q1 Party %</label>
-                                    <div class="form-group">
-                                        <div class="input-group-prepend">
-                                           <input type="text" class="form-control" name="q1_percentage" id="q1_percentage" value="0%" readonly>
-                                        </div>
-                                    </div>
-                                </div> --}}
                             </div>
                             </div>
                         </div>
@@ -109,14 +101,6 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 float-left nopadding">
-                                    {{-- <div class="form-group">
-                                        <label for="Q1Percentage">Q2 Party %</label>
-                                        <div class="form-group">
-                                            <div class="input-group-prepend">
-                                               <input type="text" class="form-control" name="q2_percentage" id="q2_percentage" value="0%" readonly>
-                                            </div>
-                                        </div>
-                                    </div> --}}
                                 </div>
                                 </div>
                             </div>
@@ -148,14 +132,6 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4 float-left nopadding">
-                                        {{-- <div class="form-group">
-                                            <label for="Q1Percentage">Q3 Party %</label>
-                                            <div class="form-group">
-                                                <div class="input-group-prepend">
-                                                   <input type="text" class="form-control" name="q3_percentage" id="q3_percentage" value="0%" readonly>
-                                                </div>
-                                            </div>
-                                        </div> --}}
                                     </div>
                                     </div>
                                 </div>
@@ -187,14 +163,6 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4 float-left nopadding">
-                                            {{-- <div class="form-group">
-                                                <label for="Q1Percentage">Q4 Party %</label>
-                                                <div class="form-group">
-                                                    <div class="input-group-prepend">
-                                                       <input type="text" class="form-control" name="q4_percentage" id="q4_percentage" value="0%" readonly>
-                                                    </div>
-                                                </div>
-                                            </div> --}}
                                         </div>
                                         </div>
                                     </div>
@@ -238,11 +206,7 @@
                                             </div>
                                         </div>
 
-
-
-
                     </div>
-
 
                         </div>
                         <!-- /.card-body -->
@@ -255,11 +219,11 @@
             <div class="card-body text-center">
                 <button id="Save" type="submit" class="btn btn-primary" onclick="return validateEmailsBeforeSubmit()"><i class="fas fa-share" ></i>&nbsp; Submit</button>
 
-                @if ($userAdmin == '1' || $userType === 'coordinator')
-                            <a href="{{ route('view.editpresident', ['id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
-        @else
-        <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
-        @endif
+            @if ($userType == 'coordinator')
+                <button type="button" id="btn-back" class="btn btn-primary" onclick="window.location.href='{{ route('board.editpresident', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
+            @else
+                <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
+            @endif
                 <button id="logout-btn" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
@@ -278,12 +242,8 @@ $(document).ready(function () {
         var userType = @json($userType);
         var userAdmin = @json($userAdmin);
 
-    if (userAdmin === 1) {
-        $('button').not('#btn-back').prop('disabled', true);
-    }else if (userType === 'coordinator' && userAdmin != 1) {
-        // Disable all input fields, select elements, textareas, and buttons
-        $('button').not('#btn-back').prop('disabled', true);
-        $('input, select, textarea').prop('disabled', true);
+   if (userType == 'coordinator' && userAdmin != 1) {
+            $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
     }
 
     });

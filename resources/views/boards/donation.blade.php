@@ -193,16 +193,14 @@
                             <br>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Payment') }}</button>
 
-                            @if ($userAdmin == '1' || $userType === 'coordinator')
-                                @if ($chIsActive != '1')
-                                    <a href="{{route('view.editdisbandchecklist', ['id' => $chDetails->id]) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Checklist</a>
-                                @else
-                                    <a href="{{ route('view.editpresident', ['id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
-                                @endif
-                            @elseif($chIsActive != '1')
+                            @if($chIsActive != '1')
                                 <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Checklist</a>
                             @else
-                            <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
+                                @if ($userType == 'coordinator')
+                                    <button type="button" id="btn-back" class="btn btn-primary" onclick="window.location.href='{{ route('board.editpresident', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
+                                @else
+                                    <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
+                                @endif
                             @endif
                         </div>
                     </form>
@@ -235,12 +233,8 @@
 
         $('select[name="pres_state"]').prop('disabled', true);
 
-        if (userAdmin === 1) {
-            $('button').not('#btn-back').prop('disabled', true);
-        }else if (userType === 'coordinator' && userAdmin != 1) {
-            // Disable all input fields, select elements, textareas, and buttons
-            $('button').not('#btn-back').prop('disabled', true);
-            $('input, select, textarea').prop('disabled', true);
+         if (userType == 'coordinator' && userAdmin != 1) {
+            $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
         }
 
         });

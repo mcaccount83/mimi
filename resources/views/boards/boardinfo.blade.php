@@ -411,14 +411,14 @@
             @endif
 
                 <div class="card-body text-center">
-                    @if ($userAdmin == '1' || $userType === 'coordinator')
-                    <a href="{{ route('view.editpresident', ['id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
-                        @else
-                            <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply mr-2"></i>Back to Chapter Profile</a>
-                        @endif
-                        @if ($chDetails->documents->new_board_submitted != '1')
-                            <button type="submit" class="btn btn-primary" onclick="return validateBeforeSubmit()" ><i class="fas fa-mail-forward mr-2" ></i>Submit</button>
-                        @endif
+                    @if ($userType == 'coordinator')
+                        <button type="button" id="btn-back"  class="btn btn-primary" onclick="window.location.href='{{ route('board.editpresident', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
+                    @else
+                        <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply mr-2"></i>Back to Profile</a>
+                    @endif
+                    @if ($chDetails->documents->new_board_submitted != '1')
+                        <button type="submit" class="btn btn-primary" onclick="return validateBeforeSubmit()" ><i class="fas fa-mail-forward mr-2" ></i>Submit</button>
+                    @endif
 				</form>
             </div>
 
@@ -434,12 +434,8 @@ $(document).ready(function() {
   $('#add_link_req').parent().hide();
   $('#not_link').parent().hide();
 
-  if (userAdmin === 1) {
-    $('button').not('#btn-back').prop('disabled', true);
-}else if (userType === 'coordinator' && userAdmin != 1) {
-        // Disable all input fields, select elements, textareas, and buttons
-        $('button').not('#btn-back').prop('disabled', true);
-        $('input, select, textarea').prop('disabled', true);
+if (userType == 'coordinator' && userAdmin != 1) {
+    $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
 
     } else if ("{{$chDetails->documents->new_board_submitted}}" === '1') {
         $('input, select, textarea').prop('disabled', true);

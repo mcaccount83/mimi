@@ -36,12 +36,12 @@
                                         <td>{{ $chapter->name }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('view.editpresident', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">President Profile</a>
-                                                <a href="{{ route('view.editboardreport', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Board Report</a>
-                                                <a href="{{ route('view.editfinancialreport', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Financial Report</a>
-                                                <a href="{{ route('view.editreregpayment', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Re-reg Payment</a>
-                                                <a href="{{ route('view.editprobation', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Probation</a>
-                                                <a href="{{ route('view.viewresources', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Resources</a>
+                                                <a href="{{ route('board.editpresident', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">President Profile</a>
+                                                <a href="{{ route('board.editboardreport', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Board Report</a>
+                                                <a href="{{ route('board.editfinancialreport', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Financial Report</a>
+                                                <a href="{{ route('board.editreregpayment', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Re-reg Payment</a>
+                                                <a href="{{ route('board.editprobation', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Probation</a>
+                                                <a href="{{ route('board.viewresources', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">Resources</a>
                                             </div>
                                         </td>
                                     </tr>

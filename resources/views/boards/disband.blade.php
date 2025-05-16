@@ -60,11 +60,7 @@
                                             <label class="custom-control-label" for="FinalPayment">YES</label>
                                         </div>
                                         @if ($chDisbanded?->final_payment != '1')
-                                            @if ($userAdmin == '1' || $userType === 'coordinator')
-                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('view.editreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
-                                            @else
-                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editreregpayment') }}'">PAY HERE</button>
-                                            @endif
+                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editreregpayment', ['id' => $chDisbanded->id]) }}'">PAY HERE</button>
                                         @endif
                                     </div>
                                 </div>
@@ -77,13 +73,7 @@
                                             <label class="custom-control-label" for="DonateFunds">YES</label>
                                         </div>
                                         @if ($chDisbanded?->donate_funds != '1')
-                                            @if ($userAdmin == '1' || $userType === 'coordinator')
-                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('view.editdonate', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
-                                            {{-- @elseif($userType === 'coordinator' )
-                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('viewas.viewchapterdonation', ['id' => $chDetails->id]) }}'">DONATE HERE</button> --}}
-                                            @else
-                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editdonate') }}'">DONATE HERE</button>
-                                            @endif
+                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editdonate', ['id' => $chDisbanded->id]) }}'">DONATE HERE</button>
                                         @endif
                                     </div>
                                 </div>
@@ -154,7 +144,6 @@
 
 
      {{-- Financial Report Form --}}
-     {{-- <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatedisbandreport", $chDetails->id) }}'> --}}
         <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatedisbandreport", $chDetails->id) }}'>
         @csrf
                     <div class="row">

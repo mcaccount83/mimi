@@ -29,19 +29,19 @@ class BoardPendingController extends Controller implements HasMiddleware
     /**
      * View New Application Status for Pending Board Members
      */
-    public function showNewChapterStatus(Request $request, $chapter_id = null): View
+    public function showNewChapterStatus(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        if ($userAdmin == 1 && isset($chapter_id)) {
-            $chId = $chapter_id;
-        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-            $chId = $chapter_id;
-        } else {
-            $chId = $user['user_pendChapterId'];
-        }
+        // if ($userAdmin == 1 && isset($chapter_id)) {
+        //     $chId = $chapter_id;
+        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+        //     $chId = $chapter_id;
+        // } else {
+        //     $chId = $user['user_pendChapterId'];
+        // }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];

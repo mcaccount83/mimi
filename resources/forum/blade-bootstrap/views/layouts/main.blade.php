@@ -20,8 +20,6 @@
 
     {{-- @vite(['resources/forum/blade-bootstrap/css/forum.css', 'resources/forum/blade-bootstrap/js/forum.js']) --}}
 
-
-
 </head>
 <body>
         <div class="wrapper">

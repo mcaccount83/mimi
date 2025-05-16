@@ -55,7 +55,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Show EOY Financial Report All Board Members
      */
-    public function editFinancialReport(Request $request, $chapter_id = null): View
+    public function editFinancialReport(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
@@ -63,13 +63,13 @@ class FinancialReportController extends Controller implements HasMiddleware
         $userEmail = $user['user_email'];
         $userAdmin = $user['userAdmin'];
 
-        if ($userAdmin == 1 && isset($chapter_id)) {
-            $chId = $chapter_id;
-        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-            $chId = $chapter_id;
-        } else {
-            $chId = $user['user_chapterId'];
-        }
+        // if ($userAdmin == 1 && isset($chapter_id)) {
+        //     $chId = $chapter_id;
+        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+        //     $chId = $chapter_id;
+        // } else {
+        //     $chId = $user['user_chapterId'];
+        // }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -418,7 +418,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Show Disband Checklist andEOY Financial Report for Disbanded Chapters
      */
-    public function editDisbandChecklist(Request $request, $chapter_id = null): View
+    public function editDisbandChecklist(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
@@ -426,13 +426,13 @@ class FinancialReportController extends Controller implements HasMiddleware
         $userEmail = $user['user_email'];
         $userAdmin = $user['userAdmin'];
 
-        if ($userAdmin == 1 && isset($chapter_id)) {
-            $chId = $chapter_id;
-        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-            $chId = $chapter_id;
-        } else {
-            $chId = $user['user_disChapterId'];
-        }
+        // if ($userAdmin == 1 && isset($chapter_id)) {
+        //     $chId = $chapter_id;
+        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+        //     $chId = $chapter_id;
+        // } else {
+        //     $chId = $user['user_disChapterId'];
+        // }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];

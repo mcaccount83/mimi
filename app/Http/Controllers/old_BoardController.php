@@ -111,19 +111,19 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * View Board Details President Login
      */
-    public function editPresident(Request $request, $chId): View
+    public function editPresident(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_chapterId'];
-        // }
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -174,7 +174,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * View Board Details President Login
      */
-    public function editMember(Request $request, $chId): View
+    public function editMember(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
@@ -182,13 +182,13 @@ class BoardController extends Controller implements HasMiddleware
         $bdPositionId = $user['user_bdPositionId'];
         $borDetails = $user['user_bdDetails'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_chapterId'];
-        // }
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -908,19 +908,19 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show Re-Registrstion Payment Form All Board Members
      */
-    public function editReregistrationPaymentForm(Request $request, $chId): View
+    public function editReregistrationPaymentForm(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_chapterId'];
-        // }
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -951,19 +951,19 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show M2M Donation Form All Board Members
      */
-    public function editDonationForm(Request $request, $chId): View
+    public function editM2MDonationForm(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_chapterId'];
-        // }
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -986,19 +986,19 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show Manual Order Form All Board Members
      */
-    public function editManualOrderForm(Request $request, $chId): View
+    public function editManualOrderForm(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_chapterId'];
-        // }
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -1020,19 +1020,19 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show Probation Submission Form All Board Members
      */
-    public function editProbationSubmission(Request $request, $chId): View
+    public function editProbationSubmission(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_chapterId'];
-        // }
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -1132,19 +1132,19 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show Chater Resources
      */
-    public function viewResources(Request $request, $chId): View
+    public function viewResources(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_chapterId'];
-        // }
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -1163,19 +1163,19 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show EOY BoardInfo All Board Members
      */
-    public function editBoardReport(Request $request, $chId): View
+    public function editBoardReport(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_chapterId'];
-        // }
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -1518,7 +1518,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show EOY Financial Report All Board Members
      */
-    public function editFinancialReport(Request $request, $chId): View
+    public function editFinancialReport(Request $request, $chapter_id = null): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
@@ -1526,13 +1526,13 @@ class BoardController extends Controller implements HasMiddleware
         $userEmail = $user['user_email'];
         $userAdmin = $user['userAdmin'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_chapterId'];
-        // }
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_chapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -1558,7 +1558,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Save EOY Financial Report All Board Members
      */
-    public function updateFinancialReport(Request $request, $chId): RedirectResponse
+    public function updateFinancialReport(Request $request, $chapterId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
@@ -1569,9 +1569,9 @@ class BoardController extends Controller implements HasMiddleware
         $input = $request->all();
         $reportReceived = $input['submitted'] ?? null;
 
-        $financialReport = FinancialReport::find($chId);
-        $documents = Documents::find($chId);
-        $chapter = Chapters::find($chId);
+        $financialReport = FinancialReport::find($chapterId);
+        $documents = Documents::find($chapterId);
+        $chapter = Chapters::find($chapterId);
 
         DB::beginTransaction();
         try {
@@ -1597,7 +1597,7 @@ class BoardController extends Controller implements HasMiddleware
 
             $chapter->save();
 
-            $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+            $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
@@ -1616,13 +1616,13 @@ class BoardController extends Controller implements HasMiddleware
             );
 
             if ($reportReceived == 1) {
-                $pdfPath = $this->pdfController->saveFinancialReport($request, $chId);   // Generate and Send the PDF
+                $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
 
                 if ($chFinancialReport->reviewer_id == null) {
-                    DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chId]);
+                    DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
                     Mail::to($emailCC)
                         ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
                 }

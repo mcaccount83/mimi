@@ -51,6 +51,10 @@
                                         <div class="col-md-12" style="margin-bottom: 5px;">
                                             @if ($resourceItem->link)
                                                 <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                            @elseif ($resourceItem->route)
+<a href="{{ route($resourceItem->route, $chDetails->id) }}" target="_blank">
+    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+</a>
                                             @elseif ($resourceItem->file_path)
                                                 <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                                     {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
@@ -93,7 +97,12 @@
                                             <div class="col-md-12" style="margin-bottom: 5px;">
                                                 @if ($resourceItem->link)
                                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                                @elseif ($resourceItem->file_path)
+                                                @elseif ($resourceItem->route)
+<a href="{{ route($resourceItem->route, $chDetails->id) }}" target="_blank">
+    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+</a>
+
+                                                    @elseif ($resourceItem->file_path)
                                                     <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                                         {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
                                                     </a>
@@ -212,8 +221,8 @@
 
                 <br>
                 <div class="card-body text-center">
-                        @if ($userAdmin == '1')
-                            <a href="{{ route('view.editpresident', ['id' => $chDetails->id]) }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+                         @if ($userType == 'coordinator')
+                            <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('board.editpresident', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
                         @endif
