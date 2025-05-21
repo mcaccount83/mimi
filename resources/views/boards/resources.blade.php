@@ -19,7 +19,13 @@
                         $thisDate = \Carbon\Carbon::now();
                     @endphp
                     <div class="col-md-12"><br><br></div>
-                        <h2 class="text-center"> MOMS Club of {{ $chDetails->name }}, {{ $stateShortName }} </h2>
+                        <h2 class="text-center"> MOMS Club of {{ $chDetails->name }},
+                            @if($chDetails->state_id < 52)
+                                {{$chDetails->state->state_short_name}}
+                            @else
+                                {{$chDetails->country->short_name}}
+                            @endif
+                        </h2>
                         <h4 class="text-center"> General Chapter Resources</h4>
                         </div>
                     </div>
@@ -98,9 +104,9 @@
                                                 @if ($resourceItem->link)
                                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                                 @elseif ($resourceItem->route)
-<a href="{{ route($resourceItem->route, $chDetails->id) }}" target="_blank">
-    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-</a>
+                                                    <a href="{{ route($resourceItem->route, $chDetails->id) }}" target="_blank">
+                                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                                    </a>
 
                                                     @elseif ($resourceItem->file_path)
                                                     <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">

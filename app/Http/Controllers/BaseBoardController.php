@@ -8,6 +8,7 @@ use App\Models\Coordinators;
 use App\Models\FinancialReportAwards;
 use App\Models\Probation;
 use App\Models\State;
+use App\Models\Country;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
 
@@ -45,6 +46,7 @@ class BaseBoardController extends Controller
         $allProbation = Probation::all();  // Full List for Dropdown Menu
         $allWebLinks = Website::all(); // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
+        $allCountries = Country::all();  // Full List for Dropdown Menu
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
         $chPayments = $chDetails->payments;
@@ -58,9 +60,9 @@ class BaseBoardController extends Controller
 
         $chDisbanded = $chDetails->disbandCheck;
 
-        $boards = $chDetails->boards()->with(['stateName', 'position'])->get();
+        $boards = $chDetails->boards()->with(['state', 'country'])->get();
         $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'country' => '', 'user_id' => ''];
 
         // Fetch board details or fallback to default
         $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
@@ -88,7 +90,7 @@ class BaseBoardController extends Controller
             'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments, 'allActive' => $allActive,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails, 'chActiveId' => $chActiveId,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus,
-            'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail, 'displayEOY' => $displayEOY,
+            'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail, 'displayEOY' => $displayEOY, 'allCountries' => $allCountries,
             'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'chIsActive' => $chIsActive, 'allProbation' => $allProbation, 'probationReason' => $probationReason,
         ];
     }

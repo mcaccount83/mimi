@@ -80,7 +80,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ route('board.viewresources')}}" >
+            <a class="nav-link" href="{{ route('board.viewresources', ['id' => $chDetails->id]) }}'">
                 <span class="no-icon">Chapter Resources</span>
             </a>
           </li>

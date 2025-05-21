@@ -33,7 +33,13 @@
                             <tbody>
                                 @foreach($chapters as $chapter)
                                     <tr id="chapter-{{ $chapter->id }}">
-                                        <td>{{ $chapter->state->state_short_name }}</td>
+                                        <td>
+                                            @if($chapter->state_id < 52)
+                                                {{$chapter->state->state_short_name}}
+                                            @else
+                                                {{$chapter->country->short_name}}
+                                            @endif
+                                        </td>
                                         <td>{{ $chapter->name }}</td>
                                         <td>
                                             <div class="btn-group">

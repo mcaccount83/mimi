@@ -46,7 +46,13 @@
                                         $thisDate = \Illuminate\Support\Carbon::now();
                                     @endphp
                                     <div class="col-md-12"><br><br></div>
-                                    <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
+                                    <h2 class="text-center">MOMS Club of {{ $chDetails->name }},
+                                         @if($chDetails->state_id < 52)
+                                            {{$chDetails->state->state_short_name}}
+                                        @else
+                                            {{$chDetails->country->short_name}}
+                                        @endif
+                                    </h2>
                                     <h2 class="text-center">{{$borDetails->first_name}} {{$borDetails->last_name}}, {{$borDetails->position->position}}</h2>
                                     <p class="description text-center">
                                         Welcome to the MOMS information Management Interface, affectionately called MIMI!
@@ -102,22 +108,33 @@
                             <input type="text" name="bor_addr" id="bor_addr" class="form-control" placeholder="Address" value="{{ $borDetails->street_address }}" required >
                             </div>
                             <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                            <div class="col-sm-5 mb-1">
-                            <input type="text" name="bor_city" id="bor_city" class="form-control" placeholder="City" value="{{ $borDetails->city }}" required >
-                            </div>
-                            <div class="col-sm-3 mb-1">
-                                <select name="bor_state" id="bor_state" class="form-control select2" style="width: 100%;" required >
-                                    <option value="">Select State</option>
-                                    @foreach($allStates as $state)
-                                    <option value="{{$state->state_short_name}}"
-                                        @if($borDetails->state == $state->state_short_name) selected @endif>
-                                        {{$state->state_long_name}}
-                                    </option>
-                                @endforeach
+                                   <div class="col-sm-3 mb-1">
+                                <input type="text" name="bor_city" id="bor_city" class="form-control" value="{{$borDetails->city != ''  ? $borDetails->city : ''}}"  required placeholder="City">
+                                </div>
+                                <div class="col-sm-3 mb-1">
+                                    <select name="bor_state" id="bor_state" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select State</option>
+                                        @foreach($allStates as $state)
+                                        <option value="{{$state->id}}"
+                                            @if(isset($borDetails->state_id) && $borDetails->state_id == $state->id) selected @endif>
+                                            {{$state->state_long_name}}
+                                        </option>
+                                    @endforeach
                                     </select>
-                            </div>
-                            <div class="col-sm-2 mb-1">
-                                <input type="text" name="bor_zip" id="bor_zip" class="form-control" value="{{ $borDetails->zip }}" placeholder="Zip" required >
+                                </div>
+                                <div class="col-sm-2 mb-1">
+                                    <input type="text" name="bor_zip" id="bor_zip" class="form-control" value="{{$borDetails->zip != ''  ? $borDetails->zip : ''}}"  required placeholder="Zip">
+                                </div>
+                                 <div class="col-sm-2" id="bor_country-container" style="display: none;">
+                                    <select name="bor_country" id="bor_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}"
+                                            @if(isset($SECDetails->country_id) && $SECDetails->country_id == $country->id) selected @endif>
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
@@ -325,7 +342,7 @@
 
                           <li class="list-group-item">
                             <h5>Resources</h5>
-                                <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.viewresources') }}'">Chapter Resources</button><br>
+                                <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.viewresources', ['id' => $chDetails->id]) }}'">Chapter Resources</button><br>
                                 <button id="eLearning" type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn bg-primary mb-1 btn-sm">eLearning Library</button><br>
                           </li>
 
@@ -389,6 +406,45 @@
 @endsection
 @section('customscript')
 <script>
+
+     document.addEventListener('DOMContentLoaded', function() {
+    // Define the sections we need to handle
+    const sections = ['bor'];
+
+    // Special state IDs that should show the country field
+    const specialStates = [52, 53, 54, 55];
+
+    // Process each section
+    sections.forEach(section => {
+        const stateDropdown = document.getElementById(`${section}_state`);
+        const countryContainer = document.getElementById(`${section}_country-container`);
+        const countrySelect = document.getElementById(`${section}_country`);
+
+        // Only proceed if all elements exist
+        if (stateDropdown && countryContainer && countrySelect) {
+            // Function to toggle country field visibility
+            function toggleCountryField() {
+                const selectedStateId = parseInt(stateDropdown.value) || 0;
+
+                if (specialStates.includes(selectedStateId)) {
+                    countryContainer.style.display = 'flex';
+                    countrySelect.setAttribute('required', 'required');
+                } else {
+                    countryContainer.style.display = 'none';
+                    countrySelect.removeAttribute('required');
+                    countrySelect.value = "";
+                }
+            }
+
+            // Set initial state
+            toggleCountryField();
+
+            // Add event listener
+            stateDropdown.addEventListener('change', toggleCountryField);
+        }
+    });
+});
+
 /* Disable fields and buttons  */
 $(document).ready(function () {
     var currentMonth = {{ $thisDate->month }};

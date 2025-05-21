@@ -76,7 +76,13 @@
                                 {{ $list->conference->short_name }}
                             @endif
                         </td>
-                        <td>{{ $list->state->state_short_name }}</td>
+                        <td>
+                                @if($list->state_id < 52)
+                                    {{$list->state->state_short_name}}
+                                @else
+                                    {{$list->country->short_name}}
+                                @endif
+                            </td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
                         <td>{{ $list->reportReviewer->first_name?? null }} {{ $list->reportReviewer->last_name?? null }}</td>

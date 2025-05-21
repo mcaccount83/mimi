@@ -18,7 +18,7 @@ class Coordinators extends Model
 
     protected $fillable = [
         'user_id', 'conference_id', 'region_id', 'layer_id', 'first_name', 'last_name', 'position_id', 'display_position_id', 'email', 'sec_email', 'report_id',
-        'address', 'city', 'state', 'zip', 'country', 'phone', 'alt_phone', 'birthday_month_id', 'birthday_day', 'home_chapter', 'coordinator_start_date',
+        'address', 'city', 'state_id', 'zip', 'country_id', 'phone', 'alt_phone', 'birthday_month_id', 'birthday_day', 'home_chapter', 'coordinator_start_date',
         'last_updated_by', 'last_updated_date', 'is_active',
     ];
 
@@ -59,7 +59,7 @@ class Coordinators extends Model
 
     public function state(): BelongsTo
     {
-        return $this->belongsTo(State::class, 'state', 'id');  // 'state' in coordinators BelongsTo 'id' in state
+        return $this->belongsTo(State::class, 'state_id', 'id');  // 'state' in coordinators BelongsTo 'id' in state
     }
 
     public function region(): BelongsTo
@@ -74,7 +74,7 @@ class Coordinators extends Model
 
     public function country(): BelongsTo
     {
-        return $this->belongsTo(Country::class, 'country', 'short_name');  // 'country_short_name' in coordinators BelongsTo 'id' in country
+        return $this->belongsTo(Country::class, 'country_id', 'id');  // 'country_short_name' in coordinators BelongsTo 'id' in country
     }
 
     public function birthdayMonth(): BelongsTo

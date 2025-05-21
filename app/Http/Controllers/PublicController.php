@@ -14,6 +14,7 @@ use App\Models\PaymentLog;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\State;
+use App\Models\Country;
 use App\Models\User;
 use App\Services\PositionConditionsService;
 use GuzzleHttp\Client;
@@ -195,8 +196,9 @@ class PublicController extends Controller
     public function editNewChapter(Request $request): View
     {
         $allStates = State::all();  // Full List for Dropdown Menu
+        $allCountries = Country::all();  // Full List for Dropdown Menu
 
-        $data = ['allStates' => $allStates,
+        $data = ['allStates' => $allStates, 'allCountries' => $allCountries
         ];
 
         return view('public.newchapter')->with($data);
@@ -225,12 +227,20 @@ class PublicController extends Controller
         $shortDescription = 'New Chapter';
         $transactionType = 'authOnlyTransaction';
         $name = $input['ch_name'];
+        $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
         $stateId = $input['ch_state'];
         $state = State::find($stateId);
         $stateShortName = $state->state_short_name;
 
+        // $specialStates = [52, 53, 54, 55];  // Define special states that require custom country selection
+        // // Default to USA (ID 198) unless a special state was selected and country was provided
+        // if (in_array($stateId, $specialStates) && isset($input['ch_country']) && !empty($input['ch_country'])) {
+        //     $countryId = $input['ch_country'];  // Use the submitted country for international & armed forces
+        // } else {
+        //     $countryId = 198;  // Default to USA for all other states
+        // }
+
         $lastupdatedDate = date('Y-m-d H:i:s');
-        $country = 'USA';
         $regId = '0';
         $statusId = '1';
         $activeStatus = '2';
@@ -238,7 +248,6 @@ class PublicController extends Controller
         $currentYear = date('Y');
 
         $confId = null;
-
         if (in_array($stateShortName, ['AK', 'HI', 'ID', 'MN', 'MT', 'ND', 'OR', 'SD', 'WA', 'WI', 'WY', '**', 'AA', 'AE', 'AP'])) {
             $confId = '1';
         } elseif (in_array($stateShortName, ['AZ', 'CA', 'CO', 'NM', 'NV', 'OK', 'TX', 'UT'])) {
@@ -257,21 +266,30 @@ class PublicController extends Controller
             ->where('is_active', 1)
             ->where('on_leave', '!=', '1')
             ->first();
-
         $pcId = $ccDetails ? $ccDetails->id : null; // Add a check in case no coordinator is found
-
-        $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
 
         $shippingFirst = $input['ch_pre_fname'];
         $shippingLast = $input['ch_pre_lname'];
         $shippingCompany = $name = $input['ch_name'];
         $shippingAddress = $input['ch_pre_street'];
         $shippingCity = $input['ch_pre_city'];
-        $shippingState = $input['ch_pre_state'];
+        $preStateId = $input['ch_pre_state'];
+        $state = State::find($stateId);
+        $shippingState = $state->state_short_name;
         $shippingZip = $input['ch_pre_zip'];
 
+        $preStateId = intval($input['ch_pre_state']);
+        $specialStates = [52, 53, 54, 55];  // Define special states that require custom country selection
+        if (in_array($preStateId, $specialStates) && isset($input['ch_pre_country']) && !empty($input['ch_pre_country'])) {
+            $preCountryId = $input['ch_pre_country']; // Use the submitted country for special states
+        } else {
+            $preCountryId = 198;  // Default to USA for all other states
+        }
+        $country = Country::find($preCountryId);
+        $shippingCountry = $country->state_short_name;
+
         $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
-                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip, $shippingCountry);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
@@ -284,8 +302,8 @@ class PublicController extends Controller
             $chapterId = Chapters::create([
                 'name' => $input['ch_name'],
                 'sanitized_name' => $sanitizedName,
-                'state_id' => $stateId,
-                'country_short_name' => $country,
+                'state_id' => $input['ch_state'],
+                'country_id' => $input['ch_country'] ?? '198',
                 'conference_id' => $confId,
                 'region_id' => $regId,
                 'status_id' => $statusId,
@@ -323,7 +341,7 @@ class PublicController extends Controller
                     'city' => $input['ch_pre_city'],
                     'state' => $input['ch_pre_state'],
                     'zip' => $input['ch_pre_zip'],
-                    'country' => $country,
+                    'country_id' => $input['ch_pre_country'] ?? '198',
                     'phone' => $input['ch_pre_phone'],
                     'last_updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
                     'last_updated_date' => $lastupdatedDate,
@@ -333,11 +351,9 @@ class PublicController extends Controller
 
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
             $chDetails = $baseQuery['chDetails'];
-            $emailCC = $baseQuery['emailCC'];  // CC Email
-            // $AdminEmail = 'dragonmom@msn.com';
+            $emailCC = $baseQuery['emailCC'];
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $paymentsAdmin = $adminEmail['payments_admin'];
-
             $founerEmail = $input['ch_pre_email'];
 
             $mailData = array_merge(
@@ -412,7 +428,17 @@ class PublicController extends Controller
         $shippingState = $input['ship_state'];
         $shippingZip = $input['ship_zip'];
 
-        $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
+        $preStateId = intval($input['ch_pre_state']);
+        $specialStates = [52, 53, 54, 55];  // Define special states that require custom country selection
+        if (in_array($preStateId, $specialStates) && isset($input['ch_pre_country']) && !empty($input['ch_pre_country'])) {
+            $preCountryId = $input['ch_pre_country']; // Use the submitted country for special states
+        } else {
+            $preCountryId = 198;  // Default to USA for all other states
+        }
+        $country = Country::find($preCountryId);
+        $shippingCountry = $country->state_short_name;
+
+        $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
@@ -467,7 +493,7 @@ class PublicController extends Controller
     /**
      * Process payments with Authorize.net
      */
-    public function processPublicPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId,
+    public function processPublicPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
                 $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
         if (app()->environment('local')) {
@@ -550,7 +576,7 @@ class PublicController extends Controller
         $customerShipping->setCity($shippingCity);
         $customerShipping->setState($shippingState);
         $customerShipping->setZip($shippingZip);
-        $customerShipping->setCountry("USA");
+        $customerShipping->setCountry($shippingCountry);
 
         // Set the customer's identifying information
         $customerData = new AnetAPI\CustomerDataType;

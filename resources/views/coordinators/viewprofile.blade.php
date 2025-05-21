@@ -71,7 +71,7 @@
                         <br>
                         <b>Address:</b><span class="float-right">{{$cdDetails->address}}
                         <br>
-                        {{$cdDetails->city}},{{$cdDetails->state}}&nbsp;{{$cdDetails->zip}}</span>
+                        {{$cdDetails->city}}, {{$cdDetails->state->state_short_name}}&nbsp;{{$cdDetails->zip}}</span>
                       </li>
                     </ul>
                 </div>

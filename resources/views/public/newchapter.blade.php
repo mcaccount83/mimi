@@ -58,6 +58,21 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="form-group row mt-1" id="country-container" style="display: none;">
+                    <label class="col-sm-4 col-form-label">Country:</label>
+                    <div class="col-sm-8">
+                        <select id="ch_country" name="ch_country" class="form-control" required>
+                            <option value="">Select Country</option>
+                            @foreach($allCountries as $country)
+                                <option value="{{$country->id}}" >
+                                    {{$country->name}}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <label class="col-sm-4 col-form-label">Requested Name:</label>
                     <div class="col-sm-8">
@@ -126,11 +141,11 @@
                                 <input type="text" name="ch_pre_street" id="ch_pre_street" class="form-control" placeholder="Address" required >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="col-sm-5 mb-1">
+                                <div class="col-sm-3 mb-1">
                                 <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" placeholder="City" required >
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="ch_pre_state" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_pre_state" id="ch_pre_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
                                         <option value="{{$state->id}}">
@@ -142,7 +157,17 @@
                                 <div class="col-sm-2 mb-1">
                                     <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" placeholder="Zip" required >
                                 </div>
+                            <div class="col-sm-2 mb-1" id="ch_pre_country-container" style="display: none;">
+                                <select name="ch_pre_country" id="ch_pre_country" class="form-control" style="width: 100%;" required>
+                                    <option value="">Select Country</option>
+                                    @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}">
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
 
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Password:</label>
@@ -294,6 +319,66 @@
 @endsection
 @section('customscript')
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Chapter state and country
+    const stateDropdown = document.getElementById('ch_state');
+    const countryContainer = document.getElementById('country-container');
+    const countrySelect = document.getElementById('ch_country');
+
+    // President state and country
+    const statePreDropdown = document.getElementById('ch_pre_state');
+    const countryPreContainer = document.getElementById('ch_pre_country-container'); // Fixed ID
+    const countryPreSelect = document.getElementById('ch_pre_country');
+
+    // Check if elements exist before adding listeners
+    if (stateDropdown && countryContainer && countrySelect) {
+        // Initially set country field requirement based on state selection
+        toggleCountryField();
+
+        // Add event listener to the state dropdown
+        stateDropdown.addEventListener('change', toggleCountryField);
+
+        function toggleCountryField() {
+            const selectedStateId = parseInt(stateDropdown.value) || 0;
+            const specialStates = [52, 53, 54, 55]; // States that should show the country field
+
+            if (specialStates.includes(selectedStateId)) {
+                countryContainer.style.display = 'flex'; // or 'block' depending on your layout
+                countrySelect.setAttribute('required', 'required');
+            } else {
+                countryContainer.style.display = 'none';
+                countrySelect.removeAttribute('required');
+                // Optionally clear the country selection when hidden
+                countrySelect.value = "";
+            }
+        }
+    }
+
+    // Check if president elements exist before adding listeners
+    if (statePreDropdown && countryPreContainer && countryPreSelect) {
+        // Initially set president country field requirement based on state selection
+        togglePreCountryField();
+
+        // Add event listener to the president state dropdown
+        statePreDropdown.addEventListener('change', togglePreCountryField); // Fixed function name
+
+        function togglePreCountryField() {
+            const selectedPreStateId = parseInt(statePreDropdown.value) || 0;
+            const specialPreStates = [52, 53, 54, 55]; // States that should show the country field
+
+            if (specialPreStates.includes(selectedPreStateId)) {
+                countryPreContainer.style.display = 'flex'; // or 'block' depending on your layout
+                countryPreSelect.setAttribute('required', 'required');
+            } else {
+                countryPreContainer.style.display = 'none';
+                countryPreSelect.removeAttribute('required');
+                // Optionally clear the country selection when hidden
+                countryPreSelect.value = "";
+            }
+        }
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirm_password');

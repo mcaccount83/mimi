@@ -41,7 +41,13 @@
                                 {{ $list->boardDisbanded->chapters->conference->short_name }}
                             @endif
                         </td>
-                        <td>{{ $list->boardDisbanded->chapters->state->state_short_name }}</td>
+                        <td>
+                            @if($list->state_id < 52)
+                                {{$list->state->state_short_name}}
+                            @else
+                                {{$list->country->short_name}}
+                            @endif
+                        </td>
                         <td>{{ $list->boardDisbanded->chapters->name }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td class="email-column">

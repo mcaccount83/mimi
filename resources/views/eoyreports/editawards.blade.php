@@ -35,7 +35,13 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }},
+                    @if($chDetails->state_id < 52)
+                        {{$chDetails->state->state_short_name}}
+                    @else
+                        {{$chDetails->country->short_name}}
+                    @endif
+                </h3>
                 <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
 
                 <ul class="list-group list-group-unbordered mb-3">

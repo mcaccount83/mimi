@@ -20,7 +20,7 @@ use App\Models\Boards;
 use App\Models\Chapters;
 use App\Models\Documents;
 use App\Models\FinancialReport;
-use App\Models\incomingboard;
+use App\Models\BoardsIncoming;
 use App\Models\Probation;
 use App\Models\ProbationSubmission;
 use App\Models\ResourceCategory;
@@ -137,6 +137,7 @@ class BoardController extends Controller implements HasMiddleware
         $allProbation = $baseQuery['allProbation'];
         $allWebLinks = $baseQuery['allWebLinks'];
         $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
 
         $PresDetails = $baseQuery['PresDetails'];
         $AVPDetails = $baseQuery['AVPDetails'];
@@ -163,7 +164,7 @@ class BoardController extends Controller implements HasMiddleware
         $display_live = ($admin->display_live == 1);
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
-            'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
+            'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
             'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments,
         ];
@@ -202,6 +203,7 @@ class BoardController extends Controller implements HasMiddleware
         $allProbation = $baseQuery['allProbation'];
         $allWebLinks = $baseQuery['allWebLinks'];
         $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
 
         $PresDetails = $baseQuery['PresDetails'];
         $AVPDetails = $baseQuery['AVPDetails'];
@@ -235,7 +237,8 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'borDetails' => $borDetails, 'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation,
-            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments,  'userAdmin' => $userAdmin,
+            'display_testing' => $display_testing, 'display_live' => $display_live, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments,
+            'userAdmin' => $userAdmin, 'allCountries' => $allCountries,
         ];
 
         return view('boards.member')->with($data);
@@ -313,9 +316,9 @@ class BoardController extends Controller implements HasMiddleware
                     'email' => $request->input('ch_pre_email'),
                     'street_address' => $request->input('ch_pre_street'),
                     'city' => $request->input('ch_pre_city'),
-                    'state' => $request->input('ch_pre_state'),
+                    'state_id' => $request->input('ch_pre_state'),
                     'zip' => $request->input('ch_pre_zip'),
-                    'country' => 'USA',
+                    'country_id' => $request->input('ch_pre_country') ?? '198',
                     'phone' => $request->input('ch_pre_phone'),
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
@@ -343,9 +346,9 @@ class BoardController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_avp_email'),
                         'street_address' => $request->input('ch_avp_street'),
                         'city' => $request->input('ch_avp_city'),
-                        'state' => $request->input('ch_avp_state'),
+                        'state_id' => $request->input('ch_avp_state'),
                         'zip' => $request->input('ch_avp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_avp_country') ?? '198',
                         'phone' => $request->input('ch_avp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -369,9 +372,9 @@ class BoardController extends Controller implements HasMiddleware
                         'board_position_id' => 2,
                         'street_address' => $request->input('ch_avp_street'),
                         'city' => $request->input('ch_avp_city'),
-                        'state' => $request->input('ch_avp_state'),
+                        'state_id' => $request->input('ch_avp_state'),
                         'zip' => $request->input('ch_avp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_avp_country') ?? '198',
                         'phone' => $request->input('ch_avp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -400,9 +403,9 @@ class BoardController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_mvp_email'),
                         'street_address' => $request->input('ch_mvp_street'),
                         'city' => $request->input('ch_mvp_city'),
-                        'state' => $request->input('ch_mvp_state'),
+                        'state_id' => $request->input('ch_mvp_state'),
                         'zip' => $request->input('ch_mvp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_mvp_country') ?? '198',
                         'phone' => $request->input('ch_mvp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -426,9 +429,9 @@ class BoardController extends Controller implements HasMiddleware
                         'board_position_id' => 3,
                         'street_address' => $request->input('ch_mvp_street'),
                         'city' => $request->input('ch_mvp_city'),
-                        'state' => $request->input('ch_mvp_state'),
+                        'state_id' => $request->input('ch_mvp_state'),
                         'zip' => $request->input('ch_mvp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_mvp_country') ?? '198',
                         'phone' => $request->input('ch_mvp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -457,9 +460,9 @@ class BoardController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_trs_email'),
                         'street_address' => $request->input('ch_trs_street'),
                         'city' => $request->input('ch_trs_city'),
-                        'state' => $request->input('ch_trs_state'),
+                        'state_id' => $request->input('ch_trs_state'),
                         'zip' => $request->input('ch_trs_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_trs_country') ?? '198',
                         'phone' => $request->input('ch_trs_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -483,9 +486,9 @@ class BoardController extends Controller implements HasMiddleware
                         'board_position_id' => 4,
                         'street_address' => $request->input('ch_trs_street'),
                         'city' => $request->input('ch_trs_city'),
-                        'state' => $request->input('ch_trs_state'),
+                        'state_id' => $request->input('ch_trs_state'),
                         'zip' => $request->input('ch_trs_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_trs_country') ?? '198',
                         'phone' => $request->input('ch_trs_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -514,9 +517,9 @@ class BoardController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_sec_email'),
                         'street_address' => $request->input('ch_sec_street'),
                         'city' => $request->input('ch_sec_city'),
-                        'state' => $request->input('ch_sec_state'),
+                        'state_id' => $request->input('ch_sec_state'),
                         'zip' => $request->input('ch_sec_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_sec_country') ?? '198',
                         'phone' => $request->input('ch_sec_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -540,9 +543,9 @@ class BoardController extends Controller implements HasMiddleware
                         'board_position_id' => 5,
                         'street_address' => $request->input('ch_sec_street'),
                         'city' => $request->input('ch_sec_city'),
-                        'state' => $request->input('ch_sec_state'),
+                        'state_id' => $request->input('ch_sec_state'),
                         'zip' => $request->input('ch_sec_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_sec_country') ?? '198',
                         'phone' => $request->input('ch_sec_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -683,7 +686,7 @@ class BoardController extends Controller implements HasMiddleware
             ]);
 
             if ($chDetailsUpd->name != $chDetails->name || $PresDetailsUpd->bor_email != $PresDetails->bor_email || $PresDetailsUpd->street_address != $PresDetails->street_address || $PresDetailsUpd->city != $PresDetails->city ||
-                    $PresDetailsUpd->state != $PresDetails->state || $PresDetailsUpd->first_name != $PresDetails->first_name || $PresDetailsUpd->last_name != $PresDetails->last_name ||
+                    $PresDetailsUpd->state_id != $PresDetails->state_id || $PresDetailsUpd->first_name != $PresDetails->first_name || $PresDetailsUpd->last_name != $PresDetails->last_name ||
                     $PresDetailsUpd->zip != $PresDetails->zip || $PresDetailsUpd->phone != $PresDetails->phone || $chDetailsUpd->inquiries_contact != $chDetails->inquiries_contact ||
                     $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
                     $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup ||
@@ -813,9 +816,9 @@ class BoardController extends Controller implements HasMiddleware
             $board->phone = $request->input('bor_phone');
             $board->street_address = $request->input('bor_addr');
             $board->city = $request->input('bor_city');
-            $board->state = $request->input('bor_state');
+            $board->state_id = $request->input('bor_state');
             $board->zip = $request->input('bor_zip');
-            $board->country = 'USA';
+            $board->country_id = $request->input('bor_country');
             $board->last_updated_by = $lastUpdatedBy;
             $board->last_updated_date = $lastupdatedDate;
             $board->save();
@@ -863,7 +866,7 @@ class BoardController extends Controller implements HasMiddleware
             ]);
 
             if ($chDetailsUpd->name != $chDetails->name || $borDetailsUpd->bor_email != $borDetails->bor_email || $borDetailsUpd->street_address != $borDetails->street_address || $borDetailsUpd->city != $borDetails->city ||
-                    $borDetailsUpd->state != $borDetails->state || $borDetailsUpd->first_name != $borDetails->first_name || $borDetailsUpd->last_name != $borDetails->last_name ||
+                    $borDetailsUpd->state_id != $borDetails->state_id || $borDetailsUpd->first_name != $borDetails->first_name || $borDetailsUpd->last_name != $borDetails->last_name ||
                     $borDetailsUpd->zip != $borDetails->zip || $borDetailsUpd->phone != $borDetails->phone || $chDetailsUpd->inquiries_contact != $chDetails->inquiries_contact ||
                     $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
                     $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup) {
@@ -970,6 +973,7 @@ class BoardController extends Controller implements HasMiddleware
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
         $PresDetails = $baseQuery['PresDetails'];
 
         $now = Carbon::now();
@@ -977,7 +981,7 @@ class BoardController extends Controller implements HasMiddleware
         $year = $now->year;
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chIsActive' => $chIsActive,
-            'PresDetails' => $PresDetails, 'allStates' => $allStates,
+            'PresDetails' => $PresDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
         return view('boards.donation')->with($data);
@@ -1005,13 +1009,14 @@ class BoardController extends Controller implements HasMiddleware
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
         $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
 
         $now = Carbon::now();
         $month = $now->month;
         $year = $now->year;
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chIsActive' => $chIsActive,
-            'allStates' => $allStates,
+            'allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
             return view('boards.manualorder')->with($data);
@@ -1184,6 +1189,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $allWebLinks = $baseQuery['allWebLinks'];
         $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
 
         $PresDetails = $baseQuery['PresDetails'];
         $AVPDetails = $baseQuery['AVPDetails'];
@@ -1193,7 +1199,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'allStates' => $allStates, 'SECDetails' => $SECDetails, 'userAdmin' => $userAdmin,
             'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'userType' => $userType,
-            'allWebLinks' => $allWebLinks,
+            'allWebLinks' => $allWebLinks, 'allCountries' => $allCountries,
         ];
 
         return view('boards.boardinfo')->with($data);
@@ -1265,27 +1271,27 @@ class BoardController extends Controller implements HasMiddleware
 
             // President Info
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
-                $PREDetails = IncomingBoard::where('chapter_id', $chId)
+                $PREDetails = BoardsIncoming::where('chapter_id', $chId)
                     ->where('board_position_id', '1')
                     ->get();
                 $presId = $request->input('presID');
                 if (count($PREDetails) != 0) {
-                    IncomingBoard::where('id', $presId)
+                    BoardsIncoming::where('id', $presId)
                         ->update([   // Update board details
                             'first_name' => $request->input('ch_pre_fname'),
                             'last_name' => $request->input('ch_pre_lname'),
                             'email' => $request->input('ch_pre_email'),
                             'street_address' => $request->input('ch_pre_street'),
                             'city' => $request->input('ch_pre_city'),
-                            'state' => $request->input('ch_pre_state'),
+                            'state_id' => $request->input('ch_pre_state'),
                             'zip' => $request->input('ch_pre_zip'),
-                            'country' => 'USA',
+                            'country_id' => $request->input('ch_pre_country') ?? '198',
                             'phone' => $request->input('ch_pre_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
                         ]);
                 } else {
-                    IncomingBoard::create([  // Create board details if new
+                    BoardsIncoming::create([  // Create board details if new
                         'chapter_id' => $chId,
                         'board_position_id' => '1',
                         'first_name' => $request->input('ch_pre_fname'),
@@ -1293,9 +1299,9 @@ class BoardController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_pre_email'),
                         'street_address' => $request->input('ch_pre_street'),
                         'city' => $request->input('ch_pre_city'),
-                        'state' => $request->input('ch_pre_state'),
+                        'state_id' => $request->input('ch_pre_state'),
                         'zip' => $request->input('ch_pre_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_pre_country') ?? '198',
                         'phone' => $request->input('ch_pre_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -1304,27 +1310,27 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             // AVP Info
-            $AVPDetails = IncomingBoard::where('chapter_id', $chId)
+            $AVPDetails = BoardsIncoming::where('chapter_id', $chId)
                 ->where('board_position_id', '2')
                 ->get();
 
             if (count($AVPDetails) > 0) {
                 if ($request->input('AVPVacant') == 'on') {
-                    IncomingBoard::where('chapter_id', $chId)
+                    BoardsIncoming::where('chapter_id', $chId)
                         ->where('board_position_id', '2')
                         ->delete();  // Delete board member if now Vacant
                 } else {
                     $AVPId = $request->input('avpID');
-                    IncomingBoard::where('id', $AVPId)
+                    BoardsIncoming::where('id', $AVPId)
                         ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_avp_fname'),
                             'last_name' => $request->input('ch_avp_lname'),
                             'email' => $request->input('ch_avp_email'),
                             'street_address' => $request->input('ch_avp_street'),
                             'city' => $request->input('ch_avp_city'),
-                            'state' => $request->input('ch_avp_state'),
+                            'state_id' => $request->input('ch_avp_state'),
                             'zip' => $request->input('ch_avp_zip'),
-                            'country' => 'USA',
+                            'country_id' => $request->input('ch_avp_country') ?? '198',
                             'phone' => $request->input('ch_avp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
@@ -1332,7 +1338,7 @@ class BoardController extends Controller implements HasMiddleware
                 }
             } else {
                 if ($request->input('AVPVacant') != 'on') {
-                    IncomingBoard::create([  // Create board details if new
+                    BoardsIncoming::create([  // Create board details if new
                         'chapter_id' => $chId,
                         'board_position_id' => '2',
                         'first_name' => $request->input('ch_avp_fname'),
@@ -1340,9 +1346,9 @@ class BoardController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_avp_email'),
                         'street_address' => $request->input('ch_avp_street'),
                         'city' => $request->input('ch_avp_city'),
-                        'state' => $request->input('ch_avp_state'),
+                        'state_id' => $request->input('ch_avp_state'),
                         'zip' => $request->input('ch_avp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_avp_country') ?? '198',
                         'phone' => $request->input('ch_avp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -1351,27 +1357,27 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             // MVP Info
-            $MVPDetails = IncomingBoard::where('chapter_id', $chId)
+            $MVPDetails = BoardsIncoming::where('chapter_id', $chId)
                 ->where('board_position_id', '3')
                 ->get();
 
             if (count($MVPDetails) > 0) {
                 if ($request->input('MVPVacant') == 'on') {
-                    IncomingBoard::where('chapter_id', $chId)
+                    BoardsIncoming::where('chapter_id', $chId)
                         ->where('board_position_id', '3')
                         ->delete();  // Delete board member if now Vacant
                 } else {
                     $MVPId = $request->input('mvpID');
-                    IncomingBoard::where('id', $MVPId)
+                    BoardsIncoming::where('id', $MVPId)
                         ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_mvp_fname'),
                             'last_name' => $request->input('ch_mvp_lname'),
                             'email' => $request->input('ch_mvp_email'),
                             'street_address' => $request->input('ch_mvp_street'),
                             'city' => $request->input('ch_mvp_city'),
-                            'state' => $request->input('ch_mvp_state'),
+                            'state_id' => $request->input('ch_mvp_state'),
                             'zip' => $request->input('ch_mvp_zip'),
-                            'country' => 'USA',
+                            'country_id' => $request->input('ch_mvp_country') ?? '198',
                             'phone' => $request->input('ch_mvp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
@@ -1379,7 +1385,7 @@ class BoardController extends Controller implements HasMiddleware
                 }
             } else {
                 if ($request->input('MVPVacant') != 'on') {
-                    IncomingBoard::create([  // Create board details if new
+                    BoardsIncoming::create([  // Create board details if new
                         'chapter_id' => $chId,
                         'board_position_id' => '3',
                         'first_name' => $request->input('ch_mvp_fname'),
@@ -1387,9 +1393,9 @@ class BoardController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_mvp_email'),
                         'street_address' => $request->input('ch_mvp_street'),
                         'city' => $request->input('ch_mvp_city'),
-                        'state' => $request->input('ch_mvp_state'),
+                        'state_id' => $request->input('ch_mvp_state'),
                         'zip' => $request->input('ch_mvp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_mvp_country') ?? '198',
                         'phone' => $request->input('ch_mvp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -1398,27 +1404,27 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             // TRS Info
-            $TRSDetails = IncomingBoard::where('chapter_id', $chId)
+            $TRSDetails = BoardsIncoming::where('chapter_id', $chId)
                 ->where('board_position_id', '4')
                 ->get();
 
             if (count($TRSDetails) > 0) {
                 if ($request->input('TreasVacant') == 'on') {
-                    IncomingBoard::where('chapter_id', $chId)
+                    BoardsIncoming::where('chapter_id', $chId)
                         ->where('board_position_id', '4')
                         ->delete();  // Delete board member if now Vacant
                 } else {
                     $TRSId = $request->input('trsID');
-                    IncomingBoard::where('id', $TRSId)
+                    BoardsIncoming::where('id', $TRSId)
                         ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_trs_fname'),
                             'last_name' => $request->input('ch_trs_lname'),
                             'email' => $request->input('ch_trs_email'),
                             'street_address' => $request->input('ch_trs_street'),
                             'city' => $request->input('ch_trs_city'),
-                            'state' => $request->input('ch_trs_state'),
+                            'state_id' => $request->input('ch_trs_state'),
                             'zip' => $request->input('ch_trs_zip'),
-                            'country' => 'USA',
+                            'country_id' => $request->input('ch_trs_country') ?? '198',
                             'phone' => $request->input('ch_trs_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
@@ -1426,7 +1432,7 @@ class BoardController extends Controller implements HasMiddleware
                 }
             } else {
                 if ($request->input('TreasVacant') != 'on') {
-                    IncomingBoard::create([  // Create board details if new
+                    BoardsIncoming::create([  // Create board details if new
                         'chapter_id' => $chId,
                         'board_position_id' => '4',
                         'first_name' => $request->input('ch_trs_fname'),
@@ -1434,9 +1440,9 @@ class BoardController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_trs_email'),
                         'street_address' => $request->input('ch_trs_street'),
                         'city' => $request->input('ch_trs_city'),
-                        'state' => $request->input('ch_trs_state'),
+                        'state_id' => $request->input('ch_trs_state'),
                         'zip' => $request->input('ch_trs_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_trs_country') ?? '198',
                         'phone' => $request->input('ch_trs_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -1445,27 +1451,27 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             // SEC Info
-            $SECDetails = IncomingBoard::where('chapter_id', $chId)
+            $SECDetails = BoardsIncoming::where('chapter_id', $chId)
                 ->where('board_position_id', '5')
                 ->get();
 
             if (count($SECDetails) > 0) {
                 if ($request->input('SecVacant') == 'on') {
-                    IncomingBoard::where('chapter_id', $chId)
+                    BoardsIncoming::where('chapter_id', $chId)
                         ->where('board_position_id', '5')
                         ->delete();  // Delete board member if now Vacant
                 } else {
                     $SECId = $request->input('secID');
-                    IncomingBoard::where('id', $SECId)
+                    BoardsIncoming::where('id', $SECId)
                         ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_sec_fname'),
                             'last_name' => $request->input('ch_sec_lname'),
                             'email' => $request->input('ch_sec_email'),
                             'street_address' => $request->input('ch_sec_street'),
                             'city' => $request->input('ch_sec_city'),
-                            'state' => $request->input('ch_sec_state'),
+                            'state_id' => $request->input('ch_sec_state'),
                             'zip' => $request->input('ch_sec_zip'),
-                            'country' => 'USA',
+                            'country_id' => $request->input('ch_sec_country') ?? '198',
                             'phone' => $request->input('ch_sec_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
@@ -1473,7 +1479,7 @@ class BoardController extends Controller implements HasMiddleware
                 }
             } else {
                 if ($request->input('SecVacant') != 'on') {
-                    IncomingBoard::create([  // Create board details if new
+                    BoardsIncoming::create([  // Create board details if new
                         'chapter_id' => $chId,
                         'board_position_id' => '5',
                         'first_name' => $request->input('ch_sec_fname'),
@@ -1481,9 +1487,9 @@ class BoardController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_sec_email'),
                         'street_address' => $request->input('ch_sec_street'),
                         'city' => $request->input('ch_sec_city'),
-                        'state' => $request->input('ch_sec_state'),
+                        'state_id' => $request->input('ch_sec_state'),
                         'zip' => $request->input('ch_sec_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_sec_country') ?? '198',
                         'phone' => $request->input('ch_sec_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,

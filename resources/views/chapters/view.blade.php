@@ -21,7 +21,13 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }},
+                   @if($chDetails->state_id < 52)
+                        {{$chDetails->state->state_short_name}}
+                    @else
+                        {{$chDetails->country->short_name}}
+                    @endif
+                    </h3>
                 <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                 <br>
                 EIN: {{$chDetails->ein}}
@@ -114,7 +120,6 @@
                     <div class="general-field">
                         <h3 class="profile-username">General Information
                             <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('board.editpresident', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
-                            {{-- <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('viewas.viewchapterpresident', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button> --}}
                     </h3>
                     <div class="row">
                             <div class="col-md-12">
@@ -370,7 +375,7 @@
                         <div class="col-md-6">
                             <h3 class="profile-username">Disband Checklist
                                 @if (isset($chDisbanded))
-                                    <button id="viewdisband" class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('viewas.viewchapterdisbandchecklist', ['id' => $chDetails->id]) }}'">View Checklist/Report As President</button>
+                                    <button id="viewdisband" class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Checklist/Report As President</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-xs ml-2" disabled>View Checklist/Report As President</button>
                                 @endif
@@ -609,7 +614,9 @@
                                         <br>
                                         {{$PresDetails->street_address}}
                                         <br>
-                                        {{$PresDetails->city}},{{$PresDetails->state}}&nbsp;{{$PresDetails->zip}}
+                                        {{$PresDetails->city}},{{$PresDetails->state->state_short_name}}&nbsp;{{$PresDetails->zip}}
+                                         <br>
+                                        {{$PresDetails->country->short_name}}
                                     </div>
                                     <div class="col-md-6">
                                     </div>
@@ -646,7 +653,9 @@
                                     <br>
                                     {{$PresDisbandedDetails->street_address}}
                                     <br>
-                                    {{$PresDisbandedDetails->city}},{{$PresDisbandedDetails->state}}&nbsp;{{$PresDisbandedDetails->zip}}
+                                    {{$PresDisbandedDetails->city}},{{$PresDisbandedDetails->state->state_short_name}}&nbsp;{{$PresDisbandedDetails->zip}}
+                                    <br>
+                                        {{$PresDisbandedDetails->country->short_name}}
                                 </div>
                                 <div class="col-md-6">
                                 </div>
@@ -674,7 +683,9 @@
                                         <br>
                                         {{$AVPDetails->street_address}}
                                         <br>
-                                        {{$AVPDetails->city}},{{$AVPDetails->state}}&nbsp;{{$AVPDetails->zip}}
+                                        {{$AVPDetails->city}},{{$AVPDetails->state->state_short_name}}&nbsp;{{$AVPDetails->zip}}
+                                        <br>
+                                        {{$AVPDetails->country->short_name}}
                                     </div>
                                     <div class="col-md-6">
                                     </div>
@@ -702,23 +713,25 @@
                             </div>
                         @endif
                         @else
-                        @if ($AVPDetails->user_id == '')
+                        @if ($AVPDisbandedDetails->user_id == '')
                             <div class="avp-field-vacant">
                                 <h3 class="profile-username">Administrative Vice President Position is Vacant</h3>
                                 <br><br>
                             </div>
                         @else
                             <div class="avp-field">
-                                <h3 class="profile-username">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
+                                <h3 class="profile-username">{{$AVPDisbandedDetails->first_name}} {{$AVPDisbandedDetails->last_name}}</h3>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <a href="mailto:{{ $AVPDetails->email }}">{{ $AVPDetails->email }}</a>
+                                        <a href="mailto:{{ $AVPDisbandedDetails->email }}">{{ $AVPDisbandedDetails->email }}</a>
                                         <br>
-                                        <span class="phone-mask">{{$AVPDetails->phone}}</span>
+                                        <span class="phone-mask">{{$AVPDisbandedDetails->phone}}</span>
                                         <br>
-                                        {{$AVPDetails->street_address}}
+                                        {{$AVPDisbandedDetails->street_address}}
                                         <br>
-                                        {{$AVPDetails->city}},{{$AVPDetails->state}}&nbsp;{{$AVPDetails->zip}}
+                                        {{$AVPDisbandedDetails->city}},{{$AVPDisbandedDetails->state->state_short_name}}&nbsp;{{$AVPDisbandedDetails->zip}}
+                                        <br>
+                                        {{$AVPDisbandedDetails->country->short_name}}
                                     </div>
                                     <div class="col-md-6">
                                     </div>
@@ -746,7 +759,9 @@
                                         <br>
                                         {{$MVPDetails->street_address}}
                                         <br>
-                                        {{$MVPDetails->city}},{{$MVPDetails->state}}&nbsp;{{$MVPDetails->zip}}
+                                        {{$MVPDetails->city}},{{$MVPDetails->state->state_short_name}}&nbsp;{{$MVPDetails->zip}}
+                                        <br>
+                                        {{$MVPDetails->country->short_name}}
                                     </div>
                                     <div class="col-md-6">
                                     </div>
@@ -790,7 +805,9 @@
                                         <br>
                                         {{$MVPDisbandedDetails->street_address}}
                                         <br>
-                                        {{$MVPDisbandedDetails->city}},{{$MVPDisbandedDetails->state}}&nbsp;{{$MVPDisbandedDetails->zip}}
+                                        {{$MVPDisbandedDetails->city}},{{$MVPDisbandedDetails->state->state_short_name}}&nbsp;{{$MVPDisbandedDetails->zip}}
+                                        <br>
+                                        {{$MVPDisbandedDetails->country->short_name}}
                                     </div>
                                     <div class="col-md-6">
                                     </div>
@@ -818,7 +835,9 @@
                                     <br>
                                     {{$TRSDetails->street_address}}
                                     <br>
-                                    {{$TRSDetails->city}},{{$TRSDetails->state}}&nbsp;{{$TRSDetails->zip}}
+                                    {{$TRSDetails->city}},{{$TRSDetails->state->state_short_name}}&nbsp;{{$TRSDetails->zip}}
+                                    <br>
+                                        {{$TRSDetails->country->short_name}}
                                 </div>
                                 <div class="col-md-6">
                                 </div>
@@ -862,7 +881,9 @@
                                         <br>
                                         {{$TRSDisbandedDetails->street_address}}
                                         <br>
-                                        {{$TRSDisbandedDetails->city}},{{$TRSDisbandedDetails->state}}&nbsp;{{$TRSDisbandedDetails->zip}}
+                                        {{$TRSDisbandedDetails->city}},{{$TRSDisbandedDetails->state->state_short_name}}&nbsp;{{$TRSDisbandedDetails->zip}}
+                                        <br>
+                                        {{$TRSDisbandedDetails->country->short_name}}
                                     </div>
                                     <div class="col-md-6">
                                     </div>
@@ -893,7 +914,9 @@
                                 <br>
                                 {{$SECDetails->street_address}}
                                 <br>
-                                {{$SECDetails->city}},{{$SECDetails->state}}&nbsp;{{$SECDetails->zip}}
+                                {{$SECDetails->city}},{{$SECDetails->state->state_short_name}}&nbsp;{{$SECDetails->zip}}
+                                <br>
+                                        {{$SECDetails->country->short_name}}
                             </div>
                             <div class="col-md-6">
                                 @php
@@ -934,7 +957,9 @@
                             <br>
                             {{$SECDisbandedDetails->street_address}}
                             <br>
-                            {{$SECDisbandedDetails->city}},{{$SECDisbandedDetails->state}}&nbsp;{{$SECDisbandedDetails->zip}}
+                            {{$SECDisbandedDetails->city}},{{$SECDisbandedDetails->state->state_short_name}}&nbsp;{{$SECDisbandedDetails->zip}}
+                            <br>
+                                        {{$SECDisbandedDetails->country->short_name}}
                         </div>
                         <div class="col-md-6">
                         </div>

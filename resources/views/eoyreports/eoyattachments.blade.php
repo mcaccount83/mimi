@@ -51,7 +51,13 @@
                                 {{ $list->conference->short_name }}
                             @endif
                         </td>
-                        <td>{{ $list->state->state_short_name }}</td>
+                        <td>
+                                @if($list->state_id < 52)
+                                    {{$list->state->state_short_name}}
+                                @else
+                                    {{$list->country->short_name}}
+                                @endif
+                            </td>
 						<td>{{ $list->name }}</td>
                         </td>
                         <td @if($list->documents?->roster_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>

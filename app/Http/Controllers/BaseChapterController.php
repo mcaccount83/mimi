@@ -11,6 +11,7 @@ use App\Models\Month;
 use App\Models\Probation;
 use App\Models\Region;
 use App\Models\State;
+use App\Models\Country;
 use App\Models\Status;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
@@ -386,6 +387,7 @@ class BaseChapterController extends Controller
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
         $stateShortName = $chDetails->state->state_short_name;
+        $countryShortName = $chDetails->country->short_name;
         $regionLongName = $chDetails->region?->long_name;
         $conferenceDescription = $chDetails->conference?->conference_description;
         $chConfId = $chDetails->conference_id;
@@ -410,14 +412,15 @@ class BaseChapterController extends Controller
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
+        $allCountries = Country::all();  // Full List for Dropdown Menu
         $allMonths = Month::all();  // Full List for Dropdown Menu
         $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
             ->where('conference_id', $chConfId)
             ->get();
 
-        $boards = $chDetails->boards()->with('stateName')->get();
+        $boards = $chDetails->boards()->with(['state', 'country'])->get();
         $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'country' => '', 'user_id' => ''];
 
         // Fetch board details or fallback to default
         $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
@@ -427,9 +430,9 @@ class BaseChapterController extends Controller
         $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
 
         $chDisbanded = $chDetails->disbandCheck;
-        $bdDisbanded = $chDetails->boardsDisbanded()->with('stateName')->get();
+        $bdDisbanded = $chDetails->boardsDisbanded()->with(['state', 'country'])->get();
         $bdDisbandedDetails = $bdDisbanded->groupBy('board_position_id');
-        $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+        $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'country' => '', 'user_id' => ''];
 
         // Fetch board details or fallback to default
         $PresDisbandedDetails = $bdDisbandedDetails->get(1, collect([$defaultDisbandedBoardMember]))->first(); // President
@@ -439,7 +442,7 @@ class BaseChapterController extends Controller
         $SECDisbandedDetails = $bdDisbandedDetails->get(5, collect([$defaultDisbandedBoardMember]))->first(); // Secretary
 
         $chPending = $chDetails->pendingCheck;
-        $bdPending = $chDetails->boardsPending()->with('stateName')->get();
+        $bdPending = $chDetails->boardsPending()->with('state', 'country')->get();
         $bdPendingDetails = $bdPending->groupBy('board_position_id');
         $defaultPendingBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
 
@@ -480,7 +483,7 @@ class BaseChapterController extends Controller
             'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails, 'allProbation' => $allProbation,
             'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
             'chPending' => $chPending, 'PresPendingDetails' => $PresPendingDetails, 'AVPPendingDetails' => $AVPPendingDetails, 'MVPPendingDetails' => $MVPPendingDetails, 'TRSPendingDetails' => $TRSPendingDetails,
-            'SECPendingDetails' => $SECPendingDetails, 'allRegions' => $allRegions,
+            'SECPendingDetails' => $SECPendingDetails, 'allRegions' => $allRegions, 'allCountries' => $allCountries, 'countryShortName' => $countryShortName
         ];
     }
 }

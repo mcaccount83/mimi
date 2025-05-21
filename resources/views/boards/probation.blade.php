@@ -20,8 +20,14 @@
                                         $thisDate = \Illuminate\Support\Carbon::now();
                                     @endphp
                                     <div class="col-md-12"><br><br></div>
-                                    <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-                                    <h4 class="text-center">Quarterly Financial Submission</h4>
+                                    <h2 class="text-center">MOMS Club of {{ $chDetails->name }},
+                                        @if($chDetails->state_id < 52)
+                                            {{$chDetails->state->state_short_name}}
+                                        @else
+                                            {{$chDetails->country->short_name}}
+                                        @endif
+                                    </h2>
+                                            <h4 class="text-center">Quarterly Financial Submission</h4>
 
                                     <p class="description text-center">
                                         Since your chapter in on probation for Excess Member Benefit Expenses, you will need to complete a quarterly financial report submission.

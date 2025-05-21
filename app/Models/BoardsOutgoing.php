@@ -17,7 +17,7 @@ class BoardsOutgoing extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id', 'chapter_id', 'board_position_id', 'first_name', 'last_name', 'email', 'phone', 'street_address', 'city', 'state', 'zip', 'country',
+        'user_id', 'chapter_id', 'board_position_id', 'first_name', 'last_name', 'email', 'phone', 'street_address', 'city', 'state_id', 'zip', 'country_id',
         'last_updated_by', 'last_updated_date',
     ];
 
@@ -31,9 +31,19 @@ class BoardsOutgoing extends Model
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in outgoing BelongsTo 'id' in chapters
     }
 
-    public function stateName(): BelongsTo
+    // public function stateName(): BelongsTo
+    // {
+    //     return $this->belongsTo(State::class, 'state', 'state_short_name');  // 'state' in outgoing BelongsTo 'state_short_name' in state
+    // }
+
+    public function state(): BelongsTo
     {
-        return $this->belongsTo(State::class, 'state', 'state_short_name');  // 'state' in outgoing BelongsTo 'state_short_name' in state
+        return $this->belongsTo(State::class, 'state_id', 'id');  // 'state' in coordinators BelongsTo 'id' in state
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'country_id', 'id');  // 'country_id' in coordinators BelongsTo 'id' in country
     }
 
     public function position(): BelongsTo

@@ -523,9 +523,9 @@ class UserController extends Controller implements HasMiddleware
             'phone' => $boardDetails->phone,
             'street_address' => $boardDetails->street_address,
             'city' => $boardDetails->city,
-            'state' => $boardDetails->state,
+            'state_id' => $boardDetails->state_id,
             'zip' => $boardDetails->zip,
-            'country' => $boardDetails->country,
+            'country_id' => $boardDetails->country_id,
             'last_updated_by' => $lastUpdatedBy,
             'last_updated_date' => $lastupdatedDate,
         ]);

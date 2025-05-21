@@ -31,7 +31,13 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }},
+                        @if($chDetails->state_id < 52)
+                            {{$chDetails->state->state_short_name}}
+                        @else
+                            {{$chDetails->country->short_name}}
+                        @endif
+                    </h3>
                   <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                   </p>
 
@@ -83,7 +89,7 @@
                                     <label class="custom-control-label" for="TreasVacant">Vacant</label>
                                 </div>
                             </div>
-                            <div class="treas-field ml-auto" style="display: {{ $TRSDetails->id == '' ? 'none' : 'block' }};">
+                            <div class="trs-field ml-auto" style="display: {{ $TRSDetails->id == '' ? 'none' : 'block' }};">
                                 <span>{{ $TRSDetails->first_name }} {{ $TRSDetails->last_name }}</span>
                             </div>
                           </div>
@@ -153,15 +159,15 @@
                                 <input type="text" name="ch_pre_street" id="ch_pre_street" class="form-control" value="{{ $PresDetails->street_address }}"  required  placeholder="Address">
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="col-sm-5 mb-1">
+                                <div class="col-sm-3 mb-1">
                                 <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" value="{{ $PresDetails->city }}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="ch_pre_state" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_pre_state" id="ch_pre_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
-                                        <option value="{{$state->state_short_name}}"
-                                            @if($PresDetails->state == $state->state_short_name) selected @endif>
+                                        <option value="{{$state->id}}"
+                                            @if($PresDetails->state_id == $state->id) selected @endif>
                                             {{$state->state_long_name}}
                                         </option>
                                     @endforeach
@@ -170,6 +176,18 @@
                                 <div class="col-sm-2 mb-1">
                                     <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" value="{{ $PresDetails->zip }}"  required placeholder="Zip">
                                 </div>
+                                <div class="col-sm-2" id="ch_pre_country-container" style="display: none;">
+                                    <select name="ch_pre_country" id="ch_pre_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}"
+                                            @if($PresDetails->country_id == $country->id) selected @endif>
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             </div>
 
                             <!-- /.form group -->
@@ -193,23 +211,34 @@
                                 <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" value="{{$AVPDetails->street_address != ''  ? $AVPDetails->street_address : ''}}"  required placeholder="Address">
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="col-sm-5 mb-1">
+                                <div class="col-sm-3 mb-1">
                                 <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" value="{{$AVPDetails->city != ''  ? $AVPDetails->city : ''}}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="ch_avp_state" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_avp_state" id="ch_avp_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
-                                        <option value="{{$state->state_short_name}}"
-                                            @if($AVPDetails->state == $state->state_short_name) selected @endif>
+                                        <option value="{{$state->id}}"
+                                            @if(isset($AVPDetails->state_id) && $AVPDetails->state_id == $state->id) selected @endif>
                                             {{$state->state_long_name}}
                                         </option>
                                     @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-2 mb-1">
+                                <div class="col-sm-2 mb-1" >
                                     <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" value="{{$AVPDetails->zip != ''  ? $AVPDetails->zip : ''}}"  required placeholder="Zip">
                                 </div>
+                                  <div class="col-sm-2" id="ch_avp_country-container" style="display: none;">
+                                    <select name="ch_avp_country" id="ch_avp_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}"
+                                            @if(isset($AVPDetails->country_id) && $AVPDetails->country_id == $country->id) selected @endif>
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             </div>
 
                              <!-- /.form group -->
@@ -233,15 +262,15 @@
                                 <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" value="{{$MVPDetails->street_address != ''  ? $MVPDetails->street_address : ''}}"  required placeholder="Address">
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="col-sm-5 mb-1">
+                                <div class="col-sm-3 mb-1">
                                 <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" value="{{$MVPDetails->city != ''  ? $MVPDetails->city : ''}}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="ch_mvp_state" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_mvp_state" id="ch_mvp_state"class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
-                                        <option value="{{$state->state_short_name}}"
-                                            @if($MVPDetails->state == $state->state_short_name) selected @endif>
+                                        <option value="{{$state->id}}"
+                                            @if(isset($MVPDetails->state_id) && $MVPDetails->state_id == $state->id) selected @endif>
                                             {{$state->state_long_name}}
                                         </option>
                                     @endforeach
@@ -250,10 +279,21 @@
                                 <div class="col-sm-2 mb-1">
                                     <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" value="{{$MVPDetails->zip != ''  ? $MVPDetails->zip : ''}}"  required placeholder="Zip">
                                 </div>
+                                <div class="col-sm-2"  id="ch_mvp_country-container" style="display: none;">
+                                    <select name="ch_mvp_country" id="ch_mvp_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}"
+                                            @if(isset($MVPDetails->country_id) && $MVPDetails->country_id == $country->id) selected @endif>
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             </div>
 
                             <!-- /.form group -->
-                            <div class="treas-field form-group row">
+                            <div class="trs-field form-group row">
                                 <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" value="{{$TRSDetails->first_name != ''  ? $TRSDetails->first_name : ''}}" required placeholder="First Name" >
@@ -273,15 +313,15 @@
                                 <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" value="{{$TRSDetails->street_address != ''  ? $TRSDetails->street_address : ''}}"  required placeholder="Address">
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="col-sm-5 mb-1">
+                                <div class="col-sm-3 mb-1">
                                 <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" value="{{$TRSDetails->city != ''  ? $TRSDetails->city : ''}}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="ch_trs_state" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_trs_state" id="ch_trs_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
-                                        <option value="{{$state->state_short_name}}"
-                                            @if($TRSDetails->state == $state->state_short_name) selected @endif>
+                                        <option value="{{$state->id}}"
+                                            @if(isset($TRSDetails->state_id) && $TRSDetails->state_id == $state->id) selected @endif>
                                             {{$state->state_long_name}}
                                         </option>
                                     @endforeach
@@ -290,6 +330,17 @@
                                 <div class="col-sm-2 mb-1">
                                     <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" value="{{$TRSDetails->zip != ''  ? $TRSDetails->zip : ''}}"  required placeholder="Zip">
                                 </div>
+                                  <div class="col-sm-2" id="ch_trs_country-container" style="display: none;">
+                                    <select name="ch_trs_country" id="ch_trs_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}"
+                                            @if(isset($TRSDetails->country_id) && $TRSDetails->country_id == $country->id) selected @endif>
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             </div>
 
                             <!-- /.form group -->
@@ -313,15 +364,15 @@
                                 <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" value="{{$SECDetails->street_address != ''  ? $SECDetails->street_address : ''}}"  required placeholder="Address">
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="col-sm-5 mb-1">
+                                <div class="col-sm-3 mb-1">
                                 <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" value="{{$SECDetails->city != ''  ? $SECDetails->city : ''}}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="ch_sec_state" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_sec_state" id="ch_sec_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
-                                        <option value="{{$state->state_short_name}}"
-                                            @if($SECDetails->state == $state->state_short_name) selected @endif>
+                                        <option value="{{$state->id}}"
+                                            @if(isset($SECDetails->state_id) && $SECDetails->state_id == $state->id) selected @endif>
                                             {{$state->state_long_name}}
                                         </option>
                                     @endforeach
@@ -330,7 +381,19 @@
                                 <div class="col-sm-2 mb-1">
                                     <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" value="{{$SECDetails->zip != ''  ? $SECDetails->zip : ''}}"  required placeholder="Zip">
                                 </div>
+                                 <div class="col-sm-2" id="ch_sec_country-container" style="display: none;">
+                                    <select name="ch_sec_country" id="ch_sec_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}"
+                                            @if(isset($SECDetails->country_id) && $SECDetails->country_id == $country->id) selected @endif>
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+                            </div>
+                        </div>
 
                         </div>
                     </div>
@@ -356,6 +419,45 @@
 @endsection
 @section('customscript')
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Define the sections we need to handle
+    const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
+
+    // Special state IDs that should show the country field
+    const specialStates = [52, 53, 54, 55];
+
+    // Process each section
+    sections.forEach(section => {
+        const stateDropdown = document.getElementById(`ch_${section}_state`);
+        const countryContainer = document.getElementById(`ch_${section}_country-container`);
+        const countrySelect = document.getElementById(`ch_${section}_country`);
+
+        // Only proceed if all elements exist
+        if (stateDropdown && countryContainer && countrySelect) {
+            // Function to toggle country field visibility
+            function toggleCountryField() {
+                const selectedStateId = parseInt(stateDropdown.value) || 0;
+
+                if (specialStates.includes(selectedStateId)) {
+                    countryContainer.style.display = 'flex';
+                    countrySelect.setAttribute('required', 'required');
+                } else {
+                    countryContainer.style.display = 'none';
+                    countrySelect.removeAttribute('required');
+                    countrySelect.value = "";
+                }
+            }
+
+            // Set initial state
+            toggleCountryField();
+
+            // Add event listener
+            stateDropdown.addEventListener('change', toggleCountryField);
+        }
+    });
+});
+
+
 // Disable fields, links and buttons
 var $chIsActive = @json($chIsActive);
 $(document).ready(function () {
@@ -397,7 +499,7 @@ function handleVacantCheckbox(checkboxId, fieldClass) {
 handleVacantCheckbox("MVPVacant", "mvp-field");
 handleVacantCheckbox("AVPVacant", "avp-field");
 handleVacantCheckbox("SecVacant", "sec-field");
-handleVacantCheckbox("TreasVacant", "treas-field");
+handleVacantCheckbox("TreasVacant", "trs-field");
 
 $(document).ready(function() {
     // Function to load the coordinator list based on the selected value

@@ -19,7 +19,7 @@
                         $thisDate = \Carbon\Carbon::now();
                     @endphp
                     <div class="col-md-12"><br><br></div>
-                        <h2 class="text-center"> MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{ $chapterDetails[0]->state }} </h2>
+                        <h2 class="text-center"> MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{ $chapterDetails[0]->state->state_short_name }} </h2>
                         <h4 class="text-center"> <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</h4>
                     <div class="col-md-12"><br></div>
                     <h4 class="text-center"><?php if(!$chapterDetails[0]->financial_report_received) echo "<br>Please complete the report below with finanacial information about your chapter.<br>

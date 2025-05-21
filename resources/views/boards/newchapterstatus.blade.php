@@ -87,7 +87,13 @@
                         <div class="board-info">
                             <div class="info-row">
                                 <div class="info-label">Name:</div>
-                                <div class="info-data"> {{ $chDetails->name }}, {{$stateShortName}}</div>
+                                <div class="info-data"> {{ $chDetails->name }},
+                                     @if($chDetails->state_id < 52)
+                                        {{$chDetails->state->state_short_name}}
+                                    @else
+                                        {{$chDetails->country->short_name}}
+                                    @endif
+                                </div>
                             </div>
                         </div>
 
@@ -126,7 +132,7 @@
                                         @endif
                                     @endforeach
                                 @else
-                                    {{ $chDetails->pendingPresident->state }}
+                                    {{ $chDetails->pendingPresident->state->state_short_name }}
                                 @endif
                                 {{ $chDetails->pendingPresident->zip }}</div>
                         </div>

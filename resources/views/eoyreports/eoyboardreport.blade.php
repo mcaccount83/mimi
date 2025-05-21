@@ -71,7 +71,13 @@
                                     {{ $list->conference->short_name }}
                                 @endif
                             </td>
-                            <td>{{ $list->state->state_short_name }}</td>
+                            <td>
+                                @if($list->state_id < 52)
+                                    {{$list->state->state_short_name}}
+                                @else
+                                    {{$list->country->short_name}}
+                                @endif
+                            </td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
                             <td @if($list->documents->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>

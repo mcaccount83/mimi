@@ -48,8 +48,9 @@ class BoardPendingController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
 
         $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'userType' => $userType, 'userAdmin' => $userAdmin,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'userType' => $userType, 'userAdmin' => $userAdmin, 'allCountries' => $allCountries,
         ];
 
         return view('boards.newchapterstatus')->with($data);

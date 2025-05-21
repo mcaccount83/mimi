@@ -123,10 +123,10 @@
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label"><br></label>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-3">
                                     <input type="text" name="cord_city" id="cord_city" class="form-control" placeholder="City" required >
                                     </div>
-                                    <div class="col-sm-3">
+                                    {{-- <div class="col-sm-3">
                                         <select id="cord_state" name="cord_state" class="form-control" style="width: 100%;" required>
                                             <option value="">Select State</option>
                                             @foreach($allStates as $state)
@@ -138,7 +138,32 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="text" name="cord_zip" id="cord_zip" class="form-control" placeholder="Zip" required >
-                                    </div>
+                                    </div> --}}
+
+                                    <div class="col-sm-3 mb-1">
+                                    <select name="cord_state" id="cord_state" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select State</option>
+                                        @foreach($allStates as $state)
+                                        <option value="{{$state->id}}">
+                                            {{$state->state_long_name}}
+                                        </option>
+                                    @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-2 mb-1">
+                                    <input type="text" name="cord_zip" id="cord_zip" class="form-control" placeholder="Zip" required >
+                                </div>
+                            <div class="col-sm-2 mb-1" id="cord_country-container" style="display: none;">
+                                <select name="cord_country" id="cord_country" class="form-control" style="width: 100%;" required>
+                                    <option value="">Select Country</option>
+                                    @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}">
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                                 </div>
                                  <!-- /.form group -->
                                  <div class="form-group row">
@@ -182,6 +207,39 @@
 @endsection
 @section('customscript')
 <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+    // Chapter state and country
+    const stateDropdown = document.getElementById('cord_state');
+    const countryContainer = document.getElementById('cord_country-container');
+    const countrySelect = document.getElementById('cord_country');
+
+    // Check if elements exist before adding listeners
+    if (stateDropdown && countryContainer && countrySelect) {
+        // Initially set country field requirement based on state selection
+        toggleCountryField();
+
+        // Add event listener to the state dropdown
+        stateDropdown.addEventListener('change', toggleCountryField);
+
+        function toggleCountryField() {
+            const selectedStateId = parseInt(stateDropdown.value) || 0;
+            const specialStates = [52, 53, 54, 55]; // States that should show the country field
+
+            if (specialStates.includes(selectedStateId)) {
+                countryContainer.style.display = 'flex'; // or 'block' depending on your layout
+                countrySelect.setAttribute('required', 'required');
+            } else {
+                countryContainer.style.display = 'none';
+                countrySelect.removeAttribute('required');
+                // Optionally clear the country selection when hidden
+                countrySelect.value = "";
+            }
+        }
+    }
+
+});
+
 
 function checkDuplicateEmail(email, id) {
         $.ajax({

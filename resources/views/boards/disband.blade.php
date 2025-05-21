@@ -16,7 +16,13 @@
                                 $thisDate = \Illuminate\Support\Carbon::now();
                             @endphp
                             <div class="col-md-12"><br><br></div>
-                            <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
+                            <h2 class="text-center">MOMS Club of {{ $chDetails->name }},
+                                 @if($chDetails->state_id < 52)
+                                    {{$chDetails->state->state_short_name}}
+                                @else
+                                    {{$chDetails->country->short_name}}
+                                @endif
+                            </h2>
                             <h4 class="text-center">Disbanding Checklist</h4>
                         </div>
                         <div class="col-md-12" style="color: red;"><center>Our records indicate that your chpater has disbanded.</center></div>
@@ -60,7 +66,7 @@
                                             <label class="custom-control-label" for="FinalPayment">YES</label>
                                         </div>
                                         @if ($chDisbanded?->final_payment != '1')
-                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editreregpayment', ['id' => $chDisbanded->id]) }}'">PAY HERE</button>
+                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
                                         @endif
                                     </div>
                                 </div>
@@ -73,7 +79,7 @@
                                             <label class="custom-control-label" for="DonateFunds">YES</label>
                                         </div>
                                         @if ($chDisbanded?->donate_funds != '1')
-                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editdonate', ['id' => $chDisbanded->id]) }}'">DONATE HERE</button>
+                                                <button type="button" class="btn btn-primary btn-xs ml-3 mb-1" onclick="window.location.href='{{ route('board.editdonate', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
                                         @endif
                                     </div>
                                 </div>

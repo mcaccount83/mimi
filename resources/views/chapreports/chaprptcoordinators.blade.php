@@ -53,7 +53,13 @@
                                     {{ $chapter->conference->short_name }}
                                 @endif
                             </td>
-                            <td>{{ $chapter->state->state_short_name }}</td>
+                            <td>
+                                @if($chapter->state_id < 52)
+                                    {{$chapter->state->state_short_name}}
+                                @else
+                                    {{$chapter->country->short_name}}
+                                @endif
+                            </td>
                             <td>{{ $chapter->name }}</td>
                             @for ($posRow = 7; $posRow > 0; $posRow--)
                                 @php $positionFound = false; @endphp

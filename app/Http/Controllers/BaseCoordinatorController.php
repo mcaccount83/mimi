@@ -10,6 +10,7 @@ use App\Models\Month;
 use App\Models\RecognitionGifts;
 use App\Models\Region;
 use App\Models\State;
+use App\Models\Country;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -252,6 +253,7 @@ class BaseCoordinatorController extends Controller
             ->orwhere('id', '0')
             ->get();
         $allStates = State::all();  // Full List for Dropdown Menu
+        $allCountries = Country::all();  // Full List for Dropdown Menu
         $allMonths = Month::all();  // Full List for Dropdown Menu
         $allRecognitionGifts = RecognitionGifts::all();  // Full List for Dropdown Menu
         $allAdminRoles = AdminRole::all();  // Full List for Dropdown Menu
@@ -269,7 +271,7 @@ class BaseCoordinatorController extends Controller
             'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'cdAdminRole' => $cdAdminRole,
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths, 'secondaryPositionId' => $secondaryPositionId,
             'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid, 'secondaryPositionShort' => $secondaryPositionShort,
-            'allRecognitionGifts' => $allRecognitionGifts,
+            'allRecognitionGifts' => $allRecognitionGifts, 'allCountries' => $allCountries
         ];
     }
 }

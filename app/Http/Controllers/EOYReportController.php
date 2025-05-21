@@ -12,7 +12,7 @@ use App\Models\Coordinators;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
-use App\Models\IncomingBoard;
+use App\Models\BoardsIncoming;
 use App\Models\State;
 use App\Models\User;
 use App\Models\Website;
@@ -448,9 +448,9 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $status = 'fail'; // Default to 'fail'
 
-        $incomingBoardDetails = IncomingBoard::where('chapter_id', $chapter_id)->get();
+        $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $chapter_id)->get();
 
-        if ($incomingBoardDetails && count($incomingBoardDetails) > 0) {
+        if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
             DB::beginTransaction();
             try {
                 $boardDetails = Boards::where('chapter_id', $chapter_id)->get();
@@ -469,7 +469,7 @@ class EOYReportController extends Controller implements HasMiddleware
                     Boards::where('chapter_id', $chapter_id)->delete();
                 }
 
-                foreach ($incomingBoardDetails as $incomingRecord) {
+                foreach ($BoardsIncomingDetails as $incomingRecord) {
                     $existingUser = User::where('email', $incomingRecord->email)->first();
                     if ($existingUser) {
                         $existingUser->first_name = $incomingRecord->first_name;
@@ -502,9 +502,9 @@ class EOYReportController extends Controller implements HasMiddleware
                         'chapter_id' => $chapter_id,
                         'street_address' => $incomingRecord->street_address,
                         'city' => $incomingRecord->city,
-                        'state' => $incomingRecord->state,
+                        'state_id' => $incomingRecord->state_id,
                         'zip' => $incomingRecord->zip,
-                        'country' => 'USA',
+                        'country_id' => $incomingRecord->country_id,
                         'phone' => $incomingRecord->phone,
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -515,7 +515,7 @@ class EOYReportController extends Controller implements HasMiddleware
                 $documents->new_board_active = 1;
                 $documents->save();
 
-                IncomingBoard::where('chapter_id', $chapter_id)->delete();
+                BoardsIncoming::where('chapter_id', $chapter_id)->delete();
 
                 DB::commit();
                 $status = 'success'; // Set status to success if everything goes well
@@ -542,8 +542,8 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
 
-        // $boards = IncomingBoard::find($id);
-        $boards = IncomingBoard::where('chapter_id', $id)->get();
+        // $boards = BoardsIncoming::find($id);
+        $boards = BoardsIncoming::where('chapter_id', $id)->get();
         if ($boards && $boards->count() > 0) {
             $bdDetails = $boards->groupBy('board_position_id');
         } else {
@@ -551,7 +551,7 @@ class EOYReportController extends Controller implements HasMiddleware
         }
 
         // $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
         $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
         $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
@@ -561,6 +561,8 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
+                $allCountries = $baseQuery['allCountries'];
+
 
         // Check if the board activation button was clicked
         if ($request->has('board') && $request->input('board') === 'active') {
@@ -586,7 +588,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = [
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'allWebLinks' => $allWebLinks, 'allStates' => $allStates,
+            'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
         return view('eoyreports.editboardreport')->with($data);
@@ -658,27 +660,27 @@ class EOYReportController extends Controller implements HasMiddleware
 
             // President Info
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
-                $PREDetails = IncomingBoard::where('chapter_id', $chId)
+                $PREDetails = BoardsIncoming::where('chapter_id', $chId)
                     ->where('board_position_id', '1')
                     ->get();
                 $presId = $request->input('presID');
                 if (count($PREDetails) != 0) {
-                    IncomingBoard::where('id', $presId)
+                    BoardsIncoming::where('id', $presId)
                         ->update([   // Update board details
                             'first_name' => $request->input('ch_pre_fname'),
                             'last_name' => $request->input('ch_pre_lname'),
                             'email' => $request->input('ch_pre_email'),
                             'street_address' => $request->input('ch_pre_street'),
                             'city' => $request->input('ch_pre_city'),
-                            'state' => $request->input('ch_pre_state'),
+                            'state_id' => $request->input('ch_pre_state'),
                             'zip' => $request->input('ch_pre_zip'),
-                            'country' => 'USA',
+                            'country_id' => $request->input('ch_pre_country') ?? '198',
                             'phone' => $request->input('ch_pre_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
                         ]);
                 } else {
-                    IncomingBoard::create([  // Create board details if new
+                    BoardsIncoming::create([  // Create board details if new
                         'chapter_id' => $chId,
                         'board_position_id' => '1',
                         'first_name' => $request->input('ch_pre_fname'),
@@ -686,9 +688,9 @@ class EOYReportController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_pre_email'),
                         'street_address' => $request->input('ch_pre_street'),
                         'city' => $request->input('ch_pre_city'),
-                        'state' => $request->input('ch_pre_state'),
+                        'state_id' => $request->input('ch_pre_state'),
                         'zip' => $request->input('ch_pre_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_pre_country') ?? '198',
                         'phone' => $request->input('ch_pre_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -697,27 +699,27 @@ class EOYReportController extends Controller implements HasMiddleware
             }
 
             // AVP Info
-            $AVPDetails = IncomingBoard::where('chapter_id', $chId)
+            $AVPDetails = BoardsIncoming::where('chapter_id', $chId)
                 ->where('board_position_id', '2')
                 ->get();
 
             if (count($AVPDetails) > 0) {
                 if ($request->input('AVPVacant') == 'on') {
-                    IncomingBoard::where('chapter_id', $chId)
+                    BoardsIncoming::where('chapter_id', $chId)
                         ->where('board_position_id', '2')
                         ->delete();  // Delete board member if now Vacant
                 } else {
                     $AVPId = $request->input('avpID');
-                    IncomingBoard::where('id', $AVPId)
+                    BoardsIncoming::where('id', $AVPId)
                         ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_avp_fname'),
                             'last_name' => $request->input('ch_avp_lname'),
                             'email' => $request->input('ch_avp_email'),
                             'street_address' => $request->input('ch_avp_street'),
                             'city' => $request->input('ch_avp_city'),
-                            'state' => $request->input('ch_avp_state'),
+                            'state_id' => $request->input('ch_avp_state'),
                             'zip' => $request->input('ch_avp_zip'),
-                            'country' => 'USA',
+                            'country_id' => $request->input('ch_avp_country') ?? '198',
                             'phone' => $request->input('ch_avp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
@@ -725,7 +727,7 @@ class EOYReportController extends Controller implements HasMiddleware
                 }
             } else {
                 if ($request->input('AVPVacant') != 'on') {
-                    IncomingBoard::create([  // Create board details if new
+                    BoardsIncoming::create([  // Create board details if new
                         'chapter_id' => $chId,
                         'board_position_id' => '2',
                         'first_name' => $request->input('ch_avp_fname'),
@@ -733,9 +735,9 @@ class EOYReportController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_avp_email'),
                         'street_address' => $request->input('ch_avp_street'),
                         'city' => $request->input('ch_avp_city'),
-                        'state' => $request->input('ch_avp_state'),
+                        'state_id' => $request->input('ch_avp_state'),
                         'zip' => $request->input('ch_avp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_avp_country') ?? '198',
                         'phone' => $request->input('ch_avp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -744,27 +746,27 @@ class EOYReportController extends Controller implements HasMiddleware
             }
 
             // MVP Info
-            $MVPDetails = IncomingBoard::where('chapter_id', $chId)
+            $MVPDetails = BoardsIncoming::where('chapter_id', $chId)
                 ->where('board_position_id', '3')
                 ->get();
 
             if (count($MVPDetails) > 0) {
                 if ($request->input('MVPVacant') == 'on') {
-                    IncomingBoard::where('chapter_id', $chId)
+                    BoardsIncoming::where('chapter_id', $chId)
                         ->where('board_position_id', '3')
                         ->delete();  // Delete board member if now Vacant
                 } else {
                     $MVPId = $request->input('mvpID');
-                    IncomingBoard::where('id', $MVPId)
+                    BoardsIncoming::where('id', $MVPId)
                         ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_mvp_fname'),
                             'last_name' => $request->input('ch_mvp_lname'),
                             'email' => $request->input('ch_mvp_email'),
                             'street_address' => $request->input('ch_mvp_street'),
                             'city' => $request->input('ch_mvp_city'),
-                            'state' => $request->input('ch_mvp_state'),
+                            'state_id' => $request->input('ch_mvp_state'),
                             'zip' => $request->input('ch_mvp_zip'),
-                            'country' => 'USA',
+                            'country_id' => $request->input('ch_mvp_country') ?? '198',
                             'phone' => $request->input('ch_mvp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
@@ -772,7 +774,7 @@ class EOYReportController extends Controller implements HasMiddleware
                 }
             } else {
                 if ($request->input('MVPVacant') != 'on') {
-                    IncomingBoard::create([  // Create board details if new
+                    BoardsIncoming::create([  // Create board details if new
                         'chapter_id' => $chId,
                         'board_position_id' => '3',
                         'first_name' => $request->input('ch_mvp_fname'),
@@ -780,9 +782,9 @@ class EOYReportController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_mvp_email'),
                         'street_address' => $request->input('ch_mvp_street'),
                         'city' => $request->input('ch_mvp_city'),
-                        'state' => $request->input('ch_mvp_state'),
+                        'state_id' => $request->input('ch_mvp_state'),
                         'zip' => $request->input('ch_mvp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_mvp_country') ?? '198',
                         'phone' => $request->input('ch_mvp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -791,27 +793,27 @@ class EOYReportController extends Controller implements HasMiddleware
             }
 
             // TRS Info
-            $TRSDetails = IncomingBoard::where('chapter_id', $chId)
+            $TRSDetails = BoardsIncoming::where('chapter_id', $chId)
                 ->where('board_position_id', '4')
                 ->get();
 
             if (count($TRSDetails) > 0) {
                 if ($request->input('TreasVacant') == 'on') {
-                    IncomingBoard::where('chapter_id', $chId)
+                    BoardsIncoming::where('chapter_id', $chId)
                         ->where('board_position_id', '4')
                         ->delete();  // Delete board member if now Vacant
                 } else {
                     $TRSId = $request->input('trsID');
-                    IncomingBoard::where('id', $TRSId)
+                    BoardsIncoming::where('id', $TRSId)
                         ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_trs_fname'),
                             'last_name' => $request->input('ch_trs_lname'),
                             'email' => $request->input('ch_trs_email'),
                             'street_address' => $request->input('ch_trs_street'),
                             'city' => $request->input('ch_trs_city'),
-                            'state' => $request->input('ch_trs_state'),
+                            'state_id' => $request->input('ch_trs_state'),
                             'zip' => $request->input('ch_trs_zip'),
-                            'country' => 'USA',
+                            'country_id' => $request->input('ch_trs_country') ?? '198',
                             'phone' => $request->input('ch_trs_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
@@ -819,7 +821,7 @@ class EOYReportController extends Controller implements HasMiddleware
                 }
             } else {
                 if ($request->input('TreasVacant') != 'on') {
-                    IncomingBoard::create([  // Create board details if new
+                    BoardsIncoming::create([  // Create board details if new
                         'chapter_id' => $chId,
                         'board_position_id' => '4',
                         'first_name' => $request->input('ch_trs_fname'),
@@ -827,9 +829,9 @@ class EOYReportController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_trs_email'),
                         'street_address' => $request->input('ch_trs_street'),
                         'city' => $request->input('ch_trs_city'),
-                        'state' => $request->input('ch_trs_state'),
+                        'state_id' => $request->input('ch_trs_state'),
                         'zip' => $request->input('ch_trs_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_trs_country') ?? '198',
                         'phone' => $request->input('ch_trs_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,
@@ -838,27 +840,27 @@ class EOYReportController extends Controller implements HasMiddleware
             }
 
             // SEC Info
-            $SECDetails = IncomingBoard::where('chapter_id', $chId)
+            $SECDetails = BoardsIncoming::where('chapter_id', $chId)
                 ->where('board_position_id', '5')
                 ->get();
 
             if (count($SECDetails) > 0) {
                 if ($request->input('SecVacant') == 'on') {
-                    IncomingBoard::where('chapter_id', $chId)
+                    BoardsIncoming::where('chapter_id', $chId)
                         ->where('board_position_id', '5')
                         ->delete();  // Delete board member if now Vacant
                 } else {
                     $SECId = $request->input('secID');
-                    IncomingBoard::where('id', $SECId)
+                    BoardsIncoming::where('id', $SECId)
                         ->update([   // Update board details if already exists
                             'first_name' => $request->input('ch_sec_fname'),
                             'last_name' => $request->input('ch_sec_lname'),
                             'email' => $request->input('ch_sec_email'),
                             'street_address' => $request->input('ch_sec_street'),
                             'city' => $request->input('ch_sec_city'),
-                            'state' => $request->input('ch_sec_state'),
+                            'state_id' => $request->input('ch_sec_state'),
                             'zip' => $request->input('ch_sec_zip'),
-                            'country' => 'USA',
+                            'country_id' => $request->input('ch_sec_country') ?? '198',
                             'phone' => $request->input('ch_sec_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
@@ -866,7 +868,7 @@ class EOYReportController extends Controller implements HasMiddleware
                 }
             } else {
                 if ($request->input('SecVacant') != 'on') {
-                    IncomingBoard::create([  // Create board details if new
+                    BoardsIncoming::create([  // Create board details if new
                         'chapter_id' => $chId,
                         'board_position_id' => '5',
                         'first_name' => $request->input('ch_sec_fname'),
@@ -874,9 +876,9 @@ class EOYReportController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_sec_email'),
                         'street_address' => $request->input('ch_sec_street'),
                         'city' => $request->input('ch_sec_city'),
-                        'state' => $request->input('ch_sec_state'),
+                        'state_id' => $request->input('ch_sec_state'),
                         'zip' => $request->input('ch_sec_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_sec_country') ?? '198',
                         'phone' => $request->input('ch_sec_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => $lastupdatedDate,

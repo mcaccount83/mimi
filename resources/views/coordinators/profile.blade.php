@@ -111,23 +111,34 @@
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label"><br></label>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-3">
                                     <input type="text" name="cord_city" id="cord_city" class="form-control" value="{{ $cdDetails->city }}"  required >
                                     </div>
                                     <div class="col-sm-3">
-                                        <select name="cord_state" class="form-control" style="width: 100%;" required>
-                                            <option value="">Select State</option>
-                                            @foreach($allStates as $state)
-                                                <option value="{{$state->state_short_name}}"
-                                                    @if($cdDetails->state == $state->state_short_name) selected @endif>
+                                        <select name="cord_state" id="cord_state" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select State</option>
+                                        @foreach($allStates as $state)
+                                        <option value="{{$state->id}}"
+                                            @if(isset($cdDetails->state_id) && $cdDetails->state_id == $state->id) selected @endif>
                                                     {{$state->state_long_name}}
                                                 </option>
-                                            @endforeach
-                                        </select>
+                                    @endforeach
+                                    </select>
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="text" name="cord_zip" id="cord_zip" class="form-control" value="{{ $cdDetails->zip }}"  required >
                                     </div>
+                                    <div class="col-sm-2">
+                                <select name="cord_country" id="cord_country" class="form-control" style="width: 100%;" required>
+                                    <option value="">Select Country</option>
+                                    @foreach($allCountries as $country)
+                                            <option value="{{$country->id}}"
+                                            @if(isset($cdDetails->country_id) && $cdDetails->country_id == $country->id) selected @endif>
+                                                {{$country->name}}
+                                            </option>
+                                        @endforeach
+                                </select>
+                            </div>
                                 </div>
                                  <!-- /.form group -->
                                  <div class="form-group row">

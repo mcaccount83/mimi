@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
-class IncomingBoard extends Model
+class BoardsIncoming extends Model
 {
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'incoming_board_member';
+    protected $table = 'boards_incoming';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id', 'chapter_id', 'board_position_id', 'first_name', 'last_name', 'email', 'phone', 'street_address', 'city', 'state', 'zip', 'country',
+        'user_id', 'chapter_id', 'board_position_id', 'first_name', 'last_name', 'email', 'phone', 'street_address', 'city', 'state_id', 'zip', 'country_id',
         'last_updated_by', 'last_updated_date',
     ];
 
@@ -31,10 +31,10 @@ class IncomingBoard extends Model
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in boards BelongsTo 'id' in chapters
     }
 
-    public function stateName(): BelongsTo
-    {
-        return $this->belongsTo(State::class, 'state', 'state_short_name');  // 'state' in boards BelongsTo 'state_short_name' in state
-    }
+    // public function stateName(): BelongsTo
+    // {
+    //     return $this->belongsTo(State::class, 'state', 'state_short_name');  // 'state' in boards BelongsTo 'state_short_name' in state
+    // }
 
     public function position(): BelongsTo
     {

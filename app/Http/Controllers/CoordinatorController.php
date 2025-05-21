@@ -12,6 +12,7 @@ use App\Models\ForumCategorySubscription;
 use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
+use App\Models\Country;
 use App\Models\User;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
@@ -148,12 +149,13 @@ class CoordinatorController extends Controller implements HasMiddleware
         $regLongName = $region->long_name;
 
         $allStates = State::all();  // Full List for Dropdown Menu
+        $allCountries = Country::all();  // Full List for Dropdown Menu
         $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
             ->where('conference_id', $confId)
             ->get();
         $allMonths = Month::all();  // Full List for Dropdown Menu
 
-        $data = ['allStates' => $allStates, 'allMonths' => $allMonths, 'allRegions' => $allRegions, 'userName' => $userName, 'coorId' => $coorId,
+        $data = ['allStates' => $allStates, 'allMonths' => $allMonths, 'allRegions' => $allRegions, 'userName' => $userName, 'coorId' => $coorId, 'allCountries' => $allCountries,
             'confId' => $confId, 'regId' => $regId, 'confLongName' => $confLongName, 'regLongName' => $regLongName, 'confDescription' => $confDescription,
         ];
 
@@ -204,9 +206,9 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'report_id' => $reportsTo,
                     'address' => $input['cord_addr'],
                     'city' => $input['cord_city'],
-                    'state' => $input['cord_state'],
+                    'state_id' => $input['cord_state'],
                     'zip' => $input['cord_zip'],
-                    'country' => 'USA',
+                    'country_id' => $input['cord_country'] ?? '198',
                     'phone' => $input['cord_phone'],
                     'alt_phone' => $input['cord_altphone'],
                     'birthday_month_id' => $input['cord_month'],
@@ -1019,11 +1021,12 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $allStates = $baseQuery['allStates'];
         $allMonths = $baseQuery['allMonths'];
+        $allCountries = $baseQuery['allCountries'];
 
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
-            'allStates' => $allStates, 'allMonths' => $allMonths, 'cdAdminRole' => $cdAdminRole,
+            'allStates' => $allStates, 'allMonths' => $allMonths, 'cdAdminRole' => $cdAdminRole, 'allCountries' => $allCountries,
         ];
 
         return view('coordinators.editdetails')->with($data);
@@ -1060,7 +1063,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->sec_email = $request->input('cord_sec_email');
             $coordinator->address = $request->input('cord_addr');
             $coordinator->city = $request->input('cord_city');
-            $coordinator->state = $request->input('cord_state');
+            $coordinator->state_id = $request->input('cord_state');
             $coordinator->zip = $request->input('cord_zip');
             $coordinator->phone = $request->input('cord_phone');
             $coordinator->alt_phone = $request->input('cord_altphone');
@@ -1187,47 +1190,6 @@ class CoordinatorController extends Controller implements HasMiddleware
         return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
     }
 
-    // public function updateCoordRecognition(Request $request, $id): RedirectResponse
-    // {
-    //     $user = User::find($request->user()->id);
-    //     $userId = $user->id;
-
-    //     $cdDetailsUser = $user->coordinator;
-    //     $cdIdUser = $cdDetailsUser->id;
-    //     $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
-
-    //     $coordinator = Coordinators::find($id);
-
-    //     DB::beginTransaction();
-    //     try {
-    //         $coordinator->recognition_year0 = $request->input('recognition_year0');
-    //         $coordinator->recognition_year1 = $request->input('recognition_year1');
-    //         $coordinator->recognition_year2 = $request->input('recognition_year2');
-    //         $coordinator->recognition_year3 = $request->input('recognition_year3');
-    //         $coordinator->recognition_year4 = $request->input('recognition_year4');
-    //         $coordinator->recognition_year5 = $request->input('recognition_year5');
-    //         $coordinator->recognition_year6 = $request->input('recognition_year6');
-    //         $coordinator->recognition_year7 = $request->input('recognition_year7');
-    //         $coordinator->recognition_year8 = $request->input('recognition_year8');
-    //         $coordinator->recognition_year9 = $request->input('recognition_year9');
-    //         $coordinator->recognition_toptier = $request->input('recognition_toptier');
-    //         $coordinator->recognition_necklace = (int) $request->has('recognition_necklace');
-    //         $coordinator->last_updated_by = $lastUpdatedBy;
-    //         $coordinator->last_updated_date = now();
-
-    //         $coordinator->save();
-
-    //         DB::commit();
-    //     } catch (\Exception $e) {
-    //         DB::rollback();  // Rollback Transaction
-    //         Log::error($e);  // Log the error
-
-    //         return to_route('coordinators.editrecognition', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
-    //     }
-
-    //     return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
-    // }
-
     /**
      * View Coordiantor Profile
      */
@@ -1301,9 +1263,10 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdLeave = $baseQuery['cdDetails']->on_leave;
 
         $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
         $allMonths = $baseQuery['allMonths'];
 
-        $data = ['cdDetails' => $cdDetails, 'allStates' => $allStates, 'allMonths' => $allMonths,
+        $data = ['cdDetails' => $cdDetails, 'allStates' => $allStates, 'allMonths' => $allMonths, 'allCountries' => $allCountries,
             'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'displayPosition' => $displayPosition, 'secondaryPosition' => $secondaryPosition, 'ReportTo' => $ReportTo,
         ];
@@ -1341,7 +1304,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->sec_email = $request->input('cord_sec_email');
             $coordinator->address = $request->input('cord_addr');
             $coordinator->city = $request->input('cord_city');
-            $coordinator->state = $request->input('cord_state');
+            $coordinator->state_id = $request->input('cord_state');
             $coordinator->zip = $request->input('cord_zip');
             $coordinator->phone = $request->input('cord_phone');
             $coordinator->alt_phone = $request->input('cord_altphone');

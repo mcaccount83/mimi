@@ -190,7 +190,9 @@
                                 <br>
                                 {{$cdDetails->address}}
                                 <br>
-                                {{$cdDetails->city}},{{$cdDetails->state}}&nbsp;{{$cdDetails->zip}}
+                                {{$cdDetails->city}}, {{$cdDetails->state->state_short_name}}&nbsp;{{$cdDetails->zip}}
+                                <br>
+                                {{$cdDetails->country->short_name}}
                             </div>
                             <div class="col-md-6">
                                 Birthday: {{$cdDetails->birthday_month}} {{$cdDetails->birthday_day}}<br>

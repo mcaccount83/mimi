@@ -35,7 +35,13 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }},
+                        @if($chDetails->state_id < 52)
+                            {{$chDetails->state->state_short_name}}
+                        @else
+                            {{$chDetails->country->short_name}}
+                        @endif
+                    </h3>
                   <p class="text-center">{{ $conferenceDescription }} Conference
                   </p>
                   <div class="form-group row mt-1">
@@ -213,25 +219,34 @@
                                 <input type="text" name="ch_pre_street" id="ch_pre_street" class="form-control" value="{{ $chDetails->pendingPresident->street_address }}"  required  placeholder="Address">
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" value="{{ $chDetails->pendingPresident->city }}"  required placeholder="City">
+                                <div class="col-sm-3 mb-1">
+                                <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" value="{{ $PresDetails->city }}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="ch_pre_state" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_pre_state" id="ch_pre_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
-                                            <option value="{{$state->id}}"
-                                                @if($chDetails->pendingPresident->state == $state->id) selected @endif>
-                                                {{$state->state_long_name}}
-                                            </option>
-                                        @endforeach
-
-
+                                        <option value="{{$state->id}}"
+                                            @if($PresDetails->state_id == $state->id) selected @endif>
+                                            {{$state->state_long_name}}
+                                        </option>
+                                    @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" value="{{ $chDetails->pendingPresident->zip }}"  required placeholder="Zip">
+                                    <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" value="{{ $PresDetails->zip }}"  required placeholder="Zip">
                                 </div>
+                                <div class="col-sm-2" id="ch_pre_country-container" style="display: none;">
+                                    <select name="ch_pre_country" id="ch_pre_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}"
+                                            @if($PresDetails->country_id == $country->id) selected @endif>
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             </div>
 
                         </div>
@@ -268,6 +283,44 @@
 @endsection
 @section('customscript')
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Define the sections we need to handle
+    const sections = ['pre'];
+
+    // Special state IDs that should show the country field
+    const specialStates = [52, 53, 54, 55];
+
+    // Process each section
+    sections.forEach(section => {
+        const stateDropdown = document.getElementById(`ch_${section}_state`);
+        const countryContainer = document.getElementById(`ch_${section}_country-container`);
+        const countrySelect = document.getElementById(`ch_${section}_country`);
+
+        // Only proceed if all elements exist
+        if (stateDropdown && countryContainer && countrySelect) {
+            // Function to toggle country field visibility
+            function toggleCountryField() {
+                const selectedStateId = parseInt(stateDropdown.value) || 0;
+
+                if (specialStates.includes(selectedStateId)) {
+                    countryContainer.style.display = 'flex';
+                    countrySelect.setAttribute('required', 'required');
+                } else {
+                    countryContainer.style.display = 'none';
+                    countrySelect.removeAttribute('required');
+                    countrySelect.value = "";
+                }
+            }
+
+            // Set initial state
+            toggleCountryField();
+
+            // Add event listener
+            stateDropdown.addEventListener('change', toggleCountryField);
+        }
+    });
+});
+
 document.addEventListener("DOMContentLoaded", function() {
     const statusField = document.getElementById("ch_active");
 

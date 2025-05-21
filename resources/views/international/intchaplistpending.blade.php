@@ -55,7 +55,13 @@
                                     {{ $list->conference->short_name }}
                                 @endif
                             </td>
-                            <td>{{ $list->state->state_short_name }}</td>
+                            <td>
+                                @if($list->state_id < 52)
+                                    {{$list->state->state_short_name}}
+                                @else
+                                    {{$list->country->short_name}}
+                                @endif
+                            </td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->pendingPresident->first_name }} {{ $list->pendingPresident->last_name }}</td>
                             <td class="email-column">

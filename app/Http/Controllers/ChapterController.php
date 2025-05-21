@@ -31,6 +31,7 @@ use App\Models\ProbationSubmission;
 use App\Models\Region;
 use App\Models\Resources;
 use App\Models\State;
+use App\Models\Country;
 use App\Models\Status;
 use App\Models\User;
 use App\Models\Website;
@@ -299,6 +300,7 @@ class ChapterController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
+        $countryShortName = $baseQuery['countryShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chConfId = $baseQuery['chConfId'];
@@ -343,7 +345,7 @@ class ChapterController extends Controller implements HasMiddleware
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
             'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
-            'resources' => $resources,
+            'resources' => $resources, 'countryShortName' => $countryShortName,
         ];
 
         return view('chapters.view')->with($data);
@@ -465,9 +467,9 @@ class ChapterController extends Controller implements HasMiddleware
                     'phone' => $boardDetail->phone,
                     'street_address' => $boardDetail->street_address,
                     'city' => $boardDetail->city,
-                    'state' => $boardDetail->state,
+                    'state_id' => $boardDetail->state_id,
                     'zip' => $boardDetail->zip,
-                    'country' => $boardDetail->country,
+                    'country_id' => $boardDetail->country_id,
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
                 ]);
@@ -597,9 +599,9 @@ class ChapterController extends Controller implements HasMiddleware
                     'phone' => $boardDetail->phone,
                     'street_address' => $boardDetail->street_address,
                     'city' => $boardDetail->city,
-                    'state' => $boardDetail->state,
+                    'state_id' => $boardDetail->state_id,
                     'zip' => $boardDetail->zip,
-                    'country' => $boardDetail->country,
+                    'country_id' => $boardDetail->country_id,
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
                 ]);
@@ -690,6 +692,7 @@ class ChapterController extends Controller implements HasMiddleware
         $confId = $user['user_confId'];
 
         $allStates = State::all();  // Full List for Dropdown Menu
+        $allCountries = Country::all();  // Full List for Dropdown Menu
         $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
             ->where('conference_id', $confId)
             ->get();
@@ -730,7 +733,7 @@ class ChapterController extends Controller implements HasMiddleware
         $pcDetails = $pcDetails->unique('cid');  // Remove duplicates based on the 'cid' field
 
         $data = ['allRegions' => $allRegions, 'allStatuses' => $allStatuses, 'pcDetails' => $pcDetails,
-            'allStates' => $allStates,
+            'allStates' => $allStates, 'allCountries' => $allCountries
         ];
 
         return view('chapters.addnew')->with($data);
@@ -745,7 +748,6 @@ class ChapterController extends Controller implements HasMiddleware
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
         $conference = $user['user_confId'];
-        $country = 'USA';
         $currentMonth = date('m');
         $currentYear = date('Y');
 
@@ -762,7 +764,7 @@ class ChapterController extends Controller implements HasMiddleware
                 'name' => $input['ch_name'],
                 'sanitized_name' => $sanitizedName,
                 'state_id' => $input['ch_state'],
-                'country_short_name' => $country,
+                'country_id' => $input['ch_country'] ?? '198',
                 'conference_id' => $conference,
                 'region_id' => $input['ch_region'],
                 'ein' => $input['ch_ein'],
@@ -811,9 +813,9 @@ class ChapterController extends Controller implements HasMiddleware
                     'chapter_id' => $chapterId,
                     'street_address' => $input['ch_pre_street'],
                     'city' => $input['ch_pre_city'],
-                    'state' => $input['ch_pre_state'],
+                    'state_id' => $input['ch_pre_state'],
                     'zip' => $input['ch_pre_zip'],
-                    'country' => $country,
+                    'country_id' => $input['ch_pre_country'] ?? '198',
                     'phone' => $input['ch_pre_phone'],
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
@@ -845,9 +847,9 @@ class ChapterController extends Controller implements HasMiddleware
                     'chapter_id' => $chapterId,
                     'street_address' => $input['ch_avp_street'],
                     'city' => $input['ch_avp_city'],
-                    'state' => $input['ch_avp_state'],
+                    'state_id' => $input['ch_avp_state'],
                     'zip' => $input['ch_avp_zip'],
-                    'country' => $country,
+                    'country_id' => $input['ch_avp_country'] ?? '198',
                     'phone' => $input['ch_avp_phone'],
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
@@ -879,9 +881,9 @@ class ChapterController extends Controller implements HasMiddleware
                     'chapter_id' => $chapterId,
                     'street_address' => $input['ch_mvp_street'],
                     'city' => $input['ch_mvp_city'],
-                    'state' => $input['ch_mvp_state'],
+                    'state_id' => $input['ch_mvp_state'],
                     'zip' => $input['ch_mvp_zip'],
-                    'country' => $country,
+                    'country_id' => $input['ch_mvp_country'] ?? '198',
                     'phone' => $input['ch_mvp_phone'],
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
@@ -913,9 +915,9 @@ class ChapterController extends Controller implements HasMiddleware
                     'chapter_id' => $chapterId,
                     'street_address' => $input['ch_trs_street'],
                     'city' => $input['ch_trs_city'],
-                    'state' => $input['ch_trs_state'],
+                    'state_id' => $input['ch_trs_state'],
                     'zip' => $input['ch_trs_zip'],
-                    'country' => $country,
+                    'country_id' => $input['ch_trs_country'] ?? '198',
                     'phone' => $input['ch_trs_phone'],
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
@@ -947,9 +949,9 @@ class ChapterController extends Controller implements HasMiddleware
                     'chapter_id' => $chapterId,
                     'street_address' => $input['ch_sec_street'],
                     'city' => $input['ch_sec_city'],
-                    'state' => $input['ch_sec_state'],
+                    'state_id' => $input['ch_sec_state'],
                     'zip' => $input['ch_sec_zip'],
-                    'country' => $country,
+                    'country_id' => $input['ch_sec_country'] ?? '198',
                     'phone' => $input['ch_sec_phone'],
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
@@ -1237,8 +1239,9 @@ class ChapterController extends Controller implements HasMiddleware
         $SECDetails = $baseQuery['SECDetails'];
 
         $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries,
             'chDetails' => $chDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'chPcId' => $chPcId, 'allStates' => $allStates, 'PresDetails' => $PresDetails,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
@@ -1293,9 +1296,9 @@ class ChapterController extends Controller implements HasMiddleware
                     'email' => $request->input('ch_pre_email'),
                     'street_address' => $request->input('ch_pre_street'),
                     'city' => $request->input('ch_pre_city'),
-                    'state' => $request->input('ch_pre_state'),
+                    'state_id' => $request->input('ch_pre_state'),
                     'zip' => $request->input('ch_pre_zip'),
-                    'country' => 'USA',
+                    'country_id' => $request->input('ch_pre_country') ?? '198',
                     'phone' => $request->input('ch_pre_phone'),
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => now(),
@@ -1336,9 +1339,9 @@ class ChapterController extends Controller implements HasMiddleware
                             'phone' => $bdDetails->phone,
                             'street_address' => $bdDetails->street_address,
                             'city' => $bdDetails->city,
-                            'state' => $bdDetails->state,
+                            'state_id' => $bdDetails->state_id,
                             'zip' => $bdDetails->zip,
-                            'country' => $bdDetails->country,
+                            'country_id' => $bdDetails->country_id,
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
                         ]);
@@ -1358,9 +1361,9 @@ class ChapterController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_avp_email'),
                         'street_address' => $request->input('ch_avp_street'),
                         'city' => $request->input('ch_avp_city'),
-                        'state' => $request->input('ch_avp_state'),
+                        'state_id' => $request->input('ch_avp_state'),
                         'zip' => $request->input('ch_avp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_avp_country') ?? '198',
                         'phone' => $request->input('ch_avp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
@@ -1396,9 +1399,9 @@ class ChapterController extends Controller implements HasMiddleware
                         'board_position_id' => 2,
                         'street_address' => $request->input('ch_avp_street'),
                         'city' => $request->input('ch_avp_city'),
-                        'state' => $request->input('ch_avp_state'),
+                        'state_id' => $request->input('ch_avp_state'),
                         'zip' => $request->input('ch_avp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_avp_country') ?? '198',
                         'phone' => $request->input('ch_avp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
@@ -1434,9 +1437,9 @@ class ChapterController extends Controller implements HasMiddleware
                             'phone' => $bdDetails->phone,
                             'street_address' => $bdDetails->street_address,
                             'city' => $bdDetails->city,
-                            'state' => $bdDetails->state,
+                            'state_id' => $bdDetails->state_id,
                             'zip' => $bdDetails->zip,
-                            'country' => $bdDetails->country,
+                            'country_id' => $bdDetails->country_id,
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
                         ]);
@@ -1456,9 +1459,9 @@ class ChapterController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_mvp_email'),
                         'street_address' => $request->input('ch_mvp_street'),
                         'city' => $request->input('ch_mvp_city'),
-                        'state' => $request->input('ch_mvp_state'),
+                        'state_id' => $request->input('ch_mvp_state'),
                         'zip' => $request->input('ch_mvp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_mvp_country') ?? '198',
                         'phone' => $request->input('ch_mvp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
@@ -1494,9 +1497,9 @@ class ChapterController extends Controller implements HasMiddleware
                         'board_position_id' => 3,
                         'street_address' => $request->input('ch_mvp_street'),
                         'city' => $request->input('ch_mvp_city'),
-                        'state' => $request->input('ch_mvp_state'),
+                        'state_id' => $request->input('ch_mvp_state'),
                         'zip' => $request->input('ch_mvp_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_mvp_country') ?? '198',
                         'phone' => $request->input('ch_mvp_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
@@ -1533,9 +1536,9 @@ class ChapterController extends Controller implements HasMiddleware
                             'phone' => $bdDetails->phone,
                             'street_address' => $bdDetails->street_address,
                             'city' => $bdDetails->city,
-                            'state' => $bdDetails->state,
+                            'state_id' => $bdDetails->state_id,
                             'zip' => $bdDetails->zip,
-                            'country' => $bdDetails->country,
+                            'country_id' => $bdDetails->country_id,
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
                         ]);
@@ -1555,9 +1558,9 @@ class ChapterController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_trs_email'),
                         'street_address' => $request->input('ch_trs_street'),
                         'city' => $request->input('ch_trs_city'),
-                        'state' => $request->input('ch_trs_state'),
+                        'state_id' => $request->input('ch_trs_state'),
                         'zip' => $request->input('ch_trs_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_trs_country') ?? '198',
                         'phone' => $request->input('ch_trs_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
@@ -1593,9 +1596,9 @@ class ChapterController extends Controller implements HasMiddleware
                         'board_position_id' => 4,
                         'street_address' => $request->input('ch_trs_street'),
                         'city' => $request->input('ch_trs_city'),
-                        'state' => $request->input('ch_trs_state'),
+                        'state_id' => $request->input('ch_trs_state'),
                         'zip' => $request->input('ch_trs_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_trs_country') ?? '198',
                         'phone' => $request->input('ch_trs_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
@@ -1633,9 +1636,9 @@ class ChapterController extends Controller implements HasMiddleware
                             'phone' => $bdDetails->phone,
                             'street_address' => $bdDetails->street_address,
                             'city' => $bdDetails->city,
-                            'state' => $bdDetails->state,
+                            'state_id' => $bdDetails->state_id,
                             'zip' => $bdDetails->zip,
-                            'country' => $bdDetails->country,
+                            'country_id' => $bdDetails->country_id,
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => $lastupdatedDate,
                         ]);
@@ -1655,9 +1658,9 @@ class ChapterController extends Controller implements HasMiddleware
                         'email' => $request->input('ch_sec_email'),
                         'street_address' => $request->input('ch_sec_street'),
                         'city' => $request->input('ch_sec_city'),
-                        'state' => $request->input('ch_sec_state'),
+                        'state_id' => $request->input('ch_sec_state'),
                         'zip' => $request->input('ch_sec_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_sec_country') ?? '198',
                         'phone' => $request->input('ch_sec_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
@@ -1693,9 +1696,9 @@ class ChapterController extends Controller implements HasMiddleware
                         'board_position_id' => 5,
                         'street_address' => $request->input('ch_sec_street'),
                         'city' => $request->input('ch_sec_city'),
-                        'state' => $request->input('ch_sec_state'),
+                        'state_id' => $request->input('ch_sec_state'),
                         'zip' => $request->input('ch_sec_zip'),
-                        'country' => 'USA',
+                        'country_id' => $request->input('ch_sec_country') ?? '198',
                         'phone' => $request->input('ch_sec_phone'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => now(),
@@ -1829,7 +1832,7 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
             if ($chDetailsUpd->name != $chDetails->name || $PresDetailsUpd->bor_email != $PresDetails->bor_email || $PresDetailsUpd->street_address != $PresDetails->street_address || $PresDetailsUpd->city != $PresDetails->city ||
-                    $PresDetailsUpd->state != $PresDetails->state || $PresDetailsUpd->first_name != $PresDetails->first_name || $PresDetailsUpd->last_name != $PresDetails->last_name ||
+                    $PresDetailsUpd->state_id != $PresDetails->state_id || $PresDetailsUpd->first_name != $PresDetails->first_name || $PresDetailsUpd->last_name != $PresDetails->last_name ||
                     $PresDetailsUpd->zip != $PresDetails->zip || $PresDetailsUpd->phone != $PresDetails->phone || $PresDetailsUpd->inquiries_contact != $PresDetails->inquiries_contact ||
                     $PresDetailsUpd->ein != $chDetails->ein || $chDetailsUpd->ein_letter_path != $chDetails->ein_letter_path || $PresDetailsUpd->inquiries_note != $PresDetails->inquiries_note ||
                     $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
@@ -2167,7 +2170,8 @@ class ChapterController extends Controller implements HasMiddleware
         $chapterStatus = $baseQuery['chapterStatus'];
 
         $allActive = $baseQuery['allActive'];
-        $allStates = $baseQuery['allStates'];  // Full List for Dropdown Menu
+        $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
         $allRegions = $baseQuery['allRegions'];
 
         $pcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
@@ -2208,7 +2212,7 @@ class ChapterController extends Controller implements HasMiddleware
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'allStates' => $allStates,
-            'pcList' => $pcList, 'allRegions' => $allRegions, 'pcDetails' => $pcDetails,
+            'pcList' => $pcList, 'allRegions' => $allRegions, 'pcDetails' => $pcDetails, 'allCountries' => $allCountries
         ];
 
         return view('chapters.editpending')->with($data);
@@ -2282,9 +2286,9 @@ class ChapterController extends Controller implements HasMiddleware
                 'email' => $request->input('ch_pre_email'),
                 'street_address' => $request->input('ch_pre_street'),
                 'city' => $request->input('ch_pre_city'),
-                'state' => $request->input('ch_pre_state'),
+                'state_id' => $request->input('ch_pre_state'),
                 'zip' => $request->input('ch_pre_zip'),
-                'country' => 'USA',
+                'country_id' => $request->input('ch_pre_country') ?? '198',
                 'phone' => $request->input('ch_pre_phone'),
                 'last_updated_by' => $lastUpdatedBy,
                 'last_updated_date' => now(),
@@ -2323,9 +2327,9 @@ class ChapterController extends Controller implements HasMiddleware
                     'phone' => $president->phone,
                     'street_address' => $president->street_address,
                     'city' => $president->city,
-                    'state' => $president->state,
+                    'state_id' => $president->state_id,
                     'zip' => $president->zip,
-                    'country' => $president->country,
+                    'country_id' => $president->country_id,
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
                 ]);

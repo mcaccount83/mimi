@@ -75,7 +75,7 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingCompany = $name;
         $shippingAddress = $PresDetails->street_address;
         $shippingCity = $PresDetails->city;
-        $shippingState = $PresDetails->state;
+        $shippingState = $PresDetails->state_id;
         $shippingZip = $PresDetails->zip;
 
         // $paymentResponse = $this->processPayment($request);
@@ -182,7 +182,7 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingCompany = $name;
         $shippingAddress = $PresDetails->street_address;
         $shippingCity = $PresDetails->city;
-        $shippingState = $PresDetails->state;
+        $shippingState = $PresDetails->state_id;
         $shippingZip = $PresDetails->zip;
 
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId,

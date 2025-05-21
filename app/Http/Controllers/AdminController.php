@@ -11,7 +11,7 @@ use App\Models\Coordinators;
 use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
-use App\Models\IncomingBoard;
+use App\Models\BoardsIncoming;
 use App\Models\Payments;
 use App\Models\ProbationSubmission;
 use App\Models\User;
@@ -539,7 +539,7 @@ class AdminController extends Controller implements HasMiddleware
 
             // Remove Data from the `outgoing_board_member` and `incoming_board_member` tables
             BoardsOutgoing::query()->delete();
-            IncomingBoard::query()->delete();
+            BoardsIncoming::query()->delete();
 
             // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
             $chapters = Chapters::with('financialReport', 'documents')->get();
@@ -642,7 +642,7 @@ class AdminController extends Controller implements HasMiddleware
             }
 
             BoardsOutgoing::query()->delete();
-            IncomingBoard::query()->delete();
+            BoardsIncoming::query()->delete();
             FinancialReport::query()->delete();
 
             // Fetch all active chapters and add balance into financial_report

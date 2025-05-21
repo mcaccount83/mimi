@@ -19,7 +19,13 @@
                         $thisDate = \Carbon\Carbon::now();
                     @endphp
                     <div class="col-md-12"><br><br></div>
-                        <h2 class="text-center"> MOMS Club of {{ $chDetails->name }}, {{ $stateShortName }} </h2>
+                        <h2 class="text-center"> MOMS Club of {{ $chDetails->name }},
+                             @if($chDetails->state_id < 52)
+                                {{$chDetails->state->state_short_name}}
+                            @else
+                                {{$chDetails->country->short_name}}
+                            @endif
+                        </h2>
                         <h4 class="text-center"> Re-Registration Payment</h4>
 
                         </div>

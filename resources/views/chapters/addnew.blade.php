@@ -41,12 +41,24 @@
                                     {{$state->state_long_name}}
                                 </option>
                             @endforeach
-                            {{-- @foreach($stateArr as $state)
-                                <option value="{{$state->id}}">{{$state->state_long_name}}</option>
-                            @endforeach --}}
                         </select>
                     </div>
                 </div>
+
+                <div class="form-group row mt-1" id="country-container" style="display: none;">
+                    <label class="col-sm-4 col-form-label">Country:</label>
+                    <div class="col-sm-8">
+                        <select id="ch_country" name="ch_country" class="form-control" required>
+                            <option value="">Select Country</option>
+                            @foreach($allCountries as $country)
+                                <option value="{{$country->id}}" >
+                                    {{$country->name}}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
 
                 <div class="form-group row mt-1">
                     <label class="col-sm-4 col-form-label">Region:</label>
@@ -126,32 +138,32 @@
                     <!-- /.card-header -->
                     <div class="row">
                         <div class="col-md-12">
-                            <!-- /.form group -->
-                            <div class="form-group row">
-                                <label class="col-sm-2 mb-1 col-form-label">President:</label>
-                                <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control"  required placeholder="First Name" >
-                                </div>
-                                <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_lname" id="ch_pre_lname" class="form-control" required placeholder="Last Name" >
-                                </div>
-                                <label class="col-sm-2 mb-1 col-form-label"></label>
-                                <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required placeholder="Email Address" >
-                                </div>
-                                <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask  required placeholder="Phone Number" >
-                                </div>
-                                <label class="col-sm-2 mb-1 col-form-label"></label>
-                                <div class="col-sm-10 mb-1">
-                                <input type="text" name="ch_pre_street" id="ch_pre_street" class="form-control" placeholder="Address" required >
-                                </div>
-                                <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" placeholder="City" required >
+                         <!-- /.form group -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 mb-1 col-form-label">President:</label>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" required placeholder="First Name" >
+                            </div>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_pre_lname" id="ch_pre_lname" class="form-control" required placeholder="Last Name">
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required placeholder="Email Address" >
+                            </div>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-10 mb-1">
+                            <input type="text" name="ch_pre_street" id="ch_pre_street" class="form-control" placeholder="Address"  required >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"><br></label>
+                            <div class="col-sm-3 mb-1">
+                             <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="ch_pre_state" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_pre_state" id="ch_pre_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
                                         <option value="{{$state->id}}">
@@ -161,43 +173,52 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" placeholder="Zip" required >
+                                    <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control"   required placeholder="Zip">
                                 </div>
+                                <div class="col-sm-2" id="ch_pre_country-container" style="display: none;">
+                                    <select name="ch_pre_country" id="ch_pre_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}">
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
 
-                            <!-- /.form group -->
-                            <div class="form-group row">
-                                <div class="d-flex align-items-center mb-1">
-                                    <label class="col-form-label mr-2">AVP:</label>
-                                    <div class="custom-control custom-switch mr-5">
-                                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" checked>
-                                        <label class="custom-control-label" for="AVPVacant">Vacant</label>
-                                    </div>
+                        <!-- /.form group -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 mb-1 col-form-label">AVP:</label>
+                            <div class="col-sm-10 mt-1 custom-control custom-switch">
+                                <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" checked>
+                                <label class="custom-control-label" for="AVPVacant">Vacant</label>
+                            </div>
+                        <div class="avp-field form-group row">
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-5 mb-1">
+                                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" required placeholder="First Name" >
                                 </div>
-                                <div class="avp-field col-sm-5 mb-1">
-                                    <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" required placeholder="First Name">
+                                <div class="col-sm-5 mb-1">
+                                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" required placeholder="Last Name" >
                                 </div>
-                                <div class="avp-field col-sm-5 mb-1">
-                                    <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" required placeholder="Last Name">
+                                <label class="col-sm-2 mb-1 col-form-label"></label>
+                                <div class="col-sm-5 mb-1">
+                                <input type="text" name="ch_avp_email" id="ch_avp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required placeholder="Email Address" >
                                 </div>
-
-                                <label class="avp-field col-sm-2 mb-1 col-form-label"></label>
-                                <div class="avp-field col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_email" id="ch_avp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" required placeholder="Email Address" >
+                                <div class="col-sm-5 mb-1">
+                                <input type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask  required placeholder="Phone Number" >
                                 </div>
-                                <div class="avp-field col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
+                                <label class="col-sm-2 mb-1 col-form-label"></label>
+                                <div class="col-sm-10 mb-1">
+                                <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control"  placeholder="Address"  required >
                                 </div>
-                                <label class="avp-field col-sm-2 mb-1 col-form-label"></label>
-                                <div class="avp-field col-sm-10 mb-1">
-                                <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" placeholder="Address" required >
+                                <label class="col-sm-2 mb-1 col-form-label"><br></label>
+                               <div class="col-sm-3 mb-1">
+                                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control"   required placeholder="City">
                                 </div>
-                                <label class="avp-field col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="avp-field col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" placeholder="City" required >
-                                </div>
-                                <div class="avp-field col-sm-3 mb-1">
-                                    <select name="ch_avp_state" class="form-control" style="width: 100%;" required>
+                                <div class="col-sm-3 mb-1">
+                                    <select name="ch_avp_state" id="ch_avp_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
                                         <option value="{{$state->id}}">
@@ -206,43 +227,54 @@
                                     @endforeach
                                     </select>
                                 </div>
-                                <div class="avp-field col-sm-2 mb-1">
-                                    <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" placeholder="Zip" required >
+                                <div class="avp-field col-sm-2 mb-1" >
+                                    <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control"   required placeholder="Zip">
                                 </div>
+                                  <div class="col-sm-2" id="ch_avp_country-container" style="display: none;">
+                                    <select name="ch_avp_country" id="ch_avp_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}">
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
+                    </div>
 
-                             <!-- /.form group -->
-                             <div class="form-group row">
-                                <div class="d-flex align-items-center mb-1">
-                                    <label class="col-form-label mr-2">MVP:</label>
-                                    <div class="custom-control custom-switch mr-5">
-                                        <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input"checked>
-                                        <label class="custom-control-label" for="MVPVacant">Vacant</label>
-                                    </div>
+                         <!-- /.form group -->
+                         <div class="form-group row">
+                            <label class="col-sm-2 mb-1 col-form-label">MVP:</label>
+                            <div class="col-sm-10 mt-1 custom-control custom-switch">
+                                    <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input" checked>
+                                    <label class="custom-control-label" for="MVPVacant">Vacant</label>
+                            </div>
+                            <div class="mvp-field form-group row">
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" required placeholder="First Name" >
+                            </div>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control"  required placeholder="Last Name" >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required placeholder="Email Address" >
+                            </div>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-10 mb-1">
+                            <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" placeholder="Address"  required >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"><br></label>
+                            <div class="col-sm-3 mb-1">
+                                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control"  required placeholder="City">
                                 </div>
-                                <div class="mvp-field col-sm-5 mb-1">
-                                <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" required placeholder="First Name" >
-                                </div>
-                                <div class="mvp-field col-sm-5 mb-1">
-                                <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" required placeholder="Last Name" >
-                                </div>
-                                <label class="mvp-field col-sm-2 mb-1 col-form-label"></label>
-                                <div class="mvp-field col-sm-5 mb-1">
-                                <input type="text" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" required placeholder="Email Address" >
-                                </div>
-                                <div class="mvp-field col-sm-5 mb-1">
-                                <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
-                                </div>
-                                <label class="mvp-field col-sm-2 mb-1 col-form-label"></label>
-                                <div class="mvp-field col-sm-10 mb-1">
-                                <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" placeholder="Address" required >
-                                </div>
-                                <label class="mvp-field col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="mvp-field col-sm-5 mb-1">
-                                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" placeholder="City" required >
-                                </div>
-                                <div class="mvp-field col-sm-3 mb-1">
-                                    <select name="ch_mvp_state" class="form-control" style="width: 100%;" required>
+                                <div class="col-sm-3 mb-1">
+                                    <select name="ch_mvp_state" id="ch_mvp_state"class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
                                         <option value="{{$state->id}}">
@@ -251,43 +283,54 @@
                                     @endforeach
                                     </select>
                                 </div>
-                                <div class="mvp-field col-sm-2 mb-1">
-                                    <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" placeholder="Zip" required >
+                                <div class="col-sm-2 mb-1">
+                                    <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control"  required placeholder="Zip">
                                 </div>
+                                <div class="col-sm-2"  id="ch_mvp_country-container" style="display: none;">
+                                    <select name="ch_mvp_country" id="ch_mvp_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}">
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- /.form group -->
-                            <div class="form-group row">
-                                <div class="d-flex align-items-center mb-1">
-                                    <label class="col-form-label mr-2">Treasurer:</label>
-                                    <div class="custom-control custom-switch mr-2">
-                                        <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" checked>
-                                        <label class="custom-control-label" for="TreasVacant">Vacant</label>
-                                    </div>
+                        <!-- /.form group -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
+                            <div class="col-sm-10 mt-1 custom-control custom-switch">
+                                    <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" checked>
+                                    <label class="custom-control-label" for="TreasVacant">Vacant</label>
+                            </div>
+                            <div class="trs-field form-group row">
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" required placeholder="First Name" >
+                            </div>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" required placeholder="Last Name" >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" required placeholder="Email Address" >
+                            </div>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask  required placeholder="Phone Number" >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-10 mb-1">
+                            <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" placeholder="Address"  required >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"><br></label>
+                            <div class="col-sm-3 mb-1">
+                                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control"  required placeholder="City">
                                 </div>
-                                <div class="treas-field col-sm-5 mb-1">
-                                <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control"  required placeholder="First Name" >
-                                </div>
-                                <div class="treas-field col-sm-5 mb-1">
-                                <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control"  required placeholder="Last Name" >
-                                </div>
-                                <label class="treas-field col-sm-2 mb-1 col-form-label"></label>
-                                <div class="treas-field col-sm-5 mb-1">
-                                <input type="text" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required placeholder="Email Address" >
-                                </div>
-                                <div class="treas-field col-sm-5 mb-1">
-                                <input type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask  required placeholder="Phone Number" >
-                                </div>
-                                <label class="treas-field col-sm-2 mb-1 col-form-label"></label>
-                                <div class="treas-field col-sm-10 mb-1">
-                                <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" placeholder="Address" required >
-                                </div>
-                                <label class="treas-field col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="treas-field col-sm-5 mb-1">
-                                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" placeholder="City" required >
-                                </div>
-                                <div class="treas-field col-sm-3 mb-1">
-                                    <select name="ch_trs_state" class="form-control" style="width: 100%;" required>
+                                <div class="col-sm-3 mb-1">
+                                    <select name="ch_trs_state" id="ch_trs_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
                                         <option value="{{$state->id}}">
@@ -296,43 +339,54 @@
                                     @endforeach
                                     </select>
                                 </div>
-                                <div class="treas-field col-sm-2 mb-1">
-                                    <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" placeholder="Zip" required >
+                                <div class="col-sm-2 mb-1">
+                                    <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" required placeholder="Zip">
                                 </div>
+                                  <div class="col-sm-2" id="ch_trs_country-container" style="display: none;">
+                                    <select name="ch_trs_country" id="ch_trs_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}">
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- /.form group -->
-                            <div class="form-group row">
-                                <div class="d-flex align-items-center mb-1">
-                                    <label class="col-form-label mr-2">Secretary:</label>
-                                    <div class="custom-control custom-switch mr-2">
-                                        <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" checked>
-                                        <label class="custom-control-label" for="SecVacant">Vacant</label>
-                                    </div>
+                        <!-- /.form group -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 mb-1 col-form-label">Secretary:</label>
+                            <div class="col-sm-10 mt-1 custom-control custom-switch">
+                                    <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" checked>
+                                    <label class="custom-control-label" for="SecVacant">Vacant</label>
+                            </div>
+                        <div class="sec-field form-group row">
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" required placeholder="First Name" >
+                            </div>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" required placeholder="Last Name" >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" required placeholder="Email Address" >
+                            </div>
+                            <div class="col-sm-5 mb-1">
+                            <input type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <div class="col-sm-10 mb-1">
+                            <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" placeholder="Address"  required >
+                            </div>
+                            <label class="col-sm-2 mb-1 col-form-label"><br></label>
+                          <div class="col-sm-3 mb-1">
+                                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" required placeholder="City">
                                 </div>
-                                <div class="sec-field col-sm-5 mb-1">
-                                <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control"  required placeholder="First Name" >
-                                </div>
-                                <div class="sec-field col-sm-5 mb-1">
-                                <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control"  required placeholder="Last Name" >
-                                </div>
-                                <label class="sec-field col-sm-2 mb-1 col-form-label"></label>
-                                <div class="sec-field col-sm-5 mb-1">
-                                <input type="text" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required placeholder="Email Address" >
-                                </div>
-                                <div class="sec-field col-sm-5 mb-1">
-                                <input type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
-                                </div>
-                                <label class="sec-field col-sm-2 mb-1 col-form-label"></label>
-                                <div class="sec-field col-sm-10 mb-1">
-                                <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" placeholder="Address" required >
-                                </div>
-                                <label class="sec-field col-sm-2 mb-1 col-form-label"><br></label>
-                                <div class="sec-field col-sm-5 mb-1">
-                                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" placeholder="City" required >
-                                </div>
-                                <div class="sec-field col-sm-3 mb-1">
-                                    <select name="ch_sec_state" class="form-control" style="width: 100%;" required>
+                                <div class="col-sm-3 mb-1">
+                                    <select name="ch_sec_state" id="ch_sec_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
                                         <option value="{{$state->id}}">
@@ -341,10 +395,21 @@
                                     @endforeach
                                     </select>
                                 </div>
-                                <div class="sec-field col-sm-2 mb-1">
-                                    <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" placeholder="Zip" required >
+                                <div class="col-sm-2 mb-1">
+                                    <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" required placeholder="Zip">
                                 </div>
+                                 <div class="col-sm-2" id="ch_sec_country-container" style="display: none;">
+                                    <select name="ch_sec_country" id="ch_sec_country" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select Country</option>
+                                        @foreach($allCountries as $country)
+                                        <option value="{{$country->id}}">
+                                            {{$country->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
+                    </div>
 
                         </div>
                     </div>
@@ -369,6 +434,75 @@
 @endsection
 @section('customscript')
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Chapter state and country
+    const stateDropdown = document.getElementById('ch_state');
+    const countryContainer = document.getElementById('country-container');
+    const countrySelect = document.getElementById('ch_country');
+
+    // Check if elements exist before adding listeners
+    if (stateDropdown && countryContainer && countrySelect) {
+        // Initially set country field requirement based on state selection
+        toggleCountryField();
+
+        // Add event listener to the state dropdown
+        stateDropdown.addEventListener('change', toggleCountryField);
+
+        function toggleCountryField() {
+            const selectedStateId = parseInt(stateDropdown.value) || 0;
+            const specialStates = [52, 53, 54, 55]; // States that should show the country field
+
+            if (specialStates.includes(selectedStateId)) {
+                countryContainer.style.display = 'flex'; // or 'block' depending on your layout
+                countrySelect.setAttribute('required', 'required');
+            } else {
+                countryContainer.style.display = 'none';
+                countrySelect.removeAttribute('required');
+                // Optionally clear the country selection when hidden
+                countrySelect.value = "";
+            }
+        }
+    }
+});
+
+    document.addEventListener('DOMContentLoaded', function() {
+    // Define the sections we need to handle
+    const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
+
+    // Special state IDs that should show the country field
+    const specialStates = [52, 53, 54, 55];
+
+    // Process each section
+    sections.forEach(section => {
+        const stateDropdown = document.getElementById(`ch_${section}_state`);
+        const countryContainer = document.getElementById(`ch_${section}_country-container`);
+        const countrySelect = document.getElementById(`ch_${section}_country`);
+
+        // Only proceed if all elements exist
+        if (stateDropdown && countryContainer && countrySelect) {
+            // Function to toggle country field visibility
+            function toggleCountryField() {
+                const selectedStateId = parseInt(stateDropdown.value) || 0;
+
+                if (specialStates.includes(selectedStateId)) {
+                    countryContainer.style.display = 'flex';
+                    countrySelect.setAttribute('required', 'required');
+                } else {
+                    countryContainer.style.display = 'none';
+                    countrySelect.removeAttribute('required');
+                    countrySelect.value = "";
+                }
+            }
+
+            // Set initial state
+            toggleCountryField();
+
+            // Add event listener
+            stateDropdown.addEventListener('change', toggleCountryField);
+        }
+    });
+});
+
 // Function to handle show/hide logic for vacant checkboxes
 function handleVacantCheckbox(checkboxId, fieldClass) {
     var fields = $("." + fieldClass);
@@ -393,7 +527,7 @@ function handleVacantCheckbox(checkboxId, fieldClass) {
 handleVacantCheckbox("MVPVacant", "mvp-field");
 handleVacantCheckbox("AVPVacant", "avp-field");
 handleVacantCheckbox("SecVacant", "sec-field");
-handleVacantCheckbox("TreasVacant", "treas-field");
+handleVacantCheckbox("TreasVacant", "trs-field");
 
 // Function to filter the coordinator dropdown
 function filterCoordinators() {
