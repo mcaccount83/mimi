@@ -34,305 +34,461 @@ class ExportController extends Controller implements HasMiddleware
     }
 
    /**
- * Export Chapter List - Optimized Version (Using Existing Base Controller)
- */
-public function indexChapter(Request $request)
-{
-    // Increase memory limit and execution time for large exports
-    ini_set('memory_limit', '512M');
-    set_time_limit(300); // 5 minutes
+     * Export Chapter List
+     */
+    public function indexChapter(Request $request)
+    {
+        // Increase memory limit and execution time for large exports
+        ini_set('memory_limit', '512M');
+        set_time_limit(300); // 5 minutes
 
-    $fileName = 'chapter_export_'.date('Y-m-d').'.csv';
-    $headers = [
-        'Content-type' => 'text/csv',
-        'Content-Disposition' => "attachment; filename=$fileName",
-        'Pragma' => 'no-cache',
-        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-        'Expires' => '0',
-    ];
-
-    $user = $this->userController->loadUserInformation($request);
-    $coorId = $user['user_coorId'];
-    $confId = $user['user_confId'];
-    $regId = $user['user_regId'];
-    $positionId = $user['user_positionId'];
-    $secPositionId = $user['user_secPositionId'];
-
-    $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-
-    // Get all chapter IDs first
-    $chapterIds = $baseQuery['query']->pluck('id')->toArray();
-
-    if (empty($chapterIds)) {
-        return redirect()->to('/home');
-    }
-
-    $callback = function () use ($chapterIds) {
-        $file = fopen('php://output', 'w');
-
-        // Write headers
+        $fileName = 'chapter_export_'.date('Y-m-d').'.csv';
         $headers = [
-            'Conference', 'Region', 'State', 'Name', 'Primary Coordinator', 'EIN',
-            'Chapter Email', 'Chapter P.O. Box', 'Inquiries Email', 'Inquiries Notes',
-            'Status', 'Notes', 'Bounraries', 'Pres Name', 'Pres Email', 'Pres Phone',
-            'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
-            'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
-            'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-            'Social Media', 'Start Month', 'Start Year', 'Dues Last Paid',
-            'Members paid for', 'NextRenewal', 'Founder', 'Sistered By', 'FormerName'
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
-        fputcsv($file, $headers);
 
-        // Process chapters in chunks to manage memory
-        $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-        $chunks = array_chunk($chapterIds, $chunkSize);
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        foreach ($chunks as $chunkIndex => $chunk) {
-            foreach ($chunk as $chId) {
-                // Use your existing base controller method
-                $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                $rowData = $this->formatChapterRowFromBaseController($chapterData);
-                fputcsv($file, $rowData);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
 
-                // Clear memory periodically within chunks
-                if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 === 0) {
-                    if (ob_get_level()) {
-                        ob_flush();
-                    }
-                    flush();
-                }
-            }
+        // Get all chapter IDs first
+        $chapterIds = $baseQuery['query']->pluck('id')->toArray();
 
-            // Force garbage collection after each chunk
-            if (function_exists('gc_collect_cycles')) {
-                gc_collect_cycles();
-            }
-
-            // Clear memory after each chunk
-            if (ob_get_level()) {
-                ob_flush();
-            }
-            flush();
+        if (empty($chapterIds)) {
+            return redirect()->to('/home');
         }
 
-        fclose($file);
-    };
+        $callback = function () use ($chapterIds) {
+            $file = fopen('php://output', 'w');
 
-    return Response::stream($callback, 200, $headers);
-}
+            // Write headers
+            $headers = [
+                'Conference', 'Region', 'State', 'Name', 'Primary Coordinator', 'EIN',
+                'Chapter Email', 'Chapter P.O. Box', 'Inquiries Email', 'Inquiries Notes',
+                'Status', 'Notes', 'Bounraries', 'Pres Name', 'Pres Email', 'Pres Phone',
+                'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
+                'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
+                'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
+                'Social Media', 'Start Month', 'Start Year', 'Dues Last Paid',
+                'Members paid for', 'NextRenewal', 'Founder', 'Sistered By', 'FormerName'
+            ];
+            fputcsv($file, $headers);
 
-/**
- * Export Zapped Chapter List - Optimized Version (Using Existing Base Controller)
- */
-public function indexZappedChapter(Request $request)
-{
-    // Increase memory limit and execution time for large exports
-    ini_set('memory_limit', '512M');
-    set_time_limit(300); // 5 minutes
+            // Process chapters in chunks to manage memory
+            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
+            $chunks = array_chunk($chapterIds, $chunkSize);
 
-    $fileName = 'chapter_zap_export_'.date('Y-m-d').'.csv';
-    $headers = [
-        'Content-type' => 'text/csv',
-        'Content-Disposition' => "attachment; filename=$fileName",
-        'Pragma' => 'no-cache',
-        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-        'Expires' => '0',
-    ];
+            foreach ($chunks as $chunkIndex => $chunk) {
+                foreach ($chunk as $chId) {
+                    // Use your existing base controller method
+                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
+                    $rowData = $this->formatChapterRowFromBaseController($chapterData);
+                    fputcsv($file, $rowData);
 
-    $user = $this->userController->loadUserInformation($request);
-    $coorId = $user['user_coorId'];
-    $confId = $user['user_confId'];
-    $regId = $user['user_regId'];
-    $positionId = $user['user_positionId'];
-    $secPositionId = $user['user_secPositionId'];
+                    // Clear memory periodically within chunks
+                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 === 0) {
+                        if (ob_get_level()) {
+                            ob_flush();
+                        }
+                        flush();
+                    }
+                }
 
-    $baseQuery = $this->baseChapterController->getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+                // Force garbage collection after each chunk
+                if (function_exists('gc_collect_cycles')) {
+                    gc_collect_cycles();
+                }
 
-    // Get all chapter IDs first
-    $chapterIds = $baseQuery['query']->pluck('id')->toArray();
+                // Clear memory after each chunk
+                if (ob_get_level()) {
+                    ob_flush();
+                }
+                flush();
+            }
 
-    if (empty($chapterIds)) {
-        return redirect()->to('/home');
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
     }
 
-    $callback = function () use ($chapterIds) {
-        $file = fopen('php://output', 'w');
+    /**
+     * Export Zapped Chapter List
+     */
+    public function indexZappedChapter(Request $request)
+    {
+        // Increase memory limit and execution time for large exports
+        ini_set('memory_limit', '512M');
+        set_time_limit(300); // 5 minutes
 
-        // Write headers
+        $fileName = 'chapter_zap_export_'.date('Y-m-d').'.csv';
         $headers = [
-            'Conference', 'Region', 'State', 'Name', 'Primary Coordinator', 'EIN',
-            'Chapter Email', 'Chapter P.O. Box', 'Inquiries Email', 'Inquiries Notes',
-            'Status', 'Notes', 'Bounraries', 'Pres Name', 'Pres Email', 'Pres Phone',
-            'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
-            'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
-            'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-            'Social Media', 'Start Month', 'Start Year', 'Dues Last Paid',
-            'Members paid for', 'NextRenewal', 'Founder', 'Sistered By', 'FormerName',
-            'Disband Date', 'Disband Reason'
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
-        fputcsv($file, $headers);
 
-        // Process chapters in chunks to manage memory
-        $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-        $chunks = array_chunk($chapterIds, $chunkSize);
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        foreach ($chunks as $chunkIndex => $chunk) {
-            foreach ($chunk as $chId) {
-                // Use your existing base controller method
-                $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                $rowData = $this->formatZappedChapterRowFromBaseController($chapterData);
-                fputcsv($file, $rowData);
+        $baseQuery = $this->baseChapterController->getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
 
-                // Clear memory periodically within chunks
-                if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 === 0) {
-                    if (ob_get_level()) {
-                        ob_flush();
-                    }
-                    flush();
-                }
-            }
+        // Get all chapter IDs first
+        $chapterIds = $baseQuery['query']->pluck('id')->toArray();
 
-            // Force garbage collection after each chunk
-            if (function_exists('gc_collect_cycles')) {
-                gc_collect_cycles();
-            }
-
-            // Clear memory after each chunk
-            if (ob_get_level()) {
-                ob_flush();
-            }
-            flush();
+        if (empty($chapterIds)) {
+            return redirect()->to('/home');
         }
 
-        fclose($file);
-    };
+        $callback = function () use ($chapterIds) {
+            $file = fopen('php://output', 'w');
 
-    return Response::stream($callback, 200, $headers);
-}
+            // Write headers
+            $headers = [
+                'Conference', 'Region', 'State', 'Name', 'Primary Coordinator', 'EIN',
+                'Chapter Email', 'Chapter P.O. Box', 'Inquiries Email', 'Inquiries Notes',
+                'Status', 'Notes', 'Bounraries', 'Pres Name', 'Pres Email', 'Pres Phone',
+                'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
+                'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
+                'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
+                'Social Media', 'Start Month', 'Start Year', 'Dues Last Paid',
+                'Members paid for', 'NextRenewal', 'Founder', 'Sistered By', 'FormerName',
+                'Disband Date', 'Disband Reason'
+            ];
+            fputcsv($file, $headers);
 
-/**
- * Format chapter row data using existing base controller response
- */
-private function formatChapterRowFromBaseController($chapterData)
-{
-    $chDetails = $chapterData['chDetails'];
-    $stateShortName = $chapterData['stateShortName'];
-    $regionLongName = $chapterData['regionLongName'];
-    $chConfId = $chapterData['chConfId'];
-    $pcName = $chapterData['pcName'];
-    $startMonthName = $chapterData['startMonthName'];
-    $chapterStatus = $chapterData['chapterStatus'];
-    $websiteLink = $chapterData['websiteLink'];
-    $PresDetails = $chapterData['PresDetails'];
-    $AVPDetails = $chapterData['AVPDetails'];
-    $MVPDetails = $chapterData['MVPDetails'];
-    $TRSDetails = $chapterData['TRSDetails'];
-    $SECDetails = $chapterData['SECDetails'];
+            // Process chapters in chunks to manage memory
+            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
+            $chunks = array_chunk($chapterIds, $chunkSize);
 
-    return [
-        'Conference' => $chConfId,
-        'Region' => $regionLongName,
-        'State' => $stateShortName,
-        'Name' => $chDetails->name,
-        'Primary Coordinator' => $pcName,
-        'EIN' => $chDetails->ein,
-        'Chapter Email' => $chDetails->email,
-        'Chapter P.O. Box' => $chDetails->po_box,
-        'Inquiries Email' => $chDetails->inquiries_contact,
-        'Inquiries Notes' => $chDetails->inquiries_note,
-        'Status' => $chapterStatus,
-        'Notes' => $chDetails->notes,
-        'Bounraries' => $chDetails->territory,
-        'Pres Name' => ($PresDetails && $PresDetails->first_name) ? $PresDetails->first_name.' '.$PresDetails->last_name : '',
-        'Pres Email' => $PresDetails->email ?? '',
-        'Pres Phone' => $PresDetails->phone ?? '',
-        'AVP Name' => ($AVPDetails && $AVPDetails->first_name) ? $AVPDetails->first_name.' '.$AVPDetails->last_name : '',
-        'AVP Email' => $AVPDetails->email ?? '',
-        'AVP Phone' => $AVPDetails->phone ?? '',
-        'MVP Name' => ($MVPDetails && $MVPDetails->first_name) ? $MVPDetails->first_name.' '.$MVPDetails->last_name : '',
-        'MVP Email' => $MVPDetails->email ?? '',
-        'MVP Phone' => $MVPDetails->phone ?? '',
-        'Treasurer Name' => ($TRSDetails && $TRSDetails->first_name) ? $TRSDetails->first_name.' '.$TRSDetails->last_name : '',
-        'Treasurer Email' => $TRSDetails->email ?? '',
-        'Treasurer Phone' => $TRSDetails->phone ?? '',
-        'Secretary Name' => ($SECDetails && $SECDetails->first_name) ? $SECDetails->first_name.' '.$SECDetails->last_name : '',
-        'Secretary Email' => $SECDetails->email ?? '',
-        'Secretary Phone' => $SECDetails->phone ?? '',
-        'Website' => $websiteLink,
-        'Linked Status' => $chDetails->website_status,
-        'EGroup' => $chDetails->egroup,
-        'Social Media' => trim(($chDetails->social1 ?? '').' '.($chDetails->social2 ?? '').' '.($chDetails->social3 ?? '')),
-        'Start Month' => $startMonthName,
-        'Start Year' => $chDetails->start_year,
-        'Dues Last Paid' => $chDetails->dues_last_paid,
-        'Members paid for' => $chDetails->members_paid_for,
-        'NextRenewal' => $chDetails->next_renewal_year,
-        'Founder' => $chDetails->founders_name,
-        'Sistered By' => $chDetails->sistered_by,
-        'FormerName' => $chDetails->former_name,
-    ];
-}
+            foreach ($chunks as $chunkIndex => $chunk) {
+                foreach ($chunk as $chId) {
+                    // Use your existing base controller method
+                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
+                    $rowData = $this->formatZappedChapterRowFromBaseController($chapterData);
+                    fputcsv($file, $rowData);
 
-/**
- * Format zapped chapter row data using existing base controller response
- */
-private function formatZappedChapterRowFromBaseController($chapterData)
-{
-    // Get the base chapter row data
-    $rowData = $this->formatChapterRowFromBaseController($chapterData);
+                    // Clear memory periodically within chunks
+                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 === 0) {
+                        if (ob_get_level()) {
+                            ob_flush();
+                        }
+                        flush();
+                    }
+                }
 
-    // Override officer details with disbanded versions
-    $PresDetails = $chapterData['PresDisbandedDetails'];
-    $AVPDetails = $chapterData['AVPDisbandedDetails'];
-    $MVPDetails = $chapterData['MVPDisbandedDetails'];
-    $TRSDetails = $chapterData['TRSDisbandedDetails'];
-    $SECDetails = $chapterData['SECDisbandedDetails'];
+                // Force garbage collection after each chunk
+                if (function_exists('gc_collect_cycles')) {
+                    gc_collect_cycles();
+                }
 
-    // Update officer information with disbanded details
-    $rowData['Pres Name'] = ($PresDetails && $PresDetails->first_name) ? $PresDetails->first_name.' '.$PresDetails->last_name : '';
-    $rowData['Pres Email'] = $PresDetails->email ?? '';
-    $rowData['Pres Phone'] = $PresDetails->phone ?? '';
-    $rowData['AVP Name'] = ($AVPDetails && $AVPDetails->first_name) ? $AVPDetails->first_name.' '.$AVPDetails->last_name : '';
-    $rowData['AVP Email'] = $AVPDetails->email ?? '';
-    $rowData['AVP Phone'] = $AVPDetails->phone ?? '';
-    $rowData['MVP Name'] = ($MVPDetails && $MVPDetails->first_name) ? $MVPDetails->first_name.' '.$MVPDetails->last_name : '';
-    $rowData['MVP Email'] = $MVPDetails->email ?? '';
-    $rowData['MVP Phone'] = $MVPDetails->phone ?? '';
-    $rowData['Treasurer Name'] = ($TRSDetails && $TRSDetails->first_name) ? $TRSDetails->first_name.' '.$TRSDetails->last_name : '';
-    $rowData['Treasurer Email'] = $TRSDetails->email ?? '';
-    $rowData['Treasurer Phone'] = $TRSDetails->phone ?? '';
-    $rowData['Secretary Name'] = ($SECDetails && $SECDetails->first_name) ? $SECDetails->first_name.' '.$SECDetails->last_name : '';
-    $rowData['Secretary Email'] = $SECDetails->email ?? '';
-    $rowData['Secretary Phone'] = $SECDetails->phone ?? '';
+                // Clear memory after each chunk
+                if (ob_get_level()) {
+                    ob_flush();
+                }
+                flush();
+            }
 
-    // Add zapped-specific fields
-    $chDetails = $chapterData['chDetails'];
-    $rowData['Disband Date'] = $chDetails->zap_date;
-    $rowData['Disband Reason'] = $chDetails->disband_reason;
+            fclose($file);
+        };
 
-    return $rowData;
-}
+        return Response::stream($callback, 200, $headers);
+    }
 
-/**
- * Alternative: Queue-based export for very large chapter datasets
- */
-// public function indexChapterQueued(Request $request)
-// {
-//     $user = $this->userController->loadUserInformation($request);
-//     $coorId = $user['user_coorId'];
-//     $confId = $user['user_confId'];
-//     $regId = $user['user_regId'];
-//     $positionId = $user['user_positionId'];
-//     $secPositionId = $user['user_secPositionId'];
+    /**
+     * Export International Chapter List
+     */
+    public function indexInternationalChapter(Request $request)
+    {
+        // Increase memory limit and execution time for large exports
+        ini_set('memory_limit', '512M');
+        set_time_limit(300); // 5 minutes
 
-//     // Dispatch job to handle export in background
-//     dispatch(new ExportChaptersJob($coorId, $confId, $regId, $positionId, $secPositionId, $user['user_id']));
+        $fileName = 'chapter_export_'.date('Y-m-d').'.csv';
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
 
-//     return response()->json([
-//         'message' => 'Chapter export started. You will receive an email when the file is ready.',
-//         'status' => 'processing'
-//     ]);
-// }
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+
+        // Get all chapter IDs first
+        $chapterIds = $baseQuery['query']->pluck('id')->toArray();
+
+        if (empty($chapterIds)) {
+            return redirect()->to('/home');
+        }
+
+        $callback = function () use ($chapterIds) {
+            $file = fopen('php://output', 'w');
+
+            // Write headers
+            $headers = [
+                'Conference', 'Region', 'State', 'Name', 'Primary Coordinator', 'EIN',
+                'Chapter Email', 'Chapter P.O. Box', 'Inquiries Email', 'Inquiries Notes',
+                'Status', 'Notes', 'Bounraries', 'Pres Name', 'Pres Email', 'Pres Phone',
+                'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
+                'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
+                'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
+                'Social Media', 'Start Month', 'Start Year', 'Dues Last Paid',
+                'Members paid for', 'NextRenewal', 'Founder', 'Sistered By', 'FormerName'
+            ];
+            fputcsv($file, $headers);
+
+            // Process chapters in chunks to manage memory
+            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
+            $chunks = array_chunk($chapterIds, $chunkSize);
+
+            foreach ($chunks as $chunkIndex => $chunk) {
+                foreach ($chunk as $chId) {
+                    // Use your existing base controller method
+                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
+                    $rowData = $this->formatChapterRowFromBaseController($chapterData);
+                    fputcsv($file, $rowData);
+
+                    // Clear memory periodically within chunks
+                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 === 0) {
+                        if (ob_get_level()) {
+                            ob_flush();
+                        }
+                        flush();
+                    }
+                }
+
+                // Force garbage collection after each chunk
+                if (function_exists('gc_collect_cycles')) {
+                    gc_collect_cycles();
+                }
+
+                // Clear memory after each chunk
+                if (ob_get_level()) {
+                    ob_flush();
+                }
+                flush();
+            }
+
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
+    }
+
+    /**
+     * Export International Zapped Chapter List
+     */
+    public function indexInternationalZapChapter(Request $request)
+    {
+        // Increase memory limit and execution time for large exports
+        ini_set('memory_limit', '512M');
+        set_time_limit(300); // 5 minutes
+
+        $fileName = 'chapter_zap_export_'.date('Y-m-d').'.csv';
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+
+        // Get all chapter IDs first
+        $chapterIds = $baseQuery['query']->pluck('id')->toArray();
+
+        if (empty($chapterIds)) {
+            return redirect()->to('/home');
+        }
+
+        $callback = function () use ($chapterIds) {
+            $file = fopen('php://output', 'w');
+
+            // Write headers
+            $headers = [
+                'Conference', 'Region', 'State', 'Name', 'Primary Coordinator', 'EIN',
+                'Chapter Email', 'Chapter P.O. Box', 'Inquiries Email', 'Inquiries Notes',
+                'Status', 'Notes', 'Bounraries', 'Pres Name', 'Pres Email', 'Pres Phone',
+                'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
+                'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
+                'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
+                'Social Media', 'Start Month', 'Start Year', 'Dues Last Paid',
+                'Members paid for', 'NextRenewal', 'Founder', 'Sistered By', 'FormerName',
+                'Disband Date', 'Disband Reason'
+            ];
+            fputcsv($file, $headers);
+
+            // Process chapters in chunks to manage memory
+            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
+            $chunks = array_chunk($chapterIds, $chunkSize);
+
+            foreach ($chunks as $chunkIndex => $chunk) {
+                foreach ($chunk as $chId) {
+                    // Use your existing base controller method
+                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
+                    $rowData = $this->formatZappedChapterRowFromBaseController($chapterData);
+                    fputcsv($file, $rowData);
+
+                    // Clear memory periodically within chunks
+                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 === 0) {
+                        if (ob_get_level()) {
+                            ob_flush();
+                        }
+                        flush();
+                    }
+                }
+
+                // Force garbage collection after each chunk
+                if (function_exists('gc_collect_cycles')) {
+                    gc_collect_cycles();
+                }
+
+                // Clear memory after each chunk
+                if (ob_get_level()) {
+                    ob_flush();
+                }
+                flush();
+            }
+
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
+    }
+
+    /**
+     * Format chapter row data using existing base controller response
+     */
+    private function formatChapterRowFromBaseController($chapterData)
+    {
+        $chDetails = $chapterData['chDetails'];
+        $stateShortName = $chapterData['stateShortName'];
+        $regionLongName = $chapterData['regionLongName'];
+        $chConfId = $chapterData['chConfId'];
+        $pcName = $chapterData['pcName'];
+        $startMonthName = $chapterData['startMonthName'];
+        $chapterStatus = $chapterData['chapterStatus'];
+        $websiteLink = $chapterData['websiteLink'];
+        $PresDetails = $chapterData['PresDetails'];
+        $AVPDetails = $chapterData['AVPDetails'];
+        $MVPDetails = $chapterData['MVPDetails'];
+        $TRSDetails = $chapterData['TRSDetails'];
+        $SECDetails = $chapterData['SECDetails'];
+
+        return [
+            'Conference' => $chConfId,
+            'Region' => $regionLongName,
+            'State' => $stateShortName,
+            'Name' => $chDetails->name,
+            'Primary Coordinator' => $pcName,
+            'EIN' => $chDetails->ein,
+            'Chapter Email' => $chDetails->email,
+            'Chapter P.O. Box' => $chDetails->po_box,
+            'Inquiries Email' => $chDetails->inquiries_contact,
+            'Inquiries Notes' => $chDetails->inquiries_note,
+            'Status' => $chapterStatus,
+            'Notes' => $chDetails->notes,
+            'Bounraries' => $chDetails->territory,
+            'Pres Name' => ($PresDetails && $PresDetails->first_name) ? $PresDetails->first_name.' '.$PresDetails->last_name : '',
+            'Pres Email' => $PresDetails->email ?? '',
+            'Pres Phone' => $PresDetails->phone ?? '',
+            'AVP Name' => ($AVPDetails && $AVPDetails->first_name) ? $AVPDetails->first_name.' '.$AVPDetails->last_name : '',
+            'AVP Email' => $AVPDetails->email ?? '',
+            'AVP Phone' => $AVPDetails->phone ?? '',
+            'MVP Name' => ($MVPDetails && $MVPDetails->first_name) ? $MVPDetails->first_name.' '.$MVPDetails->last_name : '',
+            'MVP Email' => $MVPDetails->email ?? '',
+            'MVP Phone' => $MVPDetails->phone ?? '',
+            'Treasurer Name' => ($TRSDetails && $TRSDetails->first_name) ? $TRSDetails->first_name.' '.$TRSDetails->last_name : '',
+            'Treasurer Email' => $TRSDetails->email ?? '',
+            'Treasurer Phone' => $TRSDetails->phone ?? '',
+            'Secretary Name' => ($SECDetails && $SECDetails->first_name) ? $SECDetails->first_name.' '.$SECDetails->last_name : '',
+            'Secretary Email' => $SECDetails->email ?? '',
+            'Secretary Phone' => $SECDetails->phone ?? '',
+            'Website' => $websiteLink,
+            'Linked Status' => $chDetails->website_status,
+            'EGroup' => $chDetails->egroup,
+            'Social Media' => trim(($chDetails->social1 ?? '').' '.($chDetails->social2 ?? '').' '.($chDetails->social3 ?? '')),
+            'Start Month' => $startMonthName,
+            'Start Year' => $chDetails->start_year,
+            'Dues Last Paid' => $chDetails->dues_last_paid,
+            'Members paid for' => $chDetails->members_paid_for,
+            'NextRenewal' => $chDetails->next_renewal_year,
+            'Founder' => $chDetails->founders_name,
+            'Sistered By' => $chDetails->sistered_by,
+            'FormerName' => $chDetails->former_name,
+        ];
+    }
+
+    /**
+     * Format zapped chapter row data using existing base controller response
+     */
+    private function formatZappedChapterRowFromBaseController($chapterData)
+    {
+        // Get the base chapter row data
+        $rowData = $this->formatChapterRowFromBaseController($chapterData);
+
+        // Override officer details with disbanded versions
+        $PresDetails = $chapterData['PresDisbandedDetails'];
+        $AVPDetails = $chapterData['AVPDisbandedDetails'];
+        $MVPDetails = $chapterData['MVPDisbandedDetails'];
+        $TRSDetails = $chapterData['TRSDisbandedDetails'];
+        $SECDetails = $chapterData['SECDisbandedDetails'];
+
+        // Update officer information with disbanded details
+        $rowData['Pres Name'] = ($PresDetails && $PresDetails->first_name) ? $PresDetails->first_name.' '.$PresDetails->last_name : '';
+        $rowData['Pres Email'] = $PresDetails->email ?? '';
+        $rowData['Pres Phone'] = $PresDetails->phone ?? '';
+        $rowData['AVP Name'] = ($AVPDetails && $AVPDetails->first_name) ? $AVPDetails->first_name.' '.$AVPDetails->last_name : '';
+        $rowData['AVP Email'] = $AVPDetails->email ?? '';
+        $rowData['AVP Phone'] = $AVPDetails->phone ?? '';
+        $rowData['MVP Name'] = ($MVPDetails && $MVPDetails->first_name) ? $MVPDetails->first_name.' '.$MVPDetails->last_name : '';
+        $rowData['MVP Email'] = $MVPDetails->email ?? '';
+        $rowData['MVP Phone'] = $MVPDetails->phone ?? '';
+        $rowData['Treasurer Name'] = ($TRSDetails && $TRSDetails->first_name) ? $TRSDetails->first_name.' '.$TRSDetails->last_name : '';
+        $rowData['Treasurer Email'] = $TRSDetails->email ?? '';
+        $rowData['Treasurer Phone'] = $TRSDetails->phone ?? '';
+        $rowData['Secretary Name'] = ($SECDetails && $SECDetails->first_name) ? $SECDetails->first_name.' '.$SECDetails->last_name : '';
+        $rowData['Secretary Email'] = $SECDetails->email ?? '';
+        $rowData['Secretary Phone'] = $SECDetails->phone ?? '';
+
+        // Add zapped-specific fields
+        $chDetails = $chapterData['chDetails'];
+        $rowData['Disband Date'] = $chDetails->zap_date;
+        $rowData['Disband Reason'] = $chDetails->disband_reason;
+
+        return $rowData;
+    }
 
     /**
      * Export Coordinator List
@@ -996,222 +1152,6 @@ private function formatZappedChapterRowFromBaseController($chapterData)
                     'Report Notes' => $chDocuments->report_notes,
                     'Extension Given' => ($chDocuments->report_extension == 1) ? 'YES' : 'NO',
                     'Extension Notes' => $chDocuments->extension_notes,
-                ];
-
-                $exportChapterList[] = $rowData;
-            }
-
-            $callback = function () use ($exportChapterList) {
-                $file = fopen('php://output', 'w');
-
-                if (! empty($exportChapterList)) {
-                    fputcsv($file, array_keys($exportChapterList[0]));
-                }
-
-                foreach ($exportChapterList as $row) {
-                    fputcsv($file, $row);
-                }
-
-                fclose($file);
-            };
-
-            return Response::stream($callback, 200, $headers);
-        }
-
-        return redirect()->to('/home');
-    }
-
-    /**
-     * Export International Chapter List
-     */
-    public function indexInternationalChapter(Request $request)
-    {
-        $fileName = 'int_chapter_'.date('Y-m-d').'.csv';
-        $headers = [
-            'Content-type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=$fileName",
-            'Pragma' => 'no-cache',
-            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires' => '0',
-        ];
-
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
-
-        if (count($chapterList) > 0) {
-            $exportChapterList = [];
-
-            foreach ($chapterList as $list) {
-                $chId = $list->id;
-                $baseQuery = $this->baseChapterController->getChapterDetails($chId);
-                $chDetails = $baseQuery['chDetails'];
-                $chId = $baseQuery['chId'];
-                $stateShortName = $baseQuery['stateShortName'];
-                $regionLongName = $baseQuery['regionLongName'];
-                $chConfId = $baseQuery['chConfId'];
-                $pcName = $baseQuery['pcName'];
-                $startMonthName = $baseQuery['startMonthName'];
-                $chapterStatus = $baseQuery['chapterStatus'];
-                $websiteLink = $baseQuery['websiteLink'];
-                $PresDetails = $baseQuery['PresDetails'];
-                $AVPDetails = $baseQuery['AVPDetails'];
-                $MVPDetails = $baseQuery['MVPDetails'];
-                $TRSDetails = $baseQuery['TRSDetails'];
-                $SECDetails = $baseQuery['SECDetails'];
-
-                $rowData = [
-                    'Conference' => $chConfId,
-                    'Region' => $regionLongName,
-                    'State' => $stateShortName,
-                    'Name' => $chDetails->name,
-                    'Primary Coordinator' => $pcName,
-                    'EIN' => $chDetails->ein,
-                    'Chapter Email' => $chDetails->email,
-                    'Chapter P.O. Box' => $chDetails->po_box,
-                    'Inquiries Email' => $chDetails->inquiries_contact,
-                    'Inquiries Notes' => $chDetails->inquiries_note,
-                    'Status' => $chapterStatus,
-                    'Notes' => $chDetails->notes,
-                    'Bounraries' => $chDetails->territory,
-                    'Pres Name' => $PresDetails->first_name.' '.$PresDetails->last_name,
-                    'Pres Email' => $PresDetails->email,
-                    'Pres Phone' => $PresDetails->phone,
-                    'AVP Name' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-                    'AVP Email' => $AVPDetails->email,
-                    'AVP Phone' => $AVPDetails->phone,
-                    'MVP Name' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-                    'MVP Email' => $MVPDetails->email,
-                    'MVP Phone' => $MVPDetails->phone,
-                    'Treasurer Name' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-                    'Treasurer Email' => $TRSDetails->email,
-                    'Treasurer Phone' => $TRSDetails->phone,
-                    'Secretary Name' => $SECDetails->first_name.' '.$SECDetails->last_name,
-                    'Secretary Email' => $SECDetails->email,
-                    'Secretary Phone' => $SECDetails->phone,
-                    'Website' => $websiteLink,
-                    'Linked Status' => $chDetails->website_status,
-                    'EGroup' => $chDetails->egroup,
-                    'Social Media' => $chDetails->social1.' '.$chDetails->social1.' '.$chDetails->social1,
-                    'Start Month' => $startMonthName,
-                    'Start Year' => $chDetails->start_year,
-                    'Dues Last Paid' => $chDetails->dues_last_paid,
-                    'Members paid for' => $chDetails->members_paid_for,
-                    'NextRenewal' => $chDetails->next_renewal_year,
-                    'Founder' => $chDetails->founders_name,
-                    'Sistered By' => $chDetails->sistered_by,
-                    'FormerName' => $chDetails->former_name,
-                ];
-
-                $exportChapterList[] = $rowData;
-            }
-
-            $callback = function () use ($exportChapterList) {
-                $file = fopen('php://output', 'w');
-
-                if (! empty($exportChapterList)) {
-                    fputcsv($file, array_keys($exportChapterList[0]));
-                }
-
-                foreach ($exportChapterList as $row) {
-                    fputcsv($file, $row);
-                }
-
-                fclose($file);
-            };
-
-            return Response::stream($callback, 200, $headers);
-        }
-
-        return redirect()->to('/home');
-    }
-
-    /**
-     * Export International Zapped Chapter List
-     */
-    public function indexInternationalZapChapter(Request $request)
-    {
-        $fileName = 'int_chapter_zap_export_'.date('Y-m-d').'.csv';
-        $headers = [
-            'Content-type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=$fileName",
-            'Pragma' => 'no-cache',
-            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires' => '0',
-        ];
-
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-
-        $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
-
-        if (count($chapterList) > 0) {
-            $exportChapterList = [];
-
-            foreach ($chapterList as $list) {
-                $chId = $list->id;
-                $baseQuery = $this->baseChapterController->getChapterDetails($chId);
-                $chDetails = $baseQuery['chDetails'];
-                $chId = $baseQuery['chId'];
-                $stateShortName = $baseQuery['stateShortName'];
-                $regionLongName = $baseQuery['regionLongName'];
-                $chConfId = $baseQuery['chConfId'];
-                $pcName = $baseQuery['pcName'];
-                $startMonthName = $baseQuery['startMonthName'];
-                $chapterStatus = $baseQuery['chapterStatus'];
-                $websiteLink = $baseQuery['websiteLink'];
-                $PresDetails = $baseQuery['PresDisbandedDetails'];
-                $AVPDetails = $baseQuery['AVPDisbandedDetails'];
-                $MVPDetails = $baseQuery['MVPDisbandedDetails'];
-                $TRSDetails = $baseQuery['TRSDisbandedDetails'];
-                $SECDetails = $baseQuery['SECDisbandedDetails'];
-
-                $rowData = [
-                    'Conference' => $chConfId,
-                    'Region' => $regionLongName,
-                    'State' => $stateShortName,
-                    'Name' => $chDetails->name,
-                    'Primary Coordinator' => $pcName,
-                    'EIN' => $chDetails->ein,
-                    'Chapter Email' => $chDetails->email,
-                    'Chapter P.O. Box' => $chDetails->po_box,
-                    'Inquiries Email' => $chDetails->inquiries_contact,
-                    'Inquiries Notes' => $chDetails->inquiries_note,
-                    'Status' => $chapterStatus,
-                    'Notes' => $chDetails->notes,
-                    'Bounraries' => $chDetails->territory,
-                    'Pres Name' => $PresDetails->first_name.' '.$PresDetails->last_name,
-                    'Pres Email' => $PresDetails->email,
-                    'Pres Phone' => $PresDetails->phone,
-                    'AVP Name' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-                    'AVP Email' => $AVPDetails->email,
-                    'AVP Phone' => $AVPDetails->phone,
-                    'MVP Name' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-                    'MVP Email' => $MVPDetails->email,
-                    'MVP Phone' => $MVPDetails->phone,
-                    'Treasurer Name' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-                    'Treasurer Email' => $TRSDetails->email,
-                    'Treasurer Phone' => $TRSDetails->phone,
-                    'Secretary Name' => $SECDetails->first_name.' '.$SECDetails->last_name,
-                    'Secretary Email' => $SECDetails->email,
-                    'Secretary Phone' => $SECDetails->phone,
-                    'Website' => $websiteLink,
-                    'Linked Status' => $chDetails->website_status,
-                    'EGroup' => $chDetails->egroup,
-                    'Social Media' => $chDetails->social1.' '.$chDetails->social1.' '.$chDetails->social1,
-                    'Start Month' => $startMonthName,
-                    'Start Year' => $chDetails->start_year,
-                    'Dues Last Paid' => $chDetails->dues_last_paid,
-                    'Members paid for' => $chDetails->members_paid_for,
-                    'NextRenewal' => $chDetails->next_renewal_year,
-                    'Founder' => $chDetails->founders_name,
-                    'Sistered By' => $chDetails->sistered_by,
-                    'FormerName' => $chDetails->former_name,
-                    'Disband Date' => $chDetails->zap_date,
-                    'Disband Reason' => $chDetails->disband_reason,
                 ];
 
                 $exportChapterList[] = $rowData;
