@@ -219,7 +219,7 @@ class BaseCoordinatorController extends Controller
      */
     public function getCoordinatorDetails($cdId)
     {
-        $cdDetails = Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth',
+        $cdDetails = Coordinators::with(['country', 'state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth',
             'reportsTo', 'recognition'])->find($cdId);
         $cdIsActive = $cdDetails->is_active;
         $cdPositionid = $cdDetails->position_id;
