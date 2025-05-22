@@ -1,5 +1,5 @@
 @component('mail::message')
-# MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
+# MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}
 
 Thank you for submitting your new website for linking.  The site has been reviewed and has been added to the main MOMS Club website.<br>
 <br>

@@ -1,7 +1,7 @@
 @component('mail::message')
 # Disband Checklist Complete
 
-{{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}, thank you for completing the disbanding checklist.<br>
+{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}, thank you for completing the disbanding checklist.<br>
 <br>
 You may now consider the steps to officially close your chapter finished.<br>
 <br>

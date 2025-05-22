@@ -233,6 +233,13 @@ class BaseCoordinatorController extends Controller
         $displayPosition = $cdDetails->displayPosition;
         $mimiPosition = $cdDetails->mimiPosition;
 
+         if ($cdDetails->state_id < 52){
+            $cdstateShortName = $cdDetails->state->state_short_name;
+        }
+        else{
+            $cdstateShortName = $cdDetails->country->short_name;
+        }
+
         $secondaryPosition = [];
         $secondaryPositionShort = [];
         $secondaryPositionId = [];
@@ -271,7 +278,7 @@ class BaseCoordinatorController extends Controller
             'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'cdAdminRole' => $cdAdminRole,
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths, 'secondaryPositionId' => $secondaryPositionId,
             'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid, 'secondaryPositionShort' => $secondaryPositionShort,
-            'allRecognitionGifts' => $allRecognitionGifts, 'allCountries' => $allCountries
+            'allRecognitionGifts' => $allRecognitionGifts, 'allCountries' => $allCountries, 'cdstateShortName' => $cdstateShortName
         ];
     }
 }

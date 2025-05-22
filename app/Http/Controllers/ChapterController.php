@@ -300,7 +300,7 @@ class ChapterController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $chIsActive = $baseQuery['chIsActive'];
         $stateShortName = $baseQuery['stateShortName'];
-        $countryShortName = $baseQuery['countryShortName'];
+        // $countryShortName = $baseQuery['countryShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chConfId = $baseQuery['chConfId'];
@@ -345,7 +345,7 @@ class ChapterController extends Controller implements HasMiddleware
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
             'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
-            'resources' => $resources, 'countryShortName' => $countryShortName,
+            'resources' => $resources,
         ];
 
         return view('chapters.view')->with($data);

@@ -68,14 +68,14 @@ class BaseChapterController extends Controller
         // For pending (2) or not approved (3) status, we need to use relations from the BoardsPending table
         if ($activeStatus == 2 || $activeStatus == 3) {
             return $query->with([
-                'state', 'conference', 'region', 'webLink',
+                'country', 'state', 'conference', 'region', 'webLink',
                 'pendingPresident', 'pendingAvp', 'pendingMvp', 'pendingTreasurer', 'pendingSecretary',
                 'payments', 'startMonth', 'primaryCoordinator',
             ]);
         } else {
             // For active (1) or zapped (0), use the regular Boards table
             return $query->with([
-                'state', 'conference', 'region', 'webLink',
+                'country', 'state', 'conference', 'region', 'webLink',
                 'president', 'avp', 'mvp', 'treasurer', 'secretary',
                 'payments', 'startMonth', 'primaryCoordinator',
             ]);
@@ -386,8 +386,16 @@ class BaseChapterController extends Controller
         $chIsActive = $chDetails->active_status;
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
-        $stateShortName = $chDetails->state->state_short_name;
-        $countryShortName = $chDetails->country->short_name;
+
+        if ($chDetails->state_id < 52){
+            $stateShortName = $chDetails->state->state_short_name;
+        }
+        else{
+            $stateShortName = $chDetails->country->short_name;
+        }
+
+        // $stateShortName = $chDetails->state->state_short_name;
+        // $countryShortName = $chDetails->country->short_name;
         $regionLongName = $chDetails->region?->long_name;
         $conferenceDescription = $chDetails->conference?->conference_description;
         $chConfId = $chDetails->conference_id;
@@ -420,7 +428,7 @@ class BaseChapterController extends Controller
 
         $boards = $chDetails->boards()->with(['state', 'country'])->get();
         $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'country' => '', 'user_id' => ''];
+        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
         // Fetch board details or fallback to default
         $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
@@ -432,7 +440,7 @@ class BaseChapterController extends Controller
         $chDisbanded = $chDetails->disbandCheck;
         $bdDisbanded = $chDetails->boardsDisbanded()->with(['state', 'country'])->get();
         $bdDisbandedDetails = $bdDisbanded->groupBy('board_position_id');
-        $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'country' => '', 'user_id' => ''];
+        $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
         // Fetch board details or fallback to default
         $PresDisbandedDetails = $bdDisbandedDetails->get(1, collect([$defaultDisbandedBoardMember]))->first(); // President
@@ -444,7 +452,7 @@ class BaseChapterController extends Controller
         $chPending = $chDetails->pendingCheck;
         $bdPending = $chDetails->boardsPending()->with('state', 'country')->get();
         $bdPendingDetails = $bdPending->groupBy('board_position_id');
-        $defaultPendingBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+        $defaultPendingBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
         // Fetch board details or fallback to default
         $PresPendingDetails = $bdPendingDetails->get(1, collect([$defaultPendingBoardMember]))->first(); // President
@@ -483,7 +491,7 @@ class BaseChapterController extends Controller
             'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails, 'allProbation' => $allProbation,
             'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
             'chPending' => $chPending, 'PresPendingDetails' => $PresPendingDetails, 'AVPPendingDetails' => $AVPPendingDetails, 'MVPPendingDetails' => $MVPPendingDetails, 'TRSPendingDetails' => $TRSPendingDetails,
-            'SECPendingDetails' => $SECPendingDetails, 'allRegions' => $allRegions, 'allCountries' => $allCountries, 'countryShortName' => $countryShortName
+            'SECPendingDetails' => $SECPendingDetails, 'allRegions' => $allRegions, 'allCountries' => $allCountries,
         ];
     }
 }

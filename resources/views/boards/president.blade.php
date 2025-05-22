@@ -50,13 +50,7 @@
                                         $thisDate = \Illuminate\Support\Carbon::now();
                                     @endphp
                                     <div class="col-md-12"><br><br></div>
-                                    <h2 class="text-center">MOMS Club of {{ $chDetails->name }},
-                                         @if($chDetails->state_id < 52)
-                                            {{$chDetails->state->state_short_name}}
-                                        @else
-                                            {{$chDetails->country->short_name}}
-                                        @endif
-                                    </h2>
+                                    <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
                                     <h2 class="text-center">{{$PresDetails->first_name}} {{$PresDetails->last_name}}, {{$PresDetails->position?->position}}</h2>
                                     <p class="description text-center">
                                         Welcome to the MOMS information Management Interface, affectionately called MIMI!

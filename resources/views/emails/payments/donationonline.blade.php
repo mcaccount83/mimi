@@ -1,7 +1,7 @@
 @component('mail::message')
 # Admin Donation Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has made a Donation to the Mother-to-Mother Fund through the MOMS Information Management Interface.<br>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has made a Donation to the Mother-to-Mother Fund through the MOMS Information Management Interface.<br>
 <br>
 <table>
     <tbody>

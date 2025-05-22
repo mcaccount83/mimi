@@ -10,7 +10,7 @@ A New Chapter Application has been submitted for Conference {{ $mailData['chapte
         </tr>
         <tr>
             <td>Requested Name:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}</td>
+            <td>{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}</td>
         </tr>
         <tr>
             <td>Requested Boundaries:&nbsp;&nbsp;</td>

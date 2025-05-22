@@ -1,7 +1,7 @@
 @component('mail::message')
 # Election Report Submitted
 
-{{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}, thank you for submitting your Election Report.<br>
+{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}, thank you for submitting your Election Report.<br>
 <br>
 Once activated, your incoming board members will have access to your chapter's MIMI account.<br>
 <br>

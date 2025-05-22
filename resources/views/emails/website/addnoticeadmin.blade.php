@@ -1,7 +1,7 @@
 @component('mail::message')
 # Website Link Notification
 
-Thank you for completing the review on the website for the MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}.<br>
+Thank you for completing the review on the website for the MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}.<br>
 <br>
 The new website address is: {{$mailData['chapterWebsiteURL']}}.<br>
 <br>

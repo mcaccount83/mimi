@@ -357,7 +357,7 @@ class PublicController extends Controller
             $founerEmail = $input['ch_pre_email'];
 
             $mailData = array_merge(
-                $this->baseMailDataController->getNewChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getNewChapterData($chDetails),
                 $this->baseMailDataController->getPublicPaymentData($input, $invoice),
             );
 

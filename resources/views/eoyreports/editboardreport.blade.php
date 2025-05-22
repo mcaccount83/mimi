@@ -49,13 +49,7 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }},
-                    @if($chDetails->state_id < 52)
-                        {{$chDetails->state->state_short_name}}
-                    @else
-                        {{$chDetails->country->short_name}}
-                    @endif
-                </h3>
+                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
                 <br>
                 @if ($chDetails->documents->new_board_submitted != '1' )
                     <p><span style="color:#dc3545;">Board Election Report has NOT been submitted.</span><br>

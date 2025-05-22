@@ -1,7 +1,7 @@
 @component('mail::message')
 # Re-Registration Admin Payment Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has submitted their Re-Registration payment through the MOMS Information Management Interface.<br>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has submitted their Re-Registration payment through the MOMS Information Management Interface.<br>
 <br>
 <table>
     <tbody>
@@ -20,7 +20,8 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
             <td>President Address:&nbsp;&nbsp;<br>
                 &nbsp;&nbsp;</td>
             <td>{{ $mailData['presAddress'] }}<br>
-                {{ $mailData['presCity'] }}, {{ $mailData['presState'] }} {{ $mailData['presZip'] }}</td>
+                {{ $mailData['presCity'] }}, {{ $mailData['presState'] }} {{ $mailData['presZip'] }}<br>
+                {{ $mailData['presCountry']}}</td>
         </tr>
         <tr>
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Payment Information</strong></center></td>

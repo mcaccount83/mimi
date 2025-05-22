@@ -1160,20 +1160,6 @@ class EOYReportController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
             );
 
-            // $mailData = [
-            //     'chapterid' => $id,
-            //     'chapter_name' => $chDetails->name,
-            //     'chapter_state' => $stateShortName,
-            //     'completed_name' => $completed_name,
-            //     'completed_email' => $completed_email,
-            //     'roster_path' => $roster_path,
-            //     'file_irs_path' => $file_irs_path,
-            //     'bank_statement_included_path' => $statement_1_path,
-            //     'bank_statement_2_included_path' => $statement_2_path,
-            //     'reviewer_email_message' => $reviewer_email_message,
-            //     'userName' => $userName,
-            // ];
-
             if ($financialReport->isDirty('reviewer_id')) {
                 $newReviewerId = $financialReport->reviewer_id;
                 $newReviewer = Coordinators::find($newReviewerId);

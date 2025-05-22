@@ -1,7 +1,7 @@
 @component('mail::message')
 # Financial Report Check-In Notification
 
-{{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has submitted their Financial Report. It is ready to be reviewed. The Financial Report PDF is attached and other
+{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has submitted their Financial Report. It is ready to be reviewed. The Financial Report PDF is attached and other
 documents that can be downloaded are listed below.<br>
 <br>
 Submitted by: {{$mailData['completedName']}}, <a href="mailto:{{$mailData['completedEmail']}}">{{$mailData['completedEmail']}}</a><br>

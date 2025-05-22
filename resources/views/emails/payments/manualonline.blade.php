@@ -1,7 +1,7 @@
 @component('mail::message')
 # Admin Manual Order Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has ordered a replacement manual through the MOMS Information Management Interface.<br>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has ordered a replacement manual through the MOMS Information Management Interface.<br>
 <br>
 <table>
     <tbody>
@@ -28,7 +28,8 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
             <td>Shipping Address:&nbsp;&nbsp;<br>
                 &nbsp;&nbsp;</td>
             <td>{{ $mailData['ship_street'] }}<br>
-                {{ $mailData['ship_city'] }}, {{ $mailData['ship_state'] }} {{ $mailData['ship_zip'] }}</td>
+                {{ $mailData['ship_city'] }}, {{ $mailData['ship_state'] }} {{ $mailData['ship_zip'] }}<br>
+                {{ $mailData['ship_country']}}</td>
         </tr>
         <tr>
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Payment Information</strong></center></td>

@@ -1,7 +1,7 @@
 @component('mail::message')
 # Website Review Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has updated their chapter website and they have requested to have it linked to the MOMS Club website.<br>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has updated their chapter website and they have requested to have it linked to the MOMS Club website.<br>
 <br>
 The new website address is: {{$mailData['chapterWebsiteURL']}}.<br>
 <br>

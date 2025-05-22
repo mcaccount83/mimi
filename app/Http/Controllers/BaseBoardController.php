@@ -36,7 +36,15 @@ class BaseBoardController extends Controller
         $chIsActive = $chDetails->active_status;
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
-        $stateShortName = $chDetails->state->state_short_name;
+
+         if ($chDetails->state_id < 52){
+            $stateShortName = $chDetails->state->state_short_name;
+        }
+        else{
+            $stateShortName = $chDetails->country->short_name;
+        }
+
+        // $stateShortName = $chDetails->state->state_short_name;
         $chConfId = $chDetails->conference_id;
         $chPcId = $chDetails->primary_coordinator_id;
         $probationReason = $chDetails->probation?->probation_reason;
@@ -62,7 +70,7 @@ class BaseBoardController extends Controller
 
         $boards = $chDetails->boards()->with(['state', 'country'])->get();
         $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'country' => '', 'user_id' => ''];
+        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
         // Fetch board details or fallback to default
         $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President

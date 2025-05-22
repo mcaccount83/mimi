@@ -303,21 +303,10 @@ class PDFController extends Controller
         $PresDetails = $baseQuery['PresDetails'];
         $emailCCData = $baseQuery['emailCCData'];
 
-        // $ccName = $baseQuery['cc_fname'].' '.$baseQuery['cc_lname'];
-        // $ccPosition = $baseQuery['cc_pos'];
-        // $ccConfName = $baseQuery['cc_conf_name'];
-        // $ccConfDescription = $baseQuery['cc_conf_desc'];
-
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
             $this->baseMailDataController->getCCData($emailCCData),
-            // [
-            //     'ccName' => $ccName,
-            //     'ccPosition' => $ccPosition,
-            //     'ccConfName' => $ccConfName,
-            //     'ccConfDescription' => $ccConfDescription,
-            // ],
         );
 
         $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
@@ -452,8 +441,6 @@ class PDFController extends Controller
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $request);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
-        // $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
-        // $sanitizedChapterName = $baseQuery['chapterNameSanitized'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $PresDetails = $baseQuery['PresDisbandedDetails'];
@@ -471,7 +458,6 @@ class PDFController extends Controller
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
             [
-                // 'ch_name' => $sanitizedChapterName,
                 'today' => $dateFormatted,
                 'nextMonth' => $nextMonthFormatted,
                 'startMonth' => $startMonthName,
@@ -626,7 +612,6 @@ class PDFController extends Controller
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
-        // $sanitizedChapterName = str_replace(['/', '\\'], '-', $chDetails->name);
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $PresDetails = $baseQuery['PresDetails'];
@@ -644,7 +629,6 @@ class PDFController extends Controller
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
             [
-                // 'ch_name' => $sanitizedChapterName,
                 'today' => $dateFormatted,
                 'nextMonth' => $nextMonthFormatted,
                 'startMonth' => $startMonthName,
