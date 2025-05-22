@@ -304,8 +304,8 @@ class ExportController extends Controller implements HasMiddleware
     public function indexInternationalZapChapter(Request $request)
     {
         // Increase memory limit and execution time for large exports
-        ini_set('memory_limit', '512M');
-        set_time_limit(300); // 5 minutes
+        ini_set('memory_limit', '624M');
+        set_time_limit(600); // 10 minutes
 
         $fileName = 'chapter_zap_export_'.date('Y-m-d').'.csv';
         $headers = [
