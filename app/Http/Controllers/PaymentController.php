@@ -12,6 +12,7 @@ use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
 use App\Models\PaymentLog;
 use App\Models\Payments;
+use App\Models\State;
 use App\Models\Country;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
@@ -75,18 +76,21 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingCompany = $name;
         $shippingAddress = $PresDetails->street_address;
         $shippingCity = $PresDetails->city;
-        $shippingState = $PresDetails->state_id;
+        $shipStateId = $input['ship_state'];
+        $state = State::find($shipStateId);
+        $shippingState = $state->state_short_name;
         $shippingZip = $PresDetails->zip;
 
-         $preStateId = intval($input['ch_pre_state']);
-        $specialStates = [52, 53, 54, 55];  // Define special states that require custom country selection
-        if (in_array($preStateId, $specialStates) && isset($input['ch_pre_country']) && !empty($input['ch_pre_country'])) {
-            $preCountryId = $input['ch_pre_country']; // Use the submitted country for special states
-        } else {
-            $preCountryId = 198;  // Default to USA for all other states
+        $shipStateId = intval($input['ship_state']);
+        if ($shipStateId < 52){
+            $shippingCountry = 'USA';
         }
-        $country = Country::find($preCountryId);
-        $shippingCountry = $country->state_short_name;
+        else{
+            $countryId = $input['ship_country'];
+            $country = Country::find($countryId);
+            $countryShortName = $country->short_name;
+            $shippingCountry = $countryShortName;
+        }
 
         // $paymentResponse = $this->processPayment($request);
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
@@ -192,18 +196,21 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingCompany = $name;
         $shippingAddress = $PresDetails->street_address;
         $shippingCity = $PresDetails->city;
-        $shippingState = $PresDetails->state_id;
+        $shipStateId = $input['ship_state'];
+        $state = State::find($shipStateId);
+        $shippingState = $state->state_short_name;
         $shippingZip = $PresDetails->zip;
 
-         $preStateId = intval($input['ch_pre_state']);
-        $specialStates = [52, 53, 54, 55];  // Define special states that require custom country selection
-        if (in_array($preStateId, $specialStates) && isset($input['ch_pre_country']) && !empty($input['ch_pre_country'])) {
-            $preCountryId = $input['ch_pre_country']; // Use the submitted country for special states
-        } else {
-            $preCountryId = 198;  // Default to USA for all other states
+        $shipStateId = intval($input['ship_state']);
+        if ($shipStateId < 52){
+            $shippingCountry = 'USA';
         }
-        $country = Country::find($preCountryId);
-        $shippingCountry = $country->state_short_name;
+        else{
+            $countryId = $input['ship_country'];
+            $country = Country::find($countryId);
+            $countryShortName = $country->short_name;
+            $shippingCountry = $countryShortName;
+        }
 
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
@@ -308,18 +315,21 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingCompany = $name;
         $shippingAddress = $input['ship_street'];
         $shippingCity = $input['ship_city'];
-        $shippingState = $input['ship_state'];
+        $shipStateId = $input['ship_state'];
+        $state = State::find($shipStateId);
+        $shippingState = $state->state_short_name;
         $shippingZip = $input['ship_zip'];
 
-         $preStateId = intval($input['ship_state']);
-        $specialStates = [52, 53, 54, 55];  // Define special states that require custom country selection
-        if (in_array($preStateId, $specialStates) && isset($input['ship_country']) && !empty($input['ship_country'])) {
-            $preCountryId = $input['ship_country']; // Use the submitted country for special states
-        } else {
-            $preCountryId = 198;  // Default to USA for all other states
+        $shipStateId = intval($input['ship_state']);
+        if ($shipStateId < 52){
+            $shippingCountry = 'USA';
         }
-        $country = Country::find($preCountryId);
-        $shippingCountry = $country->state_short_name;
+        else{
+            $countryId = $input['ship_country'];
+            $country = Country::find($countryId);
+            $countryShortName = $country->short_name;
+            $shippingCountry = $countryShortName;
+        }
 
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
             $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
