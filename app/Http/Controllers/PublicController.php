@@ -288,8 +288,8 @@ class PublicController extends Controller
         $country = Country::find($preCountryId);
         $shippingCountry = $country->state_short_name;
 
-        $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
-                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip, $shippingCountry);
+        $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
+                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
@@ -428,10 +428,10 @@ class PublicController extends Controller
         $shippingState = $input['ship_state'];
         $shippingZip = $input['ship_zip'];
 
-        $preStateId = intval($input['ch_pre_state']);
+        $preStateId = intval($input['ship_state']);
         $specialStates = [52, 53, 54, 55];  // Define special states that require custom country selection
-        if (in_array($preStateId, $specialStates) && isset($input['ch_pre_country']) && !empty($input['ch_pre_country'])) {
-            $preCountryId = $input['ch_pre_country']; // Use the submitted country for special states
+        if (in_array($preStateId, $specialStates) && isset($input['ship_country']) && !empty($input['ship_country'])) {
+            $preCountryId = $input['ship_country']; // Use the submitted country for special states
         } else {
             $preCountryId = 198;  // Default to USA for all other states
         }
