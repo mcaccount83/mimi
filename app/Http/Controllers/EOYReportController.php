@@ -542,22 +542,29 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
 
+        $baseIncomingBoardQuery = $this->baseChapterController->getIncomingBoardDetails($id);
+        $PresDetails = $baseIncomingBoardQuery['PresIncomingDetails'];
+        $AVPDetails = $baseIncomingBoardQuery['AVPIncomingDetails'];
+        $MVPDetails = $baseIncomingBoardQuery['MVPIncomingDetails'];
+        $TRSDetails = $baseIncomingBoardQuery['TRSIncomingDetails'];
+        $SECDetails = $baseIncomingBoardQuery['SECIncomingDetails'];
+
         // $boards = BoardsIncoming::find($id);
-        $boards = BoardsIncoming::where('chapter_id', $id)->get();
-        if ($boards && $boards->count() > 0) {
-            $bdDetails = $boards->groupBy('board_position_id');
-        } else {
-            $bdDetails = collect(); // Empty collection
-        }
+        // $boards = BoardsIncoming::where('chapter_id', $id)->get();
+        // if ($boards && $boards->count() > 0) {
+        //     $bdDetails = $boards->groupBy('board_position_id');
+        // } else {
+        //     $bdDetails = collect(); // Empty collection
+        // }
 
-        // $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
+        // // $bdDetails = $boards->groupBy('board_position_id');
+        // $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
-        $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
-        $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
-        $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
-        $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
-        $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
+        // $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
+        // $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
+        // $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
+        // $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
+        // $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
 
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu

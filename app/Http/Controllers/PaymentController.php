@@ -12,7 +12,7 @@ use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
 use App\Models\PaymentLog;
 use App\Models\Payments;
-use App\Models\User;
+use App\Models\Country;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -78,8 +78,18 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingState = $PresDetails->state_id;
         $shippingZip = $PresDetails->zip;
 
+         $preStateId = intval($input['ch_pre_state']);
+        $specialStates = [52, 53, 54, 55];  // Define special states that require custom country selection
+        if (in_array($preStateId, $specialStates) && isset($input['ch_pre_country']) && !empty($input['ch_pre_country'])) {
+            $preCountryId = $input['ch_pre_country']; // Use the submitted country for special states
+        } else {
+            $preCountryId = 198;  // Default to USA for all other states
+        }
+        $country = Country::find($preCountryId);
+        $shippingCountry = $country->state_short_name;
+
         // $paymentResponse = $this->processPayment($request);
-        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
+        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
                         $shippingFirst, $shippingLast,$shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
@@ -185,7 +195,17 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingState = $PresDetails->state_id;
         $shippingZip = $PresDetails->zip;
 
-        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
+         $preStateId = intval($input['ch_pre_state']);
+        $specialStates = [52, 53, 54, 55];  // Define special states that require custom country selection
+        if (in_array($preStateId, $specialStates) && isset($input['ch_pre_country']) && !empty($input['ch_pre_country'])) {
+            $preCountryId = $input['ch_pre_country']; // Use the submitted country for special states
+        } else {
+            $preCountryId = 198;  // Default to USA for all other states
+        }
+        $country = Country::find($preCountryId);
+        $shippingCountry = $country->state_short_name;
+
+        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
@@ -291,7 +311,17 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingState = $input['ship_state'];
         $shippingZip = $input['ship_zip'];
 
-        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId,
+        $preStateId = intval($input['ch_pre_state']);
+        $specialStates = [52, 53, 54, 55];  // Define special states that require custom country selection
+        if (in_array($preStateId, $specialStates) && isset($input['ch_pre_country']) && !empty($input['ch_pre_country'])) {
+            $preCountryId = $input['ch_pre_country']; // Use the submitted country for special states
+        } else {
+            $preCountryId = 198;  // Default to USA for all other states
+        }
+        $country = Country::find($preCountryId);
+        $shippingCountry = $country->state_short_name;
+
+        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
             $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
@@ -327,7 +357,7 @@ class PaymentController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPaymentData($chPayments, $input),
-                $this->baseMailDataController->getShippingData($input),
+                $this->baseMailDataController->getShippingData($input, $shippingCountry),
             );
 
             if ($manualOrder && $manual > 0) {
@@ -356,7 +386,7 @@ class PaymentController extends Controller implements HasMiddleware
     /**
      * Process payments with Authorize.net
      */
-     public function processPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId,
+     public function processPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
                 $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
         if (app()->environment('local')) {
@@ -444,7 +474,7 @@ class PaymentController extends Controller implements HasMiddleware
         $customerShipping->setCity($shippingCity);
         $customerShipping->setState($shippingState);
         $customerShipping->setZip($shippingZip);
-        $customerShipping->setCountry("USA");
+        $customerShipping->setCountry($shippingCountry);
 
         // Set the customer's identifying information
         $customerData = new AnetAPI\CustomerDataType;

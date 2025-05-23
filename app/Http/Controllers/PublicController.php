@@ -460,7 +460,7 @@ class PublicController extends Controller
         try {
              $mailData = array_merge(
                 $this->baseMailDataController->getPublicPaymentData($input, $invoice),
-                $this->baseMailDataController->getShippingData($input),
+                $this->baseMailDataController->getShippingData($input, $shippingCountry),
             );
 
             if ($sustainingDonation && $sustaining > 0) {

@@ -278,7 +278,7 @@ class ExportController extends Controller implements HasMiddleware
             $this->formatChapterStatusInfo($chapterData),
             $this->formatChapterPCInfo($chapterData),
             $this->formatChapterContactInfo($chapterData),
-            $this->formatBoardMemberInfo($chapterData),
+            $this->formatDisbandedBoardMemberInfo($chapterData),
             $this->formatWebsiteInfo($chapterData),
             $this->formatPaymentInfo($chapterData),
             $this->formatChapterStartInfo($chapterData),
@@ -359,8 +359,8 @@ class ExportController extends Controller implements HasMiddleware
                 'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
                 'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
                 'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-                'Social Media', 'Start Month', 'Start Year', 'Next Renewal', 'Dues Last Paid',
-                'Members paid for','Re-Reg Notes', 'Founder', 'Sistered By', 'FormerName'
+                'Social Media',  'Next Renewal', 'Dues Last Paid','Members paid for','Re-Reg Notes',
+                'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
             ];
             fputcsv($file, $headers);
 
@@ -372,7 +372,11 @@ class ExportController extends Controller implements HasMiddleware
                 foreach ($chunk as $chId) {
                     // Use your existing base controller method
                     $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $rowData = $this->formatFullChapterRow($chapterData);
+                    $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
+                    // Merge the data arrays
+                    $combinedData = array_merge($chapterData, $boardData);
+
+                    $rowData = $this->formatFullChapterRow($combinedData);
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
@@ -447,8 +451,8 @@ class ExportController extends Controller implements HasMiddleware
                 'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
                 'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
                 'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-                'Social Media', 'Start Month', 'Start Year', 'Next Renewal', 'Dues Last Paid',
-                'Members paid for','Re-Reg Notes', 'Founder', 'Sistered By', 'FormerName',
+                'Social Media',  'Next Renewal', 'Dues Last Paid','Members paid for','Re-Reg Notes',
+                'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
                 'Disband Date', 'Disband Reason'
             ];
             fputcsv($file, $headers);
@@ -461,7 +465,11 @@ class ExportController extends Controller implements HasMiddleware
                 foreach ($chunk as $chId) {
                     // Use your existing base controller method
                     $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $rowData = $this->formatZappedChapterRow($chapterData);
+                    $boardData = $this->baseChapterController->getDisbandedBoardDetails($chId);
+                    // Merge the data arrays
+                    $combinedData = array_merge($chapterData, $boardData);
+
+                    $rowData = $this->formatZappedChapterRow($combinedData);
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
@@ -500,7 +508,7 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300); // 5 minutes
 
-        $fileName = 'chapter_export_'.date('Y-m-d').'.csv';
+        $fileName = 'int_chapter_export_'.date('Y-m-d').'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -536,8 +544,8 @@ class ExportController extends Controller implements HasMiddleware
                 'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
                 'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
                 'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-                'Social Media', 'Start Month', 'Start Year', 'Next Renewal', 'Dues Last Paid',
-                'Members paid for','Re-Reg Notes', 'Founder', 'Sistered By', 'FormerName'
+                'Social Media',  'Next Renewal', 'Dues Last Paid','Members paid for','Re-Reg Notes',
+                'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
             ];
             fputcsv($file, $headers);
 
@@ -549,7 +557,11 @@ class ExportController extends Controller implements HasMiddleware
                 foreach ($chunk as $chId) {
                     // Use your existing base controller method
                     $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $rowData = $this->formatFullChapterRow($chapterData);
+                    $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
+                    // Merge the data arrays
+                    $combinedData = array_merge($chapterData, $boardData);
+
+                    $rowData = $this->formatFullChapterRow($combinedData);
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
@@ -588,7 +600,7 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512');
         set_time_limit(600); // 10 minutes
 
-        $fileName = 'chapter_zap_export_'.date('Y-m-d').'.csv';
+        $fileName = 'int_chapter_zap_export_'.date('Y-m-d').'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -624,8 +636,8 @@ class ExportController extends Controller implements HasMiddleware
                 'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
                 'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
                 'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-                'Social Media', 'Start Month', 'Start Year', 'Next Renewal', 'Dues Last Paid',
-                'Members paid for','Re-Reg Notes', 'Founder', 'Sistered By', 'FormerName',
+                'Social Media',  'Next Renewal', 'Dues Last Paid','Members paid for','Re-Reg Notes',
+                'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
                 'Disband Date', 'Disband Reason'
             ];
             fputcsv($file, $headers);
@@ -638,7 +650,11 @@ class ExportController extends Controller implements HasMiddleware
                 foreach ($chunk as $chId) {
                     // Use your existing base controller method
                     $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $rowData = $this->formatZappedChapterRow($chapterData);
+                    $boardData = $this->baseChapterController->getDisbandedBoardDetails($chId);
+                    // Merge the data arrays
+                    $combinedData = array_merge($chapterData, $boardData);
+
+                    $rowData = $this->formatZappedChapterRow($combinedData);
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
@@ -890,7 +906,11 @@ public function indexEINStatus(Request $request)
         foreach ($chunks as $chunk) {
             foreach ($chunk as $chId) {
                 $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                $rowData = $this->formatEINStatusRow($chapterData);
+                $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
+                // Merge the data arrays
+                $combinedData = array_merge($chapterData, $boardData);
+
+                $rowData = $this->formatEINStatusRow($combinedData);
                 fputcsv($file, $rowData);
             }
 
@@ -956,7 +976,11 @@ public function indexIntEINStatus(Request $request)
         foreach ($chunks as $chunk) {
             foreach ($chunk as $chId) {
                 $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                $rowData = $this->formatEINStatusRow($chapterData);
+                $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
+                // Merge the data arrays
+                $combinedData = array_merge($chapterData, $boardData);
+
+                $rowData = $this->formatEINStatusRow($combinedData);
                 fputcsv($file, $rowData);
             }
 

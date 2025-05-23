@@ -307,7 +307,6 @@ class ChapterController extends Controller implements HasMiddleware
         $chPcId = $baseQuery['chPcId'];
         $chPayments = $baseQuery['chPayments'];
         $chDocuments = $baseQuery['chDocuments'];
-        $chDisbanded = $baseQuery['chDisbanded'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $reviewComplete = $baseQuery['reviewComplete'];
         $displayEOY = $baseQuery['displayEOY'];
@@ -319,17 +318,20 @@ class ChapterController extends Controller implements HasMiddleware
         $probationReason = $baseQuery['probationReason'];
         $websiteLink = $baseQuery['websiteLink'];
 
-        $PresDetails = $baseQuery['PresDetails'];
-        $AVPDetails = $baseQuery['AVPDetails'];
-        $MVPDetails = $baseQuery['MVPDetails'];
-        $TRSDetails = $baseQuery['TRSDetails'];
-        $SECDetails = $baseQuery['SECDetails'];
+        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+        $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+        $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+        $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+        $SECDetails = $baseActiveBoardQuery['SECDetails'];
 
-        $PresDisbandedDetails = $baseQuery['PresDisbandedDetails'];
-        $AVPDisbandedDetails = $baseQuery['AVPDisbandedDetails'];
-        $MVPDisbandedDetails = $baseQuery['MVPDisbandedDetails'];
-        $TRSDisbandedDetails = $baseQuery['TRSDisbandedDetails'];
-        $SECDisbandedDetails = $baseQuery['SECDisbandedDetails'];
+        $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
+        $chDisbanded = $baseDisbandedBoardQuery['chDisbanded'];
+        $PresDisbandedDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+        $AVPDisbandedDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
+        $MVPDisbandedDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
+        $TRSDisbandedDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
+        $SECDisbandedDetails = $baseDisbandedBoardQuery['SECDisbandedDetails'];
 
         $resources = Resources::with('resourceCategory')->get();
 
@@ -483,11 +485,19 @@ class ChapterController extends Controller implements HasMiddleware
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chConfId = $baseQuery['chConfId'];
-            $PresDetails = $baseQuery['PresDisbandedDetails'];
-            $AVPDetails = $baseQuery['AVPDisbandedDetails'];
-            $MVPDetails = $baseQuery['MVPDisbandedDetails'];
-            $TRSDetails = $baseQuery['TRSDisbandedDetails'];
-            $SECDetails = $baseQuery['SECDisbandedDetails'];
+
+        $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterid);
+        $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+        $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
+        $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
+        $TRSDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
+        $SECDetails = $baseDisbandedBoardQuery['SECDisbandedDetails'];
+
+            // $PresDetails = $baseQuery['PresDisbandedDetails'];
+            // $AVPDetails = $baseQuery['AVPDisbandedDetails'];
+            // $MVPDetails = $baseQuery['MVPDisbandedDetails'];
+            // $TRSDetails = $baseQuery['TRSDisbandedDetails'];
+            // $SECDetails = $baseQuery['SECDisbandedDetails'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -623,11 +633,19 @@ class ChapterController extends Controller implements HasMiddleware
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chConfId = $baseQuery['chConfId'];
-            $PresDetails = $baseQuery['PresDetails'];
-            $AVPDetails = $baseQuery['AVPDetails'];
-            $MVPDetails = $baseQuery['MVPDetails'];
-            $TRSDetails = $baseQuery['TRSDetails'];
-            $SECDetails = $baseQuery['SECDetails'];
+
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterid);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+        $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+        $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+        $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+        $SECDetails = $baseActiveBoardQuery['SECDetails'];
+
+            // $PresDetails = $baseQuery['PresDetails'];
+            // $AVPDetails = $baseQuery['AVPDetails'];
+            // $MVPDetails = $baseQuery['MVPDetails'];
+            // $TRSDetails = $baseQuery['TRSDetails'];
+            // $SECDetails = $baseQuery['SECDetails'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -969,11 +987,20 @@ class ChapterController extends Controller implements HasMiddleware
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $pcDetails = $baseQuery['pcDetails'];
-            $PresDetails = $baseQuery['PresDetails'];
-            $AVPDetails = $baseQuery['AVPDetails'];
-            $MVPDetails = $baseQuery['MVPDetails'];
-            $TRSDetails = $baseQuery['TRSDetails'];
-            $SECDetails = $baseQuery['SECDetails'];
+
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+        $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+        $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+        $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+        $SECDetails = $baseActiveBoardQuery['SECDetails'];
+
+
+            // $PresDetails = $baseQuery['PresDetails'];
+            // $AVPDetails = $baseQuery['AVPDetails'];
+            // $MVPDetails = $baseQuery['MVPDetails'];
+            // $TRSDetails = $baseQuery['TRSDetails'];
+            // $SECDetails = $baseQuery['SECDetails'];
 
             //  Load User Information for Signing Email & PDFs
             $user = $this->userController->loadUserInformation($request);
@@ -1137,7 +1164,7 @@ class ChapterController extends Controller implements HasMiddleware
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chConfId = $baseQueryUpd['chConfId'];
-            $PresDetails = $baseQueryUpd['PresDetails'];
+            // $PresDetails = $baseQueryUpd['PresDetails'];
             $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
             $emailListCoord = $baseQueryUpd['emailListCoord'];  // Full Coordinaor List
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
@@ -1145,6 +1172,9 @@ class ChapterController extends Controller implements HasMiddleware
             $pcEmail = $pcDetailsUpd->email;  // PC Email
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $einAdmin = $adminEmail['ein_admin'];  // EIN Coor Email
+
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -1232,11 +1262,18 @@ class ChapterController extends Controller implements HasMiddleware
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chPcId = $baseQuery['chPcId'];
 
-        $PresDetails = $baseQuery['PresDetails'];
-        $AVPDetails = $baseQuery['AVPDetails'];
-        $MVPDetails = $baseQuery['MVPDetails'];
-        $TRSDetails = $baseQuery['TRSDetails'];
-        $SECDetails = $baseQuery['SECDetails'];
+        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+        $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+        $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+        $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+        $SECDetails = $baseActiveBoardQuery['SECDetails'];
+
+        // $PresDetails = $baseQuery['PresDetails'];
+        // $AVPDetails = $baseQuery['AVPDetails'];
+        // $MVPDetails = $baseQuery['MVPDetails'];
+        // $TRSDetails = $baseQuery['TRSDetails'];
+        // $SECDetails = $baseQuery['SECDetails'];
 
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
@@ -1261,11 +1298,19 @@ class ChapterController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $PresDetails = $baseQuery['PresDetails'];
-        $AVPDetails = $baseQuery['AVPDetails'];
-        $MVPDetails = $baseQuery['MVPDetails'];
-        $TRSDetails = $baseQuery['TRSDetails'];
-        $SECDetails = $baseQuery['SECDetails'];
+
+        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+        $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+        $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+        $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+        $SECDetails = $baseActiveBoardQuery['SECDetails'];
+
+        // $PresDetails = $baseQuery['PresDetails'];
+        // $AVPDetails = $baseQuery['AVPDetails'];
+        // $MVPDetails = $baseQuery['MVPDetails'];
+        // $TRSDetails = $baseQuery['TRSDetails'];
+        // $SECDetails = $baseQuery['SECDetails'];
 
         $chapter = Chapters::find($id);
 
@@ -1719,11 +1764,19 @@ class ChapterController extends Controller implements HasMiddleware
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chConfId = $baseQueryUpd['chConfId'];
             $emailPC = $baseQueryUpd['emailPC'];
-            $PresDetailsUpd = $baseQueryUpd['PresDetails'];
-            $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
-            $MVPDetailsUpd = $baseQueryUpd['MVPDetails'];
-            $TRSDetailsUpd = $baseQueryUpd['TRSDetails'];
-            $SECDetailsUpd = $baseQueryUpd['SECDetails'];
+
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        $PresDetailsUpd = $baseActiveBoardQuery['PresDetails'];
+        $AVPDetailsUpd = $baseActiveBoardQuery['AVPDetails'];
+        $MVPDetailsUpd = $baseActiveBoardQuery['MVPDetails'];
+        $TRSDetailsUpd = $baseActiveBoardQuery['TRSDetails'];
+        $SECDetailsUpd = $baseActiveBoardQuery['SECDetails'];
+
+            // $PresDetailsUpd = $baseQueryUpd['PresDetails'];
+            // $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
+            // $MVPDetailsUpd = $baseQueryUpd['MVPDetails'];
+            // $TRSDetailsUpd = $baseQueryUpd['TRSDetails'];
+            // $SECDetailsUpd = $baseQueryUpd['SECDetails'];
 
             $mailDataPres = array_merge(
                 $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
@@ -2340,7 +2393,11 @@ class ChapterController extends Controller implements HasMiddleware
                 $chDetails = $baseQuery['chDetails'];
                 $stateShortName = $baseQuery['stateShortName'];
                 $pcDetails = $baseQuery['pcDetails'];
-                $PresDetails = $baseQuery['PresDetails'];
+
+                $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+
+                // $PresDetails = $baseQuery['PresDetails'];
 
                 //  Load User Information for Signing Email & PDFs
                 $user = $this->userController->loadUserInformation($request);
