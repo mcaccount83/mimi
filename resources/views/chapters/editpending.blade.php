@@ -270,7 +270,7 @@
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Chapter Information</button>
-                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="showChapterSetupModal()"><i class="fas fa-envelope mr-2"></i>Send Startup Email</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="showChapterSetupModal()"><i class="fas fa-envelope mr-2"></i>Send Startup Email</button>
                 @endif
                 @if ($chDetails->active_status == '1')
                     <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Chapter List</button>
@@ -291,6 +291,28 @@
 @endsection
 @section('customscript')
 <script>
+    var $chActiveId = @json($chActiveId);
+    $(document).ready(function () {
+        // Disable fields for chapters that are not active
+        if (($chActiveId != 2)) {
+            $('input, select, textarea, button').prop('disabled', true);
+
+            $('a[href^="mailto:"]').each(function() {
+                $(this).addClass('disabled-link'); // Add disabled class for styling
+                $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
+                $(this).on('click', function(e) {
+                    e.preventDefault(); // Prevent link click
+                });
+            });
+
+            // Re-enable the specific "Back" buttons
+            $('#back-list').prop('disabled', false);
+            $('#back-pending').prop('disabled', false);
+            $('#back-declined').prop('disabled', false);
+            $('#back-zapped').prop('disabled', false);
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
     // Define the sections we need to handle
     const sections = ['pre'];
@@ -329,48 +351,48 @@
     });
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    const statusField = document.getElementById("ch_active");
+// document.addEventListener("DOMContentLoaded", function() {
+//     const statusField = document.getElementById("ch_active");
 
-    // Function to disable options 0 and 1
-    const disableOptions = () => {
-        Array.from(statusField.options).forEach(option => {
-            // Check for both string and numeric values
-            if (option.value === "0" || option.value === 0 ) {
-                option.disabled = true;
-                // If you want to hide them completely, uncomment the next line
-                // option.style.display = "none";
-            }
-        });
-    };
+//     // Function to disable options 0 and 1
+//     const disableOptions = () => {
+//         Array.from(statusField.options).forEach(option => {
+//             // Check for both string and numeric values
+//             if (option.value === "0" || option.value === 0 ) {
+//                 option.disabled = true;
+//                 // If you want to hide them completely, uncomment the next line
+//                 // option.style.display = "none";
+//             }
+//         });
+//     };
 
-    // Call the function to actually disable the options
-    disableOptions();
-});
+//     // Call the function to actually disable the options
+//     disableOptions();
+// });
 
-document.addEventListener('DOMContentLoaded', function() {
-    const statusSelect = document.getElementById('ch_active');
-    const disbandReasonContainer = document.getElementById('disband_reason_container');
-    const disbandReasonInput = document.getElementById('disband_reason');
+// document.addEventListener('DOMContentLoaded', function() {
+//     const statusSelect = document.getElementById('ch_active');
+//     const disbandReasonContainer = document.getElementById('disband_reason_container');
+//     const disbandReasonInput = document.getElementById('disband_reason');
 
-    function toggleDisbandReason() {
-        // Show/hide the reason field when status is 3
-        if (statusSelect.value === '3') {
-            disbandReasonContainer.style.display = 'block';
-            disbandReasonInput.required = true;
-        } else {
-            disbandReasonContainer.style.display = 'none';
-            disbandReasonInput.required = false;
-            disbandReasonInput.value = ''; // Clear the input when hidden
-        }
-    }
+//     function toggleDisbandReason() {
+//         // Show/hide the reason field when status is 3
+//         if (statusSelect.value === '3') {
+//             disbandReasonContainer.style.display = 'block';
+//             disbandReasonInput.required = true;
+//         } else {
+//             disbandReasonContainer.style.display = 'none';
+//             disbandReasonInput.required = false;
+//             disbandReasonInput.value = ''; // Clear the input when hidden
+//         }
+//     }
 
-    // Initial check on page load
-    toggleDisbandReason();
+//     // Initial check on page load
+//     toggleDisbandReason();
 
-    // Add event listener for status change
-    statusSelect.addEventListener('change', toggleDisbandReason);
-});
+//     // Add event listener for status change
+//     statusSelect.addEventListener('change', toggleDisbandReason);
+// });
 
 
 // Function to filter the coordinator dropdown
