@@ -74,19 +74,21 @@
                     <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
                     <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                 </ul>
-                <div class="text-center">
-                    @if ($chDetails->active_status == 1 )
-                        <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                    @elseif ($chDetails->active_status == 2)
-                      <b><span style="color: #ffc107;">Chapter is PENDING</span></b>
-                    @elseif ($chDetails->active_status == 3)
-                      <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b>
-                    @elseif ($chDetails->active_status == 0)
-                        <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                        Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                        {{ $chDetails->disband_reason }}
-                    @endif
-                </div>
+              <div class="text-center">
+                      @if ($chDetails->active_status == 1 )
+                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
+                      @elseif ($chDetails->active_status == 2)
+                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
+                      @elseif ($chDetails->active_status == 3)
+                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
+                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
+                          {{ $chDetails->disband_reason }}
+                      @elseif ($chDetails->active_status == 0)
+                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
+                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
+                          {{ $chDetails->disband_reason }}
+                      @endif
+                  </div>
               </div>
               <!-- /.card-body -->
             </div>
@@ -597,7 +599,6 @@
                   <!-- /.tab-pane -->
 
                   <div class="tab-pane" id="pre">
-                    @if ($chIsActive == '1')
                         <div class="pre-field">
                                 <h3 class="profile-username">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
                                 <div class="row">
@@ -636,31 +637,10 @@
                                 </div>
                             </div>
                         </div>
-                        @else
-                        <div class="pre-field">
-                            <h3 class="profile-username">{{$PresDisbandedDetails->first_name}} {{$PresDisbandedDetails->last_name}}</h3>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <a href="mailto:{{ $PresDisbandedDetails->email }}">{{ $PresDisbandedDetails->email }}</a>
-                                    <br>
-                                    <span class="phone-mask">{{$PresDisbandedDetails->phone }}</span>
-                                    <br>
-                                    {{$PresDisbandedDetails->street_address}}
-                                    <br>
-                                    {{$PresDisbandedDetails->city}},{{$PresDisbandedDetails->state->state_short_name}}&nbsp;{{$PresDisbandedDetails->zip}}
-                                    <br>
-                                        {{$PresDisbandedDetails->country->short_name}}
-                                </div>
-                                <div class="col-md-6">
-                                </div>
-                            </div>
-                        </div>
-                    @endif
                 </div>
 
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="avp">
-                    @if ($chIsActive == '1')
                         @if ($AVPDetails->user_id == '')
                             <div class="avp-field-vacant">
                                 <h3 class="profile-username">Administrative Vice President Position is Vacant</h3>
@@ -706,37 +686,9 @@
                                 </div>
                             </div>
                         @endif
-                        @else
-                        @if ($AVPDisbandedDetails->user_id == '')
-                            <div class="avp-field-vacant">
-                                <h3 class="profile-username">Administrative Vice President Position is Vacant</h3>
-                                <br><br>
-                            </div>
-                        @else
-                            <div class="avp-field">
-                                <h3 class="profile-username">{{$AVPDisbandedDetails->first_name}} {{$AVPDisbandedDetails->last_name}}</h3>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a href="mailto:{{ $AVPDisbandedDetails->email }}">{{ $AVPDisbandedDetails->email }}</a>
-                                        <br>
-                                        <span class="phone-mask">{{$AVPDisbandedDetails->phone}}</span>
-                                        <br>
-                                        {{$AVPDisbandedDetails->street_address}}
-                                        <br>
-                                        {{$AVPDisbandedDetails->city}},{{$AVPDisbandedDetails->state->state_short_name}}&nbsp;{{$AVPDisbandedDetails->zip}}
-                                        <br>
-                                        {{$AVPDisbandedDetails->country->short_name}}
-                                    </div>
-                                    <div class="col-md-6">
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endif
                     </div>
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="mvp">
-                    @if ($chIsActive == '1')
                         @if ($MVPDetails->user_id == '')
                             <div class="mvp-field-vacant">
                                 <h3 class="profile-username">Membership Vice President Position is Vacant</h3>
@@ -782,37 +734,9 @@
                                 </div>
                             </div>
                         @endif
-                    @else
-                        @if ($MVPDisbandedDetails->user_id == '')
-                            <div class="mvp-field-vacant">
-                                <h3 class="profile-username">Membership Vice President Position is Vacant</h3>
-                                <br><br>
-                            </div>
-                        @else
-                            <div class="mvp-field">
-                                <h3 class="profile-username">{{$MVPDisbandedDetails->first_name}} {{$MVPDisbandedDetails->last_name}}</h3>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a href="mailto:{{ $MVPDisbandedDetails->email }}">{{ $MVPDisbandedDetails->email }}</a>
-                                        <br>
-                                        <span class="phone-mask">{{$MVPDisbandedDetails->phone}}</span>
-                                        <br>
-                                        {{$MVPDisbandedDetails->street_address}}
-                                        <br>
-                                        {{$MVPDisbandedDetails->city}},{{$MVPDisbandedDetails->state->state_short_name}}&nbsp;{{$MVPDisbandedDetails->zip}}
-                                        <br>
-                                        {{$MVPDisbandedDetails->country->short_name}}
-                                    </div>
-                                    <div class="col-md-6">
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endif
                     </div>
                   <!-- /.tab-pane -->
                     <div class="tab-pane" id="trs">
-                        @if ($chIsActive == '1')
                         @if ($TRSDetails->user_id == '')
                           <div class="trs-field-vacant">
                               <h3 class="profile-username">Treasurer Position is Vacant</h3>
@@ -857,38 +781,10 @@
                         </div>
                     </div>
                 </div>
-                        @endif
-                        @else
-                        @if ($TRSDisbandedDetails->user_id == '')
-                            <div class="trs-field-vacant">
-                                <h3 class="profile-username">Treasurer Position is Vacant</h3>
-                                <br><br>
-                            </div>
-                        @else
-                            <div class="trs-field">
-                                <h3 class="profile-username">{{$TRSDisbandedDetails->first_name}} {{$TRSDisbandedDetails->last_name}}</h3>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a href="mailto:{{ $TRSDisbandedDetails->email }}">{{ $TRSDisbandedDetails->email }}</a>
-                                        <br>
-                                        <span class="phone-mask">{{$TRSDisbandedDetails->phone}}</span>
-                                        <br>
-                                        {{$TRSDisbandedDetails->street_address}}
-                                        <br>
-                                        {{$TRSDisbandedDetails->city}},{{$TRSDisbandedDetails->state->state_short_name}}&nbsp;{{$TRSDisbandedDetails->zip}}
-                                        <br>
-                                        {{$TRSDisbandedDetails->country->short_name}}
-                                    </div>
-                                    <div class="col-md-6">
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endif
-                        </div>
+                @endif
+                </div>
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="sec">
-                    @if ($chIsActive == '1')
                   @if ($SECDetails->user_id == '')
                     <div class="sec-field-vacant">
                         <h3 class="profile-username">Secretary Position is Vacant</h3>
@@ -934,33 +830,6 @@
                 </div>
             </div>
             @endif
-            @else
-            @if ($SECDisbandedDetails->user_id == '')
-                <div class="sec-field-vacant">
-                    <h3 class="profile-username">Secretary Position is Vacant</h3>
-                    <br><br>
-                </div>
-            @else
-                <div class="sec-field">
-                    <h3 class="profile-username">{{$SECDisbandedDetails->first_name}} {{$SECDisbandedDetails->last_name}}</h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <a href="mailto:{{ $SECDisbandedDetails->email }}">{{ $SECDisbandedDetails->email }}</a>
-                            <br>
-                            <span class="phone-mask">{{$SECDisbandedDetails->phone}}</span>
-                            <br>
-                            {{$SECDisbandedDetails->street_address}}
-                            <br>
-                            {{$SECDisbandedDetails->city}},{{$SECDisbandedDetails->state->state_short_name}}&nbsp;{{$SECDisbandedDetails->zip}}
-                            <br>
-                                        {{$SECDisbandedDetails->country->short_name}}
-                        </div>
-                        <div class="col-md-6">
-                        </div>
-                    </div>
-                </div>
-            @endif
-        @endif
     </div>
                   <!-- /.tab-pane -->
                 </div>
@@ -999,16 +868,16 @@
                 @endif
                 @if($regionalCoordinatorCondition)
                     <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDocuments->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
-                    @if($chIsActive == 1)
+                    @if($chActiveId == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal()"><i class="fas fa-ban mr-2"></i>Disband Chapter</button>
-                    @elseif($chIsActive != 1)
+                    @elseif($chActiveId != 1)
                         <button type="button" id="unzap" class="btn bg-gradient-primary mb-3" onclick="unZapChapter()"><i class="fas fa-undo mr-2"></i>UnZap Chapter</button>
                     @endif
                 @endif
                 <br>
                 @if($coordinatorCondition)
                     @if ($confId == $chConfId)
-                        @if ($chIsActive == 1)
+                        @if ($chActiveId == 1)
                             @if ($inquiriesCondition  && ($coorId != $chPcId))
                                 <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Chapter List</button>
                             @else
@@ -1022,7 +891,7 @@
                             @endif
                         @endif
                     @elseif ($einCondition && ($confId != $chConfId) || $inquiriesCondition  && ($confId != $chConfId) || $userAdmin  && ($confId != $chConfId))
-                        @if ($chIsActive == 1)
+                        @if ($chActiveId == 1)
                             <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-reply mr-2"></i>Back to International Chapter List</button>
                         @else
                             <button type="button" id="back-international-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapterzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Chapter List</button>
@@ -1039,7 +908,7 @@
 @endsection
 @section('customscript')
 <script>
-    var $chIsActive = @json($chIsActive);
+    var $chActiveId = @json($chActiveId);
     var $einCondition = @json($einCondition);
     var $inquiriesCondition = @json($inquiriesCondition);
     var $chPcId = @json($chPcId);
@@ -1048,7 +917,7 @@
 
 $(document).ready(function () {
     // Disable fields for chapters that are not active or EIN & Inquiries Coordinators who are not PC for the Chapter
-    if (($chIsActive != 1) || ($inquiriesCondition && ($coorId != $chPCid)) || ($einCondition && ($coorId != $chPCid))) {
+    if (($chActiveId != 1) || ($inquiriesCondition && ($coorId != $chPCid)) || ($einCondition && ($coorId != $chPCid))) {
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {

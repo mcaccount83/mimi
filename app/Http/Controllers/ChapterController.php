@@ -298,7 +298,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         // $countryShortName = $baseQuery['countryShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -319,19 +319,25 @@ class ChapterController extends Controller implements HasMiddleware
         $websiteLink = $baseQuery['websiteLink'];
 
         $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
-        $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
-        $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
-        $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
-        $SECDetails = $baseActiveBoardQuery['SECDetails'];
-
         $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
         $chDisbanded = $baseDisbandedBoardQuery['chDisbanded'];
-        $PresDisbandedDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-        $AVPDisbandedDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
-        $MVPDisbandedDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
-        $TRSDisbandedDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
-        $SECDisbandedDetails = $baseDisbandedBoardQuery['SECDisbandedDetails'];
+        $basePendingBoardQuery = $this->baseChapterController->getPendingBoardDetails($id);
+
+        if ($chActiveId == 1){
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+            $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+            $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+            $SECDetails = $baseActiveBoardQuery['SECDetails'];
+        }
+
+        if ($chActiveId == 0){
+            $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+            $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
+            $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
+            $TRSDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
+            $SECDetails = $baseDisbandedBoardQuery['SECDisbandedDetails'];
+        }
 
         $resources = Resources::with('resourceCategory')->get();
 
@@ -341,13 +347,12 @@ class ChapterController extends Controller implements HasMiddleware
         $startYear = $chDetails->start_year;
         $startDate = Carbon::createFromDate($startYear, $startMonthId, 1);
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionId' => $positionId, 'coorId' => $coorId, 'reviewComplete' => $reviewComplete, 'threeMonthsAgo' => $threeMonthsAgo,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'positionId' => $positionId, 'coorId' => $coorId, 'reviewComplete' => $reviewComplete, 'threeMonthsAgo' => $threeMonthsAgo,
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate, 'probationReason' => $probationReason,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
-            'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
-            'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails, 'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
-            'resources' => $resources,
+            'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded' => $chDisbanded,
+            'resources' => $resources, 'chActiveId' => $chActiveId
         ];
 
         return view('chapters.view')->with($data);
@@ -486,18 +491,12 @@ class ChapterController extends Controller implements HasMiddleware
             $stateShortName = $baseQuery['stateShortName'];
             $chConfId = $baseQuery['chConfId'];
 
-        $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterid);
-        $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-        $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
-        $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
-        $TRSDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
-        $SECDetails = $baseDisbandedBoardQuery['SECDisbandedDetails'];
-
-            // $PresDetails = $baseQuery['PresDisbandedDetails'];
-            // $AVPDetails = $baseQuery['AVPDisbandedDetails'];
-            // $MVPDetails = $baseQuery['MVPDisbandedDetails'];
-            // $TRSDetails = $baseQuery['TRSDisbandedDetails'];
-            // $SECDetails = $baseQuery['SECDisbandedDetails'];
+            $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterid);
+            $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+            $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
+            $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
+            $TRSDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
+            $SECDetails = $baseDisbandedBoardQuery['SECDisbandedDetails'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -720,7 +719,7 @@ class ChapterController extends Controller implements HasMiddleware
         $pcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $chConfId)
             ->whereBetween('position_id', [1, 7])
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->get();
 
@@ -995,13 +994,6 @@ class ChapterController extends Controller implements HasMiddleware
         $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
         $SECDetails = $baseActiveBoardQuery['SECDetails'];
 
-
-            // $PresDetails = $baseQuery['PresDetails'];
-            // $AVPDetails = $baseQuery['AVPDetails'];
-            // $MVPDetails = $baseQuery['MVPDetails'];
-            // $TRSDetails = $baseQuery['TRSDetails'];
-            // $SECDetails = $baseQuery['SECDetails'];
-
             //  Load User Information for Signing Email & PDFs
             $user = $this->userController->loadUserInformation($request);
 
@@ -1053,7 +1045,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $chDocuments = $baseQuery['chDocuments'];
         $chPayments = $baseQuery['chPayments'];
 
@@ -1074,7 +1066,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $pcList = $baseQuery['pcList'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'reviewComplete' => $reviewComplete,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'reviewComplete' => $reviewComplete,
             'chDetails' => $chDetails, 'websiteLink' => $websiteLink, 'chDocuments' => $chDocuments, 'allProbation' => $allProbation,
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'probationReason' => $probationReason,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
@@ -1256,7 +1248,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -1269,16 +1261,10 @@ class ChapterController extends Controller implements HasMiddleware
         $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
         $SECDetails = $baseActiveBoardQuery['SECDetails'];
 
-        // $PresDetails = $baseQuery['PresDetails'];
-        // $AVPDetails = $baseQuery['AVPDetails'];
-        // $MVPDetails = $baseQuery['MVPDetails'];
-        // $TRSDetails = $baseQuery['TRSDetails'];
-        // $SECDetails = $baseQuery['SECDetails'];
-
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries,
             'chDetails' => $chDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'chPcId' => $chPcId, 'allStates' => $allStates, 'PresDetails' => $PresDetails,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
@@ -1305,12 +1291,6 @@ class ChapterController extends Controller implements HasMiddleware
         $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
         $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
         $SECDetails = $baseActiveBoardQuery['SECDetails'];
-
-        // $PresDetails = $baseQuery['PresDetails'];
-        // $AVPDetails = $baseQuery['AVPDetails'];
-        // $MVPDetails = $baseQuery['MVPDetails'];
-        // $TRSDetails = $baseQuery['TRSDetails'];
-        // $SECDetails = $baseQuery['SECDetails'];
 
         $chapter = Chapters::find($id);
 
@@ -1939,11 +1919,11 @@ class ChapterController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $startMonthName = $baseQuery['startMonthName'];
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $chPcId = $baseQuery['chPcId'];
         $chDocuments = $baseQuery['chDocuments'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'conferenceDescription' => $conferenceDescription,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'conferenceDescription' => $conferenceDescription,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'startMonthName' => $startMonthName,
             'chPcId' => $chPcId, 'chDocuments' => $chDocuments,
         ];
@@ -2064,7 +2044,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -2072,7 +2052,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'conferenceDescription' => $conferenceDescription,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'conferenceDescription' => $conferenceDescription,
             'chDetails' => $chDetails, 'allWebLinks' => $allWebLinks,
             'chPcId' => $chPcId, 'regionLongName' => $regionLongName,
         ];
@@ -2209,15 +2189,26 @@ class ChapterController extends Controller implements HasMiddleware
      */
     public function editPendingChapterDetails(Request $request, $id): View
     {
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $chConfId = $baseQuery['chConfId'];
 
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chPcId = $baseQuery['chPcId'];
+
+        $basePendingBoardQuery = $this->baseChapterController->getPendingBoardDetails($id);
+        $PresDetails = $basePendingBoardQuery['PresPendingDetails'];
+        $AVPDetails = $basePendingBoardQuery['AVPPendingDetails'];
+        $MVPDetails = $basePendingBoardQuery['MVPPendingDetails'];
+        $TRSDetails = $basePendingBoardQuery['TRSPendingDetails'];
+        $SECDetails = $basePendingBoardQuery['SECPendingDetails'];
 
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $baseQuery['chapterStatus'];
@@ -2230,7 +2221,7 @@ class ChapterController extends Controller implements HasMiddleware
         $pcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $chConfId)
             ->whereBetween('position_id', [1, 7])
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->get();
 
@@ -2260,12 +2251,14 @@ class ChapterController extends Controller implements HasMiddleware
 
         $pcDetails = $pcDetails->unique('cid');
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId,
             'chDetails' => $chDetails, 'allActive' => $allActive,
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'allStates' => $allStates,
-            'pcList' => $pcList, 'allRegions' => $allRegions, 'pcDetails' => $pcDetails, 'allCountries' => $allCountries
+            'pcList' => $pcList, 'allRegions' => $allRegions, 'pcDetails' => $pcDetails, 'allCountries' => $allCountries,
+            'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails,
+            'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails
         ];
 
         return view('chapters.editpending')->with($data);
@@ -2395,7 +2388,7 @@ class ChapterController extends Controller implements HasMiddleware
                 $pcDetails = $baseQuery['pcDetails'];
 
                 $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+                $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
                 // $PresDetails = $baseQuery['PresDetails'];
 
@@ -2442,6 +2435,184 @@ class ChapterController extends Controller implements HasMiddleware
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
+        }
+    }
+
+    /**
+     *Update Pending New Chapter Information
+     */
+    public function updateApproveChapter(Request $request)
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+        $activeStatus = '1';
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
+        $input = $request->all();
+        $id = $input['chapter_id'];
+
+        $defaultCategories = $this->forumSubscriptionController->defaultCategories();
+        $defaultBoardCategories = $defaultCategories['boardCategories'];
+
+        // $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        // $chDetails = $baseQuery['chDetails'];
+        // $pcDetails = $baseQuery['pcDetails'];
+
+        $chapter = Chapters::with('pendingPresident')->find($id);
+        $chapterId = $id;
+        $president = $chapter->pendingPresident;
+        $user = $president->user;
+
+        DB::beginTransaction();
+        try {
+            $chapter->active_status = $activeStatus;
+            $chapter->start_month_id = $currentMonth;
+            $chapter->start_year = $currentYear;
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->save();
+
+            FinancialReport::create([
+                'chapter_id' => $chapterId,
+            ]);
+
+            Documents::create([
+                'chapter_id' => $chapterId,
+            ]);
+
+            Payments::create([
+                'chapter_id' => $chapterId,
+            ]);
+
+            foreach ($defaultBoardCategories as $categoryId) {
+                ForumCategorySubscription::create([
+                    'user_id' => $president->user_id,
+                    'category_id' => $categoryId,
+                ]);
+            }
+
+            User::where('id', $president->user_id)->update([
+                'user_type' => 'board',
+            ]);
+            Boards::create([
+                'user_id' => $president->user_id,
+                'chapter_id' => $president->chapter_id,
+                'board_position_id' => $president->board_position_id,
+                'first_name' => $president->first_name,
+                'last_name' => $president->last_name,
+                'email' => $president->email,
+                'phone' => $president->phone,
+                'street_address' => $president->street_address,
+                'city' => $president->city,
+                'state_id' => $president->state_id,
+                'zip' => $president->zip,
+                'country_id' => $president->country_id,
+                'last_updated_by' => $lastUpdatedBy,
+                'last_updated_date' => $lastupdatedDate,
+            ]);
+            BoardsPending::where('user_id', $president->user_id)->delete();
+
+            // Load Chapter MailData//
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $pcDetails = $baseQuery['pcDetails'];
+
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+
+            $user = $this->userController->loadUserInformation($request);
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $listAdmin = $adminEmail['list_admin'];
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getPCData($pcDetails),
+                $this->baseMailDataController->getPresData($PresDetails),
+            );
+
+            $mailTableNewChapter = $this->emailTableController->createNewChapterTable($mailData);
+
+            $mailData = array_merge($mailData, [
+                'mailTableNewChapter' => $mailTableNewChapter,
+            ]);
+
+            Mail::to($pcDetails->email)
+                ->queue(new ChapterAddPrimaryCoor($mailData));
+
+            Mail::to($listAdmin)
+                ->queue(new ChapterAddListAdmin($mailData));
+
+            DB::commit();
+
+            // Return JSON response for AJAX
+            return response()->json([
+                'success' => true,
+                'message' => 'Coordinator approved successfully.',
+                'redirect' => route('chapters.view', ['id' => $id]) // or whatever your route name is
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            // Return JSON error response for AJAX
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong, Please try again.'
+            ], 500);
+        }
+    }
+
+    /**
+     *Update Pending New Chapter Information
+     */
+    public function updateDeclineChapter(Request $request)
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+        $activeStatus = '3';
+
+        $input = $request->all();
+        $id = $input['chapter_id'];
+
+        $chapter = Chapters::with('pendingPresident')->find($id);
+        $president = $chapter->pendingPresident;
+        $user = $president->user;
+
+        DB::beginTransaction();
+        try {
+            $chapter->active_status = $activeStatus;
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->save();
+
+            User::where('id', $president->user_id)->update([
+                'is_active' => '0',
+            ]);
+
+            DB::commit();
+
+            // Return JSON response for AJAX
+            return response()->json([
+                'success' => true,
+                'message' => 'Coordinator application rejected.',
+                // 'redirect' => route('coordinators.coordrejected')
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            // Return JSON error response for AJAX
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong, Please try again.'
+            ], 500);
         }
     }
 }

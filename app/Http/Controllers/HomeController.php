@@ -81,7 +81,7 @@ class HomeController extends Controller implements HasMiddleware
 
             $baseQuery = $this->baseBoardController->getChapterDetails($chId);
             $chDetails = $baseQuery['chDetails'];
-            $chIsActive = $baseQuery['chIsActive'];
+            $chActiveId = $baseQuery['chActiveId'];
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
             // $submitted = $baseQuery['submitted'];
@@ -94,7 +94,7 @@ class HomeController extends Controller implements HasMiddleware
 
             $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
                 'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-                'chIsActive' => $chIsActive, 'resourceCategories' => $resourceCategories,
+                'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories,
             ];
 
             return view('boards.financial')->with($data);

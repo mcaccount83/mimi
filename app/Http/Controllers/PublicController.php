@@ -7,16 +7,21 @@ use App\Mail\PaymentsNewChapOnline;
 use App\Mail\PaymentsSustainingPublicThankYou;
 use App\Mail\PaymentsM2MPublicThankYou;
 use App\Mail\PaymentsPublicDonationOnline;
+use App\Mail\NewCoordinatorThankYou;
+use App\Mail\NewCoordinatorOnline;
 use App\Models\BoardsPending;
 use App\Models\Chapters;
 use App\Models\Coordinators;
+use App\Models\CoordinatorApplication;
 use App\Models\PaymentLog;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\State;
 use App\Models\Country;
+use App\Models\Month;
 use App\Models\User;
 use App\Services\PositionConditionsService;
+use Faker\Core\Coordinates;
 use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -41,16 +46,19 @@ class PublicController extends Controller
 
     protected $baseChapterController;
 
+    protected $baseCoordinatorController;
+
     protected $baseMailDataController;
 
     public function __construct(UserController $userController, PositionConditionsService $positionConditionsService, BaseBoardController $baseBoardController,
-        BaseMailDataController $baseMailDataController, BaseChapterController $baseChapterController)
+        BaseMailDataController $baseMailDataController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
     {
         $this->userController = $userController;
         $this->positionConditionsService = $positionConditionsService;
         $this->baseBoardController = $baseBoardController;
         $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
+        $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
     private function token()
@@ -255,7 +263,7 @@ class PublicController extends Controller
         $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $confId)
             ->where('position_id', 7)
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->first();
         $pcId = $ccDetails ? $ccDetails->id : null; // Add a check in case no coordinator is found
@@ -332,7 +340,7 @@ class PublicController extends Controller
                     'chapter_id' => $chapterId,
                     'street_address' => $input['ch_pre_street'],
                     'city' => $input['ch_pre_city'],
-                    'state' => $input['ch_pre_state'],
+                    'state_id' => $input['ch_pre_state'],
                     'zip' => $input['ch_pre_zip'],
                     'country_id' => $input['ch_pre_country'] ?? '198',
                     'phone' => $input['ch_pre_phone'],
@@ -722,5 +730,159 @@ class PublicController extends Controller
             'success' => false,
             'error' => $error_message,
         ];
+    }
+
+     /**
+     * Show New Coordinator Registration
+     */
+    public function editNewCoordinator(Request $request): View
+    {
+        $allStates = State::all();
+        $allCountries = Country::all();
+        $allMonths = Month::all();
+
+        $data = ['allStates' => $allStates, 'allCountries' => $allCountries, 'allMonths' => $allMonths,
+        ];
+
+        return view('public.newcoordinator')->with($data);
+    }
+
+    /**
+     * Show New Coordinator Registration Success Message
+     */
+    public function viewNewCoordinator(Request $request): View
+    {
+        $allStates = State::all();
+
+        $data = ['allStates' => $allStates,
+        ];
+
+        return view('public.newcoordinatorsuccess')->with($data);
+    }
+
+    /**
+     * Update New Coordinator Registration
+     */
+    public function updateNewCoordinator(Request $request): RedirectResponse
+    {
+        $input = $request->all();
+
+        $stateId = $input['cd_state'];
+        $state = State::find($stateId);
+        $stateShortName = $state->state_short_name;
+
+        $lastupdatedDate = date('Y-m-d H:i:s');
+        $regId = '0';
+        $activeStatus = '2';
+
+        $confId = null;
+        if (in_array($stateShortName, ['AK', 'HI', 'ID', 'MN', 'MT', 'ND', 'OR', 'SD', 'WA', 'WI', 'WY', '**', 'AA', 'AE', 'AP'])) {
+            $confId = '1';
+        } elseif (in_array($stateShortName, ['AZ', 'CA', 'CO', 'NM', 'NV', 'OK', 'TX', 'UT'])) {
+            $confId = '2';
+        } elseif (in_array($stateShortName, ['AL', 'AR', 'DC', 'FL', 'GA', 'KY', 'LA', 'MD', 'MS', 'NC', 'SC', 'TN', 'VA', 'WV'])) {
+            $confId = '3';
+        } elseif (in_array($stateShortName, ['CT', 'DE', 'MA', 'ME', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT'])) {
+            $confId = '4';
+        } elseif (in_array($stateShortName, ['IA', 'IL', 'IN', 'KS', 'MI', 'MO', 'NE', 'OH'])) {
+            $confId = '5';
+        }
+
+        $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
+            ->where('conference_id', $confId)
+            ->where('position_id', 7)
+            ->where('active_status', 1)
+            ->where('on_leave', '!=', '1')
+            ->first();
+        $pcId = $ccDetails ? $ccDetails->id : null;
+
+        $reportsTo = $ccDetails->id;
+        $reportLayerId = $ccDetails->layer_id;
+        $new_layer_id = $reportLayerId + 1;
+
+        $new_cd_email = $input['cd_fname'].'.'.$input['cd_lname'].'@momsclub.org';
+
+        DB::beginTransaction();
+        try {
+            $userId = User::create([
+                'first_name' => $input['cd_fname'],
+                'last_name' => $input['cd_lname'],
+                'email' => $new_cd_email,
+                'password' => Hash::make('TempPass4You'),
+                'user_type' => 'coordinator',
+                'is_admin' => 0,
+                'is_active' => 1
+            ])->id;
+            $coordId = Coordinators::create([
+                'user_id' => $userId,
+                'conference_id' => $confId,
+                'region_id' => $regId,
+                'layer_id' => $new_layer_id,
+                'first_name' => $input['cd_fname'],
+                'last_name' => $input['cd_lname'],
+                'position_id' => 1,
+                'display_position_id' => 1,
+                'email' => $new_cd_email,
+                'sec_email' => $input['cd_email'],
+                'report_id' => $reportsTo,
+                'address' => $input['cd_street'],
+                'city' => $input['cd_city'],
+                'state_id' => $input['cd_state'],
+                'zip' => $input['cd_zip'],
+                'country_id' => $input['cd_country'] ?? '198',
+                'phone' => $input['cd_phone'],
+                // 'alt_phone' => $input['cd_altphone'],
+                'birthday_month_id' => $input['cd_bmonth'],
+                'birthday_day' => $input['cd_bday'],
+                'home_chapter' => $input['home_chapter'].', '.$input['home_state'],
+                'coordinator_start_date' => $lastupdatedDate,
+                'last_updated_by' => $input['cd_fname'].' '.$input['cd_lname'],
+                'last_updated_date' => $lastupdatedDate,
+                'active_status' => $activeStatus
+            ])->id;
+            CoordinatorApplication::create([
+                'coordinator_id' => $coordId,
+                'start_date' => $input['start_date'],
+                'jobs_programs' => $input['jobs_programs'],
+                'helped_me' => $input['helped_me'],
+                'problems' => $input['problems'],
+                'why_volunteer' => $input['why_volunteer'],
+                'other_volunteer' => $input['other_volunteer'],
+                'special_skills' => $input['special_skills'],
+                'enjoy_volunteering' => $input['enjoy_volunteering'],
+                'referred_by' => $input['referred_by'] ?? null,
+            ]);
+
+            $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($coordId);
+            $cdDetails = $baseQuery['cdDetails'];
+            $emailCC = $ccDetails['cc_email'];
+            $coordEmail = $input['cd_email'];
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getNewCoordinatorData($cdDetails),
+                $this->baseMailDataController->getCCData($ccDetails)
+            );
+
+            Mail::to($coordEmail)
+                ->cc($emailCC)
+                ->queue(new NewCoordinatorThankYou($mailData));
+
+            Mail::to($emailCC)
+                ->queue(new NewCoordinatorOnline($mailData));
+
+                DB::commit();
+
+                DB::commit();
+
+        return redirect()->to('/newcoordinatorsuccess')->with('success', 'Application was successfully submitted!');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->to('/newcoordinator')->with('fail','Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
     }
 }

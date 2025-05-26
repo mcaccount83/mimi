@@ -173,7 +173,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         $categoryId = $category->id;
 
         // Get coordinators who are active and not on leave
-        $coordinatorUserIds = Coordinators::where('is_active', '1')
+        $coordinatorUserIds = Coordinators::where('active_status', '1')
             ->where('on_leave', '0')
             ->get()
             ->pluck('user_id')
@@ -220,7 +220,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         $categoryId = $category->id;
 
         // Get all active coordinators
-        $coordinatorUserIds = Coordinators::where('is_active', '1')
+        $coordinatorUserIds = Coordinators::where('active_status', '1')
             ->where('on_leave', '0')
             ->get()
             ->pluck('user_id')
@@ -267,7 +267,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         $categoryId = $category->id;
 
         // Get all active coordinators
-        $coordinatorUserIds = Coordinators::where('is_active', '1')
+        $coordinatorUserIds = Coordinators::where('active_status', '1')
             ->where('on_leave', '0')
             ->get()
             ->pluck('user_id')
@@ -315,7 +315,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         $categoryId = $category->id;
 
         // Get active coordinators
-        $coordinatorUserIds = Coordinators::where('is_active', '1')
+        $coordinatorUserIds = Coordinators::where('active_status', '1')
             ->where('on_leave', '0')
             ->get()
             ->pluck('user_id')
@@ -379,7 +379,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         $categoryId = $category->id;
 
         // Get active coordinators
-        $coordinatorUserIds = Coordinators::where('is_active', '1')
+        $coordinatorUserIds = Coordinators::where('active_status', '1')
             ->where('on_leave', '0')
             ->get()
             ->pluck('user_id')

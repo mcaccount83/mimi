@@ -220,7 +220,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chDocuments = $baseQuery['chDocuments'];
@@ -232,7 +232,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb,
             'coorId' => $coorId, 'confId' => $confId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
+            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
             'reviewComplete' => $reviewComplete,  'rrList' => $rrList,
         ];
 
@@ -548,23 +548,6 @@ class EOYReportController extends Controller implements HasMiddleware
         $MVPDetails = $baseIncomingBoardQuery['MVPIncomingDetails'];
         $TRSDetails = $baseIncomingBoardQuery['TRSIncomingDetails'];
         $SECDetails = $baseIncomingBoardQuery['SECIncomingDetails'];
-
-        // $boards = BoardsIncoming::find($id);
-        // $boards = BoardsIncoming::where('chapter_id', $id)->get();
-        // if ($boards && $boards->count() > 0) {
-        //     $bdDetails = $boards->groupBy('board_position_id');
-        // } else {
-        //     $bdDetails = collect(); // Empty collection
-        // }
-
-        // // $bdDetails = $boards->groupBy('board_position_id');
-        // $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
-
-        // $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
-        // $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
-        // $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
-        // $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
-        // $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
 
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
@@ -1326,14 +1309,14 @@ class EOYReportController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
+            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
         ];
 
         return view('eoyreports.editattachments')->with($data);
@@ -1416,14 +1399,14 @@ class EOYReportController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
+            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
         ];
 
         return view('eoyreports.editboundaries')->with($data);
@@ -1519,7 +1502,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
@@ -1527,7 +1510,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
+            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
         ];
 
         return view('eoyreports.editawards')->with($data);

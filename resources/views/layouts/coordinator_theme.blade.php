@@ -301,15 +301,15 @@ window.onload = function () {
                                 $newChaptersRoute = route('international.intchapterpending');
                             }
                             $activeNewChpaterRoutes = [
-                                'chapter/pendingchapterlist', 'chapter/declinedchapterlist',
-                                'international/pendingchapterlist', 'international/declinedchapterlist'
+                                'chapter/pendingchapterlist', 'chapter/declinedchapterlist', 'international/pendingchapterlist', 'international/declinedchapterlist',
+                                'coordinator/pending', 'coordinator/rejected', 'international/pending', 'international/rejected'
                             ];
                         @endphp
                         @if (isset($newChaptersRoute))
                             <li class="nav-item">
                                 <a href="{{ $newChaptersRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeNewChpaterRoutes) }}">
-                                    <i class="nav-icon fas fa-home"></i>
-                                    <p>New Chapters</p>
+                                    <i class="nav-icon fas fa-star-of-life"></i>
+                                    <p>New Chapters/Coordinators</p>
                                 </a>
                             </li>
                         @endif

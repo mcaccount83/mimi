@@ -334,10 +334,10 @@ class PaymentReportController extends Controller implements HasMiddleware
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $chDetails->status->chapter_status;
-        $chIsActive = $baseQuery['chIsActive'];
+        $chActiveId = $baseQuery['chActiveId'];
         $chPayments = $baseQuery['chPayments'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'chPayments' => $chPayments,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'chPayments' => $chPayments,
             'chDetails' => $chDetails, 'chapterStatus' => $chapterStatus, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
         ];
 

@@ -1,6 +1,6 @@
 <div class="col-12"  id="accordion">
     <input type="hidden" id="chapter_id" name="id" value="{{ Session::get('chapterid') }}">
-    @if ($userType != 'disbanded'  || $chIsActive != '1')
+    @if ($userType != 'disbanded'  || $chActiveId != '1')
         <input type="hidden" name="submitted" id="submitted" value="{{ $chDocuments['financial_report_received'] ?? '' }}" />
     @else
         <input type="hidden" name="submitted" id="submitted" value="{{ $chDocuments['final_report_received'] ?? '' }}" />
@@ -2751,7 +2751,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 <!------End Step 12 ------>
 
 <!------Begin Step 13 ------>
-@if ($chIsActive == '1')
+@if ($chActiveId == '1')
     <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '13' ? 'active' : '' }}">
     <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">

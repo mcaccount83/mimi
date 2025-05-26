@@ -18,11 +18,11 @@ class BoardsPending extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id', 'first_name', 'last_name', 'email', 'board_position_id', 'chapter_id', 'street_address', 'city', 'state_id', 'zip', 'country_id',
-        'phone', 'last_updated_by', 'last_updated_date', 'is_active',
+        'user_id', 'chapter_id', 'board_position_id', 'first_name', 'last_name', 'email', 'phone', 'street_address', 'city', 'state_id', 'zip', 'country_id',
+        'last_updated_by', 'last_updated_date',
     ];
 
-    public function user(): BelongsTo
+   public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in boards BelongsTo 'id' in user
     }
@@ -31,11 +31,6 @@ class BoardsPending extends Model
     {
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in boards BelongsTo 'id' in chapters
     }
-
-    // public function stateName(): BelongsTo
-    // {
-    //     return $this->belongsTo(State::class, 'state', 'state_short_name');  // 'state' in boards BelongsTo 'state_short_name' in state
-    // }
 
     public function state(): BelongsTo
     {

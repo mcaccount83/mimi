@@ -80,6 +80,86 @@ class CoordinatorController extends Controller implements HasMiddleware
         return view('coordinators.coordlist')->with($data);
     }
 
+     /**
+     * Pending Coorinators List
+     */
+    public function showPendingCoordinator(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseCoordinatorController->getPendingBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $coordinatorList = $baseQuery['query']->get();
+
+        $data = ['coordinatorList' => $coordinatorList];
+
+        return view('coordinators.coordlistpending')->with($data);
+    }
+
+     /**
+     * Not Approved Coorinators List
+     */
+    public function showRejectedCoordinator(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseCoordinatorController->getNotApprovedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $coordinatorList = $baseQuery['query']->get();
+
+        $data = ['coordinatorList' => $coordinatorList];
+
+        return view('coordinators.coordlistrejected')->with($data);
+    }
+
+      /**
+     * International Pending Coorinators List
+     */
+    public function showIntPendingCoordinator(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseCoordinatorController->getPendingInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $coordinatorList = $baseQuery['query']->get();
+
+        $data = ['coordinatorList' => $coordinatorList];
+
+        return view('international.intcoordlistpending')->with($data);
+    }
+
+     /**
+     * International Not Approved Coorinators List
+     */
+    public function showIntRejectedCoordinator(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseCoordinatorController->getNotApprovedInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $coordinatorList = $baseQuery['query']->get();
+
+        $data = ['coordinatorList' => $coordinatorList];
+
+        return view('international.intcoordlistrejected')->with($data);
+    }
+
     /**
      * Retired Coorinators List
      */
@@ -217,7 +297,7 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'coordinator_start_date' => $lastupdatedDate,
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => $lastupdatedDate,
-                    'is_active' => 1]
+                    'active_status' => 1]
             );
 
             CoordinatorRecognition::create([
@@ -264,18 +344,19 @@ class CoordinatorController extends Controller implements HasMiddleware
     }
 
     /**
-     * View Coordiantor Detais
+     * View Coordiantor Application
      */
-    public function viewCoordDetails(Request $request, $id): View
+    public function viewCoordApplication(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['user_confId'];
 
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
         $cdDetails = $baseQuery['cdDetails'];
+        $cdApp = $baseQuery['cdApp'];
         $cdId = $baseQuery['cdId'];
         $cdPositionid = $baseQuery['cdPositionid'];
-        $cdIsActive = $baseQuery['cdIsActive'];
+        $cdActiveStatus = $baseQuery['cdActiveStatus'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -296,7 +377,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $drList = Coordinators::with('displayPosition')
             ->where('report_id', $cdId)  // DirectReport Harcoaded List
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->get();
 
         $chList = Chapters::with('state')
@@ -305,7 +386,57 @@ class CoordinatorController extends Controller implements HasMiddleware
             ->get();
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdIsActive' => $cdIsActive, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
+            'cdActiveStatus' => $cdActiveStatus, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin, 'cdApp' => $cdApp,
+            'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
+            'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
+        ];
+
+        return view('coordinators.viewapplication')->with($data);
+    }
+
+     /**
+     * View Coordiantor Detais
+     */
+    public function viewCoordDetails(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['user_confId'];
+
+        $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
+        $cdDetails = $baseQuery['cdDetails'];
+        $cdId = $baseQuery['cdId'];
+        $cdPositionid = $baseQuery['cdPositionid'];
+        $cdActiveStatus = $baseQuery['cdActiveStatus'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $cdConfId = $baseQuery['cdConfId'];
+        $RptFName = $baseQuery['RptFName'];
+        $RptLName = $baseQuery['RptLName'];
+        $ReportTo = $RptFName.' '.$RptLName;
+        $displayPosition = $baseQuery['displayPosition'];
+        $mimiPosition = $baseQuery['mimiPosition'];
+        $secondaryPosition = $baseQuery['secondaryPosition'];
+        $cdLeave = $baseQuery['cdDetails']->on_leave;
+        $cdUserAdmin = $baseQuery['cdUserAdmin'];
+        $cdAdminRole = $baseQuery['cdAdminRole'];
+
+        $now = Carbon::now();
+        $threeMonthsAgo = $now->copy()->subMonths(3);
+        $startDate = $cdDetails->coordinator_start_date;
+        $startDate = Carbon::parse($startDate);
+
+        $drList = Coordinators::with('displayPosition')
+            ->where('report_id', $cdId)  // DirectReport Harcoaded List
+            ->where('active_status', 1)
+            ->get();
+
+        $chList = Chapters::with('state')
+            ->where('primary_coordinator_id', $cdId)  // Chapter Harcoaded List
+            ->where('active_status', 1)
+            ->get();
+
+        $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
+            'cdActiveStatus' => $cdActiveStatus, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
             'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
         ];
@@ -350,7 +481,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $chList = Chapters::with('state')
             ->where('primary_coordinator_id', $cdId)  // Chapter Harcoaded List
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->get();
 
         try {
@@ -566,7 +697,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $coordinator->is_active = 0;
+            $coordinator->active_status = 0;
             $coordinator->reason_retired = $retireReason;
             $coordinator->zapped_date = date('Y-m-d');
             $coordinator->last_updated_by = $lastUpdatedBy;
@@ -642,7 +773,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $coordinator->is_active = 1;
+            $coordinator->active_status = 1;
             $coordinator->reason_retired = null;
             $coordinator->zapped_date = null;
             $coordinator->last_updated_by = $lastUpdatedBy;
@@ -712,7 +843,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
         $cdPositionid = $baseQuery['cdPositionid'];
-        $cdIsActive = $baseQuery['cdIsActive'];
+        $cdActiveStatus = $baseQuery['cdActiveStatus'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -728,7 +859,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $rcDetails = $baseQuery['rcDetails'];  // ReportsTo Dropdown List
 
         $drList = Coordinators::where('report_id', $cdId)  // DirectReport Harcoaded List
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->get();
 
         $drRowCount = count($drList);
@@ -738,7 +869,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             ->whereBetween('position_id', [1, 6])
             ->where('position_id', '<=', $cdPositionid)
             ->where('id', '!=', $cdId)
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->orderBy('first_name')
             ->orderBy('last_name')
@@ -746,7 +877,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $drOptions = Coordinators::where('conference_id', $cdConfId)  // DirectReport Dropdown List
             ->whereBetween('position_id', [1, 7])
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->orderBy('first_name')
             ->orderBy('last_name')
@@ -766,7 +897,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $pcOptions = Coordinators::where('conference_id', $cdConfId)  // Primary Coordinator Dropdown List
             ->whereBetween('position_id', [1, 7])
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->orderBy('first_name')
             ->orderBy('last_name')
@@ -775,7 +906,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $pcRowCount = count($pcOptions);
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'drOptions' => $drOptions, 'rcDetails' => $rcDetails, 'allRegions' => $allRegions,
-            'chList' => $chList, 'drList' => $drList, 'cdIsActive' => $cdIsActive, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
+            'chList' => $chList, 'drList' => $drList, 'cdActiveStatus' => $cdActiveStatus, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
             'pcOptions' => $pcOptions, 'cdId' => $cdId, 'allPositions' => $allPositions, 'chDetails' => $chDetails, 'drDetails' => $drDetails, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName, 'pcRowCount' => $pcRowCount, 'drRowCount' => $drRowCount,
             'allAdminRoles' => $allAdminRoles, 'cdAdminRole' => $cdAdminRole,
@@ -1004,7 +1135,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
-        $cdIsActive = $baseQuery['cdIsActive'];
+        $cdActiveStatus = $baseQuery['cdActiveStatus'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -1024,7 +1155,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $allCountries = $baseQuery['allCountries'];
 
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
+            'cdActiveStatus' => $cdActiveStatus, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
             'allStates' => $allStates, 'allMonths' => $allMonths, 'cdAdminRole' => $cdAdminRole, 'allCountries' => $allCountries,
         ];
@@ -1104,7 +1235,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
-        $cdIsActive = $baseQuery['cdIsActive'];
+        $cdActiveStatus = $baseQuery['cdActiveStatus'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -1122,7 +1253,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $allRecognitionGifts = $baseQuery['allRecognitionGifts'];
 
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdIsActive' => $cdIsActive, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
+            'cdActiveStatus' => $cdActiveStatus, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition, 'cdAdminRole' => $cdAdminRole,
             'allRecognitionGifts' => $allRecognitionGifts,
         ];
@@ -1204,7 +1335,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
-        $cdIsActive = $baseQuery['cdIsActive'];
+        $cdActiveStatus = $baseQuery['cdActiveStatus'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -1219,7 +1350,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $drList = Coordinators::with('displayPosition')
             ->where('report_id', $cdId)  // DirectReport Harcoaded List
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->get();
 
         $chList = Chapters::with('state')
@@ -1249,7 +1380,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
-        $cdIsActive = $baseQuery['cdIsActive'];
+        $cdActiveStatus = $baseQuery['cdActiveStatus'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -1325,5 +1456,139 @@ class CoordinatorController extends Controller implements HasMiddleware
         }
 
         return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
+    }
+
+    /**
+     *Update Pending New Coordinator Information
+     */
+    public function updateApproveApplication(Request $request)
+    {
+        $user = User::find($request->user()->id);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+
+        $defaultCategories = $this->forumSubscriptionController->defaultCategories();
+        $defaultCoordinatorCategories = $defaultCategories['coordinatorCategories'];
+
+        $input = $request->all();
+        $cdId = $input['coord_id'];
+
+        $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
+        $cdDetails = $baseQuery['cdDetails'];
+        $userId = $cdDetails->user_id;
+        $reportsTo = $cdDetails->report_id;
+        $new_layer_id = $cdDetails->layer_id;
+
+        $coordinators = Coordinators::find($cdId);
+
+        DB::beginTransaction();
+        try {
+            $coordinators->active_status = 1;
+            $coordinators->coordinator_start_date = $lastupdatedDate;
+            $coordinators->last_updated_by = $lastUpdatedBy;
+            $coordinators->last_updated_date = $lastupdatedDate;
+            $coordinators->save();
+
+            CoordinatorRecognition::create([
+                'coordinator_id' => $cdId,
+            ]);
+
+            $reportingUpline = CoordinatorTree::where('coordinator_id', $reportsTo)->first();
+
+            $treeData = [
+                'coordinator_id' => $cdId,
+            ];
+
+            // Use the reporting coordinator's upline data
+            for ($i = 0; $i < $new_layer_id; $i++) {
+                $layerKey = "layer$i";
+                $treeData[$layerKey] = $reportingUpline->{$layerKey};
+            }
+
+            $treeData["layer$new_layer_id"] = $cdId;
+
+            // Set remaining layers to null
+            for ($i = $new_layer_id + 1; $i <= 8; $i++) {
+                $treeData["layer$i"] = null;
+            }
+
+            $coordTree = CoordinatorTree::insert($treeData);
+
+            foreach ($defaultCoordinatorCategories as $categoryId) {
+                ForumCategorySubscription::create([
+                    'user_id' => $userId,
+                    'category_id' => $categoryId,
+                ]);
+            }
+
+            DB::commit();
+
+            // Return JSON response for AJAX
+            return response()->json([
+                'success' => true,
+                'message' => 'Coordinator approved successfully.',
+                'redirect' => route('coordinators.view', ['id' => $cdId]) // or whatever your route name is
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            // Return JSON error response for AJAX
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong, Please try again.'
+            ], 500);
+        }
+    }
+
+    /**
+     *Update Pending New Coordinator Information
+     */
+    public function updateRejectApplication(Request $request)
+    {
+        $user = User::find($request->user()->id);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+
+        $input = $request->all();
+        $cdId = $input['coord_id'];
+        $cdUserId = $input['coord_userid'];
+        $retiredReason = $input['reason_retired'];
+
+        $coordinators = Coordinators::find($cdId);
+        $user = User::find($cdUserId);
+
+        DB::beginTransaction();
+        try {
+            $coordinators->active_status = 3;
+            $coordinators->zapped_date = now();
+            $coordinators->reason_retired = $retiredReason;
+            $coordinators->last_updated_by = $lastUpdatedBy;
+            $coordinators->last_updated_date = $lastupdatedDate;
+            $coordinators->save();
+
+            $user->is_active = 0;
+            $user->save();
+
+            DB::commit();
+
+            // Return JSON response for AJAX
+            return response()->json([
+                'success' => true,
+                'message' => 'Coordinator application rejected.',
+                // 'redirect' => route('coordinators.coordrejected')
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            // Return JSON error response for AJAX
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong, Please try again.'
+            ], 500);
+        }
     }
 }

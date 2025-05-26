@@ -204,7 +204,7 @@
                             <br>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Payment') }}</button>
 
-                            @if($chIsActive != '1')
+                            @if($chActiveId != '1')
                                 <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Checklist</a>
                             @else
                                 @if ($userType == 'coordinator')

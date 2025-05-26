@@ -1592,13 +1592,17 @@ class ExportController extends Controller implements HasMiddleware
                 $baseQuery = $this->baseChapterController->getChapterDetails($chId);
                 $chDetails = $baseQuery['chDetails'];
                 $chId = $baseQuery['chId'];
-                $chIsActive = $baseQuery['chIsActive'];
-                if ($chIsActive == '1') {
+                $chActiveId = $baseQuery['chActiveId'];
+                if ($chActiveId == '1') {
                     $PresDetails = $baseQuery['PresDetails'];
                     $deleteColumn = null;
                 }
-                if ($chIsActive == '0') {
+                if ($chActiveId == '0') {
                     $PresDetails = $baseQuery['PresDisbandedDetails'];
+                    $deleteColumn = 'DELETE';
+                }
+                if ($chActiveId == '2') {
+                    $PresDetails = $baseQuery['PresPendingDetails'];
                     $deleteColumn = 'DELETE';
                 }
 

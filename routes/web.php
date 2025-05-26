@@ -96,8 +96,10 @@ Route::get('/newchaptersuccess', [PublicController::class, 'viewNewChapter'])->n
 Route::get('/donation', [PublicController::class, 'editDonation'])->name('public.donation');
 Route::post('/updatedonation', [PublicController::class, 'updateDonation'])->name('public.updatedonation');
 Route::get('/donationsuccess', [PublicController::class, 'viewDonation'])->name('public.donationsuccess');
-
 Route::post('/public-payment', [PublicController::class, 'processPublicPayment'])->name('public.payment');
+Route::get('/newcoordinator', [PublicController::class, 'editNewCoordinator'])->name('public.newcoordinator');
+Route::post('/updatenewcoordinator', [PublicController::class, 'updateNewCoordinator'])->name('public.updatenewcoordinator');
+Route::get('/newcoordinatorsuccess', [PublicController::class, 'viewNewCoordinator'])->name('public.newcoordinatorsuccess');
 
 // Admin Controller Routes...Coordinator Login Required
 Route::get('/admin/reregdate', [AdminController::class, 'showReRegDate'])->name('admin.reregdate');
@@ -147,6 +149,8 @@ Route::get('/chapter/pendingchapterlist', [ChapterController::class, 'showPendin
 Route::get('/international/pendingchapterlist', [ChapterController::class, 'showIntPendingChapters'])->name('international.intchaplistpending');
 Route::get('/pendingchapterdetailsedit/{id}', [ChapterController::class, 'editPendingChapterDetails'])->name('chapters.editpending');
 Route::post('/pendingchapterdetailsupdate/{id}', [ChapterController::class, 'updatePendingChapterDetails'])->name('chapters.updatepending');
+Route::post('/chapter/updateapprove', [ChapterController::class, 'updateApproveChapter'])->name('chapters.updateapprove');
+Route::post('/chapter/updatedecline', [ChapterController::class, 'updateDeclineChapter'])->name('chapters.updatedecline');
 Route::get('/chapter/declinedchapterlist', [ChapterController::class, 'showNotApprovedChapters'])->name('chapters.chaplistdeclined');
 Route::get('/international/declinedchapterlist', [ChapterController::class, 'showIntNotApprovedChapters'])->name('international.intchaplistdeclined');
 Route::get('/chapter/chapterlist', [ChapterController::class, 'showChapters'])->name('chapters.chaplist');
@@ -194,6 +198,13 @@ Route::post('/chapter/sendchapterrereglate', [EmailController::class, 'sendChapt
 
 // Coordinator Controller Routes...Coordinator Login Required
 Route::get('/coordinator/coordlist', [CoordinatorController::class, 'showCoordinators'])->name('coordinators.coordlist');
+Route::get('/coordinator/pending', [CoordinatorController::class, 'showPendingCoordinator'])->name('coordinators.coordpending');
+Route::get('/coordinator/rejected', [CoordinatorController::class, 'showRejectedCoordinator'])->name('coordinators.coordrejected');
+Route::get('/international/pending', [CoordinatorController::class, 'showIntPendingCoordinator'])->name('international.intcoordpending');
+Route::get('/international/rejected', [CoordinatorController::class, 'showIntRejectedCoordinator'])->name('international.intcoordrejected');
+Route::get('/coordapplication/{id}', [CoordinatorController::class, 'viewCoordApplication'])->name('coordinators.viewapplication');
+Route::post('/coorddetails/updateapprove', [CoordinatorController::class, 'updateApproveApplication'])->name('coordinators.updateapprove');
+Route::post('/coorddetails/updatereject', [CoordinatorController::class, 'updateRejectApplication'])->name('coordinators.updatereject');
 Route::get('/coordinator/retired', [CoordinatorController::class, 'showRetiredCoordinator'])->name('coordinators.coordretired');
 Route::get('/international/coordinator', [CoordinatorController::class, 'showIntCoordinator'])->name('international.intcoord');
 Route::get('/international/coordinatorretired', [CoordinatorController::class, 'showIntCoordinatorRetired'])->name('international.intcoordretired');

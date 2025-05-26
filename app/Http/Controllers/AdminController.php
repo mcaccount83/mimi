@@ -171,7 +171,7 @@ class AdminController extends Controller implements HasMiddleware
     public function showUserAdmin(): View
     {
         $adminList = User::where('is_admin', '1')
-            ->where('is_active', '1')
+            ->where('active_status', '1')
             ->get();
 
         $countList = count($adminList);
@@ -185,12 +185,12 @@ class AdminController extends Controller implements HasMiddleware
      */
     public function showDuplicate(): View
     {
-        $userData = User::where('is_active', '=', '1')
+        $userData = User::where('active_status', '=', '1')
             ->groupBy('email')
             ->having(DB::raw('count(email)'), '>', 1)
             ->pluck('email');
 
-        $userList = User::where('is_active', '=', '1')
+        $userList = User::where('active_status', '=', '1')
             ->whereIn('email', $userData)
             ->get();
 
@@ -242,7 +242,7 @@ class AdminController extends Controller implements HasMiddleware
     {
         $outgoingList = User::with(['outgoing', 'board.chapters'])
             ->where('user_type', 'outgoing')
-            ->where('is_active', '1')
+            ->where('active_status', '1')
             ->get();
 
         $countList = count($outgoingList);
@@ -258,7 +258,7 @@ class AdminController extends Controller implements HasMiddleware
     {
         $disbandedList = User::with(['boardDisbanded', 'boardDisbanded.chapters'])
             ->where('user_type', 'disbanded')
-            ->where('is_active', '1')
+            ->where('active_status', '1')
             ->get();
 
         $countList = count($disbandedList);
@@ -408,9 +408,9 @@ class AdminController extends Controller implements HasMiddleware
             // Make disbanded users inactive
             DB::table('users')
                 ->where('user_type', 'disbanded')
-                ->where('is_active', '1')
+                ->where('active_status', '1')
                 ->update([
-                    'is_active' => '0',
+                    'active_status' => '0',
                 ]);
 
             DB::commit();
@@ -450,9 +450,9 @@ class AdminController extends Controller implements HasMiddleware
             // Make outgoing users inactive
             DB::table('users')
                 ->where('user_type', 'outgoing')
-                ->where('is_active', '1')
+                ->where('active_status', '1')
                 ->update([
-                    'is_active' => '0',
+                    'active_status' => '0',
                 ]);
 
             DB::commit();
@@ -532,9 +532,9 @@ class AdminController extends Controller implements HasMiddleware
             // Make outgoing users inactive
             DB::table('users')
                 ->where('user_type', 'outgoing')
-                ->where('is_active', '1')
+                ->where('active_status', '1')
                 ->update([
-                    'is_active' => '0',
+                    'active_status' => '0',
                 ]);
 
             // Remove Data from the `outgoing_board_member` and `incoming_board_member` tables
@@ -837,7 +837,7 @@ class AdminController extends Controller implements HasMiddleware
             $categoryIdPublic = $categoryPublic->id;
 
             // Get active coordinators
-            $coordinatorUserIds = Coordinators::where('is_active', '1')
+            $coordinatorUserIds = Coordinators::where('active_status', '1')
                 ->where('on_leave', '0')
                 ->get()
                 ->pluck('user_id')

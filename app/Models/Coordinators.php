@@ -19,7 +19,7 @@ class Coordinators extends Model
     protected $fillable = [
         'user_id', 'conference_id', 'region_id', 'layer_id', 'first_name', 'last_name', 'position_id', 'display_position_id', 'email', 'sec_email', 'report_id',
         'address', 'city', 'state_id', 'zip', 'country_id', 'phone', 'alt_phone', 'birthday_month_id', 'birthday_day', 'home_chapter', 'coordinator_start_date',
-        'last_updated_by', 'last_updated_date', 'is_active',
+        'last_updated_by', 'last_updated_date', 'active_status',
     ];
 
     public function coordTree(): HasOne
@@ -30,6 +30,11 @@ class Coordinators extends Model
     public function recognition(): HasOne
     {
         return $this->hasOne(CoordinatorRecognition::class, 'coordinator_id', 'id');  // 'coordinator_id' in recognition_gifts HasOne 'id' in coordinators
+    }
+
+    public function application(): HasOne
+    {
+        return $this->hasOne(CoordinatorApplication::class, 'coordinator_id', 'id');  // 'active_status' in coordinators BelongsTo 'id' in probation
     }
 
     public function user(): BelongsTo
@@ -91,4 +96,10 @@ class Coordinators extends Model
     {
         return $this->belongsTo(Coordinators::class, 'report_id', 'id');  // 'report_id' in coordinators BelongsTo 'id' in coordinators
     }
+
+    public function activeStatus(): BelongsTo
+    {
+        return $this->belongsTo(ActiveStatus::class, 'active_status', 'id');  // 'active_status' in coordinators BelongsTo 'id' in probation
+    }
+
 }

@@ -55,7 +55,7 @@
 
                   <ul class="list-group list-group-unbordered mb-3">
 
-                      <li class="list-group-item">
+                      {{-- <li class="list-group-item">
                         <label class="col-form-label mb-1">Application Submitted:</label>
                         <span class="form-control-plaintext float-right col-sm-6 mb-1 text-right custom-span">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
 
@@ -83,7 +83,7 @@
                                     {{ $chDetails->active_status == 3 ? 'required' : '' }}>
                             </div>
 
-                            </li>
+                            </li> --}}
 
 
                       @if($regionalCoordinatorCondition)
@@ -106,20 +106,34 @@
                       @else
                       <li class="list-group-item" id="display_corlist" ></li>
                       @endif
-                  </ul>
+                             <li class="list-group-item">
+
                   <div class="text-center">
                       @if ($chDetails->active_status == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                       @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ffc107;">Chapter is PENDING</span></b>
+                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
                       @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b>
+                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
+                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
+                          {{ $chDetails->disband_reason }}
                       @elseif ($chDetails->active_status == 0)
                           <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
                           Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
                           {{ $chDetails->disband_reason }}
                       @endif
                   </div>
+                </li>
+
+                   @if ($chDetails->active_status == '2')
+                    <li class="list-group-item">
+                        <div class="card-body text-center">
+                            <br>
+                            <button type="button" class="btn bg-gradient-success" id="chap-approve"><i class="fas fa-check mr-2"></i>Approve Chapter</button>
+                            <button type="button" class="btn bg-gradient-danger" id="chap-decline"><i class="fas fa-times mr-2"></i>Decline Chaper</button>
+                    </li>
+                @endif
+ </ul>
                 </div>
               <!-- /.card-body -->
             </div>
@@ -515,6 +529,222 @@ function showChapterSetupModal(chapterId) {
         }
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('chap-approve').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Are you sure?',
+            html: `
+                <p>Approving a chapter application will create their MIMI login, request their @momsclub.org email address, add them to the BoardList, and PublicList as well as give
+                    them access to Board elearning. Please verify this is what you want to do by pressing OK.</p>
+                <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Close',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            },
+            preConfirm: () => {
+                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+                return {
+                    chapter_id: chapterId,
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+                // Perform the AJAX request
+                $.ajax({
+                    url: '{{ route('chapters.updateapprove') }}',
+                    type: 'POST',
+                    data: {
+                        chapter_id: data.chapter_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        // Check if response is JSON (success) or HTML (redirect with error)
+                        if (response && typeof response === 'object') {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                }).then(() => {
+                                    if (response.redirect) {
+                                        window.location.href = response.redirect;
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                });
+                            }
+                        } else {
+                            // If response is not JSON, it's likely a redirect (success case)
+                            // Check if the response contains success indicators
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Chapter approved successfully.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                window.location.href = '{{ route('chapters.view', ['id' => 'chapterId']) }}';
+                            });
+                        }
+                    },
+                    error: function(jqXHR, exception) {
+                        let errorMessage = 'Something went wrong, Please try again.';
+
+                        // Try to parse error response
+                        if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                            errorMessage = jqXHR.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            title: 'Error!',
+                            text: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                confirmButton: 'btn-sm btn-success'
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    document.getElementById('chap-decline').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Are you sure?',
+            html: `
+                <p>Declining a chapter application will mark them as inactive and remove them from all chapter lists. Please enter the reason for declining and press OK.</p>
+                <div style="display: flex; align-items: center; ">
+                    <input type="text" id="disband_reason" name="disband_reason" class="swal2-input" placeholder ="Enter Reason" required style="width: 100%;">
+                </div>
+                <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Close',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            },
+            preConfirm: () => {
+                const disbandReason = Swal.getPopup().querySelector('#disband_reason').value;
+                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+                if (!retiredReason) {
+                    Swal.showValidationMessage('Please enter the reason for declining.');
+                    return false;
+                }
+
+                return {
+                    reason_retired: retiredReason,
+                    chapter_id: chapterId,
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+                // Perform the AJAX request
+                $.ajax({
+                    url: '{{ route('chapters.updatedecline') }}',
+                    type: 'POST',
+                    data: {
+                        reason_retired: data.reason_retired,
+                        chapter_id: data.chapter_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        // Check if response is JSON (success) or HTML (redirect with error)
+                        if (response && typeof response === 'object') {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                }).then(() => {
+                                    location.reload(); // Reload the page to reflect changes
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                });
+                            }
+                        } else {
+                            // If response is not JSON, it's likely a redirect (success case)
+                            // Check if the response contains success indicators
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Chapter declined.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        }
+                    },
+                    error: function(jqXHR, exception) {
+                        let errorMessage = 'Something went wrong, Please try again.';
+
+                        // Try to parse error response
+                        if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                            errorMessage = jqXHR.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            title: 'Error!',
+                            text: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                confirmButton: 'btn-sm btn-success'
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+});
 
 </script>
 @endsection

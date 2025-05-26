@@ -177,12 +177,12 @@ class UserController extends Controller implements HasMiddleware
     public function loadEmailDetails($chId)
     {
         $chDetails = Chapters::with(['state', 'documents', 'boards', 'coordinatorTree', 'boardsDisbanded'])->find($chId);
-        $chIsActive = $chDetails->active_status;
+        $chActiveId = $chDetails->active_status;
         $chEmail = trim($chDetails->email);
         $stateShortName = $chDetails->state->state_short_name ?? '';
         $documents = $chDetails->documents()->first();
 
-        if ($chIsActive == '1') {
+        if ($chActiveId == '1') {
             $boards = $chDetails->boards()->pluck('email')->filter()->toArray();
         } else {
             $boards = $chDetails->boardsDisbanded()->pluck('email')->filter()->toArray();
@@ -242,7 +242,7 @@ class UserController extends Controller implements HasMiddleware
         $i = 0;
         if (! empty($coordinatorList)) {
             $coordinators = Coordinators::with(['displayPosition', 'secondaryPosition'])->whereIn('id', $coordinatorList)
-                ->where('is_active', 1)
+                ->where('active_status', 1)
                 ->orderByRaw('FIELD(id, '.implode(',', $coordinatorList).')') // Ensure order is based on reversed IDs
                 ->get();
 
@@ -297,10 +297,11 @@ class UserController extends Controller implements HasMiddleware
 
         $ccDetails = Coordinators::with(['displayPosition', 'conference'])
             ->where('id', $layer1)
-            ->where('is_active', 1)
+            ->where('active_status', 1)
             ->first(); // Fetch only the first record directly
 
         $cc_id = $ccDetails?->id;
+        $cc_layer_id = $ccDetails?->layer_id;
         $cc_fname = $ccDetails?->first_name;
         $cc_lname = $ccDetails?->last_name;
         $cc_email = $ccDetails?->email;
@@ -311,6 +312,7 @@ class UserController extends Controller implements HasMiddleware
 
         return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email,
             'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id, 'cc_phone' => $cc_phone,
+            'cc_layer_id' => $cc_layer_id,
         ];
     }
 
@@ -320,7 +322,7 @@ class UserController extends Controller implements HasMiddleware
     public function loadEINCoord()
     {
         $query = Coordinators::with(['displayPosition', 'secondaryPosition'])
-            ->where('coordinators.is_active', 1)
+            ->where('coordinators.active_status', 1)
             ->where(function ($q) {
                 $q->where('coordinators.position_id', '12')
                     ->orWhereHas('secondaryPosition', function ($subQuery) {
@@ -362,7 +364,7 @@ class UserController extends Controller implements HasMiddleware
                             });
                     })
                     ->whereBetween('position_id', [1, 7])
-                    ->where('is_active', 1);
+                    ->where('active_status', 1);
             },
         ])->get();
 
@@ -413,7 +415,7 @@ class UserController extends Controller implements HasMiddleware
                             });
                     })
                     ->whereBetween('position_id', [1, 7])
-                    ->where('is_active', 1);
+                    ->where('active_status', 1);
             },
         ])->get();
 
@@ -458,7 +460,7 @@ class UserController extends Controller implements HasMiddleware
                 ->where('position_id', '>', 7)
                 ->where('position_id', '>=', $cdPositionid)
                 ->where('id', '!=', $cdId)
-                ->where('is_active', 1)
+                ->where('active_status', 1)
                 ->where('on_leave', '!=', '1')
                 ->get();
         } else {
@@ -467,7 +469,7 @@ class UserController extends Controller implements HasMiddleware
                 ->whereBetween('position_id', [3, 7])
                 ->where('position_id', '>=', $cdPositionid)
                 ->where('id', '!=', $cdId)
-                ->where('is_active', 1)
+                ->where('active_status', 1)
                 ->where('on_leave', '!=', '1')
                 ->get();
         }

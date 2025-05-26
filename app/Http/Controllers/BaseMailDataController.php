@@ -334,4 +334,43 @@ class BaseMailDataController extends Controller
             'founderCountry' => $chDetails->pendingPresident->country_id,
         ];
     }
+
+    public function getNewCoordinatorData($cdDetails)
+    {
+        return [
+            'conference_id' => $cdDetails->conference_id,
+            'region' => $cdDetails->region->short_name,
+            'first_name' => $cdDetails->first_name,
+            'last_name' => $cdDetails->last_name,
+            'position' => $cdDetails->mimiPosition->position,
+            'display_position' => $cdDetails->displayPosition->position,
+            'email' => $cdDetails->email,
+            'sec_email' => $cdDetails->sec_email,
+            'report_id' => $cdDetails->reportsTo->first_name.' '.$cdDetails->reportsTo->last_name,
+            'address' => $cdDetails->address,
+            'city' => $cdDetails->city,
+            'state' => $cdDetails->state->state_short_name,
+            'zip' => $cdDetails->zip,
+            'country' => $cdDetails->country->short_name,
+            'phone' => $cdDetails->phone,
+            'alt_phone' => $cdDetails->alt_phone,
+            'coordinator_start_date' => $cdDetails->coordinator_start_date,
+        ];
+    }
+
+     public function getNewCoordinatorAppData($input)
+    {
+        return [
+            'home_chapter' => $input['home_chapter'].', '.$input['home_state'],
+            'start_date' => $input['start_date'],
+            'jobs_programs' => $input['jobs_programs'],
+            'helped_me' => $input['helped_me'],
+            'problems' => $input['problems'],
+            'why_volunteer' => $input['why_volunteer'],
+            'other_volunteer' => $input['other_volunteer'],
+            'special_skills' => $input['special_skills'],
+            'enjoy_volunteering' => $input['enjoy_volunteering'],
+            'referred_by' => $input['referred_by'] ?? null,
+        ];
+    }
 }

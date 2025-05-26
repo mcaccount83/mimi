@@ -61,18 +61,25 @@
                         <b>Home Chapter:</b> <span class="float-right">{{ $cdDetails->home_chapter }}</span>
                     </li>
                 </ul>
-                <div class="text-center">
-                    @if ($cdDetails->is_active == 1 && $cdDetails->on_leave != 1)
-                        <b><span style="color: #28a745;">Coordinator is ACTIVE</span></b>
-                    @elseif ($cdDetails->is_active == 1 && $cdDetails->on_leave == 1)
+               <div class="text-center">
+                     @if ($cdDetails->active_status == 1 && $cdDetails->on_leave == 1)
                         <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
                         <br>
                         Leave Date: <span class="date-mask">{{ $cdDetails->leave_date }}</span><br>
                     @else
-                        <b><span style="color: #dc3545;">Coordinator is RETIRED</span></b>
-                        <br>
-                        Retired Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
-                        {{ $cdDetails->reason_retired }}
+                        @if ($cdDetails->active_status == 1 && $cdDetails->on_leave != 1)
+                            <b><span style="color: #28a745;">Coordinator is ACTIVE</span></b>
+                        @elseif ($cdDetails->active_status == 2)
+                        <b><span style="color: #ff851b;">Coordinator is PENDING</span></b>
+                        @elseif ($cdDetails->active_status == 3)
+                        <b><span style="color: #dc3545;">Coordinator was NOT APPROVED</span></b><br>
+                            Rejected Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
+                            {{ $cdDetails->reason_retired }}
+                        @elseif ($cdDetails->active_status == 0)
+                            <b><span style="color: #dc3545;">Coordinator is RETIRED</span></b><br>
+                            Retired Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
+                            {{ $cdDetails->reason_retired }}
+                        @endif
                     @endif
                 </div>
               </div>
@@ -307,21 +314,21 @@
                     @elseif($cdLeave == 1)
                         <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="removeLeaveCoordinator()"><i class="fas fa-undo mr-2"></i>Remove Coordinator From Leave</button>
                     @endif
-                    @if($cdIsActive == 1)
+                    @if($cdActiveStatus == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="retireCoordinator()"><i class="fas fa-ban mr-2"></i>Retire Coordinator</button>
-                    @elseif($cdIsActive != 1)
+                    @elseif($cdActiveStatus != 1)
                         <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="unRetireCoordinator()"><i class="fas fa-undo mr-2"></i>UnRetire Coordinator</button>
                     @endif
                 @endif
                 <br>
                 @if ($cdConfId == $confId)
-                    @if ($cdIsActive == 1)
+                    @if ($cdActiveStatus == 1)
                         <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator List</button>
                     @else
                         <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
                     @endif
                 @elseif ($userAdmin  && ($cdConfId != $confId))
-                    @if ($cdIsActive == 1)
+                    @if ($cdActiveStatus == 1)
                         <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-reply mr-2"></i>Back to International Coordinator List</button>
                     @else
                         <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
@@ -338,11 +345,11 @@
 @section('customscript')
 <script>
 
-var $cdIsActive = {{ $cdIsActive }};
+var $cdActiveStatus = {{ $cdActiveStatus }};
 
 $(document).ready(function () {
     // Disable fields for chapters that are not active
-    if ($cdIsActive != 1)
+    if ($cdActiveStatus != 1)
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
