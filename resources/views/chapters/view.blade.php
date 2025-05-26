@@ -877,24 +877,32 @@
                 <br>
                 @if($coordinatorCondition)
                     @if ($confId == $chConfId)
-                        @if ($chActiveId == 1)
-                            @if ($inquiriesCondition  && ($coorId != $chPcId))
-                                <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Chapter List</button>
-                            @else
-                                <button type="button" id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter List</button>
+                        @if ($einCondition && ($confId != $chConfId) || $inquiriesCondition  && ($confId != $chConfId) || $userAdmin  && ($confId != $chConfId))
+                            @if ($chDetails->active_status == '1')
+                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Chapter List</button>
+                            @elseif ($chDetails->active_status == '2')
+                                <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchaplistpending') }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Chapter List</button>
+                            @elseif ($chDetails->active_status == '3')
+                                <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchaplistdeclined') }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Chapter List</button>
+                            @elseif ($chDetails->active_status == '0')
+                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Chapter List</button>
+                            @endif
+                        @elseif ($inquiriesCondition  && ($coorId != $chPcId))
+                            @if ($chDetails->active_status == '1')
+                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Active Chapter List</button>
+                            @elseif ($chDetails->active_status == '0')
+                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquirieszapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Zapped Chapter List</button>
                             @endif
                         @else
-                            @if ($inquiriesCondition  && ($coorId != $chPcId))
-                                <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Zapped Chapter List</button>
-                            @else
+                            @if ($chDetails->active_status == '1')
+                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Chapter List</button>
+                            @elseif ($chDetails->active_status == '2')
+                                <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Chapter List</button>
+                            @elseif ($chDetails->active_status == '3')
+                                <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistdeclined') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Chapter List</button>
+                            @elseif ($chDetails->active_status == '0')
                                 <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
                             @endif
-                        @endif
-                    @elseif ($einCondition && ($confId != $chConfId) || $inquiriesCondition  && ($confId != $chConfId) || $userAdmin  && ($confId != $chConfId))
-                        @if ($chActiveId == 1)
-                            <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-reply mr-2"></i>Back to International Chapter List</button>
-                        @else
-                            <button type="button" id="back-international-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapterzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Chapter List</button>
                         @endif
                     @endif
                 @endif
