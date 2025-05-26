@@ -2301,23 +2301,10 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->email = $request->input('ch_email');
             $chapter->po_box = $request->input('ch_pobox');
             $chapter->primary_coordinator_id = $request->filled('ch_primarycor') ? $request->input('ch_primarycor') : $request->input('ch_hid_primarycor');
-            // $chapter->active_status = $request->input('ch_active');
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = $lastupdatedDate;
 
             $chapter->save();
-
-            // if ($chapter->active_status == 3) {
-            //     $chapter->zap_date = now();
-            //     $chapter->disband_reason = $request->input('disband_reason');
-            //     $chapter->save();
-            // }
-
-            // if ($chapter->active_status != 3) {
-            //     $chapter->zap_date = null;
-            //     $chapter->disband_reason = null;
-            //     $chapter->save();
-            // }
 
             $user->update([   // Update user details
                 'first_name' => $request->input('ch_pre_fname'),
@@ -2340,93 +2327,8 @@ class ChapterController extends Controller implements HasMiddleware
                 'last_updated_date' => now(),
             ]);
 
-            // if ($chapter->active_status == 1) {
-            //     FinancialReport::create([
-            //         'chapter_id' => $chapterId,
-            //     ]);
-
-            //     Documents::create([
-            //         'chapter_id' => $chapterId,
-            //     ]);
-
-            //     Payments::create([
-            //         'chapter_id' => $chapterId,
-            //     ]);
-
-            //     foreach ($defaultBoardCategories as $categoryId) {
-            //         ForumCategorySubscription::create([
-            //             'user_id' => $user->id,
-            //             'category_id' => $categoryId,
-            //         ]);
-            //     }
-
-                // User::where('id', $user->id)->update([
-                //     'user_type' => 'board',
-                // ]);
-                // Boards::create([
-                //     'user_id' => $user->id,
-                //     'chapter_id' => $president->chapter_id,
-                //     'board_position_id' => $president->board_position_id,
-                //     'first_name' => $president->first_name,
-                //     'last_name' => $president->last_name,
-                //     'email' => $president->email,
-                //     'phone' => $president->phone,
-                //     'street_address' => $president->street_address,
-                //     'city' => $president->city,
-                //     'state_id' => $president->state_id,
-                //     'zip' => $president->zip,
-                //     'country_id' => $president->country_id,
-                //     'last_updated_by' => $lastUpdatedBy,
-                //     'last_updated_date' => $lastupdatedDate,
-                // ]);
-                // BoardsPending::where('user_id', $user->id)->delete();
-
-                // // Load Chapter MailData//
-                // $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
-                // $chDetails = $baseQuery['chDetails'];
-                // $stateShortName = $baseQuery['stateShortName'];
-                // $pcDetails = $baseQuery['pcDetails'];
-
-                // $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-                // $PresDetails = $baseActiveBoardQuery['PresDetails'];
-
-                // // $PresDetails = $baseQuery['PresDetails'];
-
-                // //  Load User Information for Signing Email & PDFs
-                // $user = $this->userController->loadUserInformation($request);
-
-                // $mailData = array_merge(
-                //     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                //     $this->baseMailDataController->getUserData($user),
-                //     $this->baseMailDataController->getPCData($pcDetails),
-                //     $this->baseMailDataController->getPresData($PresDetails),
-                // );
-
-                // $mailTableNewChapter = $this->emailTableController->createNewChapterTable($mailData);
-
-                // $mailData = array_merge($mailData, [
-                //     'mailTableNewChapter' => $mailTableNewChapter,
-                // ]);
-
-            //     // Primary Coordinator Notification//
-            //     Mail::to($pcDetails->email)
-            //         ->queue(new ChapterAddPrimaryCoor($mailData));
-
-            //     // List Admin Notification//
-            //     // $listAdminEmail = 'listadmin@momsclub.org';
-            //     $adminEmail = $this->positionConditionsService->getAdminEmail();
-            //     $listAdmin = $adminEmail['list_admin'];
-
-            //     Mail::to($listAdmin)
-            //         ->queue(new ChapterAddListAdmin($mailData));
-            // }
-
             DB::commit();
-            // if ($chapter->active_status == 1) {
-            //     return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
-            // } else {
                 return to_route('chapters.editpending', ['id' => $id])->with('success', 'Chapter Details have been updated');
-            // }
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -2455,10 +2357,6 @@ class ChapterController extends Controller implements HasMiddleware
 
         $defaultCategories = $this->forumSubscriptionController->defaultCategories();
         $defaultBoardCategories = $defaultCategories['boardCategories'];
-
-        // $baseQuery = $this->baseChapterController->getChapterDetails($id);
-        // $chDetails = $baseQuery['chDetails'];
-        // $pcDetails = $baseQuery['pcDetails'];
 
         $chapter = Chapters::with('pendingPresident')->find($id);
         $chapterId = $id;
@@ -2552,7 +2450,7 @@ class ChapterController extends Controller implements HasMiddleware
             return response()->json([
                 'success' => true,
                 'message' => 'Coordinator approved successfully.',
-                'redirect' => route('chapters.view', ['id' => $id]) // or whatever your route name is
+                'redirect' => route('chapters.view', ['id' => $id])
             ]);
 
         } catch (\Exception $e) {
@@ -2579,6 +2477,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $input = $request->all();
         $id = $input['chapter_id'];
+        $disbandReason = $input['disband_reason'];
 
         $chapter = Chapters::with('pendingPresident')->find($id);
         $president = $chapter->pendingPresident;
@@ -2587,6 +2486,8 @@ class ChapterController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $chapter->active_status = $activeStatus;
+            $chapter->disband_reason = $disbandReason;
+            $chapter->zap_date = $lastupdatedDate;
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();

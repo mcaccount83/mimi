@@ -654,13 +654,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const disbandReason = Swal.getPopup().querySelector('#disband_reason').value;
                 const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
 
-                if (!retiredReason) {
+                if (!disbandReason) {
                     Swal.showValidationMessage('Please enter the reason for declining.');
                     return false;
                 }
 
                 return {
-                    reason_retired: retiredReason,
+                    disband_reason: disbandReason,
                     chapter_id: chapterId,
                 };
             }
@@ -673,7 +673,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     url: '{{ route('chapters.updatedecline') }}',
                     type: 'POST',
                     data: {
-                        reason_retired: data.reason_retired,
+                        disband_reason: data.disband_reason,
                         chapter_id: data.chapter_id,
                         _token: '{{ csrf_token() }}'
                     },
