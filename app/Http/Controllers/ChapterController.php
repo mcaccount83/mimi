@@ -11,6 +11,8 @@ use App\Mail\ChaptersPrimaryCoordinatorChange;
 use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
 use App\Mail\ChaptersUpdatePrimaryCoorBoard;
 use App\Mail\ChaptersUpdatePrimaryCoorChapter;
+use App\Mail\NewChapterApprovedAdmin;
+use App\Mail\NewChapterApprovedEmail;
 use App\Mail\WebsiteAddNoticeAdmin;
 use App\Mail\WebsiteAddNoticeChapter;
 use App\Mail\WebsiteReviewNotice;
@@ -69,8 +71,8 @@ class ChapterController extends Controller implements HasMiddleware
     public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
         ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, EmailController $emailController,
         EmailTableController $emailTableController, PositionConditionsService $positionConditionsService,)
-    {
 
+    {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseChapterController = $baseChapterController;
@@ -78,7 +80,7 @@ class ChapterController extends Controller implements HasMiddleware
         $this->baseMailDataController = $baseMailDataController;
         $this->emailTableController = $emailTableController;
         $this->emailController = $emailController;
-                        $this->positionConditionsService = $positionConditionsService;
+        $this->positionConditionsService = $positionConditionsService;
 
     }
 
@@ -2273,21 +2275,12 @@ class ChapterController extends Controller implements HasMiddleware
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
-        // $baseQuery = $this->baseChapterController->getChapterDetails($id);
-        // $chDetails = $baseQuery['chDetails'];
-        // $pcDetails = $baseQuery['pcDetails'];
-
         $input = $request->all();
         $chapterName = $request->input('ch_name');
 
         $chapter = Chapters::with('pendingPresident')->find($id);
-        // $chapterId = $id;
         $president = $chapter->pendingPresident;
         $user = $president->user;
-        // $userId = $president->id;
-
-        // $defaultCategories = $this->forumSubscriptionController->defaultCategories();
-        // $defaultBoardCategories = $defaultCategories['boardCategories'];
 
         DB::beginTransaction();
         try {
@@ -2424,6 +2417,8 @@ class ChapterController extends Controller implements HasMiddleware
             $user = $this->userController->loadUserInformation($request);
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $listAdmin = $adminEmail['list_admin'];
+            $paymentsAdmin = $adminEmail['payments_admin'];
+            $gsuiteAdmin = $adminEmail['gsuite_admin'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -2437,6 +2432,12 @@ class ChapterController extends Controller implements HasMiddleware
             $mailData = array_merge($mailData, [
                 'mailTableNewChapter' => $mailTableNewChapter,
             ]);
+
+            Mail::to($paymentsAdmin)
+                ->queue(new NewChapterApprovedAdmin($mailData));
+
+            Mail::to($gsuiteAdmin)
+                ->queue(new NewChapterApprovedEmail($mailData));
 
             Mail::to($pcDetails->email)
                 ->queue(new ChapterAddPrimaryCoor($mailData));

@@ -9,6 +9,7 @@ use App\Models\CoordinatorRecognition;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\ForumCategorySubscription;
+use App\Mail\NewCoordApprovedEmail;
 use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
@@ -37,15 +38,24 @@ class CoordinatorController extends Controller implements HasMiddleware
 
     protected $forumSubscriptionController;
 
-    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController,
-        PositionConditionsService $positionConditionsService,)
-    {
+    protected $baseMailDataController;
 
+    protected $emailTableController;
+
+    protected $emailController;
+
+    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController,
+        PositionConditionsService $positionConditionsService, BaseMailDataController $baseMailDataController, EmailController $emailController,
+        EmailTableController $emailTableController)
+
+    {
         $this->userController = $userController;
         $this->baseCoordinatorController = $baseCoordinatorController;
         $this->forumSubscriptionController = $forumSubscriptionController;
-                        $this->positionConditionsService = $positionConditionsService;
-
+        $this->positionConditionsService = $positionConditionsService;
+        $this->baseMailDataController = $baseMailDataController;
+        $this->emailTableController = $emailTableController;
+        $this->emailController = $emailController;
     }
 
     public static function middleware(): array
@@ -1520,6 +1530,23 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'category_id' => $categoryId,
                 ]);
             }
+
+            // Load Chapter MailData//
+            $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
+            $cdDetails = $baseQuery['cdDetails'];
+
+            $user = $this->userController->loadUserInformation($request);
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $listAdmin = $adminEmail['list_admin'];
+            $gsuiteAdmin = $adminEmail['gsuite_admin'];
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getNewCoordinatorData($cdDetails),
+                $this->baseMailDataController->getUserData($user),
+            );
+
+            Mail::to($gsuiteAdmin)
+                ->queue(new NewCoordApprovedEmail($mailData));
 
             DB::commit();
 

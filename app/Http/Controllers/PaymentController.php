@@ -76,21 +76,24 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingCompany = $name;
         $shippingAddress = $PresDetails->street_address;
         $shippingCity = $PresDetails->city;
-        $shipStateId = $input['ship_state'];
+        $shipStateId = $PresDetails->state_id;
         $state = State::find($shipStateId);
         $shippingState = $state->state_short_name;
+        $shipCountryId = $PresDetails->country_id;
+        $country = Country::find($shipCountryId);
+        $shippingCountry = $country->short_name;
         $shippingZip = $PresDetails->zip;
 
-        $shipStateId = intval($input['ship_state']);
-        if ($shipStateId < 52){
-            $shippingCountry = 'USA';
-        }
-        else{
-            $countryId = $input['ship_country'];
-            $country = Country::find($countryId);
-            $countryShortName = $country->short_name;
-            $shippingCountry = $countryShortName;
-        }
+        // $shipStateId = intval($PresDetails->state_id);
+        // if ($shipStateId < 52){
+        //     $shippingCountry = 'USA';
+        // }
+        // else{
+        //     $countryId = $input['ship_country'];
+        //     $country = Country::find($countryId);
+        //     $countryShortName = $country->short_name;
+        //     $shippingCountry = $countryShortName;
+        // }
 
         // $paymentResponse = $this->processPayment($request);
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
@@ -196,21 +199,24 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingCompany = $name;
         $shippingAddress = $PresDetails->street_address;
         $shippingCity = $PresDetails->city;
-        $shipStateId = $input['ship_state'];
+        $shipStateId = $PresDetails->state_id;
         $state = State::find($shipStateId);
         $shippingState = $state->state_short_name;
+        $shipCountryId = $PresDetails->country_id;
+        $country = Country::find($shipCountryId);
+        $shippingCountry = $country->short_name;
         $shippingZip = $PresDetails->zip;
 
-        $shipStateId = intval($input['ship_state']);
-        if ($shipStateId < 52){
-            $shippingCountry = 'USA';
-        }
-        else{
-            $countryId = $input['ship_country'];
-            $country = Country::find($countryId);
-            $countryShortName = $country->short_name;
-            $shippingCountry = $countryShortName;
-        }
+        // $shipStateId = intval($input['ship_state']);
+        // if ($shipStateId < 52){
+        //     $shippingCountry = 'USA';
+        // }
+        // else{
+        //     $countryId = $input['ship_country'];
+        //     $country = Country::find($countryId);
+        //     $countryShortName = $country->short_name;
+        //     $shippingCountry = $countryShortName;
+        // }
 
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);

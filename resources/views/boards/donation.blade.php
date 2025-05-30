@@ -57,60 +57,6 @@
                         <?php
                         ?>
 
-                        <h3 class="profile-username">Donor Information</h3>
-                    <!-- /.card-header -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <!-- /.form group -->
-                            <div class="form-group row">
-                                <label class="col-sm-2 mb-1 col-form-label">Chapter/President:</label>
-                                <div class="col-sm-5 mb-1">
-                            <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" value="MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}" readonly>
-                                </div>
-                                <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_name" id="ch_pre_name" class="form-control" value="{{ $PresDetails->first_name }} {{ $PresDetails->last_name }}" readonly >
-                                </div>
-                                <label class="col-sm-2 mb-1 col-form-label">Address:</label>
-                                <div class="col-sm-10 mb-1">
-                                <input type="text" name="pres_street" id="pres_street" class="form-control" value="{{ $PresDetails->street_address }}" readonly >
-                                </div>
-                                <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                               <div class="col-sm-3 mb-1">
-                                <input type="text" name="ch_pres_city" id="ch_pres_city" class="form-control" value="{{ $PresDetails->city }}"  required placeholder="City">
-                                </div>
-                                <div class="col-sm-3 mb-1">
-                                    <select name="ch_pres_state" id="ch_pres_state" class="form-control" style="width: 100%;" required>
-                                        <option value="">Select State</option>
-                                        @foreach($allStates as $state)
-                                        <option value="{{$state->id}}"
-                                            @if($PresDetails->state_id == $state->id) selected @endif>
-                                            {{$state->state_long_name}}
-                                        </option>
-                                    @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-sm-2 mb-1">
-                                    <input type="text" name="ch_pres_zip" id="ch_pres_zip" class="form-control" value="{{ $PresDetails->zip }}"  required placeholder="Zip">
-                                </div>
-                                <div class="col-sm-2" id="ch_pre_country-container" style="display: none;">
-                                    <select name="ch_pres_country" id="ch_pres_country" class="form-control" style="width: 100%;" required>
-                                        <option value="">Select Country</option>
-                                        @foreach($allCountries as $country)
-                                        <option value="{{$country->id}}"
-                                            @if($PresDetails->country_id == $country->id) selected @endif>
-                                            {{$country->name}}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <hr>
-
-                <h3 class="profile-username">Payment Information</h3>
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <label>Sustaining Chapter Donation</label>
