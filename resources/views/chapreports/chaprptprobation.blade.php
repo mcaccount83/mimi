@@ -40,7 +40,7 @@
                     <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td class="text-center align-middle">
                         @if ($list->probation_id == '3')
-                            <a href="{{ url("/view/chapterprobation/{$list->id}") }}"><i class="fas fa-file"></i></a>
+                            <a href="{{ url("/board/probation/{$list->id}") }}"><i class="fas fa-file"></i></a>
                         @else
                         @endif
                     </td>
