@@ -2192,6 +2192,8 @@ class ChapterController extends Controller implements HasMiddleware
     public function editPendingChapterDetails(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
@@ -2260,7 +2262,7 @@ class ChapterController extends Controller implements HasMiddleware
             'conferenceDescription' => $conferenceDescription, 'allStates' => $allStates,
             'pcList' => $pcList, 'allRegions' => $allRegions, 'pcDetails' => $pcDetails, 'allCountries' => $allCountries,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails,
-            'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails
+            'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails, 'confId' => $confId,
         ];
 
         return view('chapters.editpending')->with($data);
