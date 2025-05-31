@@ -2255,7 +2255,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $pcDetails = $pcDetails->unique('cid');
 
-        $data = ['id' => $id, 'chActiveId' => $chActiveId,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chConfId' => $chConfId,
             'chDetails' => $chDetails, 'allActive' => $allActive,
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
