@@ -366,7 +366,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdApp = $baseQuery['cdApp'];
         $cdId = $baseQuery['cdId'];
         $cdPositionid = $baseQuery['cdPositionid'];
-        $cdActiveStatus = $baseQuery['cdActiveStatus'];
+        $cdActiveId = $baseQuery['cdActiveId'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -396,7 +396,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             ->get();
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdActiveStatus' => $cdActiveStatus, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin, 'cdApp' => $cdApp,
+            'cdActiveId' => $cdActiveId, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin, 'cdApp' => $cdApp,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
             'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
         ];
@@ -416,7 +416,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
         $cdPositionid = $baseQuery['cdPositionid'];
-        $cdActiveStatus = $baseQuery['cdActiveStatus'];
+        $cdActiveId = $baseQuery['cdActiveId'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -446,7 +446,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             ->get();
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdActiveStatus' => $cdActiveStatus, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
+            'cdActiveId' => $cdActiveId, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
             'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
         ];
@@ -853,7 +853,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
         $cdPositionid = $baseQuery['cdPositionid'];
-        $cdActiveStatus = $baseQuery['cdActiveStatus'];
+        $cdActiveId = $baseQuery['cdActiveId'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -916,7 +916,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $pcRowCount = count($pcOptions);
 
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'drOptions' => $drOptions, 'rcDetails' => $rcDetails, 'allRegions' => $allRegions,
-            'chList' => $chList, 'drList' => $drList, 'cdActiveStatus' => $cdActiveStatus, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
+            'chList' => $chList, 'drList' => $drList, 'cdActiveId' => $cdActiveId, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
             'pcOptions' => $pcOptions, 'cdId' => $cdId, 'allPositions' => $allPositions, 'chDetails' => $chDetails, 'drDetails' => $drDetails, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName, 'pcRowCount' => $pcRowCount, 'drRowCount' => $drRowCount,
             'allAdminRoles' => $allAdminRoles, 'cdAdminRole' => $cdAdminRole,
@@ -1145,7 +1145,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
-        $cdActiveStatus = $baseQuery['cdActiveStatus'];
+        $cdActiveId = $baseQuery['cdActiveId'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -1165,7 +1165,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $allCountries = $baseQuery['allCountries'];
 
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdActiveStatus' => $cdActiveStatus, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
+            'cdActiveId' => $cdActiveId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition,
             'allStates' => $allStates, 'allMonths' => $allMonths, 'cdAdminRole' => $cdAdminRole, 'allCountries' => $allCountries,
         ];
@@ -1245,7 +1245,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
-        $cdActiveStatus = $baseQuery['cdActiveStatus'];
+        $cdActiveId = $baseQuery['cdActiveId'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -1263,7 +1263,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $allRecognitionGifts = $baseQuery['allRecognitionGifts'];
 
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdActiveStatus' => $cdActiveStatus, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
+            'cdActiveId' => $cdActiveId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition, 'cdAdminRole' => $cdAdminRole,
             'allRecognitionGifts' => $allRecognitionGifts,
         ];
@@ -1345,7 +1345,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
-        $cdActiveStatus = $baseQuery['cdActiveStatus'];
+        $cdActiveId = $baseQuery['cdActiveId'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];
@@ -1390,7 +1390,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
         $cdDetails = $baseQuery['cdDetails'];
         $cdId = $baseQuery['cdId'];
-        $cdActiveStatus = $baseQuery['cdActiveStatus'];
+        $cdActiveId = $baseQuery['cdActiveId'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $cdConfId = $baseQuery['cdConfId'];

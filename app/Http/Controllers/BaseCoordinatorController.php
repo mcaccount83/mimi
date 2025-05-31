@@ -327,7 +327,7 @@ class BaseCoordinatorController extends Controller
     {
         $cdDetails = Coordinators::with(['country', 'state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth',
             'reportsTo', 'recognition', 'application'])->find($cdId);
-        $cdActiveStatus = $cdDetails->active_status;
+        $cdActiveId = $cdDetails->active_status;
         $cdApp = $cdDetails->application;
         $cdPositionid = $cdDetails->position_id;
         $regionLongName = $cdDetails->region?->long_name;
@@ -380,7 +380,7 @@ class BaseCoordinatorController extends Controller
         // Load ReportsTo Coordinator Dropdown List
         $rcDetails = $this->userController->loadReportsToList($cdId, $cdConfId, $cdPositionid);
 
-        return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdActiveStatus' => $cdActiveStatus, 'regionLongName' => $regionLongName, 'cdUserAdmin' => $cdUserAdmin,
+        return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdActiveId' => $cdActiveId, 'regionLongName' => $regionLongName, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId, 'allAdminRoles' => $allAdminRoles,
             'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'cdAdminRole' => $cdAdminRole,
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths, 'secondaryPositionId' => $secondaryPositionId,

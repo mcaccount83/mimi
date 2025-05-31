@@ -302,7 +302,6 @@ class ChapterController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
-        // $countryShortName = $baseQuery['countryShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chConfId = $baseQuery['chConfId'];
@@ -323,7 +322,6 @@ class ChapterController extends Controller implements HasMiddleware
         $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
         $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
         $chDisbanded = $baseDisbandedBoardQuery['chDisbanded'];
-        $basePendingBoardQuery = $this->baseChapterController->getPendingBoardDetails($id);
 
         if ($chActiveId == 1){
             $PresDetails = $baseActiveBoardQuery['PresDetails'];

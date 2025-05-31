@@ -876,33 +876,34 @@
                 @endif
                 <br>
                 @if($coordinatorCondition)
-                     @if ($confId != $chConfId)
+                    @if ($confId == $chConfId)
+                            @if ($inquiriesCondition  && ($coorId != $chPcId))
+                                @if ($chActiveId == '1')
+                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Active Chapter List</button>
+                                @elseif ($chActiveId == '0')
+                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquirieszapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Zapped Chapter List</button>
+                                @endif
+                            @else
+                                @if ($chActiveId == '1')
+                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Chapter List</button>
+                                @elseif ($chActiveId == '2')
+                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Chapter List</button>
+                                @elseif ($chActiveId == '3')
+                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistdeclined') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Chapter List</button>
+                                @elseif ($chActiveId == '0')
+                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
+                                @endif
+                            @endif
+                     @elseif ($confId != $chConfId)
                         @if ($einCondition || $inquiriesCondition  || $userAdmin )
-                            @if ($chDetails->active_status == '1')
+                            @if ($chActiveId == '1')
                                 <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Chapter List</button>
-                            @elseif ($chDetails->active_status == '2')
+                            @elseif ($chActiveId == '2')
                                 <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchaplistpending') }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Chapter List</button>
-                            @elseif ($chDetails->active_status == '3')
+                            @elseif ($chActiveId == '3')
                                 <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchaplistdeclined') }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Chapter List</button>
-                            @elseif ($chDetails->active_status == '0')
+                            @elseif ($chActiveId == '0')
                                 <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapterzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Chapter List</button>
-                            @endif
-                    @elseif ($confId == $chConfId)
-                        @elseif ($inquiriesCondition  && ($coorId != $chPcId))
-                            @if ($chDetails->active_status == '1')
-                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Active Chapter List</button>
-                            @elseif ($chDetails->active_status == '0')
-                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquirieszapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Zapped Chapter List</button>
-                            @endif
-                        @else
-                            @if ($chDetails->active_status == '1')
-                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Chapter List</button>
-                            @elseif ($chDetails->active_status == '2')
-                                <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Chapter List</button>
-                            @elseif ($chDetails->active_status == '3')
-                                <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistdeclined') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Chapter List</button>
-                            @elseif ($chDetails->active_status == '0')
-                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
                             @endif
                         @endif
                     @endif

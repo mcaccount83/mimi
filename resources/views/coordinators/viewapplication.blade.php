@@ -207,11 +207,11 @@
 @section('customscript')
 <script>
 
-var $cdActiveStatus = {{ $cdActiveStatus }};
+var $cdActiveId = {{ $cdActiveId }};
 
 $(document).ready(function () {
     // Disable fields for chapters that are not active
-    if ($cdActiveStatus != 2)
+    if ($cdActiveId != 2)
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {

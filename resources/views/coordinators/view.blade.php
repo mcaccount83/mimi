@@ -316,37 +316,39 @@
                         <button type="button" id="removeleave" class="btn bg-gradient-primary mb-3" onclick="removeLeaveCoordinator()"><i class="fas fa-undo mr-2"></i>Remove Coordinator From Leave</button>
                     @endif
 
-                    @if($cdActiveStatus == 1)
+                    @if($cdActiveId == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="retireCoordinator()"><i class="fas fa-ban mr-2"></i>Retire Coordinator</button>
-                    @elseif($cdActiveStatus != 1)
+                    @elseif($cdActiveId != 1)
                         <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="unRetireCoordinator()"><i class="fas fa-undo mr-2"></i>UnRetire Coordinator</button>
                     @endif
                 @endif
                 <br>
-                    @if ($cdConfId != $confId)
-                        @if ($userAdmin)
-                            @if ($cdDetails->active_status == '1')
-                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
-                            @elseif ($cdDetails->active_status == '2')
-                                <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
-                            @elseif ($cdDetails->active_status == '3')
-                                <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
-                            @elseif ($cdDetails->active_status == '0')
-                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
-                            @endif
-                    @elseif ($cdConfId == $confId)
-                        @else
-                            @if ($cdDetails->active_status == '1')
-                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
-                            @elseif ($cdDetails->active_status == '2')
-                                <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Coordinator List</button>
-                            @elseif ($cdDetails->active_status == '3')
-                                <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Coordinator List</button>
-                            @elseif ($cdDetails->active_status == '0')
-                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
+                    @if ($cdConfId == $confId)
+                        @if ($cdActiveId == '1')
+                            <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
+                        @elseif ($cdActiveId == '2')
+                            <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Coordinator List</button>
+                        @elseif ($cdActiveId == '3')
+                            <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Coordinator List</button>
+                        @elseif ($cdActiveId == '0')
+                            <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
+                        @endif
+                    @else
+                        @if ($cdConfId != $confId)
+                            @if ($userAdmin)
+                                @if ($cdActiveId == '1')
+                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
+                                @elseif ($cdActiveId == '2')
+                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
+                                @elseif ($cdActiveId == '3')
+                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
+                                @elseif ($cdActiveId == '0')
+                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
+                                @endif
                             @endif
                         @endif
                     @endif
+
             </div>
         </div>
         </div>
@@ -358,11 +360,11 @@
 @section('customscript')
 <script>
 
-var $cdActiveStatus = {{ $cdActiveStatus }};
+var $cdActiveId = {{ $cdActiveId }};
 
 $(document).ready(function () {
     // Disable fields for chapters that are not active
-    if ($cdActiveStatus != 1)
+    if ($cdActiveId != 1)
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
