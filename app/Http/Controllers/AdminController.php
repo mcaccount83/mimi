@@ -171,7 +171,7 @@ class AdminController extends Controller implements HasMiddleware
     public function showUserAdmin(): View
     {
         $adminList = User::where('is_admin', '1')
-            ->where('active_status', '1')
+            ->where('is_active', '1')
             ->get();
 
         $countList = count($adminList);
