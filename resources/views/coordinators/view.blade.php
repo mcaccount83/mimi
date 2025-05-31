@@ -323,8 +323,8 @@
                     @endif
                 @endif
                 <br>
-                    @if ($cdConfId == $confId)
-                        @if ($userAdmin  && ($cdConfId != $confId))
+                    @if ($cdConfId != $confId)
+                        @if ($userAdmin)
                             @if ($cdDetails->active_status == '1')
                                 <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
                             @elseif ($cdDetails->active_status == '2')
@@ -334,6 +334,7 @@
                             @elseif ($cdDetails->active_status == '0')
                                 <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
                             @endif
+                    @elseif ($cdConfId == $confId)
                         @else
                             @if ($cdDetails->active_status == '1')
                                 <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
