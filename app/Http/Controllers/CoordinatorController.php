@@ -353,57 +353,6 @@ class CoordinatorController extends Controller implements HasMiddleware
         return redirect()->to('/coordinator/coordlist')->with('success', 'Coordinator created successfully.');
     }
 
-    /**
-     * View Coordiantor Application
-     */
-    public function viewCoordApplication(Request $request, $id): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $confId = $user['user_confId'];
-
-        $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
-        $cdDetails = $baseQuery['cdDetails'];
-        $cdApp = $baseQuery['cdApp'];
-        $cdId = $baseQuery['cdId'];
-        $cdPositionid = $baseQuery['cdPositionid'];
-        $cdActiveId = $baseQuery['cdActiveId'];
-        $regionLongName = $baseQuery['regionLongName'];
-        $conferenceDescription = $baseQuery['conferenceDescription'];
-        $cdConfId = $baseQuery['cdConfId'];
-        $RptFName = $baseQuery['RptFName'];
-        $RptLName = $baseQuery['RptLName'];
-        $ReportTo = $RptFName.' '.$RptLName;
-        $displayPosition = $baseQuery['displayPosition'];
-        $mimiPosition = $baseQuery['mimiPosition'];
-        $secondaryPosition = $baseQuery['secondaryPosition'];
-        $cdLeave = $baseQuery['cdDetails']->on_leave;
-        $cdUserAdmin = $baseQuery['cdUserAdmin'];
-        $cdAdminRole = $baseQuery['cdAdminRole'];
-
-        $now = Carbon::now();
-        $threeMonthsAgo = $now->copy()->subMonths(3);
-        $startDate = $cdDetails->coordinator_start_date;
-        $startDate = Carbon::parse($startDate);
-
-        $drList = Coordinators::with('displayPosition')
-            ->where('report_id', $cdId)  // DirectReport Harcoaded List
-            ->where('active_status', 1)
-            ->get();
-
-        $chList = Chapters::with('state')
-            ->where('primary_coordinator_id', $cdId)  // Chapter Harcoaded List
-            ->where('active_status', 1)
-            ->get();
-
-        $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
-            'cdActiveId' => $cdActiveId, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin, 'cdApp' => $cdApp,
-            'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
-            'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
-        ];
-
-        return view('coordinators.viewapplication')->with($data);
-    }
-
      /**
      * View Coordiantor Detais
      */
@@ -1467,6 +1416,129 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
     }
+
+        /**
+     * View Coordiantor Application
+     */
+    public function viewCoordApplication(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['user_confId'];
+
+        $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
+        $cdDetails = $baseQuery['cdDetails'];
+        $cdApp = $baseQuery['cdApp'];
+        $cdId = $baseQuery['cdId'];
+        $cdPositionid = $baseQuery['cdPositionid'];
+        $cdActiveId = $baseQuery['cdActiveId'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $cdConfId = $baseQuery['cdConfId'];
+        $RptFName = $baseQuery['RptFName'];
+        $RptLName = $baseQuery['RptLName'];
+        $ReportTo = $RptFName.' '.$RptLName;
+        $displayPosition = $baseQuery['displayPosition'];
+        $mimiPosition = $baseQuery['mimiPosition'];
+        $secondaryPosition = $baseQuery['secondaryPosition'];
+        $cdLeave = $baseQuery['cdDetails']->on_leave;
+        $cdUserAdmin = $baseQuery['cdUserAdmin'];
+        $cdAdminRole = $baseQuery['cdAdminRole'];
+
+        $allStates = $baseQuery['allStates'];
+        $allRegions = $baseQuery['allRegions'];
+        $allCountries = $baseQuery['allCountries'];
+        $allPositions = $baseQuery['allPositions'];
+
+        $rcDetails = $baseQuery['rcDetails'];  // ReportsTo Dropdown List
+
+        $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
+            'cdActiveId' => $cdActiveId, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin, 'cdApp' => $cdApp,
+            'rcDetails' => $rcDetails, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition,
+            'secondaryPosition' => $secondaryPosition, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
+            'allStates' => $allStates, 'allRegions' => $allRegions, 'allCountries' => $allCountries, 'allPositions' => $allPositions,
+        ];
+
+        return view('coordinators.viewapplication')->with($data);
+    }
+
+    /**
+     *Update Pending New Coordinator Applicaiton
+     */
+    public function updatePendingCoordinatorDetails(Request $request, $id): RedirectResponse
+    {
+        $admin = $this->userController->loadUserInformation($request);
+        $userAdmin = $admin['userAdmin'];
+
+        $user = User::find($request->user()->id);
+        $cdDetailsUser = $user->coordinator;
+        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+
+       // Reassign Report To / Direct Supervisor that Changed
+        $coordinator_id = $request->input('coordinator_id');
+        $new_coordinator_id = $request->input('cord_report_pc');
+        $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
+
+        $coordinator = Coordinators::find($id);
+        $coorUserId = $coordinator->user_id;
+        $corduser = User::find($coorUserId);
+
+        DB::beginTransaction();
+        try {
+            $corduser->first_name = $request->input('cord_fname');
+            $corduser->last_name = $request->input('cord_lname');
+            $corduser->email = $request->input('cord_email');
+            $corduser->updated_at = now();
+
+            $corduser->save();
+
+            $coordinator->position_id = $request->input('cord_pos');
+            $coordinator->display_position_id = $request->input('cord_disp_pos');
+            $coordinator->first_name = $request->input('cord_fname');
+            $coordinator->last_name = $request->input('cord_lname');
+            $coordinator->region_id = $request->input('cord_region');
+            $coordinator->email = $request->input('cord_email');
+            $coordinator->sec_email = $request->input('cord_sec_email');
+            // $coordinator->address = $request->input('cord_addr');
+            // $coordinator->city = $request->input('cord_city');
+            // $coordinator->state_id = $request->input('cord_state');
+            // $coordinator->zip = $request->input('cord_zip');
+            $coordinator->phone = $request->input('cord_phone');
+            $coordinator->alt_phone = $request->input('cord_altphone');
+            $coordinator->home_chapter = $request->input('cord_chapter');
+            $coordinator->last_updated_by = $lastUpdatedBy;
+            $coordinator->last_updated_date = date('Y-m-d H:i:s');
+
+            $coordinator->save();
+
+           if ($request->has('cord_sec_pos') && is_array($request->cord_sec_pos)) {
+                // Filter out any empty values
+                $validPositionIds = array_filter($request->cord_sec_pos, function ($value) {
+                    return ! empty($value) && is_numeric($value);
+                });
+
+                if (! empty($validPositionIds)) {
+                    $coordinator->secondaryPosition()->sync($validPositionIds);
+                } else {
+                    $coordinator->secondaryPosition()->detach();
+                }
+            } else {
+                $coordinator->secondaryPosition()->detach();
+            }
+
+            DB::commit();
+                return to_route('coordinators.viewapplication', ['id' => $id])->with('success', 'Coordinator Application has been updated');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return to_route('coordinators.viewapplication', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+
 
     /**
      *Update Pending New Coordinator Information

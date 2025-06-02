@@ -12,31 +12,62 @@
 </style>
 @section('content')
     <!-- Main content -->
+    <form class="form-horizontal" method="POST" action='{{ route("coordinators.updatepending",$cdDetails->id) }}'>
+    @csrf
     <section class="content">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-4">
+
+            <input type="hidden" name="coordinator_id" value="{{ $cdDetails->id }}">
+            <input type="hidden" name="OldReportPC" value="{{ $cdDetails->report_id }}">
+            <input type="hidden" name="OldPosition" value="{{ $cdDetails->position_id }}">
+            <input type="hidden" name="OldDisplayPosition" value="{{ $cdDetails->display_position_id }}">
+            <input type="hidden" name="OldSecPosition" value="{{$cdDetails->sec_position_id}}">
+
+            <input type="hidden" name="cord_fname" value="{{$cdDetails->first_name}}">
+            <input type="hidden" name="cord_lname" value="{{$cdDetails->last_name}}">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
                 <p class="text-center">{{ $conferenceDescription }} Conference
-                    @if ($regionLongName != "None")
-                    , {{ $regionLongName }} Region
-                    @else
-                    @endif
                 </p>
+
+<div class="d-flex mb-2">
+                        <b class="me-3" style="min-width: 200px;">Region:</b>
+                  <select name="cord_region" id="cord_region" class="form-control select2-sb4" style="width: 100%;" required>
+                                    @foreach($allRegions as $region)
+                                        <option value="{{$region->id}}"
+                                            @if($cdDetails->region_id == $region->id) selected @endif>
+                                            {{$region->long_name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                </div>
+
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
                     <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Contact Email:</b>
-                        <span >{{ $cdDetails->sec_email }}</span>
+                        <b class="me-3" style="min-width: 200px;">Email:</b>
+                        <input type="text" name="cord_email" id="cord_email" class="form-control" value="{{ $cdDetails->email }}" placeholder="Email Address" required>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <b class="me-3" style="min-width: 200px;">Secondary Email:</b>
+                        <input type="text" name="cord_sec_email" id="cord_sec_email" class="form-control" value="{{ $cdDetails->sec_email }}" placeholder="Seconary Email" required>
                     </div>
                     <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">Phone:</b>
-                        <span>{{ $cdDetails->phone }}</span>
+                        <input type="text" name="cord_phone" id="cord_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->phone}}" required placeholder="Phone Number" >
                     </div>
+                    <div class="d-flex mb-2">
+                        <b class="me-3" style="min-width: 200px;">Alt Phone:</b>
+                        <input type="text" name="cord_altphone" id="cord_altphone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->alt_phone}}" placeholder="Alternative Phone" >
+                    </div>
+
+
+
                     <div class="d-flex">
                         <b class="me-3" style="min-width: 200px;">Address:</b>
                         <span>{{ $cdDetails->address }}</span>
@@ -52,21 +83,79 @@
                 </li>
                   <li class="list-group-item">
                     <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Application Date:</b>
+                        <b class="me-3 mb-3" style="min-width: 200px;">Application Date:</b>
                         <span class="date-mask">{{ $cdDetails->coordinator_start_date }}</span>
                     </div>
-                    <div class="d-flex mb-2">
+                    {{-- <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">Position:</b>
                         <span>{{ $displayPosition->long_title }}</span>
-                    </div>
-                    <div class="d-flex mb-2">
+                    </div> --}}
+
+                      <div class="d-flex mb-2">
+                        <b class="me-3" style="min-width: 200px;">Display Position:</b>
+                                <select name="cord_disp_pos" id="cord_disp_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
+                                    @foreach($allPositions as $pos)
+                                            <option value="{{ $pos->id }}" {{ $cdDetails->display_position_id == $pos->id ? 'selected' : '' }}>
+                                                {{ $pos->long_title }}
+                                            </option>
+                                    @endforeach
+                                </select>
+                        </div>
+
+                        <div class="d-flex mb-2">
+                        <b class="me-3" style="min-width: 200px;">MIMI Position:<a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
+                                    <i class="fas fa-circle-question text-primary"></i></a></b>
+                                <select name="cord_pos" id="cord_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
+                                    @foreach($allPositions as $pos)
+                                        @if($pos->id >= 1 && $pos->id <= 7)
+                                            <option value="{{$pos->id}}" {{$cdDetails->position_id == $pos->id  ? 'selected' : ''}}>
+                                                {{$pos->long_title}}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                        </div>
+
+                         <div class="d-flex mb-2">
+                        <b class="me-3" style="min-width: 200px;">Secondary Position:</b>
+                                <select name="cord_sec_pos[]" id="cord_sec_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" multiple>
+                                    <option value="" {{ (!isset($cdDetails->secondaryPosition) || $cdDetails->secondaryPosition->isEmpty()) ? 'selected' : '' }}>None</option>
+                                    @foreach($allPositions as $pos)
+                                        @if($pos->id >= 9)
+                                            <option value="{{$pos->id}}"
+                                                {{ isset($cdDetails->secondaryPosition) && $cdDetails->secondaryPosition->contains('id', $pos->id) ? 'selected' : '' }}>
+                                                {{$pos->long_title}}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                        </div>
+
+                    {{-- <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">Home Chapter:</b>
                         <span>{{ $cdDetails->home_chapter }}</span>
-                    </div>
-                    <div class="d-flex">
+                    </div> --}}
+                    <div class="d-flex mb-2">
+                        <b class="me-3" style="min-width: 200px;">Home Chapter:</b>
+                                <input type="text" name="cord_chapter" id="cord_chapter" class="form-control" value="{{ $cdDetails->home_chapter }}" placeholder="Home Chapter" required>
+                        </div>
+
+                    {{-- <div class="d-flex">
                         <b class="me-3" style="min-width: 200px;">Supervising Coordinator:</b>
                         <span>{{ $ReportTo }}</span>
-                    </div>
+                    </div> --}}
+                      <div class="d-flex">
+                        <b class="me-3" style="min-width: 200px;">Supervising Coordinator:</b>
+                           <select name="cord_report_pc" id="cord_report_pc" class="form-control select2-sb4" style="width: 100%;" required>
+                                    @foreach($rcDetails as $coordinator)
+                                        <option value="{{ $coordinator['cid'] }}"
+                                            @if($cdDetails->report_id == $coordinator['cid']) selected @endif
+                                            data-region-id="{{ $coordinator['regid'] }}">
+                                            {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
                 </li>
             <li class="list-group-item">
                 <div class="text-center">
@@ -94,6 +183,7 @@
                 @if ($cdDetails['active_status'] == '2')
                     <li class="list-group-item">
                         <div class="card-body text-center">
+                            <button type="submit" class="btn bg-gradient-primary mb-3"><i class="fas fa-save mr-2" ></i>Save Updates</button>
                             <br>
                             <button type="button" class="btn bg-gradient-success" id="app-approve"><i class="fas fa-check mr-2"></i>Approve Application</button>
                             <button type="button" class="btn bg-gradient-danger" id="app-reject"><i class="fas fa-times mr-2"></i>Reject Application</button>
@@ -119,47 +209,47 @@
                             <!-- /.form group -->
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">How long have you been a MOMS Club Member?</label>
-                                    <div class="col-sm-8">{{ $cdApp->start_date }}</div>
+                                    <div class="col-sm-8">{{ $cdApp?->start_date }}</div>
                             </div>
 
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">What jobs/offices have you held with the chapter? What programs/activities have you started or led?</label>
-                               <div class="col-sm-8">{{ $cdApp->jobs_programs }}</div>
+                               <div class="col-sm-8">{{ $cdApp?->jobs_programs }}</div>
                             </div>
 
                              <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">How has the MOMS Club helped you?</label>
-                                <div class="col-sm-8">{{ $cdApp->helped_me }}</div>
+                                <div class="col-sm-8">{{ $cdApp?->helped_me }}</div>
                             </div>
 
                              <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">Did you experience any problems during your time in the MOMS Club? If so, how were those problems resolved or what did you learn from them?</label>
-                                <div class="col-sm-8">{{ $cdApp->problems }}</div>
+                                <div class="col-sm-8">{{ $cdApp?->problems }}</div>
                             </div>
 
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">Why do you want to be an International MOMS Club Volunteer?</label>
-                                <div class="col-sm-8">{{ $cdApp->why_volunteer }}</div>
+                                <div class="col-sm-8">{{ $cdApp?->why_volunteer }}</div>
                             </div>
 
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">Do you volunteer for anyone else? Please list all your volunteer positions and when you did them?</label>
-                                <div class="col-sm-8">{{ $cdApp->other_volunteer }}</div>
+                                <div class="col-sm-8">{{ $cdApp?->other_volunteer }}</div>
                             </div>
 
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">Do you have any special skills/talents/Hobbies (ie: other languages, proficient in any computer programs)?</label>
-                                <div class="col-sm-8">{{ $cdApp->special_skills }}</div>
+                                <div class="col-sm-8">{{ $cdApp?->special_skills }}</div>
                             </div>
 
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">What have you enjoyed most in previous volunteer experiences? Least?</label>
-                               <div class="col-sm-8">{{ $cdApp->enjoy_volunteering }}</div>
+                               <div class="col-sm-8">{{ $cdApp?->enjoy_volunteering }}</div>
                             </div>
 
                              <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">Referred by (if applicable):</label>
-                                <div class="col-sm-8">{{ $cdApp->referred_by }}</div>
+                                <div class="col-sm-8">{{ $cdApp?->referred_by }}</div>
                             </div>
                         </div>
 

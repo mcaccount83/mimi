@@ -55,37 +55,6 @@
 
                   <ul class="list-group list-group-unbordered mb-3">
 
-                      {{-- <li class="list-group-item">
-                        <label class="col-form-label mb-1">Application Submitted:</label>
-                        <span class="form-control-plaintext float-right col-sm-6 mb-1 text-right custom-span">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
-
-                        <label class="col-form-label mb-1">Application Status:</label>
-                            <select id="ch_active" name="ch_active" class="form-control float-right col-sm-6 mb-1 text-right" required>
-                                <option value="">Select Status</option>
-                                @foreach($allActive as $active)
-                                    @if($active->id != 0)
-                                        <option value="{{ $active->id }}"
-                                            @if($chDetails->active_status == $active->id) selected @endif>
-                                            {{ $active->active_status }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
-
-                            <div id="disband_reason_container"
-                                style="display: {{ $chDetails->active_status == 3 ? 'block' : 'none' }}">
-                                <label class="col-form-label mb-1">Reason Not Approved:</label>
-                                <input type="text"
-                                    name="disband_reason"
-                                    id="disband_reason"
-                                    class="form-control float-right col-sm-6 mb-1 text-right"
-                                    value="{{ $chDetails->disband_reason }}"
-                                    {{ $chDetails->active_status == 3 ? 'required' : '' }}>
-                            </div>
-
-                            </li> --}}
-
-
                       @if($regionalCoordinatorCondition)
                       <li class="list-group-item">
                           <label class="ch_primarycor">Update Primary Coordinator:</label>
@@ -128,6 +97,7 @@
                    @if ($chDetails->active_status == '2')
                     <li class="list-group-item">
                         <div class="card-body text-center">
+                            <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Updates</button>
                             <br>
                             <button type="button" class="btn bg-gradient-success" id="chap-approve"><i class="fas fa-check mr-2"></i>Approve Chapter</button>
                             <button type="button" class="btn bg-gradient-danger" id="chap-decline"><i class="fas fa-times mr-2"></i>Decline Chaper</button>

@@ -126,20 +126,6 @@
                                     <div class="col-sm-3">
                                     <input type="text" name="cord_city" id="cord_city" class="form-control" placeholder="City" required >
                                     </div>
-                                    {{-- <div class="col-sm-3">
-                                        <select id="cord_state" name="cord_state" class="form-control" style="width: 100%;" required>
-                                            <option value="">Select State</option>
-                                            @foreach($allStates as $state)
-                                            <option value="{{$state->id}}">
-                                                {{$state->state_long_name}}
-                                            </option>
-                                        @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <input type="text" name="cord_zip" id="cord_zip" class="form-control" placeholder="Zip" required >
-                                    </div> --}}
-
                                     <div class="col-sm-3 mb-1">
                                     <select name="cord_state" id="cord_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>

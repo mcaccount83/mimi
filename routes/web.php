@@ -197,14 +197,18 @@ Route::post('/chapter/sendchapterrereg', [EmailController::class, 'sendChapterRe
 Route::post('/chapter/sendchapterrereglate', [EmailController::class, 'sendChapterReRegLate'])->name('chapters.sendchapterrereglate');
 
 // Coordinator Controller Routes...Coordinator Login Required
-Route::get('/coordinator/coordlist', [CoordinatorController::class, 'showCoordinators'])->name('coordinators.coordlist');
 Route::get('/coordinator/pending', [CoordinatorController::class, 'showPendingCoordinator'])->name('coordinators.coordpending');
-Route::get('/coordinator/rejected', [CoordinatorController::class, 'showRejectedCoordinator'])->name('coordinators.coordrejected');
 Route::get('/international/pending', [CoordinatorController::class, 'showIntPendingCoordinator'])->name('international.intcoordpending');
-Route::get('/international/rejected', [CoordinatorController::class, 'showIntRejectedCoordinator'])->name('international.intcoordrejected');
+
 Route::get('/coordapplication/{id}', [CoordinatorController::class, 'viewCoordApplication'])->name('coordinators.viewapplication');
-Route::post('/coorddetails/updateapprove', [CoordinatorController::class, 'updateApproveApplication'])->name('coordinators.updateapprove');
-Route::post('/coorddetails/updatereject', [CoordinatorController::class, 'updateRejectApplication'])->name('coordinators.updatereject');
+Route::post('/pendingcoordinatordetailsupdate/{id}', [CoordinatorController::class, 'updatePendingCoordinatorDetails'])->name('coordinators.updatepending');
+Route::post('/coordinator/updateapprove', [CoordinatorController::class, 'updateApproveApplication'])->name('coordinators.updateapprove');
+Route::post('/coordinator/updatedecline', [CoordinatorController::class, 'updateRejectApplication'])->name('coordinators.updatereject');
+
+Route::get('/coordinator/rejected', [CoordinatorController::class, 'showRejectedCoordinator'])->name('coordinators.coordrejected');
+Route::get('/international/rejected', [CoordinatorController::class, 'showIntRejectedCoordinator'])->name('international.intcoordrejected');
+
+Route::get('/coordinator/coordlist', [CoordinatorController::class, 'showCoordinators'])->name('coordinators.coordlist');
 Route::get('/coordinator/retired', [CoordinatorController::class, 'showRetiredCoordinator'])->name('coordinators.coordretired');
 Route::get('/international/coordinator', [CoordinatorController::class, 'showIntCoordinator'])->name('international.intcoord');
 Route::get('/international/coordinatorretired', [CoordinatorController::class, 'showIntCoordinatorRetired'])->name('international.intcoordretired');
