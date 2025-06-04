@@ -50,14 +50,17 @@ class PublicController extends Controller
 
     protected $baseMailDataController;
 
+    protected $emailTableController;
+
     public function __construct(UserController $userController, PositionConditionsService $positionConditionsService, BaseBoardController $baseBoardController,
-        BaseMailDataController $baseMailDataController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
+        BaseMailDataController $baseMailDataController, EmailTableController $emailTableController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
     {
         $this->userController = $userController;
         $this->positionConditionsService = $positionConditionsService;
         $this->baseBoardController = $baseBoardController;
         $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
+        $this->emailTableController = $emailTableController;
         $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
@@ -855,13 +858,21 @@ class PublicController extends Controller
 
             $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($coordId);
             $cdDetails = $baseQuery['cdDetails'];
-            $emailCC = $ccDetails['cc_email'];
+            $emailCCData = $baseQuery['emailCCData'];
+            $emailCC = $baseQuery['emailCC'];
             $coordEmail = $input['cd_email'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getNewCoordinatorData($cdDetails),
-                $this->baseMailDataController->getCCData($ccDetails)
+                $this->baseMailDataController->getNewCoordinatorAppData($input),
+                $this->baseMailDataController->getCCData($emailCCData)
             );
+
+            $mailTable = $this->emailTableController->createNewCoordinatorTable($mailData);
+
+            $mailData = array_merge($mailData, [
+                'mailTable' => $mailTable,
+            ]);
 
             Mail::to($coordEmail)
                 ->cc($emailCC)

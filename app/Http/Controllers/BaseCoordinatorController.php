@@ -320,7 +320,7 @@ class BaseCoordinatorController extends Controller
         ]);
     }
 
-    /**
+   /**
      * Active Coordinator Details Base Query
      */
     public function getCoordinatorDetails($cdId)
@@ -377,15 +377,21 @@ class BaseCoordinatorController extends Controller
             ->where('active_status', 1)
             ->get();
 
+        // Load Conference Coordinators for Sending Email
+        $emailCCData = $this->userController->loadConferenceCoordConf($cdConfId);
+        $cc_id = $emailCCData['cc_id'];
+        $emailCC = $emailCCData['cc_email'];
+
         // Load ReportsTo Coordinator Dropdown List
         $rcDetails = $this->userController->loadReportsToList($cdId, $cdConfId, $cdPositionid);
 
-        return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdActiveId' => $cdActiveId, 'regionLongName' => $regionLongName, 'cdUserAdmin' => $cdUserAdmin,
+        return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdActiveId' => $cdActiveId, 'regionLongName' => $regionLongName, 'cdUserAdmin' => $cdUserAdmin, 'emailCC' => $emailCC,
             'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId, 'allAdminRoles' => $allAdminRoles,
             'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'cdAdminRole' => $cdAdminRole,
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths, 'secondaryPositionId' => $secondaryPositionId,
             'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid, 'secondaryPositionShort' => $secondaryPositionShort,
-            'allRecognitionGifts' => $allRecognitionGifts, 'allCountries' => $allCountries, 'cdstateShortName' => $cdstateShortName, 'cdApp' => $cdApp,
+            'allRecognitionGifts' => $allRecognitionGifts, 'allCountries' => $allCountries, 'cdstateShortName' => $cdstateShortName, 'cdApp' => $cdApp, 'emailCCData' => $emailCCData,
         ];
     }
+
 }

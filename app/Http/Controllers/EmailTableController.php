@@ -201,6 +201,27 @@ class EmailTableController extends Controller
     }
 
     /**
+      * Create Table for New Coordinators
+     */
+    public function createNewCoordinatorTable($mailData)
+    {
+        $cellStyle = 'text-align: center; padding: 6px;';
+        $cellLeftStyle = 'padding: 6px;';
+        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+
+        $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+            <tbody>';
+
+        $tableHtml = $this->createNewCoordinatorRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+
+        $tableHtml .= '</tbody></table>';
+
+        return $tableHtml;
+    }
+
+
+
+    /**
      * Create Rows for Founder
      */
     public function createFounderRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
@@ -606,4 +627,69 @@ class EmailTableController extends Controller
 
         return $tableHtml;
     }
+
+     /**
+     * Create Rows for New Chapter Application
+     */
+    public function createNewCoordinatorRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    {
+        $tableHtml .= '<tr>
+            <td colspan="2" style="'.$headerStyle.'">Application Information</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Volunteer Name</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['first_name'].' '.$mailData['last_name'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Email</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['sec_email'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Phone</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['phone'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Home Chapter</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['home_chapter'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">How long have you been a MOMS Club Member?</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['start_date'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">What jobs/offices have you held with the chapter? What programs/activities have you started or led?</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['jobs_programs'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">How has the MOMS Club helped you?</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['helped_me'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Did you experience any problems during your time in the MOMS Club? If so, how were those problems resolved or what did you learn from them?</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['problems'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Why do you want to be an International MOMS Club Volunteer?</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['why_volunteer'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Do you volunteer for anyone else? Please list all your volunteer positions and when you did them?</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['other_volunteer'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Do you have any special skills/talents/Hobbies (ie: other languages, proficient in any computer programs)?</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['special_skills'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">What have you enjoyed most in previous volunteer experiences? Least?</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['enjoy_volunteering'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Referred by: (if applicable):</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['referred_by'].'</td>
+        </tr>';
+
+        return $tableHtml;
+    }
+
 }

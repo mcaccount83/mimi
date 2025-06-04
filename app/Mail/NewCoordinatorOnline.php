@@ -32,7 +32,7 @@ class NewCoordinatorOnline extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject("New Coordinator Application Received | Conference {$this->mailData['conf']}")
+            ->subject("New Coordinator Application Received | Conference {$this->mailData['conference_id']}")
             ->markdown('emails.coordinator.newcoordonline');
     }
 }

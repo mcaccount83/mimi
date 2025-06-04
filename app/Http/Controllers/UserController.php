@@ -317,6 +317,34 @@ class UserController extends Controller implements HasMiddleware
     }
 
     /**
+     * Load Conference Coordinator Information for each Conference based on the Conference selected - used for emails and pdfs
+     */
+    public function loadConferenceCoordConf($cdConfId)
+    {
+        $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
+            ->where('conference_id', $cdConfId)
+            ->where('position_id', 7)
+            ->where('active_status', 1)
+            ->where('on_leave', '!=', '1')
+            ->first();
+
+        $cc_id = $ccDetails?->id;
+        $cc_layer_id = $ccDetails?->layer_id;
+        $cc_fname = $ccDetails?->first_name;
+        $cc_lname = $ccDetails?->last_name;
+        $cc_email = $ccDetails?->email;
+        $cc_phone = $ccDetails?->phone;
+        $cc_conf_name = $ccDetails?->conference->conference_name;
+        $cc_conf_desc = $ccDetails?->conference->conference_description;
+        $cc_pos = $ccDetails?->displayPosition->long_title;
+
+        return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email,
+            'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id, 'cc_phone' => $cc_phone,
+            'cc_layer_id' => $cc_layer_id,
+        ];
+    }
+
+    /**
      * Load EIN Coordinator Information  - used for emails and pdfs
      */
     public function loadEINCoord()
