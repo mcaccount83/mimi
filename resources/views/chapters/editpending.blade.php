@@ -97,6 +97,7 @@
                    @if ($chDetails->active_status == '2')
                     <li class="list-group-item">
                         <div class="card-body text-center">
+                            <button type="button" class="btn bg-gradient-primary mb-3" onclick="showChapterSetupModal()"><i class="fas fa-envelope mr-2"></i>Send Chapter Startup Email</button>
                             <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Updates</button>
                             <br>
                             Save all changes before approval!
