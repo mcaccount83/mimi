@@ -116,7 +116,7 @@ function showChapterSetupModal(chapterId) {
     Swal.fire({
         title: 'Chapter Startup Details',
         html: `
-            <p>This will send the initial chapter startup email to the potential founderto facilitate the discussion on boundaries and name. Please enter additional boundary and name details to include in the email and press OK to send.</p>
+            <p>This will send the initial chapter startup email to the potential founder to facilitate the discussion on boundaries and name. Please enter additional boundary and name details to include in the email and press OK to send.</p>
             <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
                 <textarea id="boundary_details" name="boundary_details" class="swal2-textarea" placeholder="Boundary Details" required style="width: 100%; height: 80px; margin: 0 !important; box-sizing: border-box;"></textarea>
             </div>
