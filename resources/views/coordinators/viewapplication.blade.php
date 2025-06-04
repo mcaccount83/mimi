@@ -185,6 +185,8 @@
                         <div class="card-body text-center">
                             <button type="submit" class="btn bg-gradient-primary mb-3"><i class="fas fa-save mr-2" ></i>Save Updates</button>
                             <br>
+                            Save all changes before approval!
+                            <br>
                             <button type="button" class="btn bg-gradient-success" id="app-approve"><i class="fas fa-check mr-2"></i>Approve Application</button>
                             <button type="button" class="btn bg-gradient-danger" id="app-reject"><i class="fas fa-times mr-2"></i>Reject Application</button>
                     </li>

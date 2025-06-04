@@ -10,6 +10,7 @@ use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\ForumCategorySubscription;
 use App\Mail\NewCoordApprovedEmail;
+use App\Mail\NewCoordApprovedGSuiteEmail;
 use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
@@ -1606,6 +1607,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             // Load Chapter MailData//
             $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
             $cdDetails = $baseQuery['cdDetails'];
+            $rcEmail = $baseQuery['rc_email'];
 
             $user = $this->userController->loadUserInformation($request);
             $adminEmail = $this->positionConditionsService->getAdminEmail();
@@ -1618,6 +1620,9 @@ class CoordinatorController extends Controller implements HasMiddleware
             );
 
             Mail::to($gsuiteAdmin)
+                ->queue(new NewCoordApprovedGSuiteEmail($mailData));
+
+            Mail::to($rcEmail)
                 ->queue(new NewCoordApprovedEmail($mailData));
 
             DB::commit();

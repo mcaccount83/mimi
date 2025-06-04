@@ -385,9 +385,15 @@ class BaseCoordinatorController extends Controller
         // Load ReportsTo Coordinator Dropdown List
         $rcDetails = $this->userController->loadReportsToList($cdId, $cdConfId, $cdPositionid);
 
+        $rcDetailsInfo = $this->userController->loadReportToCoord($cdId);
+        $rc_id = $rcDetailsInfo['rc_id'];
+        $rc_name = $rcDetailsInfo['rc_fname'].' '.$rcDetailsInfo['rc_lname'];
+        $rc_email = $rcDetailsInfo['rc_email'];
+        $rc_pos = $rcDetailsInfo['rc_pos'];
+
         return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdActiveId' => $cdActiveId, 'regionLongName' => $regionLongName, 'cdUserAdmin' => $cdUserAdmin, 'emailCC' => $emailCC,
             'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId, 'allAdminRoles' => $allAdminRoles,
-            'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'cdAdminRole' => $cdAdminRole,
+            'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'cdAdminRole' => $cdAdminRole, 'rc_email' => $rc_email,
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths, 'secondaryPositionId' => $secondaryPositionId,
             'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid, 'secondaryPositionShort' => $secondaryPositionShort,
             'allRecognitionGifts' => $allRecognitionGifts, 'allCountries' => $allCountries, 'cdstateShortName' => $cdstateShortName, 'cdApp' => $cdApp, 'emailCCData' => $emailCCData,

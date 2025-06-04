@@ -287,6 +287,22 @@ class UserController extends Controller implements HasMiddleware
         return response()->json($str);
     }
 
+    public function loadReportToCoord($cdId)
+    {
+        $rcDetails =  Coordinators::with(['displayPosition', 'secondaryPosition', 'reportsTo'])
+                ->where('id', '=', $cdId)
+            ->first(); // Returns a single model instance
+
+        $rc_id = $rcDetails->reportsTo->id;
+        $rc_fname = $rcDetails->reportsTo->first_name;
+        $rc_lname = $rcDetails->reportsTo->last_name;
+        $rc_email = $rcDetails->reportsTo->email;
+        $rc_pos = $rcDetails->reportsTo->displayPosition->long_title;
+
+        return ['rc_id' => $rc_id, 'rc_fname' => $rc_fname, 'rc_lname' => $rc_lname, 'rc_pos' => $rc_pos, 'rc_email' => $rc_email,
+        ];
+    }
+
     /**
      * Load Conference Coordinator Information for each Conference based on the PC selected - used for emails and pdfs
      */

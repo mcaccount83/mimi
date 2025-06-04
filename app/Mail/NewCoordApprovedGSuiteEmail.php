@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class NewCoordApprovedEmail extends Mailable implements ShouldQueue
+class NewCoordApprovedGSuiteEmail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -34,7 +34,7 @@ class NewCoordApprovedEmail extends Mailable implements ShouldQueue
     {
         return $this
             ->subject("New Coordinator Approved | {$this->mailData['first_name']} {$this->mailData['last_name']}")
-            ->markdown('emails.coordinator.newcoordapprovedemail');
+            ->markdown('emails.coordinator.newcoordapprovedgsuite');
     }
 
 }

@@ -99,6 +99,8 @@
                         <div class="card-body text-center">
                             <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Updates</button>
                             <br>
+                            Save all changes before approval!
+                            <br>
                             <button type="button" class="btn bg-gradient-success" id="chap-approve"><i class="fas fa-check mr-2"></i>Approve Chapter</button>
                             <button type="button" class="btn bg-gradient-danger" id="chap-decline"><i class="fas fa-times mr-2"></i>Decline Chaper</button>
                     </li>
@@ -325,50 +327,6 @@
     });
 });
 
-// document.addEventListener("DOMContentLoaded", function() {
-//     const statusField = document.getElementById("ch_active");
-
-//     // Function to disable options 0 and 1
-//     const disableOptions = () => {
-//         Array.from(statusField.options).forEach(option => {
-//             // Check for both string and numeric values
-//             if (option.value === "0" || option.value === 0 ) {
-//                 option.disabled = true;
-//                 // If you want to hide them completely, uncomment the next line
-//                 // option.style.display = "none";
-//             }
-//         });
-//     };
-
-//     // Call the function to actually disable the options
-//     disableOptions();
-// });
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     const statusSelect = document.getElementById('ch_active');
-//     const disbandReasonContainer = document.getElementById('disband_reason_container');
-//     const disbandReasonInput = document.getElementById('disband_reason');
-
-//     function toggleDisbandReason() {
-//         // Show/hide the reason field when status is 3
-//         if (statusSelect.value === '3') {
-//             disbandReasonContainer.style.display = 'block';
-//             disbandReasonInput.required = true;
-//         } else {
-//             disbandReasonContainer.style.display = 'none';
-//             disbandReasonInput.required = false;
-//             disbandReasonInput.value = ''; // Clear the input when hidden
-//         }
-//     }
-
-//     // Initial check on page load
-//     toggleDisbandReason();
-
-//     // Add event listener for status change
-//     statusSelect.addEventListener('change', toggleDisbandReason);
-// });
-
-
 // Function to filter the coordinator dropdown
 function filterCoordinators() {
     const regionDropdown = document.getElementById('ch_region');
@@ -534,6 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>Approving a chapter application will create their MIMI login, request their @momsclub.org email address, add them to the BoardList, and PublicList as well as give
                     them access to Board elearning. Please verify this is what you want to do by pressing OK.</p>
                 <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
+                <input type="hidden" id="ch_region" name="ch_region" value="{{ $chDetails->region_id }}">
             `,
             showCancelButton: true,
             confirmButtonText: 'OK',
@@ -544,6 +503,13 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             preConfirm: () => {
                 const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+                const chapterRegion = Swal.getPopup().querySelector('#ch_region').value;
+
+                if (chapterRegion == 0 || chapterRegion == null) {
+                    Swal.showValidationMessage('Please select region.');
+                    return false;
+                }
+
                 return {
                     chapter_id: chapterId,
                 };
