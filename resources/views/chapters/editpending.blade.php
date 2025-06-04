@@ -388,7 +388,7 @@ $(document).ready(function() {
     });
 });
 
-function showChapterSetupModal(chapterId) {
+function showChapterSetupModal() {
     Swal.fire({
         title: 'Chapter Startup Details',
         html: `
@@ -399,7 +399,7 @@ function showChapterSetupModal(chapterId) {
             <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
                 <textarea id="name_details" name="name_details" class="swal2-textarea" placeholder="Name Details" required style="width: 100%; height: 80px; margin: 0 !important; box-sizing: border-box;"></textarea>
             </div>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
         `,
         showCancelButton: true,
         confirmButtonText: 'OK',

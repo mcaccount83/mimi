@@ -2199,6 +2199,7 @@ class ChapterController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $chActiveId = $baseQuery['chActiveId'];
         $chConfId = $baseQuery['chConfId'];
+        $chapterId = $id;
 
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -2253,7 +2254,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $pcDetails = $pcDetails->unique('cid');
 
-        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chConfId' => $chConfId,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chapterId' => $chapterId,
             'chDetails' => $chDetails, 'allActive' => $allActive,
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
