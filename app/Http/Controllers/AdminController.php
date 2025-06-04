@@ -304,7 +304,7 @@ class AdminController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
+        $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 
         $admin = DB::table('admin')
             ->select('admin.*',

@@ -71,7 +71,7 @@ class ResourcesController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditDetails = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
+        $canEditDetails = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 
         $admin = DB::table('bugs')
             ->select('bugs.*',
@@ -168,7 +168,7 @@ class ResourcesController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 7 || $secPositionId == 7);  // CC Coordinator
+        $canEditFiles = ($positionId == 7 || in_array(7, $secPositionId));  // CC Coordinator
 
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
@@ -258,7 +258,7 @@ class ResourcesController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  // IT Coordinator
+        $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 
         $resources = Resources::with('toolkitCategory')->get();
         $toolkitCategories = ToolkitCategory::all();
