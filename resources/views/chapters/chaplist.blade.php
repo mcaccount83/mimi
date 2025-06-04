@@ -85,8 +85,9 @@
                 </div>
                 <div class="card-body text-center">
                     @if ($regionalCoordinatorCondition)
-                        <button type="button" class="btn bg-gradient-primary" onclick="showChapterSetupModal()"><i class="fas fa-envelope mr-2"></i>Send Chapter Startup Email</button>
-                        <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Chapter</a>
+                        {{-- <button type="button" class="btn bg-gradient-primary" onclick="showChapterSetupModal()"><i class="fas fa-envelope mr-2"></i>Send Chapter Startup Email</button> --}}
+                        {{-- <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Chapter</a> --}}
+                        <a class="btn bg-gradient-primary" href="{{ route('chapters.chaplistpending') }}"><i class="fas fa-share mr-2" ></i>New Chapters Pending</a>
                     @endif
                     @if ($assistConferenceCoordinatorCondition)
                         @if ($checkBoxStatus)

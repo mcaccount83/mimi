@@ -78,7 +78,9 @@
 
                 </div>
                 <div class="card-body text-center">
-
+                @if ($regionalCoordinatorCondition)
+                        <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Manually Add New Chapter</a>
+                    @endif
 
                     </div>
                 </div>

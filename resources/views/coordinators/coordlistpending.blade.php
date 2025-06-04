@@ -63,7 +63,9 @@
             </div>
 
                 <div class="card-body text-center">
-
+                @if($conferenceCoordinatorCondition)
+                    <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus mr-2" ></i>Manually Add New Coordinator</a>
+                @endif
             </div>
          </div>
           <!-- /.box -->
