@@ -151,7 +151,9 @@ class PDFController extends Controller
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
-        $PresDetails = $baseQuery['PresDetails'];
+
+        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -300,8 +302,10 @@ class PDFController extends Controller
         $stateShortName = $baseQuery['stateShortName'];
         $reRegMonth = $chDetails->start_month_id;
         $reRegYear = $chDetails->next_renewal_year;
-        $PresDetails = $baseQuery['PresDetails'];
         $emailCCData = $baseQuery['emailCCData'];
+
+        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -614,7 +618,9 @@ class PDFController extends Controller
         $chId = $baseQuery['chId'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
-        $PresDetails = $baseQuery['PresDetails'];
+
+        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
         //  Load User Information for Signing Email & PDFs
         $user = $this->userController->loadUserInformation($request);
