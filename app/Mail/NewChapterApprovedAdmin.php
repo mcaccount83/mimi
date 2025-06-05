@@ -36,5 +36,4 @@ class NewChapterApprovedAdmin extends Mailable implements ShouldQueue
             ->subject("New Chapter Approved | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.chapter.newchapterapprovedadmin');
     }
-
 }

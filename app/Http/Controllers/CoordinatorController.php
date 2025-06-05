@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Mail\BigSisterWelcome;
 use App\Mail\CoordinatorRetireAdmin;
+use App\Mail\NewCoordApprovedEmail;
+use App\Mail\NewCoordApprovedGSuiteEmail;
 use App\Models\Chapters;
 use App\Models\CoordinatorRecognition;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
+use App\Models\Country;
 use App\Models\ForumCategorySubscription;
-use App\Mail\NewCoordApprovedEmail;
-use App\Mail\NewCoordApprovedGSuiteEmail;
 use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
-use App\Models\Country;
 use App\Models\User;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
@@ -48,7 +48,6 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController,
         PositionConditionsService $positionConditionsService, BaseMailDataController $baseMailDataController, EmailController $emailController,
         EmailTableController $emailTableController)
-
     {
         $this->userController = $userController;
         $this->baseCoordinatorController = $baseCoordinatorController;
@@ -91,7 +90,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         return view('coordinators.coordlist')->with($data);
     }
 
-     /**
+    /**
      * Pending Coorinators List
      */
     public function showPendingCoordinator(Request $request): View
@@ -111,7 +110,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         return view('coordinators.coordlistpending')->with($data);
     }
 
-     /**
+    /**
      * Not Approved Coorinators List
      */
     public function showRejectedCoordinator(Request $request): View
@@ -131,7 +130,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         return view('coordinators.coordlistrejected')->with($data);
     }
 
-      /**
+    /**
      * International Pending Coorinators List
      */
     public function showIntPendingCoordinator(Request $request): View
@@ -151,7 +150,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         return view('international.intcoordlistpending')->with($data);
     }
 
-     /**
+    /**
      * International Not Approved Coorinators List
      */
     public function showIntRejectedCoordinator(Request $request): View
@@ -354,7 +353,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         return redirect()->to('/coordinator/coordlist')->with('success', 'Coordinator created successfully.');
     }
 
-     /**
+    /**
      * View Coordiantor Detais
      */
     public function viewCoordDetails(Request $request, $id): View
@@ -1418,7 +1417,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
     }
 
-        /**
+    /**
      * View Coordiantor Application
      */
     public function viewCoordApplication(Request $request, $id): View
@@ -1474,7 +1473,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdDetailsUser = $user->coordinator;
         $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
-       // Reassign Report To / Direct Supervisor that Changed
+        // Reassign Report To / Direct Supervisor that Changed
         $coordinator_id = $request->input('coordinator_id');
         $new_coordinator_id = $request->input('cord_report_pc');
         $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
@@ -1511,7 +1510,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             $coordinator->save();
 
-           if ($request->has('cord_sec_pos') && is_array($request->cord_sec_pos)) {
+            if ($request->has('cord_sec_pos') && is_array($request->cord_sec_pos)) {
                 // Filter out any empty values
                 $validPositionIds = array_filter($request->cord_sec_pos, function ($value) {
                     return ! empty($value) && is_numeric($value);
@@ -1527,7 +1526,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             }
 
             DB::commit();
-                return to_route('coordinators.viewapplication', ['id' => $id])->with('success', 'Coordinator Application has been updated');
+
+            return to_route('coordinators.viewapplication', ['id' => $id])->with('success', 'Coordinator Application has been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -1538,8 +1538,6 @@ class CoordinatorController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
-
-
 
     /**
      *Update Pending New Coordinator Information
@@ -1631,7 +1629,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             return response()->json([
                 'success' => true,
                 'message' => 'Coordinator approved successfully.',
-                'redirect' => route('coordinators.view', ['id' => $cdId]) // or whatever your route name is
+                'redirect' => route('coordinators.view', ['id' => $cdId]), // or whatever your route name is
             ]);
 
         } catch (\Exception $e) {
@@ -1641,7 +1639,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             // Return JSON error response for AJAX
             return response()->json([
                 'success' => false,
-                'message' => 'Something went wrong, Please try again.'
+                'message' => 'Something went wrong, Please try again.',
             ], 500);
         }
     }
@@ -1691,7 +1689,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             // Return JSON error response for AJAX
             return response()->json([
                 'success' => false,
-                'message' => 'Something went wrong, Please try again.'
+                'message' => 'Something went wrong, Please try again.',
             ], 500);
         }
     }

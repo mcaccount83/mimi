@@ -32,7 +32,7 @@ class PaymentsPublicDonationOnline extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject("Public Donation Received")
+            ->subject('Public Donation Received')
             ->markdown('emails.payments.donationpubliconline');
     }
 }

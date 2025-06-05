@@ -36,7 +36,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Format Chapter Information in Gropus
      */
-     private function formatChapterEINInfo($chapterData)
+    private function formatChapterEINInfo($chapterData)
     {
         $chDetails = $chapterData['chDetails'];
         $chDocuments = $chapterData['chDocuments'] ?? null;
@@ -151,10 +151,9 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-
     private function formatEOYInfo($chapterData)
     {
-      $chDocuments = $chapterData['chDocuments'];
+        $chDocuments = $chapterData['chDocuments'];
 
         return [
             'Board Report Received' => ($chDocuments->new_board_submitted == 1) ? 'YES' : 'NO',
@@ -287,7 +286,7 @@ class ExportController extends Controller implements HasMiddleware
         );
     }
 
-     /**
+    /**
      * Format row data for re-registration & international re-registration export
      */
     private function formatReRegRow($chapterData)
@@ -314,7 +313,7 @@ class ExportController extends Controller implements HasMiddleware
         );
     }
 
-   /**
+    /**
      * Export Chapter List
      */
     public function indexChapter(Request $request)
@@ -359,7 +358,7 @@ class ExportController extends Controller implements HasMiddleware
                 'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
                 'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
                 'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-                'Social Media',  'Next Renewal', 'Dues Last Paid','Members paid for','Re-Reg Notes',
+                'Social Media',  'Next Renewal', 'Dues Last Paid', 'Members paid for', 'Re-Reg Notes',
                 'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
             ];
             fputcsv($file, $headers);
@@ -451,9 +450,9 @@ class ExportController extends Controller implements HasMiddleware
                 'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
                 'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
                 'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-                'Social Media',  'Next Renewal', 'Dues Last Paid','Members paid for','Re-Reg Notes',
+                'Social Media',  'Next Renewal', 'Dues Last Paid', 'Members paid for', 'Re-Reg Notes',
                 'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
-                'Disband Date', 'Disband Reason'
+                'Disband Date', 'Disband Reason',
             ];
             fputcsv($file, $headers);
 
@@ -544,7 +543,7 @@ class ExportController extends Controller implements HasMiddleware
                 'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
                 'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
                 'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-                'Social Media',  'Next Renewal', 'Dues Last Paid','Members paid for','Re-Reg Notes',
+                'Social Media',  'Next Renewal', 'Dues Last Paid', 'Members paid for', 'Re-Reg Notes',
                 'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
             ];
             fputcsv($file, $headers);
@@ -636,9 +635,9 @@ class ExportController extends Controller implements HasMiddleware
                 'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
                 'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
                 'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-                'Social Media',  'Next Renewal', 'Dues Last Paid','Members paid for','Re-Reg Notes',
+                'Social Media',  'Next Renewal', 'Dues Last Paid', 'Members paid for', 'Re-Reg Notes',
                 'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
-                'Disband Date', 'Disband Reason'
+                'Disband Date', 'Disband Reason',
             ];
             fputcsv($file, $headers);
 
@@ -684,318 +683,313 @@ class ExportController extends Controller implements HasMiddleware
         return Response::stream($callback, 200, $headers);
     }
 
+    /**
+     * Export Overdue Re-Registration List - Optimized
+     */
+    public function indexReReg(Request $request)
+    {
+        // Increase memory limit and execution time
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
 
-
-
-
-
-   /**
- * Export Overdue Re-Registration List - Optimized
- */
-public function indexReReg(Request $request)
-{
-    // Increase memory limit and execution time
-    ini_set('memory_limit', '512M');
-    set_time_limit(300);
-
-    $fileName = 'rereg_export_'.date('Y-m-d').'.csv';
-    $headers = [
-        'Content-type' => 'text/csv',
-        'Content-Disposition' => "attachment; filename=$fileName",
-        'Pragma' => 'no-cache',
-        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-        'Expires' => '0',
-    ];
-
-    $user = $this->userController->loadUserInformation($request);
-    $coorId = $user['user_coorId'];
-    $confId = $user['user_confId'];
-    $regId = $user['user_regId'];
-    $positionId = $user['user_positionId'];
-    $secPositionId = $user['user_secPositionId'];
-
-    $now = Carbon::now();
-    $currentMonth = $now->month;
-    $lastMonth = $now->copy()->subMonth()->format('m');
-    $currentYear = $now->year;
-
-    $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-
-    $reChapterIds = $baseQuery['query']
-        ->where(function ($query) use ($currentYear, $lastMonth) {
-            $query->where('next_renewal_year', '<', $currentYear)
-                ->orWhere(function ($query) use ($currentYear, $lastMonth) {
-                    $query->where('next_renewal_year', '=', $currentYear)
-                        ->where('start_month_id', '<=', $lastMonth);
-                });
-        })
-        ->orderByDesc('start_month_id')
-        ->orderByDesc('next_renewal_year')
-        ->pluck('id')
-        ->toArray();
-
-    if (empty($reChapterIds)) {
-        return redirect()->to('/home');
-    }
-
-    $callback = function () use ($reChapterIds) {
-        $file = fopen('php://output', 'w');
-
-        // Write headers based on what formatReRegRow returns
+        $fileName = 'rereg_export_'.date('Y-m-d').'.csv';
         $headers = [
-            'Conference', 'Region', 'State', 'Name',
-            'Start Month', 'Start Year', 'Next Renewal Year', 'Dues Last Paid',
-            'Members paid for', 'Re-Reg Notes',
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
-        fputcsv($file, $headers);
 
-        // Process in chunks
-        $chunkSize = 50;
-        $chunks = array_chunk($reChapterIds, $chunkSize);
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        foreach ($chunks as $chunk) {
-            foreach ($chunk as $chId) {
-                $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                $rowData = $this->formatReRegRow($chapterData);
-                fputcsv($file, $rowData);
-            }
+        $now = Carbon::now();
+        $currentMonth = $now->month;
+        $lastMonth = $now->copy()->subMonth()->format('m');
+        $currentYear = $now->year;
 
-            // Memory cleanup
-            if (ob_get_level()) {
-                ob_flush();
-            }
-            flush();
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+
+        $reChapterIds = $baseQuery['query']
+            ->where(function ($query) use ($currentYear, $lastMonth) {
+                $query->where('next_renewal_year', '<', $currentYear)
+                    ->orWhere(function ($query) use ($currentYear, $lastMonth) {
+                        $query->where('next_renewal_year', '=', $currentYear)
+                            ->where('start_month_id', '<=', $lastMonth);
+                    });
+            })
+            ->orderByDesc('start_month_id')
+            ->orderByDesc('next_renewal_year')
+            ->pluck('id')
+            ->toArray();
+
+        if (empty($reChapterIds)) {
+            return redirect()->to('/home');
         }
 
-        fclose($file);
-    };
+        $callback = function () use ($reChapterIds) {
+            $file = fopen('php://output', 'w');
 
-    return Response::stream($callback, 200, $headers);
-}
+            // Write headers based on what formatReRegRow returns
+            $headers = [
+                'Conference', 'Region', 'State', 'Name',
+                'Start Month', 'Start Year', 'Next Renewal Year', 'Dues Last Paid',
+                'Members paid for', 'Re-Reg Notes',
+            ];
+            fputcsv($file, $headers);
 
- /**
- * Export International Overdue Re-Registration List - Optimized
- */
-public function indexIntReReg(Request $request)
-{
-    // Increase memory limit and execution time
-    ini_set('memory_limit', '512M');
-    set_time_limit(300);
+            // Process in chunks
+            $chunkSize = 50;
+            $chunks = array_chunk($reChapterIds, $chunkSize);
 
-    $fileName = 'rereg_export_'.date('Y-m-d').'.csv';
-    $headers = [
-        'Content-type' => 'text/csv',
-        'Content-Disposition' => "attachment; filename=$fileName",
-        'Pragma' => 'no-cache',
-        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-        'Expires' => '0',
-    ];
+            foreach ($chunks as $chunk) {
+                foreach ($chunk as $chId) {
+                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
+                    $rowData = $this->formatReRegRow($chapterData);
+                    fputcsv($file, $rowData);
+                }
 
-    $user = $this->userController->loadUserInformation($request);
-    $coorId = $user['user_coorId'];
-    $confId = $user['user_confId'];
-    $regId = $user['user_regId'];
-    $positionId = $user['user_positionId'];
-    $secPositionId = $user['user_secPositionId'];
+                // Memory cleanup
+                if (ob_get_level()) {
+                    ob_flush();
+                }
+                flush();
+            }
 
-    $now = Carbon::now();
-    $currentMonth = $now->month;
-    $lastMonth = $now->copy()->subMonth()->format('m');
-    $currentYear = $now->year;
+            fclose($file);
+        };
 
-    $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-
-    $reChapterIds = $baseQuery['query']
-        ->where(function ($query) use ($currentYear, $lastMonth) {
-            $query->where('next_renewal_year', '<', $currentYear)
-                ->orWhere(function ($query) use ($currentYear, $lastMonth) {
-                    $query->where('next_renewal_year', '=', $currentYear)
-                        ->where('start_month_id', '<=', $lastMonth);
-                });
-        })
-        ->orderByDesc('start_month_id')
-        ->orderByDesc('next_renewal_year')
-        ->pluck('id')
-        ->toArray();
-
-    if (empty($reChapterIds)) {
-        return redirect()->to('/home');
+        return Response::stream($callback, 200, $headers);
     }
 
-    $callback = function () use ($reChapterIds) {
-        $file = fopen('php://output', 'w');
+    /**
+     * Export International Overdue Re-Registration List - Optimized
+     */
+    public function indexIntReReg(Request $request)
+    {
+        // Increase memory limit and execution time
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
 
-        // Write headers based on what formatReRegRow returns
+        $fileName = 'rereg_export_'.date('Y-m-d').'.csv';
         $headers = [
-            'Conference', 'Region', 'State', 'Name',
-            'Start Month', 'Start Year', 'Next Renewal Year', 'Dues Last Paid',
-            'Members paid for', 'Re-Reg Notes',
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
-        fputcsv($file, $headers);
 
-        // Process in chunks
-        $chunkSize = 50;
-        $chunks = array_chunk($reChapterIds, $chunkSize);
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        foreach ($chunks as $chunk) {
-            foreach ($chunk as $chId) {
-                $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                $rowData = $this->formatReRegRow($chapterData);
-                fputcsv($file, $rowData);
-            }
+        $now = Carbon::now();
+        $currentMonth = $now->month;
+        $lastMonth = $now->copy()->subMonth()->format('m');
+        $currentYear = $now->year;
 
-            // Memory cleanup
-            if (ob_get_level()) {
-                ob_flush();
-            }
-            flush();
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+
+        $reChapterIds = $baseQuery['query']
+            ->where(function ($query) use ($currentYear, $lastMonth) {
+                $query->where('next_renewal_year', '<', $currentYear)
+                    ->orWhere(function ($query) use ($currentYear, $lastMonth) {
+                        $query->where('next_renewal_year', '=', $currentYear)
+                            ->where('start_month_id', '<=', $lastMonth);
+                    });
+            })
+            ->orderByDesc('start_month_id')
+            ->orderByDesc('next_renewal_year')
+            ->pluck('id')
+            ->toArray();
+
+        if (empty($reChapterIds)) {
+            return redirect()->to('/home');
         }
 
-        fclose($file);
-    };
+        $callback = function () use ($reChapterIds) {
+            $file = fopen('php://output', 'w');
 
-    return Response::stream($callback, 200, $headers);
-}
+            // Write headers based on what formatReRegRow returns
+            $headers = [
+                'Conference', 'Region', 'State', 'Name',
+                'Start Month', 'Start Year', 'Next Renewal Year', 'Dues Last Paid',
+                'Members paid for', 'Re-Reg Notes',
+            ];
+            fputcsv($file, $headers);
 
-/**
- * Export EIN Status List - Optimized
- */
-public function indexEINStatus(Request $request)
-{
-    // Increase memory limit and execution time
-    ini_set('memory_limit', '512M');
-    set_time_limit(300);
+            // Process in chunks
+            $chunkSize = 50;
+            $chunks = array_chunk($reChapterIds, $chunkSize);
 
-    $fileName = 'ein_status_'.date('Y-m-d').'.csv';
-    $headers = [
-        'Content-type' => 'text/csv',
-        'Content-Disposition' => "attachment; filename=$fileName",
-        'Pragma' => 'no-cache',
-        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-        'Expires' => '0',
-    ];
+            foreach ($chunks as $chunk) {
+                foreach ($chunk as $chId) {
+                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
+                    $rowData = $this->formatReRegRow($chapterData);
+                    fputcsv($file, $rowData);
+                }
 
-    $user = $this->userController->loadUserInformation($request);
-    $coorId = $user['user_coorId'];
-    $confId = $user['user_confId'];
-    $regId = $user['user_regId'];
-    $positionId = $user['user_positionId'];
-    $secPositionId = $user['user_secPositionId'];
+                // Memory cleanup
+                if (ob_get_level()) {
+                    ob_flush();
+                }
+                flush();
+            }
 
-    $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-    $chapterIds = $baseQuery['query']->pluck('id')->toArray();
+            fclose($file);
+        };
 
-    if (empty($chapterIds)) {
-        return redirect()->to('/home');
+        return Response::stream($callback, 200, $headers);
     }
 
-    $callback = function () use ($chapterIds) {
-        $file = fopen('php://output', 'w');
+    /**
+     * Export EIN Status List - Optimized
+     */
+    public function indexEINStatus(Request $request)
+    {
+        // Increase memory limit and execution time
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
 
-        // Write headers based on what formatEINStatusRow returns
+        $fileName = 'ein_status_'.date('Y-m-d').'.csv';
         $headers = [
-            'Conference', 'Region', 'State', 'Name', 'EIN', 'EIN Letter', 'Start Month', 'Start Year',
-            'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip', 'Pres Phone', 'Pres Email'
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
-        fputcsv($file, $headers);
 
-        // Process in chunks
-        $chunkSize = 50;
-        $chunks = array_chunk($chapterIds, $chunkSize);
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        foreach ($chunks as $chunk) {
-            foreach ($chunk as $chId) {
-                $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
-                // Merge the data arrays
-                $combinedData = array_merge($chapterData, $boardData);
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterIds = $baseQuery['query']->pluck('id')->toArray();
 
-                $rowData = $this->formatEINStatusRow($combinedData);
-                fputcsv($file, $rowData);
-            }
-
-            // Memory cleanup
-            if (ob_get_level()) {
-                ob_flush();
-            }
-            flush();
+        if (empty($chapterIds)) {
+            return redirect()->to('/home');
         }
 
-        fclose($file);
-    };
+        $callback = function () use ($chapterIds) {
+            $file = fopen('php://output', 'w');
 
-    return Response::stream($callback, 200, $headers);
-}
+            // Write headers based on what formatEINStatusRow returns
+            $headers = [
+                'Conference', 'Region', 'State', 'Name', 'EIN', 'EIN Letter', 'Start Month', 'Start Year',
+                'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip', 'Pres Phone', 'Pres Email',
+            ];
+            fputcsv($file, $headers);
 
-/**
- * Export International EIN Status List - Optimized
- */
-public function indexIntEINStatus(Request $request)
-{
-    // Increase memory limit and execution time
-    ini_set('memory_limit', '512M');
-    set_time_limit(300);
+            // Process in chunks
+            $chunkSize = 50;
+            $chunks = array_chunk($chapterIds, $chunkSize);
 
-    $fileName = 'ein_status_'.date('Y-m-d').'.csv';
-    $headers = [
-        'Content-type' => 'text/csv',
-        'Content-Disposition' => "attachment; filename=$fileName",
-        'Pragma' => 'no-cache',
-        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-        'Expires' => '0',
-    ];
+            foreach ($chunks as $chunk) {
+                foreach ($chunk as $chId) {
+                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
+                    $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
+                    // Merge the data arrays
+                    $combinedData = array_merge($chapterData, $boardData);
 
-    $user = $this->userController->loadUserInformation($request);
-    $coorId = $user['user_coorId'];
-    $confId = $user['user_confId'];
-    $regId = $user['user_regId'];
-    $positionId = $user['user_positionId'];
-    $secPositionId = $user['user_secPositionId'];
+                    $rowData = $this->formatEINStatusRow($combinedData);
+                    fputcsv($file, $rowData);
+                }
 
-    $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-    $chapterIds = $baseQuery['query']->pluck('id')->toArray();
+                // Memory cleanup
+                if (ob_get_level()) {
+                    ob_flush();
+                }
+                flush();
+            }
 
-    if (empty($chapterIds)) {
-        return redirect()->to('/home');
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
     }
 
-    $callback = function () use ($chapterIds) {
-        $file = fopen('php://output', 'w');
+    /**
+     * Export International EIN Status List - Optimized
+     */
+    public function indexIntEINStatus(Request $request)
+    {
+        // Increase memory limit and execution time
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
 
-        // Write headers based on what formatEINStatusRow returns
+        $fileName = 'ein_status_'.date('Y-m-d').'.csv';
         $headers = [
-            'Conference', 'Region', 'State', 'Name', 'EIN', 'EIN Letter', 'Start Month', 'Start Year',
-            'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip', 'Pres Phone', 'Pres Email'
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
-        fputcsv($file, $headers);
 
-        // Process in chunks
-        $chunkSize = 50;
-        $chunks = array_chunk($chapterIds, $chunkSize);
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        foreach ($chunks as $chunk) {
-            foreach ($chunk as $chId) {
-                $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
-                // Merge the data arrays
-                $combinedData = array_merge($chapterData, $boardData);
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterIds = $baseQuery['query']->pluck('id')->toArray();
 
-                $rowData = $this->formatEINStatusRow($combinedData);
-                fputcsv($file, $rowData);
-            }
-
-            // Memory cleanup
-            if (ob_get_level()) {
-                ob_flush();
-            }
-            flush();
+        if (empty($chapterIds)) {
+            return redirect()->to('/home');
         }
 
-        fclose($file);
-    };
+        $callback = function () use ($chapterIds) {
+            $file = fopen('php://output', 'w');
 
-    return Response::stream($callback, 200, $headers);
-}
+            // Write headers based on what formatEINStatusRow returns
+            $headers = [
+                'Conference', 'Region', 'State', 'Name', 'EIN', 'EIN Letter', 'Start Month', 'Start Year',
+                'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip', 'Pres Phone', 'Pres Email',
+            ];
+            fputcsv($file, $headers);
+
+            // Process in chunks
+            $chunkSize = 50;
+            $chunks = array_chunk($chapterIds, $chunkSize);
+
+            foreach ($chunks as $chunk) {
+                foreach ($chunk as $chId) {
+                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
+                    $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
+                    // Merge the data arrays
+                    $combinedData = array_merge($chapterData, $boardData);
+
+                    $rowData = $this->formatEINStatusRow($combinedData);
+                    fputcsv($file, $rowData);
+                }
+
+                // Memory cleanup
+                if (ob_get_level()) {
+                    ob_flush();
+                }
+                flush();
+            }
+
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
+    }
 
     /**
      * Export EOY Reports Status List
@@ -1073,7 +1067,6 @@ public function indexIntEINStatus(Request $request)
         return redirect()->to('/home');
     }
 
-
     /**
      * Export International EOY Reports Status List
      */
@@ -1145,7 +1138,6 @@ public function indexIntEINStatus(Request $request)
 
         return redirect()->to('/home');
     }
-
 
     /**
      * Export International Chapter List
@@ -1241,8 +1233,6 @@ public function indexIntEINStatus(Request $request)
 
         return redirect()->to('/home');
     }
-
-
 
     /**
      * Format Coordinator Information in Gropus
@@ -1380,7 +1370,7 @@ public function indexIntEINStatus(Request $request)
             '8 Years' => $cdDetails->recognition->recognitionGift8?->recognition_gift,
             '9 Years' => $cdDetails->recognition->recognitionGift9?->recognition_gift,
             'Necklace' => ($necklace == 1) ? 'YES' : 'NO',
-            'Top Tier/Other' => $cdDetails->recognition->recognition_toptier
+            'Top Tier/Other' => $cdDetails->recognition->recognition_toptier,
         ];
     }
 
@@ -1441,9 +1431,6 @@ public function indexIntEINStatus(Request $request)
             $this->formatCoordinatorAppreciationInfo($coordData)
         );
     }
-
-
-
 
     /**
      * Export Coordinator List
@@ -1653,7 +1640,7 @@ public function indexIntEINStatus(Request $request)
                 'Conference', 'Region', 'Coordinator Name', 'Position', 'Sec Position', 'Admin',
                 'Report To', 'Email', 'Email2', 'Phone', 'Phone2', 'Address', 'City', 'State', 'Zip',
                 'Birthday', 'Coordinator Start', 'Last Promoted', 'Leave of Absense', 'Leave Date',
-                'Retire Date', 'Retire Reason'
+                'Retire Date', 'Retire Reason',
             ];
             fputcsv($file, $headers);
 
@@ -1737,7 +1724,7 @@ public function indexIntEINStatus(Request $request)
                 'Conference', 'Region', 'Coordinator Name', 'Position', 'Sec Position', 'Admin',
                 'Report To', 'Email', 'Email2', 'Phone', 'Phone2', 'Address', 'City', 'State', 'Zip',
                 'Birthday', 'Coordinator Start', 'Last Promoted', 'Leave of Absense', 'Leave Date',
-                'Retire Date', 'Retire Reason'
+                'Retire Date', 'Retire Reason',
             ];
             fputcsv($file, $headers);
 
@@ -1862,9 +1849,6 @@ public function indexIntEINStatus(Request $request)
         return Response::stream($callback, 200, $headers);
     }
 
-
-
-
     /**
      * Export Chapter Coordinator List
      */
@@ -1963,6 +1947,4 @@ public function indexIntEINStatus(Request $request)
 
         return redirect()->to('/home');
     }
-
-
 }

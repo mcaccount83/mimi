@@ -289,8 +289,8 @@ class UserController extends Controller implements HasMiddleware
 
     public function loadReportToCoord($cdId)
     {
-        $rcDetails =  Coordinators::with(['displayPosition', 'secondaryPosition', 'reportsTo'])
-                ->where('id', '=', $cdId)
+        $rcDetails = Coordinators::with(['displayPosition', 'secondaryPosition', 'reportsTo'])
+            ->where('id', '=', $cdId)
             ->first(); // Returns a single model instance
 
         $rc_id = $rcDetails->reportsTo->id;

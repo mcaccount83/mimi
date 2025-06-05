@@ -23,6 +23,7 @@ use App\Models\BoardsOutgoing;
 use App\Models\BoardsPending;
 use App\Models\Chapters;
 use App\Models\Coordinators;
+use App\Models\Country;
 use App\Models\DisbandedChecklist;
 use App\Models\Documents;
 use App\Models\FinancialReport;
@@ -33,7 +34,6 @@ use App\Models\ProbationSubmission;
 use App\Models\Region;
 use App\Models\Resources;
 use App\Models\State;
-use App\Models\Country;
 use App\Models\Status;
 use App\Models\User;
 use App\Models\Website;
@@ -54,7 +54,7 @@ class ChapterController extends Controller implements HasMiddleware
 {
     protected $userController;
 
-            protected $positionConditionsService;
+    protected $positionConditionsService;
 
     protected $pdfController;
 
@@ -70,8 +70,7 @@ class ChapterController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
         ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, EmailController $emailController,
-        EmailTableController $emailTableController, PositionConditionsService $positionConditionsService,)
-
+        EmailTableController $emailTableController, PositionConditionsService $positionConditionsService, )
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
@@ -134,7 +133,7 @@ class ChapterController extends Controller implements HasMiddleware
         return view('chapters.chaplistdeclined')->with($data);
     }
 
-     /**
+    /**
      * Display the Pending New chapter list mapped with login coordinator
      */
     public function showIntPendingChapters(Request $request): View
@@ -323,7 +322,7 @@ class ChapterController extends Controller implements HasMiddleware
         $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
         $chDisbanded = $baseDisbandedBoardQuery['chDisbanded'];
 
-        if ($chActiveId == 1){
+        if ($chActiveId == 1) {
             $PresDetails = $baseActiveBoardQuery['PresDetails'];
             $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
             $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
@@ -331,7 +330,7 @@ class ChapterController extends Controller implements HasMiddleware
             $SECDetails = $baseActiveBoardQuery['SECDetails'];
         }
 
-        if ($chActiveId == 0){
+        if ($chActiveId == 0) {
             $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
             $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
             $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
@@ -352,7 +351,7 @@ class ChapterController extends Controller implements HasMiddleware
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate, 'probationReason' => $probationReason,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded' => $chDisbanded,
-            'resources' => $resources, 'chActiveId' => $chActiveId
+            'resources' => $resources, 'chActiveId' => $chActiveId,
         ];
 
         return view('chapters.view')->with($data);
@@ -634,11 +633,11 @@ class ChapterController extends Controller implements HasMiddleware
             $chConfId = $baseQuery['chConfId'];
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterid);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
-        $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
-        $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
-        $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
-        $SECDetails = $baseActiveBoardQuery['SECDetails'];
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+            $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+            $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+            $SECDetails = $baseActiveBoardQuery['SECDetails'];
 
             // $PresDetails = $baseQuery['PresDetails'];
             // $AVPDetails = $baseQuery['AVPDetails'];
@@ -750,7 +749,7 @@ class ChapterController extends Controller implements HasMiddleware
         $pcDetails = $pcDetails->unique('cid');  // Remove duplicates based on the 'cid' field
 
         $data = ['allRegions' => $allRegions, 'allStatuses' => $allStatuses, 'pcDetails' => $pcDetails,
-            'allStates' => $allStates, 'allCountries' => $allCountries
+            'allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
         return view('chapters.addnew')->with($data);
@@ -988,11 +987,11 @@ class ChapterController extends Controller implements HasMiddleware
             $pcDetails = $baseQuery['pcDetails'];
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
-        $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
-        $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
-        $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
-        $SECDetails = $baseActiveBoardQuery['SECDetails'];
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+            $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+            $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+            $SECDetails = $baseActiveBoardQuery['SECDetails'];
 
             //  Load User Information for Signing Email & PDFs
             $user = $this->userController->loadUserInformation($request);
@@ -1166,7 +1165,7 @@ class ChapterController extends Controller implements HasMiddleware
             $einAdmin = $adminEmail['ein_admin'];  // EIN Coor Email
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -1746,11 +1745,11 @@ class ChapterController extends Controller implements HasMiddleware
             $emailPC = $baseQueryUpd['emailPC'];
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-        $PresDetailsUpd = $baseActiveBoardQuery['PresDetails'];
-        $AVPDetailsUpd = $baseActiveBoardQuery['AVPDetails'];
-        $MVPDetailsUpd = $baseActiveBoardQuery['MVPDetails'];
-        $TRSDetailsUpd = $baseActiveBoardQuery['TRSDetails'];
-        $SECDetailsUpd = $baseActiveBoardQuery['SECDetails'];
+            $PresDetailsUpd = $baseActiveBoardQuery['PresDetails'];
+            $AVPDetailsUpd = $baseActiveBoardQuery['AVPDetails'];
+            $MVPDetailsUpd = $baseActiveBoardQuery['MVPDetails'];
+            $TRSDetailsUpd = $baseActiveBoardQuery['TRSDetails'];
+            $SECDetailsUpd = $baseActiveBoardQuery['SECDetails'];
 
             // $PresDetailsUpd = $baseQueryUpd['PresDetails'];
             // $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
@@ -2322,7 +2321,8 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
             DB::commit();
-                return to_route('chapters.editpending', ['id' => $id])->with('success', 'Chapter Details have been updated');
+
+            return to_route('chapters.editpending', ['id' => $id])->with('success', 'Chapter Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -2452,7 +2452,7 @@ class ChapterController extends Controller implements HasMiddleware
             return response()->json([
                 'success' => true,
                 'message' => 'Coordinator approved successfully.',
-                'redirect' => route('chapters.view', ['id' => $id])
+                'redirect' => route('chapters.view', ['id' => $id]),
             ]);
 
         } catch (\Exception $e) {
@@ -2462,7 +2462,7 @@ class ChapterController extends Controller implements HasMiddleware
             // Return JSON error response for AJAX
             return response()->json([
                 'success' => false,
-                'message' => 'Something went wrong, Please try again.'
+                'message' => 'Something went wrong, Please try again.',
             ], 500);
         }
     }
@@ -2514,7 +2514,7 @@ class ChapterController extends Controller implements HasMiddleware
             // Return JSON error response for AJAX
             return response()->json([
                 'success' => false,
-                'message' => 'Something went wrong, Please try again.'
+                'message' => 'Something went wrong, Please try again.',
             ], 500);
         }
     }

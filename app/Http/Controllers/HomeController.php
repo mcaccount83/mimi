@@ -66,9 +66,9 @@ class HomeController extends Controller implements HasMiddleware
             $user_chapterId = $user['user_chapterId'];
 
             if ($user_bdPositionId == '1') {
-                return redirect()->to('board/president/' . $user_chapterId);
+                return redirect()->to('board/president/'.$user_chapterId);
             } else {
-                return redirect()->to('board/member/' . $user_chapterId);
+                return redirect()->to('board/member/'.$user_chapterId);
             }
         }
 
@@ -104,7 +104,7 @@ class HomeController extends Controller implements HasMiddleware
             // Send Disbanded Chapter Board Members to Disbanded Checklist and Financial Report
             $user_disChapterId = $user['user_disChapterId'];
 
-            return redirect()->to('board/disbandchecklist/' . $user_disChapterId);
+            return redirect()->to('board/disbandchecklist/'.$user_disChapterId);
 
         } else {
             Auth::logout(); // logout non-user

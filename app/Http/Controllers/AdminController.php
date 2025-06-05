@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Models\AdminEmail;
 use App\Models\Boards;
+use App\Models\BoardsIncoming;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
-use App\Models\BoardsIncoming;
 use App\Models\Payments;
 use App\Models\ProbationSubmission;
 use App\Models\User;
@@ -1002,7 +1002,7 @@ class AdminController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      * view Email Addresses not assigned by positionId
      */
     public function showAdminEmail(): View

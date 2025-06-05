@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\ActiveStatus;
 use App\Models\Chapters;
 use App\Models\Coordinators;
+use App\Models\Country;
 use App\Models\FinancialReportAwards;
 use App\Models\Probation;
 use App\Models\State;
-use App\Models\Country;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
 
@@ -36,10 +36,9 @@ class BaseBoardController extends Controller
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
 
-         if ($chDetails->state_id < 52){
+        if ($chDetails->state_id < 52) {
             $stateShortName = $chDetails->state->state_short_name;
-        }
-        else{
+        } else {
             $stateShortName = $chDetails->country->short_name;
         }
 

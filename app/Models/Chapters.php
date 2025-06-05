@@ -49,7 +49,6 @@ class Chapters extends Model
         return $this->hasMany(BoardsIncoming::class, 'chapter_id', 'id');
     }
 
-
     public function president(): HasOne
     {
         return $this->hasOne(Boards::class, 'chapter_id', 'id')

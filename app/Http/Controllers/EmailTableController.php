@@ -201,7 +201,7 @@ class EmailTableController extends Controller
     }
 
     /**
-      * Create Table for New Coordinators
+     * Create Table for New Coordinators
      */
     public function createNewCoordinatorTable($mailData)
     {
@@ -218,8 +218,6 @@ class EmailTableController extends Controller
 
         return $tableHtml;
     }
-
-
 
     /**
      * Create Rows for Founder
@@ -628,7 +626,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-     /**
+    /**
      * Create Rows for New Chapter Application
      */
     public function createNewCoordinatorRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
@@ -691,5 +689,4 @@ class EmailTableController extends Controller
 
         return $tableHtml;
     }
-
 }
