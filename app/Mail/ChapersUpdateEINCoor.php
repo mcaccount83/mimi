@@ -6,6 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
@@ -18,28 +21,33 @@ class ChapersUpdateEINCoor extends Mailable implements ShouldQueue
 
     protected $pdfPath;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
     }
 
-    /**
-     * Build the message.  From MIMI to EIN Coordinator
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject("Chapter Name Change Notification | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.chapterupdate.eincoor')
-            ->attach($this->pdfPath, [
-                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_ChapterNameChange.pdf',
-                'mime' => 'application/pdf',
-            ]);
+        return new Envelope(
+            subject: "Chapter Name Change Notification | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
     }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.chapterupdate.eincoor',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [
+            Attachment::fromPath($this->pdfPath)
+                ->as($this->mailData['chapterState'] . '_' . $this->mailData['chapterNameSanitized'] . '_ChapterNameChange.pdf')
+                ->withMime('application/pdf'),
+        ];
+    }
+
 }

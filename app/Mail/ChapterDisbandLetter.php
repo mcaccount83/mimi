@@ -6,6 +6,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
@@ -18,29 +22,36 @@ class ChapterDisbandLetter extends Mailable implements ShouldQueue
 
     protected $pdfPath;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject("Chapter Disband Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->replyTo($this->mailData['userEmail'])
-            ->markdown('emails.disband.chapterdisbandletter')
-            ->attach($this->pdfPath, [
-                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Disband_Letter.pdf',
-                'mime' => 'application/pdf',
-            ]);
+        return new Envelope(
+            replyTo: [
+                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+            ],
+            subject: "Chapter Disband Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
     }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.disband.chapterdisbandletter',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [
+            Attachment::fromPath($this->pdfPath)
+                ->as($this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Disband_Letter.pdf')
+                ->withMime('application/pdf'),
+        ];
+    }
+
 }

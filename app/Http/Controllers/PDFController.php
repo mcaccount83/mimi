@@ -447,7 +447,9 @@ class PDFController extends Controller
         $chId = $baseQuery['chId'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
-        $PresDetails = $baseQuery['PresDisbandedDetails'];
+
+        $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
+        $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
 
         //  Load User Information for Signing Email & PDFs
         $user = $this->userController->loadUserInformation($request);
@@ -733,7 +735,9 @@ class PDFController extends Controller
         $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
         $chId = $baseQueryUpd['chId'];
         $stateShortName = $baseQueryUpd['stateShortName'];
-        $PresDetails = $baseQueryUpd['PresDetails'];
+
+        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
         //  Load User Information for Signing Email & PDFs
         $user = $this->userController->loadUserInformation($request);

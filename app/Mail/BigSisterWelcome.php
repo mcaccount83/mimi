@@ -6,6 +6,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
@@ -16,24 +20,32 @@ class BigSisterWelcome extends Mailable implements ShouldQueue
 
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.  From CC/RC to new Big Sister
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject('Welcome to Our Team!')
-            ->replyTo($this->mailData['userEmail'])
-            ->markdown('emails.coordinator.bigsisterwelcome');
+        return new Envelope(
+            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
+            replyTo: [
+                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+            ],
+            subject: 'Welcome to Our Team!',
+        );
     }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.coordinator.bigsisterwelcome',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
+    }
+
 }

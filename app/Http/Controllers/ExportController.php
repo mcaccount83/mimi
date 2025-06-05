@@ -1195,16 +1195,21 @@ public function indexIntEINStatus(Request $request)
                 $chDetails = $baseQuery['chDetails'];
                 $chId = $baseQuery['chId'];
                 $chActiveId = $baseQuery['chActiveId'];
+
+                $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chId);
+                $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chId);
+                $basePendingBoardQuery = $this->baseChapterController->getPendingBoardDetails($chId);
+
                 if ($chActiveId == '1') {
-                    $PresDetails = $baseQuery['PresDetails'];
+                    $PresDetails = $baseActiveBoardQuery['PresDetails'];
                     $deleteColumn = null;
                 }
                 if ($chActiveId == '0') {
-                    $PresDetails = $baseQuery['PresDisbandedDetails'];
+                    $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
                     $deleteColumn = 'DELETE';
                 }
                 if ($chActiveId == '2') {
-                    $PresDetails = $baseQuery['PresPendingDetails'];
+                    $PresDetails = $basePendingBoardQuery['PresPendingDetails'];
                     $deleteColumn = 'DELETE';
                 }
 
