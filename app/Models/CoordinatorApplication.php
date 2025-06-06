@@ -25,5 +25,4 @@ class CoordinatorApplication extends Model
     {
         return $this->belongsTo(Coordinators::class, 'coordinator_id', 'id');  // 'coordinator_id' in coordinator_tree BelongsTo 'id' in coordinators
     }
-
 }

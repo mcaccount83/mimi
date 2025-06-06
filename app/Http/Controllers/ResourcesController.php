@@ -27,12 +27,12 @@ class ResourcesController extends Controller implements HasMiddleware
 {
     protected $userController;
 
-            protected $positionConditionsService;
+    protected $positionConditionsService;
 
-    public function __construct(UserController $userController, PositionConditionsService $positionConditionsService,)
+    public function __construct(UserController $userController, PositionConditionsService $positionConditionsService)
     {
         $this->userController = $userController;
-                        $this->positionConditionsService = $positionConditionsService;
+        $this->positionConditionsService = $positionConditionsService;
 
     }
 

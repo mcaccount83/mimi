@@ -11,8 +11,6 @@ class EoyUploads extends Model
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'eoy_uploads';
-
     protected $fillable = [
 
     ];

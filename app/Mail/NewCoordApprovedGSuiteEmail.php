@@ -40,5 +40,4 @@ class NewCoordApprovedGSuiteEmail extends Mailable implements ShouldQueue
             ->subject("New Coordinator Approved | {$this->mailData['first_name']} {$this->mailData['last_name']}")
             ->markdown('emails.coordinator.newcoordapprovedgsuite');
     }
-
 }

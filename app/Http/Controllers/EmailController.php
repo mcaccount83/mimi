@@ -273,7 +273,7 @@ class EmailController extends Controller implements HasMiddleware
             $pcDetails = $baseQuery['pcDetails'];
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterid);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
             // $PresDetails = $baseQuery['PresDetails'];
             $emailListChap = $baseQuery['emailListChap'];

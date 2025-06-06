@@ -7,12 +7,12 @@ use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
 use App\Mail\EOYReviewrAssigned;
 use App\Models\Boards;
+use App\Models\BoardsIncoming;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
-use App\Models\BoardsIncoming;
 use App\Models\State;
 use App\Models\User;
 use App\Models\Website;
@@ -551,8 +551,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
-                $allCountries = $baseQuery['allCountries'];
-
+        $allCountries = $baseQuery['allCountries'];
 
         // Check if the board activation button was clicked
         if ($request->has('board') && $request->input('board') === 'active') {

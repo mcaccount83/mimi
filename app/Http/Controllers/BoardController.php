@@ -17,10 +17,10 @@ use App\Mail\ProbationReportThankYou;
 use App\Mail\WebsiteReviewNotice;
 use App\Models\Admin;
 use App\Models\Boards;
+use App\Models\BoardsIncoming;
 use App\Models\Chapters;
 use App\Models\Documents;
 use App\Models\FinancialReport;
-use App\Models\BoardsIncoming;
 use App\Models\Probation;
 use App\Models\ProbationSubmission;
 use App\Models\ResourceCategory;
@@ -45,7 +45,7 @@ class BoardController extends Controller implements HasMiddleware
 {
     protected $userController;
 
-        protected $positionConditionsService;
+    protected $positionConditionsService;
 
     protected $baseBoardController;
 
@@ -63,7 +63,7 @@ class BoardController extends Controller implements HasMiddleware
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseBoardController = $baseBoardController;
-                $this->positionConditionsService = $positionConditionsService;
+        $this->positionConditionsService = $positionConditionsService;
         $this->baseMailDataController = $baseMailDataController;
         $this->emailTableController = $emailTableController;
         $this->financialReportController = $financialReportController;
@@ -1019,7 +1019,7 @@ class BoardController extends Controller implements HasMiddleware
             'allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
-            return view('boards.manualorder')->with($data);
+        return view('boards.manualorder')->with($data);
     }
 
     /**

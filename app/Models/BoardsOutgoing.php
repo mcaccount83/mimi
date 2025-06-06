@@ -22,7 +22,7 @@ class BoardsOutgoing extends Model
         'last_updated_by', 'last_updated_date',
     ];
 
-   public function user(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in boards BelongsTo 'id' in user
     }

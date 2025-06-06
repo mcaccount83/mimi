@@ -77,7 +77,7 @@ class BaseMailDataController extends Controller
             'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
             'presAddress' => $PresDetails->street_address,
             'presCity' => $PresDetails->city,
-            'stateId' => (int)$PresDetails->state_id,
+            'stateId' => (int) $PresDetails->state_id,
             'presState' => $PresDetails->state->state_short_name,
             'presCountry' => $PresDetails->country->short_name,
             'presZip' => $PresDetails->zip,
@@ -92,7 +92,7 @@ class BaseMailDataController extends Controller
             'boardName' => $borDetails->first_name.' '.$borDetails->last_name,
             'boardAddress' => $borDetails->street_address,
             'boardCity' => $borDetails->city,
-            'stateId' => (int)$borDetails->state_id,
+            'stateId' => (int) $borDetails->state_id,
             'boardState' => $borDetails->state->state_short_name,
             'boardCountry' => $borDetails->country->short_name,
             'boardZip' => $borDetails->zip,
@@ -159,7 +159,7 @@ class BaseMailDataController extends Controller
             'presNameUpd' => $PresDetailsUpd->first_name.' '.$PresDetailsUpd->last_name,
             'presAddressUpd' => $PresDetailsUpd->street_address,
             'presCityUpd' => $PresDetailsUpd->city,
-            'stateId' => (int)$PresDetailsUpd->state_id,
+            'stateId' => (int) $PresDetailsUpd->state_id,
             'presState' => $PresDetailsUpd->state->state_short_name,
             'presCountry' => $PresDetailsUpd->country->short_name,
             'presZipUpd' => $PresDetailsUpd->zip,
@@ -175,7 +175,7 @@ class BaseMailDataController extends Controller
             'borNameUpd' => $borDetailsUpd->first_name.' '.$borDetailsUpd->last_name,
             'borAddressUpd' => $borDetailsUpd->street_address,
             'borCityUpd' => $borDetailsUpd->city,
-            'stateId' => (int)$borDetailsUpd->state_id,
+            'stateId' => (int) $borDetailsUpd->state_id,
             'borState' => $borDetailsUpd->state->state_short_name,
             'borCountry' => $borDetailsUpd->country->short_name,
             'borZipUpd' => $borDetailsUpd->zip,
@@ -317,7 +317,7 @@ class BaseMailDataController extends Controller
         return [
             'chapterName' => $chDetails->name,
             'chapterNameSanitized' => $chDetails->sanitized_name,
-            'stateId' => (int)$chDetails->state_id,
+            'stateId' => (int) $chDetails->state_id,
             'chapterState' => $chDetails->state->state_short_name,
             'chapterCountry' => $chDetails->country->short_name,
             'chapterConf' => $chDetails->conference_id,
@@ -358,7 +358,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-     public function getNewCoordinatorAppData($input)
+    public function getNewCoordinatorAppData($input)
     {
         return [
             'home_chapter' => $input['home_chapter'].', '.$input['home_state'],

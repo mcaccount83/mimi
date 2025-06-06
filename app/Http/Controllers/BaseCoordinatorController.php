@@ -6,11 +6,11 @@ use App\Models\AdminRole;
 use App\Models\Conference;
 use App\Models\CoordinatorPosition;
 use App\Models\Coordinators;
+use App\Models\Country;
 use App\Models\Month;
 use App\Models\RecognitionGifts;
 use App\Models\Region;
 use App\Models\State;
-use App\Models\Country;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -52,13 +52,13 @@ class BaseCoordinatorController extends Controller
         if ($activeStatus == 2 || $activeStatus == 3) {
             return $query->with([
                 'state', 'conference', 'region', 'displayPosition', 'mimiPosition',
-                'secondaryPosition', 'birthdayMonth', 'recognition'
+                'secondaryPosition', 'birthdayMonth', 'recognition',
             ]);
         } else {
             // For active (1) or zapped (0), use the regular Boards table
             return $query->with([
                 'state', 'conference', 'region', 'displayPosition', 'mimiPosition',
-                'secondaryPosition', 'birthdayMonth', 'recognition'
+                'secondaryPosition', 'birthdayMonth', 'recognition',
             ]);
         }
 
@@ -115,7 +115,6 @@ class BaseCoordinatorController extends Controller
         $checkboxStatus = [];
         $isPending = ($params['activeStatus'] == 2 || $params['activeStatus'] == 3);
 
-
         if (isset($params['coorId'])) {
             // Only apply position conditions if this is not an international or tree query
             if (isset($params['conditions']) && $params['conditions']) {
@@ -127,7 +126,7 @@ class BaseCoordinatorController extends Controller
                     $secPositionId  // Use the formatted variable here instead of $params['secPositionId']
                 );
 
-                  // Use the appropriate method based on active status
+                // Use the appropriate method based on active status
                 $baseQuery = $isPending
                     ? $this->baseConditionsController->applyPendingPositionConditions(
                         $baseQuery,
@@ -150,17 +149,17 @@ class BaseCoordinatorController extends Controller
 
             }
 
-                // $baseQuery = $this->baseConditionsController->applyPositionCoordConditions(
-                //     $baseQuery,
-                //     $conditionsData['conditions'],
-                //     $params['confId'] ?? null,
-                //     $params['regId'] ?? null,
-                //     $conditionsData['inQryArr']
-                // );
+            // $baseQuery = $this->baseConditionsController->applyPositionCoordConditions(
+            //     $baseQuery,
+            //     $conditionsData['conditions'],
+            //     $params['confId'] ?? null,
+            //     $params['regId'] ?? null,
+            //     $conditionsData['inQryArr']
+            // );
 
-                // $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
-                // $baseQuery = $checkboxResults['query'];
-                // $checkboxStatus = $checkboxResults['status'];
+            // $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
+            // $baseQuery = $checkboxResults['query'];
+            // $checkboxStatus = $checkboxResults['status'];
 
             // }
 
@@ -225,7 +224,7 @@ class BaseCoordinatorController extends Controller
         ]);
     }
 
-     public function getNotApprovedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
+    public function getNotApprovedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildCoordinatorQuery([
             'activeStatus' => 3, // 3 = not approved
@@ -269,7 +268,7 @@ class BaseCoordinatorController extends Controller
         ]);
     }
 
-     public function getPendingInternationalBaseQuery($coorId)
+    public function getPendingInternationalBaseQuery($coorId)
     {
         return $this->buildCoordinatorQuery([
             'activeStatus' => 2,
@@ -281,7 +280,7 @@ class BaseCoordinatorController extends Controller
         ]);
     }
 
-     public function getNotApprovedInternationalBaseQuery($coorId)
+    public function getNotApprovedInternationalBaseQuery($coorId)
     {
         return $this->buildCoordinatorQuery([
             'activeStatus' => 3,
@@ -320,7 +319,7 @@ class BaseCoordinatorController extends Controller
         ]);
     }
 
-   /**
+    /**
      * Active Coordinator Details Base Query
      */
     public function getCoordinatorDetails($cdId)
@@ -340,10 +339,9 @@ class BaseCoordinatorController extends Controller
         $displayPosition = $cdDetails->displayPosition;
         $mimiPosition = $cdDetails->mimiPosition;
 
-         if ($cdDetails->state_id < 52){
+        if ($cdDetails->state_id < 52) {
             $cdstateShortName = $cdDetails->state->state_short_name;
-        }
-        else{
+        } else {
             $cdstateShortName = $cdDetails->country->short_name;
         }
 
@@ -399,5 +397,4 @@ class BaseCoordinatorController extends Controller
             'allRecognitionGifts' => $allRecognitionGifts, 'allCountries' => $allCountries, 'cdstateShortName' => $cdstateShortName, 'cdApp' => $cdApp, 'emailCCData' => $emailCCData,
         ];
     }
-
 }

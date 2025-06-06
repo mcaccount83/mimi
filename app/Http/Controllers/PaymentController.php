@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsDonationOnline;
+use App\Mail\PaymentsM2MChapterThankYou;
+use App\Mail\PaymentsManualOnline;
+use App\Mail\PaymentsManualOrderReceipt;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegOnline;
-use App\Mail\PaymentsManualOrderReceipt;
-use App\Mail\PaymentsManualOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
+use App\Models\Country;
 use App\Models\PaymentLog;
 use App\Models\Payments;
 use App\Models\State;
-use App\Models\Country;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,14 +35,14 @@ class PaymentController extends Controller implements HasMiddleware
 
     protected $baseMailDataController;
 
-        protected $positionConditionsService;
+    protected $positionConditionsService;
 
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController, PositionConditionsService $positionConditionsService, )
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController, PositionConditionsService $positionConditionsService)
     {
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
         $this->baseMailDataController = $baseMailDataController;
-                $this->positionConditionsService = $positionConditionsService;
+        $this->positionConditionsService = $positionConditionsService;
 
     }
 
@@ -97,7 +97,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         // $paymentResponse = $this->processPayment($request);
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-                        $shippingFirst, $shippingLast,$shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+            $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
@@ -219,7 +219,7 @@ class PaymentController extends Controller implements HasMiddleware
         // }
 
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+            $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
@@ -327,10 +327,9 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingZip = $input['ship_zip'];
 
         $shipStateId = intval($input['ship_state']);
-        if ($shipStateId < 52){
+        if ($shipStateId < 52) {
             $shippingCountry = 'USA';
-        }
-        else{
+        } else {
             $countryId = $input['ship_country'];
             $country = Country::find($countryId);
             $countryShortName = $country->short_name;
@@ -402,8 +401,8 @@ class PaymentController extends Controller implements HasMiddleware
     /**
      * Process payments with Authorize.net
      */
-     public function processPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-                $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
+    public function processPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
+        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
         if (app()->environment('local')) {
             $transactionTypeDetail = 'authOnlyTransaction';  // Auth Only for testing Purposes
@@ -411,10 +410,10 @@ class PaymentController extends Controller implements HasMiddleware
             $transactionTypeDetail = $transactionType;  // Live Traansactions based on type of transaction set from request
         }
 
-         if ($transactionTypeDetail ==  'authCaptureTransaction'){
+        if ($transactionTypeDetail == 'authCaptureTransaction') {
             $shortTransactionType = 'Processed';
         }
-        if ($transactionTypeDetail ==  'authOnlyTransaction'){
+        if ($transactionTypeDetail == 'authOnlyTransaction') {
             $shortTransactionType = 'AuthOnly';
         }
 
@@ -482,7 +481,7 @@ class PaymentController extends Controller implements HasMiddleware
         $customerAddress->setCountry('USA');
 
         // Create the customer shipping address
-        $customerShipping = new AnetAPI\CustomerAddressType();
+        $customerShipping = new AnetAPI\CustomerAddressType;
         $customerShipping->setFirstName($shippingFirst);
         $customerShipping->setLastName($shippingLast);
         $customerShipping->setCompany($shippingCompany);
@@ -656,7 +655,6 @@ class PaymentController extends Controller implements HasMiddleware
             'error' => $error_message,
         ];
     }
-
 
     /**
      * View Payment Log List
