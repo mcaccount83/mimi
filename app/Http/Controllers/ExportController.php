@@ -1168,13 +1168,12 @@ public function indexIntEINStatus(Request $request)
         $previousYear = Carbon::now()->subYear()->startOfYear();
 
         $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
+$baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
 
         $activeSubquery = $baseQueryActive['query']
             ->select('chapters.*');
 
         $zappedSubquery = $baseQueryZapped['query']
-            ->where('chapters.zap_date', '>', $previousYear)
             ->select('chapters.*');
 
         $irsChapterList = DB::table(DB::raw("({$activeSubquery->toSql()}) as active_chapters"))
@@ -1198,18 +1197,24 @@ public function indexIntEINStatus(Request $request)
 
                 $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chId);
                 $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chId);
-                $basePendingBoardQuery = $this->baseChapterController->getPendingBoardDetails($chId);
 
-                if ($chActiveId == '1') {
+                // Check if chapter started within the last year
+                 $chapterStartedLastYear = false;
+            if (isset($chDetails->start_year) && isset($chDetails->start_month_id)) {
+                $chapterStartedLastYear = ($chDetails->start_year > $previousYear->year) ||
+                    ($chDetails->start_year == $previousYear->year && $chDetails->start_month_id >= $previousYear->month);
+            }
+
+                 if ($chActiveId == '1') {
                     $PresDetails = $baseActiveBoardQuery['PresDetails'];
-                    $deleteColumn = null;
+                    if ($chapterStartedLastYear) {
+                        $deleteColumn = 'ADD';
+                    } else {
+                        $deleteColumn = null;
+                    }
                 }
                 if ($chActiveId == '0') {
                     $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-                    $deleteColumn = 'DELETE';
-                }
-                if ($chActiveId == '2') {
-                    $PresDetails = $basePendingBoardQuery['PresPendingDetails'];
                     $deleteColumn = 'DELETE';
                 }
 

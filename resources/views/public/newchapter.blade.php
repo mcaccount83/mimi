@@ -45,6 +45,53 @@
 
                   <h3 class="profile-username ">Chapter Information</h3>
 
+
+                  {{-- <div class="d-flex align-items-center justify-content-between w-100">
+                            <div class="d-flex align-items-center">
+                                <label class="col-form-label mb-0 mr-2">Is your chapter being sponsored or sistered by another chapter?</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input"
+                                           {{$TRSDetails->id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
+                                    <label class="custom-control-label" for="TreasVacant">Yes</label>
+                                </div>
+                            </div>
+
+                          </div> --}}
+
+{{-- <!-- Toggle Switch - Default to NO (unchecked) -->
+<div class="form-group row">
+    <label class="col-sm-4 col-form-label">Is this chapter sistered by another chapter?</label>
+    <div class="col-sm-8">
+        <input type="checkbox" name="SisteredBy" id="sisteredToggle"
+               data-bootstrap-switch
+               data-on-text="Yes"
+               data-off-text="No"
+               data-on-color="success"
+               data-off-color="danger">
+    </div>
+</div>
+
+<!-- Sistered By Field - Initially Hidden -->
+<div class="form-group row" id="sisteredByField" style="display: none;">
+    <label class="col-sm-4 col-form-label">Sistered By:</label>
+    <div class="col-sm-8">
+        <input type="text" name="ch_sisteredby" id="ch_sisteredby" class="form-control" placeholder="Chapter Name">
+    </div>
+
+</div>
+
+<!-- Hear About By Field - Initially Hidden -->
+<div class="form-group row" id="hearAboutByField" style="display: none;">
+    <label class="col-sm-4 col-form-label">Where did you hear about us?</label>
+    <div class="col-sm-8">
+        <input type="text" name="ch_hearabout" id="ch_hearabout" class="form-control" placeholder="Online Search, Friend, Word of Mouth, etc">
+    </div>
+</div> --}}
+
+
+
+
+
                   <div class="form-group row mt-1">
                     <label class="col-sm-4 col-form-label">State:</label>
                     <div class="col-sm-8">
@@ -318,7 +365,47 @@
 <!-- /.container- -->
 @endsection
 @section('customscript')
+
 <script>
+$(function () {
+    // Initialize Bootstrap Switch
+    $("input[data-bootstrap-switch]").bootstrapSwitch();
+
+    // Handle switch change event
+    $('#sisteredToggle').on('switchChange.bootstrapSwitch', function(event, state) {
+        if (state) {
+            // Switch is ON (Yes) - Show sistered field, hide hear about field
+            $('#sisteredByField').slideDown(300);
+            $('#hearAboutByField').slideUp(300);
+            $('#ch_sisteredby').prop('required', true);
+            $('#ch_hearabout').prop('required', false).val(''); // Clear hear about field
+        } else {
+            // Switch is OFF (No) - Hide sistered field, show hear about field
+            $('#sisteredByField').slideUp(300);
+            $('#hearAboutByField').slideDown(300);
+            $('#ch_sisteredby').prop('required', false).val(''); // Clear sistered field
+            $('#ch_hearabout').prop('required', true);
+        }
+    });
+
+    // Initialize the field states on page load
+    var initialState = $('#sisteredToggle').bootstrapSwitch('state');
+
+    if (initialState) {
+        // YES - Show sistered field
+        $('#sisteredByField').show();
+        $('#hearAboutByField').hide();
+        $('#ch_sisteredby').prop('required', true);
+        $('#ch_hearabout').prop('required', false);
+    } else {
+        // NO - Show hear about field
+        $('#sisteredByField').hide();
+        $('#hearAboutByField').show();
+        $('#ch_sisteredby').prop('required', false);
+        $('#ch_hearabout').prop('required', true);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // Chapter state and country
     const stateDropdown = document.getElementById('ch_state');

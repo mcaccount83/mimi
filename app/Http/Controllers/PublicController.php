@@ -318,6 +318,7 @@ class PublicController extends Controller
                 'next_renewal_year' => $currentYear + 1,
                 'primary_coordinator_id' => $pcId,
                 'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
+                'sistered_by' => $input['ch_sisteredby'],
                 'last_updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
                 'last_updated_date' => $lastupdatedDate,
                 'created_at' => $lastupdatedDate,
