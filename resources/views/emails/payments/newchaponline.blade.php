@@ -10,13 +10,21 @@ A New Chapter Application has been submitted for Conference {{ $mailData['chapte
         </tr>
        @if (isset($mailData['sistered_by']) && !empty($mailData['sistered_by']))
             <tr>
-                <td>Sistered By:&nbsp;&nbsp;</td>
+                <td>Are you being sistered by another chapter?&nbsp;&nbsp;</td>
+                <td>YES</td>
+            </tr>
+            <tr>
+                <td>If so, which chapter?&nbsp;&nbsp;</td>
                 <td>{{ $mailData['sistered_by'] }}</td>
             </tr>
         @endif
         @if (isset($mailData['hear_about']) && !empty($mailData['hear_about']))
             <tr>
-                <td>How did you hear about us?&nbsp;&nbsp;</td>
+                <td>Are you being sistered by another chapter?&nbsp;&nbsp;</td>
+                <td>NO</td>
+            </tr>
+            <tr>
+                <td>If not, how did you hear about us?&nbsp;&nbsp;</td>
                 <td>{{ $mailData['hear_about'] }}</td>
             </tr>
         @endif
