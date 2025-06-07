@@ -8,13 +8,13 @@ A New Chapter Application has been submitted for Conference {{ $mailData['chapte
         <tr>
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Application Information</strong></center></td>
         </tr>
-        @if ({{ $mailData['sistered_by'] }})
+       @if ($mailData['sistered_by'])
             <tr>
                 <td>Sistered By:&nbsp;&nbsp;</td>
                 <td>{{ $mailData['sistered_by'] }}</td>
             </tr>
         @endif
-        @if ({{ $mailData['hear_about'] }})
+        @if ($mailData['hear_about'])
             <tr>
                 <td>How did you hear about us?&nbsp;&nbsp;</td>
                 <td>{{ $mailData['hear_about'] }}</td>
