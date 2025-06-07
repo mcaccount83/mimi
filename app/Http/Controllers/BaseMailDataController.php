@@ -312,11 +312,11 @@ class BaseMailDataController extends Controller
         ];
     }
 
-     public function getNewChapterAppData($input, $sistered)
+     public function getNewChapterAppData($input, $sisteredWords)
     {
         return [
             'hear_about' => $input['ch_hearabout'] ?? null,
-            'sistered' => $sistered,
+            'sistered' => $sisteredWords,
             'sistered_by' => $input['ch_sisteredby'] ?? null,
         ];
     }

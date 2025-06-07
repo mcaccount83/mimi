@@ -302,14 +302,8 @@ class PublicController extends Controller
 
         $invoice = $paymentResponse['data']['invoiceNumber'];
 
-        $sistered = 0; // default to 0 (No)
-        if (isset($input['SisteredBy'])) {
-            // Handle various possible values from Bootstrap Switch
-            $value = $input['SisteredBy'];
-            if ($value === 'on' || $value === 'true' || $value === '1' || $value === 1 || $value === true) {
-                $sistered = 1;
-            }
-        }
+        $sistered = isset($input['SisteredBy']) && $input['SisteredBy'] === '1' ? 1 : 0;
+        $sisteredWords = $sistered === 1 ? 'Yes' : 'No';
 
         DB::beginTransaction();
         try {
@@ -378,7 +372,7 @@ class PublicController extends Controller
 
             $mailData = array_merge(
                 $this->baseMailDataController->getNewChapterData($chDetails),
-                $this->baseMailDataController->getNewChapterAppData($input, $sistered),
+                $this->baseMailDataController->getNewChapterAppData($input, $sisteredWords),
                 $this->baseMailDataController->getPublicPaymentData($input, $invoice),
             );
 
