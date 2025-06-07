@@ -302,12 +302,13 @@ class PublicController extends Controller
 
         $invoice = $paymentResponse['data']['invoiceNumber'];
 
-        // Add this right before your sistered logic
-error_log('SisteredBy value: ' . var_export($input['SisteredBy'] ?? 'NOT SET', true));
-error_log('Full input array: ' . var_export($input, true));
+if (isset($input['SisteredBy'])) {
+    $sisteredValue = 1;
+} else {
+    $sisteredValue = 0;
+}
 
-$sistered = isset($input['SisteredBy']) && $input['SisteredBy'] === '1' ? 1 : 0;
-$sisteredWords = $sistered === 1 ? 'Yes' : 'No';
+$sisteredWords = $sisteredValue === 1 ? 'Yes' : 'No';
 
         DB::beginTransaction();
         try {
@@ -333,7 +334,7 @@ $sisteredWords = $sistered === 1 ? 'Yes' : 'No';
             ])->id;
             ChapterApplication::create([
                 'chapter_id' => $chapterId,
-                'sistered' => $sistered,
+                'sistered' => $sisteredValue,
                 'sistered_by' => $input['ch_sisteredby'] ?? null,
                 'hear_about' => $input['ch_hearabout'] ?? null,
             ]);

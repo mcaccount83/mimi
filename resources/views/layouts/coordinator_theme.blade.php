@@ -18,6 +18,12 @@
 <!-- Theme style -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
 
+<!-- Bootstrap Switch -->
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/bootstrap-switch/css/bootstrap-switch.min.css">
+    <!-- BS Stepper -->
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/bs-stepper/css/bs-stepper.min.css">
+
+
 <!-- Summernote CSS and JS -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 
@@ -640,6 +646,11 @@ window.onload = function () {
 <!-- AdminLTE App -->
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
+<!-- Bootstrap Switch -->
+<script src="{{ config('settings.base_url') }}theme/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<!-- BS-Stepper -->
+<script src="{{ config('settings.base_url') }}theme/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+
 <!-- Summernote -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 
@@ -670,7 +681,14 @@ window.onload = function () {
 <script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
+ <script>
+        $(document).ready(function() {
+            $("input[data-bootstrap-switch]").bootstrapSwitch();
+        });
+    </script>
+
 <script>
+
    $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()
