@@ -8,10 +8,6 @@ A New Chapter Application has been submitted for Conference {{ $mailData['chapte
         <tr>
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Application Information</strong></center></td>
         </tr>
-         {{-- <tr>
-            <td>Are you being sistered by another chapter?&nbsp;&nbsp;</td>
-            <td>{{ $mailData['sistered'] }}</td>
-        </tr> --}}
         @if ({{ $mailData['sistered_by'] }})
             <tr>
                 <td>Sistered By:&nbsp;&nbsp;</td>
