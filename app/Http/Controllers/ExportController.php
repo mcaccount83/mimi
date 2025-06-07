@@ -1168,13 +1168,12 @@ public function indexIntEINStatus(Request $request)
         $previousYear = Carbon::now()->subYear()->startOfYear();
 
         $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
+$baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
 
         $activeSubquery = $baseQueryActive['query']
             ->select('chapters.*');
 
         $zappedSubquery = $baseQueryZapped['query']
-            ->where('chapters.zap_date', '>', $previousYear)
             ->select('chapters.*');
 
         $irsChapterList = DB::table(DB::raw("({$activeSubquery->toSql()}) as active_chapters"))
