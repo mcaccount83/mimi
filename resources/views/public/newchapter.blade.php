@@ -44,53 +44,35 @@
                                 <div class="col-md-12">
 
                   <h3 class="profile-username ">Chapter Information</h3>
+                    <!-- Toggle Switch - Default to NO (unchecked) -->
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Are you being sistered by another chapter?</label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" name="SisteredBy" id="sisteredToggle"
+                                data-bootstrap-switch
+                                data-on-text="Yes"
+                                data-off-text="No"
+                                data-on-color="success"
+                                data-off-color="danger">
+                        </div>
+                    </div>
 
+                    <!-- Sistered By Field - Visible when YES sistered is checked -->
+                    <div class="form-group row" id="sisteredByField" style="display: none;">
+                        <label class="col-sm-4 col-form-label">If so, which chapter?</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="ch_sisteredby" id="ch_sisteredby" class="form-control" placeholder="Chapter Name" required>
+                        </div>
 
-                  {{-- <div class="d-flex align-items-center justify-content-between w-100">
-                            <div class="d-flex align-items-center">
-                                <label class="col-form-label mb-0 mr-2">Is your chapter being sponsored or sistered by another chapter?</label>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input"
-                                           {{$TRSDetails->id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
-                                    <label class="custom-control-label" for="TreasVacant">Yes</label>
-                                </div>
-                            </div>
+                    </div>
 
-                          </div> --}}
-
-{{-- <!-- Toggle Switch - Default to NO (unchecked) -->
-<div class="form-group row">
-    <label class="col-sm-4 col-form-label">Is this chapter sistered by another chapter?</label>
-    <div class="col-sm-8">
-        <input type="checkbox" name="SisteredBy" id="sisteredToggle"
-               data-bootstrap-switch
-               data-on-text="Yes"
-               data-off-text="No"
-               data-on-color="success"
-               data-off-color="danger">
-    </div>
-</div>
-
-<!-- Sistered By Field - Initially Hidden -->
-<div class="form-group row" id="sisteredByField" style="display: none;">
-    <label class="col-sm-4 col-form-label">Sistered By:</label>
-    <div class="col-sm-8">
-        <input type="text" name="ch_sisteredby" id="ch_sisteredby" class="form-control" placeholder="Chapter Name">
-    </div>
-
-</div>
-
-<!-- Hear About By Field - Initially Hidden -->
-<div class="form-group row" id="hearAboutByField" style="display: none;">
-    <label class="col-sm-4 col-form-label">Where did you hear about us?</label>
-    <div class="col-sm-8">
-        <input type="text" name="ch_hearabout" id="ch_hearabout" class="form-control" placeholder="Online Search, Friend, Word of Mouth, etc">
-    </div>
-</div> --}}
-
-
-
-
+                    <!-- Hear About By Field - Visible when NO sistered is checked -->
+                    <div class="form-group row" id="hearAboutByField" style="display: none;">
+                        <label class="col-sm-4 col-form-label">If not, how did you hear about us?</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="ch_hearabout" id="ch_hearabout" class="form-control" placeholder="Online Search, Friend, Word of Mouth, etc" required>
+                        </div>
+                    </div>
 
                   <div class="form-group row mt-1">
                     <label class="col-sm-4 col-form-label">State:</label>

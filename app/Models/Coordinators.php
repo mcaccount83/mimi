@@ -52,11 +52,6 @@ class Coordinators extends Model
         return $this->belongsTo(CoordinatorPosition::class, 'position_id', 'id');   // 'position_id' in coordinators BelongsTo 'id' in coordinator_position
     }
 
-    // public function secondaryPosition(): BelongsTo
-    // {
-    //     return $this->belongsTo(CoordinatorPosition::class, 'sec_position_id', 'id');  // 'sec_position_id' in coordinators BelongsTo 'id' in coordinator_position
-    // }
-
     public function secondaryPosition(): BelongsToMany
     {
         return $this->belongsToMany(CoordinatorPosition::class, 'coordinator_secondary_positions', 'coordinator_id', 'position_id');

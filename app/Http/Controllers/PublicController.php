@@ -11,6 +11,7 @@ use App\Mail\NewCoordinatorThankYou;
 use App\Mail\NewCoordinatorOnline;
 use App\Models\BoardsPending;
 use App\Models\Chapters;
+use App\Models\ChapterApplication;
 use App\Models\Coordinators;
 use App\Models\CoordinatorApplication;
 use App\Models\PaymentLog;
@@ -301,6 +302,8 @@ class PublicController extends Controller
 
         $invoice = $paymentResponse['data']['invoiceNumber'];
 
+        $sistered = ! isset($input['SisteredBy']) ? null : ($input['SisteredBy'] === 'on' ? 1 : 0);
+
         DB::beginTransaction();
         try {
             $chapterId = Chapters::create([
@@ -323,6 +326,12 @@ class PublicController extends Controller
                 'created_at' => $lastupdatedDate,
                 'active_status' => $activeStatus,
             ])->id;
+            ChapterApplication::create([
+                'chapter_id' => $chapterId,
+                'sistered' => $sistered,
+                'sistered_by' => $input['ch_sisteredby'] ?? null,
+                'hear_about' => $input['ch_hearabout'] ?? null,
+            ]);
 
             // Foundrer Info
             if (isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email'])) {
