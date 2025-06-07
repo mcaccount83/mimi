@@ -293,11 +293,11 @@ class UserController extends Controller implements HasMiddleware
                 ->where('id', '=', $cdId)
             ->first(); // Returns a single model instance
 
-        $rc_id = $rcDetails->reportsTo->id;
-        $rc_fname = $rcDetails->reportsTo->first_name;
-        $rc_lname = $rcDetails->reportsTo->last_name;
-        $rc_email = $rcDetails->reportsTo->email;
-        $rc_pos = $rcDetails->reportsTo->displayPosition->long_title;
+        $rc_id = $rcDetails->reportsTo->id ?? null;
+        $rc_fname = $rcDetails->reportsTo->first_name ?? null;
+        $rc_lname = $rcDetails->reportsTo->last_name ?? null;
+        $rc_email = $rcDetails->reportsTo->email ?? null;
+        $rc_pos = $rcDetails->reportsTo->displayPosition->long_title ?? null;
 
         return ['rc_id' => $rc_id, 'rc_fname' => $rc_fname, 'rc_lname' => $rc_lname, 'rc_pos' => $rc_pos, 'rc_email' => $rc_email,
         ];
