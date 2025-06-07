@@ -8,18 +8,22 @@ A New Chapter Application has been submitted for Conference {{ $mailData['chapte
         <tr>
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Application Information</strong></center></td>
         </tr>
-         <tr>
+         {{-- <tr>
             <td>Are you being sistered by another chapter?&nbsp;&nbsp;</td>
             <td>{{ $mailData['sistered'] }}</td>
-        </tr>
-         <tr>
-            <td>If so, which chapter?&nbsp;&nbsp;</td>
-            <td>{{ $mailData['sistered_by'] }}</td>
-        </tr>
-         <tr>
-            <td>If not, how did you hear about us?&nbsp;&nbsp;</td>
-            <td>{{ $mailData['hear_about'] }}</td>
-        </tr>
+        </tr> --}}
+        @if ({{ $mailData['sistered_by'] }})
+            <tr>
+                <td>Sistered By:&nbsp;&nbsp;</td>
+                <td>{{ $mailData['sistered_by'] }}</td>
+            </tr>
+        @endif
+        @if ({{ $mailData['hear_about'] }})
+            <tr>
+                <td>How did you hear about us?&nbsp;&nbsp;</td>
+                <td>{{ $mailData['hear_about'] }}</td>
+            </tr>
+        @endif
         <tr>
             <td>Requested Name:&nbsp;&nbsp;</td>
             <td>{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}</td>
