@@ -371,6 +371,7 @@ class PublicController extends Controller
 
             $mailData = array_merge(
                 $this->baseMailDataController->getNewChapterData($chDetails),
+                $this->baseMailDataController->getNewChapterAppData($input),
                 $this->baseMailDataController->getPublicPaymentData($input, $invoice),
             );
 

@@ -10,15 +10,15 @@ A New Chapter Application has been submitted for Conference {{ $mailData['chapte
         </tr>
          <tr>
             <td>Are you being sistered by another chapter?&nbsp;&nbsp;</td>
-            <td>{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}</td>
+            <td>{{ $mailData['sistered'] }}</td>
         </tr>
          <tr>
             <td>If so, which chapter?&nbsp;&nbsp;</td>
-            <td>{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}</td>
+            <td>{{ $mailData['sistered_by'] }}</td>
         </tr>
          <tr>
             <td>If not, how did you hear about us?&nbsp;&nbsp;</td>
-            <td>{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}</td>
+            <td>{{ $mailData['hear_about'] }}</td>
         </tr>
         <tr>
             <td>Requested Name:&nbsp;&nbsp;</td>
