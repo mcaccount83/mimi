@@ -64,6 +64,7 @@
 
                 <div class="card-body text-center">
                 @if($conferenceCoordinatorCondition)
+                                If your new coordinator is not listed above, you can manually add them.<br>
                     <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus mr-2" ></i>Manually Add New Coordinator</a>
                 @endif
             </div>

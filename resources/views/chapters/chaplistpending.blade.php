@@ -72,6 +72,7 @@
                 </div>
                 <div class="card-body text-center">
                 @if ($regionalCoordinatorCondition)
+                If your new chapter is not listed above, you can manually add them.<br>
                         <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Manually Add New Chapter</a>
                     @endif
 
