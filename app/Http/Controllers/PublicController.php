@@ -694,6 +694,7 @@ class PublicController extends Controller
                     ]);
 
                     return [
+                        'paymentType' => $shortTransactionType,
                         'success' => true,
                         'data' => [
                             'transactionId' => $tresponse->getTransId(),

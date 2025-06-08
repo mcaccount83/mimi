@@ -603,6 +603,7 @@ class PaymentController extends Controller implements HasMiddleware
                     ]);
 
                     return [
+                        'paymentType' => $shortTransactionType,
                         'success' => true,
                         'data' => [
                             'transactionId' => $tresponse->getTransId(),
