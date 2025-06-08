@@ -252,7 +252,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getPublicPaymentData($input, $invoice)
+    public function getPublicPaymentData($input, $invoice, $paymentType)
     {
         return [
             'invoice' => $invoice,
@@ -264,6 +264,7 @@ class BaseMailDataController extends Controller
             'fname' => $input['first_name'] ?? null,
             'lname' => $input['last_name'] ?? null,
             'email' => $input['email'] ?? null,
+            'paymentType' => $paymentType,
         ];
     }
 

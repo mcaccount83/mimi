@@ -302,13 +302,14 @@ class PublicController extends Controller
 
         $invoice = $paymentResponse['data']['invoiceNumber'];
 
-if (isset($input['SisteredBy'])) {
-    $sisteredValue = 1;
-} else {
-    $sisteredValue = 0;
-}
+        $paymentType = $paymentResponse['paymentType'];
 
-$sisteredWords = $sisteredValue === 1 ? 'Yes' : 'No';
+        if (isset($input['SisteredBy'])) {
+            $sisteredValue = 1;
+        } else {
+            $sisteredValue = 0;
+        }
+        $sisteredWords = $sisteredValue === 1 ? 'Yes' : 'No';
 
         DB::beginTransaction();
         try {
@@ -378,7 +379,7 @@ $sisteredWords = $sisteredValue === 1 ? 'Yes' : 'No';
             $mailData = array_merge(
                 $this->baseMailDataController->getNewChapterData($chDetails),
                 $this->baseMailDataController->getNewChapterAppData($input, $sisteredWords),
-                $this->baseMailDataController->getPublicPaymentData($input, $invoice),
+                $this->baseMailDataController->getPublicPaymentData($input, $invoice, $paymentType),
             );
 
             Mail::to($founerEmail)
@@ -468,6 +469,8 @@ $sisteredWords = $sisteredValue === 1 ? 'Yes' : 'No';
             return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
         }
 
+        $paymentType = $paymentResponse['paymentType'];
+
         $invoice = $paymentResponse['data']['invoiceNumber'];
         $donarEmail = $input['ship_email'];
         $adminEmail = $this->positionConditionsService->getAdminEmail();
@@ -482,7 +485,7 @@ $sisteredWords = $sisteredValue === 1 ? 'Yes' : 'No';
         DB::beginTransaction();
         try {
              $mailData = array_merge(
-                $this->baseMailDataController->getPublicPaymentData($input, $invoice),
+                $this->baseMailDataController->getPublicPaymentData($input, $invoice, $paymentType),
                 $this->baseMailDataController->getShippingData($input, $shippingCountry),
             );
 
@@ -746,6 +749,7 @@ $sisteredWords = $sisteredValue === 1 ? 'Yes' : 'No';
         }
 
         return [
+            'paymentType' => $shortTransactionType,
             'success' => false,
             'error' => $error_message,
         ];
