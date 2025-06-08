@@ -103,6 +103,8 @@ class PaymentController extends Controller implements HasMiddleware
             return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
         }
 
+        $paymentType = $paymentResponse['paymentType'];
+
         $emailListChap = $baseQuery['emailListChap'];
         $emailCC = $baseQuery['emailCC'];
         $pcEmail = $baseQuery['pcEmail'];
@@ -146,7 +148,7 @@ class PaymentController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPresData($PresDetails),
-                $this->baseMailDataController->getPaymentData($chPayments, $input),
+                $this->baseMailDataController->getPaymentData($chPayments, $input, $paymentType),
             );
 
             Mail::to($emailListChap)
@@ -227,6 +229,8 @@ class PaymentController extends Controller implements HasMiddleware
 
         $invoice = $paymentResponse['data']['invoiceNumber'];
 
+        $paymentType = $paymentResponse['paymentType'];
+
         $emailListChap = $baseQuery['emailListChap'];
         $emailCC = $baseQuery['emailCC'];
         $pcEmail = $baseQuery['pcEmail'];
@@ -266,7 +270,7 @@ class PaymentController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPresData($PresDetails),
-                $this->baseMailDataController->getPaymentData($chPayments, $input),
+                $this->baseMailDataController->getPaymentData($chPayments, $input, $paymentType),
             );
 
             if ($m2mDonation && $m2m > 0) {
@@ -344,6 +348,8 @@ class PaymentController extends Controller implements HasMiddleware
             return redirect()->to('/board/manual')->with('fail', $paymentResponse['error']);
         }
 
+        $paymentType = $paymentResponse['paymentType'];
+
         $emailListChap = $baseQuery['emailListChap'];
         $emailCC = $baseQuery['emailCC'];
         $pcEmail = $baseQuery['pcEmail'];
@@ -372,7 +378,7 @@ class PaymentController extends Controller implements HasMiddleware
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getPaymentData($chPayments, $input),
+                $this->baseMailDataController->getPaymentData($chPayments, $input, $paymentType),
                 $this->baseMailDataController->getShippingData($input, $shippingCountry),
             );
 
@@ -652,6 +658,7 @@ class PaymentController extends Controller implements HasMiddleware
         }
 
         return [
+            'paymentType' => $shortTransactionType,
             'success' => false,
             'error' => $error_message,
         ];

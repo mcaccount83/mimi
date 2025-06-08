@@ -41,6 +41,10 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} h
             <td>Total Paid:&nbsp;&nbsp;</td>
             <td>{{ $mailData['totalPaid'] }}</td>
         </tr>
+        <tr>
+            <td>Payment Type:&nbsp;&nbsp;</td>
+            <td>{{ $mailData['paymentType'] }}</td>
+        </tr>
         <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Cardholder Information</strong></center></td>
         </tr>
         <tr>

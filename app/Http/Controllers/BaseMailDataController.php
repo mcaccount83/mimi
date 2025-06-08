@@ -212,7 +212,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getPaymentData($chPayments, $input)
+    public function getPaymentData($chPayments, $input, $paymentType)
     {
         return [
             'chapterId' => $chPayments->chapter_id,
@@ -232,6 +232,7 @@ class BaseMailDataController extends Controller
             'fname' => $input['first_name'] ?? null,
             'lname' => $input['last_name'] ?? null,
             'email' => $input['email'] ?? null,
+            'paymentType' => $paymentType,
         ];
     }
 

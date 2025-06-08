@@ -361,6 +361,8 @@ class PaymentReportController extends Controller implements HasMiddleware
         $emailListCoord = $baseQuery['emailListCoord'];
         $emailPC = $baseQuery['emailPC'];
 
+        $paymentType = 'Manual Input';
+
         $input = $request->all();
         $rereg_date = $input['PaymentDate'];
         $m2m_date = $input['M2MPaymentDate'];
@@ -404,7 +406,7 @@ class PaymentReportController extends Controller implements HasMiddleware
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getPaymentData($chPayments, $input),
+                $this->baseMailDataController->getPaymentData($chPayments, $input, $paymentType),
             );
 
             if ($request->input('ch_notify') == 'on' && $rereg_date != null) {
