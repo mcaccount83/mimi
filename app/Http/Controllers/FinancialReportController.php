@@ -451,7 +451,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'chDisbanded' => $chDisbanded, 'chIsAcchActiveIdtive' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
+            'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.disband')->with($data);
