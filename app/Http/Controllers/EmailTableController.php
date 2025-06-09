@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 class EmailTableController extends Controller
 {
     protected $baseMailDataController;
+    protected $emailTableRowController;
 
-    public function __construct(BaseMailDataController $baseMailDataController)
+    public function __construct(BaseMailDataController $baseMailDataController, EmailTableRowController $emailTableRowController)
     {
         $this->baseMailDataController = $baseMailDataController;
+        $this->emailTableRowController = $emailTableRowController;
     }
 
     /**
@@ -31,6 +33,87 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
+     public function createNewChapterApprovedTable($mailData)
+    {
+        $cellStyle = 'text-align: center; padding: 6px;';
+        $cellLeftStyle = 'padding: 6px;';
+        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+
+        $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+            <tbody>';
+
+        $tableHtml = $this->emailTableRowController->createFounderDetailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+
+        $tableHtml .= '</tbody></table>';
+
+        return $tableHtml;
+    }
+
+    public function createNewChapterEmailTable($mailData)
+    {
+        $cellStyle = 'text-align: center; padding: 6px;';
+        $cellLeftStyle = 'padding: 6px;';
+        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+
+        $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+            <tbody>';
+
+        $tableHtml = $this->emailTableRowController->createNewChapterEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+
+        $tableHtml .= '</tbody></table>';
+
+        return $tableHtml;
+    }
+
+    public function createPresidentEmailTable($mailData)
+    {
+        $cellStyle = 'text-align: center; padding: 6px;';
+        $cellLeftStyle = 'padding: 6px;';
+        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+
+        $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+            <tbody>';
+
+        $tableHtml = $this->emailTableRowController->createPresidentEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+
+        $tableHtml .= '</tbody></table>';
+
+        return $tableHtml;
+    }
+
+    public function createPrimaryCoordEmailTable($mailData)
+    {
+        $cellStyle = 'text-align: center; padding: 6px;';
+        $cellLeftStyle = 'padding: 6px;';
+        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+
+        $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+            <tbody>';
+
+        $tableHtml = $this->emailTableRowController->createPrimaryCoordEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+
+        $tableHtml .= '</tbody></table>';
+
+        return $tableHtml;
+    }
+
+    public function createNewCoordinatorApprovedTable($mailData)
+    {
+        $cellStyle = 'text-align: center; padding: 6px;';
+        $cellLeftStyle = 'padding: 6px;';
+        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+
+        $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+            <tbody>';
+
+        $tableHtml = $this->emailTableRowController->createNewCoordinatorDetailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+
+        $tableHtml .= '</tbody></table>';
+
+        return $tableHtml;
+    }
+
+
     /**
      * List Admin Notification -- Full Board Update
      */
@@ -43,7 +126,7 @@ class EmailTableController extends Controller
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
 
-        $tableHtml = $this->createBoardRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createBoardEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
         $tableHtml .= '</tbody></table>';
 
@@ -63,7 +146,7 @@ class EmailTableController extends Controller
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
 
-        $tableHtml = $this->createBoardUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createBoardUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
         $tableHtml .= '</tbody></table>';
 
@@ -83,7 +166,7 @@ class EmailTableController extends Controller
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
 
-        $tableHtml = $this->createMemberUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createMemberUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
         $tableHtml .= '</tbody></table>';
 
@@ -103,9 +186,9 @@ class EmailTableController extends Controller
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
 
-        $tableHtml = $this->createchapterUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createchapterUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
-        $tableHtml = $this->createWebstieUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createWebsiteUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
         $tableHtml .= '</tbody></table>';
 
@@ -125,7 +208,7 @@ class EmailTableController extends Controller
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
 
-        $tableHtml = $this->createWebstieUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createWebsiteUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
         $tableHtml .= '</tbody></table>';
 
@@ -145,7 +228,7 @@ class EmailTableController extends Controller
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
 
-        $tableHtml = $this->createBoardUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createBoardUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
         $tableHtml .= '</tbody></table>';
 
@@ -165,11 +248,11 @@ class EmailTableController extends Controller
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
 
-        $tableHtml = $this->createchapterUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createchapterUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
-        $tableHtml = $this->createBoardUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createBoardUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
-        $tableHtml = $this->createWebstieUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createWebsiteUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
         $tableHtml .= '</tbody></table>';
 
@@ -189,11 +272,11 @@ class EmailTableController extends Controller
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
 
-        $tableHtml = $this->createchapterUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createchapterUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
-        $tableHtml = $this->createMemberUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createMemberUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
-        $tableHtml = $this->createWebstieUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+        $tableHtml = $this->emailTableRowController->createWebsiteUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
 
         $tableHtml .= '</tbody></table>';
 

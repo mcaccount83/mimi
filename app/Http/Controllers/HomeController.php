@@ -102,9 +102,36 @@ class HomeController extends Controller implements HasMiddleware
 
         if ($userType == 'disbanded') {
             // Send Disbanded Chapter Board Members to Disbanded Checklist and Financial Report
+            $userName = $user['user_name'];
+            $userEmail = $user['user_email'];
+            $loggedInName = $user['user_name'];
+            $chId = $user['user_disChapterId'];
+
             $user_disChapterId = $user['user_disChapterId'];
 
-            return redirect()->to('board/disbandchecklist/' . $user_disChapterId);
+            $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+            $chDetails = $baseQuery['chDetails'];
+            $chActiveId = $baseQuery['chActiveId'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $chDocuments = $baseQuery['chDocuments'];
+            // $submitted = $baseQuery['submitted'];
+            $chFinancialReport = $baseQuery['chFinancialReport'];
+            $awards = $baseQuery['awards'];
+            $allAwards = $baseQuery['allAwards'];
+
+            $chDisbanded = $baseQuery['chDisbanded'];
+
+            $resources = Resources::with('resourceCategory')->get();
+            $resourceCategories = ResourceCategory::all();
+
+            $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+                'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+                'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'user_disChapterId' => $user_disChapterId, 'chDisbanded' => $chDisbanded
+            ];
+
+            return view('boards.editdisbandchecklist')->with($data);
+
+            // return redirect()->to('board/disbandchecklist/' . $user_disChapterId);
 
         } else {
             Auth::logout(); // logout non-user

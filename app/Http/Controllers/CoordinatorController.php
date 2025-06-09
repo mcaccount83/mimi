@@ -1619,6 +1619,12 @@ class CoordinatorController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getUserData($user),
             );
 
+            $mailTable = $this->emailTableController->createNewCoordinatorApprovedTable($mailData);
+
+            $mailData = array_merge($mailData, [
+                'mailTable' => $mailTable,
+            ]);
+
             Mail::to($gsuiteAdmin)
                 ->queue(new NewCoordApprovedGSuiteEmail($mailData));
 

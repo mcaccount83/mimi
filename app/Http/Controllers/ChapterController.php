@@ -648,19 +648,14 @@ class ChapterController extends Controller implements HasMiddleware
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                [
-                    'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
-                    'presEmail' => $PresDetails->email,
-                    'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-                    'avpEmail' => $AVPDetails->email,
-                    'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-                    'mvpEmail' => $MVPDetails->email,
-                    'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-                    'trsEmail' => $TRSDetails->email,
-                    'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-                    'secEmail' => $SECDetails->email,
-                ]
+                $this->baseMailDataController->getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails),
             );
+
+            $mailTable = $this->emailTableController->createListAdminBoardTable($mailData);
+
+            $mailData = array_merge($mailData, [
+                'mailTable' => $mailTable,
+            ]);
 
             // Primary Coordinator Notification//
             // $to_email = 'listadmin@momsclub.org';
@@ -1181,9 +1176,13 @@ class ChapterController extends Controller implements HasMiddleware
             );
 
             $mailTablePrimary = $this->emailTableController->createPrimaryUpdateChapterInfoTable($mailData);
+            $mailTable = $this->emailTableController->createPresidentEmailTable($mailData);
+            $mailTablePC = $this->emailTableController->createPrimaryCoordEmailTable($mailData);
 
             $mailData = array_merge($mailData, [
                 'mailTablePrimary' => $mailTablePrimary,
+                'mailTable' => $mailTable,
+                'mailTablePC' => $mailTablePC,
             ]);
 
             // Primary Coordinator Notification//
@@ -2429,9 +2428,13 @@ class ChapterController extends Controller implements HasMiddleware
             );
 
             $mailTableNewChapter = $this->emailTableController->createNewChapterTable($mailData);
+            $mailTable = $this->emailTableController->createNewChapterApprovedTable($mailData);
+            $mailTableNewEmail = $this->emailTableController->createNewChapterEmailTable($mailData);
 
             $mailData = array_merge($mailData, [
                 'mailTableNewChapter' => $mailTableNewChapter,
+                'mailTableNewEmail' => $mailTableNewEmail,
+                'mailTable' => $mailTable,
             ]);
 
             Mail::to($paymentsAdmin)
