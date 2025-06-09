@@ -276,26 +276,6 @@ Route::get('/board/disbandchecklist/{id}', [FinancialReportController::class, 'e
 Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
 Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
 
-// Board Page View As Routes with chapterId parameter...Coordinator/Admin Login
-// Route::get('/view/board/president/{id}', [BoardController::class, 'editPresident'])->name('view.editpresident');
-// Route::post('/view/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('view.updatepresident');
-// Route::get('/view/board/member/{id}', [BoardController::class, 'editMember'])->name('view.editmember');
-// Route::post('/view/board/memberupdate/{id}}', [BoardController::class, 'updateMember'])->name('view.updatemember');
-// Route::get('/view/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('view.editboardreport');
-// Route::post('/view/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('view.updateboardreport');
-// Route::get('/view/board/reregpayment/{id}', [BoardController::class, 'editReregistrationPaymentForm'])->name('view.editreregpayment');
-// Route::get('/view/board/donation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('view.editdonate');
-// Route::get('/view/board/manualorder/{id}', [BoardController::class, 'editManualOrderForm'])->name('view.editmanualorder');
-// Route::get('/view/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('view.editprobation');
-// Route::post('/view/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('view.updateprobation');
-// Route::get('/view/board/m2mdonation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('view.editm2mdonation');
-// Route::get('/view/board/resources/{id}', [BoardController::class, 'viewResources'])->name('view.viewresources');
-// Route::get('/view/board/financialreport/{id}', [FinancialReportController::class, 'editFinancialReport'])->name('view.editfinancialreport');
-// Route::get('/view/board/disbandchecklist/{id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('view.editdisbandchecklist');
-// Route::post('/view/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('view.updatedisbandchecklist');
-// Route::post('/view/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('view.updatedisbandreport');
-// Route::get('/view/board/newchapterstatus/{id}', [PublicController::class, 'showNewChapterStatus'])->name('view.newchapterstatus');
-
 // EOYReports Controller Routes...Coordinator Login Required
 Route::get('/eoy/status', [EOYReportController::class, 'showEOYStatus'])->name('eoyreports.eoystatus');
 Route::get('/eoy/status/reminder', [EOYReportController::class, 'sendEOYStatusReminder'])->name('eoyreports.eoystatusreminder');

@@ -98,7 +98,7 @@ class BaseBoardController extends Controller
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails, 'chActiveId' => $chActiveId,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus,
             'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail, 'displayEOY' => $displayEOY, 'allCountries' => $allCountries,
-            'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'allProbation' => $allProbation, 'probationReason' => $probationReason,
+            'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'allProbation' => $allProbation, 'probationReason' => $probationReason,
         ];
     }
 }
