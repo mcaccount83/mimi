@@ -5,7 +5,7 @@
 <br>
 Once activated, your incoming board members will have access to your chapter's MIMI account.<br>
 <br>
-Outgoing board members will still be able to log in and access the Financial Report.  Financial Reports are due on July 10th.<br>
+Outgoing board members will still be able to log in and access the Financial Report.  Financial Reports are due on July 15th.<br>
 
 <br>
 <strong>MCL,</strong><br>
