@@ -1254,129 +1254,12 @@ public function indexIntEINStatus(Request $request)
 //     }
 
 
-public function indexInternationalIRSFiling(Request $request)
-{
-    // Add these performance settings
-    set_time_limit(0); // Remove time limit
-    ini_set('memory_limit', '512M'); // Increase memory limit
-
-    $fileName = 'int_subordinate_'.date('Y-m-d').'.csv';
-    $headers = [
-        'Content-type' => 'text/csv',
-        'Content-Disposition' => "attachment; filename=$fileName",
-        'Pragma' => 'no-cache',
-        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-        'Expires' => '0',
-    ];
-
-    $user = $this->userController->loadUserInformation($request);
-    $coorId = $user['user_coorId'];
-
-    // Get January 1st of the previous year
-    $previousYear = Carbon::now()->subYear()->startOfYear();
-
-    $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
-
-    $activeSubquery = $baseQueryActive['query']->select('chapters.*');
-    $zappedSubquery = $baseQueryZapped['query']->select('chapters.*');
-
-    $irsChapterQuery = DB::table(DB::raw("({$activeSubquery->toSql()}) as active_chapters"))
-        ->mergeBindings($activeSubquery->getQuery())
-        ->union(
-            DB::table(DB::raw("({$zappedSubquery->toSql()}) as zapped_chapters"))
-                ->mergeBindings($zappedSubquery->getQuery())
-        )
-        ->orderBy('ein');
-
-    // Get total count for logging
-    $totalChapters = $irsChapterQuery->count();
-
-    if ($totalChapters > 0) {
-        Log::info("Starting CSV generation with {$totalChapters} records");
-
-        $callback = function () use ($irsChapterQuery, $previousYear, $totalChapters) {
-            $file = fopen('php://output', 'w');
-
-            // Write headers first
-            fputcsv($file, ['delete', 'EIN', 'Name', 'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip']);
-
-            $processed = 0;
-            $chunkSize = 50; // Process in chunks of 50
-
-            // Process in chunks to avoid memory issues
-            $irsChapterQuery->chunk($chunkSize, function ($irsChapterList) use ($file, $previousYear, &$processed, $totalChapters) {
-                foreach ($irsChapterList as $list) {
-                    $chId = $list->id;
-                    $baseQuery = $this->baseChapterController->getChapterDetails($chId);
-                    $chDetails = $baseQuery['chDetails'];
-                    $chId = $baseQuery['chId'];
-                    $chActiveId = $baseQuery['chActiveId'];
-
-                    $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chId);
-                    $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chId);
-
-                    // Check if chapter started within the last year
-                    $chapterStartedLastYear = false;
-                    if (isset($chDetails->start_year) && isset($chDetails->start_month_id)) {
-                        $chapterStartedLastYear = ($chDetails->start_year > $previousYear->year) ||
-                            ($chDetails->start_year == $previousYear->year && $chDetails->start_month_id >= $previousYear->month);
-                    }
-
-                    if ($chActiveId == '1') {
-                        $PresDetails = $baseActiveBoardQuery['PresDetails'];
-                        if ($chapterStartedLastYear) {
-                            $deleteColumn = 'ADD';
-                        } else {
-                            $deleteColumn = null;
-                        }
-                    }
-                    if ($chActiveId == '0') {
-                        $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-                        $deleteColumn = 'DELETE';
-                    }
-
-                    $rowData = [
-                        $deleteColumn,
-                        $chDetails->ein,
-                        $chDetails->name,
-                        $PresDetails->first_name.' '.$PresDetails->last_name,
-                        $PresDetails->street_address,
-                        $PresDetails->city,
-                        $PresDetails->state_id,
-                        $PresDetails->zip,
-                    ];
-
-                    // Write row immediately instead of storing in array
-                    fputcsv($file, $rowData);
-                    $processed++;
-                }
-
-                // Log progress every chunk
-                Log::info("Processing chapter {$processed} of {$totalChapters}");
-
-                // Force output to prevent timeout
-                if (ob_get_level()) {
-                    ob_flush();
-                }
-                flush();
-            });
-
-            Log::info("CSV export completed successfully");
-            fclose($file);
-        };
-
-        return Response::stream($callback, 200, $headers);
-    }
-
-    return redirect()->to('/home');
-}
-
-/**
- * Export International Chapter List with enhanced error handling
- */
 // public function indexInternationalIRSFiling(Request $request)
 // {
+//     // Add these performance settings
+//     set_time_limit(0); // Remove time limit
+//     ini_set('memory_limit', '512M'); // Increase memory limit
+
 //     $fileName = 'int_subordinate_'.date('Y-m-d').'.csv';
 //     $headers = [
 //         'Content-type' => 'text/csv',
@@ -1392,67 +1275,184 @@ public function indexInternationalIRSFiling(Request $request)
 //     // Get January 1st of the previous year
 //     $previousYear = Carbon::now()->subYear()->startOfYear();
 
-//     // Get the base queries
 //     $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
 //     $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
 
-//     // Build optimized queries with all needed data in one go
-//     $activeSubquery = $baseQueryActive['query']
-//         ->select([
-//             'chapters.*',
-//             'bd_active.first_name as pres_first_name',
-//             'bd_active.last_name as pres_last_name',
-//             'bd_active.street_address as pres_address',
-//             'bd_active.city as pres_city',
-//             'bd_active.state_id as pres_state',
-//             'bd_active.zip as pres_zip'
-//         ])
-//         ->leftJoin('boards as bd_active', function($join) {
-//             $join->on('chapters.id', '=', 'bd_active.chapter_id')
-//                  ->where('bd_active.board_position_id', '=', 1); // Assuming 1 is President
-//         });
+//     $activeSubquery = $baseQueryActive['query']->select('chapters.*');
+//     $zappedSubquery = $baseQueryZapped['query']->select('chapters.*');
 
-//     $zappedSubquery = $baseQueryZapped['query']
-//         ->select([
-//             'chapters.*',
-//             'bd_disbanded.first_name as pres_first_name',
-//             'bd_disbanded.last_name as pres_last_name',
-//             'bd_disbanded.street_address as pres_address',
-//             'bd_disbanded.city as pres_city',
-//             'bd_disbanded.state_id as pres_state',
-//             'bd_disbanded.zip as pres_zip'
-//         ])
-//         ->leftJoin('boards as bd_disbanded', function($join) {
-//             $join->on('chapters.id', '=', 'bd_disbanded.chapter_id')
-//                  ->where('bd_disbanded.board_position_id', '=', 1); // Assuming 1 is President
-//         });
+//     $irsChapterQuery = DB::table(DB::raw("({$activeSubquery->toSql()}) as active_chapters"))
+//         ->mergeBindings($activeSubquery->getQuery())
+//         ->union(
+//             DB::table(DB::raw("({$zappedSubquery->toSql()}) as zapped_chapters"))
+//                 ->mergeBindings($zappedSubquery->getQuery())
+//         )
+//         ->orderBy('ein');
 
-//     // Stream the response directly without building array in memory
-//     $callback = function () use ($activeSubquery, $zappedSubquery, $previousYear) {
-//         $file = fopen('php://output', 'w');
+//     // Get total count for logging
+//     $totalChapters = $irsChapterQuery->count();
 
-//         // Write headers
-//         fputcsv($file, ['delete', 'EIN', 'Name', 'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip']);
+//     if ($totalChapters > 0) {
+//         Log::info("Starting CSV generation with {$totalChapters} records");
 
-//         // Process active chapters
-//         $activeSubquery->chunk(100, function ($chapters) use ($file, $previousYear) {
-//             foreach ($chapters as $chapter) {
-//                 $this->writeChapterRow($file, $chapter, true, $previousYear);
-//             }
-//         });
+//         $callback = function () use ($irsChapterQuery, $previousYear, $totalChapters) {
+//             $file = fopen('php://output', 'w');
 
-//         // Process zapped chapters
-//         $zappedSubquery->chunk(100, function ($chapters) use ($file, $previousYear) {
-//             foreach ($chapters as $chapter) {
-//                 $this->writeChapterRow($file, $chapter, false, $previousYear);
-//             }
-//         });
+//             // Write headers first
+//             fputcsv($file, ['delete', 'EIN', 'Name', 'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip']);
 
-//         fclose($file);
-//     };
+//             $processed = 0;
+//             $chunkSize = 50; // Process in chunks of 50
 
-//     return Response::stream($callback, 200, $headers);
+//             // Process in chunks to avoid memory issues
+//             $irsChapterQuery->chunk($chunkSize, function ($irsChapterList) use ($file, $previousYear, &$processed, $totalChapters) {
+//                 foreach ($irsChapterList as $list) {
+//                     $chId = $list->id;
+//                     $baseQuery = $this->baseChapterController->getChapterDetails($chId);
+//                     $chDetails = $baseQuery['chDetails'];
+//                     $chId = $baseQuery['chId'];
+//                     $chActiveId = $baseQuery['chActiveId'];
+
+//                     $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chId);
+//                     $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chId);
+
+//                     // Check if chapter started within the last year
+//                     $chapterStartedLastYear = false;
+//                     if (isset($chDetails->start_year) && isset($chDetails->start_month_id)) {
+//                         $chapterStartedLastYear = ($chDetails->start_year > $previousYear->year) ||
+//                             ($chDetails->start_year == $previousYear->year && $chDetails->start_month_id >= $previousYear->month);
+//                     }
+
+//                     if ($chActiveId == '1') {
+//                         $PresDetails = $baseActiveBoardQuery['PresDetails'];
+//                         if ($chapterStartedLastYear) {
+//                             $deleteColumn = 'ADD';
+//                         } else {
+//                             $deleteColumn = null;
+//                         }
+//                     }
+//                     if ($chActiveId == '0') {
+//                         $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+//                         $deleteColumn = 'DELETE';
+//                     }
+
+//                     $rowData = [
+//                         $deleteColumn,
+//                         $chDetails->ein,
+//                         $chDetails->name,
+//                         $PresDetails->first_name.' '.$PresDetails->last_name,
+//                         $PresDetails->street_address,
+//                         $PresDetails->city,
+//                         $PresDetails->state_id,
+//                         $PresDetails->zip,
+//                     ];
+
+//                     // Write row immediately instead of storing in array
+//                     fputcsv($file, $rowData);
+//                     $processed++;
+//                 }
+
+//                 // Log progress every chunk
+//                 Log::info("Processing chapter {$processed} of {$totalChapters}");
+
+//                 // Force output to prevent timeout
+//                 if (ob_get_level()) {
+//                     ob_flush();
+//                 }
+//                 flush();
+//             });
+
+//             Log::info("CSV export completed successfully");
+//             fclose($file);
+//         };
+
+//         return Response::stream($callback, 200, $headers);
+//     }
+
+//     return redirect()->to('/home');
 // }
+
+/**
+ * Export International Chapter List with enhanced error handling
+ */
+public function indexInternationalIRSFiling(Request $request)
+{
+    $fileName = 'int_subordinate_'.date('Y-m-d').'.csv';
+    $headers = [
+        'Content-type' => 'text/csv',
+        'Content-Disposition' => "attachment; filename=$fileName",
+        'Pragma' => 'no-cache',
+        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+        'Expires' => '0',
+    ];
+
+    $user = $this->userController->loadUserInformation($request);
+    $coorId = $user['user_coorId'];
+
+    // Get January 1st of the previous year
+    $previousYear = Carbon::now()->subYear()->startOfYear();
+
+    // Get the base queries
+    $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
+
+    // Build optimized queries with all needed data in one go
+    $activeSubquery = $baseQueryActive['query']
+        ->select([
+            'chapters.*',
+            'bd_active.first_name as pres_first_name',
+            'bd_active.last_name as pres_last_name',
+            'bd_active.street_address as pres_address',
+            'bd_active.city as pres_city',
+            'bd_active.state_id as pres_state',
+            'bd_active.zip as pres_zip'
+        ])
+        ->leftJoin('boards as bd_active', function($join) {
+            $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                 ->where('bd_active.board_position_id', '=', 1); // Assuming 1 is President
+        });
+
+    $zappedSubquery = $baseQueryZapped['query']
+        ->select([
+            'chapters.*',
+            'bd_disbanded.first_name as pres_first_name',
+            'bd_disbanded.last_name as pres_last_name',
+            'bd_disbanded.street_address as pres_address',
+            'bd_disbanded.city as pres_city',
+            'bd_disbanded.state_id as pres_state',
+            'bd_disbanded.zip as pres_zip'
+        ])
+        ->leftJoin('boards as bd_disbanded', function($join) {
+            $join->on('chapters.id', '=', 'bd_disbanded.chapter_id')
+                 ->where('bd_disbanded.board_position_id', '=', 1); // Assuming 1 is President
+        });
+
+    // Stream the response directly without building array in memory
+    $callback = function () use ($activeSubquery, $zappedSubquery, $previousYear) {
+        $file = fopen('php://output', 'w');
+
+        // Write headers
+        fputcsv($file, ['delete', 'EIN', 'Name', 'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip']);
+
+        // Process active chapters
+        $activeSubquery->chunk(100, function ($chapters) use ($file, $previousYear) {
+            foreach ($chapters as $chapter) {
+                $this->writeChapterRow($file, $chapter, true, $previousYear);
+            }
+        });
+
+        // Process zapped chapters
+        $zappedSubquery->chunk(100, function ($chapters) use ($file, $previousYear) {
+            foreach ($chapters as $chapter) {
+                $this->writeChapterRow($file, $chapter, false, $previousYear);
+            }
+        });
+
+        fclose($file);
+    };
+
+    return Response::stream($callback, 200, $headers);
+}
 
 /**
  * Helper method to write a single chapter row
