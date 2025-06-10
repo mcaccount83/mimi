@@ -1397,35 +1397,37 @@ public function indexInternationalIRSFiling(Request $request)
     $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
 
     // Build optimized queries with all needed data in one go
-    $activeSubquery = $baseQueryActive['query']
-        ->select([
-            'chapters.*',
-            'bd_active.first_name as pres_first_name',
-            'bd_active.last_name as pres_last_name',
-            'bd_active.street_address as pres_address',
-            'bd_active.city as pres_city',
-            'bd_active.state_id as pres_state',
-            'bd_active.zip as pres_zip'
-        ])
-        ->leftJoin('boards as bd_active', function($join) {
-            $join->on('chapters.id', '=', 'bd_active.chapter_id')
-                 ->where('bd_active.board_position_id', '=', 1); // Assuming 1 is President
-        });
+   $activeSubquery = $baseQueryActive['query']
+    ->select([
+        'chapters.*',
+        'bd_active.first_name as pres_first_name',
+        'bd_active.last_name as pres_last_name',
+        'bd_active.street_address as pres_address',
+        'bd_active.city as pres_city',
+        'state.state_short_name as pres_state',
+        'bd_active.zip as pres_zip'
+    ])
+    ->leftJoin('boards as bd_active', function($join) {
+        $join->on('chapters.id', '=', 'bd_active.chapter_id')
+             ->where('bd_active.board_position_id', '=', 1); // Assuming 1 is President
+    })
+    ->leftJoin('state', 'bd_active.state_id', '=', 'state.id');
 
-    $zappedSubquery = $baseQueryZapped['query']
-        ->select([
-            'chapters.*',
-            'bd_disbanded.first_name as pres_first_name',
-            'bd_disbanded.last_name as pres_last_name',
-            'bd_disbanded.street_address as pres_address',
-            'bd_disbanded.city as pres_city',
-            'bd_disbanded.state_id as pres_state',
-            'bd_disbanded.zip as pres_zip'
-        ])
-        ->leftJoin('boards as bd_disbanded', function($join) {
-            $join->on('chapters.id', '=', 'bd_disbanded.chapter_id')
-                 ->where('bd_disbanded.board_position_id', '=', 1); // Assuming 1 is President
-        });
+$zappedSubquery = $baseQueryZapped['query']
+    ->select([
+        'chapters.*',
+        'bd_disbanded.first_name as pres_first_name',
+        'bd_disbanded.last_name as pres_last_name',
+        'bd_disbanded.street_address as pres_address',
+        'bd_disbanded.city as pres_city',
+        'state.state_short_name as pres_state',
+        'bd_disbanded.zip as pres_zip'
+    ])
+    ->leftJoin('boards as bd_disbanded', function($join) {
+        $join->on('chapters.id', '=', 'bd_disbanded.chapter_id')
+             ->where('bd_disbanded.board_position_id', '=', 1); // Assuming 1 is President
+    })
+    ->leftJoin('state', 'bd_disbanded.state_id', '=', 'state.id');
 
     // Stream the response directly without building array in memory
     $callback = function () use ($activeSubquery, $zappedSubquery, $previousYear) {
