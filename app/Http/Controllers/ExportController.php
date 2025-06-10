@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
 class ExportController extends Controller implements HasMiddleware
@@ -1150,8 +1151,120 @@ public function indexIntEINStatus(Request $request)
     /**
      * Export International Chapter List
      */
-    public function indexInternationalIRSFiling(Request $request)
-    {
+//     public function indexInternationalIRSFiling(Request $request)
+//     {
+//         $fileName = 'int_subordinate_'.date('Y-m-d').'.csv';
+//         $headers = [
+//             'Content-type' => 'text/csv',
+//             'Content-Disposition' => "attachment; filename=$fileName",
+//             'Pragma' => 'no-cache',
+//             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+//             'Expires' => '0',
+//         ];
+
+//         $user = $this->userController->loadUserInformation($request);
+//         $coorId = $user['user_coorId'];
+
+//         // Get January 1st of the previous year
+//         $previousYear = Carbon::now()->subYear()->startOfYear();
+
+//         $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+// $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
+
+//         $activeSubquery = $baseQueryActive['query']
+//             ->select('chapters.*');
+
+//         $zappedSubquery = $baseQueryZapped['query']
+//             ->select('chapters.*');
+
+//         $irsChapterList = DB::table(DB::raw("({$activeSubquery->toSql()}) as active_chapters"))
+//             ->mergeBindings($activeSubquery->getQuery())
+//             ->union(
+//                 DB::table(DB::raw("({$zappedSubquery->toSql()}) as zapped_chapters"))
+//                     ->mergeBindings($zappedSubquery->getQuery())
+//             )
+//             ->orderBy('ein')
+//             ->get();
+
+//         if (count($irsChapterList) > 0) {
+//             $exportChapterList = [];
+
+//             foreach ($irsChapterList as $list) {
+//                 $chId = $list->id;
+//                 $baseQuery = $this->baseChapterController->getChapterDetails($chId);
+//                 $chDetails = $baseQuery['chDetails'];
+//                 $chId = $baseQuery['chId'];
+//                 $chActiveId = $baseQuery['chActiveId'];
+
+//                 $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chId);
+//                 $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chId);
+
+//                 // Check if chapter started within the last year
+//                  $chapterStartedLastYear = false;
+//             if (isset($chDetails->start_year) && isset($chDetails->start_month_id)) {
+//                 $chapterStartedLastYear = ($chDetails->start_year > $previousYear->year) ||
+//                     ($chDetails->start_year == $previousYear->year && $chDetails->start_month_id >= $previousYear->month);
+//             }
+
+//                  if ($chActiveId == '1') {
+//                     $PresDetails = $baseActiveBoardQuery['PresDetails'];
+//                     if ($chapterStartedLastYear) {
+//                         $deleteColumn = 'ADD';
+//                     } else {
+//                         $deleteColumn = null;
+//                     }
+//                 }
+//                 if ($chActiveId == '0') {
+//                     $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+//                     $deleteColumn = 'DELETE';
+//                 }
+
+//                 $rowData = [
+//                     'delete' => $deleteColumn,
+//                     'EIN' => $chDetails->ein,
+//                     'Name' => $chDetails->name,
+//                     'Pres Name' => $PresDetails->first_name.' '.$PresDetails->last_name,
+//                     'Pres Address' => $PresDetails->street_address,
+//                     'Pres City' => $PresDetails->city,
+//                     'Pres State' => $PresDetails->state_id,
+//                     'Pres Zip' => $PresDetails->zip,
+//                 ];
+
+//                 $exportChapterList[] = $rowData;
+//             }
+
+//             $callback = function () use ($exportChapterList) {
+//                 $file = fopen('php://output', 'w');
+
+//                 if (! empty($exportChapterList)) {
+//                     fputcsv($file, array_keys($exportChapterList[0]));
+//                 }
+
+//                 foreach ($exportChapterList as $row) {
+//                     fputcsv($file, $row);
+//                 }
+
+//                 fclose($file);
+//             };
+
+//             return Response::stream($callback, 200, $headers);
+//         }
+
+//         return redirect()->to('/home');
+//     }
+
+/**
+ * Export International Chapter List with enhanced error handling
+ */
+public function indexInternationalIRSFiling(Request $request)
+{
+    try {
+        // Set longer execution time and memory limit
+        set_time_limit(0); // Remove time limit
+        ini_set('memory_limit', '512M');
+
+        Log::info('Starting International IRS Filing export');
+
         $fileName = 'int_subordinate_'.date('Y-m-d').'.csv';
         $headers = [
             'Content-type' => 'text/csv',
@@ -1167,14 +1280,15 @@ public function indexIntEINStatus(Request $request)
         // Get January 1st of the previous year
         $previousYear = Carbon::now()->subYear()->startOfYear();
 
+        Log::info('Getting base queries for coordinator: ' . $coorId);
+
         $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-$baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
+        $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
 
-        $activeSubquery = $baseQueryActive['query']
-            ->select('chapters.*');
+        $activeSubquery = $baseQueryActive['query']->select('chapters.*');
+        $zappedSubquery = $baseQueryZapped['query']->select('chapters.*');
 
-        $zappedSubquery = $baseQueryZapped['query']
-            ->select('chapters.*');
+        Log::info('Executing union query');
 
         $irsChapterList = DB::table(DB::raw("({$activeSubquery->toSql()}) as active_chapters"))
             ->mergeBindings($activeSubquery->getQuery())
@@ -1185,57 +1299,71 @@ $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuery
             ->orderBy('ein')
             ->get();
 
+        Log::info('Found ' . count($irsChapterList) . ' chapters to process');
+
         if (count($irsChapterList) > 0) {
             $exportChapterList = [];
+            $processedCount = 0;
 
             foreach ($irsChapterList as $list) {
-                $chId = $list->id;
-                $baseQuery = $this->baseChapterController->getChapterDetails($chId);
-                $chDetails = $baseQuery['chDetails'];
-                $chId = $baseQuery['chId'];
-                $chActiveId = $baseQuery['chActiveId'];
+                try {
+                    $chId = $list->id;
 
-                $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chId);
-                $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chId);
-
-                // Check if chapter started within the last year
-                 $chapterStartedLastYear = false;
-            if (isset($chDetails->start_year) && isset($chDetails->start_month_id)) {
-                $chapterStartedLastYear = ($chDetails->start_year > $previousYear->year) ||
-                    ($chDetails->start_year == $previousYear->year && $chDetails->start_month_id >= $previousYear->month);
-            }
-
-                 if ($chActiveId == '1') {
-                    $PresDetails = $baseActiveBoardQuery['PresDetails'];
-                    if ($chapterStartedLastYear) {
-                        $deleteColumn = 'ADD';
-                    } else {
-                        $deleteColumn = null;
+                    // Log progress every 50 records
+                    if ($processedCount % 50 == 0) {
+                        Log::info('Processing chapter ' . ($processedCount + 1) . ' of ' . count($irsChapterList));
                     }
-                }
-                if ($chActiveId == '0') {
-                    $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-                    $deleteColumn = 'DELETE';
-                }
 
-                $rowData = [
-                    'delete' => $deleteColumn,
-                    'EIN' => $chDetails->ein,
-                    'Name' => $chDetails->name,
-                    'Pres Name' => $PresDetails->first_name.' '.$PresDetails->last_name,
-                    'Pres Address' => $PresDetails->street_address,
-                    'Pres City' => $PresDetails->city,
-                    'Pres State' => $PresDetails->state_id,
-                    'Pres Zip' => $PresDetails->zip,
-                ];
+                    $baseQuery = $this->baseChapterController->getChapterDetails($chId);
+                    $chDetails = $baseQuery['chDetails'];
+                    $chId = $baseQuery['chId'];
+                    $chActiveId = $baseQuery['chActiveId'];
 
-                $exportChapterList[] = $rowData;
+                    $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chId);
+                    $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chId);
+
+                    // Check if chapter started within the last year
+                    $chapterStartedLastYear = false;
+                    if (isset($chDetails->start_year) && isset($chDetails->start_month_id)) {
+                        $chapterStartedLastYear = ($chDetails->start_year > $previousYear->year) ||
+                            ($chDetails->start_year == $previousYear->year && $chDetails->start_month_id >= $previousYear->month);
+                    }
+
+                    if ($chActiveId == '1') {
+                        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+                        $deleteColumn = $chapterStartedLastYear ? 'ADD' : null;
+                    } else {
+                        $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+                        $deleteColumn = 'DELETE';
+                    }
+
+                    $rowData = [
+                        'delete' => $deleteColumn,
+                        'EIN' => $chDetails->ein ?? '',
+                        'Name' => $chDetails->name ?? '',
+                        'Pres Name' => ($PresDetails->first_name ?? '') . ' ' . ($PresDetails->last_name ?? ''),
+                        'Pres Address' => $PresDetails->street_address ?? '',
+                        'Pres City' => $PresDetails->city ?? '',
+                        'Pres State' => $PresDetails->state_id ?? '',
+                        'Pres Zip' => $PresDetails->zip ?? '',
+                    ];
+
+                    $exportChapterList[] = $rowData;
+                    $processedCount++;
+
+                } catch (\Exception $e) {
+                    Log::error('Error processing chapter ID ' . ($chId ?? 'unknown') . ': ' . $e->getMessage());
+                    // Continue processing other chapters
+                    continue;
+                }
             }
+
+            Log::info('Starting CSV generation with ' . count($exportChapterList) . ' records');
 
             $callback = function () use ($exportChapterList) {
                 $file = fopen('php://output', 'w');
 
-                if (! empty($exportChapterList)) {
+                if (!empty($exportChapterList)) {
                     fputcsv($file, array_keys($exportChapterList[0]));
                 }
 
@@ -1246,12 +1374,21 @@ $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuery
                 fclose($file);
             };
 
+            Log::info('CSV export completed successfully');
             return Response::stream($callback, 200, $headers);
         }
 
+        Log::info('No chapters found, redirecting to home');
         return redirect()->to('/home');
-    }
 
+    } catch (\Exception $e) {
+        Log::error('Fatal error in indexInternationalIRSFiling: ' . $e->getMessage());
+        Log::error('Stack trace: ' . $e->getTraceAsString());
+
+        // Return error response instead of redirect
+        return response()->json(['error' => 'Export failed: ' . $e->getMessage()], 500);
+    }
+}
 
 
     /**
