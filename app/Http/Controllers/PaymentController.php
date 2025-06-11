@@ -379,7 +379,7 @@ class PaymentController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPaymentData($chPayments, $input, $paymentType),
-                $this->baseMailDataController->getShippingData($input, $shippingCountry),
+                $this->baseMailDataController->getShippingData($input, $shippingCountry, $shippingState),
             );
 
             if ($manualOrder && $manual > 0) {

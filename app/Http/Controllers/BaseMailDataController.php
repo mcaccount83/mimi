@@ -253,14 +253,14 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getShippingData($input, $shippingCountry)
+    public function getShippingData($input, $shippingCountry, $shippingState)
     {
         return [
             'ship_fname' => $input['ship_fname'] ?? null,
             'ship_lname' => $input['ship_lname'] ?? null,
             'ship_street' => $input['ship_street'] ?? null,
             'ship_city' => $input['ship_city'] ?? null,
-            'ship_state' => $input['ship_state'] ?? null,
+            'ship_state' => $shippingState,
             'ship_country' => $shippingCountry,
             'ship_zip' => $input['ship_zip'] ?? null,
             'ship_company' => $input['ship_company'] ?? null,
