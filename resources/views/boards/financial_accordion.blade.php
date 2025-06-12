@@ -3485,7 +3485,7 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
     }
 
     function ChangeOfficeExpenses(){
-    var totalExpenses = 0;  // Initialize totalExpenses
+    var totalExpenses = 0;
     var table = document.getElementById("office-expenses");
     var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
@@ -3508,13 +3508,14 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
     var OperatingTotal = totalExpenses + SumPrintingExpense + SumPostageExpense + SumPinsExpense;
 
     // Update the fields with formatted values
-    document.getElementById("SumOtherOperatingExpense").value = totalExpenses.toFixed(2);
+    // REMOVE THIS LINE: document.getElementById("SumOtherOperatingExpense").value = totalExpenses.toFixed(2);
     document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
     document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
     document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
 
     // Set the OperatingTotal
-    document.getElementById("SumTotalChildrensRoomExpense").value = SumTotalChildrensRoomExpense.toFixed(2);
+    // Also remove this line as SumTotalChildrensRoomExpense is not defined in this function:
+    // document.getElementById("SumTotalChildrensRoomExpense").value = SumTotalChildrensRoomExpense.toFixed(2);
     document.getElementById("TotalOperatingExpense").value = OperatingTotal.toFixed(2);
 
     // Call summary recalculation
