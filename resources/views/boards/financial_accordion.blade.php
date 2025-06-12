@@ -838,8 +838,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
                             </div>
-                            <input type="text" class="form-control" name="PartyIncome{{ $row }}" id="PartyIncome{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_income'] ?? '' }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+<input type="text" class="form-control" name="PartyExpenses{{ $row }}" id="PartyExpenses{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_expenses'] ?? '' }}"
+    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                         </div>
                     </div>
                 </td>
@@ -1908,7 +1908,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumOtherExpense" id="SumOtherExpense"
+            <input type="text" class="form-control" name="SumOtherOperatingExpense" id="SumOtherOperatingExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
             </div>
         </div>
@@ -3508,7 +3508,7 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
     var OperatingTotal = totalExpenses + SumPrintingExpense + SumPostageExpense + SumPinsExpense;
 
     // Update the fields with formatted values
-    document.getElementById("SumOtherExpense").value = totalExpenses.toFixed(2);
+    document.getElementById("SumOtherOperatingExpense").value = totalExpenses.toFixed(2);
     document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
     document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
     document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
@@ -3955,6 +3955,7 @@ function DeleteChapterAwardsRow() {
         var ServiceIncomeTotal = 0;
         var ServiceExpenseTotal = 0;
         var SumOtherExpense = 0;
+        var SumOtherOperatingExpense = 0;
         var SumOperatingExpense = 0;
         var SumTotalExpense = 0;
         var SumTotalIncome = 0;
@@ -3978,6 +3979,7 @@ function DeleteChapterAwardsRow() {
         SumPartyExpense = parseNumber(document.getElementById("SumPartyExpense").value);
         SumOtherIncome = parseNumber(document.getElementById("SumOtherIncome").value);
         SumOtherExpense = parseNumber(document.getElementById("SumOtherExpense").value);
+        SumOtherOperatingExpense = parseNumber(document.getElementById("SumOtherOperatingExpense").value);
         SumOperatingExpense = parseNumber(document.getElementById("SumOperatingExpense").value);
         SumInternationalEventExpense = parseNumber(document.getElementById("SumInternationalEventExpense").value);
         SumInternationalEventIncome = parseNumber(document.getElementById("SumInternationalEventIncome").value);
