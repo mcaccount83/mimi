@@ -255,10 +255,12 @@ Route::get('/export/inteoystatus', [ExportController::class, 'indexIntEOYStatus'
 
 // Board Controller Routes...Board Login Required
 Route::get('/board/newchapterstatus/{id}', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
-Route::get('/board/president/{id}', [BoardController::class, 'editPresident'])->name('board.editpresident');
-Route::post('/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('board.updatepresident');
-Route::get('/board/member/{id}', [BoardController::class, 'editMember'])->name('board.editmember');
-Route::post('/board/memberupdate/{id}', [BoardController::class, 'updateMember'])->name('board.updatemember');
+Route::get('/board/profile/{id}', [BoardController::class, 'editProfile'])->name('board.editprofile');
+Route::post('/board/profileupdate/{id}', [BoardController::class, 'updateProfile'])->name('board.updateprofile');
+// Route::get('/board/president/{id}', [BoardController::class, 'editPresident'])->name('board.editpresident');
+// Route::post('/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('board.updatepresident');
+// Route::get('/board/member/{id}', [BoardController::class, 'editMember'])->name('board.editmember');
+// Route::post('/board/memberupdate/{id}', [BoardController::class, 'updateMember'])->name('board.updatemember');
 Route::get('/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
 Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
 Route::get('/board/reregpayment/{id}', [BoardController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');

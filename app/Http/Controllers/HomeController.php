@@ -65,11 +65,13 @@ class HomeController extends Controller implements HasMiddleware
             $user_bdPositionId = $user['user_bdPositionId'];
             $user_chapterId = $user['user_chapterId'];
 
-            if ($user_bdPositionId == '1') {
-                return redirect()->to('board/president/' . $user_chapterId);
-            } else {
-                return redirect()->to('board/member/' . $user_chapterId);
-            }
+            return redirect()->to('board/profile/' . $user_chapterId);
+
+            // if ($user_bdPositionId == '1') {
+            //     return redirect()->to('board/president/' . $user_chapterId);
+            // } else {
+            //     return redirect()->to('board/member/' . $user_chapterId);
+            // }
         }
 
         if ($userType == 'outgoing') {
