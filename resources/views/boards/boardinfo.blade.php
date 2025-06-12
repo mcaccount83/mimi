@@ -424,6 +424,16 @@
                                 </div>
 
                                 <div class="form-group row">
+                                    <label class="col-sm-12 col-form-label">Email:</label>
+                                    <div class="col-sm-12 mb-2">
+                                    <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}" placeholder="Inquiries Email Address" required >
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                    <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}" placeholder="Chapter Email Address"  >
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label class="col-sm-12 col-form-label">Website:</label>
                                     <div class="col-sm-12 mb-2">
                                         <input type="text" name="ch_website" id="ch_website" class="form-control"

@@ -1253,7 +1253,8 @@ class BoardController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $chapter->inquiries_contact = $request->input('InquiriesContact');
+            $chapter->email = $request->input('ch_inqemailcontact');
+            $chapter->inquiries_contact = $request->input('ch_email') ?? null;
             $chapter->boundary_issues = $request->input('BoundaryStatus');
             $chapter->boundary_issue_notes = $issue_note;
             $chapter->website_url = $website;
