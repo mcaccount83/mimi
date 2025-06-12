@@ -103,19 +103,19 @@ class BaseMailDataController extends Controller
 
     public function getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails)
     {
-        return [
-            'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
-            'presEmail' => $PresDetails->email,
-            'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-            'avpEmail' => $AVPDetails->email,
-            'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-            'mvpEmail' => $MVPDetails->email,
-            'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-            'trsEmail' => $TRSDetails->email,
-            'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-            'secEmail' => $SECDetails->email,
-        ];
-    }
+         return [
+        'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
+        'presEmail' => $PresDetails->email,
+        'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
+        'avpEmail' => $AVPDetails->email,
+        'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
+        'mvpEmail' => $MVPDetails->email,
+        'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
+        'trsEmail' => $TRSDetails->email,
+        'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
+        'secEmail' => $SECDetails->email,
+    ];
+}
 
 
     public function getPCData($pcDetails)

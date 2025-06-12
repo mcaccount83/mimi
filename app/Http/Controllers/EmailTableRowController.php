@@ -252,26 +252,43 @@ class EmailTableRowController extends Controller
             <td style="'.$cellStyle.'">'.$mailData['presName'].'</td>
             <td style="'.$cellStyle.'">'.$mailData['presEmail'].'</td>
         </tr>';
-        $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">AVP</td>
-            <td style="'.$cellStyle.'">'.$mailData['avpName'].'</td>
-            <td style="'.$cellStyle.'">'.$mailData['avpemail'].'</td>
-        </tr>';
-        $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">MVP</td>
-            <td style="'.$cellStyle.'">'.$mailData['mvpName'].'</td>
-            <td style="'.$cellStyle.'">'.$mailData['mvpemail'].'</td>
-        </tr>';
-        $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">Treasurer</td>
-            <td style="'.$cellStyle.'">'.$mailData['tresName'].'</td>
-            <td style="'.$cellStyle.'">'.$mailData['tresemail'].'</td>
-        </tr>';
-        $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">Secretary</td>
-            <td style="'.$cellStyle.'">'.$mailData['secName'].'</td>
-            <td style="'.$cellStyle.'">'.$mailData['secemail'].'</td>
-        </tr>';
+
+        if (!empty($mailData['avpName'])) {
+            $tableHtml .= '<tr>
+                <td style="'.$cellLeftStyle.'">AVP</td>
+                <td style="'.$cellStyle.'">'.$mailData['avpName'].'</td>
+                <td style="'.$cellStyle.'">'.$mailData['avpEmail'].'</td>
+            </tr>';
+        }
+          if (!empty($mailData['avpName'])) {
+            $tableHtml .= '<tr>
+                <td style="'.$cellLeftStyle.'">AVP</td>
+                <td style="'.$cellStyle.'">'.$mailData['avpName'].'</td>
+                <td style="'.$cellStyle.'">'.$mailData['avpEmail'].'</td>
+            </tr>';
+        }
+         if (!empty($mailData['mvpName'])) {
+            $tableHtml .= '<tr>
+                <td style="'.$cellLeftStyle.'">AVP</td>
+                <td style="'.$cellStyle.'">'.$mailData['mvpName'].'</td>
+                <td style="'.$cellStyle.'">'.$mailData['mvpEmail'].'</td>
+            </tr>';
+        }
+         if (!empty($mailData['trsName'])) {
+            $tableHtml .= '<tr>
+                <td style="'.$cellLeftStyle.'">AVP</td>
+                <td style="'.$cellStyle.'">'.$mailData['trsName'].'</td>
+                <td style="'.$cellStyle.'">'.$mailData['trsEmail'].'</td>
+            </tr>';
+        }
+         if (!empty($mailData['secName'])) {
+            $tableHtml .= '<tr>
+                <td style="'.$cellLeftStyle.'">AVP</td>
+                <td style="'.$cellStyle.'">'.$mailData['secName'].'</td>
+                <td style="'.$cellStyle.'">'.$mailData['secEmail'].'</td>
+            </tr>';
+        }
+
 
         return $tableHtml;
     }
