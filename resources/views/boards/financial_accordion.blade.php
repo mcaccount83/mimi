@@ -3514,7 +3514,7 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
     document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
 
     // Set the OperatingTotal
-    document.getElementById("SumTotalChildrensRoomExpense").value = OperatingTotal.toFixed(2);
+    document.getElementById("SumTotalChildrensRoomExpense").value = SumTotalChildrensRoomExpense.toFixed(2);
     document.getElementById("TotalOperatingExpense").value = OperatingTotal.toFixed(2);
 
     // Call summary recalculation
