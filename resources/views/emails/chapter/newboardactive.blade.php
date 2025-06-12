@@ -39,22 +39,18 @@
     <li>Note the contact information listed for your chapter’s volunteers. If you ever have trouble reaching your Primary Coordinator, you can click on the name of your Secondary Coordinator to email them.</li>
     <li>You can log on to MIMI anytime. if you receive error messages or if you have any questions at all, please let your Primary Coordinator know!</li>
 </ul>
-<br>
 <hr>
 <p><b>eLearning Portal</b></p>
-<p>Now that you have your EIN Number ({{ $mailData['chapterEIN'] }}) you should open a Chapter Checking Account. Check your area for banks that offer free accounts to non-profits. In addtion to your EIN , you will likely need a copy of the Group Exemption Letter (attached) as well as the </p>
+<p>Be sure to check out the MOMS Club eLearning site. We will continue to add more courses throughout the year.<br>
+    https://momsclub.org/elearning/chapter-training</p>
 <hr>
-<p><b>Step 4 - Set your Dues</b></p>
-<p>Most chapters charge between $20-$35 per year to their members. You will have an annual re-registration payment due to International at $5/member ($50 minimum) so be sure to include that in your calculations. Read more about how income from dues may be used.</p>
+<p><b>Web Resources</b></p>
+<p>Other resources, including the Bylaws, Fact Sheets, Sample Files, Digital Logos, etc are available online.<br>
+    https://momsclub.org/mimi/board/resources</p>
 <hr>
-<p><b>Step 5 - Hold your first Meeting</b></p>
-<p>As a chapter you’ll hold a monthly meeting where business can be discussed and voted on. All members (and potential members) are invited to attend the monthly meeting. It may be held at a local park, a library, a church, whatever works for your area, time of year and budget.</p>
-<hr>
-<p><b>Step 6 - Look for Board Members</b></p>
-<p>To be successful, you will need help!  As you start getting new members, be on the lookout for any potential board members. If someone isn’t interested in a board position, get them involved as a playgroup or service project coordinator. The more people are personally involved, the more interest they will have in helping the new chapter to become successful!</p>
-<hr>
-<p><b>Step 7 - Additional Resources</b></p>
-<p>As previously mentioned, be sure to check the "Chapter Resources" section in your MIMI profile. You’ll find FACT Sheets on various topics, sample files, logo downloads, etc.</p>
+<p><b>BoardList Forum</b></p>
+<p>The BoardList forum group will give you a chance to interact with other board members on chapter related topics.<br>
+    https://groups.google.com/a/momsclub.org/g/2025-26boardlist</p>
 
 <br>
 <p><strong>MCL</strong>,<br>

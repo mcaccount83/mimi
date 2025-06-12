@@ -1908,7 +1908,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumOtherOperatingExpense" id="SumOtherOperatingExpense"
+            <input type="text" class="form-control" name="SumOtherExpense" id="SumOtherExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
             </div>
         </div>
@@ -3508,14 +3508,14 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
     var OperatingTotal = totalExpenses + SumPrintingExpense + SumPostageExpense + SumPinsExpense;
 
     // Update the fields with formatted values
-    // REMOVE THIS LINE: document.getElementById("SumOtherOperatingExpense").value = totalExpenses.toFixed(2);
+    document.getElementById("SumOtherExpense").value = totalExpenses.toFixed(2);
     document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
     document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
     document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
 
     // Set the OperatingTotal
     // Also remove this line as SumTotalChildrensRoomExpense is not defined in this function:
-    // document.getElementById("SumTotalChildrensRoomExpense").value = SumTotalChildrensRoomExpense.toFixed(2);
+    document.getElementById("SumOperatingExpense").value = OperatingTotal.toFixed(2);
     document.getElementById("TotalOperatingExpense").value = OperatingTotal.toFixed(2);
 
     // Call summary recalculation
