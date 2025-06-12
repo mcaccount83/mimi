@@ -79,7 +79,7 @@
                     <a class="btn bg-gradient-primary" href="{{ route('coordinators.coordpending') }}"><i class="fas fa-share mr-2" ></i>New Coordinators Pending</a>
                     {{-- <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Coordinator</a> --}}
                 @endif
-                @if ($assistConferenceCoordinatorCondition)
+                @if ($regionalCoordinatorCondition)
                     @if($checkBoxStatus == null)
                         <button class="btn bg-gradient-primary" onclick="startExport('coordinator', 'Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
                     @else

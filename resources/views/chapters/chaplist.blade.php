@@ -89,7 +89,7 @@
                         {{-- <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Chapter</a> --}}
                         <a class="btn bg-gradient-primary" href="{{ route('chapters.chaplistpending') }}"><i class="fas fa-share mr-2" ></i>New Chapters Pending</a>
                     @endif
-                    @if ($assistConferenceCoordinatorCondition)
+                    @if ($regionalCoordinatorCondition)
                         @if ($checkBoxStatus)
                             <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
                         @else
