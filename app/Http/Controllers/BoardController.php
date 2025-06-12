@@ -192,8 +192,6 @@ class BoardController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
-        $bdPositionId = $user['user_bdPositionId'];
-        $borDetails = $user['user_bdDetails'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -214,6 +212,15 @@ class BoardController extends Controller implements HasMiddleware
         $MVPDetails = $baseQuery['MVPDetails'];
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
+
+        if ($userType = 'coordinator'){
+            $bdPositionId = '1';
+            $borDetails = $PresDetails;
+        }
+        else {
+            $bdPositionId = $user['user_bdPositionId'];
+            $borDetails = $user['user_bdDetails'];
+        }
 
         $now = Carbon::now();
         $month = $now->month;
