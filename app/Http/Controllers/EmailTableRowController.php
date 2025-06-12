@@ -289,7 +289,6 @@ class EmailTableRowController extends Controller
             </tr>';
         }
 
-
         return $tableHtml;
     }
 
