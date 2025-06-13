@@ -483,18 +483,27 @@
             <div class="card-body text-center">
                     <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboardreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Board Eletion Report</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
+                <br>
+                  @if ($chDetails->documents->new_board_active != '1')
+                    <div class="d-flex justify-content-center align-items-start flex-wrap">
+                            <form method="POST" action="#" onsubmit="return validateBeforeSubmit(true)">
+                                @csrf
+                                @if ($chDetails->documents->new_board_submitted != 1)
+                                    <button type="submit" class="btn bg-gradient-primary mr-1"><i class="fas fa-mail-forward mr-2"></i>Submit</button>
+                                @else
+                                    <button type="submit" class="btn bg-gradient-primary mr-1"><i class="fas fa-save mr-2"></i>Save</button>
+                                @endif
+                            </form>
 
-                    @if ($chDetails->documents->new_board_active != '1')
-                        @if ($chDetails->documents->new_board_submitted != 1)
-                            <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateBeforeSubmit(true)"><i class="fas fa-mail-forward mr-2" ></i>Submit</button>
-                        @else
-                            <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateBeforeSubmit(true)"><i class="fas fa-save mr-2" ></i>Save</button>
-                        @endif
-                        @if ($chDetails->documents->new_board_submitted == '1' )
-                        <button type="button" id="board-active" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}'"><i class="fas fa-play mr-2" ></i>Ativate Board</button>
-                        @endif
+                            @if ($chDetails->documents->new_board_submitted == '1' && $PresDetails->first_name != null)
+                                <form action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to activate the board?');">
+                                    @csrf
+                                    <input type="hidden" name="board" value="active">
+                                    <button type="submit" class="btn bg-gradient-primary"><i class="fas fa-play mr-2"></i>Activate Board</button>
+                                </form>
+                            @endif
+                        </div>
                     @endif
-				</form>
             </div>
 
     </div>

@@ -442,14 +442,14 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Activate New Board Members
      */
-    public function activateBoard(Request $request, $chapter_id): RedirectResponse
+    public function activateBoard(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapter_id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $pcDetails = $baseQuery['pcDetails'];
         $stateShortName = $baseQuery['stateShortName'];
@@ -470,15 +470,15 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $status = 'fail'; // Default to 'fail'
 
-        $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $chapter_id)->get();
+        $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $id)->get();
 
         if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
             DB::beginTransaction();
             try {
-                $boardDetails = Boards::where('chapter_id', $chapter_id)->get();
+                $boardDetails = Boards::where('chapter_id', $id)->get();
 
                 if ($boardDetails && count($boardDetails) > 0) {
-                    $borDetails = Boards::with('user')->where('chapter_id', $chapter_id)->get();
+                    $borDetails = Boards::with('user')->where('chapter_id', $id)->get();
                     foreach ($borDetails as $record) {
                         $user_id = $record->user_id;
                         $userDetails = User::find($user_id);
@@ -488,7 +488,7 @@ class EOYReportController extends Controller implements HasMiddleware
                         $userDetails->save();
                     }
 
-                    Boards::where('chapter_id', $chapter_id)->delete();
+                    Boards::where('chapter_id', $id)->delete();
                 }
 
                 foreach ($BoardsIncomingDetails as $incomingRecord) {
@@ -521,7 +521,7 @@ class EOYReportController extends Controller implements HasMiddleware
                         'last_name' => $incomingRecord->last_name,
                         'email' => $incomingRecord->email,
                         'board_position_id' => $incomingRecord->board_position_id,
-                        'chapter_id' => $chapter_id,
+                        'chapter_id' => $id,
                         'street_address' => $incomingRecord->street_address,
                         'city' => $incomingRecord->city,
                         'state_id' => $incomingRecord->state_id,
@@ -533,11 +533,11 @@ class EOYReportController extends Controller implements HasMiddleware
                     ]);
                 }
 
-                $documents = Documents::find($chapter_id);
+                $documents = Documents::find($id);
                 $documents->new_board_active = 1;
                 $documents->save();
 
-                BoardsIncoming::where('chapter_id', $chapter_id)->delete();
+                BoardsIncoming::where('chapter_id', $id)->delete();
 
                 $mailData = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -560,7 +560,12 @@ class EOYReportController extends Controller implements HasMiddleware
             }
         }
 
-        return redirect()->back()->with('status', $status);
+       if ($status === 'success') {
+            return redirect()->back()->with('success', 'Board activation successful');
+        } else {
+            return redirect()->back()->with('fail', 'Board activation failed');
+        }
+
     }
 
     /**
@@ -591,24 +596,9 @@ class EOYReportController extends Controller implements HasMiddleware
 
         // Check if the board activation button was clicked
         if ($request->has('board') && $request->input('board') === 'active') {
-            $activationStatuses = [];
-
-            // Only activate if the board is submitted and not yet active
-            if ($chDetails->documents->new_board_submitted && ! $chDetails->documents->new_board_active) {
-                $status = $this->activateBoard($chDetails->id, $lastUpdatedBy);
-                $activationStatuses[$chDetails->id] = $status;
-            }
-
-            $successfulActivations = array_filter($activationStatuses, function ($status) {
-                return $status === 'success';
-            });
-
-            if (count($successfulActivations) > 0) {
-                return redirect()->to('/eoy/boardreport')->with('success', 'Board activated successfully');
-            } else {
-                return redirect()->to('/eoy/boardreport')->with('fail', 'Board activation failed');
-            }
-        }
+    // Just redirect to the activation route
+    return $this->activateBoard($request, $id);
+}
 
         $data = [
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
@@ -631,9 +621,9 @@ class EOYReportController extends Controller implements HasMiddleware
         if ($request->input('submit_type') == 'activate_board') {
             $status = $this->activateBoard($chapter_id, $lastUpdatedBy);
             if ($status == 'success') {
-                return redirect()->to('/eoy/boardreport')->with('success', 'Board Info has been successfully activated');
+                return redirect()->back()->with('success', 'Board Info has been successfully activated');
             } elseif ($status == 'fail') {
-                return redirect()->to('/eoy/boardreport')->with('fail', 'Something went wrong, Please try again.');
+                return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
             }
         }
 
