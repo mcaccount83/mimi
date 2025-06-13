@@ -42,59 +42,12 @@ class NewBoardActive extends Mailable implements ShouldQueue
          // Download the Google Drive file first
         $pdfContent = file_get_contents($this->pdfPath);
 
-        // Try different approaches based on environment
-        // if (app()->environment('local')) {
-        //     $logoPath = ltrim(config('settings.base_url'), '/') . 'images/logo-mc.png';
-        //     $logoContent = file_get_contents($logoPath);
-        // } else {
-        //     // For production, use the web URL
-        //     $logoUrl = ltrim(config('settings.app_url'), '/') . 'images/logo-mc.png';
-        //     $logoContent = file_get_contents($logoUrl);
-        // }
-
         return $this
             ->subject('Welcome to the Executive Board!')
             ->markdown('emails.chapter.newboardactive')
             ->attachData($pdfContent, 'OfficerPacket.pdf', [
                 'mime' => 'application/pdf',
             ]);
-            // ->attachData($logoContent, 'logo-mc.png', [
-            //     'mime' => 'image/png',
-            // ]);
     }
 
-//         // Download the Google Drive file first
-//         $content = file_get_contents($this->pdfPath);
-
-//    // For local files, use the filesystem path directly
-//     $logoPath = ltrim(config('settings.base_url'), '/') . 'images/logo-mc.png';
-
-//     // Check if it's a local environment
-//     if (app()->environment('local') || str_contains(config('app.url'), 'localhost')) {
-//         // Use direct file access for local
-//         if (file_exists($logoPath)) {
-//             $logoContent = file_get_contents($logoPath);
-//         } else {
-//             throw new \Exception("Logo file not found at: " . $logoPath);
-//         }
-//     } else {
-//         // Use HTTP request for live/production
-//         $logoUrl = ltrim(config('settings.app_url'), '/') . 'images/logo-mc.png';
-//         $logoContent = file_get_contents($logoUrl);
-//     }
-
-
-
-
-    //     return $this
-    //         ->subject('Welcome to the Executive Board!')
-    //         ->markdown('emails.chapter.newboardactive')
-    //         ->attachData($content, 'OfficerPacket.pdf', [
-    //             'mime' => 'application/pdf',
-    //         ])
-    //         ->attachData($logoContent, 'logo-mc.png', [
-    //             'mime' => 'image/png',
-    //         ]);
-
-    // }
 }
