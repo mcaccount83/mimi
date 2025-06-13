@@ -1,7 +1,7 @@
 @component('mail::message')
 
 <p><b>MOMS Club of {{ $mailData['chapterName'] }}:</b></p>
-<p>{{ $mailData['message'] }}</p>
+<p>{!! strip_tags($mailData['message']) !!}</p>
 
 <br>
 <p><strong>MCL</strong>,<br>
