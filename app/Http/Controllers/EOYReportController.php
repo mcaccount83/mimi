@@ -548,15 +548,6 @@ class EOYReportController extends Controller implements HasMiddleware
                     ]
                 );
 
-                // Add this before your Mail::to() call
-                Log::info('Attempting to send mail', [
-                    'chapter_id' => $chapter_id,
-                    'emailListChap' => $emailListChap,
-                    'emailListCoord' => $emailListCoord,
-                    'pdfPath' => $pdfPath,
-                    'mailData' => $mailData
-                ]);
-
                 Mail::to($emailListChap)
                     ->cc($emailListCoord)
                     ->queue(new NewBoardActive($mailData, $pdfPath));

@@ -1,6 +1,6 @@
 @component('mail::message')
 <center>
-    <img src="{{ config('settings.base_url') }}images/logo-mc.png" alt="MC" style="width: 125px;">
+<img src="cid:logo-mc.png" alt="MC" style="width: 125px;">
 </center>
 <br>
 <h1><center>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</center></h1>
