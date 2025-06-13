@@ -6,6 +6,7 @@ use App\Mail\EOYElectionReportReminder;
 use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
 use App\Mail\EOYReviewrAssigned;
+use App\Mail\NewBoardActive;
 use App\Models\Boards;
 use App\Models\Chapters;
 use App\Models\Coordinators;
@@ -13,6 +14,7 @@ use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\BoardsIncoming;
+use App\Models\Resources;
 use App\Models\State;
 use App\Models\User;
 use App\Models\Website;
@@ -21,6 +23,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -446,6 +449,25 @@ class EOYReportController extends Controller implements HasMiddleware
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapter_id);
+        $chDetails = $baseQuery['chDetails'];
+        $pcDetails = $baseQuery['pcDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $emailListChap = $baseQuery['emailListChap'];  // Full Board
+        $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+        $emailCC = $baseQuery['emailCC'];  // CC Email
+        $emailPC = $baseQuery['emailPC'];
+
+        // Calculate the fiscal year (current year - next year)
+        $currentYear = Carbon::now()->year;
+        $nextYear = $currentYear + 1;
+        $fiscalYear = $currentYear.'-'.$nextYear;
+
+        $resources = Resources::with('resourceCategory')->get();
+        $instructionsName = 'Officer Packet';
+        $matchingInstructions = $resources->where('name', $instructionsName)->first();
+        $pdfPath = 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path;
+
         $status = 'fail'; // Default to 'fail'
 
         $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $chapter_id)->get();
@@ -516,6 +538,28 @@ class EOYReportController extends Controller implements HasMiddleware
                 $documents->save();
 
                 BoardsIncoming::where('chapter_id', $chapter_id)->delete();
+
+                $mailData = array_merge(
+                    $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                    $this->baseMailDataController->getPCData($pcDetails),
+                    $this->baseMailDataController->getUserData($user),
+                    [
+                        'fiscalYear' => $fiscalYear,
+                    ]
+                );
+
+                // Add this before your Mail::to() call
+                Log::info('Attempting to send mail', [
+                    'chapter_id' => $chapter_id,
+                    'emailListChap' => $emailListChap,
+                    'emailListCoord' => $emailListCoord,
+                    'pdfPath' => $pdfPath,
+                    'mailData' => $mailData
+                ]);
+
+                Mail::to($emailListChap)
+                    ->cc($emailListCoord)
+                    ->queue(new NewBoardActive($mailData, $pdfPath));
 
                 DB::commit();
                 $status = 'success'; // Set status to success if everything goes well

@@ -4,8 +4,7 @@
 </center>
 <br>
 <h1><center>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</center></h1>
-<p><b><strong>Welcome to the {{$mailData['yearRange']}} Executive Board!</b></p>
-<br>
+<p><b><strong>Welcome to the {{$mailData['fiscalYear']}} Executive Board!</b></p>
 <p>Welcome, {{$mailData['chapterName']}}, {{$mailData['chapterState']}} board members! Congratulations on being elected to the executive board for your chapter. We hope you have a fantastic year in store. Read on for some tips and information that will help you have a successful year. We look forward to working with you!</p>
 <hr>
 <p><b>Officer Checklist</b></p>
@@ -21,12 +20,13 @@
 </ul>
 <hr>
 <p><b>Office Packet</b></p>
-<p>This year's Officer's Resource Packet is attached.</p>
+<p>You will find the Officer's Resource Packet is attached. The officer packet includes more details about a variety of topics including Party/Member Benefit Expenses, Geographic Boundaries, Sistering, Annual Budget, Ideas for Board Meeting Agendas and more.</p>
 <br>
 <hr>
 <p><b>MOMS Information Management Interface (MIMI)</b>
 <p>MIMI (MOMS Information Management Interface) is the database system for International MOMS Club. To access MIMI go to the following link:</p>
 <p><center><a href="https://momsclub.org/mimi/login">https://momsclub.org/mimi/login</a></center></p>
+<br>
 <p>You can log on with the e-mail address we have on file for you. If you are a new board member, your default password is: TempPass4You</p>
 <p>The chapter president will have access to all chapter information, including all board members. Other board members will have access to chapter information as well as their own details. (All board members have access to MIMI!).</p>
 <p>Things to check the first time you log in:</p>
@@ -40,17 +40,21 @@
     <li>You can log on to MIMI anytime. if you receive error messages or if you have any questions at all, please let your Primary Coordinator know!</li>
 </ul>
 <hr>
+<p><b>Coordinator Team</b></p>
+<p>All MOMS Club chapters have an International Coordinator assigned to help them. She is there for anything that you need! Any questions you have or good news you want to share -- talk to her, she loves to hear from you!</p>
+<p><center>{{ $mailData['pcName'] }}<br>
+                <a href="mailto:{{ $mailData['pcEmail'] }}">{{ $mailData['pcEmail'] }}</a></center></p>
+<br>
+<hr>
+<p><b>Chapter Resources</b></p>
+<p>Other resources including the Bylaws, Fact Sheets, Sample Files, Digital Logos, etc are available in MIMI.</p>
+<hr>
+<p><b>BoardList Forum</b></p>
+<p>The BoardList forum group will give you a chance to interact with other board members on chapter related topics. All board members are automatically added. BoardList is open from August through May.</p>
+<hr>
 <p><b>eLearning Portal</b></p>
 <p>Be sure to check out the MOMS Club eLearning site. We will continue to add more courses throughout the year.<br>
     https://momsclub.org/elearning/chapter-training</p>
-<hr>
-<p><b>Web Resources</b></p>
-<p>Other resources, including the Bylaws, Fact Sheets, Sample Files, Digital Logos, etc are available online.<br>
-    https://momsclub.org/mimi/board/resources</p>
-<hr>
-<p><b>BoardList Forum</b></p>
-<p>The BoardList forum group will give you a chance to interact with other board members on chapter related topics.<br>
-    https://groups.google.com/a/momsclub.org/g/2025-26boardlist</p>
 
 <br>
 <p><strong>MCL</strong>,<br>
