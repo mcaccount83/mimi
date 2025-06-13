@@ -24,8 +24,8 @@
 <br>
 <hr>
 <p><b>MOMS Information Management Interface (MIMI)</b>
-<p>MIMI (MOMS Information Management Interface) is the database system for International MOMS Club. To access MIMI go to the following link:</p>
-<p><center><a href="https://momsclub.org/mimi/login">https://momsclub.org/mimi/login</a></center></p>
+<p>MIMI (MOMS Information Management Interface) is the database system for International MOMS Club. To access MIMI go to the following link:<br>
+<center><a href="https://momsclub.org/mimi/login">https://momsclub.org/mimi/login</a></center></p>
 <br>
 <p>You can log on with the e-mail address we have on file for you. If you are a new board member, your default password is: TempPass4You</p>
 <p>The chapter president will have access to all chapter information, including all board members. Other board members will have access to chapter information as well as their own details. (All board members have access to MIMI!).</p>
@@ -41,8 +41,8 @@
 </ul>
 <hr>
 <p><b>Coordinator Team</b></p>
-<p>All MOMS Club chapters have an International Coordinator assigned to help them. She is there for anything that you need! Any questions you have or good news you want to share -- talk to her, she loves to hear from you!</p>
-<p><center>{{ $mailData['pcName'] }}<br>
+<p>All MOMS Club chapters have an International Coordinator assigned to help them. She is there for anything that you need! Any questions you have or good news you want to share -- talk to her, she loves to hear from you!<br>
+<center>{{ $mailData['pcName'] }}<br>
                 <a href="mailto:{{ $mailData['pcEmail'] }}">{{ $mailData['pcEmail'] }}</a></center></p>
 <br>
 <hr>
