@@ -20,24 +20,31 @@ class ChapterEIN extends Mailable implements ShouldQueue
 
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject('EIN Number Received')
-            ->replyTo($this->mailData['userEmail'])
-            ->markdown('emails.chapter.chapterein');
+        return new Envelope(
+            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
+            replyTo: [
+                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+            ],
+            subject: 'EIN Number Received',
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.chapter.chapterein',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }

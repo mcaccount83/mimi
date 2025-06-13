@@ -1,7 +1,5 @@
 @component('mail::message')
-<center>
-    <img src="{{ config('settings.base_url') }}images/logo-mc.png" alt="MC" style="width: 125px;">
-</center>
+<h1><center>Congratulations on your New Chapter!</center></h1>
 <br>
 <p>I'm super excited that you have decided to start a chapter. My name is {{ $mailData['userName'] }}, I'm the {{ $mailData['userPosition'] }} for your area and will be helping you with the initial setup of your chapter. Once we have your EIN you'll officially be a MOMS Club chapter and will start working with your Primary Coordinator to get the chapter growing in your area!</p>
 <p>Below are the steps that I'll be helping you work through. A Getting Started Guide (with the steps outlined below) as well as the EIN Application and Instructions are also attached for your reference.</p>

@@ -18,36 +18,44 @@ class NewBoardActive extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
-    public $mailData;
+     public $mailData;
 
     protected $pdfPath;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-
-         // Download the Google Drive file first
-        $pdfContent = file_get_contents($this->pdfPath);
-
-        return $this
-            ->subject('Welcome to the Executive Board!')
-            ->markdown('emails.chapter.newboardactive')
-            ->attachData($pdfContent, 'OfficerPacket.pdf', [
-                'mime' => 'application/pdf',
-            ]);
+        return new Envelope(
+            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
+            replyTo: [
+                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+            ],
+            subject: 'Welcome to the Executive Board!',
+        );
     }
 
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.chapter.newboardactive',
+        );
+    }
+
+    public function attachments(): array
+    {
+        // Download the Google Drive file first
+        $pdfContent = file_get_contents($this->pdfPath);
+
+        return [
+            Attachment::fromData(
+                fn() => $pdfContent,
+                'OfficerPacket.pdf'
+            )->withMime('application/pdf'),
+        ];
+    }
 }

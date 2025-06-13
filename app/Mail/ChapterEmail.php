@@ -20,24 +20,31 @@ class ChapterEmail extends Mailable implements ShouldQueue
 
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject("MOMS Club of {$this->mailData['chapterName']}, {$this->mailData['chapterState']} | {$this->mailData['subject']}")
-            ->replyTo($this->mailData['userEmail'])
-            ->markdown('emails.chapter.chapteremail');
+        return new Envelope(
+            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
+            replyTo: [
+                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+            ],
+            subject: "{$this->mailData['subject']} | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.chapter.chapteremail',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }
