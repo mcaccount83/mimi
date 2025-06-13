@@ -54,7 +54,7 @@ class NewBoardActive extends Mailable implements ShouldQueue
         }
     } else {
         // Use HTTP request for live/production
-        $logoUrl = config('app.url') . 'images/logo-mc.png';
+        $logoUrl = ltrim(config('settings.app_url'), '/') . 'images/logo-mc.png';
         $logoContent = file_get_contents($logoUrl);
     }
 
