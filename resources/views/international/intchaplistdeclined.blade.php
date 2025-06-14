@@ -25,6 +25,9 @@
                 <thead>
                   <tr>
                     <th>Details</th>
+                    @if ($userAdmin == 'Admin')
+                        <th>Delete</th>
+                    @endif
                     <th>Conf</th>
                     <th>State</th>
                     <th>Name</th>
@@ -37,6 +40,12 @@
 
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle"><a href="{{ url("/pendingchapterdetailsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                            @if ($userAdmin == 'Admin')
+                        <td class="text-center align-middle"><i class="fa fa-ban"
+                            onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
+                            style="cursor: pointer; color: #007bff;"></i>
+                        </td>
+                    @endif
                             <td>
                                 @if ($list->region->short_name != "None")
                                     {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -95,6 +104,87 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function showDeleteChapterModal(chapterId, chapterName, activeStatus) {
+    Swal.fire({
+        title: 'Chapter Deletion',
+        html: `
+            <p>This will remove the chapter "<strong>${chapterName}</strong>" and all board members from the database.</p>
+            <p>PLEASE USE CAUTION, this cannot be undone!!</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+            <input type="hidden" id="active_status" name="active_status" value="${activeStatus}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+       preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            const activeStatus = Swal.getPopup().querySelector('#active_status').value;
+
+            return {
+                chapter_id: chapterId,
+                active_status: activeStatus
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                url: '{{ route('admin.updatechapterdelete') }}',
+                type: 'POST',
+                data: {
+                    chapterid: data.chapter_id,
+                    activeStatus: data.active_status,  // Add this line
+                    _token: '{{ csrf_token() }}'
+                },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Chapter successfully deleted.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
 
 </script>
 @endsection

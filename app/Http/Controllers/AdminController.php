@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Models\AdminEmail;
 use App\Models\Boards;
+use App\Models\BoardsDisbanded;
+use App\Models\BoardsPending;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\Coordinators;
+use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
@@ -1044,4 +1047,58 @@ class AdminController extends Controller implements HasMiddleware
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('admin.adminemail')]);
         }
     }
+
+
+
+    /**
+     * Delete Chapter/Board from Database -- cannot be undone!
+     */
+    public function updateChapterDelete(Request $request): JsonResponse
+{
+    $input = $request->all();
+    $chapterid = $input['chapterid'];
+    $activeStatus = $input['activeStatus'];
+
+    try {
+        DB::beginTransaction();
+
+        // Delete chapter and related data
+        Chapters::where('id', $chapterid)->delete();
+        Documents::where('chapter_id', $chapterid)->delete();
+        FinancialReport::where('chapter_id', $chapterid)->delete();
+
+        // Get board details based on status
+        $boardDetails = collect(); // Initialize empty collection
+
+        if ($activeStatus == 'Active') {
+            $boardDetails = Boards::where('chapter_id', $chapterid)->get();
+            Boards::where('chapter_id', $chapterid)->delete(); // Delete from Boards table
+        }
+        elseif ($activeStatus == 'Zapped') {
+            $boardDetails = BoardsDisbanded::where('chapter_id', $chapterid)->get();
+            BoardsDisbanded::where('chapter_id', $chapterid)->delete(); // Delete from BoardsDisbanding table
+        }
+        elseif ($activeStatus == 'Pending' || $activeStatus == 'Not Approved') {
+            $boardDetails = BoardsPending::where('chapter_id', $chapterid)->get();
+            BoardsPending::where('chapter_id', $chapterid)->delete(); // Delete from BoardsPending table
+        }
+
+        // Delete users and subscriptions if board members exist
+        if ($boardDetails->isNotEmpty()) {
+            $userIds = $boardDetails->pluck('user_id')->toArray();
+            User::whereIn('id', $userIds)->delete();
+            ForumCategorySubscription::whereIn('user_id', $userIds)->delete();
+        }
+
+        DB::commit();
+
+        return response()->json(['success' => 'Chapter successfully deleted.']);
+    } catch (\Exception $e) {
+        DB::rollback();
+        Log::error($e);
+
+        return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
+    }
+}
+
 }
