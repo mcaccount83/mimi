@@ -42,7 +42,7 @@
                      @if ($userAdmin == 'Admin')
                         <td class="text-center align-middle"><i class="fa fa-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
-                            style="cursor: pointer; color: #007bff;"></i>
+                            style="cursor: pointer; color: #dc3545;"></i>
                         </td>
                     @endif
                     <td>

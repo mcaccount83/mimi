@@ -43,7 +43,7 @@
                     @if ($userAdmin == 'Admin')
                         <td class="text-center align-middle"><i class="fa fa-ban"
                             onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
-                            style="cursor: pointer; color: #007bff;"></i>
+                            style="cursor: pointer; color: #dc3545;"></i>
                         </td>
                     @endif
                     <td>
