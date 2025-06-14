@@ -112,10 +112,12 @@
                     <a href="{{ route('eoyreports.eoyboardreportreminder') }}" onclick="return confirmSendReminder();">><button class="btn bg-gradient-primary"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Board Election Reminders</button></a>
 				@endif
                 @if ($assistConferenceCoordinatorCondition)
-                    <form action="{{ route('eoyreports.eoyboardreport') }}" method="GET" onsubmit="return confirm('This action will activate all received boards. \n\nAre you sure you want to activate all received boards?');">
-                        <input type="hidden" name="board" value="active">
-                        <button type="submit" class="btn bg-gradient-primary ml-1"><i class="fas fa-play mr-2"></i>Make Received Boards Active</button>
-                    </form>
+                    <form id="activateAllBoardsForm" action="{{ route('eoyreports.eoyboardreport') }}" method="GET">
+    <input type="hidden" name="board" value="active">
+    <button type="button" class="btn bg-gradient-primary ml-1" onclick="confirmActivateAllBoards()">
+        <i class="fas fa-play mr-2"></i>Make Received Boards Active
+    </button>
+</form>
                 @endif
                 </div>
              </div>
@@ -214,6 +216,23 @@ function showReviewer() {
 function confirmSendReminder() {
         return confirm('This action will send reminders to all chapters who have not submitted their Board Election Report. \n\nAre you sure you want to send the Board Elecion Report Reminders?');
     }
+
+    function confirmActivateAllBoards() {
+    Swal.fire({
+        title: 'Activate All Boards?',
+        html: 'This action will activate all received boards.<br><br>Are you sure you want to activate all received boards?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Activate All!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('activateAllBoardsForm').submit();
+        }
+    });
+}
 
 
 </script>

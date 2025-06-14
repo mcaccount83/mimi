@@ -496,11 +496,13 @@
                             </form>
 
                             @if ($chDetails->documents->new_board_submitted == '1' && $PresDetails->first_name != null)
-                            <form action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to activate the board?');">
-                                @csrf
-                                <input type="hidden" name="board" value="active">
-                                <button type="submit" class="btn bg-gradient-primary"><i class="fas fa-play mr-2"></i>Activate Board</button>
-                            </form>
+                           <form id="activateSingleBoardForm" action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST">
+    @csrf
+    <input type="hidden" name="board" value="active">
+    <button type="button" class="btn bg-gradient-primary" onclick="confirmActivateSingleBoard()">
+        <i class="fas fa-play mr-2"></i>Activate Board
+    </button>
+</form>
                             @endif
                         </div>
                     @endif
@@ -681,6 +683,23 @@ function validateBeforeSubmit() {
     }
 
     return true;
+}
+
+function confirmActivateSingleBoard() {
+    Swal.fire({
+        title: 'Activate Board?',
+        text: 'Are you sure you want to activate this board?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Activate!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('activateSingleBoardForm').submit();
+        }
+    });
 }
 
 </script>

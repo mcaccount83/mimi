@@ -95,8 +95,12 @@ class BaseChapterController extends Controller
         $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';
         $isIntReregPage = request()->route()->getName() === 'international.intregistration';
 
-        if ($queryType === 'zapped' || 'zapped_international') {
+        if ($queryType === 'zapped' || $queryType === 'zapped_international') {
             return ['query' => $baseQuery->orderByDesc('chapters.zap_date'), 'checkBox3Status' => ''];
+        }
+
+        if ($queryType === 'pending' || $queryType === 'not_approved' || $queryType === 'pending_international' || $queryType === 'not_approved_international') {
+            return ['query' => $baseQuery->orderByDesc('chapters.created_at'), 'checkBox3Status' => ''];
         }
 
         if ($isIntReregPage) {
@@ -369,7 +373,7 @@ public function getZappedInternationalBaseQuerySinceDate($coorId, $zapDateAfter)
             'coorId' => $coorId,
             'inquiriesConditions' => false,
             'conditions' => false,
-            'queryType' => 'zapped',
+            'queryType' => 'zapped_international',
         ]);
     }
 
