@@ -124,6 +124,7 @@ Route::post('/admin/updategoogledrive', [AdminController::class, 'updateGoogleDr
 Route::get('/admin/adminemail', [AdminController::class, 'showAdminEmail'])->name('admin.adminemail');
 Route::post('/admin/updateadminemail', [AdminController::class, 'updateAdminEmail'])->name('admin.updateadminemail');
 Route::post('/admin/updatechapterdelete', [AdminController::class, 'updateChapterDelete'])->name('admin.updatechapterdelete');
+Route::post('/admin/updatecoordinatordelete', [AdminController::class, 'updateCoordinatorDelete'])->name('admin.updatecoordinatordelete');
 
 // Admin Controller Routes...Coordinator Login Required
 Route::get('/adminreports/useradmin', [AdminController::class, 'showUserAdmin'])->name('adminreports.useradmin');

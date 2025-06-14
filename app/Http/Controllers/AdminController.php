@@ -10,6 +10,9 @@ use App\Models\BoardsPending;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\Coordinators;
+use App\Models\CoordinatorApplication;
+use App\Models\CoordinatorRecognition;
+use App\Models\CoordinatorTree;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
@@ -1048,57 +1051,97 @@ class AdminController extends Controller implements HasMiddleware
         }
     }
 
-
-
     /**
      * Delete Chapter/Board from Database -- cannot be undone!
      */
     public function updateChapterDelete(Request $request): JsonResponse
-{
-    $input = $request->all();
-    $chapterid = $input['chapterid'];
-    $activeStatus = $input['activeStatus'];
+    {
+        $input = $request->all();
+        $chapterid = $input['chapterid'];
+        $activeStatus = $input['activeStatus'];
 
-    try {
-        DB::beginTransaction();
+        try {
+            DB::beginTransaction();
 
-        // Delete chapter and related data
-        Chapters::where('id', $chapterid)->delete();
-        Documents::where('chapter_id', $chapterid)->delete();
-        FinancialReport::where('chapter_id', $chapterid)->delete();
+            // Delete chapter and related data
+            Chapters::where('id', $chapterid)->delete();
+            Documents::where('chapter_id', $chapterid)->delete();
+            FinancialReport::where('chapter_id', $chapterid)->delete();
 
-        // Get board details based on status
-        $boardDetails = collect(); // Initialize empty collection
+            // Get board details based on status
+            $boardDetails = collect(); // Initialize empty collection
 
-        if ($activeStatus == 'Active') {
-            $boardDetails = Boards::where('chapter_id', $chapterid)->get();
-            Boards::where('chapter_id', $chapterid)->delete(); // Delete from Boards table
+            if ($activeStatus == 'Active') {
+                $boardDetails = Boards::where('chapter_id', $chapterid)->get();
+                Boards::where('chapter_id', $chapterid)->delete(); // Delete from Boards table
+            }
+            elseif ($activeStatus == 'Zapped') {
+                $boardDetails = BoardsDisbanded::where('chapter_id', $chapterid)->get();
+                BoardsDisbanded::where('chapter_id', $chapterid)->delete(); // Delete from BoardsDisbanding table
+            }
+            elseif ($activeStatus == 'Pending' || $activeStatus == 'Not Approved') {
+                $boardDetails = BoardsPending::where('chapter_id', $chapterid)->get();
+                BoardsPending::where('chapter_id', $chapterid)->delete(); // Delete from BoardsPending table
+            }
+
+            // Delete users and subscriptions if board members exist
+            if ($boardDetails->isNotEmpty()) {
+                $userIds = $boardDetails->pluck('user_id')->toArray();
+                User::whereIn('id', $userIds)->delete();
+                ForumCategorySubscription::whereIn('user_id', $userIds)->delete();
+            }
+
+            DB::commit();
+
+            return response()->json(['success' => 'Chapter successfully deleted.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         }
-        elseif ($activeStatus == 'Zapped') {
-            $boardDetails = BoardsDisbanded::where('chapter_id', $chapterid)->get();
-            BoardsDisbanded::where('chapter_id', $chapterid)->delete(); // Delete from BoardsDisbanding table
-        }
-        elseif ($activeStatus == 'Pending' || $activeStatus == 'Not Approved') {
-            $boardDetails = BoardsPending::where('chapter_id', $chapterid)->get();
-            BoardsPending::where('chapter_id', $chapterid)->delete(); // Delete from BoardsPending table
-        }
-
-        // Delete users and subscriptions if board members exist
-        if ($boardDetails->isNotEmpty()) {
-            $userIds = $boardDetails->pluck('user_id')->toArray();
-            User::whereIn('id', $userIds)->delete();
-            ForumCategorySubscription::whereIn('user_id', $userIds)->delete();
-        }
-
-        DB::commit();
-
-        return response()->json(['success' => 'Chapter successfully deleted.']);
-    } catch (\Exception $e) {
-        DB::rollback();
-        Log::error($e);
-
-        return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
     }
-}
 
+    /**
+     * Delete Coordinator from Database -- cannot be undone!
+     */
+    public function updateCoordinatorDelete(Request $request): JsonResponse
+    {
+        $input = $request->all();
+        $coordid = $input['coordid'];
+        // Note: You're not using activeStatus in this function, so you might not need it
+
+        try {
+            DB::beginTransaction();
+
+            // Delete coordinator and related data
+            CoordinatorApplication::where('coordinator_id', $coordid)->delete();
+            CoordinatorRecognition::where('coordinator_id', $coordid)->delete();
+            CoordinatorTree::where('coordinator_id', $coordid)->delete();
+
+            // Get coordinator details BEFORE deleting the coordinator record
+            $coordDetails = Coordinators::where('id', $coordid)->first(); // Use first() instead of get()
+
+            // Get the user_id before deleting the coordinator
+            $userId = $coordDetails->user_id;
+
+            // Delete the coordinator record
+            Coordinators::where('id', $coordid)->delete();
+
+            // Delete user and related subscriptions
+            if ($userId) {
+                User::where('id', $userId)->delete(); // Use where() instead of whereIn() for single ID
+                ForumCategorySubscription::where('user_id', $userId)->delete(); // Use where() instead of whereIn()
+            }
+
+            DB::commit();
+
+            return response()->json(['success' => 'Coordinator successfully deleted.']); // Fixed message
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
+        }
+    }
 }

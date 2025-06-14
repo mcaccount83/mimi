@@ -25,6 +25,9 @@
                 <thead>
                   <tr>
                     <th>Details</th>
+                    @if ($userAdmin == 'Admin')
+                        <th>Delete</th>
+                    @endif
                     <th>Conf</th>
                     <th>Coordinator Name</th>
 					<th>Display Position</th>
@@ -37,6 +40,12 @@
                   @foreach($coordinatorList as $list)
                     <tr>
                     <td class="text-center align-middle"><a href="{{ url("/coordapplication/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    @if ($userAdmin == 'Admin')
+                        <td class="text-center align-middle"><i class="fa fa-ban"
+                            onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
+                            style="cursor: pointer; color: #007bff;"></i>
+                        </td>
+                    @endif
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -288,6 +297,87 @@ function showChapterSetupModalOLD() {
                                 }
                             }).then(() => {
                                 location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showDeleteCoordModal(coordId, firstName, lastName, activeStatus) {
+    Swal.fire({
+        title: 'Coordinator Deletion', // Changed from "Chapter Deletion"
+        html: `
+            <p>This will remove the coordinator "<strong>${firstName} ${lastName}</strong>" from the database.</p>
+            <p>PLEASE USE CAUTION, this cannot be undone!!</p>
+            <input type="hidden" id="coord_id" name="coord_id" value="${coordId}">
+            <input type="hidden" id="active_status" name="active_status" value="${activeStatus}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const coordId = Swal.getPopup().querySelector('#coord_id').value;
+            const activeStatus = Swal.getPopup().querySelector('#active_status').value;
+
+            return {
+                coord_id: coordId,
+                active_status: activeStatus
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('admin.updatecoordinatordelete') }}',
+                        type: 'POST',
+                        data: {
+                            coordid: data.coord_id,
+                            activeStatus: data.active_status, // Add this line
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Coordinator successfully deleted.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
                             });
                         },
                         error: function(jqXHR, exception) {
