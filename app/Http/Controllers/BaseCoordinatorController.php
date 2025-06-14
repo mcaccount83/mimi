@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AdminRole;
 use App\Models\Conference;
+use App\Models\CoordinatorApplication;
 use App\Models\CoordinatorPosition;
 use App\Models\Coordinators;
 use App\Models\Month;
@@ -52,7 +53,7 @@ class BaseCoordinatorController extends Controller
         if ($activeStatus == 2 || $activeStatus == 3) {
             return $query->with([
                 'state', 'conference', 'region', 'displayPosition', 'mimiPosition',
-                'secondaryPosition', 'birthdayMonth', 'recognition'
+                'secondaryPosition', 'birthdayMonth', 'recognition', 'application'
             ]);
         } else {
             // For active (1) or zapped (0), use the regular Boards table
@@ -62,8 +63,6 @@ class BaseCoordinatorController extends Controller
             ]);
         }
 
-        // return Coordinators::with(['state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth', 'recognition'])
-        //     ->where('active_status', $cdIsActive);
     }
 
     /**
@@ -74,8 +73,15 @@ class BaseCoordinatorController extends Controller
         $isBirthdayPage = request()->route()->getName() === 'coordreports.coordrptbirthdays';
         $isUtilizationPage = request()->route()->getName() === 'coordreports.coordrptvolutilization';
 
-        if ($queryType === 'retired' || 'retired_international') {
+        if ($queryType === 'retired' || $queryType === 'retired_international') {
             return ['query' => $baseQuery->orderByDesc('coordinators.zapped_date'), 'checkBoxStatus' => ''];
+        }
+
+         if ($queryType === 'pending' || $queryType === 'not_approved' || $queryType === 'pending_international' || $queryType === 'not_approved_international') {
+            return ['query' => $baseQuery->orderByDesc(CoordinatorApplication::select('created_at')
+                    ->whereColumn('coordinator_application.coordinator_id', 'coordinators.id')
+                    ->limit(1)),
+                    'checkBoxStatus' => ''];
         }
 
         if ($isBirthdayPage) {
