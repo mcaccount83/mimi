@@ -54,7 +54,7 @@ class NewBoardActive extends Mailable implements ShouldQueue
         return [
             Attachment::fromData(
                 fn() => $pdfContent,
-                'OfficerPacket.pdf'
+                $this->mailData['fiscalYear'].'_OfficerPacket.pdf'
             )->withMime('application/pdf'),
         ];
     }
