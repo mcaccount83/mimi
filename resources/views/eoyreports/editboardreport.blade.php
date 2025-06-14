@@ -496,16 +496,15 @@
                             </form>
 
                             @if ($chDetails->documents->new_board_submitted == '1' && $PresDetails->first_name != null)
-                                <form action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to activate the board?');">
-                                    @csrf
-                                    <input type="hidden" name="board" value="active">
-                                    <button type="submit" class="btn bg-gradient-primary"><i class="fas fa-play mr-2"></i>Activate Board</button>
-                                </form>
+                            <form action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to activate the board?');">
+                                @csrf
+                                <input type="hidden" name="board" value="active">
+                                <button type="submit" class="btn bg-gradient-primary"><i class="fas fa-play mr-2"></i>Activate Board</button>
+                            </form>
                             @endif
                         </div>
                     @endif
             </div>
-
     </div>
     <!-- /.container- -->
 @endsection

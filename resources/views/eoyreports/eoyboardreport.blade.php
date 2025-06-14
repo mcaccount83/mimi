@@ -106,12 +106,18 @@
                 </div>
             </div>
                 <div class="card-body text-center">
+                                        <div class="d-flex justify-content-center align-items-start flex-wrap">
+
 				@if ($regionalCoordinatorCondition)
                     <a href="{{ route('eoyreports.eoyboardreportreminder') }}" onclick="return confirmSendReminder();">><button class="btn bg-gradient-primary"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Board Election Reminders</button></a>
 				@endif
                 @if ($assistConferenceCoordinatorCondition)
-                    <button type="button" id="board-active" class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-play" ></i>&nbsp;&nbsp;&nbsp;Make Received Boards Active</button>
-				@endif
+                    <form action="{{ route('eoyreports.eoyboardreport') }}" method="GET" onsubmit="return confirm('This action will activate all received boards. \n\nAre you sure you want to activate all received boards?');">
+                        <input type="hidden" name="board" value="active">
+                        <button type="submit" class="btn bg-gradient-primary ml-1"><i class="fas fa-play mr-2"></i>Make Received Boards Active</button>
+                    </form>
+                @endif
+                </div>
              </div>
            </div>
           <!-- /.box -->
