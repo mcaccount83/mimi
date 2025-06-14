@@ -74,7 +74,7 @@ class BaseCoordinatorController extends Controller
         $isBirthdayPage = request()->route()->getName() === 'coordreports.coordrptbirthdays';
         $isUtilizationPage = request()->route()->getName() === 'coordreports.coordrptvolutilization';
 
-        if ($queryType === 'retired') {
+        if ($queryType === 'retired' || 'retired_international') {
             return ['query' => $baseQuery->orderByDesc('coordinators.zapped_date'), 'checkBoxStatus' => ''];
         }
 
@@ -301,7 +301,7 @@ class BaseCoordinatorController extends Controller
             'coorId' => $coorId,
             'treeConditions' => false,
             'conditions' => false,
-            'queryType' => 'international',
+            'queryType' => 'retired_international',
         ]);
     }
 
