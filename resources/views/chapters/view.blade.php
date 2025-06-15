@@ -657,9 +657,9 @@
                                         <br>
                                         {{$AVPDetails->street_address}}
                                         <br>
-                                        {{$AVPDetails->city}},{{$AVPDetails->state->state_short_name}}&nbsp;{{$AVPDetails->zip}}
+                                        {{$AVPDetails->city}},{{$AVPDetails->state?->state_short_name}}&nbsp;{{$AVPDetails->zip}}
                                         <br>
-                                        {{$AVPDetails->country->short_name}}
+                                        {{$AVPDetails->country?->short_name}}
                                     </div>
                                     <div class="col-md-6">
                                     </div>
@@ -705,9 +705,9 @@
                                         <br>
                                         {{$MVPDetails->street_address}}
                                         <br>
-                                        {{$MVPDetails->city}},{{$MVPDetails->state->state_short_name}}&nbsp;{{$MVPDetails->zip}}
+                                        {{$MVPDetails->city}},{{$MVPDetails->state?->state_short_name}}&nbsp;{{$MVPDetails->zip}}
                                         <br>
-                                        {{$MVPDetails->country->short_name}}
+                                        {{$MVPDetails->country?->short_name}}
                                     </div>
                                     <div class="col-md-6">
                                     </div>
@@ -753,9 +753,9 @@
                                     <br>
                                     {{$TRSDetails->street_address}}
                                     <br>
-                                    {{$TRSDetails->city}},{{$TRSDetails->state->state_short_name}}&nbsp;{{$TRSDetails->zip}}
+                                    {{$TRSDetails->city}},{{$TRSDetails->state?->state_short_name}}&nbsp;{{$TRSDetails->zip}}
                                     <br>
-                                        {{$TRSDetails->country->short_name}}
+                                        {{$TRSDetails->country?->short_name}}
                                 </div>
                                 <div class="col-md-6">
                                 </div>
@@ -804,9 +804,9 @@
                                 <br>
                                 {{$SECDetails->street_address}}
                                 <br>
-                                {{$SECDetails->city}},{{$SECDetails->state->state_short_name}}&nbsp;{{$SECDetails->zip}}
+                                {{$SECDetails->city}},{{$SECDetails->state?->state_short_name}}&nbsp;{{$SECDetails->zip}}
                                 <br>
-                                        {{$SECDetails->country->short_name}}
+                                        {{$SECDetails->country?->short_name}}
                             </div>
                             <div class="col-md-6">
                                 @php
