@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Mail\BigSisterWelcome;
 use App\Mail\CoordinatorRetireAdmin;
+use App\Mail\ChaptersPrimaryCoordinatorChange;
+use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
 use App\Models\Chapters;
 use App\Models\CoordinatorRecognition;
 use App\Models\Coordinators;
@@ -35,6 +37,8 @@ class CoordinatorController extends Controller implements HasMiddleware
 
     protected $positionConditionsService;
 
+        protected $baseChapterController;
+
     protected $baseCoordinatorController;
 
     protected $forumSubscriptionController;
@@ -47,10 +51,11 @@ class CoordinatorController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController,
         PositionConditionsService $positionConditionsService, BaseMailDataController $baseMailDataController, EmailController $emailController,
-        EmailTableController $emailTableController)
+        EmailTableController $emailTableController, BaseChapterController $baseChapterController)
 
     {
         $this->userController = $userController;
+        $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
         $this->forumSubscriptionController = $forumSubscriptionController;
         $this->positionConditionsService = $positionConditionsService;
@@ -878,42 +883,84 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Reassign Chapter
      */
-    public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $check_changed = false)
-    {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+   public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $check_changed = false)
+{
+    $user = User::find($request->user()->id);
+    $userId = $user->id;
 
-        $cdDetailsUser = $user->coordinator;
-        $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+    $cdDetailsUser = $user->coordinator;
+    $cdIdUser = $cdDetailsUser->id;
+    $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
-        if ($check_changed) {
-            $checkPrimaryIdArr = Chapters::find($chapter_id);
-            $current_primary = $checkPrimaryIdArr->primary_coordinator_id;
-            if ($current_primary == $coordinator_id) {
-                return true;
-            }
+    if ($check_changed) {
+        $checkPrimaryIdArr = Chapters::find($chapter_id);
+        $current_primary = $checkPrimaryIdArr->primary_coordinator_id;
+        if ($current_primary == $coordinator_id) {
+            return true;
         }
-
-        $chapter = Chapters::find($chapter_id);
-
-        DB::beginTransaction();
-        try {
-            $chapter->primary_coordinator_id = $coordinator_id;
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
-
-            $chapter->save();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
-            return false;
-        }
-
     }
+
+    $chapter = Chapters::find($chapter_id);
+
+    // Store the old primary coordinator ID BEFORE updating
+    $oldPrimaryCoordinatorId = $chapter->primary_coordinator_id;
+
+    DB::beginTransaction();
+    try {
+        $chapter->primary_coordinator_id = $coordinator_id;
+        $chapter->last_updated_by = $lastUpdatedBy;
+        $chapter->last_updated_date = date('Y-m-d H:i:s');
+
+        $chapter->save();
+
+        // PC Change Notification - Check if primary coordinator actually changed
+        if ($oldPrimaryCoordinatorId != $coordinator_id) {
+
+            // Get updated chapter details using your base controller
+            $baseQueryUpd = $this->baseChapterController->getChapterDetails($chapter_id);
+            $chDetailsUpd = $baseQueryUpd['chDetails'];
+            $stateShortName = $baseQueryUpd['stateShortName'];
+            $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
+            $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
+            $pcEmail = $pcDetailsUpd->email;  // PC Email
+
+            // Get President details
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapter_id);
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+
+            // Build mail data using your base controllers
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
+                $this->baseMailDataController->getPresData($PresDetails),
+                $this->baseMailDataController->getPCUpdatedData($pcDetailsUpd)
+            );
+
+            $mailTable = $this->emailTableController->createPresidentEmailTable($mailData);
+            $mailTablePC = $this->emailTableController->createPrimaryCoordEmailTable($mailData);
+
+            $mailData = array_merge($mailData, [
+                'mailTable' => $mailTable,
+                'mailTablePC' => $mailTablePC,
+            ]);
+
+            // Send notifications
+            Mail::to($emailListChap)
+                ->queue(new ChaptersPrimaryCoordinatorChange($mailData));
+
+            Mail::to($pcEmail)
+                ->queue(new ChaptersPrimaryCoordinatorChangePCNotice($mailData));
+        }
+
+        DB::commit();
+        return true; // Add success return
+
+    } catch (\Exception $e) {
+        DB::rollback();  // Rollback Transaction
+        Log::error($e);  // Log the error
+
+        return false;
+    }
+}
 
     /**
      * Reassign Coordinator
