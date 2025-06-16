@@ -129,16 +129,18 @@ class BaseMailDataController extends Controller
     public function getRCData($rcDetails)
     {
         return [
-            'pcEmail' => $rcDetails->email,
-            'pcName' => $rcDetails->first_name.' '.$rcDetails->last_name,
+            'rcEmail' => $rcDetails->email,
+            'rcName' => $rcDetails->first_name.' '.$rcDetails->last_name,
+            // 'rcPosition' => $rcDetails->position->position,
         ];
     }
 
      public function getCDData($cdDetails)
     {
         return [
-            'pcEmail' => $cdDetails->email,
-            'pcName' => $cdDetails->first_name.' '.$cdDetails->last_name,
+            'cdEmail' => $cdDetails->email,
+            'cdName' => $cdDetails->first_name.' '.$cdDetails->last_name,
+            // 'cdPosition' => $cdDetails->position->position,
         ];
     }
 

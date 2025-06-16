@@ -36,7 +36,7 @@ class MentoringCoordinatorChange extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject("Primary Coordinator Change | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
+            ->subject("Mentoring Coordinator Change")
             ->markdown('emails.coordinator.mentoringcoordcdchangenotice');
     }
 }

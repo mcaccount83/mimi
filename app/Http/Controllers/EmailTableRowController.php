@@ -62,11 +62,11 @@ class EmailTableRowController extends Controller
         </tr>';
         $tableHtml .= '<tr>
             <td style="'.$cellLeftStyle.'">Name</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['rcNameUpd'].'</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['rcName'].'</td>
         </tr>';
         $tableHtml .= '<tr>
             <td style="'.$cellLeftStyle.'">Email</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['rcEmailUpd'].'</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['rcEmail'].'</td>
         </tr>';
 
         return $tableHtml;
