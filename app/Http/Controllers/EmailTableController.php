@@ -97,6 +97,38 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
+    public function createMentoringCoordEmailTable($mailData)
+    {
+        $cellStyle = 'text-align: center; padding: 6px;';
+        $cellLeftStyle = 'padding: 6px;';
+        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+
+        $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+            <tbody>';
+
+        $tableHtml = $this->emailTableRowController->createMentoringCoordEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+
+        $tableHtml .= '</tbody></table>';
+
+        return $tableHtml;
+    }
+
+    public function createCoordEmailTable($mailData)
+    {
+        $cellStyle = 'text-align: center; padding: 6px;';
+        $cellLeftStyle = 'padding: 6px;';
+        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+
+        $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+            <tbody>';
+
+        $tableHtml = $this->emailTableRowController->createCoordEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml);
+
+        $tableHtml .= '</tbody></table>';
+
+        return $tableHtml;
+    }
+
     public function createNewCoordinatorApprovedTable($mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';

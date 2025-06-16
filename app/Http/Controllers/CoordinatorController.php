@@ -6,6 +6,8 @@ use App\Mail\BigSisterWelcome;
 use App\Mail\CoordinatorRetireAdmin;
 use App\Mail\ChaptersPrimaryCoordinatorChange;
 use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
+use App\Mail\MentoringCoordinatorChange;
+use App\Mail\MentoringCoordinatorChangeRCNotice;
 use App\Models\Chapters;
 use App\Models\CoordinatorRecognition;
 use App\Models\Coordinators;
@@ -1019,6 +1021,41 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordTree = CoordinatorTree::where('coordinator_id', $coordinator_id)
                 ->update($treeData);
 
+                // RC Change Notification - Check if mentoring coordinator actually changed
+            // if ($current_report != $new_coordinator_id) {
+
+            //     // Get updated coorinator details using your base controller
+            //     $baseQueryUpd = $this->baseCoordinatorController->getCoordinatorDetails($coordinator_id);
+            //     $cdDetailsUpd = $baseQueryUpd['cdDetails'];
+            //     $cdEmail = $cdDetailsUpd->email;
+
+            //     // Get updated coorinator details using your base controller
+            //     $baseQueryMentor = $this->baseCoordinatorController->getCoordinatorDetails($new_coordinator_id);
+            //     $rcDetails = $baseQueryMentor['cdDetails'];
+            //     $rcEmail = $rcDetails->email;
+
+            //     // Build mail data using your base controllers
+            //     $mailData = array_merge(
+            //         $this->baseMailDataController->getRCData($rcDetails),
+            //         $this->baseMailDataController->getCDData($cdDetailsUpd),
+            //     );
+
+            //     $mailTable = $this->emailTableController->createMentoringCoordEmailTable($mailData);
+            //     $mailTableRC = $this->emailTableController->createCoordEmailTable($mailData);
+
+            //     $mailData = array_merge($mailData, [
+            //         'mailTable' => $mailTable,
+            //         'mailTableRC' => $mailTableRC,
+            //     ]);
+
+            //     // Send notifications
+            //     Mail::to($cdEmail)
+            //         ->queue(new MentoringCoordinatorChange($mailData));
+
+            //     Mail::to($rcEmail)
+            //         ->queue(new MentoringCoordinatorChangeRCNotice($mailData));
+            // }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
@@ -1125,7 +1162,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             return to_route('coordinators.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
         }
 
-        return to_route('coordinators.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
+        return to_route('coordinators.view', ['id' => $id])->with('success', 'Coordinator Details have been updated');
     }
 
     /**

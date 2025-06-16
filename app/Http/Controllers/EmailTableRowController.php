@@ -52,6 +52,47 @@ class EmailTableRowController extends Controller
         return $tableHtml;
     }
 
+    /**
+     * Create Rows for Mentoring Coord Email
+     */
+    public function createMentoringCoordEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    {
+        $tableHtml .= '<tr>
+            <td colspan="2" style="'.$headerStyle.'">Mentoring Coordinator</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Name</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['rcNameUpd'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Email</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['rcEmailUpd'].'</td>
+        </tr>';
+
+        return $tableHtml;
+    }
+
+    /**
+     * Create Rows for Mentoring Coord Email
+     */
+    public function createCoordEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    {
+        $tableHtml .= '<tr>
+            <td colspan="2" style="'.$headerStyle.'">Coordinator Details</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Name</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['cdName'].'</td>
+        </tr>';
+        $tableHtml .= '<tr>
+            <td style="'.$cellLeftStyle.'">Email</td>
+            <td style="'.$cellLeftStyle.'">'.$mailData['cdEmail'].'</td>
+        </tr>';
+
+        return $tableHtml;
+    }
+
+
 
     /**
      * Create Rows for President Email
