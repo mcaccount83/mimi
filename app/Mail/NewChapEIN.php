@@ -14,7 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class ChapersUpdateListAdminMember extends Mailable implements ShouldQueue
+class NewChapEIN extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -28,14 +28,18 @@ class ChapersUpdateListAdminMember extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Chapter Update ListAdmin Notice | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
+            replyTo: [
+                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+            ],
+            subject: 'EIN Number Received',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.chapterupdate.listadminmember',
+            markdown: 'emails.chapter.newchapein',
         );
     }
 
@@ -43,5 +47,4 @@ class ChapersUpdateListAdminMember extends Mailable implements ShouldQueue
     {
         return [];
     }
-
 }

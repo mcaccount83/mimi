@@ -14,7 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class DisbandFinancialReportThankYou extends Mailable implements ShouldQueue
+class DisbandReportCCNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -22,31 +22,32 @@ class DisbandFinancialReportThankYou extends Mailable implements ShouldQueue
 
     protected $pdfPath;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
-
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->from('support@momsclub.org', 'MOMS Club')
-            ->subject('Final Financial Report Submitted')
-            ->markdown('emails.disband.finalreportthankyou')
-            ->attach($this->pdfPath, [
-                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Final_FinancialReport.pdf',
-                'mime' => 'application/pdf',
-            ]);
+        return new Envelope(
+            subject: "Final Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
+    }
 
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.chapter.disbandreportccnotice',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [
+            Attachment::fromPath($this->pdfPath)
+                ->as($this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Final_FinancialReport.pdf')
+                ->withMime('application/pdf'),
+        ];
     }
 }

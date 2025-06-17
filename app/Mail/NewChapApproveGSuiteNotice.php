@@ -14,7 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class ChapterEIN extends Mailable implements ShouldQueue
+class NewChapApproveGSuiteNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -28,18 +28,14 @@ class ChapterEIN extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
-            replyTo: [
-                new Address($this->mailData['userEmail'], $this->mailData['userName'])
-            ],
-            subject: 'EIN Number Received',
+            subject: "New Chapter Approved | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.chapter.chapterein',
+            markdown: 'emails.chapter.newchapapprovegsuirenotice',
         );
     }
 
@@ -47,4 +43,5 @@ class ChapterEIN extends Mailable implements ShouldQueue
     {
         return [];
     }
+
 }

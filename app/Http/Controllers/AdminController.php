@@ -431,9 +431,8 @@ class AdminController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -473,9 +472,8 @@ class AdminController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -999,8 +997,8 @@ class AdminController extends Controller implements HasMiddleware
             return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('admin.googledrive')]);
 
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback transaction on exception
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -1042,8 +1040,8 @@ class AdminController extends Controller implements HasMiddleware
             return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('admin.adminemail')]);
 
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback transaction on exception
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -1095,8 +1093,8 @@ class AdminController extends Controller implements HasMiddleware
 
             return response()->json(['success' => 'Chapter successfully deleted.']);
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         }
@@ -1138,8 +1136,8 @@ class AdminController extends Controller implements HasMiddleware
 
             return response()->json(['success' => 'Coordinator successfully deleted.']); // Fixed message
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         }

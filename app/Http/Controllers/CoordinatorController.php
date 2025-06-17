@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\BigSisterWelcome;
+use App\Mail\NewCoordinatordWelcome;
 use App\Mail\CoordinatorRetireAdmin;
-use App\Mail\ChaptersPrimaryCoordinatorChange;
-use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
-use App\Mail\MentoringCoordinatorChange;
-use App\Mail\MentoringCoordinatorChangeRCNotice;
+use App\Mail\PCChangeChapNotice;
+use App\Mail\PCChangePCNotice;
+use App\Mail\RCChangeCoordNotice;
+use App\Mail\RCChangeRCNotice;
 use App\Models\Chapters;
 use App\Models\CoordinatorRecognition;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\ForumCategorySubscription;
-use App\Mail\NewCoordApprovedEmail;
-use App\Mail\NewCoordApprovedGSuiteEmail;
+use App\Mail\NewCoordApproveRCNotice;
+use App\Mail\NewCoordApproveGSuiteNotice;
 use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
@@ -474,7 +474,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             Mail::to($cdEmail)
                 ->cc($ReportEmail, $cdEmailUser)
-                ->queue(new BigSisterWelcome($mailData));
+                ->queue(new NewCoordinatordWelcome($mailData));
 
             // Commit the transaction
             DB::commit();
@@ -538,8 +538,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
 
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, please try again.';
 
@@ -581,8 +581,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
 
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback transaction on exception
-            Log::error($e);
+            DB::rollback();   // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -633,8 +633,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
 
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback transaction on exception
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -760,24 +760,6 @@ class CoordinatorController extends Controller implements HasMiddleware
                 ]);
             }
 
-            // Get Mail Data
-            $coordName = $coordinator->fisrt_name.' '.$coordinator->last_name;
-            $coordConf = $coordinator->conference_id;
-            $email = $coordinator->email;
-
-            // $mailData = [
-            //     'coordName' => $coordName,
-            //     'confNumber' => $coordConf,
-            //     'email' => $email,
-            // ];
-
-            // $to_email = 'jackie.mchenry@momsclub.org';
-            // $adminEmail = $this->positionConditionsService->getAdminEmail();
-            // $gsuiteAdmin = $adminEmail['gsuite_admin'];  // Gsuite Coor Email
-
-            // Mail::to($gsuiteAdmin, 'MOMS Club')
-            //     ->queue(new CoordinatorRetireAdmin($mailData));
-
             DB::commit();
 
             $message = 'Coordinator successfully reactivated';
@@ -785,8 +767,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
 
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback transaction on exception
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             $message = 'Something went wrong, Please try again.';
 
@@ -947,10 +929,10 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             // Send notifications
             Mail::to($emailListChap)
-                ->queue(new ChaptersPrimaryCoordinatorChange($mailData));
+                ->queue(new PCChangeChapNotice($mailData));
 
             Mail::to($pcEmail)
-                ->queue(new ChaptersPrimaryCoordinatorChangePCNotice($mailData));
+                ->queue(new PCChangePCNotice($mailData));
         }
 
         DB::commit();
@@ -1050,10 +1032,10 @@ class CoordinatorController extends Controller implements HasMiddleware
 
                 // Send notifications
                 Mail::to($cdEmail)
-                    ->queue(new MentoringCoordinatorChange($mailData));
+                    ->queue(new RCChangeCoordNotice($mailData));
 
                 Mail::to($rcEmail)
-                    ->queue(new MentoringCoordinatorChangeRCNotice($mailData));
+                    ->queue(new RCChangeRCNotice($mailData));
             }
 
             DB::commit();
@@ -1152,12 +1134,10 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
             echo $e->getMessage();
             exit();
-            DB::rollback();
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return to_route('coordinators.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
         }
@@ -1252,12 +1232,10 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
             echo $e->getMessage();
             exit();
-            DB::rollback();
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return to_route('coordinators.editdetails', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         }
@@ -1710,10 +1688,10 @@ class CoordinatorController extends Controller implements HasMiddleware
             ]);
 
             Mail::to($gsuiteAdmin)
-                ->queue(new NewCoordApprovedGSuiteEmail($mailData));
+                ->queue(new NewCoordApproveGSuiteNotice($mailData));
 
             Mail::to($rcEmail)
-                ->queue(new NewCoordApprovedEmail($mailData));
+                ->queue(new NewCoordApproveRCNotice($mailData));
 
             DB::commit();
 
@@ -1725,8 +1703,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             // Return JSON error response for AJAX
             return response()->json([
@@ -1775,8 +1753,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             // Return JSON error response for AJAX
             return response()->json([

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ChapersUpdateEINCoor;
-use App\Mail\ChapterDisbandLetter;
+use App\Mail\NameChangeEINNotice;
+use App\Mail\DisbandChapterLetter;
 use App\Mail\ProbationNoPmtLetter;
 use App\Mail\ProbationNoRptLetter;
 use App\Mail\ProbationPartyLetter;
@@ -397,27 +397,27 @@ class PDFController extends Controller
                 case 'general':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+                        ->queue(new DisbandChapterLetter($mailData, $pdfPath));
                     break;
                 case 'did_not_start':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+                        ->queue(new DisbandChapterLetter($mailData, $pdfPath));
                     break;
                 case 'no_report':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+                        ->queue(new DisbandChapterLetter($mailData, $pdfPath));
                     break;
                 case 'no_payment':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+                        ->queue(new DisbandChapterLetter($mailData, $pdfPath));
                     break;
                 case 'no_communication':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
+                        ->queue(new DisbandChapterLetter($mailData, $pdfPath));
                     break;
                 default:
                     return response()->json(['message' => 'Invalid letter type selected'], 400);
@@ -709,7 +709,7 @@ class PDFController extends Controller
             );
 
             Mail::to($eincoorEmail)
-                ->queue(new ChapersUpdateEINCoor($mailData, $pdfPath));
+                ->queue(new NameChangeEINNotice($mailData, $pdfPath));
 
             return response()->json([
                 'status' => 'success',

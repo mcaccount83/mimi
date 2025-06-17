@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ChapterEIN;
+use App\Mail\NewChapEIN;
 use App\Mail\ChapterEmail;
-use App\Mail\ChapterSetup;
+use App\Mail\NewChapterSetup;
 use App\Mail\NewChapterWelcome;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
@@ -91,7 +91,7 @@ class EmailController extends Controller implements HasMiddleware
 
             Mail::to($founderEmail)
                 ->cc($userEmail)
-                ->queue(new ChapterSetup($mailData, $pdfPath, $pdfPath2));
+                ->queue(new NewChapterSetup($mailData, $pdfPath, $pdfPath2));
 
             // Commit the transaction
             DB::commit();
@@ -166,7 +166,7 @@ class EmailController extends Controller implements HasMiddleware
 
             Mail::to($founderEmail)
                 ->cc($userEmail)
-                ->queue(new ChapterSetup($mailData, $pdfPath, $pdfPath2));
+                ->queue(new NewChapterSetup($mailData, $pdfPath, $pdfPath2));
 
             // Commit the transaction
             DB::commit();
@@ -221,7 +221,7 @@ class EmailController extends Controller implements HasMiddleware
 
             Mail::to($emailListChap)
                 ->cc($emailListCoord)
-                ->queue(new ChapterEIN($mailData));
+                ->queue(new NewChapEIN($mailData));
 
             // Commit the transaction
             DB::commit();

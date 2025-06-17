@@ -14,7 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class ChapterAddPrimaryCoor extends Mailable implements ShouldQueue
+class NewChapPCNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -35,7 +35,7 @@ class ChapterAddPrimaryCoor extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.chapterupdate.primarycooraddnotice',
+            markdown: 'emails.chapter.newchappcnotice',
         );
     }
 

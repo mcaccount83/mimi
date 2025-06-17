@@ -14,7 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class NewChapterWelcome extends Mailable implements ShouldQueue
+class DisbandChapterLetter extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -22,15 +22,11 @@ class NewChapterWelcome extends Mailable implements ShouldQueue
 
     protected $pdfPath;
 
-    protected $pdfPath2;
-
-    public function __construct($mailData, $pdfPath, $pdfPath2)
+    public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
-        $this->pdfPath2 = $pdfPath2;
     }
-
 
     public function envelope(): Envelope
     {
@@ -39,36 +35,24 @@ class NewChapterWelcome extends Mailable implements ShouldQueue
             replyTo: [
                 new Address($this->mailData['userEmail'], $this->mailData['userName'])
             ],
-            subject: 'Congratulations on your New Chapter!',
+            subject: "Chapter Disband Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.chapter.newchapterwelcome',
+            markdown: 'emails.chapter.disbandchapterletter',
         );
     }
 
     public function attachments(): array
     {
-        $attachments = [
+        return [
             Attachment::fromPath($this->pdfPath)
-                ->as($this->mailData['chapterState'].'_'.$this->mailData['chapterName'].'_ChapterInGoodStanding.pdf')
+                ->as($this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Disband_Letter.pdf')
                 ->withMime('application/pdf'),
         ];
-
-        if ($this->pdfPath2) {
-            $pdfContent = file_get_contents($this->pdfPath2);
-            if ($pdfContent !== false) {
-                $attachments[] = Attachment::fromData(
-                    fn() => $pdfContent,
-                    'GroupExemptionLetter.pdf'
-                )->withMime('application/pdf');
-            }
-        }
-
-        return $attachments;
     }
 
 }

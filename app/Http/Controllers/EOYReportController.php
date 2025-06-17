@@ -6,7 +6,7 @@ use App\Mail\EOYElectionReportReminder;
 use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
 use App\Mail\EOYReviewrAssigned;
-use App\Mail\NewBoardActive;
+use App\Mail\NewBoardWelcome;
 use App\Models\Boards;
 use App\Models\Chapters;
 use App\Models\Coordinators;
@@ -552,12 +552,12 @@ class EOYReportController extends Controller implements HasMiddleware
 
                 Mail::to($emailListChap)
                     ->cc($emailListCoord)
-                    ->queue(new NewBoardActive($mailData, $pdfPath));
+                    ->queue(new NewBoardWelcome($mailData, $pdfPath));
 
                 DB::commit();
                 $status = 'success'; // Set status to success if everything goes well
             } catch (\Exception $e) {
-                DB::rollback();
+                DB::rollback();  // Rollback Transaction
                 $status = 'fail'; // Set status to fail if an exception occurs
             }
         }
@@ -1576,135 +1576,4 @@ class EOYReportController extends Controller implements HasMiddleware
         return to_route('eoyreports.editawards', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
-
-
-
-    /**
-     * Activate New Board Members
-     */
-    // public function activateBoard(Request $request, $id): RedirectResponse
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $userId = $user['userId'];
-    //     $lastUpdatedBy = $user['user_name'];
-    //     $lastupdatedDate = date('Y-m-d H:i:s');
-
-    //     $baseQuery = $this->baseChapterController->getChapterDetails($id);
-    //     $chDetails = $baseQuery['chDetails'];
-    //     $pcDetails = $baseQuery['pcDetails'];
-    //     $stateShortName = $baseQuery['stateShortName'];
-    //     $emailListChap = $baseQuery['emailListChap'];  // Full Board
-    //     $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
-    //     $emailCC = $baseQuery['emailCC'];  // CC Email
-    //     $emailPC = $baseQuery['emailPC'];
-
-    //     // Calculate the fiscal year (current year - next year)
-    //     $currentYear = Carbon::now()->year;
-    //     $nextYear = $currentYear + 1;
-    //     $fiscalYear = $currentYear.'-'.$nextYear;
-
-    //     $resources = Resources::with('resourceCategory')->get();
-    //     $instructionsName = 'Officer Packet';
-    //     $matchingInstructions = $resources->where('name', $instructionsName)->first();
-    //     $pdfPath = 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path;
-
-    //     $status = 'fail'; // Default to 'fail'
-
-    //     $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $id)->get();
-
-    //     if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
-    //         DB::beginTransaction();
-    //         try {
-    //             $boardDetails = Boards::where('chapter_id', $id)->get();
-
-    //             if ($boardDetails && count($boardDetails) > 0) {
-    //                 $borDetails = Boards::with('user')->where('chapter_id', $id)->get();
-    //                 foreach ($borDetails as $record) {
-    //                     $user_id = $record->user_id;
-    //                     $userDetails = User::find($user_id);
-
-    //                     $userDetails->user_type = 'outgoing';
-    //                     $userDetails->updated_at = now();
-    //                     $userDetails->save();
-    //                 }
-
-    //                 Boards::where('chapter_id', $id)->delete();
-    //             }
-
-    //             foreach ($BoardsIncomingDetails as $incomingRecord) {
-    //                 $existingUser = User::where('email', $incomingRecord->email)->first();
-    //                 if ($existingUser) {
-    //                     $existingUser->first_name = $incomingRecord->first_name;
-    //                     $existingUser->last_name = $incomingRecord->last_name;
-    //                     $existingUser->email = $incomingRecord->email;
-    //                     $existingUser->user_type = 'board';
-    //                     $existingUser->updated_at = now();
-    //                     $existingUser->save();
-    //                     $userId = $existingUser->id;
-
-    //                 } else {
-    //                     $newUser = User::create([  // Create user details if new
-    //                         'first_name' => $incomingRecord->first_name,
-    //                         'last_name' => $incomingRecord->last_name,
-    //                         'email' => $incomingRecord->email,
-    //                         'password' => Hash::make('TempPass4You'),
-    //                         'user_type' => 'board',
-    //                         'is_active' => 1,
-    //                     ]);
-    //                     $userId = $newUser->id;
-
-    //                 }
-
-    //                 Boards::create([  // Create board details if new
-    //                     'user_id' => $userId,
-    //                     'first_name' => $incomingRecord->first_name,
-    //                     'last_name' => $incomingRecord->last_name,
-    //                     'email' => $incomingRecord->email,
-    //                     'board_position_id' => $incomingRecord->board_position_id,
-    //                     'chapter_id' => $id,
-    //                     'street_address' => $incomingRecord->street_address,
-    //                     'city' => $incomingRecord->city,
-    //                     'state_id' => $incomingRecord->state_id,
-    //                     'zip' => $incomingRecord->zip,
-    //                     'country_id' => $incomingRecord->country_id,
-    //                     'phone' => $incomingRecord->phone,
-    //                     'last_updated_by' => $lastUpdatedBy,
-    //                     'last_updated_date' => $lastupdatedDate,
-    //                 ]);
-    //             }
-
-    //             $documents = Documents::find($id);
-    //             $documents->new_board_active = 1;
-    //             $documents->save();
-
-    //             BoardsIncoming::where('chapter_id', $id)->delete();
-
-    //             $mailData = array_merge(
-    //                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-    //                 $this->baseMailDataController->getPCData($pcDetails),
-    //                 $this->baseMailDataController->getUserData($user),
-    //                 [
-    //                     'fiscalYear' => $fiscalYear,
-    //                 ]
-    //             );
-
-    //             Mail::to($emailListChap)
-    //                 ->cc($emailListCoord)
-    //                 ->queue(new NewBoardActive($mailData, $pdfPath));
-
-    //             DB::commit();
-    //             $status = 'success'; // Set status to success if everything goes well
-    //         } catch (\Exception $e) {
-    //             DB::rollback();
-    //             $status = 'fail'; // Set status to fail if an exception occurs
-    //         }
-    //     }
-
-    //    if ($status === 'success') {
-    //         return redirect()->back()->with('success', 'Board activation successful');
-    //     } else {
-    //         return redirect()->back()->with('fail', 'Board activation failed');
-    //     }
-
-    // }
 }

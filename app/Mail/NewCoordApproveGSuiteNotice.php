@@ -14,31 +14,33 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class NewChapterApprovedEmail extends Mailable implements ShouldQueue
+class NewCoordApproveGSuiteNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
-
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject("New Chapter Approved | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.chapter.newchapterapprovedemail');
+        return new Envelope(
+            subject: "New Coordinator Approved | {$this->mailData['first_name']}, {$this->mailData['last_name']}",
+        );
     }
 
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.coordinator.newcoordapprovegsuitenotice',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
+    }
 }

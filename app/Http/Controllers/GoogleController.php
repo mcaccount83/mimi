@@ -528,7 +528,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
 
-            Log::info('Creating year folder with data: '.json_encode($folderMetadata));
+            // Log::info('Creating year folder with data: '.json_encode($folderMetadata));
 
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
@@ -569,7 +569,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
 
-            Log::info('Creating conference folder with data: '.json_encode($folderMetadata));
+            // Log::info('Creating conference folder with data: '.json_encode($folderMetadata));
 
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
@@ -612,7 +612,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
 
-            Log::info('Creating state folder with data: '.json_encode($folderMetadata));
+            // Log::info('Creating state folder with data: '.json_encode($folderMetadata));
 
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
@@ -657,7 +657,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'mimeType' => 'application/vnd.google-apps.folder',
             ];
 
-            Log::info('Creating chapter folder with data: '.json_encode($folderMetadata));
+            // Log::info('Creating chapter folder with data: '.json_encode($folderMetadata));
 
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [

@@ -14,7 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class NewBoardActive extends Mailable implements ShouldQueue
+class NewBoardWelcome extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -42,20 +42,22 @@ class NewBoardActive extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.chapter.newboardactive',
+            markdown: 'emails.chapter.newboardwelcome',
         );
     }
 
     public function attachments(): array
     {
-        // Download the Google Drive file first
-        $pdfContent = file_get_contents($this->pdfPath);
+        $attachments = [];
 
-        return [
-            Attachment::fromData(
+        $pdfContent = @file_get_contents($this->pdfPath);
+        if ($pdfContent !== false) {
+            $attachments[] = Attachment::fromData(
                 fn() => $pdfContent,
                 $this->mailData['fiscalYear'].'_OfficerPacket.pdf'
-            )->withMime('application/pdf'),
-        ];
+            )->withMime('application/pdf');
+        }
+
+        return $attachments;
     }
 }

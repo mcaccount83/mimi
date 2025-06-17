@@ -14,7 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class DisbandFinalReportSubmit extends Mailable implements ShouldQueue
+class NewChapterSetup extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -22,16 +22,18 @@ class DisbandFinalReportSubmit extends Mailable implements ShouldQueue
 
     protected $pdfPath;
 
+    protected $pdfPath2;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($mailData, $pdfPath)
+    public function __construct($mailData, $pdfPath, $pdfPath2)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
-
+        $this->pdfPath2 = $pdfPath2;
     }
 
     /**
@@ -39,13 +41,19 @@ class DisbandFinalReportSubmit extends Mailable implements ShouldQueue
      */
     public function build(): static
     {
+        // Download the Google Drive file first
+        $content = file_get_contents($this->pdfPath);
+        $content2 = file_get_contents($this->pdfPath2);
+
         return $this
-            ->subject("Final Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.disband.finalreportsubmitted')
-            ->attach($this->pdfPath, [
-                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Final_FinancialReport.pdf',
+            ->subject('Chapter Setup')
+            ->replyTo($this->mailData['userEmail'])
+            ->markdown('emails.chapter.newchaptersetup')
+            ->attachData($content, 'EINApplication.pdf', [
+                'mime' => 'application/pdf',
+            ])
+            ->attachData($content2, 'EINInstructions.pdf', [
                 'mime' => 'application/pdf',
             ]);
-
     }
 }

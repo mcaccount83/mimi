@@ -14,44 +14,34 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class ChapterDisbandLetter extends Mailable implements ShouldQueue
+class UnZapChapListNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
     public $mailData;
 
-    protected $pdfPath;
-
-    public function __construct($mailData, $pdfPath)
+     public function __construct($mailData)
     {
         $this->mailData = $mailData;
-        $this->pdfPath = $pdfPath;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            replyTo: [
-                new Address($this->mailData['userEmail'], $this->mailData['userName'])
-            ],
-            subject: "Chapter Disband Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+            subject: 'Chapter unZapped ListAdmin Notice',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.disband.chapterdisbandletter',
+            markdown: 'emails.chapter.unzapchaplistnotice',
         );
     }
 
     public function attachments(): array
     {
-        return [
-            Attachment::fromPath($this->pdfPath)
-                ->as($this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Disband_Letter.pdf')
-                ->withMime('application/pdf'),
-        ];
+        return [];
     }
 
 }

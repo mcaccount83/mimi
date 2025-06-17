@@ -14,7 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class ChapterAddListAdmin extends Mailable implements ShouldQueue
+class NewChapListNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -28,14 +28,14 @@ class ChapterAddListAdmin extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Chapter Add Notification",
+            subject: "Chapter Add ListAdmin Notice",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.chapterupdate.listadminaddnotice',
+            markdown: 'emails.chapter.newchaplsitnotice',
         );
     }
 

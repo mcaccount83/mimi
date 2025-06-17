@@ -14,34 +14,45 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class ChapersUpdateListAdmin extends Mailable implements ShouldQueue
+class DisbandReportThankYou extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
     public $mailData;
 
-    public function __construct($mailData)
+    protected $pdfPath;
+
+     public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
+        $this->pdfPath = $pdfPath;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Chapter Update ListAdmin Notice | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+            from: new Address('support@momsclub.org', 'MOMS Club'),
+            replyTo: [
+                new Address('support@momsclub.org', 'MOMS Club')
+            ],
+            subject: "Final Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.chapterupdate.listadmin',
+            markdown: 'emails.chapter.disbandreportthankyou',
         );
     }
 
     public function attachments(): array
     {
-        return [];
+        return [
+            Attachment::fromPath($this->pdfPath)
+                ->as($this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Final_FinancialReport.pdf')
+                ->withMime('application/pdf'),
+        ];
     }
 
 }

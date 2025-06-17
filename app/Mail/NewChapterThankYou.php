@@ -20,27 +20,32 @@ class NewChapterThankYou extends Mailable implements ShouldQueue
 
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
-        // $this->mailData['chapterDate'] = date('m-d-Y', strtotime($this->mailData['chapterDate']));
-
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->from('support@momsclub.org', 'MOMS Club')
-            ->subject('Thank You for Your New Chapter Application')
-            ->markdown('emails.payments.newchapthankyou');
-        // ->with('mailData', $this->mailData);
+        return new Envelope(
+            from: new Address('support@momsclub.org', 'MOMS Club'),
+            replyTo: [
+                new Address('support@momsclub.org', 'MOMS Club')
+            ],
+            subject: "Thank You for Your New Chapter Application!",
+        );
     }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.payments.newchapthankyou',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
+    }
+
 }

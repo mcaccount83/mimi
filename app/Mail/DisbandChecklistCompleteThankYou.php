@@ -14,41 +14,38 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class ChapersUpdateEINCoor extends Mailable implements ShouldQueue
+class DisbandChecklistCompleteThankYou extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
     public $mailData;
 
-    protected $pdfPath;
-
-    public function __construct($mailData, $pdfPath)
+      public function __construct($mailData)
     {
         $this->mailData = $mailData;
-        $this->pdfPath = $pdfPath;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Chapter Name Change Notification | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+            from: new Address('support@momsclub.org', 'MOMS Club'),
+            replyTo: [
+                new Address('support@momsclub.org', 'MOMS Club')
+            ],
+            subject: "Disband Checklist Submitted",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.chapterupdate.eincoor',
+            markdown: 'emails.chapter.disbandchecklistcompletethankyou',
         );
     }
 
     public function attachments(): array
     {
-        return [
-            Attachment::fromPath($this->pdfPath)
-                ->as($this->mailData['chapterState'] . '_' . $this->mailData['chapterNameSanitized'] . '_ChapterNameChange.pdf')
-                ->withMime('application/pdf'),
-        ];
+        return [];
     }
 
 }

@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ChapersUpdateListAdmin;
-use App\Mail\ChapterAddListAdmin;
-use App\Mail\ChapterAddPrimaryCoor;
-use App\Mail\ChapterReAddListAdmin;
-use App\Mail\ChapterRemoveListAdmin;
-use App\Mail\ChaptersPrimaryCoordinatorChange;
-use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
-use App\Mail\ChaptersUpdatePrimaryCoorBoard;
-use App\Mail\ChaptersUpdatePrimaryCoorChapter;
-use App\Mail\NewChapterApprovedAdmin;
-use App\Mail\NewChapterApprovedEmail;
+use App\Mail\BorUpdateListNoitce;
+use App\Mail\NewChapListNotice;
+use App\Mail\NewChapPCNotice;
+use App\Mail\UnZapChapListNotice;
+use App\Mail\DisbandChapListNotice;
+use App\Mail\PCChangeChapNotice;
+use App\Mail\PCChangePCNotice;
+use App\Mail\BorUpdatePCNotice;
+use App\Mail\ChapDetailsUpdatePCNotice;
+use App\Mail\NewChapApproveAdminNotice;
+use App\Mail\NewChapApproveGSuiteNotice;
 use App\Mail\WebsiteAddNoticeAdmin;
 use App\Mail\WebsiteAddNoticeChapter;
 use App\Mail\WebsiteReviewNotice;
@@ -407,8 +407,8 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return response()->json([
                 'status' => 'error', 'message' => 'Something went wrong, Please try again.',
@@ -520,7 +520,7 @@ class ChapterController extends Controller implements HasMiddleware
             $listAdmin = $adminEmail['list_admin'];
 
             Mail::to($listAdmin)
-                ->queue(new ChapterRemoveListAdmin($mailData));
+                ->queue(new DisbandChapListNotice($mailData));
 
             // Generate and Send the PDF Disbanding Letter & Notification to Board and Coordinators//
             if ($disbandLetter == 1) {
@@ -663,7 +663,7 @@ class ChapterController extends Controller implements HasMiddleware
             $listAdmin = $adminEmail['list_admin'];
 
             Mail::to($listAdmin)
-                ->queue(new ChapterReAddListAdmin($mailData));
+                ->queue(new UnZapChapListNotice($mailData));
 
             // Commit the transaction
             DB::commit();
@@ -1012,7 +1012,7 @@ class ChapterController extends Controller implements HasMiddleware
 
             // Primary Coordinator Notification//
             Mail::to($pcDetails->email)
-                ->queue(new ChapterAddPrimaryCoor($mailData));
+                ->queue(new NewChapPCNotice($mailData));
 
             // List Admin Notification//
             // $listAdminEmail = 'listadmin@momsclub.org';
@@ -1020,7 +1020,7 @@ class ChapterController extends Controller implements HasMiddleware
             $listAdmin = $adminEmail['list_admin'];
 
             Mail::to($listAdmin)
-                ->queue(new ChapterAddListAdmin($mailData));
+                ->queue(new NewChapListNotice($mailData));
 
             DB::commit();
         } catch (\Exception $e) {
@@ -1191,7 +1191,7 @@ class ChapterController extends Controller implements HasMiddleware
                     $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup || $chDetailsUpd->territory != $chDetails->territory ||
                     $chDetailsUpd->additional_info != $chDetails->additional_info || $chDetailsUpd->status_id != $chDetails->status_id || $chDetailsUpd->notes != $chDetails->notes) {
                 Mail::to($pcEmail)
-                    ->queue(new ChaptersUpdatePrimaryCoorChapter($mailData));
+                    ->queue(new ChapDetailsUpdatePCNotice($mailData));
             }
 
             // Name Change Notification//
@@ -1203,10 +1203,10 @@ class ChapterController extends Controller implements HasMiddleware
             // PC Change Notification//
             if ($chDetailsUpd->primary_coordinator_id != $chDetails->primary_coordinator_id) {
                 Mail::to($emailListChap)
-                    ->queue(new ChaptersPrimaryCoordinatorChange($mailData));
+                    ->queue(new PCChangeChapNotice($mailData));
 
                 Mail::to($pcEmail)
-                    ->queue(new ChaptersPrimaryCoordinatorChangePCNotice($mailData));
+                    ->queue(new PCChangePCNotice($mailData));
             }
 
             // Website URL Change Notification//
@@ -1876,8 +1876,7 @@ class ChapterController extends Controller implements HasMiddleware
                     $mailDataSecp['secName'] != $mailDataSec['secNameUpd'] || $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
 
                 Mail::to($emailPC)
-                    ->queue(new ChaptersUpdatePrimaryCoorBoard($mailData));
-                // ->queue(new ChaptersUpdatePrimaryCoorPresident($mailData));
+                    ->queue(new BorUpdatePCNotice($mailData));
             }
 
             // //List Admin Notification//
@@ -1890,7 +1889,7 @@ class ChapterController extends Controller implements HasMiddleware
                         $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
 
                 Mail::to($listAdmin)
-                    ->queue(new ChapersUpdateListAdmin($mailData));
+                    ->queue(new BorUpdateListNoitce($mailData));
             }
 
             DB::commit();
@@ -2438,16 +2437,16 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
             Mail::to($paymentsAdmin)
-                ->queue(new NewChapterApprovedAdmin($mailData));
+                ->queue(new NewChapApproveAdminNotice($mailData));
 
             Mail::to($gsuiteAdmin)
-                ->queue(new NewChapterApprovedEmail($mailData));
+                ->queue(new NewChapApproveGSuiteNotice($mailData));
 
             Mail::to($pcDetails->email)
-                ->queue(new ChapterAddPrimaryCoor($mailData));
+                ->queue(new NewChapPCNotice($mailData));
 
             Mail::to($listAdmin)
-                ->queue(new ChapterAddListAdmin($mailData));
+                ->queue(new NewChapListNotice($mailData));
 
             DB::commit();
 
@@ -2459,8 +2458,8 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             // Return JSON error response for AJAX
             return response()->json([
@@ -2511,8 +2510,8 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             // Return JSON error response for AJAX
             return response()->json([

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\DisbandChecklistComplete;
-use App\Mail\DisbandChecklistThankYou;
-use App\Mail\DisbandFinalReportSubmit;
-use App\Mail\DisbandFinancialReportThankYou;
+use App\Mail\DisbandChecklistCompleteCCNotice;
+use App\Mail\DisbandChecklistCompleteThankYou;
+use App\Mail\DisbandReportCCNotice;
+use App\Mail\DisbandReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
 use App\Models\Chapters;
@@ -516,23 +516,23 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $pdfPath = $this->pdfController->saveFinalFinancialReport($request, $chapterId);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
-                    ->queue(new DisbandFinancialReportThankYou($mailData, $pdfPath));
+                    ->queue(new DisbandReportThankYou($mailData, $pdfPath));
 
                 if ($chFinancialReport->reviewer_id == null) {
                     DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
                 }
 
                 Mail::to($emailCC)
-                    ->queue(new DisbandFinalReportSubmit($mailData, $pdfPath));
+                    ->queue(new DisbandReportCCNotice($mailData, $pdfPath));
             }
 
             if ($documents->final_report_received == '1' && $checklistComplete) {
                 Mail::to($userEmail)
                     ->cc($emailListChap)
-                    ->queue(new DisbandChecklistThankYou($mailData));
+                    ->queue(new DisbandChecklistCompleteThankYou($mailData));
 
                 Mail::to($emailCC)
-                    ->queue(new DisbandChecklistComplete($mailData));
+                    ->queue(new DisbandChecklistCompleteCCNotice($mailData));
             }
 
             DB::commit();
@@ -606,10 +606,10 @@ class FinancialReportController extends Controller implements HasMiddleware
             if ($documents->final_financial_report_received == '1' && $checklistComplete) {
                 Mail::to($userEmail)
                     ->cc($emailListChap)
-                    ->queue(new DisbandChecklistThankYou($mailData));
+                    ->queue(new DisbandChecklistCompleteThankYou($mailData));
 
                 Mail::to($emailCC)
-                    ->queue(new DisbandChecklistComplete($mailData));
+                    ->queue(new DisbandChecklistCompleteCCNotice($mailData));
             }
 
             DB::commit();

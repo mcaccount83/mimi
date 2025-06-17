@@ -15,6 +15,8 @@ use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class CoordinatorRetireAdmin extends Mailable implements ShouldQueue
+// class RetireCoordGSuiteNotice extends Mailable implements ShouldQueue
+
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
