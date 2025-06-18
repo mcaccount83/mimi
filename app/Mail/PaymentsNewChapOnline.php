@@ -15,7 +15,7 @@ use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class PaymentsNewChapOnline extends Mailable implements ShouldQueue
-// class NewChapterPayment extends Mailable implements ShouldQueue
+// class NewChapterAdminNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -39,5 +39,6 @@ class PaymentsNewChapOnline extends Mailable implements ShouldQueue
         return $this
             ->subject("New Chapter Application Received | Conference {$this->mailData['chapterConf']}")
             ->markdown('emails.payments.newchaponline');
+            // ->markdown('emails.chapter.newchapteradminnotice');
     }
 }

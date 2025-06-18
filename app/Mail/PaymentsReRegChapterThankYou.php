@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class PaymentsReRegChapterThankYou extends Mailable implements ShouldQueue
+// class ReRegChapterThankYou extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -50,6 +51,7 @@ class PaymentsReRegChapterThankYou extends Mailable implements ShouldQueue
             ->from('support@momsclub.org', 'MOMS Club')
             ->subject('Thank You for Your Re-Registration Payment')
             ->markdown('emails.payments.reregchapterthankyou');
+            // ->markdown('emails.chapter.reregchapterthankyou');
         // ->with('mailData', $this->mailData);
     }
 }

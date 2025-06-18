@@ -15,6 +15,7 @@ use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class PaymentsSustainingPublicThankYou extends Mailable implements ShouldQueue
+// class DonationSustainingPublicThankYou extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -39,5 +40,6 @@ class PaymentsSustainingPublicThankYou extends Mailable implements ShouldQueue
             ->from('support@momsclub.org', 'MOMS Club')
             ->subject('Thank You for Your Sustaining Chapter Donation')
             ->markdown('emails.payments.sustainingpublicthankyou');
+            // ->markdown('emails.public.donationsustainingpublicthankyou');
     }
 }

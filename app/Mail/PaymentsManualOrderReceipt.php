@@ -15,6 +15,7 @@ use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class PaymentsManualOrderReceipt extends Mailable implements ShouldQueue
+// class ManualOrderChapterReceipt extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -39,5 +40,6 @@ class PaymentsManualOrderReceipt extends Mailable implements ShouldQueue
             ->from('support@momsclub.org', 'MOMS Club')
             ->subject('Chapter Manual Replacement Order')
             ->markdown('emails.payments.manualorderreceipt');
+            // ->markdown('emails.chapter.manualorderchapterreceipt');
     }
 }

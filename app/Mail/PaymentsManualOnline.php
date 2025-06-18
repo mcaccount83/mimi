@@ -15,6 +15,7 @@ use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class PaymentsManualOnline extends Mailable implements ShouldQueue
+// class ManualOrderAdminNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -37,7 +38,7 @@ class PaymentsManualOnline extends Mailable implements ShouldQueue
     {
         return $this
             ->subject("Donation Received | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.payments.manual
-            online');
+            ->markdown('emails.payments.manualonline');
+            // ->markdown('emails.chapter.manualorderadminnotice');
     }
 }

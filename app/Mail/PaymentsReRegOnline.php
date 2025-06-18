@@ -15,6 +15,7 @@ use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class PaymentsReRegOnline extends Mailable implements ShouldQueue
+// class ReRegAdminNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
@@ -38,5 +39,6 @@ class PaymentsReRegOnline extends Mailable implements ShouldQueue
         return $this
             ->subject("Re-Registration Payment Received | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.payments.reregonline');
+            // ->markdown('emails.chapter.reregadminnotice');
     }
 }
