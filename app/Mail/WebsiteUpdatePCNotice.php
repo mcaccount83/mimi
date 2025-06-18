@@ -14,40 +14,35 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class WebsiteReviewNotice extends Mailable implements ShouldQueue
-// class WebsiteReviewCCNotice extends Mailable implements ShouldQueue
+class WebsiteUpdatePCNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct($mailData)
+
+      public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject('Website Review Notification')
-            ->markdown('emails.website.reviewnotice');
+        return new Envelope(
+            subject: 'Website Update Notification',
+        );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.chapter.websiteupdatepcnotice',
+        );
+    }
+
     public function attachments(): array
     {
         return [];
     }
+
 }

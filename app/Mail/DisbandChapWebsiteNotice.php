@@ -14,30 +14,34 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class PaymentsReRegReceipt extends Mailable implements ShouldQueue
+class DisbandchapWebsiteNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct($mailData)
+       public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->from('support@momsclub.org', 'MOMS Club')
-            ->subject('Thank You for Your Re-Registration Payment')
-            ->markdown('emails.payments.reregreceipt');
+        return new Envelope(
+            subject: "Website Remove Notice | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
     }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.chapter.disbandchapwebsitenotice',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
+    }
+
 }

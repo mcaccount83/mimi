@@ -12,7 +12,7 @@ use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
 use App\Mail\ProbationReportSubmitted;
 use App\Mail\ProbationReportThankYou;
-use App\Mail\WebsiteReviewNotice;
+use App\Mail\NewWebsiteReviewNotice;
 use App\Models\Admin;
 use App\Models\Chapters;
 use App\Models\Documents;
@@ -623,7 +623,7 @@ class BoardController extends Controller implements HasMiddleware
             if ($webStatusUpd != $webStatusPre) {
                 if ($webStatusUpd == 2) {
                     Mail::to($emailCC)
-                        ->queue(new WebsiteReviewNotice($mailData));
+                        ->queue(new NewWebsiteReviewNotice($mailData));
                 }
             }
 

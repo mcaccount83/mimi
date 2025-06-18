@@ -13,10 +13,10 @@ use App\Mail\BorUpdatePCNotice;
 use App\Mail\ChapDetailsUpdatePCNotice;
 use App\Mail\NewChapApproveAdminNotice;
 use App\Mail\NewChapApproveGSuiteNotice;
-use App\Mail\WebsiteAddNoticeAdmin;
-use App\Mail\WebsiteAddNoticeChapter;
-use App\Mail\WebsiteReviewNotice;
-use App\Mail\WebsiteUpdatePrimaryCoor;
+use App\Mail\NewWebsiteApproveCoordNotice;
+use App\Mail\NewWebsiteApproveChapNotice;
+use App\Mail\NewWebsiteReviewNotice;
+use App\Mail\WebsiteUpdatePCNotice;
 use App\Models\Boards;
 use App\Models\BoardsDisbanded;
 use App\Models\BoardsOutgoing;
@@ -1213,16 +1213,16 @@ class ChapterController extends Controller implements HasMiddleware
             if ($chDetailsUpd->website_status != $chDetails->website_status) {
                 if ($chDetailsUpd->website_status == 1) {
                     Mail::to($emailCC)
-                        ->queue(new WebsiteAddNoticeAdmin($mailData));
+                        ->queue(new NewWebsiteApproveCoordNotice($mailData));
 
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new WebsiteAddNoticeChapter($mailData));
+                        ->queue(new NewWebsiteApproveChapNotice($mailData));
                 }
 
                 if ($chDetailsUpd->website_status == 2) {
                     Mail::to($emailCC)
-                        ->queue(new WebsiteReviewNotice($mailData));
+                        ->queue(new NewWebsiteReviewNotice($mailData));
                 }
             }
 
@@ -2118,16 +2118,16 @@ class ChapterController extends Controller implements HasMiddleware
 
                 if ($request->input('ch_webstatus') == 1) {
                     Mail::to($emailCC)
-                        ->queue(new WebsiteAddNoticeAdmin($mailData));
+                        ->queue(new NewWebsiteApproveCoordNotice($mailData));
 
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new WebsiteAddNoticeChapter($mailData));
+                        ->queue(new NewWebsiteApproveChapNotice($mailData));
                 }
 
                 if ($request->input('ch_webstatus') == 2) {
                     Mail::to($emailCC)
-                        ->queue(new WebsiteReviewNotice($mailData));
+                        ->queue(new NewWebsiteReviewNotice($mailData));
                 }
             }
 
@@ -2143,8 +2143,9 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
             if ($chDetailsUpd->website_url != $chDetails->website_url || $chDetailsUpd->website_status != $chDetails->website_status) {
-                Mail::to($emailPC)
-                    ->queue(new WebsiteUpdatePrimaryCoor($mailData));
+                    Mail::to($emailPC)
+                    ->queue(new WebsiteUpdatePCNotice($mailData));
+
             }
 
             DB::commit();

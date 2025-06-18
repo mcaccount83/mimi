@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NewCoordinatordWelcome;
-use App\Mail\CoordinatorRetireAdmin;
+use App\Mail\RetireCoordGSuiteNotice;
 use App\Mail\PCChangeChapNotice;
 use App\Mail\PCChangePCNotice;
 use App\Mail\RCChangeCoordNotice;
@@ -695,7 +695,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $gsuiteAdmin = $adminEmail['gsuite_admin'];  // Gsuite Coor Email
 
             Mail::to($gsuiteAdmin, 'MOMS Club')
-                ->queue(new CoordinatorRetireAdmin($mailData));
+                ->queue(new RetireCoordGSuiteNotice($mailData));
 
             DB::commit();
 

@@ -14,40 +14,34 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class WebsiteAddNoticeChapter extends Mailable implements ShouldQueue
-// class WebsiteAddChapNotice extends Mailable implements ShouldQueue
+class NewWebsiteApproveChapNotice extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct($mailData)
+     public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject('Website Link Notification')
-            ->markdown('emails.website.addnoticechapter');
+        return new Envelope(
+            subject: "Website Link Notification | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.chapter.newwebsiteapprovechapnotice',
+        );
+    }
+
     public function attachments(): array
     {
         return [];
     }
+
 }
