@@ -218,6 +218,7 @@
 
                     <hr>
 
+                    <div id="payment-section">
                 <h3 class="profile-username">Payment Information</h3>
                 <!-- /.card-header -->
                 <div class="row">
@@ -326,6 +327,8 @@
                     </form>
                 </div>
             </div>
+
+                    </div>
     <!-- /.card-body -->
     </div>
     <!-- /.card -->
@@ -396,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // President state and country
     const statePreDropdown = document.getElementById('ch_pre_state');
-    const countryPreContainer = document.getElementById('ch_pre_country-container'); // Fixed ID
+    const countryPreContainer = document.getElementById('ch_pre_country-container');
     const countryPreSelect = document.getElementById('ch_pre_country');
 
     // Check if elements exist before adding listeners
@@ -412,38 +415,174 @@ document.addEventListener('DOMContentLoaded', function() {
             const specialStates = [52, 53, 54, 55]; // States that should show the country field
 
             if (specialStates.includes(selectedStateId)) {
-                countryContainer.style.display = 'flex'; // or 'block' depending on your layout
+                // Show country field
+                countryContainer.style.display = 'flex';
                 countrySelect.setAttribute('required', 'required');
+
+                // Hide payment section and remove required attributes
+                hidePaymentSection();
             } else {
+                // Hide country field
                 countryContainer.style.display = 'none';
                 countrySelect.removeAttribute('required');
-                // Optionally clear the country selection when hidden
                 countrySelect.value = "";
+
+                // Show payment section and restore required attributes
+                showPaymentSection();
             }
         }
     }
 
-    // Check if president elements exist before adding listeners
+    // President state logic (unchanged)
     if (statePreDropdown && countryPreContainer && countryPreSelect) {
-        // Initially set president country field requirement based on state selection
         togglePreCountryField();
-
-        // Add event listener to the president state dropdown
-        statePreDropdown.addEventListener('change', togglePreCountryField); // Fixed function name
+        statePreDropdown.addEventListener('change', togglePreCountryField);
 
         function togglePreCountryField() {
             const selectedPreStateId = parseInt(statePreDropdown.value) || 0;
-            const specialPreStates = [52, 53, 54, 55]; // States that should show the country field
+            const specialPreStates = [52, 53, 54, 55];
 
             if (specialPreStates.includes(selectedPreStateId)) {
-                countryPreContainer.style.display = 'flex'; // or 'block' depending on your layout
+                countryPreContainer.style.display = 'flex';
                 countryPreSelect.setAttribute('required', 'required');
             } else {
                 countryPreContainer.style.display = 'none';
                 countryPreSelect.removeAttribute('required');
-                // Optionally clear the country selection when hidden
                 countryPreSelect.value = "";
             }
+        }
+    }
+
+    function hidePaymentSection() {
+        // Hide payment fields section (everything except submit button and authorize notice)
+        const paymentHeading = Array.from(document.querySelectorAll('h3')).find(h3 =>
+            h3.textContent.trim() === 'Payment Information'
+        );
+
+        if (paymentHeading) {
+            // Hide the payment heading
+            paymentHeading.style.display = 'none';
+
+            // Hide all payment form groups
+            const paymentFields = [
+                'card_number', 'expiration_date', 'cvv', 'first_name',
+                'last_name', 'email', 'address', 'city', 'state', 'zip',
+                'newchap', 'fee', 'total'
+            ];
+
+            paymentFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    // Hide the entire form group
+                    let formGroup = field.closest('.form-group');
+                    if (formGroup) {
+                        formGroup.style.display = 'none';
+                    }
+
+                    // Remove required attribute and clear value
+                    field.removeAttribute('required');
+                    field.value = '';
+                }
+            });
+
+            // Hide the payment warning message (but keep the submit section warning)
+            const paymentWarningDiv = document.querySelector('.col-md-12[style*="color: red"]:not(.card-body .col-md-12)');
+            if (paymentWarningDiv && !paymentWarningDiv.closest('.card-body.text-center')) {
+                paymentWarningDiv.style.display = 'none';
+            }
+        }
+
+        // Hide the authorize.net notice section
+        const authorizeNotice = document.querySelector('img[alt="authorize-net-seal"]');
+        if (authorizeNotice) {
+            // Hide the entire authorize notice section
+            let noticeSection = authorizeNotice.closest('.col-md-12');
+            if (noticeSection) {
+                noticeSection.style.display = 'none';
+            }
+            // Also hide the preceding empty div
+            if (noticeSection && noticeSection.previousElementSibling) {
+                noticeSection.previousElementSibling.style.display = 'none';
+            }
+        }
+
+        // Update submit button text and warning message
+        const submitButton = document.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.innerHTML = '<i class="fas fa-share"></i>&nbsp;Submit Application';
+        }
+
+        // Update the submit section warning message for non-payment submissions
+        const submitWarningDiv = document.querySelector('.card-body.text-center .col-md-12[style*="color: red"]');
+        if (submitWarningDiv) {
+            submitWarningDiv.innerHTML = '<center>Page will automatically re-direct after application submission with success or error message.<br>Please do not refresh the page after clicking "Submit Application"!</center>';
+        }
+    }
+
+    function showPaymentSection() {
+        // Show payment fields section
+        const paymentHeading = Array.from(document.querySelectorAll('h3')).find(h3 =>
+            h3.textContent.trim() === 'Payment Information'
+        );
+
+        if (paymentHeading) {
+            // Show the payment heading
+            paymentHeading.style.display = 'block';
+
+            // Show all payment form groups and restore required attributes
+            const paymentFields = [
+                'card_number', 'expiration_date', 'cvv', 'first_name',
+                'last_name', 'email', 'address', 'city', 'state', 'zip',
+                'newchap', 'fee', 'total'
+            ];
+
+            paymentFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    // Show the entire form group
+                    let formGroup = field.closest('.form-group');
+                    if (formGroup) {
+                        formGroup.style.display = 'flex';
+                    }
+
+                    // Restore required attribute (except for readonly fields)
+                    if (fieldId !== 'newchap' && fieldId !== 'fee' && fieldId !== 'total') {
+                        field.setAttribute('required', 'required');
+                    }
+                }
+            });
+
+            // Show the payment warning message (if there was one outside submit section)
+            const paymentWarningDiv = document.querySelector('.col-md-12[style*="color: red"]:not(.card-body .col-md-12)');
+            if (paymentWarningDiv && !paymentWarningDiv.closest('.card-body.text-center')) {
+                paymentWarningDiv.style.display = 'block';
+            }
+        }
+
+        // Show the authorize.net notice section
+        const authorizeNotice = document.querySelector('img[alt="authorize-net-seal"]');
+        if (authorizeNotice) {
+            // Show the entire authorize notice section
+            let noticeSection = authorizeNotice.closest('.col-md-12');
+            if (noticeSection) {
+                noticeSection.style.display = 'block';
+            }
+            // Also show the preceding empty div
+            if (noticeSection && noticeSection.previousElementSibling) {
+                noticeSection.previousElementSibling.style.display = 'block';
+            }
+        }
+
+        // Update submit button text and warning message
+        const submitButton = document.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.innerHTML = '<i class="fas fa-share"></i>&nbsp;Submit Payment';
+        }
+
+        // Update the submit section warning message for payment submissions
+        const submitWarningDiv = document.querySelector('.card-body.text-center .col-md-12[style*="color: red"]');
+        if (submitWarningDiv) {
+            submitWarningDiv.innerHTML = '<center>Page will automatically re-direct after application submission with success or error message.<br>DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center>';
         }
     }
 });

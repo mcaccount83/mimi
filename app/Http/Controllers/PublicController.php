@@ -270,7 +270,7 @@ class PublicController extends Controller
             ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->first();
-        $pcId = $ccDetails ? $ccDetails->id : null; // Add a check in case no coordinator is found
+        $pcId = $ccDetails ? $ccDetails->id : null;
 
         $shippingFirst = $input['ch_pre_fname'];
         $shippingLast = $input['ch_pre_lname'];
@@ -293,16 +293,26 @@ class PublicController extends Controller
             $shippingCountry = $countryShortName;
         }
 
-        $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+        // Check if this is an international application (states 52, 53, 54, 55)
+        $chapterStateId = intval($input['ch_state']);
+        $isInternational = in_array($chapterStateId, [52, 53, 54, 55]);
 
-        if (! $paymentResponse['success']) {
-            return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
+        // Initialize payment variables
+        $invoice = null;
+        $paymentType = 'No Payment Required';
+
+        // Only process payment for USA-based chapters
+        if (!$isInternational) {
+            $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
+                            $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+
+            if (! $paymentResponse['success']) {
+                return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
+            }
+
+            $invoice = $paymentResponse['data']['invoiceNumber'];
+            $paymentType = $paymentResponse['paymentType'];
         }
-
-        $invoice = $paymentResponse['data']['invoiceNumber'];
-
-        $paymentType = $paymentResponse['paymentType'];
 
         if (isset($input['SisteredBy'])) {
             $sisteredValue = 1;
@@ -333,6 +343,7 @@ class PublicController extends Controller
                 'created_at' => $lastupdatedDate,
                 'active_status' => $activeStatus,
             ])->id;
+
             ChapterApplication::create([
                 'chapter_id' => $chapterId,
                 'sistered' => $sisteredValue,
@@ -340,7 +351,7 @@ class PublicController extends Controller
                 'hear_about' => $input['ch_hearabout'] ?? null,
             ]);
 
-            // Foundrer Info
+            // Founder Info
             if (isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email'])) {
                 $userId = User::create([
                     'first_name' => $input['ch_pre_fname'],
@@ -350,6 +361,7 @@ class PublicController extends Controller
                     'user_type' => 'pending',
                     'is_active' => 1,
                 ])->id;
+
                 BoardsPending::create([
                     'user_id' => $userId,
                     'first_name' => $input['ch_pre_fname'],
@@ -366,7 +378,6 @@ class PublicController extends Controller
                     'last_updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
                     'last_updated_date' => $lastupdatedDate,
                 ])->id;
-
             }
 
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
@@ -374,7 +385,7 @@ class PublicController extends Controller
             $emailCC = $baseQuery['emailCC'];
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $paymentsAdmin = $adminEmail['payments_admin'];
-            $founerEmail = $input['ch_pre_email'];
+            $founderEmail = $input['ch_pre_email'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getNewChapterData($chDetails),
@@ -382,23 +393,29 @@ class PublicController extends Controller
                 $this->baseMailDataController->getPublicPaymentData($input, $invoice, $paymentType),
             );
 
-            Mail::to($founerEmail)
+            Mail::to($founderEmail)
                 ->cc($emailCC)
                 ->queue(new NewChapterThankYou($mailData));
 
-            Mail::to([$emailCC, $paymentsAdmin])
-                ->queue(new PaymentsNewChapOnline($mailData));
+            // Only send payment notification if payment was processed
+            if (!$isInternational) {
+                Mail::to([$emailCC, $paymentsAdmin])
+                    ->queue(new PaymentsNewChapOnline($mailData));
+            }
 
-                DB::commit();
+            DB::commit();
 
-        return redirect()->to('/newchaptersuccess')->with('success', 'Application was successfully submitted!');
+            return redirect()->to('/newchaptersuccess')->with('success', 'Application was successfully submitted!');
+
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            DB::rollback();
+            Log::error($e);
 
-            return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
+            // For international applications, show a generic error since there's no payment error
+            $errorMessage = $isInternational ? 'There was an error processing your application. Please try again.' : $paymentResponse['error'];
+            return redirect()->to('/newchapter')->with('fail', $errorMessage);
+
         } finally {
-            // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
     }
