@@ -135,16 +135,21 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">What jobs/offices have you held with the chapter? What programs/activities have you started or led?</label>
-                                <div class="col-sm-8">
-                                    <textarea name="jobs_programs" class="form-control" rows="4" required></textarea>
-                                </div>
-                            </div>
-
+    <label class="col-sm-4 col-form-label">What jobs/offices have you held with the chapter? What programs/activities have you started or led?</label>
+    <div class="col-sm-8">
+        <textarea name="jobs_programs" class="form-control" rows="4" maxlength="520" required></textarea>
+        <small class="form-text text-muted">
+<span id="char-count-jobs">0</span>/520 characters
+        </small>
+    </div>
+</div>
                              <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">How has the MOMS Club helped you?</label>
                                 <div class="col-sm-8">
                                     <textarea name="helped_me" class="form-control" rows="4" required></textarea>
+                                    <small class="form-text text-muted">
+<span id="char-count-helped">0</span>/520 characters
+        </small>
                                 </div>
                             </div>
 
@@ -152,6 +157,9 @@
                                 <label class="col-sm-4 col-form-label">Did you experience any problems during your time in the MOMS Club? If so, how were those problems resolved or what did you learn from them?</label>
                                 <div class="col-sm-8">
                                     <textarea name="problems" class="form-control" rows="4" required></textarea>
+                                    <small class="form-text text-muted">
+<span id="char-count-problems">0</span>/520 characters
+        </small>
                                 </div>
                             </div>
 
@@ -159,6 +167,9 @@
                                 <label class="col-sm-4 col-form-label">Why do you want to be an International MOMS Club Volunteer?</label>
                                 <div class="col-sm-8">
                                     <textarea name="why_volunteer" class="form-control" rows="4" required></textarea>
+                                    <small class="form-text text-muted">
+<span id="char-count-volunteer">0</span>/520 characters
+        </small>
                                 </div>
                             </div>
 
@@ -166,6 +177,9 @@
                                 <label class="col-sm-4 col-form-label">Do you volunteer for anyone else? Please list all your volunteer positions and when you did them?</label>
                                 <div class="col-sm-8">
                                     <textarea name="other_volunteer" class="form-control" rows="4" required></textarea>
+                                    <small class="form-text text-muted">
+<span id="char-count-other">0</span>/520 characters
+        </small>
                                 </div>
                             </div>
 
@@ -173,6 +187,9 @@
                                 <label class="col-sm-4 col-form-label">Do you have any special skills/talents/Hobbies (ie: other languages, proficient in any computer programs)?</label>
                                 <div class="col-sm-8">
                                     <textarea name="special_skills" class="form-control" rows="4" required></textarea>
+                                    <small class="form-text text-muted">
+<span id="char-count-skills">0</span>/520 characters
+        </small>
                                 </div>
                             </div>
 
@@ -180,6 +197,9 @@
                                 <label class="col-sm-4 col-form-label">What have you enjoyed most in previous volunteer experiences? Least?</label>
                                 <div class="col-sm-8">
                                     <textarea name="enjoy_volunteering" class="form-control" rows="4" required></textarea>
+                                    <small class="form-text text-muted">
+<span id="char-count-enjoy">0</span>/520 characters
+        </small>
                                 </div>
                             </div>
 
@@ -194,7 +214,7 @@
                         <div class="card-body text-center">
                             <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after application submission.</div>
                             <br>
-                                <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-share mr-2"></i>Submi Application</button>
+                                <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-share mr-2"></i>Submit Application</button>
                         </div>
 
                     </form>
@@ -217,6 +237,42 @@
 @section('customscript')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Define all textareas and their corresponding counter IDs
+    const textareaConfigs = [
+        { name: 'jobs_programs', counterId: 'char-count-jobs' },
+        { name: 'helped_me', counterId: 'char-count-helped' },
+        { name: 'problems', counterId: 'char-count-problems' },
+        { name: 'why_volunteer', counterId: 'char-count-volunteer' },
+        { name: 'other_volunteer', counterId: 'char-count-other' },
+        { name: 'special_skills', counterId: 'char-count-skills' },
+        { name: 'enjoy_volunteering', counterId: 'char-count-enjoy' }
+    ];
+
+    const maxLength = 520;
+
+    // Loop through each textarea configuration
+    textareaConfigs.forEach(config => {
+        const textarea = document.querySelector(`textarea[name="${config.name}"]`);
+        const charCount = document.getElementById(config.counterId);
+
+        if (textarea && charCount) {
+            textarea.addEventListener('input', function() {
+                const currentLength = this.value.length;
+                charCount.textContent = currentLength;
+
+                // Change color based on usage
+                const parent = charCount.parentElement;
+                if (currentLength >= maxLength * 0.9) { // 90% full
+                    parent.className = 'form-text text-danger';
+                } else if (currentLength >= maxLength * 0.8) { // 80% full
+                    parent.className = 'form-text text-warning';
+                } else {
+                    parent.className = 'form-text text-muted';
+                }
+            });
+        }
+    });
+
     // Chapter state and country
     const stateDropdown = document.getElementById('cd_state');
     const countryContainer = document.getElementById('cd_country-container');
@@ -258,7 +314,6 @@ document.getElementById('email').addEventListener('blur', function() {
         document.getElementById('emailHelp').innerHTML = '';
     }
 });
-
 
 </script>
 @endsection
