@@ -123,7 +123,7 @@ class EmailTableRowController extends Controller
             <td colspan="2" style="'.$headerStyle.'">Chapter & Founder Information</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$headerStyle.'">Chapter Name</td>
+            <td style="'.$cellLeftStyle.'">Chapter Name</td>
             <td style="'.$cellLeftStyle.'">'.$mailData['chapterName'].' '.$mailData['chapterState'].'</td>
         </tr>';
         $tableHtml .= '<tr>
@@ -163,7 +163,7 @@ class EmailTableRowController extends Controller
             <td colspan="2" style="'.$headerStyle.'">Chapter Information</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$headerStyle.'">Chapter Name</td>
+            <td style="'.$cellLeftStyle.'">Chapter Name</td>
             <td style="'.$cellLeftStyle.'">'.$mailData['chapterName'].' '.$mailData['chapterState'].'</td>
         </tr>';
         $tableHtml .= '<tr>
@@ -343,7 +343,7 @@ class EmailTableRowController extends Controller
             <td colspan="2" style="'.$headerStyle.'">'.$mailData['borPosition'].' Information</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'"></td>
+            <td style="'.$headerStyle.'"></td>
             <td style="'.$headerStyle.'">Previous</td>
             <td style="'.$headerStyle.'">Updated</td>
         </tr>';
