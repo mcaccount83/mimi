@@ -2410,6 +2410,7 @@ class ChapterController extends Controller implements HasMiddleware
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $pcDetails = $baseQuery['pcDetails'];
+            $emailCC = $baseQuery['emailCC'];
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
             $PresDetails = $baseActiveBoardQuery['PresDetails'];
@@ -2440,7 +2441,7 @@ class ChapterController extends Controller implements HasMiddleware
             Mail::to($paymentsAdmin)
                 ->queue(new NewChapApproveAdminNotice($mailData));
 
-            Mail::to($gsuiteAdmin)
+            Mail::to($emailCC)
                 ->queue(new NewChapApproveGSuiteNotice($mailData));
 
             Mail::to($pcDetails->email)
