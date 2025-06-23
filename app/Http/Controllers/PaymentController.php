@@ -100,7 +100,7 @@ class PaymentController extends Controller implements HasMiddleware
                         $shippingFirst, $shippingLast,$shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
-            return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
+            return redirect()->back()->with('fail', $paymentResponse['error']);
         }
 
         $paymentType = $paymentResponse['paymentType'];
@@ -171,7 +171,7 @@ class PaymentController extends Controller implements HasMiddleware
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/board/reregpayment')->with('fail', $paymentResponse['error']);
+            return redirect()->back()->with('fail', $paymentResponse['error']);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -224,7 +224,7 @@ class PaymentController extends Controller implements HasMiddleware
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
-            return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
+            return redirect()->back()->with('fail', $paymentResponse['error']);
         }
 
         $invoice = $paymentResponse['data']['invoiceNumber'];
@@ -295,7 +295,7 @@ class PaymentController extends Controller implements HasMiddleware
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/board/donation')->with('fail', $paymentResponse['error']);
+            return redirect()->back()->with('fail', $paymentResponse['error']);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -398,7 +398,7 @@ class PaymentController extends Controller implements HasMiddleware
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/board/manual')->with('fail', $paymentResponse['error']);
+            return redirect()->back()->with('fail', $paymentResponse['error']);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
