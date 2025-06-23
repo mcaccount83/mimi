@@ -1105,6 +1105,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
+            $coordinator->region_id = $request->input('cord_region');
             $coordinator->position_id = $request->input('cord_pos');
             $coordinator->display_position_id = $request->input('cord_disp_pos');
             $coordinator->last_promoted = $request->input('CoordinatorPromoteDate');
