@@ -940,7 +940,7 @@ function showBigSisterEmailModal() {
     Swal.fire({
         title: 'Big Sister Welcome Email',
         html: `
-            <p>This will automatically send the Big Sister Welcome Email to the Big Sister, her Supervising Coordinator and current the user sending the email.</p>
+            <p>This will automatically send the Big Sister Welcome Email to the Big Sister, her Mentoring Coordinator and Full Coordinator Team.</p>
             <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $cdDetails->id }}">
         `,
         showCancelButton: true,

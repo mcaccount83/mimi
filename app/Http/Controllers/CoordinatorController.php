@@ -446,6 +446,9 @@ class CoordinatorController extends Controller implements HasMiddleware
         $ReportEmail = $cdDetails->reportsTo?->email;
         $ReportPhone = $cdDetails->reportsTo?->phone;
 
+        $cdList = $this->userController->loadCoordEmailDetails($cdId);
+        $emailListCoord = $cdList['emailListCoord'];
+
         $chList = Chapters::with('state')
             ->where('primary_coordinator_id', $cdId)  // Chapter Harcoaded List
             ->where('active_status', 1)
@@ -473,7 +476,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             ];
 
             Mail::to($cdEmail)
-                ->cc($ReportEmail, $cdEmailUser)
+                ->cc($emailListCoord)
+                // ->cc($ReportEmail, $cdEmailUser)
                 ->queue(new NewCoordinatordWelcome($mailData));
 
             // Commit the transaction

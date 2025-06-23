@@ -219,6 +219,31 @@ class UserController extends Controller implements HasMiddleware
         ];
     }
 
+     /**
+     * load Email Details -- Mail for Coordinator Downline bassed on CoordId
+     */
+    public function loadCoordEmailDetails($cdId)
+    {
+        $cdDetails = Coordinators::with(['coordTree'])->find($cdId);
+        $coordinators = $cdDetails->coordTree()->get();
+
+        $coordinatorList = collect($coordinators)
+                ->flatMap(function ($value) {
+                    $attributes = $value->getAttributes();
+
+                    return collect(range(1, 8))
+                        ->map(fn ($i) => $attributes['layer'.$i] ?? null)
+                        ->filter(fn ($id) => is_numeric($id));
+                })
+                ->unique();
+
+            $emailListCoord = Coordinators::whereIn('id', $coordinatorList)->pluck('email')->filter()->toArray();
+
+        return [
+            'emailListCoord' => $emailListCoord,
+        ];
+    }
+
     /**
      * load Coordinator List for a PC selected and their downline
      */

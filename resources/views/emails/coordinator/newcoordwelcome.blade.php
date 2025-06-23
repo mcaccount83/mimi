@@ -68,7 +68,7 @@
     https://momsclub.org/mimi/admin/resources</p>
 <hr>
 <b>YOUR COORDINATOR TEAM</b>
-<p>You are never alone! No matter how seasoned you are, you will always have a Coordinator Team around you. Your full coordinator team is cc'd here so you have all of their information and I'm also here for anything that you need!  But, as your Mentoring Coordinator, {{ $mailData['cor_fname'] }} should always be your first point of contact.</p>
+<p>You are never alone! No matter how seasoned you are, you will always have a Coordinator Team around you. Your full coordinator team is cc'd here and listed in your MIMI profile so you have all of their information and I'm also here for anything that you need!  But, as your Mentoring Coordinator, {{ $mailData['cor_fname'] }} should always be your first point of contact.</p>
 
 <br>
 <p><strong>MCL</strong>,<br>
