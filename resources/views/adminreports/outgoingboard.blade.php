@@ -34,17 +34,17 @@
                     <tbody>
                         @foreach($outgoingList as $list)
                         <td>
-                            @if ($list->boardOutgoing?->chapters->region->short_name != "None")
-                                {{ $list->boardOutgoing?->chapters->conference->short_name }} / {{ $list->boardOutgoing?->chapters->region->short_name }}
+                            @if ($list->boardOutgoing?->chapters->region?->short_name != "None")
+                                {{ $list->boardOutgoing?->chapters->conference?->short_name }} / {{ $list->boardOutgoing?->chapters->region?->short_name }}
                             @else
-                                {{ $list->boardOutgoing?->chapters->conference->short_name }}
+                                {{ $list->boardOutgoing?->chapters->conference?->short_name }}
                             @endif
                         </td>
                         <td>
                            @if($list->boardOutgoing?->state_id < 52)
-                                {{$list->boardOutgoing?->state->state_short_name}}
+                                {{$list->boardOutgoing?->state?->state_short_name}}
                             @else
-                                {{$list->boardOutgoing?->country->short_name}}
+                                {{$list->boardOutgoing?->country?->short_name}}
                             @endif
                         </td>
                         <td>{{ $list->boardOutgoing?->chapters->name }}</td>
