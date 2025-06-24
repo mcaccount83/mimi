@@ -210,11 +210,16 @@
                                 <label class="col-sm-2 col-form-label">Website:</label>
                                 <div class="col-sm-7">
                                     <input type="text" name="ch_website" id="ch_website" class="form-control"
-                                           value="{{$chDetails->website_url}}"
-                                           onchange="updateWebsiteStatus()" placeholder="Chapter Website">
+                                        value="{{$chDetails->website_url}}"
+                                        placeholder="Chapter Website">
                                 </div>
+                            </div>
+
+                            <!-- Website Status Container - Hidden by default -->
+                            <div class="form-group row" id="ch_webstatus-container" style="display: none;">
+                                <label class="col-sm-2 col-form-label">Website Status:</label>
                                 <div class="col-sm-3">
-                                    <select name="ch_webstatus" id="ch_webstatus"class="form-control" style="width: 100%;" required>
+                                    <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;">
                                         <option value="">Select Status</option>
                                         @foreach($allWebLinks as $status)
                                             <option value="{{$status->id}}"
@@ -225,6 +230,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <!-- /.form group -->
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Website Notes:</label>
@@ -288,6 +294,39 @@ $(document).ready(function () {
                 e.preventDefault(); // Prevent link click
             });
         });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const websiteUrl = document.getElementById('ch_website');
+    const statusContainer = document.getElementById('ch_webstatus-container');
+    const websiteStatus = document.getElementById('ch_webstatus');
+
+    // Only proceed if all elements exist
+    if (websiteUrl && statusContainer && websiteStatus) {
+
+        // Function to toggle status field visibility
+        function toggleStatusField() {
+            const urlValue = websiteUrl.value.trim();
+
+            if (urlValue !== '' && urlValue !== 'http://') {
+                // Show status field if URL has a meaningful value
+                statusContainer.style.display = 'flex';
+                websiteStatus.setAttribute('required', 'required');
+            } else {
+                // Hide status field if URL is empty or just the default "http://"
+                statusContainer.style.display = 'none';
+                websiteStatus.removeAttribute('required');
+                websiteStatus.value = ""; // Clear the selection
+            }
+        }
+
+        // Set initial state on page load
+        toggleStatusField();
+
+        // Add event listeners for real-time updates
+        websiteUrl.addEventListener('input', toggleStatusField);
+        websiteUrl.addEventListener('change', toggleStatusField);
     }
 });
 
