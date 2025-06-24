@@ -151,7 +151,13 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Website:</label> <a href="{{$chDetails->website_url}}" target="_blank">{{$chDetails->website_url}}</a>
+
+                        <label>Website:</label>
+                            @if($chDetails->website_url == 'http://' || empty($chDetails->website_url))
+                                &nbsp;
+                            @else
+                                <a href="{{$chDetails->website_url}}" target="_blank">{{$chDetails->website_url}}</a>
+                            @endif
                         <br>
                         <label>Webiste Link Status:</label> {{$websiteLink}}
                         <br>

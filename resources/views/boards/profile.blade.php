@@ -416,7 +416,7 @@
                         </div>
 
                         <!-- Web Status Field -->
-                        <div class="form-group row">
+                        <div class="form-group row" id="ch_webstatus-container" style="display: none;">
                             <label class="col-sm-2 col-form-label">Web Status</label>
                             <div class="col-sm-5">
                                 <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;"
@@ -732,52 +732,101 @@ $(document).ready(function () {
 
 });
 
+ document.addEventListener('DOMContentLoaded', function() {
+    const websiteUrl = document.getElementById('ch_website');
+    const statusContainer = document.getElementById('ch_webstatus-container');
+    const websiteStatus = document.getElementById('ch_webstatus');
+
+    // Only proceed if all elements exist
+    if (websiteUrl && statusContainer && websiteStatus) {
+
+        // Function to toggle status field visibility
+        function toggleStatusField() {
+            const urlValue = websiteUrl.value.trim();
+
+            if (urlValue !== '' && urlValue !== 'http://') {
+                // Show status field if URL has a meaningful value
+                statusContainer.style.display = 'flex';
+                websiteStatus.setAttribute('required', 'required');
+            } else {
+                // Hide status field if URL is empty or just the default "http://"
+                statusContainer.style.display = 'none';
+                websiteStatus.removeAttribute('required');
+                websiteStatus.value = ""; // Clear the selection
+            }
+        }
+
+        // Set initial state on page load
+        toggleStatusField();
+
+        // Add event listeners for real-time updates
+        websiteUrl.addEventListener('input', toggleStatusField);
+        websiteUrl.addEventListener('change', toggleStatusField);
+    }
+});
+
 document.addEventListener("DOMContentLoaded", function() {
     const websiteField = document.getElementById("ch_website");
     const statusField = document.getElementById("ch_webstatus");
-    const hiddenStatus = document.querySelector('input[name="ch_hid_webstatus"]');
 
-    // Get the current saved value
-    const savedValue = hiddenStatus.value;
-    const originalUrl = websiteField.value;
-
-    // Function to disable options 0 and 1
-    const disableRestrictedOptions = () => {
+    websiteField.addEventListener("input", function() {
+        // Enable options 2 and 3, disable options 1 and 2
         Array.from(statusField.options).forEach(option => {
-            if (option.value === "0" || option.value === "1") {
+            if (["0", "1"].includes(option.value)) {
                 option.disabled = true;
+            } else if (["2", "3"].includes(option.value)) {
+                option.disabled = false;
             }
         });
-    };
-
-    // Function to update status field requirements
-    const updateStatusRequirement = () => {
-        if (websiteField.value.trim() === '') {
-            statusField.removeAttribute('required');
-            statusField.value = ''; // Optionally clear the status
-        } else {
-            statusField.setAttribute('required', 'required');
-        }
-    };
-
-    // Initial setup
-    disableRestrictedOptions();
-    updateStatusRequirement();
-
-    // Ensure the saved value is selected if URL exists
-    if (originalUrl && statusField.value) {
-        statusField.value = savedValue;
-    }
-
-    // Add event listener for website URL changes
-    websiteField.addEventListener("input", function() {
-        if (this.value !== originalUrl) {
-            statusField.value = "";
-            disableRestrictedOptions();
-        }
-        updateStatusRequirement();
     });
 });
+
+// document.addEventListener("DOMContentLoaded", function() {
+//     const websiteField = document.getElementById("ch_website");
+//     const statusField = document.getElementById("ch_webstatus");
+//     const hiddenStatus = document.querySelector('input[name="ch_hid_webstatus"]');
+
+//     // Get the current saved value
+//     const savedValue = hiddenStatus.value;
+//     const originalUrl = websiteField.value;
+
+//     // Function to disable options 0 and 1
+//     const disableRestrictedOptions = () => {
+//         Array.from(statusField.options).forEach(option => {
+//             if (option.value === "0" || option.value === "1") {
+//                 option.disabled = true;
+//             }
+//         });
+//     };
+
+//     // Function to update status field requirements
+//     const updateStatusRequirement = () => {
+//         if (websiteField.value.trim() === '') {
+//             statusField.removeAttribute('required');
+//             statusField.value = ''; // Optionally clear the status
+//         } else {
+//             statusField.setAttribute('required', 'required');
+//         }
+//     };
+
+//     // Initial setup
+//     disableRestrictedOptions();
+//     updateStatusRequirement();
+
+//     // Ensure the saved value is selected if URL exists
+//     if (originalUrl && statusField.value) {
+//         statusField.value = savedValue;
+//     }
+
+//     // Add event listener for website URL changes
+//     websiteField.addEventListener("input", function() {
+//         if (this.value !== originalUrl) {
+//             statusField.value = "";
+//             disableRestrictedOptions();
+//         }
+//         updateStatusRequirement();
+//     });
+// });
 
 // Function to handle show/hide logic for vacant checkboxes
 function handleVacantCheckbox(checkboxId, fieldClass) {

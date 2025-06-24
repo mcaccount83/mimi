@@ -429,7 +429,31 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                 <div class="form-group row">
+                                <label class="col-sm-12 col-form-label">Website:</label>
+                                <div class="col-sm-12">
+                                    <input type="text" name="ch_website" id="ch_website" class="form-control"
+                                        value="{{$chDetails->website_url}}"
+                                        placeholder="Chapter Website">
+                                </div>
+                            </div>
+
+                            <!-- Website Status Container - Hidden by default -->
+                            <div class="form-group row" id="ch_webstatus-container" style="display: none; margin-top: -8px;">
+                                <div class="col-sm-8">
+                                    <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;">
+                                        <option value="">Select Status</option>
+                                        @foreach($allWebLinks as $status)
+                                            <option value="{{$status->id}}"
+                                                @if($chDetails->website_status == $status->id) selected @endif>
+                                                {{$status->link_status}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                                {{-- <div class="form-group row">
                                     <label class="col-sm-12 col-form-label">Website:</label>
                                     <div class="col-sm-12 mb-2">
                                         <input type="text" name="ch_website" id="ch_website" class="form-control"
@@ -447,7 +471,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <!-- /.form group -->
                         <div class="form-group row">
@@ -512,6 +536,39 @@
 @endsection
 @section('customscript')
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const websiteUrl = document.getElementById('ch_website');
+    const statusContainer = document.getElementById('ch_webstatus-container');
+    const websiteStatus = document.getElementById('ch_webstatus');
+
+    // Only proceed if all elements exist
+    if (websiteUrl && statusContainer && websiteStatus) {
+
+        // Function to toggle status field visibility
+        function toggleStatusField() {
+            const urlValue = websiteUrl.value.trim();
+
+            if (urlValue !== '' && urlValue !== 'http://') {
+                // Show status field if URL has a meaningful value
+                statusContainer.style.display = 'flex';
+                websiteStatus.setAttribute('required', 'required');
+            } else {
+                // Hide status field if URL is empty or just the default "http://"
+                statusContainer.style.display = 'none';
+                websiteStatus.removeAttribute('required');
+                websiteStatus.value = ""; // Clear the selection
+            }
+        }
+
+        // Set initial state on page load
+        toggleStatusField();
+
+        // Add event listeners for real-time updates
+        websiteUrl.addEventListener('input', toggleStatusField);
+        websiteUrl.addEventListener('change', toggleStatusField);
+    }
+});
+
         document.addEventListener('DOMContentLoaded', function() {
     // Define the sections we need to handle
     const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
