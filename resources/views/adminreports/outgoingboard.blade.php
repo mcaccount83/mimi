@@ -23,7 +23,9 @@
             <table id="chapterlist" class="table table-sm table-hover" >
                 <thead>
                     <tr>
-                      <th>Chapter</th>
+                      <th>Conf/Reg</th>
+                    <th>State</th>
+                    <th>Chapter</th>
                       <th>Name</th>
                       <th>Email</th>
                     <th>User Type</th>
@@ -31,8 +33,21 @@
                     </thead>
                     <tbody>
                         @foreach($outgoingList as $list)
-                        <tr>
-                            <td>{{ $list->board->chapters->name }}, {{ $list->board->chapters->state->state_short_name }}</td>
+                        <td>
+                            @if ($list->boardOutgoing?->chapters->region->short_name != "None")
+                                {{ $list->boardOutgoing?->chapters->conference->short_name }} / {{ $list->boardOutgoing?->chapters->region->short_name }}
+                            @else
+                                {{ $list->boardOutgoing?->chapters->conference->short_name }}
+                            @endif
+                        </td>
+                        <td>
+                           @if($list->boardOutgoing?->state_id < 52)
+                                {{$list->boardOutgoing?->state->state_short_name}}
+                            @else
+                                {{$list->boardOutgoing?->country->short_name}}
+                            @endif
+                        </td>
+                        <td>{{ $list->boardOutgoing?->chapters->name }}</td>
                             <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                             <td class="email-column">
                                 <a href="mailto:{{ $list->email }}">{{ $list->email }}</a>

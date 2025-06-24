@@ -191,12 +191,12 @@ class AdminController extends Controller implements HasMiddleware
      */
     public function showDuplicate(): View
     {
-        $userData = User::where('active_status', '=', '1')
+        $userData = User::where('is_active', '=', '1')
             ->groupBy('email')
             ->having(DB::raw('count(email)'), '>', 1)
             ->pluck('email');
 
-        $userList = User::where('active_status', '=', '1')
+        $userList = User::where('is_active', '=', '1')
             ->whereIn('email', $userData)
             ->get();
 
@@ -246,9 +246,9 @@ class AdminController extends Controller implements HasMiddleware
      */
     public function showOutgoingBoard(): View
     {
-        $outgoingList = User::with(['outgoing', 'board.chapters'])
+        $outgoingList = User::with(['boardOutgoing', 'boardOutgoing.chapters'])
             ->where('user_type', 'outgoing')
-            ->where('active_status', '1')
+            ->where('is_active', '1')
             ->get();
 
         $countList = count($outgoingList);
@@ -264,7 +264,7 @@ class AdminController extends Controller implements HasMiddleware
     {
         $disbandedList = User::with(['boardDisbanded', 'boardDisbanded.chapters'])
             ->where('user_type', 'disbanded')
-            ->where('active_status', '1')
+            ->where('is_active', '1')
             ->get();
 
         $countList = count($disbandedList);

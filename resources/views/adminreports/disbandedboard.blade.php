@@ -42,10 +42,10 @@
                             @endif
                         </td>
                         <td>
-                            @if($list->state_id < 52)
-                                {{$list->state->state_short_name}}
+                           @if($list->boardDisbanded->state_id < 52)
+                                {{$list->boardDisbanded->state->state_short_name}}
                             @else
-                                {{$list->country->short_name}}
+                                {{$list->boardDisbanded->country->short_name}}
                             @endif
                         </td>
                         <td>{{ $list->boardDisbanded->chapters->name }}</td>

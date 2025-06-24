@@ -59,16 +59,6 @@ class User extends Authenticatable
         return $this->hasOne(AdminRole::class, 'id', 'is_admin');  // 'is_admin' in users HasOne 'id' in admin_roles
     }
 
-    // public function outgoing(): HasOne
-    // {
-    //     return $this->hasOne(OutgoingBoard::class, 'user_id', 'id');  // 'user_id' in outgoing_board_members HasOne 'id' in users
-    // }
-
-    // public function disbanded(): HasOne
-    // {
-    //     return $this->hasOne(DisbandedBoard::class, 'user_id', 'id');  // 'user_id' in disbanded_board_members HasOne 'id' in users
-    // }
-
     public function authorFullName()
     {
         return $this->first_name.' '.$this->last_name;
