@@ -68,8 +68,13 @@
                         @elseif ( $list->website_status == 2 ) style="background-color: #ffc107;"
                         @endif>
                     {{ $list->webLink->link_status?? null }}</td>
-                    <td><a href="{{ url("{$list->website_url}") }}" target="_blank">{{ $list->website_url }}</a></td>
-                    <td>{{ $list->egroup }}</td>
+                    <td>
+                        @if($list->website_url == 'http://' || empty($list->website_url))
+                            &nbsp;
+                        @else
+                            <a href="{{ url($list->website_url) }}" target="_blank">{{ $list->website_url }}</a>
+                        @endif
+                    </td>                    <td>{{ $list->egroup }}</td>
                     <td>{{ $list->website_notes }}</td>
                     </tr>
                   @endforeach
