@@ -35,20 +35,20 @@
                     @foreach($disbandedList as $list)
                     <tr>
                         <td>
-                            @if ($list->boardDisbanded->chapters->region->short_name != "None")
-                                {{ $list->boardDisbanded->chapters->conference->short_name }} / {{ $list->boardDisbanded->chapters->region->short_name }}
+                            @if ($list->boardDisbanded?->chapters->region->short_name != "None")
+                                {{ $list->boardDisbanded?->chapters->conference->short_name }} / {{ $list->boardDisbanded?->chapters->region->short_name }}
                             @else
-                                {{ $list->boardDisbanded->chapters->conference->short_name }}
+                                {{ $list->boardDisbanded?->chapters->conference->short_name }}
                             @endif
                         </td>
                         <td>
-                           @if($list->boardDisbanded->state_id < 52)
-                                {{$list->boardDisbanded->state->state_short_name}}
+                           @if($list->boardDisbanded?->state_id < 52)
+                                {{$list->boardDisbanded?->state->state_short_name}}
                             @else
-                                {{$list->boardDisbanded->country->short_name}}
+                                {{$list->boardDisbanded?->country->short_name}}
                             @endif
                         </td>
-                        <td>{{ $list->boardDisbanded->chapters->name }}</td>
+                        <td>{{ $list->boardDisbanded?->chapters->name }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td class="email-column">
                             <a href="mailto:{{ $list->email }}">{{ $list->email }}</a>

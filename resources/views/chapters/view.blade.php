@@ -801,9 +801,6 @@
                         <h3 class="profile-username">{{$SECDetails->first_name}} {{$SECDetails->last_name}}</h3>
                         <div class="row">
                             <div class="col-md-6">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
                                 <a href="mailto:{{ $SECDetails->email }}">{{ $SECDetails->email }}</a>
                                 <br>
                                 <span class="phone-mask">{{$SECDetails->phone}}</span>
@@ -813,8 +810,11 @@
                                 {{$SECDetails->city}},{{$SECDetails->state?->state_short_name}}&nbsp;{{$SECDetails->zip}}
                                 <br>
                                         {{$SECDetails->country?->short_name}}
-                            </div>
-                            <div class="col-md-6">
+                           </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
                                 @php
                                     $Subscriptions = $SECDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                 @endphp
