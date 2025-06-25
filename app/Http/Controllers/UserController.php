@@ -584,22 +584,25 @@ class UserController extends Controller implements HasMiddleware
             'updated_at' => $lastupdatedDate,
         ]);
 
-        BoardsOutgoing::create([
-            'user_id' => $boardDetails->user_id,
-            'chapter_id' => $boardDetails->chapter_id,
-            'board_position_id' => $boardDetails->board_position_id,
-            'first_name' => $boardDetails->first_name,
-            'last_name' => $boardDetails->last_name,
-            'email' => $boardDetails->email,
-            'phone' => $boardDetails->phone,
-            'street_address' => $boardDetails->street_address,
-            'city' => $boardDetails->city,
-            'state_id' => $boardDetails->state_id,
-            'zip' => $boardDetails->zip,
-            'country_id' => $boardDetails->country_id,
-            'last_updated_by' => $lastUpdatedBy,
-            'last_updated_date' => $lastupdatedDate,
-        ]);
-
+        BoardsOutgoing::updateOrCreate(
+            [
+                'user_id' => $boardDetails->user_id,
+                'chapter_id' => $boardDetails->chapter_id,
+                'board_position_id' => $boardDetails->board_position_id,
+            ],
+            [
+                'first_name' => $boardDetails->first_name,
+                'last_name' => $boardDetails->last_name,
+                'email' => $boardDetails->email,
+                'phone' => $boardDetails->phone,
+                'street_address' => $boardDetails->street_address,
+                'city' => $boardDetails->city,
+                'state_id' => $boardDetails->state_id,
+                'zip' => $boardDetails->zip,
+                'country_id' => $boardDetails->country_id,
+                'last_updated_by' => $lastUpdatedBy,
+                'last_updated_date' => $lastupdatedDate,
+            ]
+        );
     }
 }

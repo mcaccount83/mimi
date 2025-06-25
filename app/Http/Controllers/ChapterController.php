@@ -1353,22 +1353,26 @@ class ChapterController extends Controller implements HasMiddleware
                             'user_type' => 'outgoing',
                             'updated_at' => $lastupdatedDate,
                         ]);
-                        BoardsOutgoing::create([
-                            'user_id' => $user->id,
-                            'chapter_id' => $bdDetails->chapter_id,
-                            'board_position_id' => $bdDetails->board_position_id,
-                            'first_name' => $bdDetails->first_name,
-                            'last_name' => $bdDetails->last_name,
-                            'email' => $bdDetails->email,
-                            'phone' => $bdDetails->phone,
-                            'street_address' => $bdDetails->street_address,
-                            'city' => $bdDetails->city,
-                            'state_id' => $bdDetails->state_id,
-                            'zip' => $bdDetails->zip,
-                            'country_id' => $bdDetails->country_id,
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => $lastupdatedDate,
-                        ]);
+                        BoardsOutgoing::updateOrCreate(
+                            [
+                                'user_id' => $user->id,
+                                'chapter_id' => $bdDetails->chapter_id,
+                                'board_position_id' => $bdDetails->board_position_id,
+                            ],
+                            [
+                                'first_name' => $bdDetails->first_name,
+                                'last_name' => $bdDetails->last_name,
+                                'email' => $bdDetails->email,
+                                'phone' => $bdDetails->phone,
+                                'street_address' => $bdDetails->street_address,
+                                'city' => $bdDetails->city,
+                                'state_id' => $bdDetails->state_id,
+                                'zip' => $bdDetails->zip,
+                                'country_id' => $bdDetails->country_id,
+                                'last_updated_by' => $lastUpdatedBy,
+                                'last_updated_date' => $lastupdatedDate,
+                            ]
+                        );
                         Boards::where('user_id', $user->id)->delete();
                         ForumCategorySubscription::where('user_id', $user->id)->delete();
                     }
@@ -1451,22 +1455,26 @@ class ChapterController extends Controller implements HasMiddleware
                             'user_type' => 'outgoing',
                             'updated_at' => $lastupdatedDate,
                         ]);
-                        BoardsOutgoing::create([
-                            'user_id' => $user->id,
-                            'chapter_id' => $bdDetails->chapter_id,
-                            'board_position_id' => $bdDetails->board_position_id,
-                            'first_name' => $bdDetails->first_name,
-                            'last_name' => $bdDetails->last_name,
-                            'email' => $bdDetails->email,
-                            'phone' => $bdDetails->phone,
-                            'street_address' => $bdDetails->street_address,
-                            'city' => $bdDetails->city,
-                            'state_id' => $bdDetails->state_id,
-                            'zip' => $bdDetails->zip,
-                            'country_id' => $bdDetails->country_id,
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => $lastupdatedDate,
-                        ]);
+                        BoardsOutgoing::updateOrCreate(
+                            [
+                                'user_id' => $user->id,
+                                'chapter_id' => $bdDetails->chapter_id,
+                                'board_position_id' => $bdDetails->board_position_id,
+                            ],
+                            [
+                                'first_name' => $bdDetails->first_name,
+                                'last_name' => $bdDetails->last_name,
+                                'email' => $bdDetails->email,
+                                'phone' => $bdDetails->phone,
+                                'street_address' => $bdDetails->street_address,
+                                'city' => $bdDetails->city,
+                                'state_id' => $bdDetails->state_id,
+                                'zip' => $bdDetails->zip,
+                                'country_id' => $bdDetails->country_id,
+                                'last_updated_by' => $lastUpdatedBy,
+                                'last_updated_date' => $lastupdatedDate,
+                            ]
+                        );
                         Boards::where('user_id', $user->id)->delete();
                         ForumCategorySubscription::where('user_id', $user->id)->delete();
                     }
@@ -1550,22 +1558,26 @@ class ChapterController extends Controller implements HasMiddleware
                             'user_type' => 'outgoing',
                             'updated_at' => $lastupdatedDate,
                         ]);
-                        BoardsOutgoing::create([
-                            'user_id' => $user->id,
-                            'chapter_id' => $bdDetails->chapter_id,
-                            'board_position_id' => $bdDetails->board_position_id,
-                            'first_name' => $bdDetails->first_name,
-                            'last_name' => $bdDetails->last_name,
-                            'email' => $bdDetails->email,
-                            'phone' => $bdDetails->phone,
-                            'street_address' => $bdDetails->street_address,
-                            'city' => $bdDetails->city,
-                            'state_id' => $bdDetails->state_id,
-                            'zip' => $bdDetails->zip,
-                            'country_id' => $bdDetails->country_id,
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => $lastupdatedDate,
-                        ]);
+                        BoardsOutgoing::updateOrCreate(
+                            [
+                                'user_id' => $user->id,
+                                'chapter_id' => $bdDetails->chapter_id,
+                                'board_position_id' => $bdDetails->board_position_id,
+                            ],
+                            [
+                                'first_name' => $bdDetails->first_name,
+                                'last_name' => $bdDetails->last_name,
+                                'email' => $bdDetails->email,
+                                'phone' => $bdDetails->phone,
+                                'street_address' => $bdDetails->street_address,
+                                'city' => $bdDetails->city,
+                                'state_id' => $bdDetails->state_id,
+                                'zip' => $bdDetails->zip,
+                                'country_id' => $bdDetails->country_id,
+                                'last_updated_by' => $lastUpdatedBy,
+                                'last_updated_date' => $lastupdatedDate,
+                            ]
+                        );
                         Boards::where('user_id', $user->id)->delete();
                         ForumCategorySubscription::where('user_id', $user->id)->delete();
                     }
@@ -1650,22 +1662,26 @@ class ChapterController extends Controller implements HasMiddleware
                             'user_type' => 'outgoing',
                             'updated_at' => $lastupdatedDate,
                         ]);
-                        BoardsOutgoing::create([
-                            'user_id' => $user->id,
-                            'chapter_id' => $bdDetails->chapter_id,
-                            'board_position_id' => $bdDetails->board_position_id,
-                            'first_name' => $bdDetails->first_name,
-                            'last_name' => $bdDetails->last_name,
-                            'email' => $bdDetails->email,
-                            'phone' => $bdDetails->phone,
-                            'street_address' => $bdDetails->street_address,
-                            'city' => $bdDetails->city,
-                            'state_id' => $bdDetails->state_id,
-                            'zip' => $bdDetails->zip,
-                            'country_id' => $bdDetails->country_id,
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => $lastupdatedDate,
-                        ]);
+                        BoardsOutgoing::updateOrCreate(
+                            [
+                                'user_id' => $user->id,
+                                'chapter_id' => $bdDetails->chapter_id,
+                                'board_position_id' => $bdDetails->board_position_id,
+                            ],
+                            [
+                                'first_name' => $bdDetails->first_name,
+                                'last_name' => $bdDetails->last_name,
+                                'email' => $bdDetails->email,
+                                'phone' => $bdDetails->phone,
+                                'street_address' => $bdDetails->street_address,
+                                'city' => $bdDetails->city,
+                                'state_id' => $bdDetails->state_id,
+                                'zip' => $bdDetails->zip,
+                                'country_id' => $bdDetails->country_id,
+                                'last_updated_by' => $lastUpdatedBy,
+                                'last_updated_date' => $lastupdatedDate,
+                            ]
+                        );
                         Boards::where('user_id', $user->id)->delete();
                         ForumCategorySubscription::where('user_id', $user->id)->delete();
                     }
