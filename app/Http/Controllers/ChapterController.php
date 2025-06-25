@@ -501,22 +501,22 @@ class ChapterController extends Controller implements HasMiddleware
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                [
-                    'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
-                    'presEmail' => $PresDetails->email,
-                    'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-                    'avpEmail' => $AVPDetails->email,
-                    'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-                    'mvpEmail' => $MVPDetails->email,
-                    'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-                    'trsEmail' => $TRSDetails->email,
-                    'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-                    'secEmail' => $SECDetails->email,
-                ]
+                $this->baseMailDataController->getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails),
+                // [
+                //     'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
+                //     'presEmail' => $PresDetails->email,
+                //     'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
+                //     'avpEmail' => $AVPDetails->email,
+                //     'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
+                //     'mvpEmail' => $MVPDetails->email,
+                //     'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
+                //     'trsEmail' => $TRSDetails->email,
+                //     'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
+                //     'secEmail' => $SECDetails->email,
+                // ]
             );
 
             // ListAdmin Notification//
-            // $to_email = 'listadmin@momsclub.org';
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $listAdmin = $adminEmail['list_admin'];
 
@@ -635,17 +635,11 @@ class ChapterController extends Controller implements HasMiddleware
             $chConfId = $baseQuery['chConfId'];
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterid);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
-        $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
-        $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
-        $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
-        $SECDetails = $baseActiveBoardQuery['SECDetails'];
-
-            // $PresDetails = $baseQuery['PresDetails'];
-            // $AVPDetails = $baseQuery['AVPDetails'];
-            // $MVPDetails = $baseQuery['MVPDetails'];
-            // $TRSDetails = $baseQuery['TRSDetails'];
-            // $SECDetails = $baseQuery['SECDetails'];
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+            $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+            $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+            $SECDetails = $baseActiveBoardQuery['SECDetails'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -659,14 +653,12 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
             // Primary Coordinator Notification//
-            // $to_email = 'listadmin@momsclub.org';
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $listAdmin = $adminEmail['list_admin'];
 
             Mail::to($listAdmin)
                 ->queue(new UnZapChapListNotice($mailData));
 
-            // Commit the transaction
             DB::commit();
 
             $message = 'Chapter successfully unzapped';
@@ -984,11 +976,11 @@ class ChapterController extends Controller implements HasMiddleware
             $pcDetails = $baseQuery['pcDetails'];
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
-        $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
-        $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
-        $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
-        $SECDetails = $baseActiveBoardQuery['SECDetails'];
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+            $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+            $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+            $SECDetails = $baseActiveBoardQuery['SECDetails'];
 
             //  Load User Information for Signing Email & PDFs
             $user = $this->userController->loadUserInformation($request);
@@ -997,18 +989,19 @@ class ChapterController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getPCData($pcDetails),
-                [
-                    'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
-                    'presEmail' => $PresDetails->email,
-                    'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-                    'avpEmail' => $AVPDetails->email,
-                    'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-                    'mvpEmail' => $MVPDetails->email,
-                    'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-                    'trsEmail' => $TRSDetails->email,
-                    'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-                    'secEmail' => $SECDetails->email,
-                ]
+                $this->baseMailDataController->getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails),
+                // [
+                //     'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
+                //     'presEmail' => $PresDetails->email,
+                //     'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
+                //     'avpEmail' => $AVPDetails->email,
+                //     'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
+                //     'mvpEmail' => $MVPDetails->email,
+                //     'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
+                //     'trsEmail' => $TRSDetails->email,
+                //     'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
+                //     'secEmail' => $SECDetails->email,
+                // ]
             );
 
             // Primary Coordinator Notification//
@@ -1016,7 +1009,6 @@ class ChapterController extends Controller implements HasMiddleware
                 ->queue(new NewChapPCNotice($mailData));
 
             // List Admin Notification//
-            // $listAdminEmail = 'listadmin@momsclub.org';
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $listAdmin = $adminEmail['list_admin'];
 
@@ -1452,9 +1444,9 @@ class ChapterController extends Controller implements HasMiddleware
         $stateId = $requestData->input($prefix . 'state');
         $countryId = $requestData->input($prefix . 'country') ?? '198';
 
-        // Check if user with this email already exists and is not outgoing
+        // Check if user with this email already exists and is not on another active board
         $existingUser = User::where('email', $email)
-                        //    ->where('user_type', '!=', 'outgoing')
+                           ->where('user_type', '!=', 'board')
                         ->first();
 
         if ($existingUser) {
@@ -1554,87 +1546,14 @@ class ChapterController extends Controller implements HasMiddleware
             $TRSDetailsUpd = $baseActiveBoardQuery['TRSDetails'];
             $SECDetailsUpd = $baseActiveBoardQuery['SECDetails'];
 
-            $mailDataPres = array_merge(
+            $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getPresData($PresDetails),
                 $this->baseMailDataController->getPresUpdatedData($PresDetailsUpd),
+                $this->baseMailDataController->getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails),
+                $this->baseMailDataController->getBoardUpdEmail($PresDetailsUpd, $AVPDetailsUpd, $MVPDetailsUpd, $TRSDetailsUpd, $SECDetailsUpd)
             );
-
-            $mailData = array_merge($mailDataPres);
-            if ($AVPDetailsUpd !== null) {
-                $mailDataAvp = ['avpNameUpd' => $AVPDetailsUpd->first_name.' '.$AVPDetailsUpd->last_name,
-                    'avpemailUpd' => $AVPDetailsUpd->email, ];
-                $mailData = array_merge($mailData, $mailDataAvp);
-            } else {
-                $mailDataAvp = ['avpNameUpd' => '',
-                    'avpemailUpd' => '', ];
-                $mailData = array_merge($mailData, $mailDataAvp);
-            }
-            if ($MVPDetailsUpd !== null) {
-                $mailDataMvp = ['mvpNameUpd' => $MVPDetailsUpd->first_name.' '.$MVPDetailsUpd->last_name,
-                    'mvpemailUpd' => $MVPDetailsUpd->email, ];
-                $mailData = array_merge($mailData, $mailDataMvp);
-            } else {
-                $mailDataMvp = ['mvpNameUpd' => '',
-                    'mvpemailUpd' => '', ];
-                $mailData = array_merge($mailData, $mailDataMvp);
-            }
-            if ($TRSDetailsUpd !== null) {
-                $mailDatatres = ['tresNameUpd' => $TRSDetailsUpd->first_name.' '.$TRSDetailsUpd->last_name,
-                    'tresemailUpd' => $TRSDetailsUpd->email, ];
-                $mailData = array_merge($mailData, $mailDatatres);
-            } else {
-                $mailDatatres = ['tresNameUpd' => '',
-                    'tresemailUpd' => '', ];
-                $mailData = array_merge($mailData, $mailDatatres);
-            }
-            if ($SECDetailsUpd !== null) {
-                $mailDataSec = ['secNameUpd' => $SECDetailsUpd->first_name.' '.$SECDetailsUpd->last_name,
-                    'secemailUpd' => $SECDetailsUpd->email, ];
-                $mailData = array_merge($mailData, $mailDataSec);
-            } else {
-                $mailDataSec = ['secNameUpd' => '',
-                    'secemailUpd' => '', ];
-                $mailData = array_merge($mailData, $mailDataSec);
-            }
-
-            if ($AVPDetails !== null) {
-                $mailDataAvpp = ['avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-                    'avpemail' => $AVPDetails->email, ];
-                $mailData = array_merge($mailData, $mailDataAvpp);
-            } else {
-                $mailDataAvpp = ['avpName' => '',
-                    'avpemail' => '', ];
-                $mailData = array_merge($mailData, $mailDataAvpp);
-            }
-            if ($MVPDetails !== null) {
-                $mailDataMvpp = ['mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-                    'mvpemail' => $MVPDetails->email, ];
-                $mailData = array_merge($mailData, $mailDataMvpp);
-            } else {
-                $mailDataMvpp = ['mvpName' => '',
-                    'mvpemail' => '', ];
-                $mailData = array_merge($mailData, $mailDataMvpp);
-            }
-            if ($TRSDetails !== null) {
-                $mailDatatresp = ['tresName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-                    'tresemail' => $TRSDetails->email, ];
-                $mailData = array_merge($mailData, $mailDatatresp);
-            } else {
-                $mailDatatresp = ['tresName' => '',
-                    'tresemail' => '', ];
-                $mailData = array_merge($mailData, $mailDatatresp);
-            }
-            if ($SECDetails !== null) {
-                $mailDataSecp = ['secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-                    'secemail' => $SECDetails->email, ];
-                $mailData = array_merge($mailData, $mailDataSecp);
-            } else {
-                $mailDataSecp = ['secName' => '',
-                    'secemail' => '', ];
-                $mailData = array_merge($mailData, $mailDataSecp);
-            }
 
             $mailTableListAdmin = $this->emailTableController->createListAdminUpdateBoardTable($mailData);
             $mailTablePrimary = $this->emailTableController->createPrimaryUpdateBoardInfoTable($mailData);
@@ -1651,10 +1570,10 @@ class ChapterController extends Controller implements HasMiddleware
                     $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
                     $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup || $chDetailsUpd->territory != $chDetails->territory ||
                     $chDetailsUpd->additional_info != $chDetails->additional_info || $chDetailsUpd->status_id != $chDetails->status_id || $chDetailsUpd->notes != $chDetails->notes ||
-                    $mailDataAvpp['avpName'] != $mailDataAvp['avpNameUpd'] || $mailDataAvpp['avpemail'] != $mailDataAvp['avpemailUpd'] ||
-                    $mailDataMvpp['mvpName'] != $mailDataMvp['mvpNameUpd'] || $mailDataMvpp['mvpemail'] != $mailDataMvp['mvpemailUpd'] ||
-                    $mailDatatresp['tresName'] != $mailDatatres['tresNameUpd'] || $mailDatatresp['tresemail'] != $mailDatatres['tresemailUpd'] ||
-                    $mailDataSecp['secName'] != $mailDataSec['secNameUpd'] || $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
+                    $mailData['avpName'] != $mailData['avpNameUpd'] || $mailData['avpEmail'] != $mailData['avpEmailUpd'] ||
+                    $mailData['mvpName'] != $mailData['mvpNameUpd'] || $mailData['mvpEmail'] != $mailData['mvpEmailUpd'] ||
+                    $mailData['tresName'] != $mailData['tresNameUpd'] || $mailData['tresEmail'] != $mailData['tresEmailUpd'] ||
+                    $mailData['secName'] != $mailData['secNameUpd'] || $mailData['secEmail'] != $mailData['secEmailUpd']) {
 
                 Mail::to($emailPC)
                     ->queue(new BorUpdatePCNotice($mailData));
@@ -1664,9 +1583,9 @@ class ChapterController extends Controller implements HasMiddleware
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $listAdmin = $adminEmail['list_admin'];
 
-            if ($PresDetailsUpd->email != $PresDetails->email || $PresDetailsUpd->email != $PresDetails->email || $mailDataAvpp['avpemail'] != $mailDataAvp['avpemailUpd'] ||
-                        $mailDataMvpp['mvpemail'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemail'] != $mailDatatres['tresemailUpd'] ||
-                        $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
+            if ($PresDetailsUpd->email != $PresDetails->email || $PresDetailsUpd->email != $PresDetails->email || $mailData['avpEmail'] != $mailData['avpEmailUpd'] ||
+                        $mailData['mvpEmail'] != $mailData['mvpEmailUpd'] || $mailData['tresEmail'] != $mailData['tresEmailUpd'] ||
+                        $mailData['secEmail'] != $mailData['secEmailUpd']) {
 
                 Mail::to($listAdmin)
                     ->queue(new BorUpdateListNoitce($mailData));
@@ -1685,607 +1604,6 @@ class ChapterController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
-
-            // $chapter->last_updated_by = $lastUpdatedBy;
-            // $chapter->last_updated_date = date('Y-m-d H:i:s');
-            // $chapter->save();
-
-            // // President Info
-            // if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
-            //     $chapter = Chapters::with('president')->find($id);
-            //     $president = $chapter->president;
-            //     $user = $president->user;
-
-            //     $user->update([   // Update user details
-            //         'first_name' => $request->input('ch_pre_fname'),
-            //         'last_name' => $request->input('ch_pre_lname'),
-            //         'email' => $request->input('ch_pre_email'),
-            //         'updated_at' => now(),
-            //     ]);
-            //     $president->update([   // Update board details
-            //         'first_name' => $request->input('ch_pre_fname'),
-            //         'last_name' => $request->input('ch_pre_lname'),
-            //         'email' => $request->input('ch_pre_email'),
-            //         'street_address' => $request->input('ch_pre_street'),
-            //         'city' => $request->input('ch_pre_city'),
-            //         'state_id' => $request->input('ch_pre_state'),
-            //         'zip' => $request->input('ch_pre_zip'),
-            //         'country_id' => $request->input('ch_pre_country') ?? '198',
-            //         'phone' => $request->input('ch_pre_phone'),
-            //         'last_updated_by' => $lastUpdatedBy,
-            //         'last_updated_date' => now(),
-            //     ]);
-            //     // Check if subscription already exists
-            //     foreach ($defaultBoardCategories as $categoryId) {
-            //         $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-            //             ->where('category_id', $categoryId)
-            //             ->first();
-            //         if (! $existingSubscription) {
-            //             ForumCategorySubscription::create([
-            //                 'user_id' => $user->id,
-            //                 'category_id' => $categoryId,
-            //             ]);
-            //         }
-            //     }
-            // }
-
-            // // AVP Info
-            // $chapter = Chapters::with('avp')->find($id);
-            // $avp = $chapter->avp;
-            // if ($avp) {
-            //     $user = $avp->user;
-            //     $bdDetails = $avp;
-            //     if ($request->input('AVPVacant') == 'on') {
-            //         if ($user) {
-            //             User::where('id', $user->id)->update([
-            //                 'user_type' => 'outgoing',
-            //                 'updated_at' => $lastupdatedDate,
-            //             ]);
-            //             BoardsOutgoing::updateOrCreate(
-            //                 [
-            //                     'user_id' => $user->id,
-            //                     'chapter_id' => $bdDetails->chapter_id,
-            //                     'board_position_id' => $bdDetails->board_position_id,
-            //                 ],
-            //                 [
-            //                     'first_name' => $bdDetails->first_name,
-            //                     'last_name' => $bdDetails->last_name,
-            //                     'email' => $bdDetails->email,
-            //                     'phone' => $bdDetails->phone,
-            //                     'street_address' => $bdDetails->street_address,
-            //                     'city' => $bdDetails->city,
-            //                     'state_id' => $bdDetails->state_id,
-            //                     'zip' => $bdDetails->zip,
-            //                     'country_id' => $bdDetails->country_id,
-            //                     'last_updated_by' => $lastUpdatedBy,
-            //                     'last_updated_date' => $lastupdatedDate,
-            //                 ]
-            //             );
-            //             Boards::where('user_id', $user->id)->delete();
-            //             ForumCategorySubscription::where('user_id', $user->id)->delete();
-            //         }
-            //     } else {
-            //         $user->update([   // Update user details if alrady exists
-            //             'first_name' => $request->input('ch_avp_fname'),
-            //             'last_name' => $request->input('ch_avp_lname'),
-            //             'email' => $request->input('ch_avp_email'),
-            //             'updated_at' => now(),
-            //         ]);
-            //         $avp->update([   // Update board details if alrady exists
-            //             'first_name' => $request->input('ch_avp_fname'),
-            //             'last_name' => $request->input('ch_avp_lname'),
-            //             'email' => $request->input('ch_avp_email'),
-            //             'street_address' => $request->input('ch_avp_street'),
-            //             'city' => $request->input('ch_avp_city'),
-            //             'state_id' => $request->input('ch_avp_state'),
-            //             'zip' => $request->input('ch_avp_zip'),
-            //             'country_id' => $request->input('ch_avp_country') ?? '198',
-            //             'phone' => $request->input('ch_avp_phone'),
-            //             'last_updated_by' => $lastUpdatedBy,
-            //             'last_updated_date' => now(),
-            //         ]);
-            //         // Check if subscription already exists
-            //         foreach ($defaultBoardCategories as $categoryId) {
-            //             $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-            //                 ->where('category_id', $categoryId)
-            //                 ->first();
-            //             if (! $existingSubscription) {
-            //                 ForumCategorySubscription::create([
-            //                     'user_id' => $user->id,
-            //                     'category_id' => $categoryId,
-            //                 ]);
-            //             }
-            //         }
-            //     }
-            // } else {
-            //     if ($request->input('AVPVacant') != 'on') {
-            //         $user = User::create([  // Create user details if new
-            //             'first_name' => $request->input('ch_avp_fname'),
-            //             'last_name' => $request->input('ch_avp_lname'),
-            //             'email' => $request->input('ch_avp_email'),
-            //             'password' => Hash::make('TempPass4You'),
-            //             'user_type' => 'board',
-            //             'is_active' => 1,
-            //         ]);
-            //         $chapter->avp()->create([  // Create board details if new
-            //             'user_id' => $user->id,
-            //             'first_name' => $request->input('ch_avp_fname'),
-            //             'last_name' => $request->input('ch_avp_lname'),
-            //             'email' => $request->input('ch_avp_email'),
-            //             'board_position_id' => 2,
-            //             'street_address' => $request->input('ch_avp_street'),
-            //             'city' => $request->input('ch_avp_city'),
-            //             'state_id' => $request->input('ch_avp_state'),
-            //             'zip' => $request->input('ch_avp_zip'),
-            //             'country_id' => $request->input('ch_avp_country') ?? '198',
-            //             'phone' => $request->input('ch_avp_phone'),
-            //             'last_updated_by' => $lastUpdatedBy,
-            //             'last_updated_date' => now(),
-            //         ]);
-            //         foreach ($defaultBoardCategories as $categoryId) {
-            //             ForumCategorySubscription::create([
-            //                 'user_id' => $user->id,
-            //                 'category_id' => $categoryId,
-            //             ]);
-            //         }
-            //     }
-            // }
-
-            // // MVP Info
-            // $chapter = Chapters::with('mvp')->find($id);
-            // $mvp = $chapter->mvp;
-            // if ($mvp) {
-            //     $user = $mvp->user;
-            //     $bdDetails = $mvp;
-            //     if ($request->input('MVPVacant') == 'on') {
-            //         if ($user) {
-            //             User::where('id', $user->id)->update([
-            //                 'user_type' => 'outgoing',
-            //                 'updated_at' => $lastupdatedDate,
-            //             ]);
-            //             BoardsOutgoing::updateOrCreate(
-            //                 [
-            //                     'user_id' => $user->id,
-            //                     'chapter_id' => $bdDetails->chapter_id,
-            //                     'board_position_id' => $bdDetails->board_position_id,
-            //                 ],
-            //                 [
-            //                     'first_name' => $bdDetails->first_name,
-            //                     'last_name' => $bdDetails->last_name,
-            //                     'email' => $bdDetails->email,
-            //                     'phone' => $bdDetails->phone,
-            //                     'street_address' => $bdDetails->street_address,
-            //                     'city' => $bdDetails->city,
-            //                     'state_id' => $bdDetails->state_id,
-            //                     'zip' => $bdDetails->zip,
-            //                     'country_id' => $bdDetails->country_id,
-            //                     'last_updated_by' => $lastUpdatedBy,
-            //                     'last_updated_date' => $lastupdatedDate,
-            //                 ]
-            //             );
-            //             Boards::where('user_id', $user->id)->delete();
-            //             ForumCategorySubscription::where('user_id', $user->id)->delete();
-            //         }
-            //     } else {
-            //         $user->update([   // Update user details if alrady exists
-            //             'first_name' => $request->input('ch_mvp_fname'),
-            //             'last_name' => $request->input('ch_mvp_lname'),
-            //             'email' => $request->input('ch_mvp_email'),
-            //             'updated_at' => now(),
-            //         ]);
-            //         $mvp->update([   // Update board details if alrady exists
-            //             'first_name' => $request->input('ch_mvp_fname'),
-            //             'last_name' => $request->input('ch_mvp_lname'),
-            //             'email' => $request->input('ch_mvp_email'),
-            //             'street_address' => $request->input('ch_mvp_street'),
-            //             'city' => $request->input('ch_mvp_city'),
-            //             'state_id' => $request->input('ch_mvp_state'),
-            //             'zip' => $request->input('ch_mvp_zip'),
-            //             'country_id' => $request->input('ch_mvp_country') ?? '198',
-            //             'phone' => $request->input('ch_mvp_phone'),
-            //             'last_updated_by' => $lastUpdatedBy,
-            //             'last_updated_date' => now(),
-            //         ]);
-            //         // Check if subscription already exists
-            //         foreach ($defaultBoardCategories as $categoryId) {
-            //             $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-            //                 ->where('category_id', $categoryId)
-            //                 ->first();
-            //             if (! $existingSubscription) {
-            //                 ForumCategorySubscription::create([
-            //                     'user_id' => $user->id,
-            //                     'category_id' => $categoryId,
-            //                 ]);
-            //             }
-            //         }
-            //     }
-            // } else {
-            //     if ($request->input('MVPVacant') != 'on') {
-            //         $user = User::create([  // Create user details if new
-            //             'first_name' => $request->input('ch_mvp_fname'),
-            //             'last_name' => $request->input('ch_mvp_lname'),
-            //             'email' => $request->input('ch_mvp_email'),
-            //             'password' => Hash::make('TempPass4You'),
-            //             'user_type' => 'board',
-            //             'is_active' => 1,
-            //         ]);
-            //         $chapter->mvp()->create([  // Create board details if new
-            //             'user_id' => $user->id,
-            //             'first_name' => $request->input('ch_mvp_fname'),
-            //             'last_name' => $request->input('ch_mvp_lname'),
-            //             'email' => $request->input('ch_mvp_email'),
-            //             'board_position_id' => 3,
-            //             'street_address' => $request->input('ch_mvp_street'),
-            //             'city' => $request->input('ch_mvp_city'),
-            //             'state_id' => $request->input('ch_mvp_state'),
-            //             'zip' => $request->input('ch_mvp_zip'),
-            //             'country_id' => $request->input('ch_mvp_country') ?? '198',
-            //             'phone' => $request->input('ch_mvp_phone'),
-            //             'last_updated_by' => $lastUpdatedBy,
-            //             'last_updated_date' => now(),
-            //         ]);
-
-            //         foreach ($defaultBoardCategories as $categoryId) {
-            //             ForumCategorySubscription::create([
-            //                 'user_id' => $user->id,
-            //                 'category_id' => $categoryId,
-            //             ]);
-            //         }
-            //     }
-            // }
-
-            // // TRS Info
-            // $chapter = Chapters::with('treasurer')->find($id);
-            // $treasurer = $chapter->treasurer;
-            // if ($treasurer) {
-            //     $user = $treasurer->user;
-            //     $bdDetails = $treasurer;
-            //     if ($request->input('TreasVacant') == 'on') {
-            //         if ($user) {
-            //             User::where('id', $user->id)->update([
-            //                 'user_type' => 'outgoing',
-            //                 'updated_at' => $lastupdatedDate,
-            //             ]);
-            //             BoardsOutgoing::updateOrCreate(
-            //                 [
-            //                     'user_id' => $user->id,
-            //                     'chapter_id' => $bdDetails->chapter_id,
-            //                     'board_position_id' => $bdDetails->board_position_id,
-            //                 ],
-            //                 [
-            //                     'first_name' => $bdDetails->first_name,
-            //                     'last_name' => $bdDetails->last_name,
-            //                     'email' => $bdDetails->email,
-            //                     'phone' => $bdDetails->phone,
-            //                     'street_address' => $bdDetails->street_address,
-            //                     'city' => $bdDetails->city,
-            //                     'state_id' => $bdDetails->state_id,
-            //                     'zip' => $bdDetails->zip,
-            //                     'country_id' => $bdDetails->country_id,
-            //                     'last_updated_by' => $lastUpdatedBy,
-            //                     'last_updated_date' => $lastupdatedDate,
-            //                 ]
-            //             );
-            //             Boards::where('user_id', $user->id)->delete();
-            //             ForumCategorySubscription::where('user_id', $user->id)->delete();
-            //         }
-            //     } else {
-            //         $user->update([   // Update user details if alrady exists
-            //             'first_name' => $request->input('ch_trs_fname'),
-            //             'last_name' => $request->input('ch_trs_lname'),
-            //             'email' => $request->input('ch_trs_email'),
-            //             'updated_at' => now(),
-            //         ]);
-            //         $treasurer->update([   // Update board details if alrady exists
-            //             'first_name' => $request->input('ch_trs_fname'),
-            //             'last_name' => $request->input('ch_trs_lname'),
-            //             'email' => $request->input('ch_trs_email'),
-            //             'street_address' => $request->input('ch_trs_street'),
-            //             'city' => $request->input('ch_trs_city'),
-            //             'state_id' => $request->input('ch_trs_state'),
-            //             'zip' => $request->input('ch_trs_zip'),
-            //             'country_id' => $request->input('ch_trs_country') ?? '198',
-            //             'phone' => $request->input('ch_trs_phone'),
-            //             'last_updated_by' => $lastUpdatedBy,
-            //             'last_updated_date' => now(),
-            //         ]);
-            //         // Check if subscription already exists
-            //         foreach ($defaultBoardCategories as $categoryId) {
-            //             $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-            //                 ->where('category_id', $categoryId)
-            //                 ->first();
-            //             if (! $existingSubscription) {
-            //                 ForumCategorySubscription::create([
-            //                     'user_id' => $user->id,
-            //                     'category_id' => $categoryId,
-            //                 ]);
-            //             }
-            //         }
-            //     }
-            // } else {
-            //     if ($request->input('TreasVacant') != 'on') {
-            //         $user = User::create([  // Create user details if new
-            //             'first_name' => $request->input('ch_trs_fname'),
-            //             'last_name' => $request->input('ch_trs_lname'),
-            //             'email' => $request->input('ch_trs_email'),
-            //             'password' => Hash::make('TempPass4You'),
-            //             'user_type' => 'board',
-            //             'is_active' => 1,
-            //         ]);
-            //         $chapter->treasurer()->create([  // Create board details if new
-            //             'user_id' => $user->id,
-            //             'first_name' => $request->input('ch_trs_fname'),
-            //             'last_name' => $request->input('ch_trs_lname'),
-            //             'email' => $request->input('ch_trs_email'),
-            //             'board_position_id' => 4,
-            //             'street_address' => $request->input('ch_trs_street'),
-            //             'city' => $request->input('ch_trs_city'),
-            //             'state_id' => $request->input('ch_trs_state'),
-            //             'zip' => $request->input('ch_trs_zip'),
-            //             'country_id' => $request->input('ch_trs_country') ?? '198',
-            //             'phone' => $request->input('ch_trs_phone'),
-            //             'last_updated_by' => $lastUpdatedBy,
-            //             'last_updated_date' => now(),
-            //         ]);
-
-            //         foreach ($defaultBoardCategories as $categoryId) {
-            //             ForumCategorySubscription::create([
-            //                 'user_id' => $user->id,
-            //                 'category_id' => $categoryId,
-            //             ]);
-            //         }
-            //     }
-            // }
-
-            // // SEC Info
-            // $chapter = Chapters::with('secretary')->find($id);
-            // $secretary = $chapter->secretary;
-            // ForumCategorySubscription::where('user_id', $user)->delete();
-            // if ($secretary) {
-            //     $user = $secretary->user;
-            //     $bdDetails = $secretary;
-            //     if ($request->input('SecVacant') == 'on') {
-            //         if ($user) {
-            //             User::where('id', $user->id)->update([
-            //                 'user_type' => 'outgoing',
-            //                 'updated_at' => $lastupdatedDate,
-            //             ]);
-            //             BoardsOutgoing::updateOrCreate(
-            //                 [
-            //                     'user_id' => $user->id,
-            //                     'chapter_id' => $bdDetails->chapter_id,
-            //                     'board_position_id' => $bdDetails->board_position_id,
-            //                 ],
-            //                 [
-            //                     'first_name' => $bdDetails->first_name,
-            //                     'last_name' => $bdDetails->last_name,
-            //                     'email' => $bdDetails->email,
-            //                     'phone' => $bdDetails->phone,
-            //                     'street_address' => $bdDetails->street_address,
-            //                     'city' => $bdDetails->city,
-            //                     'state_id' => $bdDetails->state_id,
-            //                     'zip' => $bdDetails->zip,
-            //                     'country_id' => $bdDetails->country_id,
-            //                     'last_updated_by' => $lastUpdatedBy,
-            //                     'last_updated_date' => $lastupdatedDate,
-            //                 ]
-            //             );
-            //             Boards::where('user_id', $user->id)->delete();
-            //             ForumCategorySubscription::where('user_id', $user->id)->delete();
-            //         }
-            //     } else {
-            //         $user->update([   // Update user details if alrady exists
-            //             'first_name' => $request->input('ch_sec_fname'),
-            //             'last_name' => $request->input('ch_sec_lname'),
-            //             'email' => $request->input('ch_sec_email'),
-            //             'updated_at' => now(),
-            //         ]);
-            //         $secretary->update([   // Update board details if alrady exists
-            //             'first_name' => $request->input('ch_sec_fname'),
-            //             'last_name' => $request->input('ch_sec_lname'),
-            //             'email' => $request->input('ch_sec_email'),
-            //             'street_address' => $request->input('ch_sec_street'),
-            //             'city' => $request->input('ch_sec_city'),
-            //             'state_id' => $request->input('ch_sec_state'),
-            //             'zip' => $request->input('ch_sec_zip'),
-            //             'country_id' => $request->input('ch_sec_country') ?? '198',
-            //             'phone' => $request->input('ch_sec_phone'),
-            //             'last_updated_by' => $lastUpdatedBy,
-            //             'last_updated_date' => now(),
-            //         ]);
-            //         // Check if subscription already exists
-            //         foreach ($defaultBoardCategories as $categoryId) {
-            //             $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-            //                 ->where('category_id', $categoryId)
-            //                 ->first();
-            //             if (! $existingSubscription) {
-            //                 ForumCategorySubscription::create([
-            //                     'user_id' => $user->id,
-            //                     'category_id' => $categoryId,
-            //                 ]);
-            //             }
-            //         }
-            //     }
-            // } else {
-            //     if ($request->input('SecVacant') != 'on') {
-            //         $user = User::create([  // Create user details if new
-            //             'first_name' => $request->input('ch_sec_fname'),
-            //             'last_name' => $request->input('ch_sec_lname'),
-            //             'email' => $request->input('ch_sec_email'),
-            //             'password' => Hash::make('TempPass4You'),
-            //             'user_type' => 'board',
-            //             'is_active' => 1,
-            //         ]);
-            //         $chapter->secretary()->create([  // Create board details if new
-            //             'user_id' => $user->id,
-            //             'first_name' => $request->input('ch_sec_fname'),
-            //             'last_name' => $request->input('ch_sec_lname'),
-            //             'email' => $request->input('ch_sec_email'),
-            //             'board_position_id' => 5,
-            //             'street_address' => $request->input('ch_sec_street'),
-            //             'city' => $request->input('ch_sec_city'),
-            //             'state_id' => $request->input('ch_sec_state'),
-            //             'zip' => $request->input('ch_sec_zip'),
-            //             'country_id' => $request->input('ch_sec_country') ?? '198',
-            //             'phone' => $request->input('ch_sec_phone'),
-            //             'last_updated_by' => $lastUpdatedBy,
-            //             'last_updated_date' => now(),
-            //         ]);
-
-            //         foreach ($defaultBoardCategories as $categoryId) {
-            //             ForumCategorySubscription::create([
-            //                 'user_id' => $user->id,
-            //                 'category_id' => $categoryId,
-            //             ]);
-            //         }
-            //     }
-            // }
-
-            // Update Chapter MailData//
-            // $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
-            // $chDetailsUpd = $baseQueryUpd['chDetails'];
-            // $stateShortName = $baseQueryUpd['stateShortName'];
-            // $chConfId = $baseQueryUpd['chConfId'];
-            // $emailPC = $baseQueryUpd['emailPC'];
-
-            // $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-            // $PresDetailsUpd = $baseActiveBoardQuery['PresDetails'];
-            // $AVPDetailsUpd = $baseActiveBoardQuery['AVPDetails'];
-            // $MVPDetailsUpd = $baseActiveBoardQuery['MVPDetails'];
-            // $TRSDetailsUpd = $baseActiveBoardQuery['TRSDetails'];
-            // $SECDetailsUpd = $baseActiveBoardQuery['SECDetails'];
-
-            // $mailDataPres = array_merge(
-            //     $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
-            //     $this->baseMailDataController->getUserData($user),
-            //     $this->baseMailDataController->getPresData($PresDetails),
-            //     $this->baseMailDataController->getPresUpdatedData($PresDetailsUpd),
-            // );
-
-            // $mailData = array_merge($mailDataPres);
-            // if ($AVPDetailsUpd !== null) {
-            //     $mailDataAvp = ['avpNameUpd' => $AVPDetailsUpd->first_name.' '.$AVPDetailsUpd->last_name,
-            //         'avpemailUpd' => $AVPDetailsUpd->email, ];
-            //     $mailData = array_merge($mailData, $mailDataAvp);
-            // } else {
-            //     $mailDataAvp = ['avpNameUpd' => '',
-            //         'avpemailUpd' => '', ];
-            //     $mailData = array_merge($mailData, $mailDataAvp);
-            // }
-            // if ($MVPDetailsUpd !== null) {
-            //     $mailDataMvp = ['mvpNameUpd' => $MVPDetailsUpd->first_name.' '.$MVPDetailsUpd->last_name,
-            //         'mvpemailUpd' => $MVPDetailsUpd->email, ];
-            //     $mailData = array_merge($mailData, $mailDataMvp);
-            // } else {
-            //     $mailDataMvp = ['mvpNameUpd' => '',
-            //         'mvpemailUpd' => '', ];
-            //     $mailData = array_merge($mailData, $mailDataMvp);
-            // }
-            // if ($TRSDetailsUpd !== null) {
-            //     $mailDatatres = ['tresNameUpd' => $TRSDetailsUpd->first_name.' '.$TRSDetailsUpd->last_name,
-            //         'tresemailUpd' => $TRSDetailsUpd->email, ];
-            //     $mailData = array_merge($mailData, $mailDatatres);
-            // } else {
-            //     $mailDatatres = ['tresNameUpd' => '',
-            //         'tresemailUpd' => '', ];
-            //     $mailData = array_merge($mailData, $mailDatatres);
-            // }
-            // if ($SECDetailsUpd !== null) {
-            //     $mailDataSec = ['secNameUpd' => $SECDetailsUpd->first_name.' '.$SECDetailsUpd->last_name,
-            //         'secemailUpd' => $SECDetailsUpd->email, ];
-            //     $mailData = array_merge($mailData, $mailDataSec);
-            // } else {
-            //     $mailDataSec = ['secNameUpd' => '',
-            //         'secemailUpd' => '', ];
-            //     $mailData = array_merge($mailData, $mailDataSec);
-            // }
-
-            // if ($AVPDetails !== null) {
-            //     $mailDataAvpp = ['avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-            //         'avpemail' => $AVPDetails->email, ];
-            //     $mailData = array_merge($mailData, $mailDataAvpp);
-            // } else {
-            //     $mailDataAvpp = ['avpName' => '',
-            //         'avpemail' => '', ];
-            //     $mailData = array_merge($mailData, $mailDataAvpp);
-            // }
-            // if ($MVPDetails !== null) {
-            //     $mailDataMvpp = ['mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-            //         'mvpemail' => $MVPDetails->email, ];
-            //     $mailData = array_merge($mailData, $mailDataMvpp);
-            // } else {
-            //     $mailDataMvpp = ['mvpName' => '',
-            //         'mvpemail' => '', ];
-            //     $mailData = array_merge($mailData, $mailDataMvpp);
-            // }
-            // if ($TRSDetails !== null) {
-            //     $mailDatatresp = ['tresName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-            //         'tresemail' => $TRSDetails->email, ];
-            //     $mailData = array_merge($mailData, $mailDatatresp);
-            // } else {
-            //     $mailDatatresp = ['tresName' => '',
-            //         'tresemail' => '', ];
-            //     $mailData = array_merge($mailData, $mailDatatresp);
-            // }
-            // if ($SECDetails !== null) {
-            //     $mailDataSecp = ['secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-            //         'secemail' => $SECDetails->email, ];
-            //     $mailData = array_merge($mailData, $mailDataSecp);
-            // } else {
-            //     $mailDataSecp = ['secName' => '',
-            //         'secemail' => '', ];
-            //     $mailData = array_merge($mailData, $mailDataSecp);
-            // }
-
-            // $mailTableListAdmin = $this->emailTableController->createListAdminUpdateBoardTable($mailData);
-            // $mailTablePrimary = $this->emailTableController->createPrimaryUpdateBoardInfoTable($mailData);
-
-            // $mailData = array_merge($mailData, [
-            //     'mailTableListAdmin' => $mailTableListAdmin,
-            //     'mailTablePrimary' => $mailTablePrimary,
-            // ]);
-
-            // if ($chDetailsUpd->name != $chDetails->name || $PresDetailsUpd->bor_email != $PresDetails->bor_email || $PresDetailsUpd->street_address != $PresDetails->street_address || $PresDetailsUpd->city != $PresDetails->city ||
-            //         $PresDetailsUpd->state_id != $PresDetails->state_id || $PresDetailsUpd->first_name != $PresDetails->first_name || $PresDetailsUpd->last_name != $PresDetails->last_name ||
-            //         $PresDetailsUpd->zip != $PresDetails->zip || $PresDetailsUpd->phone != $PresDetails->phone || $PresDetailsUpd->inquiries_contact != $PresDetails->inquiries_contact ||
-            //         $PresDetailsUpd->ein != $chDetails->ein || $chDetailsUpd->ein_letter_path != $chDetails->ein_letter_path || $PresDetailsUpd->inquiries_note != $PresDetails->inquiries_note ||
-            //         $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
-            //         $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup || $chDetailsUpd->territory != $chDetails->territory ||
-            //         $chDetailsUpd->additional_info != $chDetails->additional_info || $chDetailsUpd->status_id != $chDetails->status_id || $chDetailsUpd->notes != $chDetails->notes ||
-            //         $mailDataAvpp['avpName'] != $mailDataAvp['avpNameUpd'] || $mailDataAvpp['avpemail'] != $mailDataAvp['avpemailUpd'] ||
-            //         $mailDataMvpp['mvpName'] != $mailDataMvp['mvpNameUpd'] || $mailDataMvpp['mvpemail'] != $mailDataMvp['mvpemailUpd'] ||
-            //         $mailDatatresp['tresName'] != $mailDatatres['tresNameUpd'] || $mailDatatresp['tresemail'] != $mailDatatres['tresemailUpd'] ||
-            //         $mailDataSecp['secName'] != $mailDataSec['secNameUpd'] || $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
-
-            //     Mail::to($emailPC)
-            //         ->queue(new BorUpdatePCNotice($mailData));
-            // }
-
-            // // List Admin Notification
-            // $adminEmail = $this->positionConditionsService->getAdminEmail();
-            // $listAdmin = $adminEmail['list_admin'];
-
-            // if ($PresDetailsUpd->email != $PresDetails->email || $PresDetailsUpd->email != $PresDetails->email || $mailDataAvpp['avpemail'] != $mailDataAvp['avpemailUpd'] ||
-            //             $mailDataMvpp['mvpemail'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemail'] != $mailDatatres['tresemailUpd'] ||
-            //             $mailDataSecp['secemail'] != $mailDataSec['secemailUpd']) {
-
-            //     Mail::to($listAdmin)
-            //         ->queue(new BorUpdateListNoitce($mailData));
-            // }
-
-    //         DB::commit();
-
-    //         return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
-    //     } catch (\Exception $e) {
-    //         DB::rollback();  // Rollback Transaction
-    //         Log::error($e);  // Log the error
-
-    //         return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
-    //     } finally {
-    //         // This ensures DB connections are released even if exceptions occur
-    //         DB::disconnect();
-    //     }
-    // }
 
     /**
      *Edit Chapter EIN Notes

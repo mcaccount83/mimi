@@ -104,19 +104,34 @@ class BaseMailDataController extends Controller
     public function getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails)
     {
          return [
-        'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
-        'presEmail' => $PresDetails->email,
-        'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-        'avpEmail' => $AVPDetails->email,
-        'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-        'mvpEmail' => $MVPDetails->email,
-        'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-        'trsEmail' => $TRSDetails->email,
-        'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-        'secEmail' => $SECDetails->email,
-    ];
-}
+            'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
+            'presEmail' => $PresDetails->email,
+            'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
+            'avpEmail' => $AVPDetails->email,
+            'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
+            'mvpEmail' => $MVPDetails->email,
+            'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
+            'trsEmail' => $TRSDetails->email,
+            'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
+            'secEmail' => $SECDetails->email,
+        ];
+    }
 
+    public function getBoardUpdEmail($PresDetailsUpd, $AVPDetailsUpd, $MVPDetailsUpd, $TRSDetailsUpd, $SECDetailsUpd)
+    {
+         return [
+            'presNameUpd' => $PresDetailsUpd->first_name.' '.$PresDetailsUpd->last_name,
+            'presEmailUpd' => $PresDetailsUpd->email,
+            'avpNameUpd' => $AVPDetailsUpd->first_name.' '.$AVPDetailsUpd->last_name,
+            'avpEmailUpd' => $AVPDetailsUpd->email,
+            'mvpNameUpd' => $MVPDetailsUpd->first_name.' '.$MVPDetailsUpd->last_name,
+            'mvpEmailUpd' => $MVPDetailsUpd->email,
+            'trsNameUpd' => $TRSDetailsUpd->first_name.' '.$TRSDetailsUpd->last_name,
+            'trsEmailUpd' => $TRSDetailsUpd->email,
+            'secNameUpd' => $SECDetailsUpd->first_name.' '.$SECDetailsUpd->last_name,
+            'secEmailUpd' => $SECDetailsUpd->email,
+        ];
+    }
 
     public function getPCData($pcDetails)
     {

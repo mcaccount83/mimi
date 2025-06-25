@@ -694,11 +694,10 @@ class CoordinatorController extends Controller implements HasMiddleware
                 'email' => $email,
             ];
 
-            // $to_email = 'jackie.mchenry@momsclub.org';
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $gsuiteAdmin = $adminEmail['gsuite_admin'];  // Gsuite Coor Email
 
-            Mail::to($gsuiteAdmin, 'MOMS Club')
+            Mail::to($gsuiteAdmin)
                 ->queue(new RetireCoordGSuiteNotice($mailData));
 
             DB::commit();
