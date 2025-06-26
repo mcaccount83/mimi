@@ -96,7 +96,7 @@ class HomeController extends Controller implements HasMiddleware
 
             $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
                 'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-                'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories,
+                'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'allAwards' => $allAwards
             ];
 
             return view('boards.financial')->with($data);

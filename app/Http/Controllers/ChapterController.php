@@ -502,18 +502,6 @@ class ChapterController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails),
-                // [
-                //     'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
-                //     'presEmail' => $PresDetails->email,
-                //     'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-                //     'avpEmail' => $AVPDetails->email,
-                //     'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-                //     'mvpEmail' => $MVPDetails->email,
-                //     'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-                //     'trsEmail' => $TRSDetails->email,
-                //     'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-                //     'secEmail' => $SECDetails->email,
-                // ]
             );
 
             // ListAdmin Notification//
@@ -990,18 +978,6 @@ class ChapterController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails),
-                // [
-                //     'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
-                //     'presEmail' => $PresDetails->email,
-                //     'avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
-                //     'avpEmail' => $AVPDetails->email,
-                //     'mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
-                //     'mvpEmail' => $MVPDetails->email,
-                //     'trsName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
-                //     'trsEmail' => $TRSDetails->email,
-                //     'secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
-                //     'secEmail' => $SECDetails->email,
-                // ]
             );
 
             // Primary Coordinator Notification//
@@ -1332,7 +1308,7 @@ class ChapterController extends Controller implements HasMiddleware
             if ($isVacant) {
                 if ($user) {
                     $this->updateUserToOutgoing($user, $lastupdatedDate);
-                    $this->createOutgoingBoardMember($user, $boardMember, $lastUpdatedBy, $lastupdatedDate);
+                    // $this->createOutgoingBoardMember($user, $boardMember, $lastUpdatedBy, $lastupdatedDate);
                     $this->removeActiveBoardMember($user);
                 }
 

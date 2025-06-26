@@ -14,6 +14,7 @@ use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\BoardsIncoming;
+use App\Models\BoardsOutgoing;
 use App\Models\Resources;
 use App\Models\State;
 use App\Models\User;
@@ -489,6 +490,25 @@ class EOYReportController extends Controller implements HasMiddleware
                         $userDetails->user_type = 'outgoing';
                         $userDetails->updated_at = now();
                         $userDetails->save();
+
+                        BoardsOutgoing::create([  // Create outgoing board details
+                            'id' => $record->id,
+                            'user_id' => $record->user_id,
+                            'first_name' => $record->first_name,
+                            'last_name' => $record->last_name,
+                            'email' => $record->email,
+                            'board_position_id' => $record->board_position_id,
+                            'chapter_id' => $id,
+                            'street_address' => $record->street_address,
+                            'city' => $record->city,
+                            'state_id' => $record->state_id,
+                            'zip' => $record->zip,
+                            'country_id' => $record->country_id,
+                            'phone' => $record->phone,
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
+
                     }
 
                     Boards::where('chapter_id', $id)->delete();

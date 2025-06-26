@@ -137,8 +137,8 @@ class UserController extends Controller implements HasMiddleware
 
                 case 'outgoing':
                     $userInfo += [
-                        'user_bdOutId' => $user->outgoing->id,
-                        'user_outChapterId' => $user->outgoing->chapter_id,
+                        'user_bdOutId' => $user->boardOutgoing->id,
+                        'user_outChapterId' => $user->boardOutgoing->chapter_id,
                     ];
                     break;
 

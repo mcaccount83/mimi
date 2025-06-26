@@ -15,7 +15,7 @@ class BoardsOutgoing extends Model
 
     protected $table = 'boards_outgoing';
 
-    public $timestamps = false;
+     public $timestamps = false;
 
     protected $fillable = [
         'user_id', 'chapter_id', 'board_position_id', 'first_name', 'last_name', 'email', 'phone', 'street_address', 'city', 'state_id', 'zip', 'country_id',
