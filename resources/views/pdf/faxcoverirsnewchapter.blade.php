@@ -29,6 +29,19 @@
             width: 150px;
             background-color: #f5f5f5;
         }
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            font-size: 10px;
+            line-height: 1.3;
+            text-align: justify;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            background-color: white;
+        }
+
     </style>
 </head>
 <body>
@@ -53,8 +66,7 @@
             </tr>
             <tr>
                 <td class="label">FROM:</td>
-                <td>International MOMS Club<br>
-                {{ $pdfData['ccName'] }}, Conference Coordinator</td>
+                <td>International MOMS Club<br> {{ $pdfData['ccName'] }}, Conference Coordinator</td>
             </tr>
             <tr>
                 <td class="label">EMAIL:</td>
@@ -73,13 +85,13 @@
                 <td>SS-4 APPLICATION FOR SUBORDINATE</td>
             </tr>
         </table>
+
         <table>
             <tr>
                 <td>
                     SS4 – EIN application for (1) subordinates.<br>
                     <br>
-                    Please note, <u><b>this is a new chapter, in no way affiliated with any former chapter that may have been registered in the same town, or with the same name in the past.</b></u>
-                    Other than this newly registered chapter, there is currently no International MOMS Club subordinate in {{ $pdfData['presCity'] }}, {{ $pdfData['chapterState'] }}.<br>
+                    Please note, <u><b>this is a new chapter, in no way affiliated with any former chapter that may have been registered in the same town, or with the same name in the past.</b></u> Other than this newly registered chapter, there is currently no International MOMS Club subordinate in {{ $pdfData['presCity'] }}, {{ $pdfData['chapterState'] }}.<br>
                     <br>
                     Thank you.<br>
                     <br>
@@ -88,10 +100,12 @@
                 </td>
             </tr>
         </table>
-    <h6>
-        The information contained in this transmission may contain confidential information, including patient information protected under federal and state law. This document is intended for the Internal Revenue Service only. If you are not the intended recipient, you are hereby notified that any disclosure or distribution of this information is in violation of HIPAA confidentiality and prohibited. If you are not the intended recipient, please contact the sender by reply email and delete all copies. This fax disclaimer is present on the cover sheet and serves as a warning to ensure privacy.
-    </h6>
     </div>
+
+    <!-- Fixed footer -->
+    <div class="footer">
+        The information contained in this transmission may contain confidential information, including patient information protected under federal and state law. This document is intended for the Internal Revenue Service only. If you are not the intended recipient, you are hereby notified that any disclosure or distribution of this information is in violation of HIPAA confidentiality and prohibited. If you are not the intended recipient, please contact the sender by reply email and delete all copies. This fax disclaimer is present on the cover sheet and serves as a warning to ensure privacy.
+    </div>
+
 </body>
 </html>
-

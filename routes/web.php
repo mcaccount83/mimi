@@ -312,9 +312,7 @@ Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'gene
 Route::get('/board/financialreport/pdf/{id}', [PDFController::class, 'generateFinancialReport'])->name('pdf.financialreport');
 Route::get('/financial-report-pdf', [PDFController::class, 'saveFinancialReport'])->name('pdf.financialreport');
 Route::post('/generate-probation-letter', [PDFController::class, 'saveProbationLetter'])->name('pdf.generateProbationLetter');
-
 Route::get('/board/newchapfaxcover/pdf/{id}', [PDFController::class, 'generateNewChapterFaxCover'])->name('pdf.newchapfaxcover');
-
 
 // Google Controller -- Uploading Files Routes...Used for Board & Coordinator Layouts
 Route::post('/files/storeEIN/{id}', [GoogleController::class, 'storeEIN']);
