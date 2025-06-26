@@ -33,7 +33,7 @@
 </head>
 <body>
     <!-- Fax Cover Page -->
-    @include('pdf.chapternamechangefaxcover', ['pdfData' => $pdfData])
+    @include('pdf.chapternamehangefaxcover', ['pdfData' => $pdfData])
 
     <div class="page-break"></div>
 
