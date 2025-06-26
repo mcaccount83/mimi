@@ -18,17 +18,17 @@
             <td>855-214-7520</td>
         </tr>
         <tr>
-            <td class="label">FROM:</td>
+        <td class="label">FROM:</td>
             <td>International MOMS Club<br>
-            Jackie McHenry, EIN/990N Compliance</td>
+                {{ $pdfData['einName'] }}, EIN/990N Compliance</td>
         </tr>
         <tr>
             <td class="label">EMAIL:</td>
-            <td>jackie.mchenry@momsclub.org</td>
+            <td>{{ $pdfData['einEmail'] }}</td>
         </tr>
         <tr>
             <td class="label">PHONE:</td>
-            <td>412-742-0895</td>
+            <td>{{ $pdfData['einPhone'] }}</td>
         </tr>
         <tr>
             <td class="label">FAX:</td>
@@ -37,8 +37,8 @@
         <tr>
             <td class="label">REGARDING:</td>
             <td>International MOMS Club<br>
-            Taxpayer ID Number:  77-0125681<br>
-            GEN Number:  3706</td>
+                Taxpayer ID Number:  77-0125681<br>
+                GEN Number:  3706</td>
         </tr>
     </table>
      <table>

@@ -33,11 +33,11 @@
 </head>
 <body>
     <!-- Fax Cover Page -->
-    @include('pdf.chapternamehangefaxcover', ['pdfData' => $pdfData])
+    @include('pdf.faxcoverirsnamechange-content', ['pdfData' => $pdfData])
 
     <div class="page-break"></div>
 
     <!-- Name Change Letter Page -->
-    @include('pdf.chapternamechange', ['pdfData' => $pdfData])
+    @include('pdf.chapternamechange-content', ['pdfData' => $pdfData])
 </body>
 </html>
