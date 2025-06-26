@@ -1,4 +1,4 @@
-
+<div class="keep-together" style="page-break-inside: avoid;">
     <center><h1>FAX</h1></center>
     <table>
         <tr>
@@ -53,7 +53,8 @@
             </td>
         </tr>
     </table>
-<h5>
+<h6>
     The information contained in this transmission may contain confidential information, including patient information protected under federal and state law. This document is intended for the Internal Revenue Service only. If you are not the intended recipient, you are hereby notified that any disclosure or distribution of this information is in violation of HIPAA confidentiality and prohibited. If you are not the intended recipient, please contact the sender by reply email and delete all copies. This fax disclaimer is present on the cover sheet and serves as a warning to ensure privacy.
-</h5
+</h6>
+</div>
 
