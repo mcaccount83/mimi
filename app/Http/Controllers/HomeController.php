@@ -46,72 +46,44 @@ class HomeController extends Controller implements HasMiddleware
             Auth::logout();  // logout inactive user
             $request->session()->flush();
             $request->session()->flash('error', 'User does not have an active profile');
-
             return redirect()->to('/login');
         }
 
         if ($userType == 'coordinator') {
             // Send to Coordinator Dashboard
+            $user_coorId = $user['user_coorId'];
             return redirect()->to('coordviewprofile');
         }
 
         if ($userType == 'pending') {
-            // Send to Pending Founders to Status Inquiry Screen
+            // Send Pending Founders to Status Inquiry Screen
+            $user_pendChapterId = $user['user_pendChapterId'];
             return redirect()->to('board/newchapterstatus');
         }
 
         if ($userType == 'board') {
-            // Send to President or Member Profile Screen
-            $user_bdPositionId = $user['user_bdPositionId'];
+            // Send Active Board Members to Board Profile Screen
             $user_chapterId = $user['user_chapterId'];
-
             return redirect()->to('board/profile/' . $user_chapterId);
-
-            // if ($user_bdPositionId == '1') {
-            //     return redirect()->to('board/president/' . $user_chapterId);
-            // } else {
-            //     return redirect()->to('board/member/' . $user_chapterId);
-            // }
         }
 
         if ($userType == 'outgoing') {
             // Send Outgoing Board Members to Financial Report ONLY
-            $userName = $user['user_name'];
-            $userEmail = $user['user_email'];
-            $loggedInName = $user['user_name'];
-            $chId = $user['user_outChapterId'];
-
-            $baseQuery = $this->baseBoardController->getChapterDetails($chId);
-            $chDetails = $baseQuery['chDetails'];
-            $chActiveId = $baseQuery['chActiveId'];
-            $stateShortName = $baseQuery['stateShortName'];
-            $chDocuments = $baseQuery['chDocuments'];
-            // $submitted = $baseQuery['submitted'];
-            $chFinancialReport = $baseQuery['chFinancialReport'];
-            $awards = $baseQuery['awards'];
-            $allAwards = $baseQuery['allAwards'];
-
-            $resources = Resources::with('resourceCategory')->get();
-            $resourceCategories = ResourceCategory::all();
-
-            $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
-                'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-                'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'allAwards' => $allAwards
-            ];
-
-            return view('boards.financial')->with($data);
+            $user_outChapterId = $user['user_outChapterId'];
+            return redirect()->to('board/financialreport/' . $user_outChapterId);
         }
 
         if ($userType == 'disbanded') {
             // Send Disbanded Chapter Board Members to Disbanded Checklist and Financial Report
             $user_disChapterId = $user['user_disChapterId'];
-
             return redirect()->to('board/disbandchecklist/' . $user_disChapterId);
 
-        } else {
+        }
+
+        else {
             Auth::logout(); // logout non-user
             $request->session()->flush();
-
+            $request->session()->flash('error', 'User does not have an active profile');
             return redirect()->to('/login');
         }
     }

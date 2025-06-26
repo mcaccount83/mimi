@@ -63,14 +63,6 @@ class FinancialReportController extends Controller implements HasMiddleware
         $userEmail = $user['user_email'];
         $userAdmin = $user['userAdmin'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_chapterId'];
-        // }
-
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $chActiveId = $baseQuery['chActiveId'];
