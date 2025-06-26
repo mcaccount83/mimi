@@ -1,7 +1,9 @@
 @component('mail::message')
 # ListAdmin New Chapter Add Notification
 
-The follownig chapter has added to MIMI:  MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}, Conference {{$mailData['chapterConf']}}.<br>
+The follownig chapter has added to MIMI:<br>
+<br>
+MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}, Conference {{$mailData['chapterConf']}}.<br>
 <br>
 Please add members of this chapter to any groups, forums and mailing lists.<br>
 <br>

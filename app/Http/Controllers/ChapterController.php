@@ -788,182 +788,8 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
             $chapter = Chapters::find($chapterId);
-            // Update all board positions
+            // Update founder/president position
             $this->updateBoardMember($chapter, 'president', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'avp', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'mvp', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'treasurer', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'secretary', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
-
-            // // President Info
-            // if (isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email'])) {
-            //     $userId = User::create([
-            //         'first_name' => $input['ch_pre_fname'],
-            //         'last_name' => $input['ch_pre_lname'],
-            //         'email' => $input['ch_pre_email'],
-            //         'password' => Hash::make('TempPass4You'),
-            //         'user_type' => 'board',
-            //         'is_active' => 1,
-            //     ])->id;
-            //     Boards::create([
-            //         'user_id' => $userId,
-            //         'first_name' => $input['ch_pre_fname'],
-            //         'last_name' => $input['ch_pre_lname'],
-            //         'email' => $input['ch_pre_email'],
-            //         'board_position_id' => 1,
-            //         'chapter_id' => $chapterId,
-            //         'street_address' => $input['ch_pre_street'],
-            //         'city' => $input['ch_pre_city'],
-            //         'state_id' => $input['ch_pre_state'],
-            //         'zip' => $input['ch_pre_zip'],
-            //         'country_id' => $input['ch_pre_country'] ?? '198',
-            //         'phone' => $input['ch_pre_phone'],
-            //         'last_updated_by' => $lastUpdatedBy,
-            //         'last_updated_date' => $lastupdatedDate,
-            //     ])->id;
-            //     foreach ($defaultBoardCategories as $categoryId) {
-            //         ForumCategorySubscription::create([
-            //             'user_id' => $userId,
-            //             'category_id' => $categoryId,
-            //         ]);
-            //     }
-            // }
-
-            // // AVP Info
-            // if ($request->input('AVPVacant') != 'on') {
-            //     $userId = User::create([
-            //         'first_name' => $input['ch_avp_fname'],
-            //         'last_name' => $input['ch_avp_lname'],
-            //         'email' => $input['ch_avp_email'],
-            //         'password' => Hash::make('TempPass4You'),
-            //         'user_type' => 'board',
-            //         'is_active' => 1,
-            //     ])->id;
-            //     Boards::create([
-            //         'user_id' => $userId,
-            //         'first_name' => $input['ch_avp_fname'],
-            //         'last_name' => $input['ch_avp_lname'],
-            //         'email' => $input['ch_avp_email'],
-            //         'board_position_id' => 2,
-            //         'chapter_id' => $chapterId,
-            //         'street_address' => $input['ch_avp_street'],
-            //         'city' => $input['ch_avp_city'],
-            //         'state_id' => $input['ch_avp_state'],
-            //         'zip' => $input['ch_avp_zip'],
-            //         'country_id' => $input['ch_avp_country'] ?? '198',
-            //         'phone' => $input['ch_avp_phone'],
-            //         'last_updated_by' => $lastUpdatedBy,
-            //         'last_updated_date' => $lastupdatedDate,
-            //     ])->id;
-            //     foreach ($defaultBoardCategories as $categoryId) {
-            //         ForumCategorySubscription::create([
-            //             'user_id' => $userId,
-            //             'category_id' => $categoryId,
-            //         ]);
-            //     }
-            // }
-
-            // // MVP Info
-            // if ($request->input('MVPVacant') != 'on') {
-            //     $userId = User::create([
-            //         'first_name' => $input['ch_mvp_fname'],
-            //         'last_name' => $input['ch_mvp_lname'],
-            //         'email' => $input['ch_mvp_email'],
-            //         'password' => Hash::make('TempPass4You'),
-            //         'user_type' => 'board',
-            //         'is_active' => 1,
-            //     ])->id;
-            //     Boards::create([
-            //         'user_id' => $userId,
-            //         'first_name' => $input['ch_mvp_fname'],
-            //         'last_name' => $input['ch_mvp_lname'],
-            //         'email' => $input['ch_mvp_email'],
-            //         'board_position_id' => 3,
-            //         'chapter_id' => $chapterId,
-            //         'street_address' => $input['ch_mvp_street'],
-            //         'city' => $input['ch_mvp_city'],
-            //         'state_id' => $input['ch_mvp_state'],
-            //         'zip' => $input['ch_mvp_zip'],
-            //         'country_id' => $input['ch_mvp_country'] ?? '198',
-            //         'phone' => $input['ch_mvp_phone'],
-            //         'last_updated_by' => $lastUpdatedBy,
-            //         'last_updated_date' => $lastupdatedDate,
-            //     ])->id;
-            //     foreach ($defaultBoardCategories as $categoryId) {
-            //         ForumCategorySubscription::create([
-            //             'user_id' => $userId,
-            //             'category_id' => $categoryId,
-            //         ]);
-            //     }
-            // }
-
-            // // TRS Info
-            // if ($request->input('TreasVacant') != 'on') {
-            //     $userId = User::create([
-            //         'first_name' => $input['ch_trs_fname'],
-            //         'last_name' => $input['ch_trs_lname'],
-            //         'email' => $input['ch_trs_email'],
-            //         'password' => Hash::make('TempPass4You'),
-            //         'user_type' => 'board',
-            //         'is_active' => 1,
-            //     ])->id;
-            //     Boards::create([
-            //         'user_id' => $userId,
-            //         'first_name' => $input['ch_trs_fname'],
-            //         'last_name' => $input['ch_trs_lname'],
-            //         'email' => $input['ch_trs_email'],
-            //         'board_position_id' => 4,
-            //         'chapter_id' => $chapterId,
-            //         'street_address' => $input['ch_trs_street'],
-            //         'city' => $input['ch_trs_city'],
-            //         'state_id' => $input['ch_trs_state'],
-            //         'zip' => $input['ch_trs_zip'],
-            //         'country_id' => $input['ch_trs_country'] ?? '198',
-            //         'phone' => $input['ch_trs_phone'],
-            //         'last_updated_by' => $lastUpdatedBy,
-            //         'last_updated_date' => $lastupdatedDate,
-            //     ])->id;
-            //     foreach ($defaultBoardCategories as $categoryId) {
-            //         ForumCategorySubscription::create([
-            //             'user_id' => $userId,
-            //             'category_id' => $categoryId,
-            //         ]);
-            //     }
-            // }
-
-            // // SEC Info
-            // if ($request->input('SecVacant') != 'on') {
-            //     $userId = User::create([
-            //         'first_name' => $input['ch_sec_fname'],
-            //         'last_name' => $input['ch_sec_lname'],
-            //         'email' => $input['ch_sec_email'],
-            //         'password' => Hash::make('TempPass4You'),
-            //         'user_type' => 'board',
-            //         'is_active' => 1,
-            //     ])->id;
-            //     Boards::create([
-            //         'user_id' => $userId,
-            //         'first_name' => $input['ch_sec_fname'],
-            //         'last_name' => $input['ch_sec_lname'],
-            //         'email' => $input['ch_sec_email'],
-            //         'board_position_id' => 5,
-            //         'chapter_id' => $chapterId,
-            //         'street_address' => $input['ch_sec_street'],
-            //         'city' => $input['ch_sec_city'],
-            //         'state_id' => $input['ch_sec_state'],
-            //         'zip' => $input['ch_sec_zip'],
-            //         'country_id' => $input['ch_sec_country'] ?? '198',
-            //         'phone' => $input['ch_sec_phone'],
-            //         'last_updated_by' => $lastUpdatedBy,
-            //         'last_updated_date' => $lastupdatedDate,
-            //     ])->id;
-            //     foreach ($defaultBoardCategories as $categoryId) {
-            //         ForumCategorySubscription::create([
-            //             'user_id' => $userId,
-            //             'category_id' => $categoryId,
-            //         ]);
-            //     }
-            // }
 
             // Load Chapter MailData//
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
@@ -974,10 +800,6 @@ class ChapterController extends Controller implements HasMiddleware
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
             $PresDetails = $baseActiveBoardQuery['PresDetails'];
-            $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
-            $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
-            $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
-            $SECDetails = $baseActiveBoardQuery['SECDetails'];
 
             //  Load User Information for Signing Email & PDFs
             $user = $this->userController->loadUserInformation($request);
@@ -1141,7 +963,6 @@ class ChapterController extends Controller implements HasMiddleware
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
             $chConfId = $baseQueryUpd['chConfId'];
-            // $PresDetails = $baseQueryUpd['PresDetails'];
             $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
             $emailListCoord = $baseQueryUpd['emailListCoord'];  // Full Coordinaor List
             $emailCC = $baseQueryUpd['emailCC'];  // CC Email
@@ -1151,7 +972,7 @@ class ChapterController extends Controller implements HasMiddleware
             $einAdmin = $adminEmail['ein_admin'];  // EIN Coor Email
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),

@@ -140,7 +140,7 @@
                         <div class="col-md-12">
                          <!-- /.form group -->
                         <div class="form-group row">
-                            <label class="col-sm-2 mb-1 col-form-label">President:</label>
+                            <label class="col-sm-2 mb-1 col-form-label">Founder:</label>
                             <div class="col-sm-5 mb-1">
                             <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" required placeholder="First Name" >
                             </div>
@@ -188,7 +188,7 @@
                         </div>
 
                         <!-- /.form group -->
-                        <div class="form-group row">
+                        {{-- <div class="form-group row">
                             <label class="col-sm-2 mb-1 col-form-label">AVP:</label>
                             <div class="col-sm-10 mt-1 custom-control custom-switch">
                                 <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" checked>
@@ -241,10 +241,10 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                          <!-- /.form group -->
-                         <div class="form-group row">
+                         {{-- <div class="form-group row">
                             <label class="col-sm-2 mb-1 col-form-label">MVP:</label>
                             <div class="col-sm-10 mt-1 custom-control custom-switch">
                                     <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input" checked>
@@ -297,10 +297,10 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                         <!-- /.form group -->
-                        <div class="form-group row">
+                        {{-- <div class="form-group row">
                             <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
                             <div class="col-sm-10 mt-1 custom-control custom-switch">
                                     <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" checked>
@@ -353,10 +353,10 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                         <!-- /.form group -->
-                        <div class="form-group row">
+                        {{-- <div class="form-group row">
                             <label class="col-sm-2 mb-1 col-form-label">Secretary:</label>
                             <div class="col-sm-10 mt-1 custom-control custom-switch">
                                     <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" checked>
@@ -409,7 +409,7 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                         </div>
                     </div>
@@ -524,10 +524,10 @@ function handleVacantCheckbox(checkboxId, fieldClass) {
 }
 
 // Apply the logic for each checkbox with a specific class
-handleVacantCheckbox("MVPVacant", "mvp-field");
-handleVacantCheckbox("AVPVacant", "avp-field");
-handleVacantCheckbox("SecVacant", "sec-field");
-handleVacantCheckbox("TreasVacant", "trs-field");
+// handleVacantCheckbox("MVPVacant", "mvp-field");
+// handleVacantCheckbox("AVPVacant", "avp-field");
+// handleVacantCheckbox("SecVacant", "sec-field");
+// handleVacantCheckbox("TreasVacant", "trs-field");
 
 // Function to filter the coordinator dropdown
 function filterCoordinators() {
@@ -611,10 +611,10 @@ function validateEmailsBeforeSubmit() {
     // Get the values from the input fields
     const emails = [
         $('#ch_pre_email').val().trim(),
-        $('#ch_avp_email').val().trim(),
-        $('#ch_mvp_email').val().trim(),
-        $('#ch_trs_email').val().trim(),
-        $('#ch_sec_email').val().trim()
+        // $('#ch_avp_email').val().trim(),
+        // $('#ch_mvp_email').val().trim(),
+        // $('#ch_trs_email').val().trim(),
+        // $('#ch_sec_email').val().trim()
     ];
 
     // Filter out empty emails and check for duplicates

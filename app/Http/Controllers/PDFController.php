@@ -759,7 +759,7 @@ class PDFController extends Controller
             ]
         );
 
-        $pdf = Pdf::loadView('pdf.chapternamechange', compact('pdfData'));
+        $pdf = Pdf::loadView('pdf.chapternamechangecombined', compact('pdfData'));
 
         $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_NameChangeLetter.pdf';
 
