@@ -214,6 +214,17 @@
                             </div>
                         @endif
 
+                        @if($chDetails->ein == null && ($conferenceCoordinatorCondition || $einCondition))
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>EIN Fax Coversheet:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="row">
                             <div class="col-sm-6 mb-2">
                                 <label>EIN Letter:</label>

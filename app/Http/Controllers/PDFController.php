@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NameChangeEINNotice;
+use App\Mail\NewChapterFaxCover;
 use App\Mail\DisbandChapterLetter;
 use App\Mail\ProbationNoPmtLetter;
 use App\Mail\ProbationNoRptLetter;
@@ -762,6 +763,141 @@ class PDFController extends Controller
         $pdf = Pdf::loadView('pdf.chapternamechangecombined', compact('pdfData'));
 
         $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_NameChangeLetter.pdf';
+
+        return [
+            'pdf' => $pdf,
+            'filename' => $filename,
+        ];
+    }
+
+     /**
+     * Save & Send IRS Name Change Letter
+     */
+    // public function saveNewChapterFaxCover(Request $request, $chapterId, $chNamePrev): JsonResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $userId = $user['userId'];
+
+    //     $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+    //     $chDetails = $baseQuery['chDetails'];
+    //     $stateShortName = $baseQuery['stateShortName'];
+
+    //     $irsDrive = DB::table('google_drive')->value('irs_letter');
+    //     $sharedDriveId = $irsDrive;
+
+    //     $result = $this->generateNameChangeLetter($request, $chapterId, $chDetails);
+    //     $pdf = $result['pdf'];
+    //     $name = $result['filename'];
+
+    //     $pdfPath = storage_path('app/pdf_reports/'.$name);
+    //     $pdf->save($pdfPath);
+
+    //     $filename = basename($pdfPath);
+    //     $mimetype = 'application/pdf';
+    //     $filecontent = file_get_contents($pdfPath);
+
+    //     if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+    //         // $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
+    //         // if ($existingDocRecord) {
+    //         //     $existingDocRecord->new_chapter_fax_cover_path = $file_id;
+    //         //     $existingDocRecord->save();
+    //         // } else {
+    //         //     Log::error("Expected document record for chapter_id {$chapterId} not found");
+    //         //     $newDocData = ['chapter_id' => $chapterId];
+    //         //     $newDocData['new_chapter_fax_cover_path'] = $file_id;
+    //         //     Documents::create($newDocData);
+    //         // }
+
+    //         $emailEINCoorData = $this->userController->loadEINCoord();
+    //         $eincoorEmail = $emailEINCoorData['ein_email'];
+
+    //         $mailData = array_merge(
+    //             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+    //         );
+
+    //         Mail::to($eincoorEmail)
+    //             ->queue(new NewChapterFaxCover($mailData, $pdfPath));
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'Letter emailed successfully.',
+    //             'pdf_path' => $pdfPath,
+    //             'google_drive_id' => $file_id,
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'error',
+    //         'message' => 'Failed to successfully generate letter.',
+    //     ], 500);
+    // }
+
+    // /**
+    //  * Generate IRS Name Change Letter
+    //  */
+    // public function generateNewChapterFaxCover(Request $request, $chapterId)
+    // {
+    //     $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $request);
+    //     $chDetails = $baseQuery['chDetails'];
+    //     $stateShortName = $baseQuery['stateShortName'];
+
+    //     $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+    //     $emailCCData = $baseActiveBoardQuery['emailCCData'];
+
+    //     $emailEINCoorData = $this->userController->loadEINCoord();
+
+    //     $todayDate = date('F j, Y');
+
+    //     $pdfData = array_merge(
+    //         $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+    //         $this->baseMailDataController->getCCData($emailCCData),
+    //         $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+    //         [
+    //             'todayDate' => $todayDate,
+    //         ]
+    //     );
+
+    //     $pdf = Pdf::loadView('pdf.faxcoverirsnewchapter', compact('pdfData'));
+
+    //     $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_NewChapterIRSCover.pdf';
+
+    //     return [
+    //         'pdf' => $pdf,
+    //         'filename' => $filename,
+    //     ];
+    // }
+
+     public function generateNewChapterFaxCover($chapterId, $streamResponse = true)
+    {
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $emailCCData = $baseQuery['emailCCData'];
+
+        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+
+        $emailEINCoorData = $this->userController->loadEINCoord();
+
+        $todayDate = date('F j, Y');
+
+        $pdfData = array_merge(
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            $this->baseMailDataController->getCCData($emailCCData),
+            $this->baseMailDataController->getPresData($PresDetails),
+            // $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+            [
+                'todayDate' => $todayDate,
+            ]
+        );
+
+        $pdf = Pdf::loadView('pdf.faxcoverirsnewchapter', compact('pdfData'));
+
+        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_NewChapterIRSCover.pdf';
+
+        if ($streamResponse) {
+            return $pdf->stream($filename, ['Attachment' => 0]);
+        }
 
         return [
             'pdf' => $pdf,
