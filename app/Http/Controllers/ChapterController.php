@@ -1331,7 +1331,9 @@ class ChapterController extends Controller implements HasMiddleware
 
             if ($isVacant) {
                 if ($user) {
-                    $this->moveUserToOutgoing($user, $boardMember, $lastUpdatedBy, $lastupdatedDate);
+                    $this->updateUserToOutgoing($user, $lastupdatedDate);
+                    $this->createOutgoingBoardMember($user, $boardMember, $lastUpdatedBy, $lastupdatedDate);
+                    $this->removeActiveBoardMember($user);
                 }
 
             } else {
@@ -1340,8 +1342,8 @@ class ChapterController extends Controller implements HasMiddleware
                 $emailChanged = ($user->email !== $email);
 
                 if ($nameChanged && $emailChanged) {
-                    // Move to outgoing and delete current board record
-                    $this->moveUserToOutgoing($user, $boardMember, $lastUpdatedBy, $lastupdatedDate);
+                    $this->updateUserToOutgoing($user, $lastupdatedDate);
+                    $this->removeActiveBoardMember($user);
                     // Create new board member in same position
                     $this->createNewBoardMember($chapterWithRelation, $relation, $positionId, $requestData, $prefix, $lastUpdatedBy, $defaultBoardCategories);
 
@@ -1358,15 +1360,16 @@ class ChapterController extends Controller implements HasMiddleware
         }
     }
 
-    private function moveUserToOutgoing($user, $bdDetails, $lastUpdatedBy, $lastupdatedDate)
+    private function updateUserToOutgoing($user, $lastupdatedDate)
     {
-        // Update user type to outgoing
         User::where('id', $user->id)->update([
             'user_type' => 'outgoing',
             'updated_at' => $lastupdatedDate,
         ]);
+    }
 
-        // Create or update record in outgoing board table
+    private function createOutgoingBoardMember($user, $bdDetails, $lastUpdatedBy, $lastupdatedDate)
+    {
         BoardsOutgoing::updateOrCreate(
             [
                 'user_id' => $user->id,
@@ -1387,8 +1390,10 @@ class ChapterController extends Controller implements HasMiddleware
                 'last_updated_date' => $lastupdatedDate,
             ]
         );
+    }
 
-        // Remove from active board table and forum subscriptions
+    private function removeActiveBoardMember($user)
+    {
         Boards::where('user_id', $user->id)->delete();
         ForumCategorySubscription::where('user_id', $user->id)->delete();
     }
@@ -1563,43 +1568,38 @@ class ChapterController extends Controller implements HasMiddleware
                 'mailTablePrimary' => $mailTablePrimary,
             ]);
 
-            if ($chDetailsUpd->name != $chDetails->name || $PresDetailsUpd->bor_email != $PresDetails->bor_email || $PresDetailsUpd->street_address != $PresDetails->street_address || $PresDetailsUpd->city != $PresDetails->city ||
-                    $PresDetailsUpd->state_id != $PresDetails->state_id || $PresDetailsUpd->first_name != $PresDetails->first_name || $PresDetailsUpd->last_name != $PresDetails->last_name ||
-                    $PresDetailsUpd->zip != $PresDetails->zip || $PresDetailsUpd->phone != $PresDetails->phone || $PresDetailsUpd->inquiries_contact != $PresDetails->inquiries_contact ||
-                    $PresDetailsUpd->ein != $chDetails->ein || $chDetailsUpd->ein_letter_path != $chDetails->ein_letter_path || $PresDetailsUpd->inquiries_note != $PresDetails->inquiries_note ||
-                    $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
-                    $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup || $chDetailsUpd->territory != $chDetails->territory ||
-                    $chDetailsUpd->additional_info != $chDetails->additional_info || $chDetailsUpd->status_id != $chDetails->status_id || $chDetailsUpd->notes != $chDetails->notes ||
-                    $mailData['avpName'] != $mailData['avpNameUpd'] || $mailData['avpEmail'] != $mailData['avpEmailUpd'] ||
-                    $mailData['mvpName'] != $mailData['mvpNameUpd'] || $mailData['mvpEmail'] != $mailData['mvpEmailUpd'] ||
-                    $mailData['tresName'] != $mailData['tresNameUpd'] || $mailData['tresEmail'] != $mailData['tresEmailUpd'] ||
-                    $mailData['secName'] != $mailData['secNameUpd'] || $mailData['secEmail'] != $mailData['secEmailUpd']) {
+            if ($PresDetailsUpd->email != $PresDetails->email || $PresDetailsUpd->first_name != $PresDetails->first_name || $PresDetailsUpd->last_name != $PresDetails->last_name ||
+                    $AVPDetailsUpd->email != $AVPDetails->email || $AVPDetailsUpd->first_name != $AVPDetails->first_name || $AVPDetailsUpd->last_name != $AVPDetails->last_name ||
+                    $MVPDetailsUpd->email != $MVPDetails->email || $MVPDetailsUpd->first_name != $MVPDetails->first_name || $MVPDetailsUpd->last_name != $MVPDetails->last_name ||
+                    $TRSDetailsUpd->email != $TRSDetails->email || $TRSDetailsUpd->first_name != $TRSDetails->first_name || $TRSDetailsUpd->last_name != $TRSDetails->last_name ||
+                    $SECDetailsUpd->email != $SECDetails->email || $SECDetailsUpd->first_name != $SECDetails->first_name || $SECDetailsUpd->last_name != $SECDetails->last_name)
 
-                Mail::to($emailPC)
-                    ->queue(new BorUpdatePCNotice($mailData));
-            }
+                {
+                    Mail::to($emailPC)
+                        ->queue(new BorUpdatePCNotice($mailData));
+                }
 
             // List Admin Notification
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $listAdmin = $adminEmail['list_admin'];
 
-            if ($PresDetailsUpd->email != $PresDetails->email || $PresDetailsUpd->email != $PresDetails->email || $mailData['avpEmail'] != $mailData['avpEmailUpd'] ||
-                        $mailData['mvpEmail'] != $mailData['mvpEmailUpd'] || $mailData['tresEmail'] != $mailData['tresEmailUpd'] ||
-                        $mailData['secEmail'] != $mailData['secEmailUpd']) {
+            if ($PresDetailsUpd->email != $PresDetails->email || $AVPDetailsUpd->email != $AVPDetails->email || $MVPDetailsUpd->email != $MVPDetails->email ||
+                    $TRSDetailsUpd->email != $TRSDetails->email || $SECDetailsUpd->email != $SECDetails->email)
 
-                Mail::to($listAdmin)
-                    ->queue(new BorUpdateListNoitce($mailData));
-            }
+                {
+                    Mail::to($listAdmin)
+                        ->queue(new BorUpdateListNoitce($mailData));
+                }
 
             DB::commit();
 
-            return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
+            return to_route('chapters.view', ['id' => $id])->with('success', 'Board Details have been updated');
 
        } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong: ' . $e->getMessage());
+            return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             DB::disconnect();
         }
@@ -1656,7 +1656,7 @@ class ChapterController extends Controller implements HasMiddleware
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return to_route('chapters.editirs', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('chapters.editirs', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         }
 
         return to_route('chapters.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');

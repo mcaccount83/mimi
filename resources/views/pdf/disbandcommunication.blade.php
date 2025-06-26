@@ -38,10 +38,10 @@
                 online via MIMI or by check.  If the chapters’ funds are donated to the MOMS Club, then we will be able to vouch to the IRS that the funds were properly donated.</li>
                 <br>
             <li>
-                Prior to your charitable dontaion, any re-registration dues for the past year need to be paid to the MOMS Club. Those dues are $5 per member who renewed their membership since the
+                Prior to your charitable donation, any re-registration dues for the past year need to be paid to the MOMS Club. Those dues are $5 per member who renewed their membership since the
                 last time your chapter’s registration was paid, with a minimum of $50 to be paid. You may make your payment online via MIMI or by check.</li>
                 <br>
-            <li>Because only on-going registered chapters may have MOMS Club manuals, you need to make sure the chapter manual and all its contents are destroyed OR it is returned to the address bewlo, postage paid.</li>
+            <li>Because only on-going registered chapters may have MOMS Club manuals, you need to make sure the chapter manual and all its contents are destroyed OR it is returned to the address below, postage paid.</li>
                 <br>
             <li>Since you are no longer affiliated with the MOMS Club, neither the former officers nor members of your disbanded chapter may use the name
                 “MOMS Club,” the “MOMS Offering Moms Support” slogan, or the MOMS Club logo, as those are registered service marks of the MOMS Club and you do not
