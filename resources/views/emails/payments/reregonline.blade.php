@@ -1,7 +1,9 @@
 @component('mail::message')
 # Re-Registration Admin Payment Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has submitted their Re-Registration payment through the MOMS Information Management Interface.<br>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has submitted their Re-Registration payment.<br>
+<br>
+<p>The payment has been entered into MIMI and a Thank You email has been sent to the chapter.</p>
 <br>
 <table>
     <tbody>

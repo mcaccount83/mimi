@@ -1,7 +1,9 @@
 @component('mail::message')
 # Admin Manual Order Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has ordered a replacement manual through the MOMS Information Management Interface.<br>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has ordered a replacement manual.<br>
+<br>
+<p>The order has been processed and a receipt has been sent to the chapter.</p>
 <br>
 <table>
     <tbody>
@@ -65,8 +67,6 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} h
         <td>{{ $mailData['email'] }}</td>
     </tbody>
 </table>
-<br>
-<p>The manual has been ordered, this is for notification purposes only.</p>
 <br>
 <strong>MCL,</strong><br>
 MIMI Database Administrator

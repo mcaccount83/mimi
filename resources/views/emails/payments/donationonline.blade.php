@@ -1,7 +1,9 @@
 @component('mail::message')
 # Admin Donation Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has made a Donation to the Mother-to-Mother Fund through the MOMS Information Management Interface.<br>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has made a Donation to the Mother-to-Mother Fund.<br>
+<br>
+<p>The donation has been entered into MIMI and a Thank You email has been sent to the chapter.</p>
 <br>
 <table>
     <tbody>
@@ -64,8 +66,6 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} h
         <td>{{ $mailData['email'] }}</td>
     </tbody>
 </table>
-<br>
-<p>The M2M Donation has been entered into MIMI automatically, this is for notification purposes only.</p>
 <br>
 <strong>MCL,</strong><br>
 MIMI Database Administrator

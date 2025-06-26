@@ -1,7 +1,7 @@
 @component('mail::message')
 # Admin Public Donation Notification
 
-A public Donation to International MOMS Club has been made through the MOMS Information Management Interface.<br>
+A public Donation to International MOMS Club. A Thank You email has been sent to the donor.</p>
 <br>
 <table>
     <tbody>
@@ -66,8 +66,6 @@ A public Donation to International MOMS Club has been made through the MOMS Info
         <td>{{ $mailData['email'] }}</td>
     </tbody>
 </table>
-<br>
-<p>The Donation has been processed, this is for notification purposes only.</p>
 <br>
 <strong>MCL,</strong><br>
 MIMI Database Administrator
