@@ -61,7 +61,6 @@
                                     onclick="event.preventDefault(); openPdfViewer('{{ $list->documents->ein_letter_path }}');">
                                     <i class="far fa-file-pdf"></i>
                                     </a>
-
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif
@@ -100,11 +99,13 @@
                 </table>
             </div>
                 <div class="card-body text-center">
+                    <button class="btn bg-gradient-primary mb-3" onclick="showIRSUpdatesModal()"><i class="fas fa-file-pdf mr-2" ></i>IRS Updates to EO Dept</button>
                     <button class="btn bg-gradient-primary mb-3" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf mr-2" ></i>EO Dept Fax Coversheet</button>
                     <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
                     <br>
                     <button class="btn bg-gradient-primary" onclick="showSubordinateCoverSheetModal()"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing Fax Coversheet</button>
-                    <button class="btn bg-gradient-primary" onclick="window.open('{{ route('pdf.subordinatefiling') }}', '_blank')"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button>
+                    {{-- <button class="btn bg-gradient-primary" onclick="window.open('{{ route('pdf.subordinatefiling') }}', '_blank')"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button> --}}
+                    <button class="btn bg-gradient-primary" onclick="showSubordinateFilingModal()"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button>
                     <button class="btn bg-gradient-primary" onclick="startExport('intirsfiling', 'Subordinate Filing Report')"><i class="fas fa-download mr-2" ></i>Export Subordinate Filing</button>
                 </div>
             </div>
@@ -220,5 +221,96 @@ function showSubordinateCoverSheetModal() {
         }
     });
 }
+
+function showIRSUpdatesModal() {
+    Swal.fire({
+        title: 'IRS Updates to EO Dept',
+        html: `
+            <p>This will generate the Fax Coversheet for the IRS EO Department. Enter the total number of pages (including the coversheet) to be faxed as well as
+                a brief message describing the contents of the fax.</p>
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="total_pages" name="total_pages" class="swal2-input" placeholder="Enter Total Pages" required style="width: 100%;">
+            </div>
+            <div style="display: flex; align-items: center;">
+                <input type="date" id="from_date" name="from_date" class="swal2-input" required style="width: 100%;">
+            </div>
+            `,
+        showCancelButton: true,
+        confirmButtonText: 'Generate',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const totalPages = Swal.getPopup().querySelector('#total_pages').value;
+            const fromDate = Swal.getPopup().querySelector('#from_date').value;
+
+            if (!totalPages || isNaN(totalPages) || totalPages < 1) {
+                Swal.showValidationMessage('Please enter a valid number of pages');
+                return false;
+            }
+
+            if (!fromDate || fromDate.trim() === '') {
+                Swal.showValidationMessage('Please enter a start date for report');
+                return false;
+            }
+
+            return {
+                total_pages: totalPages,
+                from_date: fromDate,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Open PDF in new window with pages parameter
+            const url = `{{ route('pdf.irsupdates') }}?pages=${data.total_pages}&date=${data.from_date}`;
+            window.open(url, '_blank');
+        }
+    });
+}
+
+function showSubordinateFilingModal() {
+    Swal.fire({
+        title: 'IRS Updates to EO Dept',
+        html: `
+            <p>This will generate the Fax Coversheet for the IRS EO Department. Enter the total number of pages (including the coversheet) to be faxed as well as
+                a brief message describing the contents of the fax.</p>
+            <div style="display: flex; align-items: center;">
+                <input type="date" id="from_date" name="from_date" class="swal2-input" required style="width: 100%;">
+            </div>
+            `,
+        showCancelButton: true,
+        confirmButtonText: 'Generate',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const fromDate = Swal.getPopup().querySelector('#from_date').value;
+
+            if (!fromDate || fromDate.trim() === '') {
+                Swal.showValidationMessage('Please enter a start date for report');
+                return false;
+            }
+
+            return {
+                from_date: fromDate,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Open PDF in new window with pages parameter
+            const url = `{{ route('pdf.subordinatefiling') }}?date=${data.from_date}`;
+            window.open(url, '_blank');
+        }
+    });
+}
+
 </script>
 @endsection

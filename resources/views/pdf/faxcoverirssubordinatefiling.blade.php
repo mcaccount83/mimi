@@ -90,7 +90,10 @@
         <table>
             <tr>
                 <td>
-                    Full subordinate list for updates, additions, deletions from Jan {{ $pdfData['lastYear'] }} - present.<br>
+                    <br>
+                    Full subordinate list of updates, additions and deletions from {{ $startFormatted }} - {{ $todayFormatted }}.<br>
+                    <br>
+                    Some additions or deletions may have been included in a previous submission, but are included here to ensure a full and complete report.<br>
                     <br>
                     Thank you.<br>
                     <br>

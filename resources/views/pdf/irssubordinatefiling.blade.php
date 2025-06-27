@@ -85,7 +85,8 @@
             <span class="header-right">INTERNATIONAL MOMS CLUB</span>
         </div>
         <div class="header-line">
-            <span class="header-left">{{ strtoupper($month ?? 'MONTH') }} {{ $year ?? 'YEAR' }}</span>
+            {{-- <span class="header-left">{{ strtoupper($month ?? 'MONTH') }} {{ $year ?? 'YEAR' }}</span> --}}
+            <span class="header-left">{{ $startFormatted }} - {{ $todayFormatted }}</span>
             <span class="header-right">TAX ID#77-0125681 GEN# 3706</span>
         </div>
     </div>
@@ -119,16 +120,5 @@
             @endforeach
         </tbody>
     </table>
-
-    @if(!empty($isPdf))
-<style>
-  body {
-    transform-origin: top left;
-    transform: rotate(90deg) translate(0, -100vh);
-    width: 100vh;
-    height: 100vw;
-  }
-</style>
-@endif
 </body>
 </html>
