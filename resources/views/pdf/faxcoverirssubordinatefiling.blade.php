@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Chapter Name Change</title>
+    <title>IRS Subordinate Filing</title>
     <style>
         .page-break {
             page-break-after: always;
@@ -29,6 +29,18 @@
             width: 150px;
             background-color: #f5f5f5;
         }
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            font-size: 10px;
+            line-height: 1.3;
+            text-align: justify;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            background-color: white;
+        }
     </style>
 </head>
 <body>
@@ -41,7 +53,7 @@
             </tr>
             <tr>
                 <td class="label">PAGES:</td>
-                <td>{{ $pdfData['totalPages'] }} (including cover)</td>
+                <td> {{ $pdfData['totalPages'] }} Pages (including cover)</td>
             </tr>
             <tr>
                 <td class="label">TO:</td>
@@ -78,19 +90,22 @@
         <table>
             <tr>
                 <td>
-                    Full subordinate list for updates, additions, deletions from Jan {{ $pdfData['prevYear'] }} - present.<br>
+                    Full subordinate list for updates, additions, deletions from Jan {{ $pdfData['lastYear'] }} - present.<br>
                     <br>
                     Thank you.<br>
                     <br>
-                    {{ $pdfData['followPages'] }} to follow.<br>
+                    {{ $pdfData['followPages'] }} pages to follow.<br>
                     <br>
                 </td>
             </tr>
         </table>
-    <h6>
+   </div>
+
+    <!-- Fixed footer -->
+    <div class="footer">
         The information contained in this transmission may contain confidential information, including patient information protected under federal and state law. This document is intended for the Internal Revenue Service only. If you are not the intended recipient, you are hereby notified that any disclosure or distribution of this information is in violation of HIPAA confidentiality and prohibited. If you are not the intended recipient, please contact the sender by reply email and delete all copies. This fax disclaimer is present on the cover sheet and serves as a warning to ensure privacy.
-    </h6>
     </div>
+
 </body>
 </html>
 

@@ -785,20 +785,21 @@ class PDFController extends Controller
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
-        $todayDate = date('F j, Y');
+        $date = Carbon::now();
+        $dateFormatted = $date->format('F j, Y');
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getCCData($emailCCData),
             $this->baseMailDataController->getPresData($PresDetails),
             [
-                'todayDate' => $todayDate,
+                'todayDate' => $dateFormatted,
             ]
         );
 
         $pdf = Pdf::loadView('pdf.faxcoverirsnewchapter', compact('pdfData'));
 
-        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_NewChapterIRSCover.pdf';
+        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_NewChapterFaxCover.pdf';
 
         if ($streamResponse) {
             return $pdf->stream($filename, ['Attachment' => 0]);
@@ -809,6 +810,47 @@ class PDFController extends Controller
             'filename' => $filename,
         ];
     }
+
+    // /**
+    //  * Generate New Chapter IRS Fax Coversheet
+    //  */
+     public function generateSubordinateFilingFaxCover($streamResponse = true)
+    {
+        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+
+        $totalPages = (int) $pages;
+        $followPages = $totalPages - 1;
+
+        $date = Carbon::now();
+        $dateFormatted = $date->format('F j, Y');
+        $lastYear = $date->subYear()->format('Y');
+
+        $emailEINCoorData = $this->userController->loadEINCoord();
+
+        $pdfData = array_merge(
+            $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+            [
+                'todayDate' => $dateFormatted,
+                'totalPages' => $totalPages,
+                'followPages' => $followPages,
+                'lastYear' => $lastYear,
+            ]
+        );
+
+        $pdf = Pdf::loadView('pdf.faxcoverirssubordinatefiling', compact('pdfData'));
+
+        $filename = '_IRSSubordinateFilingFaxCover.pdf';
+
+        if ($streamResponse) {
+            return $pdf->stream($filename, ['Attachment' => 0]);
+        }
+
+        return [
+            'pdf' => $pdf,
+            'filename' => $filename,
+        ];
+    }
+
 
     /**
      * Upload PDF to Google Drive

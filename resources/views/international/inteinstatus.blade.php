@@ -96,7 +96,9 @@
                 </table>
             </div>
                 <div class="card-body text-center">
-                    <button class="btn bg-gradient-primary" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
+                    <br>
+                    <button class="btn bg-gradient-primary" onclick="showSubordinateCoverSheetModal()"><i class="fas fa-fax mr-2" ></i>Subordinate Filing Fax Coversheet</button>
                     <button class="btn bg-gradient-primary" onclick="startExport('intirsfiling', 'Subordinate Filing Report')"><i class="fas fa-download mr-2" ></i>Export Subordinate Filing Report</button>
                 </div>
             </div>
@@ -124,5 +126,43 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function showSubordinateCoverSheetModal() {
+    Swal.fire({
+        title: 'IRS Subordinate Filing',
+        html: `
+            <p>This will generate the Fax Coversheet for the IRS Subordinate Filing. Enter the total number of pages (including the coversheet) to be faxed.</p>
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="total_pages" name="total_pages" class="swal2-input" placeholder="Enter Total Pages" required style="width: 100%;">
+            </div>`,
+        showCancelButton: true,
+        confirmButtonText: 'Generate',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const totalPages = Swal.getPopup().querySelector('#total_pages').value;
+
+            if (!totalPages || isNaN(totalPages) || totalPages < 1) {
+                Swal.showValidationMessage('Please enter a valid number of pages');
+                return false;
+            }
+
+            return {
+                total_pages: totalPages,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Open PDF in new window with pages parameter
+            const url = `{{ route('pdf.subordinatefilingfaxcover') }}?pages=${data.total_pages}`;
+            window.open(url, '_blank');
+        }
+    });
+}
 </script>
 @endsection
