@@ -812,7 +812,7 @@ class PDFController extends Controller
     }
 
     // /**
-    //  * Generate New Chapter IRS Fax Coversheet
+    //  * Generate Subordinate Filing IRS Fax Coversheet
     //  */
      public function generateSubordinateFilingFaxCover($streamResponse = true)
     {
@@ -822,6 +822,7 @@ class PDFController extends Controller
         $followPages = $totalPages - 1;
 
         $date = Carbon::now();
+        $year = $date->format('Y');
         $dateFormatted = $date->format('F j, Y');
         $lastYear = $date->subYear()->format('Y');
 
@@ -839,7 +840,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView('pdf.faxcoverirssubordinatefiling', compact('pdfData'));
 
-        $filename = '_IRSSubordinateFilingFaxCover.pdf';
+        $filename = $year.'_IRSSubordinateFilingFaxCover.pdf';
 
         if ($streamResponse) {
             return $pdf->stream($filename, ['Attachment' => 0]);
@@ -851,6 +852,46 @@ class PDFController extends Controller
         ];
     }
 
+    // /**
+    //  * Generate General EO Dept IRS Fax Coversheet
+    //  */
+     public function generateEODeptFaxCover($streamResponse = true)
+    {
+        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        $message = request()->query('message') ?? request()->input('message') ?? 1;
+
+        $totalPages = (int) $pages;
+        $followPages = $totalPages - 1;
+
+        $date = Carbon::now();
+        $dateToday = $date->format('m-d-Y');
+        $dateFormatted = $date->format('F j, Y');
+
+        $emailEINCoorData = $this->userController->loadEINCoord();
+
+        $pdfData = array_merge(
+            $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+            [
+                'todayDate' => $dateFormatted,
+                'totalPages' => $totalPages,
+                'followPages' => $followPages,
+                'message' => $message,
+            ]
+        );
+
+        $pdf = Pdf::loadView('pdf.faxcoverirseodept', compact('pdfData'));
+
+        $filename = $dateToday.'_IRSEODeptFaxCover.pdf';
+
+        if ($streamResponse) {
+            return $pdf->stream($filename, ['Attachment' => 0]);
+        }
+
+        return [
+            'pdf' => $pdf,
+            'filename' => $filename,
+        ];
+    }
 
     /**
      * Upload PDF to Google Drive

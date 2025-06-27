@@ -1182,6 +1182,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         User::where('id', $user->id)->update([
             'user_type' => 'outgoing',
+            'is_active' => '0',
             'updated_at' => $lastupdatedDate,
         ]);
     }
