@@ -96,7 +96,7 @@
                 </table>
             </div>
                 <div class="card-body text-center">
-                    <button class="btn bg-gradient-primary" onclick="showEODeptCoverSheetModal()"><i class="fas fa-fax mr-2" ></i>EO Dept Fax Coversheet</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="showEODeptCoverSheetModal()"><i class="fas fa-fax mr-2" ></i>EO Dept Fax Coversheet</button>
                     <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
                     <br>
                     <button class="btn bg-gradient-primary" onclick="showSubordinateCoverSheetModal()"><i class="fas fa-fax mr-2" ></i>Subordinate Filing Fax Coversheet</button>
