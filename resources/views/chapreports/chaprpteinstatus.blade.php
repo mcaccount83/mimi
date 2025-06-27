@@ -46,7 +46,10 @@
                         </td>
                         <td class="text-center align-middle">
                             @if ($list->documents->ein_letter_path != null)
-                                <a href="{{ $list->documents->ein_letter_path }}"><i class="far fa-file-pdf"></i></a>
+                                <a href="{{ $list->documents->ein_letter_path }}"
+                                    onclick="event.preventDefault(); openPdfViewer('{{ $list->documents->ein_letter_path }}');">
+                                    <i class="far fa-file-pdf"></i>
+                                    </a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif

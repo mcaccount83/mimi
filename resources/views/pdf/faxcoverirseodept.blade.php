@@ -29,6 +29,7 @@
             width: 150px;
             background-color: #f5f5f5;
         }
+
         .footer {
             position: fixed;
             bottom: 20px;

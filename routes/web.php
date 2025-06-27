@@ -314,6 +314,7 @@ Route::get('/financial-report-pdf', [PDFController::class, 'saveFinancialReport'
 Route::post('/generate-probation-letter', [PDFController::class, 'saveProbationLetter'])->name('pdf.generateProbationLetter');
 Route::get('/board/newchapfaxcover/pdf/{id}', [PDFController::class, 'generateNewChapterFaxCover'])->name('pdf.newchapfaxcover');
 Route::get('/board/subordinatefilingfaxcover/pdf', [PDFController::class, 'generateSubordinateFilingFaxCover'])->name('pdf.subordinatefilingfaxcover');
+Route::get('/board/subordinatefiling/pdf', [PDFController::class, 'generateSubordinateFiling'])->name('pdf.subordinatefiling');
 Route::get('/board/eodeptfaxcover/pdf', [PDFController::class, 'generateEODeptFaxCover'])->name('pdf.eodeptfaxcover');
 
 // Google Controller -- Uploading Files Routes...Used for Board & Coordinator Layouts

@@ -57,7 +57,11 @@
                         </td>
                         <td class="text-center align-middle">
                             @if ($list->documents->ein_letter_path != null)
-                                <a href="{{ $list->documents->ein_letter_path }}"><i class="far fa-file-pdf"></i></a>
+                                <a href="{{ $list->documents->ein_letter_path }}"
+                                    onclick="event.preventDefault(); openPdfViewer('{{ $list->documents->ein_letter_path }}');">
+                                    <i class="far fa-file-pdf"></i>
+                                    </a>
+
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif
@@ -96,11 +100,12 @@
                 </table>
             </div>
                 <div class="card-body text-center">
-                    <button class="btn bg-gradient-primary mb-3" onclick="showEODeptCoverSheetModal()"><i class="fas fa-fax mr-2" ></i>EO Dept Fax Coversheet</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf mr-2" ></i>EO Dept Fax Coversheet</button>
                     <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
                     <br>
-                    <button class="btn bg-gradient-primary" onclick="showSubordinateCoverSheetModal()"><i class="fas fa-fax mr-2" ></i>Subordinate Filing Fax Coversheet</button>
-                    <button class="btn bg-gradient-primary" onclick="startExport('intirsfiling', 'Subordinate Filing Report')"><i class="fas fa-download mr-2" ></i>Export Subordinate Filing Report</button>
+                    <button class="btn bg-gradient-primary" onclick="showSubordinateCoverSheetModal()"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing Fax Coversheet</button>
+                    <button class="btn bg-gradient-primary" onclick="window.open('{{ route('pdf.subordinatefiling') }}', '_blank')"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button>
+                    <button class="btn bg-gradient-primary" onclick="startExport('intirsfiling', 'Subordinate Filing Report')"><i class="fas fa-download mr-2" ></i>Export Subordinate Filing</button>
                 </div>
             </div>
              <!-- /.box -->
