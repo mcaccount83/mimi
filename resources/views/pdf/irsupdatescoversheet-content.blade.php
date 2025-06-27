@@ -3,7 +3,7 @@
         <!-- Fax Cover Page Content -->
         <div class="keep-together" style="page-break-inside: avoid;">
             <center><h1>FAX</h1></center>
-            <table>
+            <table class="cover-table">
                 <tr>
                     <td class="label">DATE:</td>
                     <td>{{ $pdfData['todayDate'] }}</td>
@@ -44,10 +44,11 @@
                         GEN Number:  3706</td>
                 </tr>
             </table>
-             <table>
+             <table class="cover-table">
                 <tr>
                     <td>
-                        Subordinate corrections.<br>
+                        <br>
+                        Subordinate corrections. Includes any additions and deletions from {{ $pdfData['startFormatted'] }} - {{ $pdfData['todayFormatted'] }}.<br>
                         <br>
                         Thank you.<br>
                         <br>

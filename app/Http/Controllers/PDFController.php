@@ -863,145 +863,17 @@ class PDFController extends Controller
     // /**
     //  * Generate Subordinate Filing
     //  */
-    //  public function generateSubordinateFiling(Request $request, $streamResponse = true)
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     // Get January 1st of the previous year
-    //     $previousYear = Carbon::now()->subYear()->startOfYear();
-
-    //     // Get the base queries
-    //     $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
-
-    //     // Build optimized queries with all needed data in one go
-    //     $activeChapters = $baseQueryActive['query']
-    //         ->select([
-    //             'chapters.*',
-    //             'bd_active.first_name as pres_first_name',
-    //             'bd_active.last_name as pres_last_name',
-    //             'bd_active.street_address as pres_address',
-    //             'bd_active.city as pres_city',
-    //             'state.state_short_name as pres_state',
-    //             'bd_active.zip as pres_zip'
-    //         ])
-    //         ->where('chapters.ein', '!=', null )
-    //         ->where('chapters.ein', '!=', '*********' )
-    //         ->where('chapters.country_id', '=', '198')
-    //         ->leftJoin('boards as bd_active', function($join) {
-    //             $join->on('chapters.id', '=', 'bd_active.chapter_id')
-    //                 ->where('bd_active.board_position_id', '=', 1); // Assuming 1 is President
-    //         })
-    //         ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
-    //         ->get();
-
-    //     $zappedChapters = $baseQueryZapped['query']
-    //         ->select([
-    //             'chapters.*',
-    //             'bd_disbanded.first_name as pres_first_name',
-    //             'bd_disbanded.last_name as pres_last_name',
-    //             'bd_disbanded.street_address as pres_address',
-    //             'bd_disbanded.city as pres_city',
-    //             'state.state_short_name as pres_state',
-    //             'bd_disbanded.zip as pres_zip'
-    //         ])
-    //         ->whereDate('chapters.zap_date', '>=', $previousYear->toDateString())
-    //         ->where('chapters.ein', '!=', null )
-    //         ->where('chapters.ein', '!=', '*********' )
-    //         ->where('chapters.country_id', '=', '198')
-    //         ->leftJoin('boards_disbanded as bd_disbanded', function($join) {
-    //             $join->on('chapters.id', '=', 'bd_disbanded.chapter_id')
-    //                 ->where('bd_disbanded.board_position_id', '=', 1); // Assuming 1 is President
-    //         })
-    //         ->leftJoin('state', 'bd_disbanded.state_id', '=', 'state.id')
-    //         ->get();
-
-    //     // Process chapters and add notes column
-    //     $chapterList = collect();
-
-    //     // Process active chapters
-    //     foreach ($activeChapters as $chapter) {
-    //         $notesColumn = null;
-
-    //         // Check if chapter started within the last year
-    //         if (isset($chapter->start_year) && isset($chapter->start_month_id)) {
-    //             $chapterStartedLastYear = ($chapter->start_year > $previousYear->year) ||
-    //                 ($chapter->start_year == $previousYear->year && $chapter->start_month_id >= $previousYear->month);
-    //             $notesColumn = $chapterStartedLastYear ? 'ADD' : null;
-    //         }
-
-    //         $chapter->notes_column = $notesColumn;
-    //         $chapter->is_active = true;
-    //         $chapterList->push($chapter);
-    //     }
-
-    //     // Process zapped chapters
-    //     foreach ($zappedChapters as $chapter) {
-    //         $chapter->notes_column = 'DELETE';
-    //         $chapter->is_active = false;
-    //         $chapterList->push($chapter);
-    //     }
-
-    //     // Step 1: Sort by EIN (ascending)
-    //     $chapterList = $chapterList->sortBy('ein');
-    //     // Step 2: Sort by notes_column priority (null first, ADD second, DELETE last)
-    //     $chapterList = $chapterList->sortBy(function($chapter) {
-    //         if (is_null($chapter->notes_column)) {
-    //             return 0;
-    //         } elseif ($chapter->notes_column === 'ADD') {
-    //             return 1;
-    //         } elseif ($chapter->notes_column === 'DELETE') {
-    //             return 2;
-    //         }
-    //         return 3;
-    //     });
-
-    //     $date = Carbon::now();
-    //     $month = $date->format('F');
-    //     $year = $date->format('Y');
-    //     $dateFormatted = $date->format('F j, Y');
-
-    //     $emailEINCoorData = $this->userController->loadEINCoord();
-
-    //     $pdfData = array_merge(
-    //         $this->baseMailDataController->getEINCoorData($emailEINCoorData),
-    //         [
-    //             'todayDate' => $dateFormatted,
-    //             'month' => $month,
-    //             'year' => $year,
-    //             'chapterList' => $chapterList,
-    //         ]
-    //     );
-
-    //     $pdf = Pdf::loadView('pdf.irssubordinatefiling', $pdfData);
-
-    //     $filename = $year.'_IRSSubordinateFiling.pdf';
-
-    //     if ($streamResponse) {
-    //         return $pdf->stream($filename, ['Attachment' => 0]);
-    //     }
-
-    //     return [
-    //         'pdf' => $pdf,
-    //         'filename' => $filename,
-    //     ];
-    // }
-
-     public function generateSubordinateFiling(Request $request, $streamResponse = true)
+      public function generateSubordinateFiling(Request $request, $streamResponse = true)
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
-
-        // Get January 1st of the previous year
-        $previousYear = Carbon::now()->subYear()->startOfYear();
 
         $dateInput = request()->query('date') ?? request()->input('date');
         $date = $dateInput ? Carbon::parse($dateInput) : Carbon::now();
         $startFormatted = $date->format('F Y');
         $todayDate = Carbon::now();
         $todayFormatted = $todayDate->format('F Y');
-
+        $year = $todayDate->format('Y');
 
         // Get the update, add and zap lists
         $chapterUpdateList = $this->generateIRSUpdateList($coorId, $date);
@@ -1014,51 +886,26 @@ class PDFController extends Controller
         // Process update chapters
         foreach ($chapterUpdateList as $chapter) {
             $chapter->notes_column = null;
-            $chapter->is_active = true;
             $chapterList->push($chapter);
         }
 
         // Process add chapters
         foreach ($chapterAddList as $chapter) {
             $chapter->notes_column = 'ADD';
-            $chapter->is_active = true;
             $chapterList->push($chapter);
         }
 
         // Process zapped chapters
         foreach ($chapterZapList as $chapter) {
             $chapter->notes_column = 'DELETE';
-            $chapter->is_active = false;
             $chapterList->push($chapter);
         }
-
-        // Step 1: Sort by EIN (ascending)
-        $chapterList = $chapterList->sortBy('ein');
-        // Step 2: Sort by notes_column priority (null first, ADD second, DELETE last)
-        $chapterList = $chapterList->sortBy(function($chapter) {
-            if (is_null($chapter->notes_column)) {
-                return 0;
-            } elseif ($chapter->notes_column === 'ADD') {
-                return 1;
-            } elseif ($chapter->notes_column === 'DELETE') {
-                return 2;
-            }
-            return 3;
-        });
-
-        $date = Carbon::now();
-        $month = $date->format('F');
-        $year = $date->format('Y');
-        $dateFormatted = $date->format('F j, Y');
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
         $pdfData = array_merge(
             $this->baseMailDataController->getEINCoorData($emailEINCoorData),
             [
-                'todayDate' => $dateFormatted,
-                'month' => $month,
-                'year' => $year,
                 'chapterList' => $chapterList,
                 'startFormatted' => $startFormatted,
                 'todayFormatted' => $todayFormatted
@@ -1108,7 +955,8 @@ class PDFController extends Controller
                     ->where('bd_active.board_position_id', '=', 1);
             })
             ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
-            ->get();
+            ->get()
+            ->sortBy('ein');
     }
 
     private function generateIRSAddList($coorId, $date)
@@ -1140,7 +988,8 @@ class PDFController extends Controller
                     ->where('bd_active.board_position_id', '=', 1);
             })
             ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
-            ->get();
+            ->get()
+            ->sortBy('ein');
     }
 
     private function generateIRSZapList($coorId, $date)
@@ -1154,9 +1003,13 @@ class PDFController extends Controller
             ->whereNotNull('chapters.ein')
             ->where('chapters.ein', '!=', '*********')
             ->where('chapters.country_id', '=', '198')
-            ->get();
+            ->get()
+            ->sortBy('ein');
     }
 
+     // /**
+    //  * Generate IRS Updates other than Subordinate Filing
+    //  */
      public function generateIRSUpdates(Request $request, $streamResponse = true)
     {
         $user = $this->userController->loadUserInformation($request);
@@ -1169,15 +1022,14 @@ class PDFController extends Controller
         $date = $dateInput ? Carbon::parse($dateInput) : Carbon::now();
         $startFormatted = $date->format('m-d-Y');
 
+        $todayDate = Carbon::now();
+        $sartFormatted2 = $date->format('F Y');
+        $todayFormatted = $todayDate->format('F Y');
+        $dateFormatted = $todayDate->format('F j, Y');
+
         // Get the add and zap lists
         $chapterAddList = $this->generateIRSAddList($coorId, $date);
         $chapterZapList = $this->generateIRSZapList($coorId, $date);
-
-
-        $todayDate = Carbon::now();
-        $month = $todayDate->format('F');
-        $year = $todayDate->format('Y');
-        $dateFormatted = $todayDate->format('F j, Y');
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
@@ -1186,6 +1038,8 @@ class PDFController extends Controller
             [
                 'todayDate' => $dateFormatted,
                 'startDate' => $startFormatted,
+                'startFormatted' => $sartFormatted2,
+                'todayFormatted' => $todayFormatted,
                 'totalPages' => $totalPages,
                 'followPages' => $followPages,
                 'chapterAddList' => $chapterAddList,
@@ -1208,7 +1062,7 @@ class PDFController extends Controller
     }
 
     // /**
-    //  * Generate General EO Dept IRS Fax Coversheet
+    //  * Other/Generate General EO Dept IRS Fax Coversheet
     //  */
      public function generateEODeptFaxCover($streamResponse = true)
     {

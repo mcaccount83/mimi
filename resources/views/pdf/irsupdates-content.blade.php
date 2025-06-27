@@ -13,7 +13,7 @@
                 Gen Number: 3706</p>
             @if(count($pdfData['chapterZapList']) > 0)
                 <p>Below is a list of subordinates that have disbanded since our last submission on {{ $pdfData['startDate'] }} and <u><b>should be removed from our group immediately.</u></b></p>
-                <table>
+                <table class="zap-table">
                     <thead>
                         <tr>
                             <th>EIN#</th>
@@ -32,7 +32,7 @@
             @endif
             @if(count($pdfData['chapterAddList']) > 0)
             <p>Below is a list of subordinates organized since our last submission on {{ $pdfData['startDate'] }}.  <u><b>These chapters are good standing and should be added to our list of subordinates.  All chapters have the same fiscal year of July 1st-June 30th.</u></b></p>
-            <table>
+            <table class="add-table">
                 <thead>
                     <tr>
                         <th>EIN#</th>
