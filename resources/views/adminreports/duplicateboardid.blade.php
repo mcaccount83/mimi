@@ -43,9 +43,13 @@
 						<td>{{ $list->last_name }}</td>
 						<td>
 							@if($list->is_active=='1')
-							YES
-							@else
-								NO
+							    ACTIVE
+							@elseif($list->is_active=='2')
+								PENDING
+                            @elseif($list->is_active=='3')
+								NOT APPROVED
+                            @elseif($list->is_active=='0')
+								NOT ACTIVE
 							@endif
 						</td>
 			        </tr>
