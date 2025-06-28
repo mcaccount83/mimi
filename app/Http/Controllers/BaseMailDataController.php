@@ -245,8 +245,8 @@ class BaseMailDataController extends Controller
     public function getFinancialReportData($chDocuments, $chFinancialReport)
     {
         return [
-            'completedName' => $chFinancialReport->completed_name,
-            'completedEmail' => $chFinancialReport->completed_email,
+            'completedName' => $chFinancialReport->completed_name ?? null,
+            'completedEmail' => $chFinancialReport->completed_email ?? null,
             'boardElectionReportReceived' => $chDocuments->new_board_submitted,
             'financialReportReceived' => $chDocuments->financial_report_received,
             '990NSubmissionReceived' => $chDocuments->irs_verified,
@@ -256,7 +256,7 @@ class BaseMailDataController extends Controller
             'statement1Path' => $chDocuments->statement_1_path,
             'statement2Path' => $chDocuments->statement_2_path,
             'financialPdfPath' => $chDocuments->financial_pdf_path,
-            'reviewerEmailMessage' => $chFinancialReport->reviewer_email_message,
+            'reviewerEmailMessage' => $chFinancialReport->reviewer_email_message ?? null,
             'final_report_received' => $chDocuments->final_report_received,
             'financialFinalPdfPath' => $chDocuments->final_financial_pdf_path,
         ];
