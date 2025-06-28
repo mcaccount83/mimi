@@ -313,11 +313,10 @@ Route::get('/board/financialreport/pdf/{id}', [PDFController::class, 'generateFi
 Route::get('/financial-report-pdf', [PDFController::class, 'saveFinancialReport'])->name('pdf.financialreport');
 Route::post('/generate-probation-letter', [PDFController::class, 'saveProbationLetter'])->name('pdf.generateProbationLetter');
 Route::get('/board/newchapfaxcover/pdf/{id}', [PDFController::class, 'generateNewChapterFaxCover'])->name('pdf.newchapfaxcover');
-Route::get('/board/subordinatefilingfaxcover/pdf', [PDFController::class, 'generateSubordinateFilingFaxCover'])->name('pdf.subordinatefilingfaxcover');
-Route::get('/board/subordinatefiling/pdf', [PDFController::class, 'generateSubordinateFiling'])->name('pdf.subordinatefiling');
 Route::get('/board/eodeptfaxcover/pdf', [PDFController::class, 'generateEODeptFaxCover'])->name('pdf.eodeptfaxcover');
-Route::get('/board/irsupdates/pdf', [PDFController::class, 'generateIRSUpdates'])->name('pdf.irsupdates');
-
+Route::get('/board/combinedsubordinatefiling/pdf', [PDFController::class, 'generateCombinedIRSSubordinateFiling'])->name('pdf.combinedsubordinatefiling');
+Route::get('/board/combinedirsupdates/pdf', [PDFController::class, 'generateCombinedIRSUpdates'])->name('pdf.combinedirsupdates');
+Route::get('/board/combinednamechangeletter/pdf/{id}', [PDFController::class, 'generateCombinedNameChangeLetter'])->name('pdf.combinednamechangeletter');
 
 // Google Controller -- Uploading Files Routes...Used for Board & Coordinator Layouts
 Route::post('/files/storeEIN/{id}', [GoogleController::class, 'storeEIN']);

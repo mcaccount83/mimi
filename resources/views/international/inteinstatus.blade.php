@@ -99,14 +99,13 @@
                 </table>
             </div>
                 <div class="card-body text-center">
-                    <button class="btn bg-gradient-primary mb-3" onclick="showIRSUpdatesModal()"><i class="fas fa-file-pdf mr-2" ></i>IRS Updates to EO Dept</button>
-                    <button class="btn bg-gradient-primary mb-3" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf mr-2" ></i>EO Dept Fax Coversheet</button>
                     <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
+                    <button class="btn bg-gradient-primary  mb-3" onclick="startExport('intirsfiling', 'Subordinate Filing Report')"><i class="fas fa-download mr-2" ></i>Export Subordinate Filing</button>
                     <br>
-                    <button class="btn bg-gradient-primary" onclick="showSubordinateCoverSheetModal()"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing Fax Coversheet</button>
                     {{-- <button class="btn bg-gradient-primary" onclick="window.open('{{ route('pdf.subordinatefiling') }}', '_blank')"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button> --}}
-                    <button class="btn bg-gradient-primary" onclick="showSubordinateFilingModal()"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button>
-                    <button class="btn bg-gradient-primary" onclick="startExport('intirsfiling', 'Subordinate Filing Report')"><i class="fas fa-download mr-2" ></i>Export Subordinate Filing</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf mr-2" ></i>EO Dept Fax Coversheet</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="showIRSUpdatesModal()"><i class="fas fa-file-pdf mr-2" ></i>IRS Updates to EO Dept</button>
+                    <button class="btn bg-gradient-primary  mb-3" onclick="showSubordinateFilingModal()"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button>
                 </div>
             </div>
              <!-- /.box -->
@@ -178,45 +177,7 @@ function showEODeptCoverSheetModal() {
             const data = result.value;
 
             // Open PDF in new window with pages parameter
-            const url = `{{ route('pdf.eodeptfaxcover') }}?pages=${data.total_pages}&message=${encodeURIComponent(data.email_message)}`;
-            window.open(url, '_blank');
-        }
-    });
-}
-
-function showSubordinateCoverSheetModal() {
-    Swal.fire({
-        title: 'IRS Subordinate Filing',
-        html: `
-            <p>This will generate the Fax Coversheet for the IRS Subordinate Filing. Enter the total number of pages (including the coversheet) to be faxed.</p>
-            <div style="display: flex; align-items: center;">
-                <input type="text" id="total_pages" name="total_pages" class="swal2-input" placeholder="Enter Total Pages" required style="width: 100%;">
-            </div>`,
-        showCancelButton: true,
-        confirmButtonText: 'Generate',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const totalPages = Swal.getPopup().querySelector('#total_pages').value;
-
-            if (!totalPages || isNaN(totalPages) || totalPages < 1) {
-                Swal.showValidationMessage('Please enter a valid number of pages');
-                return false;
-            }
-
-            return {
-                total_pages: totalPages,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Open PDF in new window with pages parameter
-            const url = `{{ route('pdf.subordinatefilingfaxcover') }}?pages=${data.total_pages}`;
+            const url = `{{ route('pdf.eodeptfaxcover') }}?pages=${data.total_pages}&message=${encodeURIComponent(data.email_message)}&title=${encodeURIComponent('IRS EO Department Fax')}`;
             window.open(url, '_blank');
         }
     });
@@ -266,7 +227,7 @@ function showIRSUpdatesModal() {
             const data = result.value;
 
             // Open PDF in new window with pages parameter
-            const url = `{{ route('pdf.irsupdates') }}?pages=${data.total_pages}&date=${data.from_date}`;
+            const url = `{{ route('pdf.combinedirsupdates') }}?pages=${data.total_pages}&date=${data.from_date}`;
             window.open(url, '_blank');
         }
     });
@@ -279,6 +240,9 @@ function showSubordinateFilingModal() {
             <p>This will generate the Fax Coversheet for the IRS EO Department. Enter the total number of pages (including the coversheet) to be faxed as well as
                 a brief message describing the contents of the fax.</p>
             <div style="display: flex; align-items: center;">
+                <input type="text" id="total_pages" name="total_pages" class="swal2-input" placeholder="Enter Total Pages" required style="width: 100%;">
+            </div>
+            <div style="display: flex; align-items: center;">
                 <input type="date" id="from_date" name="from_date" class="swal2-input" required style="width: 100%;">
             </div>
             `,
@@ -290,7 +254,13 @@ function showSubordinateFilingModal() {
             cancelButton: 'btn-sm btn-danger'
         },
         preConfirm: () => {
+            const totalPages = Swal.getPopup().querySelector('#total_pages').value;
             const fromDate = Swal.getPopup().querySelector('#from_date').value;
+
+            if (!totalPages || isNaN(totalPages) || totalPages < 1) {
+                Swal.showValidationMessage('Please enter a valid number of pages');
+                return false;
+            }
 
             if (!fromDate || fromDate.trim() === '') {
                 Swal.showValidationMessage('Please enter a start date for report');
@@ -298,6 +268,7 @@ function showSubordinateFilingModal() {
             }
 
             return {
+                total_pages: totalPages,
                 from_date: fromDate,
             };
         }
@@ -306,7 +277,7 @@ function showSubordinateFilingModal() {
             const data = result.value;
 
             // Open PDF in new window with pages parameter
-            const url = `{{ route('pdf.subordinatefiling') }}?date=${data.from_date}`;
+            const url = `{{ route('pdf.combinedsubordinatefiling') }}?pages=${data.total_pages}&date=${data.from_date}`;
             window.open(url, '_blank');
         }
     });

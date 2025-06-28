@@ -23,7 +23,9 @@
         "livewire/livewire": "^3.6",
         "rap2hpoutre/laravel-log-viewer": "^2.5",
         "riari/laravel-forum": "^7.0",
-        "romanzipp/laravel-queue-monitor": "dev-master"
+        "romanzipp/laravel-queue-monitor": "dev-master",
+        "setasign/fpdf": "^1.8",
+        "setasign/fpdi": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",

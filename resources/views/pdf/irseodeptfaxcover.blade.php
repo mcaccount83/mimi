@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IRS Subordinate Filing</title>
+    <title>{{ $pdfData['title'] }}</title>
     <style>
         .page-break {
             page-break-after: always;
@@ -29,6 +29,7 @@
             width: 150px;
             background-color: #f5f5f5;
         }
+
         .footer {
             position: fixed;
             bottom: 20px;
@@ -91,9 +92,7 @@
             <tr>
                 <td>
                     <br>
-                    Full subordinate list of updates, additions and deletions from {{ $startFormatted }} - {{ $todayFormatted }}.<br>
-                    <br>
-                    Some additions or deletions may have been included in a previous submission, but are included here to ensure a full and complete report.<br>
+                    {!! $pdfData['message'] !!}<br>
                     <br>
                     Thank you.<br>
                     <br>

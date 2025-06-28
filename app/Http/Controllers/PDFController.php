@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use setasign\Fpdi\Fpdi;
+use Illuminate\Support\Facades\Storage;
 
 class PDFController extends Controller
 {
@@ -679,12 +681,10 @@ class PDFController extends Controller
         $irsDrive = DB::table('google_drive')->value('irs_letter');
         $sharedDriveId = $irsDrive;
 
-        $result = $this->generateNameChangeLetter($request, $chapterId, $chNamePrev, $chDetailsUpd, $pcDetailsUpd);
-        $pdf = $result['pdf'];
+        // $result = $this->generateNameChangeLetter($request, $chapterId, $chNamePrev, $chDetailsUpd, $pcDetailsUpd);
+        $result = $this->generateCombinedNameChangeLetter($chapterId, $chNamePrev, false);
+        $pdfPath = $result['pdf'];
         $name = $result['filename'];
-
-        $pdfPath = storage_path('app/pdf_reports/'.$name);
-        $pdf->save($pdfPath);
 
         $filename = basename($pdfPath);
         $mimetype = 'application/pdf';
@@ -726,12 +726,71 @@ class PDFController extends Controller
         ], 500);
     }
 
+    // /**
+    //  * Generate Combined Name Change Letter (Cover Sheet & Report)
+    //  */
+    public function generateCombinedNameChangeLetter($chapterId, $chNamePrev, $streamResponse = false)
+    {
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $chapterName = $chDetails->name;
+        $chapterState = $baseQuery['stateShortName'];
+
+        $title = $chapterName.', '.$chapterState.' | Chapter Name Change';
+        $message = "Name change for subordinate.";
+        $pages = '2';
+
+        // 1. Generate both DOMPDFs
+        $cover = $this->generateEODeptFaxCover(false, $title, $message, $pages);
+        $report = $this->generateNameChangeLetter($chapterId, $chNamePrev);
+        $filename = $report['filename'];
+
+        // 2. Save to temporary files
+        $coverPath = storage_path('app/temp_faxcover.pdf');
+        $reportPath = storage_path('app/temp_irsupdates.pdf');
+
+        file_put_contents($coverPath, $cover['pdf']->output());
+        file_put_contents($reportPath, $report['pdf']->output());
+
+        // 3. Merge with FPDI (don't confuse with your PDF alias)
+        $merger = new Fpdi();
+
+        $addFile = function ($filePath) use ($merger) {
+            $pageCount = $merger->setSourceFile($filePath);
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $tpl = $merger->importPage($i);
+                $size = $merger->getTemplateSize($tpl);
+                $merger->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                $merger->useTemplate($tpl);
+            }
+        };
+
+        $addFile($coverPath);
+        $addFile($reportPath);
+
+        // 4. Output final merged PDF
+        $mergedPdfPath = storage_path('app/pdf_reports/' . $filename);
+        $merger->Output($mergedPdfPath, 'F'); // ✅ Save to file
+
+
+        // 5. Clean up
+        @unlink($coverPath);
+        @unlink($reportPath);
+
+        return [
+            'pdf' => $mergedPdfPath, // the FPDI object
+            'filename' => $filename,
+        ];
+    }
+
     /**
      * Generate IRS Name Change Letter
      */
-    public function generateNameChangeLetter(Request $request, $chapterId, $chNamePrev)
+    // public function generateNameChangeLetter(Request $request, $chapterId, $chNamePrev)
+
+     public function generateNameChangeLetter($chapterId, $chNamePrev)
     {
-        $baseQueryUpd = $this->baseChapterController->getChapterDetails($chapterId, $request);
+        $baseQueryUpd = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetailsUpd = $baseQueryUpd['chDetails'];
         $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
         $chId = $baseQueryUpd['chId'];
@@ -739,9 +798,6 @@ class PDFController extends Controller
 
         $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
         $PresDetails = $baseActiveBoardQuery['PresDetails'];
-
-        //  Load User Information for Signing Email & PDFs
-        $user = $this->userController->loadUserInformation($request);
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
@@ -760,7 +816,7 @@ class PDFController extends Controller
             ]
         );
 
-        $pdf = Pdf::loadView('pdf.chapternamechangecombined', compact('pdfData'));
+        $pdf = Pdf::loadView('pdf.irsnamenamechangeletter', compact('pdfData'));
 
         $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_NameChangeLetter.pdf';
 
@@ -770,9 +826,9 @@ class PDFController extends Controller
         ];
     }
 
-    // /**
-    //  * Generate New Chapter IRS Fax Coversheet
-    //  */
+    /**
+     * Generate New Chapter IRS Fax Coversheet
+     */
      public function generateNewChapterFaxCover($chapterId, $streamResponse = true)
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
@@ -811,53 +867,57 @@ class PDFController extends Controller
         ];
     }
 
-    // /**
-    //  * Generate Subordinate Filing IRS Fax Coversheet
+     // /**
+    //  * Generate Combined IRS Subordinate Filing (Cover Sheet & Report)
     //  */
-     public function generateSubordinateFilingFaxCover($streamResponse = true)
+    public function generateCombinedIRSSubordinateFiling(Request $request)
     {
+        $startFormatted = Carbon::parse($request->query('date') ?? now())->format('F Y');
+        $todayFormatted = now()->format('F Y');
+
+        $title = 'IRS Subordinate Filing';
+        $message = "Full subordinate list of updates, additions and deletions from $startFormatted - $todayFormatted.<br><br>Some additions or deletions may have been included in a previous submission, but are included here to ensure a full and complete report.";
         $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
 
-        $totalPages = (int) $pages;
-        $followPages = $totalPages - 1;
+        // 1. Generate both DOMPDFs
+        $cover = $this->generateEODeptFaxCover(false, $title, $message, $pages);
+        $filing = $this->generateSubordinateFiling($request, false);
+        $filename = $filing['filename'];
 
-        $dateInput = request()->query('date') ?? request()->input('date');
-        $date = $dateInput ? Carbon::parse($dateInput) : Carbon::now();
-        $startFormatted = $date->format('F Y');
-        $todayDate = Carbon::now();
-        $todayFormatted = $todayDate->format('F Y');
+        // 2. Save to temporary files
+        $coverPath = storage_path('app/temp_faxcover.pdf');
+        $filingPath = storage_path('app/temp_subordinatefiling.pdf');
 
-        $date = Carbon::now();
-        $year = $date->format('Y');
-        $dateFormatted = $date->format('F j, Y');
-        $lastYear = $date->subYear()->format('Y');
+        file_put_contents($coverPath, $cover['pdf']->output());
+        file_put_contents($filingPath, $filing['pdf']->output());
 
-        $emailEINCoorData = $this->userController->loadEINCoord();
+        // 3. Merge with FPDI (don't confuse with your PDF alias)
+        $merger = new Fpdi();
 
-        $pdfData = array_merge(
-            $this->baseMailDataController->getEINCoorData($emailEINCoorData),
-            [
-                'todayDate' => $dateFormatted,
-                'totalPages' => $totalPages,
-                'followPages' => $followPages,
-                'lastYear' => $lastYear,
-                'startFormatted' => $startFormatted,
-                'todayFormatted' => $todayFormatted
-            ]
-        );
+        $addFile = function ($filePath) use ($merger) {
+            $pageCount = $merger->setSourceFile($filePath);
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $tpl = $merger->importPage($i);
+                $size = $merger->getTemplateSize($tpl);
+                $merger->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                $merger->useTemplate($tpl);
+            }
+        };
 
-        $pdf = Pdf::loadView('pdf.faxcoverirssubordinatefiling', compact('pdfData'));
+        $addFile($coverPath);
+        $addFile($filingPath);
 
-        $filename = $year.'_IRSSubordinateFilingFaxCover.pdf';
+        // 4. Output final merged PDF
+        $mergedPdfContent = $merger->Output('S'); // Uppercase Output() from FPDI/FPDF
 
-        if ($streamResponse) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
-        }
+        // 5. Clean up
+        @unlink($coverPath);
+        @unlink($filingPath);
 
-        return [
-            'pdf' => $pdf,
-            'filename' => $filename,
-        ];
+        return response($mergedPdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => "inline; filename=\"$filename\"",
+        ]);
     }
 
     // /**
@@ -880,22 +940,18 @@ class PDFController extends Controller
         $chapterAddList = $this->generateIRSAddList($coorId, $date);
         $chapterZapList = $this->generateIRSZapList($coorId, $date);
 
-        // Process chapters and add notes column
         $chapterList = collect();
 
-        // Process update chapters
         foreach ($chapterUpdateList as $chapter) {
             $chapter->notes_column = null;
             $chapterList->push($chapter);
         }
 
-        // Process add chapters
         foreach ($chapterAddList as $chapter) {
             $chapter->notes_column = 'ADD';
             $chapterList->push($chapter);
         }
 
-        // Process zapped chapters
         foreach ($chapterZapList as $chapter) {
             $chapter->notes_column = 'DELETE';
             $chapterList->push($chapter);
@@ -926,85 +982,57 @@ class PDFController extends Controller
         ];
     }
 
-    private function generateIRSUpdateList($coorId, $date)
+     // /**
+    //  * Generate Combined IRS Updates (Cover Sheet & Report)
+    //  */
+    public function generateCombinedIRSUpdates(Request $request)
     {
-        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $startFormatted = Carbon::parse($request->query('date') ?? now())->format('F Y');
+        $todayFormatted = now()->format('F Y');
 
-        return $baseQueryActive['query']
-            ->select([
-                'chapters.*',
-                'bd_active.first_name as pres_first_name',
-                'bd_active.last_name as pres_last_name',
-                'bd_active.street_address as pres_address',
-                'bd_active.city as pres_city',
-                'state.state_short_name as pres_state',
-                'bd_active.zip as pres_zip'
-            ])
-            ->whereNotNull('chapters.ein')
-            ->where('chapters.ein', '!=', '*********')
-            ->where('chapters.country_id', '=', '198')
-            ->where(function($query) use ($date) {
-                $query->where('chapters.start_year', '<', $date->year)
-                    ->orWhere(function($query) use ($date) {
-                        $query->where('chapters.start_year', '=', $date->year)
-                            ->where('chapters.start_month_id', '<=', $date->month);
-                    });
-            })
-            ->leftJoin('boards as bd_active', function($join) {
-                $join->on('chapters.id', '=', 'bd_active.chapter_id')
-                    ->where('bd_active.board_position_id', '=', 1);
-            })
-            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
-            ->get()
-            ->sortBy('ein');
-    }
+        $title = 'IRS Updates';
+        $message = "Subordinate corrections. Includes any additions and deletions from $startFormatted - $todayFormatted.";
+        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
 
-    private function generateIRSAddList($coorId, $date)
-    {
-        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        // 1. Generate both DOMPDFs
+        $cover = $this->generateEODeptFaxCover(false, $title, $message, $pages);
+        $report = $this->generateIRSUpdates($request, false);
+        $filename = $report['filename'];
 
-        return $baseQueryActive['query']
-            ->select([
-                'chapters.*',
-                'bd_active.first_name as pres_first_name',
-                'bd_active.last_name as pres_last_name',
-                'bd_active.street_address as pres_address',
-                'bd_active.city as pres_city',
-                'state.state_short_name as pres_state',
-                'bd_active.zip as pres_zip'
-            ])
-            ->whereNotNull('chapters.ein')
-            ->where('chapters.ein', '!=', '*********')
-            ->where('chapters.country_id', '=', '198')
-            ->where(function($query) use ($date) {
-                $query->where('chapters.start_year', '>', $date->year)
-                    ->orWhere(function($query) use ($date) {
-                        $query->where('chapters.start_year', '=', $date->year)
-                                ->where('chapters.start_month_id', '>', $date->month);
-                    });
-            })
-            ->leftJoin('boards as bd_active', function($join) {
-                $join->on('chapters.id', '=', 'bd_active.chapter_id')
-                    ->where('bd_active.board_position_id', '=', 1);
-            })
-            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
-            ->get()
-            ->sortBy('ein');
-    }
+        // 2. Save to temporary files
+        $coverPath = storage_path('app/temp_faxcover.pdf');
+        $reportPath = storage_path('app/temp_irsupdates.pdf');
 
-    private function generateIRSZapList($coorId, $date)
-    {
-        $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $date);
+        file_put_contents($coverPath, $cover['pdf']->output());
+        file_put_contents($reportPath, $report['pdf']->output());
 
-        return $baseQueryZapped['query']
-            ->select([
-                'chapters.*'
-            ])
-            ->whereNotNull('chapters.ein')
-            ->where('chapters.ein', '!=', '*********')
-            ->where('chapters.country_id', '=', '198')
-            ->get()
-            ->sortBy('ein');
+        // 3. Merge with FPDI (don't confuse with your PDF alias)
+        $merger = new Fpdi();
+
+        $addFile = function ($filePath) use ($merger) {
+            $pageCount = $merger->setSourceFile($filePath);
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $tpl = $merger->importPage($i);
+                $size = $merger->getTemplateSize($tpl);
+                $merger->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                $merger->useTemplate($tpl);
+            }
+        };
+
+        $addFile($coverPath);
+        $addFile($reportPath);
+
+        // 4. Output final merged PDF
+        $mergedPdfContent = $merger->Output('S'); // Uppercase Output() from FPDI/FPDF
+
+        // 5. Clean up
+        @unlink($coverPath);
+        @unlink($reportPath);
+
+        return response($mergedPdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => "inline; filename=\"$filename\"",
+        ]);
     }
 
      // /**
@@ -1047,7 +1075,7 @@ class PDFController extends Controller
             ]
         );
 
-        $pdf = Pdf::loadView('pdf.irsupdatescombined', ['pdfData' => $pdfData]);
+        $pdf = Pdf::loadView('pdf.irsupdates', ['pdfData' => $pdfData]);
 
         $filename = $date.'_IRSUpdates.pdf';
 
@@ -1062,12 +1090,103 @@ class PDFController extends Controller
     }
 
     // /**
-    //  * Other/Generate General EO Dept IRS Fax Coversheet
+    //  * Generate IRS list of Updated Chapters
     //  */
-     public function generateEODeptFaxCover($streamResponse = true)
+    private function generateIRSUpdateList($coorId, $date)
     {
-        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
-        $message = request()->query('message') ?? request()->input('message') ?? 1;
+        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+
+        return $baseQueryActive['query']
+            ->select([
+                'chapters.*',
+                'bd_active.first_name as pres_first_name',
+                'bd_active.last_name as pres_last_name',
+                'bd_active.street_address as pres_address',
+                'bd_active.city as pres_city',
+                'state.state_short_name as pres_state',
+                'bd_active.zip as pres_zip'
+            ])
+            ->whereNotNull('chapters.ein')
+            ->where('chapters.ein', '!=', '*********')
+            ->where('chapters.country_id', '=', '198')
+            ->where(function($query) use ($date) {
+                $query->where('chapters.start_year', '<', $date->year)
+                    ->orWhere(function($query) use ($date) {
+                        $query->where('chapters.start_year', '=', $date->year)
+                            ->where('chapters.start_month_id', '<=', $date->month);
+                    });
+            })
+            ->leftJoin('boards as bd_active', function($join) {
+                $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                    ->where('bd_active.board_position_id', '=', 1);
+            })
+            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->get()
+            ->sortBy('ein');
+    }
+
+    // /**
+    //  * Generate IRS list of Added Chapters
+    //  */
+    private function generateIRSAddList($coorId, $date)
+    {
+        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+
+        return $baseQueryActive['query']
+            ->select([
+                'chapters.*',
+                'bd_active.first_name as pres_first_name',
+                'bd_active.last_name as pres_last_name',
+                'bd_active.street_address as pres_address',
+                'bd_active.city as pres_city',
+                'state.state_short_name as pres_state',
+                'bd_active.zip as pres_zip'
+            ])
+            ->whereNotNull('chapters.ein')
+            ->where('chapters.ein', '!=', '*********')
+            ->where('chapters.country_id', '=', '198')
+            ->where(function($query) use ($date) {
+                $query->where('chapters.start_year', '>', $date->year)
+                    ->orWhere(function($query) use ($date) {
+                        $query->where('chapters.start_year', '=', $date->year)
+                                ->where('chapters.start_month_id', '>', $date->month);
+                    });
+            })
+            ->leftJoin('boards as bd_active', function($join) {
+                $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                    ->where('bd_active.board_position_id', '=', 1);
+            })
+            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->get()
+            ->sortBy('ein');
+    }
+
+    // /**
+    //  * Generate IRS list of Zapped Chapters
+    //  */
+    private function generateIRSZapList($coorId, $date)
+    {
+        $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $date);
+
+        return $baseQueryZapped['query']
+            ->select([
+                'chapters.*'
+            ])
+            ->whereNotNull('chapters.ein')
+            ->where('chapters.ein', '!=', '*********')
+            ->where('chapters.country_id', '=', '198')
+            ->get()
+            ->sortBy('ein');
+    }
+
+    // /**
+    //  * EO Dept IRS Fax Coversheet
+    //  */
+     public function generateEODeptFaxCover($streamResponse = true, $title = null, $message = null, $pages = null)
+    {
+        $pages = $pages ?? request()->query('pages') ?? request()->input('pages') ?? 1;
+        $message = $message ?? request()->query('message') ?? request()->input('message') ?? '';
+        $title = $title ?? request()->query('title') ?? request()->input('title') ?? 'Fax Cover Sheet';
 
         $totalPages = (int) $pages;
         $followPages = $totalPages - 1;
@@ -1084,11 +1203,12 @@ class PDFController extends Controller
                 'todayDate' => $dateFormatted,
                 'totalPages' => $totalPages,
                 'followPages' => $followPages,
+                'title' => $title,
                 'message' => $message,
             ]
         );
 
-        $pdf = Pdf::loadView('pdf.faxcoverirseodept', compact('pdfData'));
+        $pdf = Pdf::loadView('pdf.irseodeptfaxcover', compact('pdfData'));
 
         $filename = $dateToday.'_IRSEODeptFaxCover.pdf';
 
