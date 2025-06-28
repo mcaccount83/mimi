@@ -42,13 +42,13 @@
 					<td>{{ $list->first_name }}</td>
 						<td>{{ $list->last_name }}</td>
 						<td>
-							@if($list->is_active=='1')
+							@if($list->active_status=='1')
 							    ACTIVE
-							@elseif($list->is_active=='2')
+							@elseif($list->active_status=='2')
 								PENDING
-                            @elseif($list->is_active=='3')
+                            @elseif($list->active_status=='3')
 								NOT APPROVED
-                            @elseif($list->is_active=='0')
+                            @elseif($list->active_status=='0')
 								NOT ACTIVE
 							@endif
 						</td>
