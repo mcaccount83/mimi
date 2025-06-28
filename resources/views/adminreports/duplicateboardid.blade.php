@@ -29,7 +29,8 @@
                   <th>Position ID</th>
 			        <th>First Name</th>
 				  <th>Last Name</th>
-				  <th>Active</th>
+                  <th>Status</th>
+				  <th>Active User</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -41,6 +42,34 @@
                         <td>{{ $list->board_position_id }}</td>
 					<td>{{ $list->first_name }}</td>
 						<td>{{ $list->last_name }}</td>
+                        <td>
+                            @if($list->user_type == 'coordinator')
+                                @if($list->coordinator->active_status == '1')
+                                    ACTIVE
+                                @elseif($list->coordinator->active_status == '2')
+                                    PENDING
+                                @elseif($list->coordinator->active_status == '3')
+                                    NOT APPROVED
+                                @elseif($list->coordinator->active_status == '0')
+                                    NOT ACTIVE
+                                @endif
+                            @endif
+                            @if($list->user_type == 'board')
+                                ACTIVE
+                            @endif
+                            @if($list->user_type == 'disbanded')
+                                DISBANDED
+                            @endif
+                            @if($list->user_type == 'outgoing')
+                                OUTGOING
+                            @endif
+                            @if($list->user_type == 'incoming')
+                                INCOMING
+                            @endif
+                            @if($list->user_type == 'pending')
+                                PENDING
+                            @endif
+                        </td>
 						<td>
 							@if($list->is_active=='1')
 							    YES
