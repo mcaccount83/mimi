@@ -36,7 +36,7 @@ class EOYLateReportReminder extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject('End of Year Reports - Late Notice')
+            ->subject("End of Year Reports Late Notice | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.endofyear.latereportreminder');
     }
 }

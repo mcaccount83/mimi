@@ -36,7 +36,7 @@ class EOYFinancialReportReminder extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject('Financial Report Reminder')
+            ->subject("Financial Report Reminder | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.endofyear.financialreportreminder');
     }
 }

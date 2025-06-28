@@ -36,7 +36,7 @@ class EOYElectionReportReminder extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->subject('Election Report Reminder')
+            ->subject("Election Report Reminder | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.endofyear.electionreportreminder');
     }
 }
