@@ -3,7 +3,7 @@
 
 The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has made a Donation to the Mother-to-Mother Fund.<br>
 <br>
-<p>The donation has been entered into MIMI and a Thank You email has been sent to the chapter.</p>
+The donation has been entered into MIMI and a Thank You email has been sent to the chapter.<br>
 <br>
 <table>
     <tbody>

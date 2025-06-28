@@ -3,7 +3,7 @@
 
 The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has ordered a replacement manual.<br>
 <br>
-<p>The order has been processed and a receipt has been sent to the chapter.</p>
+The order has been processed and a receipt has been sent to the chapter.<br>
 <br>
 <table>
     <tbody>

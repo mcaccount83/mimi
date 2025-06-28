@@ -1,7 +1,7 @@
 @component('mail::message')
 # Admin Public Donation Notification
 
-A public Donation to International MOMS Club. A Thank You email has been sent to the donor.</p>
+A public Donation to International MOMS Club. A Thank You email has been sent to the donor.<br>
 <br>
 <table>
     <tbody>

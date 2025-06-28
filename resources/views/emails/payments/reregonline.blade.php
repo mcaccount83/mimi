@@ -3,7 +3,7 @@
 
 The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has submitted their Re-Registration payment.<br>
 <br>
-<p>The payment has been entered into MIMI and a Thank You email has been sent to the chapter.</p>
+The Re-Registration Payment and Sustaining Chapter Donation (if they made one) have been entered into MIMI and a Thank You email has been sent to the chapter.<br>
 <br>
 <table>
     <tbody>
@@ -75,8 +75,6 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} h
         <td>{{ $mailData['email'] }}</td>
     </tbody>
 </table>
-<br>
-<p>The Re-Registration Payment and Sustaining Chapter Donation (if they made one) have been entered into MIMI automatically, this is for notification purposes only.</p>
 <br>
 <strong>MCL,</strong><br>
 MIMI Database Administrator
