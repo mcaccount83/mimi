@@ -11,7 +11,7 @@ Please submit your report as soon as possible to ensure that your incoming board
 <li>Receipt of Conference Newsletter</li>
 <li>Automated Messages from MIMI, including Re-Registration payment reminders</li></ul>
 
-<p>The Board Election Report (as well as the Financial Report) can be accessed by logging into your MIMI account https://momsclub.org/mimi and selecting the buttons at the top of your screen.</p>
+<p>The Board Election Report (as well as the Financial Report) can be accessed by logging into your MIMI account https://momsclub.org/mimi and selecting the buttons at the right hand side of your screen.</p>
 <br>
 <strong>MCL,</strong><br>
 MIMI Database Administrator
