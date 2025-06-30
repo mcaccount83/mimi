@@ -480,14 +480,14 @@ class EOYReportController extends Controller implements HasMiddleware
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $baseQuery = $this->baseChapterController->getChapterDetails($id);
-        $chDetails = $baseQuery['chDetails'];
-        $pcDetails = $baseQuery['pcDetails'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $emailListChap = $baseQuery['emailListChap'];  // Full Board
-        $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
-        $emailCC = $baseQuery['emailCC'];  // CC Email
-        $emailPC = $baseQuery['emailPC'];
+        // $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        // $chDetails = $baseQuery['chDetails'];
+        // $pcDetails = $baseQuery['pcDetails'];
+        // $stateShortName = $baseQuery['stateShortName'];
+        // $emailListChap = $baseQuery['emailListChap'];  // Full Board
+        // $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+        // $emailCC = $baseQuery['emailCC'];  // CC Email
+        // $emailPC = $baseQuery['emailPC'];
 
         // Calculate the fiscal year (current year - next year)
         $currentYear = Carbon::now()->year;
@@ -587,6 +587,15 @@ class EOYReportController extends Controller implements HasMiddleware
                 $documents->save();
 
                 BoardsIncoming::where('chapter_id', $id)->delete();
+
+                $baseQuery = $this->baseChapterController->getChapterDetails($id);
+                $chDetails = $baseQuery['chDetails'];
+                $pcDetails = $baseQuery['pcDetails'];
+                $stateShortName = $baseQuery['stateShortName'];
+                $emailListChap = $baseQuery['emailListChap'];  // Full Board
+                $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+                $emailCC = $baseQuery['emailCC'];  // CC Email
+                $emailPC = $baseQuery['emailPC'];  // PC Email
 
                 $mailData = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
