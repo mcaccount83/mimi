@@ -21,7 +21,7 @@
 <br>
 <hr>
 <p><b>MOMS Information Management Interface (MIMI)</b>
-<p>MIMI (MOMS Information Management Interface) is the database system for International MOMS Club. To access MIMI go to the following link:<br>
+<p>MIMI is the database system for International MOMS Club. To access MIMI go to the following link:<br>
 <center><a href="https://momsclub.org/mimi/login">https://momsclub.org/mimi/login</a></center></p>
 <br>
 <p>You can log on with the e-mail address we have on file for you. If you are a new board member, your default password is: TempPass4You</p>
