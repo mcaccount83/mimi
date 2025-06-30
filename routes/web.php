@@ -265,8 +265,8 @@ Route::post('/board/profileupdate/{id}', [BoardController::class, 'updateProfile
 // Route::post('/board/memberupdate/{id}', [BoardController::class, 'updateMember'])->name('board.updatemember');
 Route::get('/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
 Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
-Route::get('/board/reregpayment/{id}', [BoardController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
-Route::get('/board/donation/{id}', [BoardController::class, 'editDonationForm'])->name('board.editdonate');
+// Route::get('/board/reregpayment/{id}', [BoardController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
+// Route::get('/board/donation/{id}', [BoardController::class, 'editDonationForm'])->name('board.editdonate');
 Route::get('/board/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
 Route::get('/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
 Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
@@ -329,6 +329,8 @@ Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResour
 Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
 
 // Payment Controller Routes...Coordinator Login Required
+Route::get('/board/reregpayment/{id}', [PaymentController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
+Route::get('/board/donation/{id}', [PaymentController::class, 'editDonationForm'])->name('board.editdonate');
 Route::post('/process-payment', [PaymentController::class, 'reRegistrationPayment'])->name('process.payment');
 Route::post('/process-donation', [PaymentController::class, 'm2mPayment'])->name('process.donation');
 Route::post('/process-manual', [PaymentController::class, 'manualPayment'])->name('process.manual');

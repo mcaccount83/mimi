@@ -54,6 +54,69 @@ class PaymentController extends Controller implements HasMiddleware
     }
 
     /**
+     * Show Re-Registrstion Payment Form All Board Members
+     */
+    public function editReregistrationPaymentForm(Request $request, $chId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $startMonthName = $baseQuery['startMonthName'];
+
+        $now = Carbon::now();
+        $month = $now->month;
+        $year = $now->year;
+        $start_month = $chDetails->start_month_id;
+        $next_renewal_year = $chDetails->next_renewal_year;
+        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
+        $rangeEndDate = $due_date->copy()->subMonth()->endOfMonth();
+        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
+
+        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
+        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
+            'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
+            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'chActiveId' => $chActiveId,
+        ];
+
+        return view('boards.payment')->with($data);
+    }
+
+    /**
+     * Show M2M Donation Form All Board Members
+     */
+    public function editDonationForm(Request $request, $chId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
+        $PresDetails = $baseQuery['PresDetails'];
+
+        $now = Carbon::now();
+        $month = $now->month;
+        $year = $now->year;
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
+            'PresDetails' => $PresDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
+        ];
+
+        return view('boards.donation')->with($data);
+    }
+
+    /**
      * Re-Registration & Sustaining Donation Payment
      */
     public function reRegistrationPayment(Request $request): RedirectResponse
