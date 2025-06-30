@@ -3027,7 +3027,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         </div>
         <div class="card-body text-center">
             <button type="button" class="btn btn-primary" id="btn-step-14" ><i class="fas fa-save" ></i>&nbsp; Save</button>
-            @if($thisDate->month >= 3 && $thisDate->month <= 12)
+            @if($thisDate->month >= 6 && $thisDate->month <= 12)
             <button type="button" class="btn btn-success" id="final-submit" ><i class="fas fa-share-square" ></i>&nbsp; Submit Report</button>
         </div>
     </section>
