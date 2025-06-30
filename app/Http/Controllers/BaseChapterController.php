@@ -220,17 +220,17 @@ class BaseChapterController extends Controller
     }
 
     // Add new method for zapped with date filter
-public function getZappedInternationalBaseQuerySinceDate($coorId, $zapDateAfter)
-{
-    return $this->buildChapterQuery([
-        'activeStatus' => 0, // 0 = zapped
-        'coorId' => $coorId,
-        'inquiriesConditions' => false,
-        'conditions' => false,
-        'queryType' => 'international',
-        'zapDateAfter' => $zapDateAfter,
-    ]);
-}
+    public function getZappedInternationalBaseQuerySinceDate($coorId, $zapDateAfter)
+    {
+        return $this->buildChapterQuery([
+            'activeStatus' => 0, // 0 = zapped
+            'coorId' => $coorId,
+            'inquiriesConditions' => false,
+            'conditions' => false,
+            'queryType' => 'international',
+            'zapDateAfter' => $zapDateAfter,
+        ]);
+    }
 
     /**
      * Public methods for different query types

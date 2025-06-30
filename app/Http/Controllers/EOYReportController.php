@@ -111,8 +111,22 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
+        $now = Carbon::now();
+        $oneYearAgo = $now->copy()->subYear();
+
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($oneYearAgo) {
+                $query->where(function ($q) use ($oneYearAgo) {
+                    $q->where('start_year', '<', $oneYearAgo->year)
+                        ->orWhere(function ($q) use ($oneYearAgo) {
+                            $q->where('start_year', '=', $oneYearAgo->year)
+                                ->where('start_month_id', '<=', $oneYearAgo->month);
+                        });
+                });
+            })
+            ->get();
+
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
@@ -403,8 +417,21 @@ class EOYReportController extends Controller implements HasMiddleware
         $secPositionId = $user['user_secPositionId'];
         $lastUpdatedBy = $user['user_name'];
 
+        $now = Carbon::now();
+        $oneYearAgo = $now->copy()->subYear();
+
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($oneYearAgo) {
+                $query->where(function ($q) use ($oneYearAgo) {
+                    $q->where('start_year', '<', $oneYearAgo->year)
+                        ->orWhere(function ($q) use ($oneYearAgo) {
+                            $q->where('start_year', '=', $oneYearAgo->year)
+                                ->where('start_month_id', '<=', $oneYearAgo->month);
+                        });
+                });
+            })
+            ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
@@ -941,8 +968,21 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
+        $now = Carbon::now();
+        $oneYearAgo = $now->copy()->subYear();
+
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($oneYearAgo) {
+                $query->where(function ($q) use ($oneYearAgo) {
+                    $q->where('start_year', '<', $oneYearAgo->year)
+                        ->orWhere(function ($q) use ($oneYearAgo) {
+                            $q->where('start_year', '=', $oneYearAgo->year)
+                                ->where('start_month_id', '<=', $oneYearAgo->month);
+                        });
+                });
+            })
+            ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
@@ -1318,8 +1358,21 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
+        $now = Carbon::now();
+        $oneYearAgo = $now->copy()->subYear();
+
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($oneYearAgo) {
+                $query->where(function ($q) use ($oneYearAgo) {
+                    $q->where('start_year', '<', $oneYearAgo->year)
+                        ->orWhere(function ($q) use ($oneYearAgo) {
+                            $q->where('start_year', '=', $oneYearAgo->year)
+                                ->where('start_month_id', '<=', $oneYearAgo->month);
+                        });
+                });
+            })
+            ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
@@ -1409,8 +1462,21 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
+        $now = Carbon::now();
+        $oneYearAgo = $now->copy()->subYear();
+
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($oneYearAgo) {
+                $query->where(function ($q) use ($oneYearAgo) {
+                    $q->where('start_year', '<', $oneYearAgo->year)
+                        ->orWhere(function ($q) use ($oneYearAgo) {
+                            $q->where('start_year', '=', $oneYearAgo->year)
+                                ->where('start_month_id', '<=', $oneYearAgo->month);
+                        });
+                });
+            })
+            ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
@@ -1497,8 +1563,21 @@ class EOYReportController extends Controller implements HasMiddleware
         $secPositionId = $user['user_secPositionId'];
         $lastUpdatedBy = $user['user_name'];
 
+        $now = Carbon::now();
+        $oneYearAgo = $now->copy()->subYear();
+
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($oneYearAgo) {
+                $query->where(function ($q) use ($oneYearAgo) {
+                    $q->where('start_year', '<', $oneYearAgo->year)
+                        ->orWhere(function ($q) use ($oneYearAgo) {
+                            $q->where('start_year', '=', $oneYearAgo->year)
+                                ->where('start_month_id', '<=', $oneYearAgo->month);
+                        });
+                });
+            })
+            ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
