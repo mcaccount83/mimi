@@ -3,6 +3,9 @@
 
 A public Donation to International MOMS Club. A Thank You email has been sent to the donor.<br>
 <br>
+<strong>MCL,</strong><br>
+MIMI Database Administrator
+<br>
 <table>
     <tbody>
         <tr>
@@ -66,8 +69,5 @@ A public Donation to International MOMS Club. A Thank You email has been sent to
         <td>{{ $mailData['email'] }}</td>
     </tbody>
 </table>
-<br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
 @endcomponent
 

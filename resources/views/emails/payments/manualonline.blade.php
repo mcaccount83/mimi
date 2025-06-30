@@ -5,6 +5,9 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} h
 <br>
 The order has been processed and a receipt has been sent to the chapter.<br>
 <br>
+<strong>MCL,</strong><br>
+MIMI Database Administrator
+<br>
 <table>
     <tbody>
         <tr>
@@ -67,8 +70,5 @@ The order has been processed and a receipt has been sent to the chapter.<br>
         <td>{{ $mailData['email'] }}</td>
     </tbody>
 </table>
-<br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
 @endcomponent
 

@@ -5,6 +5,9 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} h
 <br>
 The donation has been entered into MIMI and a Thank You email has been sent to the chapter.<br>
 <br>
+<strong>MCL,</strong><br>
+MIMI Database Administrator
+<br>
 <table>
     <tbody>
         <tr>
@@ -66,8 +69,5 @@ The donation has been entered into MIMI and a Thank You email has been sent to t
         <td>{{ $mailData['email'] }}</td>
     </tbody>
 </table>
-<br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
 @endcomponent
 

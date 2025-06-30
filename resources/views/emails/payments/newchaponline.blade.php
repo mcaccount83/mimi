@@ -3,6 +3,12 @@
 
 A New Chapter Application has been submitted for Conference {{ $mailData['chapterConf'] }}. Please review the application information and contact the founder to begin the Approval process.<br>
 <br>
+The New Chapter Application Fee is authorize only and must be retrieved in 30 days or the founder will have to resubmit their application. New Chapter must be approved and moved
+    from PENDING to ACTIVE status before fee can be retrieved.<br>
+<br>
+<strong>MCL,</strong><br>
+MIMI Database Administrator
+<br>
 <table>
     <tbody>
         <tr>
@@ -94,12 +100,5 @@ A New Chapter Application has been submitted for Conference {{ $mailData['chapte
         <td>{{ $mailData['email'] }}</td>
     </tbody>
 </table>
-<br>
-<p>The New Chapter Application Fee is authorize only and must be retrieved in 30 days or the founder will have to resubmit their application. New Chapter must be approved and moved
-    from PENDING to ACTIVE status before fee can be retrieved.
-</p>
-<br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
 @endcomponent
 
