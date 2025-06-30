@@ -16,7 +16,7 @@
     <li>Have FUN! Being president is a lot of fun! Delegate, then relax, smile and enjoy your term!</li>
 </ul>
 <hr>
-<p><b>Office Packet</b></p>
+<p><b>Officer Packet</b></p>
 <p>You will find the Officer's Resource Packet is attached. The officer packet includes more details about a variety of topics including Party/Member Benefit Expenses, Geographic Boundaries, Sistering, Annual Budget, Ideas for Board Meeting Agendas and more.</p>
 <br>
 <hr>
