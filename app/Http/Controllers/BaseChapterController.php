@@ -61,14 +61,14 @@ class BaseChapterController extends Controller
     /**
      * Get base query with common relations
      */
-    private function getBaseQueryWithRelations($activeStatus, $zapDateAfter = null)
+    private function getBaseQueryWithRelations($activeStatus)
     {
         $query = Chapters::query()->where('active_status', $activeStatus);
 
         // Add zap_date filter if provided (only for zapped chapters)
-        if ($zapDateAfter && $activeStatus == 0) {
-            $query->where('chapters.zap_date', '>', $zapDateAfter);
-        }
+        // if ($zapDateAfter && $activeStatus == 0) {
+        //     $query->where('chapters.zap_date', '>', $zapDateAfter);
+        // }
 
         // For pending (2) or not approved (3) status, we need to use relations from the BoardsPending table
         if ($activeStatus == 2 || $activeStatus == 3) {
@@ -140,8 +140,8 @@ class BaseChapterController extends Controller
      */
     private function buildChapterQuery($params)
     {
-        $zapDateAfter = $params['zapDateAfter'] ?? null;
-        $baseQuery = $this->getBaseQueryWithRelations($params['activeStatus'], $zapDateAfter);
+        // $zapDateAfter = $params['zapDateAfter'] ?? null;
+        $baseQuery = $this->getBaseQueryWithRelations($params['activeStatus']);
         $checkboxStatus = [];
         $isPending = ($params['activeStatus'] == 2 || $params['activeStatus'] == 3);
 
@@ -220,17 +220,17 @@ class BaseChapterController extends Controller
     }
 
     // Add new method for zapped with date filter
-    public function getZappedInternationalBaseQuerySinceDate($coorId, $zapDateAfter)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 0, // 0 = zapped
-            'coorId' => $coorId,
-            'inquiriesConditions' => false,
-            'conditions' => false,
-            'queryType' => 'international',
-            'zapDateAfter' => $zapDateAfter,
-        ]);
-    }
+    // public function getZappedInternationalBaseQuerySinceDate($coorId, $zapDateAfter)
+    // {
+    //     return $this->buildChapterQuery([
+    //         'activeStatus' => 0, // 0 = zapped
+    //         'coorId' => $coorId,
+    //         'inquiriesConditions' => false,
+    //         'conditions' => false,
+    //         'queryType' => 'international',
+    //         'zapDateAfter' => $zapDateAfter,
+    //     ]);
+    // }
 
     /**
      * Public methods for different query types

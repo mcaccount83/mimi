@@ -100,7 +100,7 @@
             </div>
                 <div class="card-body text-center">
                     <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
-                    <button class="btn bg-gradient-primary  mb-3" onclick="startExport('intirsfiling', 'Subordinate Filing Report')"><i class="fas fa-download mr-2" ></i>Export Subordinate Filing</button>
+                    {{-- <button class="btn bg-gradient-primary  mb-3" onclick="startExport('intirsfiling', 'Subordinate Filing Report')"><i class="fas fa-download mr-2" ></i>Export Subordinate Filing</button> --}}
                     <br>
                     {{-- <button class="btn bg-gradient-primary" onclick="window.open('{{ route('pdf.subordinatefiling') }}', '_blank')"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button> --}}
                     <button class="btn bg-gradient-primary mb-3" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf mr-2" ></i>EO Dept Fax Coversheet</button>

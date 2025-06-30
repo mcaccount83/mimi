@@ -1166,7 +1166,7 @@ class PDFController extends Controller
     //  */
     private function generateIRSZapList($coorId, $date)
     {
-        $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $date);
+        $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
 
         return $baseQueryZapped['query']
             ->select([
@@ -1175,6 +1175,7 @@ class PDFController extends Controller
             ->whereNotNull('chapters.ein')
             ->where('chapters.ein', '!=', '*********')
             ->where('chapters.country_id', '=', '198')
+            ->where('chapters.zap_date', '>', $date)
             ->get()
             ->sortBy('ein');
     }
