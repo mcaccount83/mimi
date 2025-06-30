@@ -11,8 +11,6 @@ storage
 /storage/pail
 /vendor
 .env
-.env.backup
-.env.production
 /.phpunit.cache
 Homestead.json
 Homestead.yaml
@@ -23,4 +21,4 @@ yarn-error.log
 /.idea
 /.nova
 /.vscode
-run_scheduler.php
+old_run_scheduler.php
