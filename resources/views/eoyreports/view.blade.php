@@ -441,7 +441,7 @@ $(document).ready(function() {
         // Update the coordinator list when the dropdown changes
         $("#ch_reportrev").change(function() {
             var selectedValue = $(this).val();
-            loadCoordinatorList(selectedValue);
+            loadReviewerList(selectedValue);
     });
 });
 

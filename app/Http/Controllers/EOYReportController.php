@@ -246,14 +246,13 @@ class EOYReportController extends Controller implements HasMiddleware
         $allAwards = $baseQuery['allAwards'];
         $reviewComplete = $baseQuery['reviewComplete'];
         $rrList = $baseQuery['rrList'];
-                $pcList = $baseQuery['pcList'];
 
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb,
             'coorId' => $coorId, 'confId' => $confId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
-            'reviewComplete' => $reviewComplete,  'rrList' => $rrList, 'pcList' => $pcList,
+            'reviewComplete' => $reviewComplete,  'rrList' => $rrList,
         ];
 
         return view('eoyreports.view')->with($data);
@@ -265,7 +264,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYDetails(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userId = $user['userId'];
+        $coorId = $user['user_coorId'];
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
@@ -280,7 +279,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $extension_notes = $request->filled('extension_notes') ? $request->input('extension_notes') : $request->input('hid_extension_notes');
         // $irs_notes = $input['irs_notes'];
         $irs_notes = $request->filled('irs_notes') ? $request->input('irs_notes') : $request->input('hid_irs_notes');
-        $reviewer_id = isset($input['ch_reportrev']) && ! empty($input['ch_reportrev']) ? $input['ch_reportrev'] : $userId;
+        $reviewer_id = isset($input['ch_reportrev']) && ! empty($input['ch_reportrev']) ? $input['ch_reportrev'] : $coorId;
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
@@ -303,7 +302,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $financialReport->reviewer_id = $reviewer_id;
             $financialReport->submitted = $financial_report_received != null ? date('Y-m-d H:i:s') : null;
             if ($financial_report_received != null) {
-                $financialReport->reviewer_id = $financialReport->reviewer_id ?? $userId;
+                $financialReport->reviewer_id = $financialReport->reviewer_id ?? $coorId;
             }
             $financialReport->review_complete = $financial_review_complete != null ? date('Y-m-d H:i:s') : null;
             $financialReport->save();
@@ -1098,8 +1097,6 @@ class EOYReportController extends Controller implements HasMiddleware
         $allAwards = $baseQuery['allAwards'];
         // $submitted = $baseQuery['submitted'];
         $rrList = $baseQuery['rrList'];
-        $rrList = $baseQuery['rrList'];
-
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards,
