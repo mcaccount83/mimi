@@ -1112,13 +1112,14 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYFinancialReport(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
         $userName = $user['user_name'];
         $lastUpdatedBy = $userName;
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
         $farthest_step_visited_coord = $input['FurthestStep'];
-        $reviewer_id = isset($input['AssignedReviewer']) ? $input['AssignedReviewer'] : null;
+        $reviewer_id = isset($input['ch_reportrev']) && ! empty($input['ch_reportrev']) ? $input['ch_reportrev'] : $coorId;
         $reportReceived = $input['submitted'];
         $submitType = $input['submit_type'];
         $step_1_notes_log = $input['Step1_Log'];
@@ -1196,7 +1197,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $financialReport->reviewer_id = $reviewer_id;
+            $financialReport->reviewer_id = $financialReport->reviewer_id ?? $coorId;
             $financialReport->step_1_notes_log = $step_1_notes_log;
             $financialReport->step_2_notes_log = $step_2_notes_log;
             $financialReport->step_3_notes_log = $step_3_notes_log;
