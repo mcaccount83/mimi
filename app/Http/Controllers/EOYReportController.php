@@ -246,12 +246,14 @@ class EOYReportController extends Controller implements HasMiddleware
         $allAwards = $baseQuery['allAwards'];
         $reviewComplete = $baseQuery['reviewComplete'];
         $rrList = $baseQuery['rrList'];
+                $pcList = $baseQuery['pcList'];
+
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb,
             'coorId' => $coorId, 'confId' => $confId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
-            'reviewComplete' => $reviewComplete,  'rrList' => $rrList,
+            'reviewComplete' => $reviewComplete,  'rrList' => $rrList, 'pcList' => $pcList,
         ];
 
         return view('eoyreports.view')->with($data);
@@ -1096,6 +1098,8 @@ class EOYReportController extends Controller implements HasMiddleware
         $allAwards = $baseQuery['allAwards'];
         // $submitted = $baseQuery['submitted'];
         $rrList = $baseQuery['rrList'];
+        $rrList = $baseQuery['rrList'];
+
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards,

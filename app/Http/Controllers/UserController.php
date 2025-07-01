@@ -471,53 +471,47 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Load Reviewer Dropdown List
      */
-    public function loadReviewerList($chRegId, $chConfId)
-    {
-        $chList = Chapters::with([
-            'reportReviewer' => function ($query) use ($chRegId, $chConfId) {
-                $query->with(['displayPosition', 'secondaryPosition'])
-                    ->where(function ($q) use ($chRegId, $chConfId) {
-                        $q->where('region_id', $chRegId)
-                            ->orWhere(function ($subQuery) use ($chConfId) {
-                                $subQuery->where('region_id', 0)
-                                    ->where('conference_id', $chConfId);
-                            });
-                    })
-                    ->whereBetween('position_id', [1, 7])
-                    ->where('active_status', 1);
-            },
-        ])->get();
+     // Remove the reportReviewer relationship entirely and just query coordinators directly
+public function loadReviewerList($chRegId, $chConfId)
+{
+    $rrList = Coordinators::with(['displayPosition', 'secondaryPosition'])
+        ->where(function ($q) use ($chRegId, $chConfId) {
+            $q->where('region_id', $chRegId)
+                ->orWhere(function ($subQuery) use ($chConfId) {
+                    $subQuery->where('region_id', 0)
+                        ->where('conference_id', $chConfId);
+                });
+        })
+        ->whereBetween('position_id', [1, 7])
+        ->where('active_status', 1)
+        ->get();
 
-        $rrList = $chList->pluck('reportReviewer')->filter();
+    $rrDetails = $rrList->map(function ($coordinator) {
+        $mainTitle = $coordinator->displayPosition->short_title ?? '';
+        $secondaryTitles = '';
 
-        $rrDetails = $rrList->map(function ($coordinator) {
-            $mainTitle = $coordinator->displayPosition->short_title ?? '';
-            $secondaryTitles = '';
+        if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+            $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
+        }
 
-            if (! empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
-                $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
-            }
+        $combinedTitle = $mainTitle;
+        if (!empty($secondaryTitles)) {
+            $combinedTitle .= '/' . $secondaryTitles;
+        }
 
-            $combinedTitle = $mainTitle;
-            if (! empty($secondaryTitles)) {
-                $combinedTitle .= '/'.$secondaryTitles;
-            }
+        $cpos = "({$combinedTitle})";
 
-            $cpos = "({$combinedTitle})";
+        return [
+            'cid' => $coordinator->id,
+            'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
+            'dpos' => $mainTitle,
+            'cpos' => $cpos,
+            'regid' => $coordinator->region_id,
+        ];
+    });
 
-            return [
-                'cid' => $coordinator->id,
-                'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'dpos' => $mainTitle,
-                'cpos' => $cpos,
-                'regid' => $coordinator->region_id,
-            ];
-        });
-
-        $rrDetails = $rrDetails->unique('cid');  // Remove duplicates based on the 'cid' field
-
-        return $rrDetails; // Return all coordinators as a collection
-    }
+    return $rrDetails->unique('cid');
+}
 
     /**
      * Load Reports To Dropdown List

@@ -85,11 +85,9 @@
                                 <label class="custom-control-label" for="irs_verified"></label>
                             </div>
                         </div>
-
                     </li>
 
                     <li class="list-group-item">
-
                         <label class="ch_reportrev">Assigned Reviewer:</label>
                         <select name="ch_reportrev" id="ch_reportrev" class="form-control float-right col-sm-6 text-right" style="width: 100%;" >
                             <option value="">Select Coordinator</option>
@@ -101,10 +99,10 @@
                             @endforeach
                         </select>
                 </li>
-
-                    <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                    <input type="hidden" id="ch_reportrev" value="{{ $chFinancialReport->reviewer_id }}">
                     <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                 </ul>
+
                <div class="text-center">
                       @if ($chDetails->active_status == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
@@ -421,10 +419,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 $(document).ready(function() {
     // Function to load the coordinator list based on the selected value
-    function loadCoordinatorList(id) {
+    function loadReviewerList(id) {
         if(id != "") {
             $.ajax({
-                url: '{{ url("/load-coordinator-list") }}' + '/' + id,
+                url: '{{ url("/load-reviewer-list") }}' + '/' + id,
                 type: "GET",
                 success: function(result) {
                 $("#display_corlist").html(result);
@@ -437,11 +435,11 @@ $(document).ready(function() {
     }
 
     // Get the selected coordinator ID on page load
-    var selectedCorId = $("#ch_primarycor").val();
-        loadCoordinatorList(selectedCorId);
+    var selectedCorId = $("#ch_reportrev").val();
+        loadReviewerList(selectedCorId);
 
         // Update the coordinator list when the dropdown changes
-        $("#ch_primarycor").change(function() {
+        $("#ch_reportrev").change(function() {
             var selectedValue = $(this).val();
             loadCoordinatorList(selectedValue);
     });
