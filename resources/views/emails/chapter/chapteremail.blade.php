@@ -28,8 +28,13 @@
     $message = preg_replace('/<li[^>]*>/', '• ', $message);
     $message = str_replace('</li>', "\n", $message);
 
-    // Clean up any remaining tags and extra whitespace
+    // Clean up any remaining tags
     $message = strip_tags($message);
+
+    // DECODE HTML ENTITIES (including &nbsp;) - This is the key addition
+    $message = html_entity_decode($message, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+    // Trim whitespace
     $message = trim($message);
 
     // Fix multiple line breaks
