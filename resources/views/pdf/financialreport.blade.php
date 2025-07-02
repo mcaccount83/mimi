@@ -268,7 +268,7 @@
     <b>SERVICE PROJECTS</b>
     <hr>
     </div>
-    <table width="100%" style="border-collapse: collapse;">
+    {{-- <table width="100%" style="border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 1px solid #333;">
                 <td>Project Description</td>
@@ -322,7 +322,71 @@
                 $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $totalServiceM2M;
                 ?>
         </tbody>
-    </table>
+    </table> --}}
+    <table width="100%" style="border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid #333;">
+                                    <td>Project Description</td>
+                                    <td>Project Income</td>
+                                    <td>Supplies/Expenses</td>
+                                    <td>Charity Donation</td>
+                                    <td>M2M Donation</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $service_projects = null;
+                                $totalServiceIncome = 0;
+                                $totalServiceSupplies = 0;
+                                $totalServiceCharity = 0;
+                                $totalServiceM2M = 0;
+
+                                if (isset($pdfData['service_project_array'])) {
+                                    $blobData = base64_decode($pdfData['service_project_array']);
+                                    $service_projects = unserialize($blobData);
+
+                                    if ($service_projects === false) {
+                                        echo "Error: Failed to unserialize data.";
+                                    } else {
+                                        foreach ($service_projects as $row) {
+                                            // Sanitize and remove commas before converting to float
+                                            $income = is_numeric(str_replace(',', '', $row['service_project_income'])) ? floatval(str_replace(',', '', $row['service_project_income'])) : 0;
+                                            $supplies = is_numeric(str_replace(',', '', $row['service_project_supplies'])) ? floatval(str_replace(',', '', $row['service_project_supplies'])) : 0;
+                                            $charity = is_numeric(str_replace(',', '', $row['service_project_charity'])) ? floatval(str_replace(',', '', $row['service_project_charity'])) : 0;
+                                            $m2m = is_numeric(str_replace(',', '', $row['service_project_m2m'])) ? floatval(str_replace(',', '', $row['service_project_m2m'])) : 0;
+
+                                            echo "<tr>";
+                                            echo "<td>" . htmlspecialchars($row['service_project_desc']) . "</td>";
+                                            echo "<td>$" . number_format($income, 2) . "</td>";
+                                            echo "<td>$" . number_format($supplies, 2) . "</td>";
+                                            echo "<td>$" . number_format($charity, 2) . "</td>";
+                                            echo "<td>$" . number_format($m2m, 2) . "</td>";
+                                            echo "</tr>";
+
+                                            // Totals
+                                            $totalServiceIncome += $income;
+                                            $totalServiceSupplies += $supplies;
+                                            $totalServiceCharity += $charity;
+                                            $totalServiceM2M += $m2m;
+                                        }
+                                        // Total row
+                                        echo "<tr style='border-top: 1px solid #333;'>";
+                                        echo "<td><strong>Total</strong></td>";
+                                        echo "<td><strong>$" . number_format($totalServiceIncome, 2) . "</strong></td>";
+                                        echo "<td><strong>$" . number_format($totalServiceSupplies, 2) . "</strong></td>";
+                                        echo "<td><strong>$" . number_format($totalServiceCharity, 2) . "</strong></td>";
+                                        echo "<td><strong>$" . number_format($totalServiceM2M, 2) . "</strong></td>";
+                                        echo "</tr>";
+                                    }
+                                } else {
+                                    echo "<tr style='border-top: 1px solid #333;'>";
+                                    echo "<td colspan='5'>No Service Projects Entered.</td>";
+                                    echo "</tr>";
+                                }
+                                $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $totalServiceM2M;
+                                ?>
+                            </tbody>
+                        </table>
     <br>
     <table width="50%" >
         <tbody>
