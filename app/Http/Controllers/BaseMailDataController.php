@@ -242,7 +242,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getFinancialReportData($chDocuments, $chFinancialReport)
+    public function getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message)
     {
         return [
             'completedName' => $chFinancialReport->completed_name ?? null,
@@ -256,7 +256,7 @@ class BaseMailDataController extends Controller
             'statement1Path' => $chDocuments->statement_1_path,
             'statement2Path' => $chDocuments->statement_2_path,
             'financialPdfPath' => $chDocuments->financial_pdf_path,
-            'reviewerEmailMessage' => $chFinancialReport->reviewer_email_message ?? null,
+            'reviewerEmailMessage' => $reviewer_email_message,
             'final_report_received' => $chDocuments->final_report_received,
             'financialFinalPdfPath' => $chDocuments->final_financial_pdf_path,
         ];

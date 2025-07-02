@@ -191,7 +191,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
             );
 
         }
@@ -373,7 +373,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
             );
 
         }
@@ -1052,7 +1052,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
             );
 
         }
@@ -1119,7 +1119,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $input = $request->all();
         $farthest_step_visited_coord = $input['FurthestStep'];
-        $reviewer_id = isset($input['ch_reportrev']) && ! empty($input['ch_reportrev']) ? $input['ch_reportrev'] : $coorId;
+        $reviewer_id = isset($input['AssignedReviewer']) && ! empty($input['AssignedReviewer']) ? $input['AssignedReviewer'] : $coorId;
         $reportReceived = $input['submitted'];
         $submitType = $input['submit_type'];
         $step_1_notes_log = $input['Step1_Log'];
@@ -1197,7 +1197,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $financialReport->reviewer_id = $financialReport->reviewer_id ?? $coorId;
+            $financialReport->reviewer_id = $reviewer_id ?? $coorId;
             $financialReport->step_1_notes_log = $step_1_notes_log;
             $financialReport->step_2_notes_log = $step_2_notes_log;
             $financialReport->step_3_notes_log = $step_3_notes_log;
@@ -1236,7 +1236,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message),
             );
 
             if ($financialReport->isDirty('reviewer_id')) {
