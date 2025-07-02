@@ -832,28 +832,30 @@
                         <input type="text" class="form-control" name="PartyDesc{{ $row }}" id="PartyDesc{{ $row }}" value="{{ $party_expenses[$row]['party_expense_desc'] ?? '' }}">
                     </div>
                 </td>
+             <td>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <!-- FIXED: Income field should be named PartyIncome, not PartyExpenses -->
+                            <input type="text" class="form-control" name="PartyIncome{{ $row }}" id="PartyIncome{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_income'] ?? '' }}"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                        </div>
+                    </div>
+                </td>
                 <td>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
                             </div>
-<input type="text" class="form-control" name="PartyExpenses{{ $row }}" id="PartyExpenses{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_expenses'] ?? '' }}"
-    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                            <!-- FIXED: Expenses field should be named PartyExpenses, not PartyIncome -->
+                            <input type="text" class="form-control" name="PartyExpenses{{ $row }}" id="PartyExpenses{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_expenses'] ?? '' }}"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                         </div>
                     </div>
                 </td>
-                <td>
-    <div class="form-group">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">$</span>
-            </div>
-            <input type="text" class="form-control" name="PartyIncome{{ $row }}" id="PartyIncome{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_income'] ?? '' }}"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-        </div>
-    </div>
-</td>
             </tr>
         @endfor
     </tbody>
@@ -3450,7 +3452,7 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         ReCalculateSummaryTotal();
     }
 
-    function AddPartyExpenseRow() {
+function AddPartyExpenseRow() {
         var ExpenseCount = parseInt(document.getElementById("PartyExpenseRowCount").value);
         var table = document.getElementById("party-expenses");
         var tbody = table.getElementsByTagName('tbody')[0];
