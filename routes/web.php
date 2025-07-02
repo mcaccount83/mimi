@@ -56,7 +56,7 @@ Route::post('/checkpassword', [UserController::class, 'checkCurrentPassword'])->
 Route::put('/updatepassword', [UserController::class, 'updatePassword'])->name('updatepassword');
 Route::get('/load-email-details/{chId}', [UserController::class, 'loadEmailDetails'])->name('load.email.details');
 Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinatorList'])->name('load.coordinator.list');
-Route::get('/load-reviewer-list/{id}', [UserController::class, 'loadReviewerList'])->name('load.reviewer.list');
+// Route::get('/load-reviewer-list/{id}', [UserController::class, 'loadReviewerList'])->name('load.reviewer.list');
 
 // Error Log Routes...Public, No login required
 Route::get('admin/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');

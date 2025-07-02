@@ -100,7 +100,7 @@
                         </select>
                 </li>
                     <input type="hidden" id="ch_reportrev" value="{{ $chFinancialReport->reviewer_id }}">
-                    <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
+                    {{-- <li class="list-group-item" id="display_corlist" class="list-group-item"></li> --}}
                 </ul>
 
                <div class="text-center">
@@ -417,33 +417,33 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-$(document).ready(function() {
-    // Function to load the coordinator list based on the selected value
-    function loadReviewerList(id) {
-        if(id != "") {
-            $.ajax({
-                url: '{{ url("/load-reviewer-list") }}' + '/' + id,
-                type: "GET",
-                success: function(result) {
-                $("#display_corlist").html(result);
-                },
-                error: function (jqXHR, exception) {
-                console.log("Error: ", jqXHR, exception);
-                }
-            });
-        }
-    }
+// $(document).ready(function() {
+//     // Function to load the coordinator list based on the selected value
+//     function loadReviewerList(id) {
+//         if(id != "") {
+//             $.ajax({
+//                 url: '{{ url("/load-reviewer-list") }}' + '/' + id,
+//                 type: "GET",
+//                 success: function(result) {
+//                 $("#display_corlist").html(result);
+//                 },
+//                 error: function (jqXHR, exception) {
+//                 console.log("Error: ", jqXHR, exception);
+//                 }
+//             });
+//         }
+//     }
 
-    // Get the selected coordinator ID on page load
-    var selectedCorId = $("#ch_reportrev").val();
-        loadReviewerList(selectedCorId);
+//     // Get the selected coordinator ID on page load
+//     var selectedCorId = $("#ch_reportrev").val();
+//         loadReviewerList(selectedCorId);
 
-        // Update the coordinator list when the dropdown changes
-        $("#ch_reportrev").change(function() {
-            var selectedValue = $(this).val();
-            loadReviewerList(selectedValue);
-    });
-});
+//         // Update the coordinator list when the dropdown changes
+//         $("#ch_reportrev").change(function() {
+//             var selectedValue = $(this).val();
+//             loadReviewerList(selectedValue);
+//     });
+// });
 
 function showRosterUploadModal() {
     var chapter_id = "{{ $chDetails->id }}";
