@@ -100,7 +100,9 @@
                         </select>
                 </li>
                     <input type="hidden" id="ch_reportrev" value="{{ $chFinancialReport->reviewer_id }}">
-                    {{-- <li class="list-group-item" id="display_corlist" class="list-group-item"></li> --}}
+
+                     <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                    <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                 </ul>
 
                <div class="text-center">
@@ -358,6 +360,32 @@
 @endsection
 @section('customscript')
 <script>
+
+    $(document).ready(function() {
+    function loadCoordinatorList(coorId) {
+        if (coorId != "") {
+            $.ajax({
+                url: '{{ url("/load-coordinator-list") }}' + '/' + coorId,
+                type: "GET",
+                success: function(result) {
+                    $("#display_corlist").html(result);
+                },
+                error: function (jqXHR, exception) {
+                    console.log("Error: ", jqXHR, exception);
+                }
+            });
+        }
+    }
+
+    var selectedCorId = $("#ch_primarycor").val();
+    loadCoordinatorList(selectedCorId);
+
+    $("#ch_primarycor").change(function() {
+        var selectedValue = $(this).val();
+        loadCoordinatorList(selectedValue);
+    });
+});
+
     var $chActiveId = @json($chActiveId);
     var $einCondition = @json($einCondition);
     var $inquiriesCondition = @json($inquiriesCondition);
@@ -416,34 +444,6 @@ document.addEventListener("DOMContentLoaded", function() {
             extensionNotes.setAttribute('readonly', true);
         }
     }
-
-// $(document).ready(function() {
-//     // Function to load the coordinator list based on the selected value
-//     function loadReviewerList(id) {
-//         if(id != "") {
-//             $.ajax({
-//                 url: '{{ url("/load-reviewer-list") }}' + '/' + id,
-//                 type: "GET",
-//                 success: function(result) {
-//                 $("#display_corlist").html(result);
-//                 },
-//                 error: function (jqXHR, exception) {
-//                 console.log("Error: ", jqXHR, exception);
-//                 }
-//             });
-//         }
-//     }
-
-//     // Get the selected coordinator ID on page load
-//     var selectedCorId = $("#ch_reportrev").val();
-//         loadReviewerList(selectedCorId);
-
-//         // Update the coordinator list when the dropdown changes
-//         $("#ch_reportrev").change(function() {
-//             var selectedValue = $(this).val();
-//             loadReviewerList(selectedValue);
-//     });
-// });
 
 function showRosterUploadModal() {
     var chapter_id = "{{ $chDetails->id }}";
