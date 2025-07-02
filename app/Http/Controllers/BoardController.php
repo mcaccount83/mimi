@@ -1296,7 +1296,7 @@ class BoardController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null),
             );
 
             if ($reportReceived == 1) {

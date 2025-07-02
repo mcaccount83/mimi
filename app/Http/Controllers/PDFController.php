@@ -161,7 +161,7 @@ class PDFController extends Controller
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
-            $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport),
+            $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null),
             [
                 'changed_dues' => $chFinancialReport->changed_dues,
                 'different_dues' => $chFinancialReport->different_dues,
