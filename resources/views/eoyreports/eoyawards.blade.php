@@ -21,82 +21,115 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <table id="chapterlist" class="table table-sm table-hover">
-                        <thead>
-                            <tr>
-                                <th>Details</th>
-                                <th>Conf/Reg</th>
-                                <th>State</th>
-                                <th>Name</th>
-                                @for ($i = 0; $i < $maxAwards; $i++)
-                                <th>Award {{ $i + 1 }}</th>
-                            @endfor
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($chapterList as $list)
-                        @php
-                            $chapter_awards = null;
-                            if (isset($list->financialReport->chapter_awards)) {
-                                $blobData = base64_decode($list->financialReport->chapter_awards);
-                                $chapter_awards = unserialize($blobData);
-                                if ($chapter_awards === false) {
-                                    $chapter_awards = [];
-                                }
-                            }
-                        @endphp
-                        @if($chapter_awards != null)
+                   @php
+    $hasAnyAwards = false;
+    $actualMaxAwards = 0;
 
-                                <tr>
-                                    <td class="text-center">
-                                        @if ($assistConferenceCoordinatorCondition)
-                                            <a href="{{ url("/eoy/editawards/{$list->id}") }}"><i class="fas fa-eye"></i></a>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($list->region->short_name != "None")
-                                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
-                                        @else
-                                            {{ $list->conference->short_name }}
-                                        @endif
-                                    </td>
-                                    <td>
-                                @if($list->state_id < 52)
-                                    {{$list->state->state_short_name}}
+    // Check if any chapter has actual awards (not just blank entries)
+    foreach($chapterList as $list) {
+        if (isset($list->financialReport->chapter_awards)) {
+            $blobData = base64_decode($list->financialReport->chapter_awards);
+            $chapter_awards = unserialize($blobData);
+            if ($chapter_awards !== false && !empty($chapter_awards)) {
+                // Count only awards that have an actual awards_type selected
+                $validAwards = 0;
+                foreach ($chapter_awards as $award) {
+                    if (!empty($award['awards_type'])) {
+                        $validAwards++;
+                    }
+                }
+                if ($validAwards > 0) {
+                    $hasAnyAwards = true;
+                    $actualMaxAwards = max($actualMaxAwards, $validAwards);
+                }
+            }
+        }
+    }
+@endphp
+
+<table id="chapterlist" class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th>Details</th>
+            <th>Conf/Reg</th>
+            <th>State</th>
+            <th>Name</th>
+            @if ($hasAnyAwards)
+                @for ($i = 0; $i < $actualMaxAwards; $i++)
+                    <th>Award {{ $i + 1 }}</th>
+                @endfor
+            @endif
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($chapterList as $list)
+            @php
+                $chapter_awards = null;
+                $validChapterAwards = [];
+
+                if (isset($list->financialReport->chapter_awards)) {
+                    $blobData = base64_decode($list->financialReport->chapter_awards);
+                    $chapter_awards = unserialize($blobData);
+                    if ($chapter_awards !== false && !empty($chapter_awards)) {
+                        // Only include awards that have an awards_type selected
+                        foreach ($chapter_awards as $award) {
+                            if (!empty($award['awards_type'])) {
+                                $validChapterAwards[] = $award;
+                            }
+                        }
+                    }
+                }
+            @endphp
+            @if(!empty($validChapterAwards))
+                <tr>
+                    <td class="text-center">
+                        @if ($assistConferenceCoordinatorCondition)
+                            <a href="{{ url("/eoy/editawards/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                        @endif
+                    </td>
+                    <td>
+                        @if ($list->region->short_name != "None")
+                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                        @else
+                            {{ $list->conference->short_name }}
+                        @endif
+                    </td>
+                    <td>
+                        @if($list->state_id < 52)
+                            {{$list->state->state_short_name}}
+                        @else
+                            {{$list->country->short_name}}
+                        @endif
+                    </td>
+                    <td>{{ $list->name }}</td>
+                    @for ($i = 0; $i < $actualMaxAwards; $i++)
+                        <td>
+                            @if (isset($validChapterAwards[$i]))
+                                @php
+                                    $awardType = "Unknown";
+                                    foreach ($allAwards as $allAward) {
+                                        if ($allAward->id == $validChapterAwards[$i]['awards_type']) {
+                                            $awardType = $allAward->award_type;
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                {{ $awardType }}<br>
+                                @if ($validChapterAwards[$i]['awards_approved'])
+                                    <div style="background-color:#28a745; color: #ffffff;">YES</div>
                                 @else
-                                    {{$list->country->short_name}}
+                                    <div style="background-color:#dc3545; color: #ffffff;">NO</div>
                                 @endif
-                            </td>
-                                    <td>{{ $list->name }}</td>
-                                    @for ($i = 0; $i < $maxAwards; $i++)
-                                        <td>
-                                            @if ($chapter_awards && isset($chapter_awards[$i]))
-                                                @php
-                                                    $awardType = "Unknown";
-                                                    foreach ($allAwards as $allAward) {
-                                                        if ($allAward->id == $chapter_awards[$i]['awards_type']) {
-                                                            $awardType = $allAward->award_type;
-                                                            break;
-                                                        }
-                                                    }
-                                                @endphp
-                                                {{ $awardType }}<br>
-                                                @if ($chapter_awards[$i]['awards_approved'])
-                                                    <div style="background-color:#28a745; color: #ffffff;">YES</div>
-                                                @else
-                                                    <div style="background-color:#dc3545; color: #ffffff;">NO</div>
-                                                @endif
-                                            @else
-                                                <!-- Empty cell for chapters with fewer awards -->
-                                                &nbsp;
-                                            @endif
-                                        </td>
-                                    @endfor
-                                </tr>
+                            @else
+                                &nbsp;
                             @endif
-                            @endforeach
-                        </tbody>
-                    </table>
+                        </td>
+                    @endfor
+                </tr>
+            @endif
+        @endforeach
+    </tbody>
+</table>
                 </div>
                 <!-- /.card-body -->
                 <div class="col-sm-12">
