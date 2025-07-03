@@ -1251,7 +1251,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $financialReport->save();
 
             if ($submitType == 'review_complete') {
-                $documents->financial_report_complete = 1;
+                $documents->financial_review_complete = 1;
                 $documents->review_complete = $lastupdatedDate;
             }
 
@@ -1331,7 +1331,7 @@ class EOYReportController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $documents->financial_report_received = '1';
-            $documents->financial_report_complete = null;
+            $documents->financial_review_complete = null;
             $documents->review_complete = null;
             $documents->save();
 

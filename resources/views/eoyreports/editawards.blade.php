@@ -61,7 +61,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Financial Review Complete:</label>
-                                <span class="float-right">{{ $chDetails->documents->financial_report_complete == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documents->financial_review_complete == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
