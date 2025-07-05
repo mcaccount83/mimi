@@ -14,10 +14,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class BorUpdateListNoitce extends Mailable implements ShouldQueue
+class BorUpdateListNoitce extends BaseMailable
 {
-    use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
-
     public $mailData;
 
     public function __construct($mailData)

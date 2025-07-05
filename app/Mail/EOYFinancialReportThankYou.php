@@ -14,10 +14,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class EOYFinancialReportThankYou extends Mailable implements ShouldQueue
+class EOYFinancialReportThankYou extends BaseMailable
 {
-    use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
-
     public $mailData;
 
     protected $pdfPath;

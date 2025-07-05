@@ -14,10 +14,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class EOYFinancialReportReminder extends Mailable implements ShouldQueue
+class EOYFinancialReportReminder extends BaseMailable
 {
-    use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
-
     public $mailData;
 
     /**
