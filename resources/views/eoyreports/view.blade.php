@@ -184,7 +184,7 @@
                         </div>
                     </div>
 
-                    <div class="row mt-2">
+                    {{-- <div class="row mt-2">
                         <div class="col-sm-3">
                             <label>Extension:<label>
 
@@ -197,6 +197,12 @@
                 @else
                     Chapter has not been given an extension.
                 @endif
+                        </div>
+                    </div> --}}
+                    <div class="form-group row align-middle mt-2">
+                        <label class="col-sm-3 col-form-label">Extension Notes:</label>
+                        <div class="col-sm-9">
+                        <input type="text" name="extension_notes" id="extension_notes" class="form-control" value="{{ $chDocuments->extension_notes }}" >
                         </div>
                     </div>
 
@@ -247,7 +253,13 @@
                                 @endif
                         </div>
                     </div>
-                    <div class="row mt-2">
+                    <div class="form-group row align-middle mt-2">
+                        <label class="col-sm-3 col-form-label">IRS Notes:</label>
+                        <div class="col-sm-9">
+                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDocuments->irs_notes }}" >
+                        </div>
+                    </div>
+                    {{-- <div class="row mt-2">
                         <div class="col-sm-3">
                             <label>990N Filing:</label>
                     </div>
@@ -258,7 +270,7 @@
                          Chapter has no 990 filing notes.
                     @endif
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="row ">
                         <div class="col-sm-3">
@@ -411,23 +423,23 @@ $(document).ready(function () {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    // Initialize the state when the page loads
-    toggleIRSVerified();
+// document.addEventListener("DOMContentLoaded", function() {
+//     // Initialize the state when the page loads
+//     toggleIRSVerified();
 
-    document.getElementById('irs_verified').addEventListener('change', toggleIRSVerified);
-});
+//     document.getElementById('irs_verified').addEventListener('change', toggleIRSVerified);
+// });
 
-function toggleIRSVerified() {
-    const irsVerified = document.getElementById('irs_verified');
-    const irsNotes = document.getElementById('irs_notes');
+// function toggleIRSVerified() {
+//     const irsVerified = document.getElementById('irs_verified');
+//     const irsNotes = document.getElementById('irs_notes');
 
-    if (irsVerified.checked) {
-        irsNotes.setAttribute('readonly', true);
-    } else {
-        irsNotes.removeAttribute('readonly');
-    }
-}
+//     if (irsVerified.checked) {
+//         irsNotes.setAttribute('readonly', true);
+//     } else {
+//         irsNotes.removeAttribute('readonly');
+//     }
+// }
 
 document.addEventListener("DOMContentLoaded", function() {
         // Initialize the state when the page loads
