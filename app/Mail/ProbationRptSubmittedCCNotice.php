@@ -7,8 +7,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class ProbationReportSubmitted extends BaseMailable
-// class ProbationRptSubmittedCCNotice extends BaseMailable
+class ProbationRptSubmittedCCNotice extends BaseMailable
 {
     public $mailData;
 
@@ -29,7 +28,6 @@ class ProbationReportSubmitted extends BaseMailable
     {
         return $this
             ->subject("Quarterly Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.chapter.probationreportsubmitted');
-            // ->markdown('emails.chapter.probationrptsubmittedccnotice');
+            ->markdown('emails.chapter.probationrptsubmittedccnotice');
     }
 }

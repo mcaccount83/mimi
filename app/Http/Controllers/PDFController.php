@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Mail\NameChangeEINNotice;
 use App\Mail\NewChapterFaxCover;
 use App\Mail\DisbandChapterLetter;
-use App\Mail\ProbationNoPmtLetter;
-use App\Mail\ProbationNoRptLetter;
-use App\Mail\ProbationPartyLetter;
-use App\Mail\ProbationReleaseLetter;
-use App\Mail\WarningPartyLetter;
+use App\Mail\ProbationChapNoPmtLetter;
+use App\Mail\ProbationChapNoRptLetter;
+use App\Mail\ProbationChapPartyLetter;
+use App\Mail\ProbationChapReleaseLetter;
+use App\Mail\ProbationChapWarningPartyLetter;
 use App\Models\Documents;
 use App\Models\GoogleDrive;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -573,27 +573,27 @@ class PDFController extends Controller
                 case 'no_report':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ProbationNoRptLetter($mailData, $pdfPath));
+                        ->queue(new ProbationChapNoRptLetter($mailData, $pdfPath));
                     break;
                 case 'no_payment':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ProbationNoPmtLetter($mailData, $pdfPath));
+                        ->queue(new ProbationChapNoPmtLetter($mailData, $pdfPath));
                     break;
                 case 'probation_party':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ProbationPartyLetter($mailData, $pdfPath));
+                        ->queue(new ProbationChapPartyLetter($mailData, $pdfPath));
                     break;
                 case 'warning_party':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new WarningPartyLetter($mailData, $pdfPath));
+                        ->queue(new ProbationChapWarningPartyLetter($mailData, $pdfPath));
                     break;
                 case 'probation_release':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ProbationReleaseLetter($mailData, $pdfPath));
+                        ->queue(new ProbationChapReleaseLetter($mailData, $pdfPath));
                     break;
                 default:
                     return response()->json(['message' => 'Invalid letter type selected'], 400);

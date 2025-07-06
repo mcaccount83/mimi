@@ -7,8 +7,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class ProbationReleaseLetter extends BaseMailable
-// class ProbationChapReleaseLetter extends BaseMailable
+class ProbationChapPartyLetter extends BaseMailable
 {
     public $mailData;
 
@@ -31,12 +30,11 @@ class ProbationReleaseLetter extends BaseMailable
     public function build(): static
     {
         return $this
-            ->subject("Probation Release Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
+            ->subject("Probation Party Expense Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->replyTo($this->mailData['userEmail'])
-            ->markdown('emails.chapter.probationreleaseletter')
-            // ->markdown('emails.chapter.probationchapreleaseletter')
+            ->markdown('emails.chapter.probationchappartyletter')
             ->attach($this->pdfPath, [
-                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Probation_Release.pdf',
+                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Probation_Party.pdf',
                 'mime' => 'application/pdf',
             ]);
     }

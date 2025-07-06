@@ -7,8 +7,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class NewCoordinatorOnline extends BaseMailable
-// class NewCoordApplication extends BaseMailable
+class ProbationRptThankYou extends BaseMailable
 {
     public $mailData;
 
@@ -20,6 +19,7 @@ class NewCoordinatorOnline extends BaseMailable
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
+
     }
 
     /**
@@ -28,7 +28,7 @@ class NewCoordinatorOnline extends BaseMailable
     public function build(): static
     {
         return $this
-            ->subject("New Coordinator Application Received | Conference {$this->mailData['conference_id']}")
-            ->markdown('emails.coordinator.newcoordonline');
+            ->subject('Quarterly Financial Report Submitted')
+            ->markdown('emails.chapter.probationrptthankyou');
     }
 }

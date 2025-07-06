@@ -10,8 +10,8 @@ use App\Mail\EOYElectionReportSubmitted;
 use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
-use App\Mail\ProbationReportSubmitted;
-use App\Mail\ProbationReportThankYou;
+use App\Mail\ProbationRptSubmittedCCNotice;
+use App\Mail\ProbationRptThankYou;
 use App\Mail\NewWebsiteReviewNotice;
 use App\Models\Admin;
 use App\Models\Chapters;
@@ -816,10 +816,10 @@ class BoardController extends Controller implements HasMiddleware
             );
 
             Mail::to($emailCC)
-                ->queue(new ProbationReportSubmitted($mailData));
+                ->queue(new ProbationRptSubmittedCCNotice($mailData));
 
             Mail::to($emailListChap)
-                ->queue(new ProbationReportThankYou($mailData));
+                ->queue(new ProbationRptThankYou($mailData));
 
             DB::commit();
 

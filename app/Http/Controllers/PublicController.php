@@ -8,7 +8,7 @@ use App\Mail\PaymentsSustainingPublicThankYou;
 use App\Mail\PaymentsM2MPublicThankYou;
 use App\Mail\PaymentsPublicDonationOnline;
 use App\Mail\NewCoordinatorThankYou;
-use App\Mail\NewCoordinatorOnline;
+use App\Mail\NewCoordApplication;
 use App\Models\BoardsPending;
 use App\Models\Chapters;
 use App\Models\ChapterApplication;
@@ -917,7 +917,7 @@ class PublicController extends Controller
                 ->queue(new NewCoordinatorThankYou($mailData));
 
             Mail::to($emailCC)
-                ->queue(new NewCoordinatorOnline($mailData));
+                ->queue(new NewCoordApplication($mailData));
 
                 DB::commit();
 
