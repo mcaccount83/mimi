@@ -11,24 +11,33 @@ class ProbationRptThankYou extends BaseMailable
 {
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
 
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+     public function envelope(): Envelope
     {
-        return $this
-            ->subject('Quarterly Financial Report Submitted')
-            ->markdown('emails.chapter.probationrptthankyou');
+        return new Envelope(
+            from: new Address('support@momsclub.org', 'MOMS Club'),
+            replyTo: [
+                new Address('support@momsclub.org', 'MOMS Club')
+            ],
+            subject: "Quarterly Financial Report Submitted",
+        );
     }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.chapter.probationrptthankyou',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
+    }
+
 }

@@ -13,29 +13,37 @@ class ProbationChapWarningPartyLetter extends BaseMailable
 
     protected $pdfPath;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+       public function envelope(): Envelope
     {
-        return $this
-            ->subject("Warning Party Expense Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->replyTo($this->mailData['userEmail'])
-            ->markdown('emails.chapter.probationchapwarningpartyletter')
-            ->attach($this->pdfPath, [
-                'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Warning_Party.pdf',
-                'mime' => 'application/pdf',
-            ]);
+        return new Envelope(
+            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
+            replyTo: [
+                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+            ],
+            subject: "Warning Party Expense Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
     }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.chapter.probationchapwarningpartyletter',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [
+            Attachment::fromPath($this->pdfPath)
+                ->as($this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Warning_Party.pdf')
+                ->withMime('application/pdf'),
+        ];
+    }
+
 }
