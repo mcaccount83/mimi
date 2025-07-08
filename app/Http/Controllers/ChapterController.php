@@ -1692,7 +1692,7 @@ class ChapterController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
         $activeChapterList = $baseQuery['query']->get();
 
         $countList = count($activeChapterList);
