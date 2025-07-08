@@ -3197,8 +3197,8 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         var VoluntaryFees;
         var TotalFees;
 
-        ManditoryFees = Number(document.getElementById("ManditoryMeetingFeesPaid").value);
-        VoluntaryFees = Number(document.getElementById("VoluntaryDonationsPaid").value);
+        ManditoryFees = parseFloat(document.getElementById("ManditoryMeetingFeesPaid").value.replace(/,/g, '')) || 0;
+        VoluntaryFees = parseFloat(document.getElementById("VoluntaryDonationsPaid").value.replace(/,/g, '')) || 0;
 
         TotalFees = (ManditoryFees + VoluntaryFees).toFixed(2);
 
