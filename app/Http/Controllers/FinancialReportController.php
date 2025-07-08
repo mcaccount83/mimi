@@ -32,16 +32,19 @@ class FinancialReportController extends Controller implements HasMiddleware
 
     protected $baseBoardController;
 
+    protected $baseChapterController;
+
     protected $pdfController;
 
     protected $baseMailDataController;
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController,
-        BaseMailDataController $baseMailDataController)
+        BaseMailDataController $baseMailDataController, BaseChapterController $baseChapterController)
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseBoardController = $baseBoardController;
+        $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
     }
 
@@ -354,14 +357,18 @@ class FinancialReportController extends Controller implements HasMiddleware
             $cc_id = $baseQuery['cc_id'];
             $reviewerEmail = $baseQuery['reviewerEmail'];
 
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
+                $this->baseMailDataController->getPresData($PresDetails),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null),
             );
 
             if ($reportReceived == 1) {
-                $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId);   // Generate and Send the PDF
+                $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId, $PresDetails);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
@@ -498,14 +505,18 @@ class FinancialReportController extends Controller implements HasMiddleware
             $emailCC = $baseQuery['emailCC'];
             $cc_id = $baseQuery['cc_id'];
 
+            $baseDsibandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
+            $PresDetails = $baseDsibandedBoardQuery['PresDisbandedDetails'];
+
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null),
+                $this->baseMailDataController->getPresData($PresDetails),
             );
 
             if ($documents->final_report_received == '1') {
-                $pdfPath = $this->pdfController->saveFinalFinancialReport($request, $chapterId);   // Generate and Send the PDF
+                $pdfPath = $this->pdfController->saveFinalFinancialReport($request, $chapterId, $PresDetails);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new DisbandReportThankYou($mailData, $pdfPath));

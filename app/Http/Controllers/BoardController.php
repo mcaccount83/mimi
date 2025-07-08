@@ -41,9 +41,11 @@ class BoardController extends Controller implements HasMiddleware
 {
     protected $userController;
 
-        protected $positionConditionsService;
+    protected $positionConditionsService;
 
     protected $baseBoardController;
+
+    protected $baseChapterController;
 
     protected $pdfController;
 
@@ -54,12 +56,13 @@ class BoardController extends Controller implements HasMiddleware
     protected $financialReportController;
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController, PositionConditionsService $positionConditionsService,
-        BaseMailDataController $baseMailDataController, FinancialReportController $financialReportController, EmailTableController $emailTableController)
+        BaseMailDataController $baseMailDataController, FinancialReportController $financialReportController, EmailTableController $emailTableController, BaseChapterController $baseChapterController)
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseBoardController = $baseBoardController;
-                $this->positionConditionsService = $positionConditionsService;
+        $this->baseChapterController = $baseChapterController;
+        $this->positionConditionsService = $positionConditionsService;
         $this->baseMailDataController = $baseMailDataController;
         $this->emailTableController = $emailTableController;
         $this->financialReportController = $financialReportController;
@@ -1293,14 +1296,18 @@ class BoardController extends Controller implements HasMiddleware
             $cc_id = $baseQuery['cc_id'];
             $reviewerEmail = $baseQuery['reviewerEmail'];
 
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chId);
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
+                $this->baseMailDataController->getPresData($PresDetails),
                 $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null),
             );
 
             if ($reportReceived == 1) {
-                $pdfPath = $this->pdfController->saveFinancialReport($request, $chId);   // Generate and Send the PDF
+                $pdfPath = $this->pdfController->saveFinancialReport($request, $chId, $PresDetails);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));

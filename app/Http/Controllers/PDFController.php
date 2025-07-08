@@ -66,7 +66,7 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-    public function saveFinancialReport(Request $request, $chapterId)
+    public function saveFinancialReport(Request $request, $chapterId, $PresDetails)
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
@@ -83,7 +83,7 @@ class PDFController extends Controller
         $state = $baseQuery['stateShortName'];
         $chapterName = $chDetails->name;
 
-        $result = $this->generateFinancialReport($chapterId);
+        $result = $this->generateFinancialReport($chapterId, $PresDetails);
         $pdf = $result['pdf'];
         $name = $result['filename'];
 
@@ -112,13 +112,13 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-    public function saveFinalFinancialReport(Request $request, $chapterId)
+    public function saveFinalFinancialReport(Request $request, $chapterId, $PresDetails)
     {
         $googleDrive = GoogleDrive::first();
         $finalFinancialDrive = $googleDrive->final_financial_report;
         $sharedDriveId = $finalFinancialDrive;  // Shared Drive -> EOY Uploads
 
-        $result = $this->generateFinancialReport($chapterId);
+        $result = $this->generateFinancialReport($chapterId, $PresDetails);
         $pdf = $result['pdf'];
         $name = $result['filename'];
 
@@ -147,7 +147,7 @@ class PDFController extends Controller
     /**
      * Generate Financial Report
      */
-    public function generateFinancialReport($chapterId)
+    public function generateFinancialReport($chapterId, $PresDetails)
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -155,8 +155,8 @@ class PDFController extends Controller
         $chDocuments = $baseQuery['chDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+        // $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+        // $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
