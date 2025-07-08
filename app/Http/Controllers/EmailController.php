@@ -8,9 +8,11 @@ use App\Mail\NewChapterSetup;
 use App\Mail\NewChapterWelcome;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
+use App\Mail\EOYElectionReportReminder;
 use App\Models\EmailFields;
 use App\Models\Resources;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -507,4 +509,84 @@ class EmailController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
+
+      /**
+     * Board Election Report Reminder Auto Send
+     */
+    public function sendEOYBoardReportReminder(Request $request): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']
+            ->whereHas('documents', function ($query) {
+                $query->where('report_extension', '0')
+                    ->orWhereNull('report_extension');
+            })
+            ->whereHas('documents', function ($query) {
+                $query->where('new_board_submitted', '0')
+                    ->orWhereNull('new_board_submitted');
+            })
+            ->get();
+
+        if ($chapterList->isEmpty()) {
+            return redirect()->back()->with('info', 'There are no Chapters with Board Reports Due.');
+        }
+
+        $chapterIds = [];
+        $chapterEmails = [];
+        $coordinatorEmails = [];
+        $mailData = [];
+
+        foreach ($chapterList as $chapter) {
+            $chapterIds[] = $chapter->id;
+
+            if ($chapter->name) {
+                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+                $chDetails = $emailDetails['chDetails'];
+                $stateShortName = $emailDetails['stateShortName'];
+                $chDocuments = $emailDetails['chDocuments'];
+                $chFinancialReport = $emailDetails['chFinancialReport'];
+                $emailListChap = $emailDetails['emailListChap'];
+                $emailListCoord = $emailDetails['emailListCoord'];
+
+                $chapterEmails[$chDetails->name] = $emailListChap;
+                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+            }
+
+            $mailData[$chDetails->name] = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
+            );
+
+        }
+
+        foreach ($mailData as $chapterName => $data) {
+            if (! empty($chapterName)) {
+                Mail::to($chapterEmails[$chapterName] ?? [])
+                    ->cc($coordinatorEmails[$chapterName] ?? [])
+                    ->queue(new EOYElectionReportReminder($data));
+            }
+        }
+
+        try {
+            DB::commit();
+
+            return redirect()->to('/eoy/boardreport')->with('success', 'Board Election Reminders have been successfully sent.');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
 }

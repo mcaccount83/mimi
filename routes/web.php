@@ -197,6 +197,8 @@ Route::post('/chapter/sendnewchapter', [EmailController::class, 'sendNewChapterE
 Route::post('/chapter/sendchapter', [EmailController::class, 'sendChapterEmail'])->name('chapters.sendchapter');
 Route::post('/chapter/sendchapterrereg', [EmailController::class, 'sendChapterReReg'])->name('chapters.sendchapterrereg');
 Route::post('/chapter/sendchapterrereglate', [EmailController::class, 'sendChapterReRegLate'])->name('chapters.sendchapterrereglate');
+Route::get('/eoy/boardreport/reminder', [EmailController::class, 'sendEOYBoardReportReminder'])->name('eoyreports.eoyboardreportreminder');
+
 
 // Coordinator Controller Routes...Coordinator Login Required
 Route::get('/coordinator/pending', [CoordinatorController::class, 'showPendingCoordinator'])->name('coordinators.coordpending');
@@ -287,7 +289,7 @@ Route::get('/eoy/editstatus/{id}', [EOYReportController::class, 'editEOYDetails'
 Route::post('/eoy/updatestatus/{id}', [EOYReportController::class, 'updateEOYDetails'])->name('eoyreports.update');
 Route::get('/eoy/boardreport', [EOYReportController::class, 'showEOYBoardReport'])->name('eoyreports.eoyboardreport');
 // Route::get('/eoy/activateboardreport/{id}', [EOYReportController::class, 'activateBoard'])->name('eoyreports.activateboardreport');
-Route::get('/eoy/boardreport/reminder', [EOYReportController::class, 'sendEOYBoardReportReminder'])->name('eoyreports.eoyboardreportreminder');
+// Route::get('/eoy/boardreport/reminder', [EOYReportController::class, 'sendEOYBoardReportReminder'])->name('eoyreports.eoyboardreportreminder');
 Route::get('/eoy/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.editboardreport');
 Route::post('/eoy/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.activateboardreport');
 Route::post('eoy/updateboardreport/{id}', [EOYReportController::class, 'updateEOYBoardReport'])->name('eoyreports.updateboardreport');
