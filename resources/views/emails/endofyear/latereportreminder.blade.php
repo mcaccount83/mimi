@@ -4,13 +4,13 @@
 At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.<br>
 <br>
 <ul>
-    @if($mailData['boardElectionReportReceived'] == 0)
+    @if($mailData['boardElectionReportReceived'] != '1')
         <li>Board Election Report</li>
     @endif
-    @if($mailData['financialReportReceived'] == 0)
+    @if($mailData['financialReportReceived'] != '1')
         <li>Financial Report</li>
     @endif
-    @if($mailData['990NSubmissionReceived'] == 0)
+    @if($mailData['990NSubmissionReceived'] != '1')
         <li>990N Submission</li>
     @endif
     @if($mailData['einLetterCopyReceived'] == null)

@@ -9,6 +9,8 @@ use App\Mail\NewChapterWelcome;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\EOYElectionReportReminder;
+use App\Mail\EOYFinancialReportReminder;
+use App\Mail\EOYLateReportReminder;
 use App\Models\EmailFields;
 use App\Models\Resources;
 use Illuminate\Http\JsonResponse;
@@ -588,5 +590,166 @@ class EmailController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
+
+    /**
+     * Financial Report Reminder Auto Send
+     */
+    public function sendEOYFinancialReportReminder(Request $request): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']
+            ->whereHas('documents', function ($query) {
+                $query->where('report_extension', '0')
+                    ->orWhereNull('report_extension');
+            })
+            ->whereHas('documents', function ($query) {
+                $query->where('financial_report_received', '0')
+                    ->orWhereNull('financial_report_received');
+            })
+            ->get();
+
+        if ($chapterList->isEmpty()) {
+            return redirect()->back()->with('info', 'There are no Chapters with Financial Reports Due.');
+        }
+
+        $chapterIds = [];
+        $chapterEmails = [];
+        $coordinatorEmails = [];
+        $mailData = [];
+
+        foreach ($chapterList as $chapter) {
+            $chapterIds[] = $chapter->id;
+
+            if ($chapter->name) {
+                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+                $chDetails = $emailDetails['chDetails'];
+                $stateShortName = $emailDetails['stateShortName'];
+                $chDocuments = $emailDetails['chDocuments'];
+                $chFinancialReport = $emailDetails['chFinancialReport'];
+                $emailListChap = $emailDetails['emailListChap'];
+                $emailListCoord = $emailDetails['emailListCoord'];
+
+                $chapterEmails[$chDetails->name] = $emailListChap;
+                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+            }
+
+            $mailData[$chDetails->name] = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
+            );
+
+        }
+
+        foreach ($mailData as $chapterName => $data) {
+            if (! empty($chapterName)) {
+                Mail::to($chapterEmails[$chapterName] ?? [])
+                    ->cc($coordinatorEmails[$chapterName] ?? [])
+                    ->queue(new EOYFinancialReportReminder($data));
+            }
+        }
+        try {
+            DB::commit();
+
+            return redirect()->to('/eoy/financialreport')->with('success', 'Financial Report Reminders have been successfully sent.');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+     /**
+     * Auto Send EOY Report Status Reminder
+     */
+    public function sendEOYStatusReminder(Request $request): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']
+            ->whereHas('documents', function ($query) {
+                $query->where('report_extension', '0')
+                    ->orWhereNull('report_extension');
+            })
+            ->whereHas('documents', function ($query) {
+                $query->where('new_board_submitted', '0')
+                    ->orWhereNull('new_board_submitted')
+                    ->orWhere('financial_report_received', '0')
+                    ->orWhereNull('financial_report_received');
+            })
+            ->get();
+
+        if ($chapterList->isEmpty()) {
+            return redirect()->back()->with('info', 'There are no Chapters with Reports Due.');
+        }
+
+         $chapterIds = [];
+        $chapterEmails = [];
+        $coordinatorEmails = [];
+        $mailData = [];
+
+        foreach ($chapterList as $chapter) {
+            $chapterIds[] = $chapter->id;
+
+            if ($chapter->name) {
+                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+                $chDetails = $emailDetails['chDetails'];
+                $stateShortName = $emailDetails['stateShortName'];
+                $chDocuments = $emailDetails['chDocuments'];
+                $chFinancialReport = $emailDetails['chFinancialReport'];
+                $emailListChap = $emailDetails['emailListChap'];
+                $emailListCoord = $emailDetails['emailListCoord'];
+
+                $chapterEmails[$chDetails->name] = $emailListChap;
+                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+            }
+
+            $mailData[$chDetails->name] = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
+            );
+
+        }
+
+        foreach ($mailData as $chapterName => $data) {
+            if (! empty($chapterName)) {
+                Mail::to($chapterEmails[$chapterName] ?? [])
+                    ->cc($coordinatorEmails[$chapterName] ?? [])
+                    ->queue(new EOYLateReportReminder($data));
+            }
+        }
+
+        try {
+
+            DB::commit();
+
+            return redirect()->to('/eoy/status')->with('success', 'EOY Late Notices have been successfully sent.');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
 
 }
