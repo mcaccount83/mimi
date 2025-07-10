@@ -714,22 +714,27 @@ $(document).ready(function () {
     var currentMonth = {{ $thisDate->month }};
     var userType = @json($userType);
     var userAdmin = @json($userAdmin);
+    var boardActive = @json($boardActive);
 
-    // Disable all input fields, select elements, textareas, and buttons based on criteria
-    if (userAdmin == 1 || currentMonth >= 5 && currentMonth <= 7) {
+    if (userAdmin == 1) {
+        // Admin - always disable everything
         $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
         $('#Save, #Password, #logout-btn').prop('disabled', true);
-    }else if (userAdmin == 1) {
-        $('#Password, #logout-btn').prop('disabled', true);
-    }else if (userType == 'coordinator' && userAdmin != 1) {
+    } else if (userType == 'coordinator' && userAdmin != 1) {
+        // Coordinators - ALWAYS disable (never enabled)
         $('input, select, textarea').prop('disabled', true);
         $('#Save, #Password, #logout-btn').prop('disabled', true);
         $('#display_corlist').addClass('disabled-link').attr('href', '#');
-    } else if (currentMonth >= 5 && currentMonth <= 7) {
+    } else if (currentMonth == 5) {
+        // Board members in month 5 - always disable
+        $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
+        $('#Save, #Password, #logout-btn').prop('disabled', true);
+    } else if ((currentMonth == 6 || currentMonth == 7) && boardActive != 1) {
+        // Board members in months 6-7 - only disable if boardActive != 1
         $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
         $('#Save').prop('disabled', true);
     }
-
+    // Board members in months 6-7 with boardActive == 1 will have enabled fields
 });
 
  document.addEventListener('DOMContentLoaded', function() {

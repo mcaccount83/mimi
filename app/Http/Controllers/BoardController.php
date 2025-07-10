@@ -116,6 +116,8 @@ class BoardController extends Controller implements HasMiddleware
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
+        // dd(['userType' => $userType, 'userAdmin' => $userAdmin, 'user' => $user]);
+
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
@@ -123,6 +125,7 @@ class BoardController extends Controller implements HasMiddleware
         $chPayments = $baseQuery['chPayments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $chDocuments = $baseQuery['chDocuments'];
+        $boardActive = $chDocuments->new_board_active;
         $probationReason = $baseQuery['probationReason'];
 
         $allProbation = $baseQuery['allProbation'];
@@ -136,7 +139,7 @@ class BoardController extends Controller implements HasMiddleware
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
 
-        if ($userType = 'coordinator'){
+        if ($userType == 'coordinator'){
             $bdPositionId = '1';
             $borDetails = $PresDetails;
         }
@@ -167,7 +170,7 @@ class BoardController extends Controller implements HasMiddleware
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
             'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive
         ];
 
         return view('boards.profile')->with($data);
