@@ -64,15 +64,17 @@
                                         <h2 class="text-center">{{$SECDetails->first_name}} {{$SECDetails->last_name}}, {{$SECDetails->position?->position}}</h2>
                                     @endif
 
-
                                     {{-- <h2 class="text-center">{{$PresDetails->first_name}} {{$PresDetails->last_name}}, {{$PresDetails->position?->position}}</h2> --}}
                                     <p class="description text-center">
                                         Welcome to the MOMS information Management Interface, affectionately called MIMI!
                                         <br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                                     </p>
                                     <div id="readOnlyText" class="description text-center">
-                                        @if($thisDate->month >= 5 && $thisDate->month <= 7)
-                                            <p><span style="color: red;">All Board Member Information is <strong>READ ONLY</strong> at this time.<br>
+                                        @if(($thisDate->month == 5 || $thisDate->month == 6) ||
+                                            (($thisDate->month == 7 || $thisDate->month == 8)  && $chDetails->documents->new_board_active != '1'))
+                                            <p><span style="color: red;">All Board Member Information is currently <strong>READ ONLY</strong>.<br>
+                                                In order to add new board members to MIMI, please complete the Board Election Report.<br>
+                                        {{-- @elseif($thisDate->month == 5 || $thisDate->month == )
                                                 @if($chDetails->documents->new_board_active != '1')
                                                     In order to add new board members to MIMI, please complete the Board Election Report.<br>
                                                 @endif
@@ -80,7 +82,7 @@
                                                     If you need to make updates to your listed officers, please contact your Primary Coordinator.</span></p>
                                                 <p>Incoming Board Members have been activated and have full MIMI access.<br>
                                                     Outgoing Board Members can still log in and access Financial Reports Only.</p>
-                                                @endif
+                                                @endif --}}
                                             @endif
                                     </div>
                                 </div>
@@ -717,24 +719,23 @@ $(document).ready(function () {
     var boardActive = @json($boardActive);
 
     if (userAdmin == 1) {
-        // Admin - always disable everything
-        $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
-        $('#Save, #Password, #logout-btn').prop('disabled', true);
+        // Admin - ALWAYS allow edits for testing purposes
+        $('#logout-btn').prop('disabled', true);
     } else if (userType == 'coordinator' && userAdmin != 1) {
         // Coordinators - ALWAYS disable (never enabled)
         $('input, select, textarea').prop('disabled', true);
         $('#Save, #Password, #logout-btn').prop('disabled', true);
         $('#display_corlist').addClass('disabled-link').attr('href', '#');
-    } else if (currentMonth == 5) {
-        // Board members in month 5 - always disable
-        $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
-        $('#Save, #Password, #logout-btn').prop('disabled', true);
-    } else if ((currentMonth == 6 || currentMonth == 7) && boardActive != 1) {
-        // Board members in months 6-7 - only disable if boardActive != 1
+    } else if (currentMonth == 5 || currentMonth == 6 ) {
+        // Board members in month 5-6 - always disable
+        $('input, select, textarea').prop('disabled', true);
+        $('#Save, #Password').prop('disabled', true);
+    } else if ((currentMonth == 7 || currentMonth == 8) && boardActive != 1) {
+        // Board members in months 7-8 - only disable if boardActive != 1
         $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
         $('#Save').prop('disabled', true);
     }
-    // Board members in months 6-7 with boardActive == 1 will have enabled fields
+    // Board members in months 9-12 & 1-4 will be editable for everyone
 });
 
  document.addEventListener('DOMContentLoaded', function() {
