@@ -2955,7 +2955,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         <label>Award Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['award_path'] }}">&nbsp; View Award Files</a><br>
                         <strong style="color:red">Please Note</strong><br>
                             Save award entry information before replacing file(s). This will refresh the screen - be sure to save all work before clicking button to Replace Award Files.<br>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="showAwardploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award Files</button>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="showAwardUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award Files</button>
                 </div>
             @else
                 <div class="col-md-12" id="AwardBlock">
