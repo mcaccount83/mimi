@@ -2954,13 +2954,13 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                 <div class="col-md-12" id="AwardBlock">
                         <label>Award Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['award_path'] }}">&nbsp; View Award Files</a><br>
                         <strong style="color:red">Please Note</strong><br>
-                            This will refresh the screen - be sure to save all work before clicking button to Replace Award Files.<br>
+                            Save award entry information before replacing file(s). This will refresh the screen - be sure to save all work before clicking button to Replace Award Files.<br>
                         <button type="button" class="btn btn-sm btn-primary" onclick="showAwardploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award Files</button>
                 </div>
             @else
                 <div class="col-md-12" id="AwardBlock">
                         <strong style="color:red">Please Note</strong><br>
-                            This will refresh the screen - be sure to save all work before clicking button to Upload Award Files.<br>
+                            Save award entry information before uploading file(s). This will refresh the screen - be sure to save all work before clicking button to Upload Award Files.<br>
                         <button type="button" class="btn btn-sm btn-primary" onclick="showAwardUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Award Files</button>
                 </div>
             @endif
@@ -4582,7 +4582,7 @@ function showAwardUploadModal() {
     Swal.fire({
         title: 'Upload Award Attachments',
         html: `
-            <form id="uploadAward1Form" enctype="multipart/form-data">
+            <form id="uploadAwardForm" enctype="multipart/form-data">
                 @csrf
                 <input type="file" name='file' required>
             </form>
