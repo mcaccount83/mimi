@@ -8,18 +8,25 @@ use App\Mail\DisbandReportCCNotice;
 use App\Mail\DisbandReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
+use App\Mail\NewBoardWelcome;
 use App\Models\Chapters;
 use App\Models\DisbandedChecklist;
+use App\Models\Boards;
+use App\Models\BoardsIncoming;
+use App\Models\BoardsOutgoing;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
@@ -628,4 +635,148 @@ class FinancialReportController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
+
+    // Unified method that handles both single and batch activations
+    public function activateSingleBoard(Request $request, $id)
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+
+        // Calculate the fiscal year (current year - next year)
+        $currentYear = Carbon::now()->year;
+        $nextYear = $currentYear + 1;
+        $fiscalYear = $currentYear.'-'.$nextYear;
+
+        $resources = Resources::with('resourceCategory')->get();
+        $instructionsName = 'Officer Packet';
+        $matchingInstructions = $resources->where('name', $instructionsName)->first();
+        $pdfPath = 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path;
+
+        $status = 'fail';
+        $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $id)->get();
+
+        if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
+            // DB::beginTransaction();
+            try {
+                $boardDetails = Boards::where('chapter_id', $id)->get();
+
+                if ($boardDetails && count($boardDetails) > 0) {
+                    $borDetails = Boards::with('user')->where('chapter_id', $id)->get();
+                    foreach ($borDetails as $record) {
+                        $user_id = $record->user_id;
+                        $userDetails = User::find($user_id);
+
+                        $userDetails->user_type = 'outgoing';
+                        $userDetails->updated_at = now();
+                        $userDetails->save();
+
+                        BoardsOutgoing::create([  // Create outgoing board details
+                            'id' => $record->id,
+                            'user_id' => $record->user_id,
+                            'first_name' => $record->first_name,
+                            'last_name' => $record->last_name,
+                            'email' => $record->email,
+                            'board_position_id' => $record->board_position_id,
+                            'chapter_id' => $id,
+                            'street_address' => $record->street_address,
+                            'city' => $record->city,
+                            'state_id' => $record->state_id,
+                            'zip' => $record->zip,
+                            'country_id' => $record->country_id,
+                            'phone' => $record->phone,
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => $lastupdatedDate,
+                        ]);
+
+                    }
+
+                    Boards::where('chapter_id', $id)->delete();
+                }
+
+                foreach ($BoardsIncomingDetails as $incomingRecord) {
+                    $existingUser = User::where('email', $incomingRecord->email)->first();
+                    if ($existingUser) {
+                        $existingUser->first_name = $incomingRecord->first_name;
+                        $existingUser->last_name = $incomingRecord->last_name;
+                        $existingUser->email = $incomingRecord->email;
+                        $existingUser->user_type = 'board';
+                        $existingUser->updated_at = now();
+                        $existingUser->save();
+                        $userId = $existingUser->id;
+
+                    } else {
+                        $newUser = User::create([  // Create user details if new
+                            'first_name' => $incomingRecord->first_name,
+                            'last_name' => $incomingRecord->last_name,
+                            'email' => $incomingRecord->email,
+                            'password' => Hash::make('TempPass4You'),
+                            'user_type' => 'board',
+                            'is_active' => 1,
+                        ]);
+                        $userId = $newUser->id;
+                    }
+
+                    Boards::create([  // Create board details if new
+                        'user_id' => $userId,
+                        'first_name' => $incomingRecord->first_name,
+                        'last_name' => $incomingRecord->last_name,
+                        'email' => $incomingRecord->email,
+                        'board_position_id' => $incomingRecord->board_position_id,
+                        'chapter_id' => $id,
+                        'street_address' => $incomingRecord->street_address,
+                        'city' => $incomingRecord->city,
+                        'state_id' => $incomingRecord->state_id,
+                        'zip' => $incomingRecord->zip,
+                        'country_id' => $incomingRecord->country_id,
+                        'phone' => $incomingRecord->phone,
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => $lastupdatedDate,
+                    ]);
+                }
+
+                $documents = Documents::find($id);
+                $documents->new_board_active = 1;
+                $documents->save();
+
+                BoardsIncoming::where('chapter_id', $id)->delete();
+
+                $baseQuery = $this->baseChapterController->getChapterDetails($id);
+                $chDetails = $baseQuery['chDetails'];
+                $pcDetails = $baseQuery['pcDetails'];
+                $chPcId = $chDetails->primary_coordinator_id;
+                $stateShortName = $baseQuery['stateShortName'];
+                $emailListChap = $baseQuery['emailListChap'];  // Full Board
+                $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
+                // $emailPC = $baseQuery['emailPC'];  // PC Email
+
+                $mailData = array_merge(
+                    $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                    $this->baseMailDataController->getPCData($pcDetails),
+                    $this->baseMailDataController->getCCData($emailCCData),
+                    // $this->baseMailDataController->getUserData($user),
+                    [
+                        'fiscalYear' => $fiscalYear,
+                    ]
+                );
+
+                Mail::to($emailListChap)
+                    ->cc($emailListCoord)
+                    ->queue(new NewBoardWelcome($mailData, $pdfPath));
+
+                // DB::commit();
+                $status = 'success'; // Set status to success if everything goes well
+            } catch (\Exception $e) {
+                // DB::rollback();  // Rollback Transaction
+                // $status = 'fail'; // Set status to fail if an exception occurs
+                Log::error("Error in activateSingleBoard: " . $e->getMessage());
+                throw $e; // Re-throw so calling function can handle it
+            }
+        }
+
+        return $status;
+    }
+
 }

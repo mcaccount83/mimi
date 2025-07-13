@@ -55,8 +55,8 @@
 
 <br>
 <p><strong>MCL</strong>,<br>
-    {{ $mailData['userName'] }}<br>
-    {{ $mailData['userPosition'] }}<br>
-    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
+    {{ $mailData['ccName'] }}<br>
+    {{ $mailData['ccPosition'] }}<br>
+    {{ $mailData['ccConfName'] }}, {{ $mailData['ccConfDescription'] }}<br>
     International MOMS Club</p>
 @endcomponent

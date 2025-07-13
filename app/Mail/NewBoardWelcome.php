@@ -22,9 +22,9 @@ class NewBoardWelcome extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
+            from: new Address($this->mailData['ccEmail'], $this->mailData['ccName']),
             replyTo: [
-                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+                new Address($this->mailData['ccEmail'], $this->mailData['ccName'])
             ],
             subject: 'Welcome to the Executive Board!',
         );

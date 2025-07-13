@@ -1489,19 +1489,35 @@ class BoardController extends Controller implements HasMiddleware
                 }
             }
 
-            $mailData = array_merge(
+            $now = Carbon::now();
+$month = $now->month;
+
+$mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             );
+
+if($month >= 1 && $month <= 6){
+
+$message = 'Board info has been Submitted';
 
             Mail::to($emailCC)
                 ->queue(new EOYElectionReportSubmitted($mailData));
 
             Mail::to($emailListChap)
                 ->queue(new EOYElectionReportThankYou($mailData));
+}
+
+if($month >= 7 && $month <= 12){
+    $status = $this->financialReportController->activateSingleBoard($request, $chId);
+
+    if ($status === 'success') {
+                $message = 'Board info has been submitted and activated successfully';
+            }
+        }
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Board Info has been Submitted');
+            return redirect()->back()->with('success', $message);
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
