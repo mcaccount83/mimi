@@ -519,7 +519,7 @@ class ChapterController extends Controller implements HasMiddleware
             // Commit the transaction
             DB::commit();
 
-            $message = 'Chapter successfully unzapped';
+            $message = 'Chapter successfully zapped';
 
             // Return JSON response
             return response()->json([
