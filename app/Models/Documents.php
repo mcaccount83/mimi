@@ -18,6 +18,7 @@ class Documents extends Model
         'good_standing_letter',
         'ein_letter',
         'ein_letter_path',
+        'ein_notes',
         'irs_notes',
         'irs_verified',
         'probation_path',

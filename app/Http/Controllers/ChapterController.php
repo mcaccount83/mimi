@@ -919,6 +919,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $chapter = Chapters::find($id);
         $chapterId = $id;
+        $documents = Documents::find($id);
         $probation = ProbationSubmission::find($id);
 
         DB::beginTransaction();
@@ -927,7 +928,7 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->name = $chapterName;
             $chapter->sanitized_name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $chapterName);
             // $chapter->name = $request->filled('ch_name') ? $request->input('ch_name') : $request->input('ch_hid_name');
-            $chapter->notes = $request->input('ch_einnotes');
+            // $chapter->notes = $request->input('ch_einnotes');
             $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
             $chapter->sistered_by = $request->filled('ch_sistered') ? $request->input('ch_sistered') : $request->input('ch_hid_sistered');
             $chapter->territory = $request->filled('ch_boundariesterry') ? $request->input('ch_boundariesterry') : $request->input('ch_hid_boundariesterry');
@@ -951,6 +952,9 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->last_updated_date = $lastupdatedDate;
 
             $chapter->save();
+
+            $documents->ein_notes = $request->input('ein_notes');
+            $documents->save();
 
             if ($chapter->probation_id == 3 && ! $probation) {
                 ProbationSubmission::create([
@@ -1466,6 +1470,7 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->save();
 
             $documents->ein_letter = $request->has('ch_ein_letter') ? 1 : 0;
+            $documents->ein_notes = $request->input('ein_notes');
             $documents->irs_verified = $request->has('irs_verified') ? 1 : 0;
             $documents->irs_notes = $request->input('irs_notes');
             $documents->save();

@@ -20,7 +20,7 @@
         <div class="row">
           <div class="col-md-4">
             <input type="hidden" name="hid_extension_notes" value="{{$chDocuments->extension_notes}}">
-            <input type="hidden" name="hid_irs_notes" value="{{ $chFinancialReport->check_current_990N_notes }}">
+            <input type="hidden" name="hid_irs_notes" value="{{ $chDocuments->irs_notes }}">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">

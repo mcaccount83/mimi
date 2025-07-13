@@ -39,7 +39,7 @@
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
 
-                <b>IRS Notes:</b> {{$chDocuments->irs_notes}}
+                <b>EIN Notes:</b> {{$chDocuments->ein_notes}}
                     </li>
                     <li class="list-group-item">
                         <b>Re-Registration Dues:</b><span class="float-right">

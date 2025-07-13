@@ -98,6 +98,15 @@
                         </div>
                         </div>
 
+                        <!-- /.form group -->
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 col-form-label mb-1">EIN Notes:</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="ein_notes" id="ein_notes" class="form-control" value="{{ $chDocuments->ein_notes }}" placeholder="EIN Notes">
+                                                    </div>
+                                                </div>
+
+
  <!-- /.form group -->
  <div class="form-group row align-items-center  mb-3">
     <label class="col-sm-2 col-form-label">990N Verifed with IRS:</label>
@@ -107,17 +116,27 @@
     </div>
 </div>
 
+<!-- /.form group -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">990N Submission:</label>
+                            <div class="col-sm-10">
+                                @if($chDocuments->irs_path != null)
+                                <button class="btn bg-gradient-primary btn-sm" onclick="window.open('{{ $chDocuments->irs_path }}', '_blank')">View/Download 990N Submission</button>
+                            @else
+                                <button class="btn bg-gradient-primary btn-sm disabled">No 990N Submission on File</button>
+                            @endif
+                        </div>
+                        </div>
 
 
 
                                                 <!-- /.form group -->
                                                 <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label mb-1">IRS Notes:</label>
+                                                    <label class="col-sm-2 col-form-label mb-1">990N Submission Notes:</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDocuments->irs_notes }}" placeholder="990N Notes">
+                                                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDocuments->irs_notes }}" placeholder="990N Submission Notes">
                                                     </div>
                                                 </div>
-
 
 
 

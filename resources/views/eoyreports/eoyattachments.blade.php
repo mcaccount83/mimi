@@ -66,7 +66,8 @@
                         <td @if($list->documents?->statement_1_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documents?->statement_1_path != null) YES @else NO @endif
                         </td>
-                        <td @if($list->documents?->statement_2_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td>
+                            {{-- @if($list->documents?->statement_2_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif> --}}
                             @if($list->documents?->statement_2_path != null) YES @else NO @endif
                         </td>
                         <td @if($list->documents?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>

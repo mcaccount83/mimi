@@ -188,7 +188,7 @@
                      <div class="form-group row align-middle mt-2">
                         <label class="col-sm-3 col-form-label">990 Submission Notes:</label>
                         <div class="col-sm-9">
-                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDetails->financialReport->check_current_990N_notes }}" >
+                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDetails->documents->irs_notes }}" >
                         </div>
                     </div>
                     <!-- /.form group -->

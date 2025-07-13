@@ -48,7 +48,7 @@
 
                   <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
-                    <label class="col-form-label">IRS Notes:</label><input type="text" name="ch_einnotes" id="ch_einnotes" class="form-control float-right col-sm-8 mb-1 text-right" value="{{ $chDocuments->irs_notes }}" placeholder="IRS/EIN Notes">
+                    <label class="col-form-label">EIN Notes:</label><input type="text" name="ein_notes" id="ein_notes" class="form-control float-right col-sm-8 mb-1 text-right" value="{{ $chDocuments->ein_notes }}" placeholder="EIN Notes">
                     </li>
                       <li class="list-group-item">
                           <b>Re-Registration Dues:</b><span class="float-right">
