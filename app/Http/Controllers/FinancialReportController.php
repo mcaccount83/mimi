@@ -120,13 +120,13 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->associate_member_fee = $input['AssociateMemberDues'] ?? null;
 
         // MONTHLY MEETING EXPENSES
-        $financialReport->manditory_meeting_fees_paid = $input['ManditoryMeetingFeesPaid'] ?? null;
-        $financialReport->voluntary_donations_paid = $input['VoluntaryDonationsPaid'] ?? null;
+        $financialReport->manditory_meeting_fees_paid = isset($input['ManditoryMeetingFeesPaid']) ? preg_replace('/[^\d.]/', '', $input['ManditoryMeetingFeesPaid']) : null;
+        $financialReport->voluntary_donations_paid = isset($input['VoluntaryDonationsPaid']) ? preg_replace('/[^\d.]/', '', $input['VoluntaryDonationsPaid']) : null;
         $financialReport->meeting_speakers = $input['MeetingSpeakers'] ?? null;
         $financialReport->meeting_speakers_array = $input['Speakers'] ?? null;
         $financialReport->discussion_topic_frequency = $input['SpeakerFrequency'] ?? null;
         $financialReport->childrens_room_sitters = $input['ChildrensRoom'] ?? null;
-        $financialReport->paid_baby_sitters = $input['PaidBabySitters'] ?? null;
+        $financialReport->paid_baby_sitters = isset($input['PaidBabySitters']) ? preg_replace('/[^\d.]/', '', $input['PaidBabySitters']) : null;
 
         // Children Room Expenses (serialized)
         $ChildrenRoomArray = null;
@@ -167,9 +167,9 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->party_expense_array = base64_encode(serialize($PartyExpenseFields));
 
         // OFFICE & OPERATING EXPENSES
-        $financialReport->office_printing_costs = $input['PrintingCosts'] ?? null;
-        $financialReport->office_postage_costs = $input['PostageCosts'] ?? null;
-        $financialReport->office_membership_pins_cost = $input['MembershipPins'] ?? null;
+        $financialReport->office_printing_costs = isset($input['PrintingCosts']) ? preg_replace('/[^\d.]/', '', $input['PrintingCosts']) : null;
+        $financialReport->office_postage_costs = isset($input['PostageCosts']) ? preg_replace('/[^\d.]/', '', $input['PostageCosts']) : null;
+        $financialReport->office_membership_pins_cost = isset($input['MembershipPins']) ? preg_replace('/[^\d.]/', '', $input['MembershipPins']) : null;
 
         // Office Other Expenses (serialized)
         $OfficeOtherArray = null;
@@ -181,8 +181,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->office_other_expenses = base64_encode(serialize($OfficeOtherArray));
 
         // INTERNATIONAL EVENTS & RE-REGISTRATION
-        $financialReport->annual_registration_fee = $input['AnnualRegistrationFee'] ?? null;
-        $financialReport->international_event = $input['InternationalEvent'] ?? null;
+        $financialReport->annual_registration_fee = isset($input['AnnualRegistrationFee']) ? preg_replace('/[^\d.]/', '', $input['AnnualRegistrationFee']) : null;
+        $financialReport->international_event = isset($input['InternationalEvent']) ? preg_replace('/[^\d.]/', '', $input['InternationalEvent']) : null;
 
         // International Events (serialized)
         $InternationalEventArray = null;
