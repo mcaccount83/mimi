@@ -126,6 +126,14 @@ Route::post('/admin/updateadminemail', [AdminController::class, 'updateAdminEmai
 Route::post('/admin/updatechapterdelete', [AdminController::class, 'updateChapterDelete'])->name('admin.updatechapterdelete');
 Route::post('/admin/updatecoordinatordelete', [AdminController::class, 'updateCoordinatorDelete'])->name('admin.updatecoordinatordelete');
 
+Route::get('/admin/confreglist', [AdminController::class, 'showConfRegList'])->name('admin.confreglist');
+// Update these routes in your web.php
+Route::get('/admin/editconflist', [AdminController::class, 'editConfList'])->name('admin.editconflist');
+Route::post('/admin/updateconflist', [AdminController::class, 'updateConfList'])->name('admin.updateconflist');
+Route::post('/admin/storeconf', [AdminController::class, 'storeConf'])->name('admin.storeconf');
+Route::delete('/admin/deleteconf/{id}', [AdminController::class, 'deleteConf'])->name('admin.deleteconf');
+
+
 // Admin Controller Routes...Coordinator Login Required
 Route::get('/adminreports/useradmin', [AdminController::class, 'showUserAdmin'])->name('adminreports.useradmin');
 Route::get('/adminreports/duplicateuser', [AdminController::class, 'showDuplicate'])->name('adminreports.duplicateuser');

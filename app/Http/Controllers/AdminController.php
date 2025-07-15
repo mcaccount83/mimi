@@ -9,6 +9,8 @@ use App\Models\BoardsDisbanded;
 use App\Models\BoardsPending;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
+use App\Models\Conference;
+use App\Models\Region;
 use App\Models\Coordinators;
 use App\Models\CoordinatorApplication;
 use App\Models\CoordinatorRecognition;
@@ -1143,4 +1145,84 @@ class AdminController extends Controller implements HasMiddleware
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         }
     }
+
+     /**
+     * view Conference & Region Lists
+     */
+    public function showConfRegList(): View
+    {
+        $confList = Conference::orderBy('id')
+                    ->with(['regions' => function ($query) {
+                        $query->orderBy('short_name');
+                    }])
+                    ->get();
+
+        $data = ['confList' => $confList];
+
+        return view('admin.confreglist')->with($data);
+    }
+
+    public function editConfList(): View
+    {
+        $confList = Conference::orderBy('id')
+                    ->get();
+
+        $data = ['confList' => $confList];
+
+        return view('admin.editconflist')->with($data);
+    }
+
+public function updateConfList(Request $request)
+{
+    $validated = $request->validate([
+        'id' => 'required|exists:conference,id',
+        'conference_name' => 'required|string|max:255',
+        'short_name' => 'required|string|max:50',
+        'conference_description' => 'required|string|max:500',
+        'short_description' => 'required|string|max:10'
+    ]);
+
+    try {
+        $conference = Conference::findOrFail($validated['id']);
+        $conference->update([
+            'conference_name' => $validated['conference_name'],
+            'short_name' => $validated['short_name'],
+            'conference_description' => $validated['conference_description'],
+            'short_description' => $validated['short_description']
+        ]);
+
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
+}
+
+public function storeConf(Request $request)
+{
+    $validated = $request->validate([
+        'conference_name' => 'required|string|max:255',
+        'short_name' => 'required|string|max:50',
+        'conference_description' => 'required|string|max:500',
+        'short_description' => 'required|string|max:10'
+    ]);
+
+    try {
+        $conference = Conference::create($validated);
+        return response()->json(['success' => true, 'id' => $conference->id]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
+}
+
+public function deleteConf($id)
+{
+    try {
+        $conference = Conference::findOrFail($id);
+        $conference->delete();
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
+}
+
 }
