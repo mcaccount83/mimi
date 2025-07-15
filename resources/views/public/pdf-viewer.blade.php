@@ -60,6 +60,16 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         background-color: white;
     }
+    #image-viewer {
+        max-width: 100%;
+        max-height: 100%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        background-color: white;
+        cursor: zoom-in;
+    }
+    #image-viewer.zoomed {
+        cursor: zoom-out;
+    }
     .pdf-btn {
         background-color: #fff;
         border: 1px solid #dee2e6;
@@ -165,6 +175,14 @@
         text-align: center;
         border-top: 1px solid #e9ecef;
     }
+    .hidden {
+        display: none !important;
+    }
+    .image-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 </style>
 
 @section('content')
@@ -186,7 +204,8 @@
 
     <div class="pdf-toolbar">
         <div class="pdf-toolbar-section">
-            <div class="pdf-navigation">
+            <!-- PDF Navigation (hidden for images) -->
+            <div class="pdf-navigation" id="pdf-navigation">
                 <button id="prev-page" class="pdf-btn" title="Previous page">
                     <span class="pdf-btn-icon">◀</span>
                 </button>
@@ -207,6 +226,13 @@
             <button id="fit-width-btn" class="pdf-btn" title="Fit to width">
                 <span class="pdf-btn-icon">↔</span>
             </button>
+            <!-- Image-specific controls -->
+            <button id="fit-screen-btn" class="pdf-btn hidden" title="Fit to screen">
+                <span class="pdf-btn-icon">⛶</span>
+            </button>
+            <button id="actual-size-btn" class="pdf-btn hidden" title="Actual size">
+                <span class="pdf-btn-icon">1:1</span>
+            </button>
         </div>
     </div>
 
@@ -216,9 +242,10 @@
             <div>Loading document...</div>
         </div>
         <canvas id="pdf-canvas"></canvas>
+        <img id="image-viewer" class="hidden" alt="Document Image">
     </div>
 
-    <div class="pdf-footer">
+    <div class="pdf-footer" id="pdf-footer">
         Powered by PDF.js
     </div>
 </div>
@@ -233,6 +260,7 @@
     // Get elements
     const pdfContent = document.getElementById('pdf-content');
     const pdfCanvas = document.getElementById('pdf-canvas');
+    const imageViewer = document.getElementById('image-viewer');
     const ctx = pdfCanvas.getContext('2d');
     const pdfLoading = document.getElementById('pdf-loading');
     const pageInput = document.getElementById('page-input');
@@ -242,35 +270,143 @@
     const zoomInButton = document.getElementById('zoom-in');
     const zoomOutButton = document.getElementById('zoom-out');
     const fitWidthButton = document.getElementById('fit-width-btn');
+    const fitScreenButton = document.getElementById('fit-screen-btn');
+    const actualSizeButton = document.getElementById('actual-size-btn');
     const zoomLevel = document.getElementById('zoom-level');
     const pdfTitle = document.getElementById('pdf-title');
     const pdfInfo = document.getElementById('pdf-info');
     const downloadBtn = document.getElementById('download-btn');
     const closeBtn = document.getElementById('close-btn');
+    const pdfNavigation = document.getElementById('pdf-navigation');
+    const pdfFooter = document.getElementById('pdf-footer');
 
     // Variables to hold PDF document and current page
     let pdfDoc = null;
     let currentPage = 1;
     let zoomFactor = 1.0;
     let fitToWidth = false;
+    let isImage = false;
+    let originalImageWidth = 0;
+    let originalImageHeight = 0;
     const fileId = '{{ $fileId }}';
     const proxyUrl = '{{ route("pdf-proxy") }}?id=' + fileId;
 
-    // Function to render the current page
+    // Function to detect file type
+    async function detectFileType(url) {
+        try {
+            const response = await fetch(url, { method: 'HEAD' });
+            const contentType = response.headers.get('content-type');
+
+            if (contentType) {
+                if (contentType.includes('image/')) {
+                    return 'image';
+                } else if (contentType.includes('pdf')) {
+                    return 'pdf';
+                }
+            }
+
+            // Fallback: try to load as PDF first, then as image
+            return 'unknown';
+        } catch (error) {
+            console.error('Error detecting file type:', error);
+            return 'unknown';
+        }
+    }
+
+    // Function to setup UI for image viewing
+    function setupImageViewer() {
+        isImage = true;
+        pdfNavigation.classList.add('hidden');
+        fitScreenButton.classList.remove('hidden');
+        actualSizeButton.classList.remove('hidden');
+        pdfCanvas.classList.add('hidden');
+        imageViewer.classList.remove('hidden');
+        pdfFooter.textContent = 'Image Viewer';
+
+        // Update title
+        pdfTitle.textContent = 'Image Viewer';
+        pdfInfo.textContent = 'Image document';
+    }
+
+    // Function to setup UI for PDF viewing
+    function setupPdfViewer() {
+        isImage = false;
+        pdfNavigation.classList.remove('hidden');
+        fitScreenButton.classList.add('hidden');
+        actualSizeButton.classList.add('hidden');
+        pdfCanvas.classList.remove('hidden');
+        imageViewer.classList.add('hidden');
+        pdfFooter.textContent = 'Powered by PDF.js';
+    }
+
+    // Function to load and display image
+    async function loadImage() {
+        try {
+            pdfLoading.style.display = 'flex';
+            setupImageViewer();
+
+            imageViewer.onload = function() {
+                originalImageWidth = this.naturalWidth;
+                originalImageHeight = this.naturalHeight;
+
+                // Fit to container by default
+                fitImageToContainer();
+
+                pdfLoading.style.display = 'none';
+
+                // Update info
+                pdfInfo.textContent = `${originalImageWidth} × ${originalImageHeight} pixels`;
+            };
+
+            imageViewer.onerror = function() {
+                showError('Failed to load image. The file may be corrupted or inaccessible.');
+            };
+
+            imageViewer.src = proxyUrl;
+
+        } catch (error) {
+            console.error('Error loading image:', error);
+            showError('Failed to load image. ' + error.message);
+        }
+    }
+
+    // Function to fit image to container
+    function fitImageToContainer() {
+        const containerWidth = pdfContent.clientWidth - 40;
+        const containerHeight = pdfContent.clientHeight - 40;
+
+        const widthRatio = containerWidth / originalImageWidth;
+        const heightRatio = containerHeight / originalImageHeight;
+        const ratio = Math.min(widthRatio, heightRatio);
+
+        zoomFactor = ratio;
+        applyImageZoom();
+    }
+
+    // Function to apply zoom to image
+    function applyImageZoom() {
+        const newWidth = originalImageWidth * zoomFactor;
+        const newHeight = originalImageHeight * zoomFactor;
+
+        imageViewer.style.width = newWidth + 'px';
+        imageViewer.style.height = newHeight + 'px';
+
+        zoomLevel.textContent = Math.round(zoomFactor * 100) + '%';
+    }
+
+    // Function to render PDF page
     async function renderPage() {
         if (!pdfDoc) return;
 
         pdfLoading.style.display = 'flex';
 
         try {
-            // Get the page
             const page = await pdfDoc.getPage(currentPage);
 
-            // Calculate scale based on container width if fit to width is active
             let scale = zoomFactor;
             if (fitToWidth) {
                 const viewport = page.getViewport({ scale: 1 });
-                const containerWidth = pdfContent.clientWidth - 40; // Subtract padding
+                const containerWidth = pdfContent.clientWidth - 40;
                 scale = containerWidth / viewport.width;
                 zoomFactor = scale;
                 zoomLevel.textContent = Math.round(scale * 100) + '%';
@@ -278,19 +414,15 @@
 
             const viewport = page.getViewport({ scale: scale });
 
-            // Set canvas dimensions to match the viewport
             pdfCanvas.width = viewport.width;
             pdfCanvas.height = viewport.height;
 
-            // Render the PDF page
             const renderContext = {
                 canvasContext: ctx,
                 viewport: viewport
             };
 
             await page.render(renderContext).promise;
-
-            // Update page info
             pageInput.value = currentPage;
 
         } catch (error) {
@@ -321,35 +453,28 @@
 
         document.getElementById('retry-btn').addEventListener('click', () => {
             errorDiv.remove();
-            loadPdf();
+            loadDocument();
         });
     }
 
-    // Function to load the PDF document
+    // Function to load PDF document
     async function loadPdf() {
         try {
             pdfLoading.style.display = 'flex';
+            setupPdfViewer();
 
-            // Use our proxy to avoid CORS issues
             const loadingTask = pdfjsLib.getDocument(proxyUrl);
-
-            // Load the PDF document
             pdfDoc = await loadingTask.promise;
 
-            // Set total page count
             pageCount.textContent = `/ ${pdfDoc.numPages}`;
-
-            // Set max value for page input
             pageInput.max = pdfDoc.numPages;
 
-            // Try to get document metadata
             try {
                 const metadata = await pdfDoc.getMetadata();
                 if (metadata && metadata.info) {
                     const title = metadata.info.Title || 'Document';
                     pdfTitle.textContent = title;
 
-                    // Format creation date if available
                     let infoText = '';
                     if (metadata.info.CreationDate) {
                         try {
@@ -360,7 +485,6 @@
                         }
                     }
 
-                    // Add page count
                     infoText += infoText ? ' • ' : '';
                     infoText += `${pdfDoc.numPages} page${pdfDoc.numPages !== 1 ? 's' : ''}`;
 
@@ -375,17 +499,31 @@
                 pdfInfo.textContent = `${pdfDoc.numPages} page${pdfDoc.numPages !== 1 ? 's' : ''}`;
             }
 
-            // Render the first page
             currentPage = 1;
             await renderPage();
 
         } catch (error) {
             console.error('Error loading PDF:', error);
-            showError('Failed to load document. This might be due to access restrictions or network issues.');
+            // If PDF loading fails, try loading as image
+            await loadImage();
         }
     }
 
-    // Event listeners for navigation
+    // Main function to load document
+    async function loadDocument() {
+        const fileType = await detectFileType(proxyUrl);
+
+        if (fileType === 'image') {
+            await loadImage();
+        } else if (fileType === 'pdf') {
+            await loadPdf();
+        } else {
+            // Try PDF first, then image
+            await loadPdf();
+        }
+    }
+
+    // Event listeners for PDF navigation
     prevButton.addEventListener('click', async () => {
         if (currentPage > 1) {
             currentPage--;
@@ -414,21 +552,62 @@
     zoomInButton.addEventListener('click', async () => {
         fitToWidth = false;
         zoomFactor *= 1.2;
-        zoomLevel.textContent = Math.round(zoomFactor * 100) + '%';
-        await renderPage();
+
+        if (isImage) {
+            applyImageZoom();
+        } else {
+            zoomLevel.textContent = Math.round(zoomFactor * 100) + '%';
+            await renderPage();
+        }
     });
 
     zoomOutButton.addEventListener('click', async () => {
         fitToWidth = false;
         zoomFactor /= 1.2;
         if (zoomFactor < 0.1) zoomFactor = 0.1;
-        zoomLevel.textContent = Math.round(zoomFactor * 100) + '%';
-        await renderPage();
+
+        if (isImage) {
+            applyImageZoom();
+        } else {
+            zoomLevel.textContent = Math.round(zoomFactor * 100) + '%';
+            await renderPage();
+        }
     });
 
     fitWidthButton.addEventListener('click', async () => {
-        fitToWidth = true;
-        await renderPage();
+        if (isImage) {
+            // For images, fit to container width
+            const containerWidth = pdfContent.clientWidth - 40;
+            zoomFactor = containerWidth / originalImageWidth;
+            applyImageZoom();
+        } else {
+            fitToWidth = true;
+            await renderPage();
+        }
+    });
+
+    // Image-specific controls
+    fitScreenButton.addEventListener('click', () => {
+        fitImageToContainer();
+    });
+
+    actualSizeButton.addEventListener('click', () => {
+        zoomFactor = 1.0;
+        applyImageZoom();
+    });
+
+    // Image click to zoom
+    imageViewer.addEventListener('click', (e) => {
+        if (imageViewer.classList.contains('zoomed')) {
+            // Zoom out
+            fitImageToContainer();
+            imageViewer.classList.remove('zoomed');
+        } else {
+            // Zoom in
+            zoomFactor = 1.0;
+            applyImageZoom();
+            imageViewer.classList.add('zoomed');
+        }
     });
 
     // Download button
@@ -443,54 +622,73 @@
         window.close();
     });
 
-    // Add keyboard shortcuts
+    // Keyboard shortcuts
     document.addEventListener('keydown', async (e) => {
-        if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-            if (currentPage > 1) {
-                currentPage--;
+        if (!isImage) {
+            // PDF navigation
+            if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                if (currentPage > 1) {
+                    currentPage--;
+                    await renderPage();
+                }
+                e.preventDefault();
+            } else if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+                if (pdfDoc && currentPage < pdfDoc.numPages) {
+                    currentPage++;
+                    await renderPage();
+                }
+                e.preventDefault();
+            } else if (e.key === 'Home') {
+                currentPage = 1;
                 await renderPage();
+                e.preventDefault();
+            } else if (e.key === 'End') {
+                if (pdfDoc) {
+                    currentPage = pdfDoc.numPages;
+                    await renderPage();
+                }
+                e.preventDefault();
             }
-            e.preventDefault();
-        } else if (e.key === 'ArrowRight' || e.key === 'PageDown') {
-            if (pdfDoc && currentPage < pdfDoc.numPages) {
-                currentPage++;
-                await renderPage();
-            }
-            e.preventDefault();
-        } else if (e.key === '+') {
+        }
+
+        // Zoom controls (work for both PDF and images)
+        if (e.key === '+' || e.key === '=') {
             fitToWidth = false;
             zoomFactor *= 1.1;
-            zoomLevel.textContent = Math.round(zoomFactor * 100) + '%';
-            await renderPage();
+
+            if (isImage) {
+                applyImageZoom();
+            } else {
+                zoomLevel.textContent = Math.round(zoomFactor * 100) + '%';
+                await renderPage();
+            }
             e.preventDefault();
         } else if (e.key === '-') {
             fitToWidth = false;
             zoomFactor /= 1.1;
             if (zoomFactor < 0.1) zoomFactor = 0.1;
-            zoomLevel.textContent = Math.round(zoomFactor * 100) + '%';
-            await renderPage();
-            e.preventDefault();
-        } else if (e.key === 'Home') {
-            currentPage = 1;
-            await renderPage();
-            e.preventDefault();
-        } else if (e.key === 'End') {
-            if (pdfDoc) {
-                currentPage = pdfDoc.numPages;
+
+            if (isImage) {
+                applyImageZoom();
+            } else {
+                zoomLevel.textContent = Math.round(zoomFactor * 100) + '%';
                 await renderPage();
             }
             e.preventDefault();
         }
     });
 
-    // Handle window resize for fit-to-width mode
+    // Handle window resize
     window.addEventListener('resize', async () => {
-        if (fitToWidth) {
+        if (isImage) {
+            // Maintain current zoom level for images
+            applyImageZoom();
+        } else if (fitToWidth) {
             await renderPage();
         }
     });
 
     // Initialize the viewer
-    loadPdf();
+    loadDocument();
 </script>
 @endsection
