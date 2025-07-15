@@ -87,17 +87,19 @@
 </div>
 
                         <!-- /.form group -->
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">EIN Letter:</label>
+                         <div class="row">
+                            <div class="col-sm-2 col-form-label mb-1">
+                                <label>EIN Letter:</label>
+                            </div>
                             <div class="col-sm-10">
                                 @if($chDocuments->ein_letter_path != null)
-                                <button class="btn bg-gradient-primary btn-sm" onclick="window.open('{{ $chDocuments->ein_letter_path }}', '_blank')">View/Download EIN Letter</button>
-                            @else
-                                <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
-                            @endif
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->ein_letter_path }}'">EIN Letter from IRS</button> --}}
+                                @else
+                                    <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
+                                @endif
+                            </div>
                         </div>
-                        </div>
-
                         <!-- /.form group -->
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Notes:</label>
