@@ -1250,8 +1250,8 @@ class PDFController extends Controller
         $dateFormatted = $todayDate->format('F j, Y');
 
         // Get the add and zap lists
-        $wrongDateList = $this->generateIRSWrongDateList($coorId, $date);
-        $notFoundList = $this->generateIRSNotFoundList($coorId, $date);
+        $wrongDateList = $this->generateIRSWrongDateList($coorId);
+        $notFoundList = $this->generateIRSNotFoundList($coorId);
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
@@ -1283,7 +1283,7 @@ class PDFController extends Controller
      // /**
     //  * Generate IRS list of 990N Filing Corrections with the Wrong Dates
     //  */
-    private function generateIRSWrongDateList($coorId, $date)
+    private function generateIRSWrongDateList($coorId)
     {
         $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
 
@@ -1298,7 +1298,7 @@ class PDFController extends Controller
                 'bd_active.zip as pres_zip'
             ])
             ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
-            ->where('documents.irs_wrongdate', '==', '1')
+->where('documents.irs_wrongdate', 1)
             ->leftJoin('boards as bd_active', function($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
@@ -1311,7 +1311,7 @@ class PDFController extends Controller
      // /**
     //  * Generate IRS list of 990N Filing Corrections where chapter was not found
     //  */
-    private function generateIRSNotFoundList($coorId, $date)
+    private function generateIRSNotFoundList($coorId)
     {
         $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
 
@@ -1326,7 +1326,7 @@ class PDFController extends Controller
                 'bd_active.zip as pres_zip'
             ])
             ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
-            ->where('documents.irs_notfound', '==', '1')
+->where('documents.irs_notfound', 1)
             ->leftJoin('boards as bd_active', function($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
