@@ -110,6 +110,7 @@
 
 
  <!-- /.form group -->
+
  <div class="form-group row align-items-center  mb-3">
     <label class="col-sm-2 col-form-label">990N Verifed with IRS:</label>
     <div class="col-sm-10 custom-control custom-switch">
@@ -119,7 +120,20 @@
 </div>
 
 <!-- /.form group -->
-                        <div class="form-group row">
+                <div class="row">
+                            <div class="col-sm-2 col-form-label mb-1">
+                                <label>990N Submission:</label>
+                            </div>
+                            <div class="col-sm-10">
+                                @if($chDocuments->irs_path != null)
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->irs_path }}')">View/Download 990N Submission</button>
+                                @else
+                                    <button class="btn bg-gradient-primary btn-sm disabled">No 990N Submission on File</button>
+                                @endif
+                            </div>
+                        </div>
+
+                        {{-- <div class="form-group row">
                             <label class="col-sm-2 col-form-label">990N Submission:</label>
                             <div class="col-sm-10">
                                 @if($chDocuments->irs_path != null)
@@ -128,7 +142,7 @@
                                 <button class="btn bg-gradient-primary btn-sm disabled">No 990N Submission on File</button>
                             @endif
                         </div>
-                        </div>
+                        </div> --}}
 
 
 
