@@ -116,21 +116,20 @@ class EOYReportController extends Controller implements HasMiddleware
         $secPositionId = $user['user_secPositionId'];
 
         $now = Carbon::now();
-        $oneYearAgo = $now->copy()->subYear();
+        $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            // ->where(function ($query) use ($oneYearAgo) {
-            //     $query->where(function ($q) use ($oneYearAgo) {
-            //         $q->where('start_year', '<', $oneYearAgo->year)
-            //             ->orWhere(function ($q) use ($oneYearAgo) {
-            //                 $q->where('start_year', '=', $oneYearAgo->year)
-            //                     ->where('start_month_id', '<=', $oneYearAgo->month);
-            //             });
-            //     });
-            // })
+            ->where(function ($query) use ($currentYear) {
+                $query->where(function ($q) use ($currentYear) {
+                    $q->where('start_year', '<', $currentYear)
+                        ->orWhere(function ($q) use ($currentYear) {
+                            $q->where('start_year', '=', $currentYear)
+                                ->where('start_month_id', '<', 7); // July is month 7
+                        });
+                });
+            })
             ->get();
-
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
@@ -422,20 +421,20 @@ class EOYReportController extends Controller implements HasMiddleware
         $secPositionId = $user['user_secPositionId'];
         $lastUpdatedBy = $user['user_name'];
 
-        $now = Carbon::now();
-        $oneYearAgo = $now->copy()->subYear();
+       $now = Carbon::now();
+        $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            // ->where(function ($query) use ($oneYearAgo) {
-            //     $query->where(function ($q) use ($oneYearAgo) {
-            //         $q->where('start_year', '<', $oneYearAgo->year)
-            //             ->orWhere(function ($q) use ($oneYearAgo) {
-            //                 $q->where('start_year', '=', $oneYearAgo->year)
-            //                     ->where('start_month_id', '<=', $oneYearAgo->month);
-            //             });
-            //     });
-            // })
+            ->where(function ($query) use ($currentYear) {
+                $query->where(function ($q) use ($currentYear) {
+                    $q->where('start_year', '<', $currentYear)
+                        ->orWhere(function ($q) use ($currentYear) {
+                            $q->where('start_year', '=', $currentYear)
+                                ->where('start_month_id', '<', 7); // July is month 7
+                        });
+                });
+            })
             ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1009,19 +1008,19 @@ return view('eoyreports.eoyboardreport')->with($data);
         $secPositionId = $user['user_secPositionId'];
 
         $now = Carbon::now();
-        $oneYearAgo = $now->copy()->subYear();
+        $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            // ->where(function ($query) use ($oneYearAgo) {
-            //     $query->where(function ($q) use ($oneYearAgo) {
-            //         $q->where('start_year', '<', $oneYearAgo->year)
-            //             ->orWhere(function ($q) use ($oneYearAgo) {
-            //                 $q->where('start_year', '=', $oneYearAgo->year)
-            //                     ->where('start_month_id', '<=', $oneYearAgo->month);
-            //             });
-            //     });
-            // })
+            ->where(function ($query) use ($currentYear) {
+                $query->where(function ($q) use ($currentYear) {
+                    $q->where('start_year', '<', $currentYear)
+                        ->orWhere(function ($q) use ($currentYear) {
+                            $q->where('start_year', '=', $currentYear)
+                                ->where('start_month_id', '<', 7); // July is month 7
+                        });
+                });
+            })
             ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1400,19 +1399,19 @@ return view('eoyreports.eoyboardreport')->with($data);
         $secPositionId = $user['user_secPositionId'];
 
         $now = Carbon::now();
-        $oneYearAgo = $now->copy()->subYear();
+        $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            // ->where(function ($query) use ($oneYearAgo) {
-            //     $query->where(function ($q) use ($oneYearAgo) {
-            //         $q->where('start_year', '<', $oneYearAgo->year)
-            //             ->orWhere(function ($q) use ($oneYearAgo) {
-            //                 $q->where('start_year', '=', $oneYearAgo->year)
-            //                     ->where('start_month_id', '<=', $oneYearAgo->month);
-            //             });
-            //     });
-            // })
+            ->where(function ($query) use ($currentYear) {
+                $query->where(function ($q) use ($currentYear) {
+                    $q->where('start_year', '<', $currentYear)
+                        ->orWhere(function ($q) use ($currentYear) {
+                            $q->where('start_year', '=', $currentYear)
+                                ->where('start_month_id', '<', 7); // July is month 7
+                        });
+                });
+            })
             ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1715,5 +1714,113 @@ return view('eoyreports.eoyboardreport')->with($data);
 
         return to_route('eoyreports.editawards', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
+
+    /**
+     * View the 990N Filing Details
+     */
+    public function showIRSSubmission(Request $request): View
+    {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_reports'];
+        $breadcrumb = 'Financial Report Attacchments';
+
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+       $now = Carbon::now();
+        $currentYear = $now->year;
+
+        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($currentYear) {
+                $query->where(function ($q) use ($currentYear) {
+                    $q->where('start_year', '<', $currentYear)
+                        ->orWhere(function ($q) use ($currentYear) {
+                            $q->where('start_year', '=', $currentYear)
+                                ->where('start_month_id', '<', 7); // July is month 7
+                        });
+                });
+            })
+            ->get();
+        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBox2Status = $baseQuery['checkBox2Status'];
+
+        $countList = count($chapterList);
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+
+        return view('eoyreports.eoyirssubmission')->with($data);
+    }
+
+    /**
+     * View the 990N Filing Details
+     */
+    public function editIRSSubmission(Request $request, $id): View
+    {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_details'];
+        $breadcrumb = 'EOY Attachments';
+
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $chConfId = $baseQuery['chConfId'];
+        $chPcId = $baseQuery['chPcId'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
+            'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
+        ];
+
+        return view('eoyreports.editirssubmission')->with($data);
+    }
+
+    /**
+     * Update the 990N Filing Details
+     */
+    public function updateIRSSubmission(Request $request, $id): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+
+        $chapter = Chapters::find($id);
+        $documents = Documents::find($id);
+
+        DB::beginTransaction();
+        try {
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->save();
+
+            $documents->irs_verified = (int) $request->has('irs_verified');
+            $documents->irs_issues = (int) $request->has('irs_issues');
+            $documents->irs_wrongdate = (int) $request->has('irs_wrongdate');
+            $documents->irs_notfound = (int) $request->has('irs_notfound');
+            $documents->irs_notes = $request->input('irs_notes');
+            $documents->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->to('/eoy/irssubmission')->with('fail', 'Something went wrong, Please try again.');
+        }
+
+        return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
+    }
+
 
 }

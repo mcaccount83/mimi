@@ -1180,6 +1180,163 @@ class PDFController extends Controller
             ->sortBy('ein');
     }
 
+     // /**
+    //  * Generate Combined 990N Filing Corrections (Cover Sheet & Report)
+    //  */
+    public function generateCombinedIRSFilingCorrections(Request $request)
+    {
+        $startFormatted = Carbon::parse($request->query('date') ?? now())->format('F Y');
+        $todayFormatted = now()->format('F Y');
+
+        $title = 'IRS Updates';
+        $message = "Subordinate corrections. Chapters could not file 990N.";
+        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+
+        // 1. Generate both DOMPDFs
+        $cover = $this->generateEODeptFaxCover(false, $title, $message, $pages);
+        $report = $this->generateIRSFilingCorrections($request, false);
+        $filename = $report['filename'];
+
+        // 2. Save to temporary files
+        $coverPath = storage_path('app/temp_faxcover.pdf');
+        $reportPath = storage_path('app/temp_irsupdates.pdf');
+
+        file_put_contents($coverPath, $cover['pdf']->output());
+        file_put_contents($reportPath, $report['pdf']->output());
+
+        // 3. Merge with FPDI (don't confuse with your PDF alias)
+        $merger = new Fpdi();
+
+        $addFile = function ($filePath) use ($merger) {
+            $pageCount = $merger->setSourceFile($filePath);
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $tpl = $merger->importPage($i);
+                $size = $merger->getTemplateSize($tpl);
+                $merger->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                $merger->useTemplate($tpl);
+            }
+        };
+
+        $addFile($coverPath);
+        $addFile($reportPath);
+
+        // 4. Output final merged PDF
+        $mergedPdfContent = $merger->Output('S'); // Uppercase Output() from FPDI/FPDF
+
+        // 5. Clean up
+        @unlink($coverPath);
+        @unlink($reportPath);
+
+        return response($mergedPdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => "inline; filename=\"$filename\"",
+        ]);
+    }
+
+      // /**
+    //  * Generate 990N Filing Corrections
+    //  */
+     public function generateIRSFilingCorrections(Request $request, $streamResponse = true)
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+
+        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        $totalPages = (int) $pages;
+        $followPages = $totalPages - 1;
+
+        $todayDate = Carbon::now();
+        $date = $todayDate ? Carbon::parse($todayDate) : Carbon::now();
+        $dateFormatted = $todayDate->format('F j, Y');
+
+        // Get the add and zap lists
+        $wrongDateList = $this->generateIRSWrongDateList($coorId, $date);
+        $notFoundList = $this->generateIRSNotFoundList($coorId, $date);
+
+        $emailEINCoorData = $this->userController->loadEINCoord();
+
+        $pdfData = array_merge(
+            $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+            [
+                'todayDate' => $dateFormatted,
+                'totalPages' => $totalPages,
+                'followPages' => $followPages,
+                'wrongDateList' => $wrongDateList,
+                'notFoundList' => $notFoundList,
+            ]
+        );
+
+        $pdf = Pdf::loadView('pdf.irsfilingcorrections', ['pdfData' => $pdfData]);
+
+        $filename = $date.'_IRSFilingCorrections.pdf';
+
+        if ($streamResponse) {
+            return $pdf->stream($filename, ['Attachment' => 0]);
+        }
+
+        return [
+            'pdf' => $pdf,
+            'filename' => $filename,
+        ];
+    }
+
+     // /**
+    //  * Generate IRS list of 990N Filing Corrections with the Wrong Dates
+    //  */
+    private function generateIRSWrongDateList($coorId, $date)
+    {
+        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+
+        return $baseQueryActive['query']
+            ->select([
+                'chapters.*',
+                'bd_active.first_name as pres_first_name',
+                'bd_active.last_name as pres_last_name',
+                'bd_active.street_address as pres_address',
+                'bd_active.city as pres_city',
+                'state.state_short_name as pres_state',
+                'bd_active.zip as pres_zip'
+            ])
+            ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
+            ->where('documents.irs_wrongdate', '==', '1')
+            ->leftJoin('boards as bd_active', function($join) {
+                $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                    ->where('bd_active.board_position_id', '=', 1);
+            })
+            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->get()
+            ->sortBy('ein');
+    }
+
+     // /**
+    //  * Generate IRS list of 990N Filing Corrections where chapter was not found
+    //  */
+    private function generateIRSNotFoundList($coorId, $date)
+    {
+        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+
+        return $baseQueryActive['query']
+            ->select([
+                'chapters.*',
+                'bd_active.first_name as pres_first_name',
+                'bd_active.last_name as pres_last_name',
+                'bd_active.street_address as pres_address',
+                'bd_active.city as pres_city',
+                'state.state_short_name as pres_state',
+                'bd_active.zip as pres_zip'
+            ])
+            ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
+            ->where('documents.irs_notfound', '==', '1')
+            ->leftJoin('boards as bd_active', function($join) {
+                $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                    ->where('bd_active.board_position_id', '=', 1);
+            })
+            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->get()
+            ->sortBy('ein');
+    }
+
+
     // /**
     //  * EO Dept IRS Fax Coversheet
     //  */
