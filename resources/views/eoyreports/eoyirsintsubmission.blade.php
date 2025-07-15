@@ -13,7 +13,7 @@
                 <div class="card-header">
                 <div class="dropdown">
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        990N Filing Report
+                        International 990N Filing Report
                     </h3>
                     <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
                     @include('layouts.dropdown_menus.menu_eoy')
@@ -80,19 +80,8 @@
                 </table>
             </div>
             <!-- /.card-body -->
-            <div class="col-sm-12">
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
-                    <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" name="showReviewer" id="showReviewer" class="custom-control-input" {{$checkBox2Status}} onchange="showReviewer()" />
-                    <label class="custom-control-label" for="showReviewer">Only show chapters I am Assigned Reviewer for</label>
-                </div>
-            </div>
-                <div class="card-body text-center">
+            <div class="card-body text-center">
+
            </div>
           <!-- /.box -->
         </div>
@@ -117,29 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function showPrimary() {
-    var base_url = '{{ url("/eoy/attachments") }}';
 
-    if ($("#showPrimary").prop("checked") == true) {
-        window.location.href = base_url + '?check=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function showReviewer() {
-    var base_url = '{{ url("/eoy/attachments") }}';
-
-    if ($("#showReviewer").prop("checked") == true) {
-        window.location.href = base_url + '?check2=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function confirmSendReminder() {
-    return confirm('This action will send a Late Notice to all chapters who have not submitted their Board Election Report OR their Financial Report, excluding those with an extension or an assigned reviewer. \n\nAre you sure you want to send the EOY Late Notices?');
-}
 
 </script>
 @endsection

@@ -315,6 +315,9 @@ Route::get('/eoy/irssubmission', [EOYReportController::class, 'showIRSSubmission
 Route::get('/eoy/editirssubmission/{id}', [EOYReportController::class, 'editIRSSubmission'])->name('eoyreports.editirssubmission');
 Route::post('/eoy/updateirssubmission/{id}', [EOYReportController::class, 'updateIRSSubmission'])->name('eoyreports.updateirssubmission');
 
+Route::get('/eoy/irsintsubmission', [EOYReportController::class, 'showIRSIntSubmission'])->name('eoyreports.eoyirsintsubmission');
+
+
 // PDF Controller Routes...Used for Board & Coordinator Layouts
 Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'generateGoodStanding'])->name('pdf.chapteringoodstanding');
 Route::get('/board/financialreport/pdf/{id}', [PDFController::class, 'generateFinancialReport'])->name('pdf.financialreport');
@@ -325,9 +328,7 @@ Route::get('/board/eodeptfaxcover/pdf', [PDFController::class, 'generateEODeptFa
 Route::get('/board/combinedsubordinatefiling/pdf', [PDFController::class, 'generateCombinedIRSSubordinateFiling'])->name('pdf.combinedsubordinatefiling');
 Route::get('/board/combinedirsupdates/pdf', [PDFController::class, 'generateCombinedIRSUpdates'])->name('pdf.combinedirsupdates');
 Route::get('/board/combinednamechangeletter/pdf/{id}', [PDFController::class, 'generateCombinedNameChangeLetter'])->name('pdf.combinednamechangeletter');
-
 Route::get('/board/combinedirsfilingcorrections/pdf', [PDFController::class, 'generateCombinedIRSFilingCorrections'])->name('pdf.combinedirsfilingcorrections');
-
 
 // Google Controller -- Uploading Files Routes...Used for Board & Coordinator Layouts
 Route::post('/files/storeEIN/{id}', [GoogleController::class, 'storeEIN']);

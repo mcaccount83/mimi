@@ -1755,6 +1755,39 @@ return view('eoyreports.eoyboardreport')->with($data);
         return view('eoyreports.eoyirssubmission')->with($data);
     }
 
+    public function showIRSIntSubmission(Request $request): View
+    {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_reports'];
+        $breadcrumb = 'Financial Report Attacchments';
+
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+
+       $now = Carbon::now();
+        $currentYear = $now->year;
+
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($currentYear) {
+                $query->where(function ($q) use ($currentYear) {
+                    $q->where('start_year', '<', $currentYear)
+                        ->orWhere(function ($q) use ($currentYear) {
+                            $q->where('start_year', '=', $currentYear)
+                                ->where('start_month_id', '<', 7); // July is month 7
+                        });
+                });
+            })
+            ->get();
+        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBox2Status = $baseQuery['checkBox2Status'];
+
+        $countList = count($chapterList);
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+
+        return view('eoyreports.eoyirsintsubmission')->with($data);
+    }
+
     /**
      * View the 990N Filing Details
      */
