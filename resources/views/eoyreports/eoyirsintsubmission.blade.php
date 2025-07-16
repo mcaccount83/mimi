@@ -81,6 +81,7 @@
             </div>
             <!-- /.card-body -->
             <div class="card-body text-center">
+                    <button class="btn bg-gradient-primary mb-3" onclick="showIRSFilingCorrectionsModal()"><i class="fas fa-file-pdf mr-2" ></i>990N Filing corrections to EO Dept</button>
 
            </div>
           <!-- /.box -->
@@ -107,6 +108,43 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+function showIRSFilingCorrectionsModal() {
+    Swal.fire({
+        title: 'IRS 990N Filing Corrections to EO Dept',
+        html: `
+            <p>This will generate the Fax Coversheet & Letter for the IRS EO Department listing 990N Filing Corrections. Enter the total number of pages (including the coversheet) to be faxed.</p>
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="total_pages" name="total_pages" class="swal2-input" placeholder="Enter Total Pages" required style="width: 100%;">
+            </div>
+            `,
+        showCancelButton: true,
+        confirmButtonText: 'Generate',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const totalPages = Swal.getPopup().querySelector('#total_pages').value;
 
+            if (!totalPages || isNaN(totalPages) || totalPages < 1) {
+                Swal.showValidationMessage('Please enter a valid number of pages');
+                return false;
+            }
+
+            return {
+                total_pages: totalPages,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Open PDF in new window with pages parameter
+            const url = `{{ route('pdf.combinedirsfilingcorrections') }}?pages=${data.total_pages}`;
+            window.open(url, '_blank');
+        }
+    });
+}
 </script>
 @endsection
