@@ -142,88 +142,6 @@ class EOYReportController extends Controller implements HasMiddleware
     }
 
     /**
-     * Auto Send EOY Report Status Reminder
-     */
-    // public function sendEOYStatusReminder(Request $request): RedirectResponse
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-    //     $confId = $user['user_confId'];
-    //     $regId = $user['user_regId'];
-    //     $positionId = $user['user_positionId'];
-    //     $secPositionId = $user['user_secPositionId'];
-
-    //     $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-    //     $chapterList = $baseQuery['query']
-    //         ->whereHas('documents', function ($query) {
-    //             $query->where('report_extension', '0')
-    //                 ->orWhereNull('report_extension');
-    //         })
-    //         ->whereHas('documents', function ($query) {
-    //             $query->where('new_board_submitted', '0')
-    //                 ->orWhereNull('new_board_submitted')
-    //                 ->orWhere('financial_report_received', '0')
-    //                 ->orWhereNull('financial_report_received');
-    //         })
-    //         ->get();
-
-    //     if ($chapterList->isEmpty()) {
-    //         return redirect()->back()->with('info', 'There are no Chapters with Reports Due.');
-    //     }
-
-    //     $chapterIds = [];
-    //     $chapterEmails = [];
-    //     $coordinatorEmails = [];
-    //     $mailData = [];
-
-    //     foreach ($chapterList as $chapter) {
-    //         $chapterIds[] = $chapter->id;
-
-    //         if ($chapter->name) {
-    //             $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
-    //             $chDetails = $emailDetails['chDetails'];
-    //             $stateShortName = $emailDetails['stateShortName'];
-    //             $chDocuments = $emailDetails['chDocuments'];
-    //             $chFinancialReport = $emailDetails['chFinancialReport'];
-    //             $emailListChap = $emailDetails['emailListChap'];
-    //             $emailListCoord = $emailDetails['emailListCoord'];
-
-    //             $chapterEmails[$chDetails->name] = $emailListChap;
-    //             $coordinatorEmails[$chDetails->name] = $emailListCoord;
-    //         }
-
-    //         $mailData[$chDetails->name] = array_merge(
-    //             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-    //             $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
-    //         );
-
-    //     }
-
-    //     foreach ($mailData as $chapterName => $data) {
-    //         if (! empty($chapterName)) {
-    //             Mail::to($chapterEmails[$chapterName] ?? [])
-    //                 ->cc($coordinatorEmails[$chapterName] ?? [])
-    //                 ->queue(new EOYLateReportReminder($data));
-    //         }
-    //     }
-
-    //     try {
-
-    //         DB::commit();
-
-    //         return redirect()->to('/eoy/status')->with('success', 'EOY Late Notices have been successfully sent.');
-    //     } catch (\Exception $e) {
-    //         DB::rollback();  // Rollback Transaction
-    //         Log::error($e);  // Log the error
-
-    //         return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-    //     } finally {
-    //         // This ensures DB connections are released even if exceptions occur
-    //         DB::disconnect();
-    //     }
-    // }
-
-    /**
      * Edit the EOY Status Details
      */
     public function editEOYDetails(Request $request, $id): View
@@ -325,85 +243,6 @@ class EOYReportController extends Controller implements HasMiddleware
         return to_route('eoyreports.view', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
-     /**
-     * Board Election Report Reminder Auto Send
-     */
-    // public function sendEOYBoardReportReminder(Request $request): RedirectResponse
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-    //     $confId = $user['user_confId'];
-    //     $regId = $user['user_regId'];
-    //     $positionId = $user['user_positionId'];
-    //     $secPositionId = $user['user_secPositionId'];
-
-    //     $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-    //     $chapterList = $baseQuery['query']
-    //         // ->whereHas('documents', function ($query) {
-    //         //     $query->where('report_extension', '0')
-    //         //         ->orWhereNull('report_extension');
-    //         // })
-    //         // ->whereHas('documents', function ($query) {
-    //         //     $query->where('new_board_submitted', '0')
-    //         //         ->orWhereNull('new_board_submitted');
-    //         // })
-    //         ->get();
-
-    //     if ($chapterList->isEmpty()) {
-    //         return redirect()->back()->with('info', 'There are no Chapters with Board Reports Due.');
-    //     }
-
-    //     $chapterIds = [];
-    //     $chapterEmails = [];
-    //     $coordinatorEmails = [];
-    //     $mailData = [];
-
-    //     foreach ($chapterList as $chapter) {
-    //         $chapterIds[] = $chapter->id;
-
-    //         if ($chapter->name) {
-    //             $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
-    //             $chDetails = $emailDetails['chDetails'];
-    //             $stateShortName = $emailDetails['stateShortName'];
-    //             $chDocuments = $emailDetails['chDocuments'];
-    //             $chFinancialReport = $emailDetails['chFinancialReport'];
-    //             $emailListChap = $emailDetails['emailListChap'];
-    //             $emailListCoord = $emailDetails['emailListCoord'];
-
-    //             $chapterEmails[$chDetails->name] = $emailListChap;
-    //             $coordinatorEmails[$chDetails->name] = $emailListCoord;
-    //         }
-
-    //         $mailData[$chDetails->name] = array_merge(
-    //             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-    //             $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
-    //         );
-
-    //     }
-
-    //     foreach ($mailData as $chapterName => $data) {
-    //         if (! empty($chapterName)) {
-    //             Mail::to($chapterEmails[$chapterName] ?? [])
-    //                 ->cc($coordinatorEmails[$chapterName] ?? [])
-    //                 ->queue(new EOYElectionReportReminder($data));
-    //         }
-    //     }
-
-    //     try {
-    //         DB::commit();
-
-    //         return redirect()->to('/eoy/boardreport')->with('success', 'Board Election Reminders have been successfully sent.');
-    //     } catch (\Exception $e) {
-    //         DB::rollback();  // Rollback Transaction
-    //         Log::error($e);  // Log the error
-
-    //         return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-    //     } finally {
-    //         // This ensures DB connections are released even if exceptions occur
-    //         DB::disconnect();
-    //     }
-    // }
-
     /**
      * View the Board Info Received list
      */
@@ -468,179 +307,30 @@ if ($request->has('board') && $request->input('board') === 'active') {
         }
     }
 
-    // Process results after all activations are attempted
-    $successfulActivations = array_filter($activationStatuses, function ($status) {
-        return $status === 'success';
-    });
+            // Process results after all activations are attempted
+            $successfulActivations = array_filter($activationStatuses, function ($status) {
+                return $status === 'success';
+            });
 
-    if (count($activationStatuses) == 0) {
-        return redirect()->to('/eoy/boardreport')->with('info', 'No Incoming Board Members for Activation');
-    } elseif (count($successfulActivations) == count($activationStatuses)) {
-        return redirect()->to('/eoy/boardreport')->with('success', 'All Board Info has been successfully activated');
-    } elseif (count($successfulActivations) > 0) {
-        $successCount = count($successfulActivations);
-        $totalCount = count($activationStatuses);
-        return redirect()->to('/eoy/boardreport')->with('warning', "Board activation completed: {$successCount}/{$totalCount} successful");
-    } else {
-        return redirect()->to('/eoy/boardreport')->with('fail', 'Board activation failed for all chapters');
+            if (count($activationStatuses) == 0) {
+                return redirect()->to('/eoy/boardreport')->with('info', 'No Incoming Board Members for Activation');
+            } elseif (count($successfulActivations) == count($activationStatuses)) {
+                return redirect()->to('/eoy/boardreport')->with('success', 'All Board Info has been successfully activated');
+            } elseif (count($successfulActivations) > 0) {
+                $successCount = count($successfulActivations);
+                $totalCount = count($activationStatuses);
+                return redirect()->to('/eoy/boardreport')->with('warning', "Board activation completed: {$successCount}/{$totalCount} successful");
+            } else {
+                return redirect()->to('/eoy/boardreport')->with('fail', 'Board activation failed for all chapters');
+            }
+        }
+
+        $countList = count($chapterList);
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+
+        return view('eoyreports.eoyboardreport')->with($data);
+
     }
-}
-
-$countList = count($chapterList);
-$data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
-
-return view('eoyreports.eoyboardreport')->with($data);
-
-               }
-
-    // Unified method that handles both single and batch activations
-    // public function activateSingleBoard(Request $request, $id)
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $userId = $user['userId'];
-    //     $lastUpdatedBy = $user['user_name'];
-    //     $lastupdatedDate = date('Y-m-d H:i:s');
-
-    //     // $baseQuery = $this->baseChapterController->getChapterDetails($id);
-    //     // $chDetails = $baseQuery['chDetails'];
-    //     // $pcDetails = $baseQuery['pcDetails'];
-    //     // $stateShortName = $baseQuery['stateShortName'];
-    //     // $emailListChap = $baseQuery['emailListChap'];  // Full Board
-    //     // $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
-    //     // $emailCC = $baseQuery['emailCC'];  // CC Email
-    //     // $emailPC = $baseQuery['emailPC'];
-
-    //     // Calculate the fiscal year (current year - next year)
-    //     $currentYear = Carbon::now()->year;
-    //     $nextYear = $currentYear + 1;
-    //     $fiscalYear = $currentYear.'-'.$nextYear;
-
-    //     $resources = Resources::with('resourceCategory')->get();
-    //     $instructionsName = 'Officer Packet';
-    //     $matchingInstructions = $resources->where('name', $instructionsName)->first();
-    //     $pdfPath = 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path;
-
-    //     $status = 'fail'; // Default to 'fail'
-
-    //     $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $id)->get();
-
-    //     if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
-    //         DB::beginTransaction();
-    //         try {
-    //             $boardDetails = Boards::where('chapter_id', $id)->get();
-
-    //             if ($boardDetails && count($boardDetails) > 0) {
-    //                 $borDetails = Boards::with('user')->where('chapter_id', $id)->get();
-    //                 foreach ($borDetails as $record) {
-    //                     $user_id = $record->user_id;
-    //                     $userDetails = User::find($user_id);
-
-    //                     $userDetails->user_type = 'outgoing';
-    //                     $userDetails->updated_at = now();
-    //                     $userDetails->save();
-
-    //                     BoardsOutgoing::create([  // Create outgoing board details
-    //                         'id' => $record->id,
-    //                         'user_id' => $record->user_id,
-    //                         'first_name' => $record->first_name,
-    //                         'last_name' => $record->last_name,
-    //                         'email' => $record->email,
-    //                         'board_position_id' => $record->board_position_id,
-    //                         'chapter_id' => $id,
-    //                         'street_address' => $record->street_address,
-    //                         'city' => $record->city,
-    //                         'state_id' => $record->state_id,
-    //                         'zip' => $record->zip,
-    //                         'country_id' => $record->country_id,
-    //                         'phone' => $record->phone,
-    //                         'last_updated_by' => $lastUpdatedBy,
-    //                         'last_updated_date' => $lastupdatedDate,
-    //                     ]);
-
-    //                 }
-
-    //                 Boards::where('chapter_id', $id)->delete();
-    //             }
-
-    //             foreach ($BoardsIncomingDetails as $incomingRecord) {
-    //                 $existingUser = User::where('email', $incomingRecord->email)->first();
-    //                 if ($existingUser) {
-    //                     $existingUser->first_name = $incomingRecord->first_name;
-    //                     $existingUser->last_name = $incomingRecord->last_name;
-    //                     $existingUser->email = $incomingRecord->email;
-    //                     $existingUser->user_type = 'board';
-    //                     $existingUser->updated_at = now();
-    //                     $existingUser->save();
-    //                     $userId = $existingUser->id;
-
-    //                 } else {
-    //                     $newUser = User::create([  // Create user details if new
-    //                         'first_name' => $incomingRecord->first_name,
-    //                         'last_name' => $incomingRecord->last_name,
-    //                         'email' => $incomingRecord->email,
-    //                         'password' => Hash::make('TempPass4You'),
-    //                         'user_type' => 'board',
-    //                         'is_active' => 1,
-    //                     ]);
-    //                     $userId = $newUser->id;
-    //                 }
-
-    //                 Boards::create([  // Create board details if new
-    //                     'user_id' => $userId,
-    //                     'first_name' => $incomingRecord->first_name,
-    //                     'last_name' => $incomingRecord->last_name,
-    //                     'email' => $incomingRecord->email,
-    //                     'board_position_id' => $incomingRecord->board_position_id,
-    //                     'chapter_id' => $id,
-    //                     'street_address' => $incomingRecord->street_address,
-    //                     'city' => $incomingRecord->city,
-    //                     'state_id' => $incomingRecord->state_id,
-    //                     'zip' => $incomingRecord->zip,
-    //                     'country_id' => $incomingRecord->country_id,
-    //                     'phone' => $incomingRecord->phone,
-    //                     'last_updated_by' => $lastUpdatedBy,
-    //                     'last_updated_date' => $lastupdatedDate,
-    //                 ]);
-    //             }
-
-    //             $documents = Documents::find($id);
-    //             $documents->new_board_active = 1;
-    //             $documents->save();
-
-    //             BoardsIncoming::where('chapter_id', $id)->delete();
-
-    //             $baseQuery = $this->baseChapterController->getChapterDetails($id);
-    //             $chDetails = $baseQuery['chDetails'];
-    //             $pcDetails = $baseQuery['pcDetails'];
-    //             $stateShortName = $baseQuery['stateShortName'];
-    //             $emailListChap = $baseQuery['emailListChap'];  // Full Board
-    //             $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
-    //             $emailCC = $baseQuery['emailCC'];  // CC Email
-    //             $emailPC = $baseQuery['emailPC'];  // PC Email
-
-    //             $mailData = array_merge(
-    //                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-    //                 $this->baseMailDataController->getPCData($pcDetails),
-    //                 $this->baseMailDataController->getUserData($user),
-    //                 [
-    //                     'fiscalYear' => $fiscalYear,
-    //                 ]
-    //             );
-
-    //             Mail::to($emailListChap)
-    //                 ->cc($emailListCoord)
-    //                 ->queue(new NewBoardWelcome($mailData, $pdfPath));
-
-    //             DB::commit();
-    //             $status = 'success'; // Set status to success if everything goes well
-    //         } catch (\Exception $e) {
-    //             DB::rollback();  // Rollback Transaction
-    //             $status = 'fail'; // Set status to fail if an exception occurs
-    //         }
-    //     }
-
-    //     return $status;
-    // }
 
     /**
      * Board Info Report Details
@@ -1031,84 +721,6 @@ return view('eoyreports.eoyboardreport')->with($data);
     }
 
     /**
-     * Financial Report Reminder Auto Send
-     */
-    // public function sendEOYFinancialReportReminder(Request $request): RedirectResponse
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-    //     $confId = $user['user_confId'];
-    //     $regId = $user['user_regId'];
-    //     $positionId = $user['user_positionId'];
-    //     $secPositionId = $user['user_secPositionId'];
-
-    //     $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-    //     $chapterList = $baseQuery['query']
-    //         ->whereHas('documents', function ($query) {
-    //             $query->where('report_extension', '0')
-    //                 ->orWhereNull('report_extension');
-    //         })
-    //         ->whereHas('documents', function ($query) {
-    //             $query->where('financial_report_received', '0')
-    //                 ->orWhereNull('financial_report_received');
-    //         })
-    //         ->get();
-
-    //     if ($chapterList->isEmpty()) {
-    //         return redirect()->back()->with('info', 'There are no Chapters with Financial Reports Due.');
-    //     }
-
-    //     $chapterIds = [];
-    //     $chapterEmails = [];
-    //     $coordinatorEmails = [];
-    //     $mailData = [];
-
-    //     foreach ($chapterList as $chapter) {
-    //         $chapterIds[] = $chapter->id;
-
-    //         if ($chapter->name) {
-    //             $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
-    //             $chDetails = $emailDetails['chDetails'];
-    //             $stateShortName = $emailDetails['stateShortName'];
-    //             $chDocuments = $emailDetails['chDocuments'];
-    //             $chFinancialReport = $emailDetails['chFinancialReport'];
-    //             $emailListChap = $emailDetails['emailListChap'];
-    //             $emailListCoord = $emailDetails['emailListCoord'];
-
-    //             $chapterEmails[$chDetails->name] = $emailListChap;
-    //             $coordinatorEmails[$chDetails->name] = $emailListCoord;
-    //         }
-
-    //         $mailData[$chDetails->name] = array_merge(
-    //             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-    //             $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
-    //         );
-
-    //     }
-
-    //     foreach ($mailData as $chapterName => $data) {
-    //         if (! empty($chapterName)) {
-    //             Mail::to($chapterEmails[$chapterName] ?? [])
-    //                 ->cc($coordinatorEmails[$chapterName] ?? [])
-    //                 ->queue(new EOYFinancialReportReminder($data));
-    //         }
-    //     }
-    //     try {
-    //         DB::commit();
-
-    //         return redirect()->to('/eoy/financialreport')->with('success', 'Financial Report Reminders have been successfully sent.');
-    //     } catch (\Exception $e) {
-    //         DB::rollback();  // Rollback Transaction
-    //         Log::error($e);  // Log the error
-
-    //         return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-    //     } finally {
-    //         // This ensures DB connections are released even if exceptions occur
-    //         DB::disconnect();
-    //     }
-    // }
-
-    /**
      * Financial Report for Coordinator side for Reviewing of Chapters
      */
     public function reviewFinancialReport(Request $request, $id): View
@@ -1324,6 +936,7 @@ return view('eoyreports.eoyboardreport')->with($data);
         try {
             $documents->financial_report_received = null;
             $documents->report_received = null;
+            $documents->report_extension = '1';
             $documents->save();
 
             $financialReport->submitted = null;
@@ -1502,20 +1115,20 @@ return view('eoyreports.eoyboardreport')->with($data);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $now = Carbon::now();
-        $oneYearAgo = $now->copy()->subYear();
+     $now = Carbon::now();
+        $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            // ->where(function ($query) use ($oneYearAgo) {
-            //     $query->where(function ($q) use ($oneYearAgo) {
-            //         $q->where('start_year', '<', $oneYearAgo->year)
-            //             ->orWhere(function ($q) use ($oneYearAgo) {
-            //                 $q->where('start_year', '=', $oneYearAgo->year)
-            //                     ->where('start_month_id', '<=', $oneYearAgo->month);
-            //             });
-            //     });
-            // })
+            ->where(function ($query) use ($currentYear) {
+                $query->where(function ($q) use ($currentYear) {
+                    $q->where('start_year', '<', $currentYear)
+                        ->orWhere(function ($q) use ($currentYear) {
+                            $q->where('start_year', '=', $currentYear)
+                                ->where('start_month_id', '<', 7); // July is month 7
+                        });
+                });
+            })
             ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
@@ -1604,19 +1217,19 @@ return view('eoyreports.eoyboardreport')->with($data);
         $lastUpdatedBy = $user['user_name'];
 
         $now = Carbon::now();
-        $oneYearAgo = $now->copy()->subYear();
+        $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            // ->where(function ($query) use ($oneYearAgo) {
-            //     $query->where(function ($q) use ($oneYearAgo) {
-            //         $q->where('start_year', '<', $oneYearAgo->year)
-            //             ->orWhere(function ($q) use ($oneYearAgo) {
-            //                 $q->where('start_year', '=', $oneYearAgo->year)
-            //                     ->where('start_month_id', '<=', $oneYearAgo->month);
-            //             });
-            //     });
-            // })
+            ->where(function ($query) use ($currentYear) {
+                $query->where(function ($q) use ($currentYear) {
+                    $q->where('start_year', '<', $currentYear)
+                        ->orWhere(function ($q) use ($currentYear) {
+                            $q->where('start_year', '=', $currentYear)
+                                ->where('start_month_id', '<', 7); // July is month 7
+                        });
+                });
+            })
             ->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];

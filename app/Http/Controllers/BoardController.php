@@ -1594,7 +1594,7 @@ if($month >= 7 && $month <= 12){
             if ($reportReceived == 1) {
                 $documents->financial_report_received = 1;
                 $documents->report_received = $lastupdatedDate;
-
+                $documents->report_extension = null;
                 $documents->save();
             }
 

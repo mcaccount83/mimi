@@ -344,6 +344,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
                 $documents->financial_report_received = 1;
                 $documents->report_received = $lastupdatedDate;
+                $documents->report_extension = null;
                 $documents->save();
             }
 
@@ -489,10 +490,12 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $financialReport->completed_name = $userName;
                 $financialReport->completed_email = $userEmail;
                 $financialReport->submitted = $lastupdatedDate;
+
                 $financialReport->save();
 
                 $documents->final_report_received = 1;
                 $documents->report_received = $lastupdatedDate;
+                $documents->report_extension = null;
                 $documents->save();
             }
 
