@@ -121,7 +121,16 @@ class PaymentController extends Controller implements HasMiddleware
      */
     public function reRegistrationPayment(Request $request): RedirectResponse
     {
-        $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
+
+        if($userType == 'coordinator'){
+            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+        }
+        if($userType == 'outgoing'){
+            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
+        }
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
         $confId = $chDetails->conference_id;
@@ -147,18 +156,6 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingCountry = $country->short_name;
         $shippingZip = $PresDetails->zip;
 
-        // $shipStateId = intval($PresDetails->state_id);
-        // if ($shipStateId < 52){
-        //     $shippingCountry = 'USA';
-        // }
-        // else{
-        //     $countryId = $input['ship_country'];
-        //     $country = Country::find($countryId);
-        //     $countryShortName = $country->short_name;
-        //     $shippingCountry = $countryShortName;
-        // }
-
-        // $paymentResponse = $this->processPayment($request);
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
                         $shippingFirst, $shippingLast,$shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
@@ -172,7 +169,6 @@ class PaymentController extends Controller implements HasMiddleware
         $emailCC = $baseQuery['emailCC'];
         $pcEmail = $baseQuery['pcEmail'];
 
-        // $AdminEmail = 'dragonmom@msn.com';
         $adminEmail = $this->positionConditionsService->getAdminEmail();
         $paymentsAdmin = $adminEmail['payments_admin'];
 

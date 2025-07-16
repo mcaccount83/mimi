@@ -64,19 +64,32 @@ class BaseBoardController extends Controller
         $displayEOY = $this->positionConditionsService->getEOYDisplay();
 
         $awards = $chDetails->financialReport;
-
         $chDisbanded = $chDetails->disbandCheck;
 
-        $boards = $chDetails->boards()->with(['state', 'country'])->get();
-        $bdDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
-        // Fetch board details or fallback to default
-        $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
-        $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
-        $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
-        $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
-        $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
+        if ($chActiveId == 1){
+            $boards = $chDetails->boards()->with(['state', 'country'])->get();
+            $bdDetails = $boards->groupBy('board_position_id');
+            $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
+            // Fetch board details or fallback to default
+            $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
+            $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
+            $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
+            $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
+            $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
+        }
+
+        if ($chActiveId == 0){
+            $bdDisbanded = $chDetails->boardsDisbanded()->with(['state', 'country'])->get();
+            $bdDisbandedDetails = $bdDisbanded->groupBy('board_position_id');
+            $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
+            // Fetch board details or fallback to default
+            $PresDetails = $bdDisbandedDetails->get(1, collect([$defaultDisbandedBoardMember]))->first(); // President
+            $AVPDetails = $bdDisbandedDetails->get(2, collect([$defaultDisbandedBoardMember]))->first(); // AVP
+            $MVPDetails = $bdDisbandedDetails->get(3, collect([$defaultDisbandedBoardMember]))->first(); // MVP
+            $TRSDetails = $bdDisbandedDetails->get(4, collect([$defaultDisbandedBoardMember]))->first(); // Treasurer
+            $SECDetails = $bdDisbandedDetails->get(5, collect([$defaultDisbandedBoardMember]))->first(); // Secretary
+        }
 
         // Load Board and Coordinators for Sending Email
         $emailData = $this->userController->loadEmailDetails($chId);
