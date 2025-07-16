@@ -133,7 +133,7 @@
                     </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <label>Chpater Email Address:</label> <a href="mailto:{{ $chDetails->email}}">{{ $chDetails->email}}</a>
+                                <label>Chapter Email Address:</label> <a href="mailto:{{ $chDetails->email}}">{{ $chDetails->email}}</a>
                         <br>
                         <label>Email used for Inquiries:</label> <a href="mailto:{{ $chDetails->inquiries_contact}}">{{ $chDetails->inquiries_contact}}</a>
                         <br>
