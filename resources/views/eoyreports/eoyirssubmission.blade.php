@@ -28,6 +28,7 @@
                 <th>Conf/Reg</th>
 				<th>State</th>
                 <th>Name</th>
+                <th>EIN</th>
                 <th>990N Attached</th>
                 <th>IRS Verified</th>
                 <th>Filing Issues</th>
@@ -58,6 +59,7 @@
                                 @endif
                             </td>
 						<td>{{ $list->name }}</td>
+                        <td>{{ $list->ein }}</td>
                         </td>
                         <td @if($list->documents?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documents?->irs_path != null) YES @else NO @endif
