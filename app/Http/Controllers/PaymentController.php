@@ -242,7 +242,16 @@ class PaymentController extends Controller implements HasMiddleware
      */
     public function m2mPayment(Request $request): RedirectResponse
     {
-        $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+        $user = $this->userController->loadUserInformation($request);
+        $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
+
+        if($userType == 'coordinator'){
+            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+        }
+        if($userType == 'outgoing'){
+            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
+        }
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
         $confId = $chDetails->conference_id;
@@ -267,17 +276,6 @@ class PaymentController extends Controller implements HasMiddleware
         $country = Country::find($shipCountryId);
         $shippingCountry = $country->short_name;
         $shippingZip = $PresDetails->zip;
-
-        // $shipStateId = intval($input['ship_state']);
-        // if ($shipStateId < 52){
-        //     $shippingCountry = 'USA';
-        // }
-        // else{
-        //     $countryId = $input['ship_country'];
-        //     $country = Country::find($countryId);
-        //     $countryShortName = $country->short_name;
-        //     $shippingCountry = $countryShortName;
-        // }
 
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
                         $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
