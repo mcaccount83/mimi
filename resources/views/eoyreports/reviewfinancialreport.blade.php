@@ -205,6 +205,11 @@
                 <b>Sistered another chapter:</b> <span class="float-right">{{ is_null($chFinancialReport['check_sistered_another_chapter']) ? 'Please Review'
                     : ($chFinancialReport ['check_sistered_another_chapter'] == 0 ? 'NO' : ($chFinancialReport ['check_sistered_another_chapter'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
+            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
+                <b>Chapter Awards:</b> <span class="float-right">
+                    <button type="button" id="back-eoy" class="btn btn-xs bg-gradient-primary" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chDetails->id]) }}'">View/Update Award Information</button>
+                </span>
+            </div>
 
             @php
                 $yesBackground = '#28a745';  // Green background for "YES"
