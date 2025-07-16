@@ -153,7 +153,14 @@ class PDFController extends Controller
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chActiveId = $baseQuery['chActiveId'];
+
+        if ($chActiveId == 1){
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        }
+        if ($chActiveId == 0){
+        $chFinancialReport = $baseQuery['chFinancialReportFinal'];
+        }
 
         // $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
         // $PresDetails = $baseActiveBoardQuery['PresDetails'];
