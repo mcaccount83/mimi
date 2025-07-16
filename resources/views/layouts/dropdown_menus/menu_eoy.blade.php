@@ -8,6 +8,6 @@
     <a class="dropdown-item" href="{{ route('eoyreports.eoyawards') }}">Chapter Awards Report</a>
     @if (($userAdmin))
         <a class="dropdown-item" href="{{ route('eoyreports.eoyirsintsubmission') }}">International 990N Filing Report</a>
-        <a class="dropdown-item" href="{{ route('eoyreports.eoyawards') }}">International Chapter Awards Report</a>
+        <a class="dropdown-item" href="{{ route('eoyreports.eoyintawards') }}">International Chapter Awards Report</a>
     @endif
 </div>

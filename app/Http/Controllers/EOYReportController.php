@@ -1254,6 +1254,51 @@ if ($request->has('board') && $request->input('board') === 'active') {
         return view('eoyreports.eoyawards', $data);
     }
 
+    public function showEOYIntAwards(Request $request): View
+    {
+        $titles = $this->getPageTitle($request);
+        $title = $titles['eoy_reports'];
+        $breadcrumb = 'International Chapter Awards Report';
+
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+
+        $now = Carbon::now();
+        $currentYear = $now->year;
+
+        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($currentYear) {
+                $query->where(function ($q) use ($currentYear) {
+                    $q->where('start_year', '<', $currentYear)
+                        ->orWhere(function ($q) use ($currentYear) {
+                            $q->where('start_year', '=', $currentYear)
+                                ->where('start_month_id', '<', 7); // July is month 7
+                        });
+                });
+            })
+            ->get();
+
+        $allAwards = FinancialReportAwards::all();
+
+        $maxAwards = 0;
+        foreach ($chapterList as $list) {
+            if (isset($list->financialReport->chapter_awards)) {
+                $awards = unserialize(base64_decode($list->financialReport->chapter_awards));
+                if ($awards) {
+                    $maxAwards = max($maxAwards, count($awards));
+                }
+            }
+        }
+
+        $countList = count($chapterList);
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList,
+            'allAwards' => $allAwards, 'maxAwards' => $maxAwards,
+        ];
+
+        return view('eoyreports.eoyintawards', $data);
+    }
+
     /**
      * View the EOY Award Details
      */
