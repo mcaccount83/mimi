@@ -43,7 +43,7 @@
                         $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
 
                         // Define the message body with a link
-                        $mimiUrl = 'https://example.com/mimi';
+                        $mimiUrl = 'https://momsclub.org/mimi';
                         $mailMessage = "Don't forget to complete the Board Election Report for your chapter! This report is available now and should be filled out as soon as your chapter has held its election but is due no later than June 30th at 11:59pm.\n\n";
                         $mailMessage .= "Please submit your report as soon as possible to ensure that your incoming board members have access to all the tools they need to be successful. The information from the report is used for:\n";
                         $mailMessage .= "- Chapter Contacts for your Coordinator Team\n";

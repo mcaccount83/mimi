@@ -47,7 +47,7 @@
                             $reportReceived = $emailData['reportReceived'] ?? null;
                             $einLetter = $emailData['einLetter'] ?? null;
 
-                            $mimiUrl = 'https://example.com/mimi';
+                            $mimiUrl = 'https://momsclub.org/mimi';
                             $mailMessage = "At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.\n\n";
                             $mailMessage .= "The following items are missing:\n";
                                 if (is_null($list->documents->new_board_submitted) || $list->documents->new_board_submitted == 0) {

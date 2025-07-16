@@ -49,7 +49,7 @@
                         $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
 
                         // Define the message body with a link
-                        $mimiUrl = 'https://example.com/mimi';
+                        $mimiUrl = 'https://momsclub.org/mimi';
                         $mailMessage = "Don't forget to complete the Financial Report for your chapter! This report is available now and is due no later than July 15th at 11:59pm.\n\n";
                         $mailMessage .= "After receiving your completed reports, your Coordinator Team will review the report and reach out if they have any questions.\n\n";
                         $mailMessage .= "The Financial Report (as well as the Board Election Report) can be accessed by logging into your MIMI account: $mimiUrl and selecting the buttons at the top of your screen.";
