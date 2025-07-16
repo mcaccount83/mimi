@@ -47,7 +47,7 @@ Sustaining chapter donations are voluntary and in addition to your chapter's re-
 </p>
 </td></tr></table>
 <br>
-<p>If payment is not recevied by the last day of <b>{{$mailData['dueMonth']}}</b> your chapter will be placed on probation.</p>
+<p>If payment is not received by the last day of <b>{{$mailData['dueMonth']}}</b> your chapter will be placed on probation.</p>
 <br>
 <p>If you have any questions at all, do not hesitate to ask.</p>
 <br>
