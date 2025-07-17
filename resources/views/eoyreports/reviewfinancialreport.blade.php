@@ -962,7 +962,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- <?php
+                            <?php
                             $party_expenses = null;
                             $totalPartyIncome = 0;
                             $totalPartyExpense = 0;
@@ -1010,7 +1010,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 
                                 $partyPercentage = 0;
                             }
-                            ?> --}}
+                            ?>
                         </tbody>
                     </table>
                     <br>
