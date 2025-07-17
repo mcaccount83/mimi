@@ -330,7 +330,9 @@ Route::get('/eoy/irsintsubmission', [EOYReportController::class, 'showIRSIntSubm
 // PDF Controller Routes...Used for Board & Coordinator Layouts
 Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'generateGoodStanding'])->name('pdf.chapteringoodstanding');
 Route::get('/board/financialreport/pdf/{id}', [PDFController::class, 'generateFinancialReport'])->name('pdf.financialreport');
-Route::get('/financial-report-pdf', [PDFController::class, 'saveFinancialReport'])->name('pdf.financialreport');
+// Route::get('/financial-report-pdf', [PDFController::class, 'saveFinancialReport'])->name('pdf.generatefinancialreport');
+Route::post('/financial-report-pdf', [PDFController::class, 'saveFinancialReport'])->name('pdf.generatefinancialreport');
+// Route::get('/financial-report-pdf/{id}/{presDetails}', [PDFController::class, 'saveFinancialReport'])->name('pdf.generatefinancialreport');
 Route::post('/generate-probation-letter', [PDFController::class, 'saveProbationLetter'])->name('pdf.generateProbationLetter');
 Route::get('/board/newchapfaxcover/pdf/{id}', [PDFController::class, 'generateNewChapterFaxCover'])->name('pdf.newchapfaxcover');
 Route::get('/board/eodeptfaxcover/pdf', [PDFController::class, 'generateEODeptFaxCover'])->name('pdf.eodeptfaxcover');

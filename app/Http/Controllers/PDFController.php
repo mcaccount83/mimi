@@ -10,6 +10,7 @@ use App\Mail\ProbationChapNoRptLetter;
 use App\Mail\ProbationChapPartyLetter;
 use App\Mail\ProbationChapReleaseLetter;
 use App\Mail\ProbationChapWarningPartyLetter;
+use App\Models\Chapters;
 use App\Models\Documents;
 use App\Models\GoogleDrive;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -66,8 +67,25 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-    public function saveFinancialReport(Request $request, $chapterId, $PresDetails)
-    {
+public function saveFinancialReport(Request $request, $chapterId = null, $PresDetails = null)
+// public function saveFinancialReport(Request $request)
+
+{
+        // Prefer route parameters if provided, else fallback to request
+    $chapterId = $chapterId ?? $request->chapterId;
+    $chActiveId = $request->chActiveId ?? null;
+
+    // Only calculate PresDetails if not passed in
+    if ($PresDetails === null) {
+        if ($chActiveId === '1') {
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+        } elseif ($chActiveId === '0') {
+            $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
+            $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+        }
+    }
+
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
 
@@ -112,8 +130,14 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-    public function saveFinalFinancialReport(Request $request, $chapterId, $PresDetails)
+    // public function saveFinalFinancialReport(Request $request, $chapterId, $PresDetails)
+        public function saveFinalFinancialReport(Request $request)
+
     {
+
+        $chapterId = $request->chapterId;
+        $PresDetails = $request->PresDetails;
+
         $googleDrive = GoogleDrive::first();
         $finalFinancialDrive = $googleDrive->final_financial_report;
         $sharedDriveId = $finalFinancialDrive;  // Shared Drive -> EOY Uploads

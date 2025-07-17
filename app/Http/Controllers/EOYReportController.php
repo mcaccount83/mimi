@@ -168,8 +168,18 @@ class EOYReportController extends Controller implements HasMiddleware
         $reviewComplete = $baseQuery['reviewComplete'];
         $rrList = $baseQuery['rrList'];
 
+        $PresDetails = null;
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb,
+        if ($chActiveId == '1') {
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+        } elseif ($chActiveId == '0') {
+            $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
+            $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+
+        }
+
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'PresDetails' => $PresDetails,
             'coorId' => $coorId, 'confId' => $confId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,

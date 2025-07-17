@@ -181,8 +181,9 @@
                         </div>
                         <div class="col-sm-9">
                             <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.reviewfinancialreport', ['id' => $chDetails->id]) }}'">View Financial Report</button>
+<button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="generateFinancialReport()">Regenerate Financial PDF</button>
                         </div>
-                    </div>
+                                    </div>
 
                     {{-- <div class="row mt-2">
                         <div class="col-sm-3">
@@ -456,6 +457,151 @@ document.addEventListener("DOMContentLoaded", function() {
             extensionNotes.setAttribute('readonly', true);
         }
     }
+
+    const chapterId = @json($chDetails->id);
+    const chActiveId = @json($chActiveId);
+
+   function generateFinancialReport() {
+        Swal.fire({
+            title: 'Generate Financial Report',
+            html: `
+                <p>This will generate the financial report PDF.</p>
+                <input type="hidden" id="chapter_id" value="${chapterId}">
+                <input type="hidden" id="active_id" value="${chActiveId}">
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Generate Letter',
+            cancelButtonText: 'Close',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            },
+            preConfirm: () => {
+                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+                const chActiveId = Swal.getPopup().querySelector('#active_id').value;
+                return { chapterId, chActiveId };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we generate your letter.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+
+                        $.ajax({
+                            url: '{{ route('pdf.generatefinancialreport') }}',
+                            type: 'POST',
+                            data: {
+                                chapterId: data.chapterId,
+                                chActiveId: data.chActiveId,
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                }).then(() => {
+                                    location.reload(); // Reload the page to reflect changes
+                                });
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong. Please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+//   function generateFinancialReport() {
+//     // Show confirmation dialog
+//     Swal.fire({
+//         title: 'Generate Financial Report',
+//         text: 'This will generate the financial report PDF.',
+//         showCancelButton: true,
+//         confirmButtonText: 'Generate',
+//         cancelButtonText: 'Cancel',
+//         customClass: {
+//             confirmButton: 'btn-sm btn-success',
+//             cancelButton: 'btn-sm btn-danger'
+//         }
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//             // Show loading
+//             Swal.fire({
+//                 title: 'Generating...',
+//                 text: 'Please wait while the PDF is being generated.',
+//                 allowOutsideClick: false,
+//                 didOpen: () => {
+//                     Swal.showLoading();
+//                 }
+//             });
+
+//             // Create and submit form dynamically
+//             const form = document.createElement('form');
+//             form.method = 'POST';
+//             form.action = '{{ route("pdf.generatefinancialreport") }}';
+//             // Removed form.target = '_blank'; to prevent opening in new tab
+
+//             // Add CSRF token
+//             const csrfInput = document.createElement('input');
+//             csrfInput.type = 'hidden';
+//             csrfInput.name = '_token';
+//             csrfInput.value = '{{ csrf_token() }}';
+//             form.appendChild(csrfInput);
+
+//             // Add chapter ID
+//             const chapterInput = document.createElement('input');
+//             chapterInput.type = 'hidden';
+//             chapterInput.name = 'chapter_id';
+//             chapterInput.value = '{{ $chDetails->id }}';
+//             form.appendChild(chapterInput);
+
+//             // Add PresDetails as JSON
+//             const presInput = document.createElement('input');
+//             presInput.type = 'hidden';
+//             presInput.name = 'pres_details';
+//             presInput.value = JSON.stringify(@json($PresDetails));
+//             form.appendChild(presInput);
+
+//             document.body.appendChild(form);
+//             form.submit();
+//             document.body.removeChild(form);
+
+//             // Show success message after form submission
+//             setTimeout(() => {
+//                 Swal.fire({
+//                     title: 'Success!',
+//                     text: 'Financial report has been generated successfully.',
+//                     icon: 'success',
+//                     confirmButtonText: 'OK',
+//                     customClass: {
+//                         confirmButton: 'btn-sm btn-success'
+//                     }
+//                 });
+//             }, 2000);
+//         }
+//     });
+// }
 
 function showRosterUploadModal() {
     var chapter_id = "{{ $chDetails->id }}";
