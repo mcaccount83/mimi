@@ -66,8 +66,7 @@ class BaseBoardController extends Controller
         $awards = $chDetails->financialReport;
         $chDisbanded = $chDetails->disbandCheck;
 
-
-        if ($chActiveId == 1){
+        if ($chActiveId == '1'){
             $boards = $chDetails->boards()->with(['state', 'country'])->get();
             $bdDetails = $boards->groupBy('board_position_id');
             $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
@@ -79,7 +78,7 @@ class BaseBoardController extends Controller
             $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
         }
 
-        if ($chActiveId == 0){
+        if ($chActiveId == '0'){
             $bdDisbanded = $chDetails->boardsDisbanded()->with(['state', 'country'])->get();
             $bdDisbandedDetails = $bdDisbanded->groupBy('board_position_id');
             $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];

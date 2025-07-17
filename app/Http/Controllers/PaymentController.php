@@ -125,10 +125,10 @@ class PaymentController extends Controller implements HasMiddleware
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        if($userType == 'coordinator'){
+        if($userType == 'board'){
             $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         }
-        if($userType == 'outgoing'){
+        if($userType == 'disbanded'){
             $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
         }
         $chDetails = $baseQuery['chDetails'];
@@ -246,10 +246,10 @@ class PaymentController extends Controller implements HasMiddleware
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        if($userType == 'coordinator'){
+        if($userType == 'board'){
             $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         }
-        if($userType == 'outgoing'){
+        if($userType == 'disbanded'){
             $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
         }
         $chDetails = $baseQuery['chDetails'];
