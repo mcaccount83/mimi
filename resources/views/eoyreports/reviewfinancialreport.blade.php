@@ -97,6 +97,29 @@
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Party Percentage:</b> <span class="float-right">
+                        <?php
+                                $newMembers = $chFinancialReport['total_new_members'] * $chFinancialReport['dues_per_member'];
+                                $renewalMembers = $chFinancialReport['total_renewed_members'] * $chFinancialReport['dues_per_member'];
+                                $renewalMembersDiff = $chFinancialReport['total_renewed_members'] * $chFinancialReport['dues_per_member_renewal'];
+                                $newMembersNew = $chFinancialReport['total_new_members_changed_dues'] * $chFinancialReport['dues_per_member_new_changed'];
+                                $renewMembersNew = $chFinancialReport['total_renewed_members_changed_dues'] * $chFinancialReport['dues_per_member_new_changed'];
+                                $renewMembersNewDiff = $chFinancialReport['total_renewed_members_changed_dues'] * $chFinancialReport['dues_per_member_renewal_changed'];
+                                $partialMembers = $chFinancialReport['members_who_paid_partial_dues'] * $chFinancialReport['total_partial_fees_collected'];
+                                $associateMembers = $chFinancialReport['total_associate_members'] * $chFinancialReport['associate_member_fee'];
+
+                                $totalMembers = $chFinancialReport['total_new_members'] +$chFinancialReport['total_renewed_members'] + $chFinancialReport['total_new_members_changed_dues'] + $chFinancialReport['total_renewed_members_changed_dues']
+                                        + $chFinancialReport['members_who_paid_partial_dues'] + $chFinancialReport['total_associate_members']+ $chFinancialReport['members_who_paid_no_dues'];
+
+                                if ($chFinancialReport['different_dues'] == 1 && $chFinancialReport['changed_dues'] == 1) {
+                                    $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
+                                } elseif ($chFinancialReport['different_dues'] == 1) {
+                                    $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
+                                } elseif ($chFinancialReport['changed_dues'] == 1) {
+                                    $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
+                                } else {
+                                    $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
+                                }
+                            ?>
                      <?php
 $party_expenses = null;
 $totalPartyIncome = 0;
