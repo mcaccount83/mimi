@@ -97,7 +97,40 @@
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Party Percentage:</b> <span class="float-right">
+                    <?php
+$party_expenses = null;
+$totalPartyIncome = 0;
+$totalPartyExpense = 0;
+
+if (isset($chFinancialReport['party_expense_array'])) {
+    $blobData = base64_decode($chFinancialReport['party_expense_array']);
+    $party_expenses = unserialize($blobData);
+
+    if ($party_expenses === false) {
+        $partyPercentage = 0; // fallback
+    } else {
+        foreach ($party_expenses as $row) {
+            $income = is_numeric(str_replace(',', '', $row['party_expense_income'])) ? floatval(str_replace(',', '', $row['party_expense_income'])) : 0;
+            $expense = is_numeric(str_replace(',', '', $row['party_expense_expenses'])) ? floatval(str_replace(',', '', $row['party_expense_expenses'])) : 0;
+
+            $totalPartyIncome += $income;
+            $totalPartyExpense += $expense;
+        }
+
+        // Calculate party percentage
+        if (empty($totalDues) || $totalDues == 0) {
+            $partyPercentage = 0;
+        } else {
+            $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
+        }
+    }
+} else {
+    $partyPercentage = 0;
+}
+?>
+
                 </span>
+                 {{ number_format($partyPercentage * 100, 2) }}%
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b> Party Percentage less than 15%:</b> <span class="float-right" style="
@@ -929,7 +962,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
+                            {{-- <?php
                             $party_expenses = null;
                             $totalPartyIncome = 0;
                             $totalPartyExpense = 0;
@@ -977,7 +1010,7 @@
 
                                 $partyPercentage = 0;
                             }
-                            ?>
+                            ?> --}}
                         </tbody>
                     </table>
                     <br>
