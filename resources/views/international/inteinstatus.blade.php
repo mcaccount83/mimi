@@ -42,6 +42,7 @@
                     <th>Start Date</th>
                     <th>EIN</th>
                     <th>Letter On File</th>
+                    <th>Added Subordinate</th>
                     <th>EIN Notes</th>
                 </tr>
                 </thead>
@@ -87,6 +88,14 @@
                         <td @if($list->documents->ein_letter_path != null)style="background-color: transparent;"
                             @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documents->ein_letter_path != null)
+                                YES
+                            @else
+                                NO
+                            @endif
+                        </td>
+                         <td @if($list->documents->ein_sent != null)style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents->ein_sent != null)
                                 YES
                             @else
                                 NO

@@ -108,6 +108,27 @@
                                                     </div>
                                                 </div>
 
+                                                 <!-- /.form group -->
+ @if($userAdmin == 1 )
+    <div class="form-group row align-items-center  mb-3">
+        <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
+        <div class="col-sm-10 custom-control custom-switch">
+            <input type="checkbox" name="ein_sent" id="ein_sent" class="custom-control-input" {{$chDocuments->ein_sent == 1 ? 'checked' : ''}}>
+            <label class="custom-control-label" for="ein_sent"></label>
+        </div>
+    </div>
+@else
+    <div class="form-group row align-items-center  mb-3">
+        <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
+        <div class="col-sm-10 custom-control custom-switch">
+            <input type="checkbox" name="ein_sent" id="ein_sent" class="custom-control-input" {{$chDocuments->ein_sent == 1 ? 'checked' : ''}} disabled>
+            <label class="custom-control-label" for="ein_sent"></label>
+            <!-- Hidden input to submit the value -->
+            <input type="hidden" name="ein_sent" value="{{ $chDocuments->ein_sent }}">
+        </div>
+    </div>
+@endif
+
 
  <!-- /.form group -->
 

@@ -1087,7 +1087,7 @@ public function saveFinancialReport(Request $request, $chapterId = null, $PresDe
         $dateFormatted = $todayDate->format('F j, Y');
 
         // Get the add and zap lists
-        $chapterAddList = $this->generateIRSAddList($coorId, $date);
+        $chapterAddList = $this->generateIRSAddList2($coorId, $date);
         $chapterZapList = $this->generateIRSZapList($coorId, $date);
 
         $emailEINCoorData = $this->userController->loadEINCoord();
@@ -1188,6 +1188,40 @@ public function saveFinancialReport(Request $request, $chapterId = null, $PresDe
                     ->where('bd_active.board_position_id', '=', 1);
             })
             ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->get()
+            ->sortBy('ein');
+    }
+
+    // /**
+    //  * Generate IRS list of Added Chapters that have not been reported
+    //  */
+    private function generateIRSAddList2($coorId, $date)
+    {
+        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+
+        return $baseQueryActive['query']
+            ->select([
+                'chapters.*',
+                'bd_active.first_name as pres_first_name',
+                'bd_active.last_name as pres_last_name',
+                'bd_active.street_address as pres_address',
+                'bd_active.city as pres_city',
+                'state.state_short_name as pres_state',
+                'bd_active.zip as pres_zip'
+            ])
+            ->whereNotNull('chapters.ein')
+            ->where('chapters.ein', '!=', '*********')
+            ->where('chapters.country_id', '=', '198')
+            ->leftJoin('documents as doc', 'chapters.id', '=', 'doc.chapter_id')
+            ->leftJoin('boards as bd_active', function($join) {
+                $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                    ->where('bd_active.board_position_id', '=', 1);
+            })
+            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->where(function($query) {
+                $query->whereNull('doc.ein_sent')
+                    ->orWhere('doc.ein_sent', '!=', 1);
+            })
             ->get()
             ->sortBy('ein');
     }
