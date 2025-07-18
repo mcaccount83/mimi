@@ -154,7 +154,9 @@
                                 <label class="custom-control-label" for="irs_verified"></label>
                             </div>
                         </div>
+                    </div>
 
+<div class="form-group row align-middle">
                         <label class="col-sm-3 col-form-label">990N Submission Issues:<br>
                             <small>(Wrong Dates, Not Found, etc)</small></label>
                         <div class="col-sm-3">
@@ -168,22 +170,43 @@
 
                         <!-- /.form group -->
                     <div class="form-group row align-middle">
-                        <label class="col-sm-3 col-form-label">Wrong Dates Listed:</label>
-                        <div class="col-sm-3">
+                        <label class="col-sm-2 col-form-label">Wrong Dates Listed:</label>
+                        <div class="col-sm-1">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="irs_wrongdate" id="irs_wrongdate" class="custom-control-input"
                                 {{ $chDetails->documents->irs_wrongdate == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="irs_wrongdate"></label>
                             </div>
                         </div>
-                         <label class="col-sm-3 col-form-label">Chapter Not Found:</label>
-                        <div class="col-sm-3">
+                         <label class="col-sm-2 col-form-label">Chapter Not Found:</label>
+                        <div class="col-sm-1">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="irs_notfound" id="irs_notfound" class="custom-control-input"
                                 {{ $chDetails->documents->irs_notfound == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="irs_notfound"></label>
                             </div>
                         </div>
+
+                         @if($userAdmin == 1 )
+                            <label class="col-sm-2 col-form-label">IRS Notified:</label>
+                            <div class="col-sm-1">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="irs_notified" id="irs_notified" class="custom-control-input"
+                                    {{ $chDetails->documents->irs_notified == 1 ? 'checked' : ''}} >
+                                    <label class="custom-control-label" for="irs_notified"></label>
+                                </div>
+                            </div>
+                        @else
+                            <label class="col-sm-2 col-form-label">IRS Notified:</label>
+                            <div class="col-sm-1">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="irs_notified" id="irs_notified" class="custom-control-input"
+                                    {{ $chDetails->documents->irs_notified == 1 ? 'checked' : ''}} disabled>
+                                    <label class="custom-control-label" for="irs_notified"></label>
+                                    <input type="hidden" name="irs_notified" value="{{ $chDetails->documents->irs_notified }}">
+                                </div>
+                            </div>
+                        @endif
                     </div>
                          <!-- /.form group -->
 

@@ -33,6 +33,7 @@
                 <th>IRS Verified</th>
                 <th>Filing Issues</th>
                 <th>Issue Details</th>
+                <th>IRS Notified</th>
                 <th>Filing Notes</th>
 				</tr>
                 </thead>
@@ -74,6 +75,9 @@
                             @if($list->documents?->irs_wrongdate == 1) WRONG DATES @else  @endif
                             @if($list->documents?->irs_wrongdate == 1 && $list->documents?->irs_notfound == 1) <br> @endif
                             @if($list->documents?->irs_notfound == 1) NOT FOUND @else  @endif
+                        </td>
+                        <td @if($list->documents?->irs_issues != 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents?->irs_notified == 1) YES @elseif($list->documents?->irs_notified != 1 && $list->documents?->irs_issues == 1) NO @else  @endif
                         </td>
                         <td>{{ $list->documents?->irs_notes?? null }}</td>
                  </tr>

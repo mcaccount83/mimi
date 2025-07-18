@@ -1349,57 +1349,65 @@ public function saveFinancialReport(Request $request, $chapterId = null, $PresDe
     //  * Generate IRS list of 990N Filing Corrections with the Wrong Dates
     //  */
     private function generateIRSWrongDateList($coorId)
-    {
-        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+{
+    $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
 
-        return $baseQueryActive['query']
-            ->select([
-                'chapters.*',
-                'bd_active.first_name as pres_first_name',
-                'bd_active.last_name as pres_last_name',
-                'bd_active.street_address as pres_address',
-                'bd_active.city as pres_city',
-                'state.state_short_name as pres_state',
-                'bd_active.zip as pres_zip'
-            ])
-            ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
-->where('documents.irs_wrongdate', 1)
-            ->leftJoin('boards as bd_active', function($join) {
-                $join->on('chapters.id', '=', 'bd_active.chapter_id')
-                    ->where('bd_active.board_position_id', '=', 1);
-            })
-            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
-            ->get()
-            ->sortBy('ein');
-    }
+    return $baseQueryActive['query']
+        ->select([
+            'chapters.*',
+            'bd_active.first_name as pres_first_name',
+            'bd_active.last_name as pres_last_name',
+            'bd_active.street_address as pres_address',
+            'bd_active.city as pres_city',
+            'state.state_short_name as pres_state',
+            'bd_active.zip as pres_zip'
+        ])
+        ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
+        ->leftJoin('boards as bd_active', function($join) {
+            $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                ->where('bd_active.board_position_id', '=', 1);
+        })
+        ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+        ->where('documents.irs_wrongdate', 1)
+        ->where(function($query) {
+            $query->whereNull('documents.irs_notified')
+                  ->orWhere('documents.irs_notified', '!=', '1');
+        })
+        ->get()
+        ->sortBy('ein');
+}
 
      // /**
     //  * Generate IRS list of 990N Filing Corrections where chapter was not found
     //  */
     private function generateIRSNotFoundList($coorId)
-    {
-        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+{
+    $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
 
-        return $baseQueryActive['query']
-            ->select([
-                'chapters.*',
-                'bd_active.first_name as pres_first_name',
-                'bd_active.last_name as pres_last_name',
-                'bd_active.street_address as pres_address',
-                'bd_active.city as pres_city',
-                'state.state_short_name as pres_state',
-                'bd_active.zip as pres_zip'
-            ])
-            ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
-->where('documents.irs_notfound', 1)
-            ->leftJoin('boards as bd_active', function($join) {
-                $join->on('chapters.id', '=', 'bd_active.chapter_id')
-                    ->where('bd_active.board_position_id', '=', 1);
-            })
-            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
-            ->get()
-            ->sortBy('ein');
-    }
+    return $baseQueryActive['query']
+        ->select([
+            'chapters.*',
+            'bd_active.first_name as pres_first_name',
+            'bd_active.last_name as pres_last_name',
+            'bd_active.street_address as pres_address',
+            'bd_active.city as pres_city',
+            'state.state_short_name as pres_state',
+            'bd_active.zip as pres_zip'
+        ])
+        ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
+        ->leftJoin('boards as bd_active', function($join) {
+            $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                ->where('bd_active.board_position_id', '=', 1);
+        })
+        ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+        ->where('documents.irs_notfound', 1)
+        ->where(function($query) {
+            $query->whereNull('documents.irs_notified')
+                  ->orWhere('documents.irs_notified', '!=', '1');
+        })
+        ->get()
+        ->sortBy('ein');
+}
 
 
     // /**
