@@ -76,7 +76,9 @@
                             @if($list->documents?->irs_wrongdate == 1 && $list->documents?->irs_notfound == 1) <br> @endif
                             @if($list->documents?->irs_notfound == 1) NOT FOUND @else  @endif
                         </td>
-                        <td @if($list->documents?->irs_issues != 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                       <td @if($list->documents?->irs_notified != 1 && $list->documents?->irs_issues == 1) style="background-color:#dc3545; color: #ffffff;"
+                            @elseif($list->documents?->irs_notified == 1 && $list->documents?->irs_issues == 1) style="background-color:#28a745; color: #ffffff;"
+                            @else style="background-color: #transparent;" @endif>
                             @if($list->documents?->irs_notified == 1) YES @elseif($list->documents?->irs_notified != 1 && $list->documents?->irs_issues == 1) NO @else  @endif
                         </td>
                         <td>{{ $list->documents?->irs_notes?? null }}</td>
