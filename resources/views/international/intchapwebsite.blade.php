@@ -36,19 +36,11 @@
                 </thead>
                 <tbody>
                 @foreach($websiteList as $list)
-                    {{-- @php
-                        $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                        $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
-                        $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
-                    @endphp --}}
-
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/chapterwebsiteedit/{$list->id}") }}"><i class="fas fa-eye "></i></a></td>
                     <td class="text-center align-middle">
-                        <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="far fa-envelope text-primary"></i></a>
-
-                        {{-- <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Website Review | MOMS Club of ' . $list->name . ', ' . $list->state->state_short_name) }}"><i class="far fa-envelope"></i></a></td> --}}
-                   </td>
+                        <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
+                  </td>
                    <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}

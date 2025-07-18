@@ -314,7 +314,7 @@
                                     <label>Custom Message:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Board in MIMI</button>
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">Email Board in MIMI</button>
                                 </div>
                             </div>
                             @php

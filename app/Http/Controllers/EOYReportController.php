@@ -737,6 +737,10 @@ if ($request->has('board') && $request->input('board') === 'active') {
     {
         $user = $this->userController->loadUserInformation($request);
         $loggedInName = $user['user_name'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -750,8 +754,8 @@ if ($request->has('board') && $request->input('board') === 'active') {
         $rrList = $baseQuery['rrList'];
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards,
-            'chDocuments' => $chDocuments,
+            'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
         ];
 
         return view('eoyreports.reviewfinancialreport')->with($data);

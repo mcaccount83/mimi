@@ -1116,7 +1116,7 @@ function customErrorAlert(message) {
 //     });
 // }
 
-function showChapterEmailModal(chapterName, chapterId) {
+function showChapterEmailModal(chapterName, chapterId, userName, userPosition, userConfName, userConfDesc) {
     Swal.fire({
         title: 'Chapter Email Message',
         html: `
@@ -1128,6 +1128,13 @@ function showChapterEmailModal(chapterName, chapterId) {
                 <textarea id="email_message" name="email_message" class="rich-editor" placeholder="Email Message" required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;"></textarea>
             </div>
             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+            <p><b>MCL,</b><br>
+                ${userName}<br>
+                ${userPosition}<br>
+                ${userConfName}, ${userConfDesc}<br>
+                International MOMS Club</p>
+            </div>
         `,
         showCancelButton: true,
         confirmButtonText: 'OK',

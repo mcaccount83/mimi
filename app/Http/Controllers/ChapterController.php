@@ -180,13 +180,19 @@ class ChapterController extends Controller implements HasMiddleware
         $regId = $user['user_regId'];
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
         $countList = $chapterList->count();
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
+                'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+        ];
 
         return view('chapters.chaplist')->with($data);
     }
@@ -298,6 +304,10 @@ class ChapterController extends Controller implements HasMiddleware
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
         $positionId = $user['user_positionId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -353,7 +363,8 @@ class ChapterController extends Controller implements HasMiddleware
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate, 'probationReason' => $probationReason,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded' => $chDisbanded,
-            'resources' => $resources
+            'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+
         ];
 
         return view('chapters.view')->with($data);
@@ -1498,11 +1509,16 @@ class ChapterController extends Controller implements HasMiddleware
         $regId = $user['user_regId'];
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $websiteList = $baseQuery['query']->get();
 
-        $data = ['websiteList' => $websiteList];
+        $data = ['websiteList' => $websiteList, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+];
 
         return view('chapters.chapwebsite')->with($data);
     }
@@ -1514,11 +1530,16 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
         $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
         $websiteList = $baseQuery['query']->get();
 
-        $data = ['websiteList' => $websiteList];
+        $data = ['websiteList' => $websiteList, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+];
 
         return view('international.intchapwebsite')->with($data);
     }
