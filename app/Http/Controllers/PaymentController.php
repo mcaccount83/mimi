@@ -201,7 +201,13 @@ class PaymentController extends Controller implements HasMiddleware
                 $payments->save();
             }
 
-            $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+            if($userType == 'board'){
+                $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+            }
+            if($userType == 'disbanded'){
+                $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
+            }
+            // $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
             $chPayments = $baseQueryUpd['chPayments'];
 
             $mailData = array_merge(
@@ -321,7 +327,13 @@ class PaymentController extends Controller implements HasMiddleware
                 $payments->save();
             }
 
-            $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+             if($userType == 'board'){
+                $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+            }
+            if($userType == 'disbanded'){
+                $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
+            }
+            // $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
             $chPayments = $baseQueryUpd['chPayments'];
 
             $mailData = array_merge(
