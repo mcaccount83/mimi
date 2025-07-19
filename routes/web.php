@@ -203,6 +203,8 @@ Route::get('/chapterreports/coordinators', [ChapterReportController::class, 'sho
 Route::post('/chapter/sendstartup', [EmailController::class, 'sendChapterStartup'])->name('chapters.sendstartup');
 Route::post('/chapter/sendnewchapter', [EmailController::class, 'sendNewChapterEmail'])->name('chapters.sendnewchapter');
 Route::post('/chapter/sendchapter', [EmailController::class, 'sendChapterEmail'])->name('chapters.sendchapter');
+Route::post('/chapter/sendcoord', [EmailController::class, 'sendCoordEmail'])->name('coordinators.sendcoord');
+Route::post('/chapter/sendcoordup', [EmailController::class, 'sendCoordUplineEmail'])->name('coordinators.sendcoordup');
 Route::post('/chapter/sendchapterrereg', [EmailController::class, 'sendChapterReReg'])->name('chapters.sendchapterrereg');
 Route::post('/chapter/sendchapterrereglate', [EmailController::class, 'sendChapterReRegLate'])->name('chapters.sendchapterrereglate');
 Route::get('/eoy/boardreport/reminder', [EmailController::class, 'sendEOYBoardReportReminder'])->name('eoyreports.eoyboardreportreminder');

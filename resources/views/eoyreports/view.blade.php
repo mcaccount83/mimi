@@ -351,6 +351,8 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
+                    <button class="btn bg-gradient-primary mb-3" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'EOY Reports')">
+                        <i class="fa fa-envelope mr-2"></i>Email Board</button>
                     <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save EOY Information</button>
                     @if ($chDetails->boundary_issues != null)
                         <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editboundaries', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Boundary Issues</button>

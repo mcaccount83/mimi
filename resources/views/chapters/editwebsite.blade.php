@@ -134,14 +134,8 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
-                @php
-                    $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($chDetails->id);
-                    $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
-                    $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
-                @endphp
-                <button type="button" class="btn bg-gradient-primary mb-3"
-                            onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">
-                            <i class="fas fa-envelope mr-2"></i>Email Board</button>
+                <button class="btn bg-gradient-primary mb-3" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Website Review')">
+                        <i class="fa fa-envelope mr-2"></i>Email Board</button>
                     <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Website Information</button>
                 <br>
                 @endif

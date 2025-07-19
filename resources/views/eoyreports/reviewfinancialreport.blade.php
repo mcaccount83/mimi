@@ -323,7 +323,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
         <div class="card-body text-center">
             <br>
             <button type="submit" id="btn-step-14" class="btn bg-gradient-primary mb-2"><i class="fas fa-save mr-2"></i>Save Report Review</button>
-            <button class="btn bg-gradient-primary mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
+            <button class="btn bg-gradient-primary mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Financial Report Review')">
                 <i class="fa fa-envelope mr-2"></i>Email Board</button>
             <br>
             @if ($chDocuments['financial_review_complete'] != "" && $chDocuments['financial_report_received'])

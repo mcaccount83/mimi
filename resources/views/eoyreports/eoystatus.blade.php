@@ -38,29 +38,19 @@
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
-                        @php
-                            $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                            $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
-                            $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
+                    @php
+                        $mailData = [
+                            'chapterName' => $list->name,
+                            'chapterState' => $list->state,
+                            'boardElectionReportReceived' => $list->documents->new_board_submitted,
+                            'financialReportReceived' => $list->documents->financial_report_received,
+                            '990NSubmissionReceived' => $list->documents->irs_path,
+                            'einLetterCopyReceived' => $list->documents->ein_letter,
+                        ];
 
-                            $boardSubmitted = $emailData['boardSubmitted'] ?? null;
-                            $reportReceived = $emailData['reportReceived'] ?? null;
-                            $einLetter = $emailData['einLetter'] ?? null;
-
-                            $mimiUrl = 'https://momsclub.org/mimi';
-                            $mailMessage = "At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.\n\n";
-                            $mailMessage .= "The following items are missing:\n";
-                                if (is_null($list->documents->new_board_submitted) || $list->documents->new_board_submitted == 0) {
-                                    $mailMessage .= "- Board Election Report\n";
-                                }
-                                if (is_null($list->documents->financial_report_received) || $list->documents->financial_report_received == 0) {
-                                    $mailMessage .= "- Financial Report\n";
-                                }
-                                if (is_null($einLetter) || $einLetter == 0) { // `einLetter` is still used if its value directly reflects the EIN letter status
-                                    $mailMessage .= "- Copy of EIN Letter\n";
-                                }
-                            $mailMessage .= "\nPlease submit these reports as soon as possible to ensure compliance and access to resources. The reports can be accessed by logging into your MIMI account: $mimiUrl.\n";
-                        @endphp
+                        $renderedHtml = View::make('emails.endofyear.latereportreminder', ['mailData' => $mailData])->render();
+                        $renderedPlainText = strip_tags($renderedHtml);
+                    @endphp
 
                         <tr>
                             <td class="text-center align-middle">
@@ -70,7 +60,11 @@
                             </td>
                             <td class="text-center align-middle">
                                 @if ($list->documents->new_board_submitted == null || $list->documents->financial_report_received == null || $list->documents->new_board_submitted == 0 || $list->documents->financial_report_received == 0)
-                                    <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('EOY Status Report | MOMS Club of ' . $list->name . ', ' . $list->state->state_short_name) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
+                                   <a href="#" class="email-link" data-chapter-name="{{ $list->name }}" data-chapter-id="{{ $list->id }}" data-user-name="{{ $userName }}"
+                                    data-user-position="{{ $userPosition }}" data-user-conf-name="{{ $userConfName }}" data-user-conf-desc="{{ $userConfDesc }}"
+                                    data-predefined-subject="End of Year Reports Late Notice" data-message-id="msg-{{ $list->id }}"> <i class="far fa-envelope text-primary"></i></a>
+                                    <textarea id="msg-{{ $list->id }}" class="d-none">{{ $renderedHtml = View::make('emails.endofyear.latereportreminder',
+                                        ['mailData' => $mailData, 'minimal' => true, ])->render(); }}</textarea>
                                 @endif
                             </td>
                             <td>
@@ -149,6 +143,27 @@ document.addEventListener("DOMContentLoaded", function() {
         if (itemPath === currentPath) {
             item.classList.add("active");
         }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.email-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const messageId = this.dataset.messageId;
+            const fullMessage = document.getElementById(messageId).value;
+
+            showChapterEmailModal(
+                this.dataset.chapterName,
+                this.dataset.chapterId,
+                this.dataset.userName,
+                this.dataset.userPosition,
+                this.dataset.userConfName,
+                this.dataset.userConfDesc,
+                this.dataset.predefinedSubject,
+                fullMessage
+            );
+        });
     });
 });
 

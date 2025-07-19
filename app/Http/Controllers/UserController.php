@@ -223,26 +223,115 @@ class UserController extends Controller implements HasMiddleware
      * load Email Details -- Mail for Coordinator Downline bassed on CoordId
      */
     public function loadCoordEmailDetails($cdId)
-    {
-        $cdDetails = Coordinators::with(['coordTree'])->find($cdId);
-        $coordinators = $cdDetails->coordTree()->get();
+{
+    $cdDetails = Coordinators::with(['coordTree'])->find($cdId);
+    $coordinators = $cdDetails->coordTree()->get();
 
-        $coordinatorList = collect($coordinators)
-                ->flatMap(function ($value) {
-                    $attributes = $value->getAttributes();
+    $coordinatorList = collect($coordinators)
+            ->filter(function ($coordTree) use ($cdId) {
+                // Only process rows where one of the layers contains our $cdId
+                $attributes = $coordTree->getAttributes();
+                for ($i = 1; $i <= 8; $i++) {
+                    if (($attributes['layer'.$i] ?? null) == $cdId) {
+                        return true;
+                    }
+                }
+                return false;
+            })
+            ->flatMap(function ($value) use ($cdId) {
+                $attributes = $value->getAttributes();
+                $foundLayer = null;
 
-                    return collect(range(1, 8))
-                        ->map(fn ($i) => $attributes['layer'.$i] ?? null)
-                        ->filter(fn ($id) => is_numeric($id));
-                })
-                ->unique();
+                // Find which layer contains our $cdId
+                for ($i = 1; $i <= 8; $i++) {
+                    if (($attributes['layer'.$i] ?? null) == $cdId) {
+                        $foundLayer = $i;
+                        break;
+                    }
+                }
 
-            $emailListCoord = Coordinators::whereIn('id', $coordinatorList)->pluck('email')->filter()->toArray();
+                if (!$foundLayer) return [];
 
-        return [
-            'emailListCoord' => $emailListCoord,
-        ];
-    }
+                // Return $cdId and all layers BEFORE it (upline hierarchy)
+                return collect(range(1, $foundLayer))
+                    ->map(fn ($i) => $attributes['layer'.$i] ?? null)
+                    ->filter(fn ($id) => is_numeric($id));
+            })
+            ->unique();
+
+    // Get the main coordinator's email (the "to" email)
+    $toEmail = Coordinators::where('id', $cdId)
+        ->where('active_status', 1)
+        ->where('on_leave', '!=', 1)
+        ->pluck('email')
+        ->filter()
+        ->first();
+
+    // Get upline emails (excluding the main coordinator for CC)
+    $ccEmailList = Coordinators::whereIn('id', $coordinatorList->reject($cdId))
+        ->where('active_status', 1)
+        ->where('on_leave', '!=', 1)
+        ->pluck('email')
+        ->filter()
+        ->toArray();
+
+    return [
+        'toCoordEmail' => $toEmail,
+        'ccCoordEmailList' => $ccEmailList,
+    ];
+}
+
+
+   public function loadCoordEmailDownlineDetails($cdId)
+{
+    // Find all coordinators whose coordTree contains $cdId in any layer
+    $downlineCoordinators = Coordinators::with(['coordTree'])
+        ->where('active_status', 1)
+        ->where('on_leave', '!=', 1)
+        ->whereHas('coordTree', function($query) use ($cdId) {
+            for ($i = 1; $i <= 8; $i++) {
+                $query->orWhere("layer{$i}", $cdId);
+            }
+        })
+        ->get();
+
+    // Extract only the coordinator IDs that are BELOW $cdId in the hierarchy
+    $coordinatorList = collect($downlineCoordinators)
+            ->flatMap(function ($coordinator) use ($cdId) {
+                $coordTree = $coordinator->coordTree()->first();
+                if (!$coordTree) return [];
+
+                $attributes = $coordTree->getAttributes();
+                $foundLayer = null;
+
+                // Find which layer contains our $cdId
+                for ($i = 1; $i <= 8; $i++) {
+                    if (($attributes['layer'.$i] ?? null) == $cdId) {
+                        $foundLayer = $i;
+                        break;
+                    }
+                }
+
+                if (!$foundLayer) return [];
+
+                // Return only layers AFTER the found layer (lower in hierarchy)
+                return collect(range($foundLayer + 1, 8))
+                    ->map(fn ($i) => $attributes['layer'.$i] ?? null)
+                    ->filter(fn ($id) => is_numeric($id));
+            })
+            ->unique();
+
+    $emailListCoord = Coordinators::whereIn('id', $coordinatorList)
+        ->where('active_status', 1)
+        ->where('on_leave', '!=', 1)
+        ->pluck('email')
+        ->filter()
+        ->toArray();
+
+    return [
+        'emailListCoord' => $emailListCoord,
+    ];
+}
 
     /**
      * load Coordinator List for a PC selected and their downline

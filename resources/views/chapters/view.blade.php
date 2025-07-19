@@ -865,9 +865,8 @@
                     $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
                     $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
                 @endphp
-                        <button type="button" class="btn bg-gradient-primary mb-3"
-                            onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">
-                            <i class="fas fa-envelope mr-2"></i>Email Board</button>
+                    <button class="btn bg-gradient-primary mb-3" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
+                        <i class="fa fa-envelope mr-2"></i>Email Board</button>
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Chapter Information</button>
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
                 @endif

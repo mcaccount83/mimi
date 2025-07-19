@@ -1585,6 +1585,13 @@ class ChapterController extends Controller implements HasMiddleware
      */
     public function editChapterWebsite(Request $request, $id): View
     {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
+
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $chActiveId = $baseQuery['chActiveId'];
@@ -1598,6 +1605,7 @@ class ChapterController extends Controller implements HasMiddleware
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'conferenceDescription' => $conferenceDescription,
             'chDetails' => $chDetails, 'allWebLinks' => $allWebLinks,
             'chPcId' => $chPcId, 'regionLongName' => $regionLongName,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
         ];
 
         return view('chapters.editwebsite')->with($data);

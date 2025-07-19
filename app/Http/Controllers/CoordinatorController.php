@@ -80,11 +80,16 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function showCoordinators(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userCoordId = $user['user_coorId'];
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
         $regId = $user['user_regId'];
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
         $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
@@ -93,7 +98,9 @@ class CoordinatorController extends Controller implements HasMiddleware
         $emailListCord = $coordinatorList->pluck('email')->filter()->implode(';');
 
         $countList = count($coordinatorList);
-        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord];
+        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord,
+                        'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'userCoordId' => $userCoordId
+];
 
         return view('coordinators.coordlist')->with($data);
     }

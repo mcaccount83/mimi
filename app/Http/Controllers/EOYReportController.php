@@ -114,6 +114,10 @@ class EOYReportController extends Controller implements HasMiddleware
         $regId = $user['user_regId'];
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
         $now = Carbon::now();
         $currentYear = $now->year;
@@ -136,6 +140,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
             'title' => $title, 'breadcrumb' => $breadcrumb,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
         ];
 
         return view('eoyreports.eoystatus')->with($data);
@@ -153,6 +158,10 @@ class EOYReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -184,6 +193,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
             'reviewComplete' => $reviewComplete,  'rrList' => $rrList,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
         ];
 
         return view('eoyreports.view')->with($data);
@@ -269,6 +279,10 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
         $lastUpdatedBy = $user['user_name'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
        $now = Carbon::now();
         $currentYear = $now->year;
@@ -336,7 +350,9 @@ if ($request->has('board') && $request->input('board') === 'active') {
         }
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
+                'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+        ];
 
         return view('eoyreports.eoyboardreport')->with($data);
 
@@ -706,6 +722,10 @@ if ($request->has('board') && $request->input('board') === 'active') {
         $regId = $user['user_regId'];
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
         $now = Carbon::now();
         $currentYear = $now->year;
@@ -725,7 +745,9 @@ if ($request->has('board') && $request->input('board') === 'active') {
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
+                    'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+        ];
 
         return view('eoyreports.eoyfinancialreport')->with($data);
     }

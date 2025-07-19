@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\NewChapEIN;
 use App\Mail\ChapterEmail;
+use App\Mail\CoordEmail;
 use App\Mail\NewChapterSetup;
 use App\Mail\NewChapterWelcome;
 use App\Mail\PaymentsReRegLate;
@@ -32,13 +33,16 @@ class EmailController extends Controller implements HasMiddleware
 
     protected $baseChapterController;
 
+    protected $baseCoordinatorController;
+
     public function __construct(UserController $userController, PDFController $pdfController, BaseMailDataController $baseMailDataController,
-        BaseChapterController $baseChapterController)
+        BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseMailDataController = $baseMailDataController;
         $this->baseChapterController = $baseChapterController;
+        $this->baseCoordinatorController = $baseCoordinatorController;
     }
 
     public static function middleware(): array
@@ -391,6 +395,122 @@ class EmailController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
+
+    public function sendCoordEmail(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+
+        $input = $request->all();
+        $emailSubject = $input['subject'];
+        $emailMessage = $input['message'];
+        $coordId = $input['coordId'];
+
+        $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($coordId);
+        $cdDetails = $baseQuery['cdDetails'];
+        $cdList = $this->userController->loadCoordEmailDetails($coordId);
+        $toCoordEmail = $cdList['toCoordEmail'];
+        $ccCoordEmailList = $cdList['ccCoordEmailList'];
+
+        try {
+            DB::beginTransaction();
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getNewCoordinatorData($cdDetails),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getMessageData($input),
+            );
+
+            Mail::to($toCoordEmail)
+                ->cc($ccCoordEmailList)
+                ->queue(new CoordEmail($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successful sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('coordinators.view', ['id' => $coordId]),
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('coordinators.view', ['id' => $coordId]),
+            ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+    public function sendCoordUplineEmail(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userCoordId = $user['user_coorId'];
+
+        $input = $request->all();
+        $emailSubject = $input['subject'];
+        $emailMessage = $input['message'];
+        $userCoordId = $input['userCoordId'];
+
+        $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($userCoordId);
+        $cdDetails = $baseQuery['cdDetails'];
+        $cdList = $this->userController->loadCoordEmailDownlineDetails($userCoordId);
+        $emailListCoord = $cdList['emailListCoord'];
+
+        try {
+            DB::beginTransaction();
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getNewCoordinatorData($cdDetails),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getMessageData($input),
+            );
+
+            Mail::to($emailListCoord)
+                ->queue(new CoordEmail($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successful sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('coordinators.view', ['id' => $userCoordId]),
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('coordinators.view', ['id' => $userCoordId]),
+            ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
 
     /**
      * Send Chapter Re-Registration Reminder

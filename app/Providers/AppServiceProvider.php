@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
+        // Register mail markdown views namespace
+    $this->loadViewsFrom(resource_path('views/vendor/mail/html'), 'mail');
     }
 
     /**
@@ -29,3 +32,4 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 }
+

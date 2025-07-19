@@ -24,10 +24,10 @@
                 <thead>
                   <tr>
                     <th>Details</th>
+                    <th>Email</th>
                     <th>Conf/Reg</th>
                     <th>Coordinator Name</th>
 					<th>Display Position</th>
-                    {{-- <th>MIMI Position</th> --}}
                     <th>Secondary Positions</th>
 					<th>Hire Date</th>
                     <th>Email</th>
@@ -38,6 +38,9 @@
                   @foreach($coordinatorList as $list)
                     <tr>
                     <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td>
+                        <a onclick="showCoordEmailModal('{{ $list->first_name }}', '{{ $list->last_name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
+                    </td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -50,7 +53,6 @@
                             <td @if ( $list->on_leave == 1 ) style="background-color: #ffc107;" @endif>ON LEAVE</td><td></td>
                         @else
                             <td>{{ $list->displayPosition->long_title }}</td>
-                            {{-- <td>{{ $list->mimiPosition->short_title }}</td> --}}
                             <td>
                                 @forelse($list->secondaryPosition as $position)
                                     {{ $position->long_title }}@if(!$loop->last)<br>@endif
@@ -77,7 +79,6 @@
                 <div class="card-body text-center">
                 @if($conferenceCoordinatorCondition)
                     <a class="btn bg-gradient-primary" href="{{ route('coordinators.coordpending') }}"><i class="fas fa-share mr-2" ></i>New Coordinators Pending</a>
-                    {{-- <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Coordinator</a> --}}
                 @endif
                 @if ($regionalCoordinatorCondition)
                     @if($checkBoxStatus == null)
@@ -86,7 +87,7 @@
                         <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button></a>
                     @endif
                 @endif
-                <a class="btn bg-gradient-primary" href="mailto:{{ $emailListCord }}"><i class="fas fa-envelope mr-2" ></i>E-mail Listed Coordinators</a>
+                <a class="btn bg-gradient-primary" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope mr-2"></i>E-mail Coordinators</a>
             </div>
          </div>
           <!-- /.box -->

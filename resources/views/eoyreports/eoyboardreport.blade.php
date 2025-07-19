@@ -38,20 +38,13 @@
                 <tbody>
                     @foreach($chapterList as $list)
                     @php
-                        $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                        $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
-                        $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
+                        $mailData = [
+                            'chapterName' => $list->name,
+                            'chapterState' => $list->state,
+                        ];
 
-                        // Define the message body with a link
-                        $mimiUrl = 'https://momsclub.org/mimi';
-                        $mailMessage = "Don't forget to complete the Board Election Report for your chapter! This report is available now and should be filled out as soon as your chapter has held its election but is due no later than June 30th at 11:59pm.\n\n";
-                        $mailMessage .= "Please submit your report as soon as possible to ensure that your incoming board members have access to all the tools they need to be successful. The information from the report is used for:\n";
-                        $mailMessage .= "- Chapter Contacts for your Coordinator Team\n";
-                        $mailMessage .= "- Access to MIMI\n";
-                        $mailMessage .= "- Inclusion in the Board Discussion Group\n";
-                        $mailMessage .= "- Receipt of Conference Newsletter\n";
-                        $mailMessage .= "- Automated Messages from MIMI, including Re-Registration payment reminders.\n\n";
-                        $mailMessage .= "The Board Election Report can be accessed by logging into your MIMI account: $mimiUrl and selecting the buttons at the top of your screen.\n";
+                        $renderedHtml = View::make('emails.endofyear.electionreportreminder', ['mailData' => $mailData])->render();
+                        $renderedPlainText = strip_tags($renderedHtml);
                     @endphp
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle">
@@ -61,7 +54,11 @@
                         </td>
                             <td class="text-center align-middle">
                                 @if ($list->documents->new_board_submitted == null || $list->documents->new_board_submitted == 0)
-                                    <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Board Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state->state_short_name) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
+                                    <a href="#" class="email-link" data-chapter-name="{{ $list->name }}" data-chapter-id="{{ $list->id }}" data-user-name="{{ $userName }}"
+                                    data-user-position="{{ $userPosition }}" data-user-conf-name="{{ $userConfName }}" data-user-conf-desc="{{ $userConfDesc }}"
+                                    data-predefined-subject="Board Election Report Reminder" data-message-id="msg-{{ $list->id }}"> <i class="far fa-envelope text-primary"></i></a>
+                                    <textarea id="msg-{{ $list->id }}" class="d-none">{{ $renderedHtml = View::make('emails.endofyear.electionreportreminder',
+                                        ['mailData' => $mailData, 'minimal' => true, ])->render(); }}</textarea>
                                 @endif
                             </td>
                             <td>
@@ -144,6 +141,27 @@ document.addEventListener("DOMContentLoaded", function() {
         if (itemPath === currentPath) {
             item.classList.add("active");
         }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.email-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const messageId = this.dataset.messageId;
+            const fullMessage = document.getElementById(messageId).value;
+
+            showChapterEmailModal(
+                this.dataset.chapterName,
+                this.dataset.chapterId,
+                this.dataset.userName,
+                this.dataset.userPosition,
+                this.dataset.userConfName,
+                this.dataset.userConfDesc,
+                this.dataset.predefinedSubject,
+                fullMessage
+            );
+        });
     });
 });
 
