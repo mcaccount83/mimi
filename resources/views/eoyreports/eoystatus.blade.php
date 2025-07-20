@@ -29,7 +29,7 @@
                 <th>Conf/Reg</th>
 				<th>State</th>
                 <th>Name</th>
-                <th>Extension Given<br>Do Not Send Late Notice</th>
+                <th>Extension Given or<br>Returned to Chapter</th>
                 <th>Board Report Received</th>
                 <th>Board Report Activated</th>
 				<th>Financial Report Received</th>
