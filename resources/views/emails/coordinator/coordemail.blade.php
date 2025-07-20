@@ -1,6 +1,8 @@
 @component('mail::message')
 
-<p><b>{{ $mailData['first_name'] }} {{ $mailData['last_name'] }}:</b></p>
+@if($mailData['first_name'] != ' ')
+<p><b>{{ $mailData['first_name'] }}:</b></p>
+@endif
 
 @php
     $message = $mailData['message'];

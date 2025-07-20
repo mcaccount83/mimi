@@ -473,9 +473,13 @@ class EmailController extends Controller implements HasMiddleware
             DB::beginTransaction();
 
             $mailData = array_merge(
-                $this->baseMailDataController->getNewCoordinatorData($cdDetails),
+                // $this->baseMailDataController->getNewCoordinatorData($cdDetails),
                 $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getMessageData($input),
+                [
+                    'first_name' => ' ',
+                    'last_name' => ' ',
+                ]
             );
 
             Mail::to($emailListCoord)

@@ -1125,6 +1125,9 @@ function showChapterEmailModal(chapterName, chapterId, userName, userPosition, u
             <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
                 <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
             </div>
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+            <p><br><b>MOMS Club of ${chapterName}:</b></p>
+            </div>
             <div style="width: 100%; margin-bottom: 10px;">
                 <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
             </div>
@@ -1272,6 +1275,9 @@ function showCoordEmailModal(coordFName, coordLName, coordId, userName, userPosi
             <p>This will send your message to <b>${coordFName} ${coordLName}</b> and their full upline.<br>
             <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
                 <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+            </div>
+             <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+            <p><br><b>${coordFName}:</b></p>
             </div>
             <div style="width: 100%; margin-bottom: 10px;">
                 <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
