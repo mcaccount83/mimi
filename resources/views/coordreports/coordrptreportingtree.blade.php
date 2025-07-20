@@ -22,255 +22,171 @@
 
 <!-- Main content -->
 <div class="card-body">
-%% SOLUTION 1: Use explicit positioning with invisible nodes
-<div class="mermaid-container">
-    <div class="mermaid flowchart" id="mermaid-chart">
-        flowchart TD
 
-        %% Define all nodes first
-        @foreach ($coordinatorList as $coordinator)
-        @php
-            $id = $coordinator['id'] ?? '';
-            $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
-            $position = htmlspecialchars($coordinator['displayPosition']['short_title'] ?? '');
-            $sec_titles = '';
-            if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
-                $sec_titles_array = $coordinator->secondaryPosition->pluck('short_title')->toArray();
-                $sec_titles = htmlspecialchars(implode('/', $sec_titles_array));
-            }
-            $region = htmlspecialchars($coordinator['region']['short_name'] ?? '');
-            $conf = htmlspecialchars($coordinator['conference']['short_name'] ?? '');
+    <div class="mermaid-container">
+        <div class="mermaid flowchart" id="mermaid-chart">
+            flowchart TD
 
-            $node_label = "$name<br>$position";
-            if ($sec_titles) $node_label .= "/$sec_titles";
-            if ($region !== "None") $node_label .= "<br>$region";
-            if ($region === "None") $node_label .= "<br>$conf";
-        @endphp
-            {{ $id }}["{!! $node_label !!}"]
-        @endforeach
-
-        %% Create invisible spacer nodes to force vertical alignment
-        @php
-            $level_groups = [];
-            // Group coordinators by their reporting level
-            foreach ($coordinatorList as $coordinator) {
-                $report_id = $coordinator['report_id'];
-                $id = $coordinator['id'];
-                if (!isset($level_groups[$report_id])) {
-                    $level_groups[$report_id] = [];
-                }
-                $level_groups[$report_id][] = $id;
-            }
-        @endphp
-
-        @foreach ($level_groups as $manager_id => $subordinates)
-            @if (count($subordinates) > 1)
-                %% Create invisible connectors for multiple subordinates
-                {{ $manager_id }} --> connector_{{ $manager_id }}[ ]
-                style connector_{{ $manager_id }} fill:transparent,stroke:transparent,color:transparent
-
-                @foreach ($subordinates as $index => $subordinate_id)
-                    @php
-                        $shouldExclude = ($manager_id == "0" && $founderCondition) || ($manager_id == "1" && !$founderCondition);
-                    @endphp
-                    @if (!$shouldExclude)
-                        connector_{{ $manager_id }} --> {{ $subordinate_id }}
-                    @endif
-                @endforeach
-            @else
-                %% Direct connection for single subordinates
-                @php
-                    $subordinate_id = $subordinates[0];
-                    $shouldExclude = ($manager_id == "0" && $founderCondition) || ($manager_id == "1" && !$founderCondition);
-                @endphp
-                @if (!$shouldExclude)
-                    {{ $manager_id }} --> {{ $subordinate_id }}
-                @endif
-            @endif
-        @endforeach
-
-        %% Subgraphs remain the same...
-        @php
-            $conference_groups = [];
-            $region_groups = [];
-
-            foreach ($coordinatorList as $coordinator) {
+            %% Define all nodes first
+            @foreach ($coordinatorList as $coordinator)
+            @php
                 $id = $coordinator['id'] ?? '';
+                $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
+                $position = htmlspecialchars($coordinator['displayPosition']['short_title'] ?? '');
+                $sec_titles = '';
+                if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                    $sec_titles_array = $coordinator->secondaryPosition->pluck('short_title')->toArray();
+                    $sec_titles = htmlspecialchars(implode('/', $sec_titles_array));
+                }
+                $region = htmlspecialchars($coordinator['region']['short_name'] ?? '');
+                $conf = htmlspecialchars($coordinator['conference']['short_name'] ?? '');
 
-                if ($founderCondition) {
-                    $conf = $coordinator['conference']['short_name'];
-                    if ($conf !== "Intl") {
-                        if (!isset($conference_groups[$conf])) {
-                            $conference_groups[$conf] = [];
+                $node_label = "$name<br>$position";
+                if ($sec_titles) $node_label .= "/$sec_titles";
+                if ($region !== "None") $node_label .= "<br>$region";
+                if ($region === "None") $node_label .= "<br>$conf";
+            @endphp
+                {{ $id }}["{!! $node_label !!}"]
+            @endforeach
+
+            %% Group nodes into subgraphs without redefining them
+            @php
+                $conference_groups = [];
+                $region_groups = [];
+
+                foreach ($coordinatorList as $coordinator) {
+                    $id = $coordinator['id'] ?? '';
+
+                    if ($founderCondition) {
+                        $conf = $coordinator['conference']['short_name'];
+                        if ($conf !== "Intl") {
+                            if (!isset($conference_groups[$conf])) {
+                                $conference_groups[$conf] = [];
+                            }
+                            $region = $coordinator['region']['short_name'];
+                            if ($region !== "None") {
+                                if (!isset($conference_groups[$conf][$region])) {
+                                    $conference_groups[$conf][$region] = [];
+                                }
+                                $conference_groups[$conf][$region][] = $id;
+                            } else {
+                                if (!isset($conference_groups[$conf]['_conf'])) {
+                                    $conference_groups[$conf]['_conf'] = [];
+                                }
+                                $conference_groups[$conf]['_conf'][] = $id;
+                            }
                         }
+                    } else {
                         $region = $coordinator['region']['short_name'];
                         if ($region !== "None") {
-                            if (!isset($conference_groups[$conf][$region])) {
-                                $conference_groups[$conf][$region] = [];
+                            if (!isset($region_groups[$region])) {
+                                $region_groups[$region] = [];
                             }
-                            $conference_groups[$conf][$region][] = $id;
-                        } else {
-                            if (!isset($conference_groups[$conf]['_conf'])) {
-                                $conference_groups[$conf]['_conf'] = [];
-                            }
-                            $conference_groups[$conf]['_conf'][] = $id;
+                            $region_groups[$region][] = $id;
                         }
-                    }
-                } else {
-                    $region = $coordinator['region']['short_name'];
-                    if ($region !== "None") {
-                        if (!isset($region_groups[$region])) {
-                            $region_groups[$region] = [];
-                        }
-                        $region_groups[$region][] = $id;
                     }
                 }
-            }
-        @endphp
+            @endphp
 
-        @if ($founderCondition)
-            @foreach ($conference_groups as $conference => $regions_data)
-                subgraph {{ $conference }}
-                    direction TB
-                    style {{ $conference }} fill:none,stroke:none
+            %% Founder Condition Subgraphs
+            @if ($founderCondition)
+                @foreach ($conference_groups as $conference => $regions_data)
+                    subgraph {{ $conference }}
+                        direction TB
+                        style {{ $conference }} fill:none,stroke:none
 
-                    @if (isset($regions_data['_conf']))
-                        @foreach ($regions_data['_conf'] as $id)
+                        %% Conference-level coordinators (if any)
+                        @if (isset($regions_data['_conf']))
+                            @foreach ($regions_data['_conf'] as $id)
+                                {{ $id }}
+                            @endforeach
+                        @endif
+
+                        %% Region subgraphs
+                        @foreach ($regions_data as $region => $ids)
+                            @if ($region !== '_conf')
+                                subgraph {{ $region }}
+                                    direction TB
+                                    style {{ $region }} fill:none,stroke:none
+
+                                    %% List node IDs without redefining
+                                    @foreach ($ids as $id)
+                                        {{ $id }}
+                                    @endforeach
+                                end
+                            @endif
+                        @endforeach
+                    end
+                @endforeach
+            @else
+                %% Non-Founder Condition Subgraphs
+                @foreach ($region_groups as $region => $ids)
+                    subgraph {{ $region }}
+                        direction TB
+                        style {{ $region }} fill:none,stroke:none
+
+                        %% List node IDs without redefining
+                        @foreach ($ids as $id)
                             {{ $id }}
                         @endforeach
-                    @endif
-
-                    @foreach ($regions_data as $region => $ids)
-                        @if ($region !== '_conf')
-                            subgraph {{ $region }}
-                                direction TB
-                                style {{ $region }} fill:none,stroke:none
-
-                                @foreach ($ids as $id)
-                                    {{ $id }}
-                                @endforeach
-                            end
-                        @endif
-                    @endforeach
-                end
-            @endforeach
-        @else
-            @foreach ($region_groups as $region => $ids)
-                subgraph {{ $region }}
-                    direction TB
-                    style {{ $region }} fill:none,stroke:none
-
-                    @foreach ($ids as $id)
-                        {{ $id }}
-                    @endforeach
-                end
-            @endforeach
-        @endif
-    </div>
-</div>
-
-%% ===================================================
-%% SOLUTION 2: Alternative with forced rank ordering
-%% ===================================================
-
-{{-- <div class="mermaid-container-alt">
-    <div class="mermaid flowchart" id="mermaid-chart-alt">
-        graph TD
-
-        %% Define nodes with explicit rank constraints
-        @foreach ($coordinatorList as $coordinator)
-        @php
-            $id = $coordinator['id'] ?? '';
-            $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
-            $position = htmlspecialchars($coordinator['displayPosition']['short_title'] ?? '');
-            $sec_titles = '';
-            if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
-                $sec_titles_array = $coordinator->secondaryPosition->pluck('short_title')->toArray();
-                $sec_titles = htmlspecialchars(implode('/', $sec_titles_array));
-            }
-            $region = htmlspecialchars($coordinator['region']['short_name'] ?? '');
-            $conf = htmlspecialchars($coordinator['conference']['short_name'] ?? '');
-
-            $node_label = "$name<br>$position";
-            if ($sec_titles) $node_label .= "/$sec_titles";
-            if ($region !== "None") $node_label .= "<br>$region";
-            if ($region === "None") $node_label .= "<br>$conf";
-        @endphp
-            {{ $id }}["{!! $node_label !!}"]
-        @endforeach
-
-        %% Group connections by hierarchy level and force vertical spacing
-        @php
-            $connections_by_level = [];
-            foreach ($coordinatorList as $coordinator) {
-                $report_id = $coordinator['report_id'];
-                $id = $coordinator['id'];
-                $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
-
-                if (!$shouldExclude) {
-                    if (!isset($connections_by_level[$report_id])) {
-                        $connections_by_level[$report_id] = [];
-                    }
-                    $connections_by_level[$report_id][] = $id;
-                }
-            }
-
-            // Sort by manager ID to ensure consistent ordering
-            ksort($connections_by_level);
-        @endphp
-
-        %% Create connections with explicit vertical flow
-        @foreach ($connections_by_level as $manager_id => $subordinate_ids)
-            @foreach ($subordinate_ids as $subordinate_id)
-                {{ $manager_id }} -.-> {{ $subordinate_id }}
-            @endforeach
-
-            %% Add invisible horizontal spacers between siblings at same level
-            @if (count($subordinate_ids) > 1)
-                @for ($i = 0; $i < count($subordinate_ids) - 1; $i++)
-                    {{ $subordinate_ids[$i] }} ~~~ {{ $subordinate_ids[$i + 1] }}
-                @endfor
+                    end
+                @endforeach
             @endif
-        @endforeach
 
-        %% Same subgraph logic as before...
-        @if ($founderCondition)
-            @foreach ($conference_groups as $conference => $regions_data)
-                subgraph {{ $conference }}
-                    direction TB
-                    @if (isset($regions_data['_conf']))
-                        @foreach ($regions_data['_conf'] as $id)
-                            {{ $id }}
-                        @endforeach
-                    @endif
-                    @foreach ($regions_data as $region => $ids)
-                        @if ($region !== '_conf')
-                            subgraph {{ $region }}
-                                direction TB
-                                @foreach ($ids as $id)
-                                    {{ $id }}
-                                @endforeach
-                            end
-                        @endif
-                    @endforeach
-                end
-            @endforeach
-        @else
-            @foreach ($region_groups as $region => $ids)
-                subgraph {{ $region }}
-                    direction TB
-                    @foreach ($ids as $id)
-                        {{ $id }}
-                    @endforeach
-                end
-            @endforeach
-        @endif
+            %% Connect Coordinators - SORTED BY MANAGER TO MINIMIZE CROSSINGS
+            @php
+                $connections = [];
+                foreach ($coordinatorList as $coordinator) {
+                    $report_id = $coordinator['report_id'];
+                    $id = $coordinator['id'];
+                    $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
 
-        %% Style invisible elements
-        linkStyle default stroke:transparent
-        classDef invisible fill:transparent,stroke:transparent,color:transparent
+                    if (!$shouldExclude) {
+                        $connections[] = ['manager' => $report_id, 'subordinate' => $id];
+                    }
+                }
+
+                // Sort connections: first by manager ID, then by subordinate ID
+                usort($connections, function($a, $b) {
+                    if ($a['manager'] === $b['manager']) {
+                        return strcmp($a['subordinate'], $b['subordinate']);
+                    }
+                    return strcmp($a['manager'], $b['manager']);
+                });
+            @endphp
+
+            @foreach ($connections as $connection)
+                {{ $connection['manager'] }} --> {{ $connection['subordinate'] }}
+            @endforeach
+
+            %% FORCE VERTICAL ALIGNMENT WITH RANKING
+            @php
+                // Group subordinates by their manager for rank constraints
+                $subordinate_groups = [];
+                foreach ($connections as $connection) {
+                    $manager = $connection['manager'];
+                    $subordinate = $connection['subordinate'];
+                    if (!isset($subordinate_groups[$manager])) {
+                        $subordinate_groups[$manager] = [];
+                    }
+                    $subordinate_groups[$manager][] = $subordinate;
+                }
+            @endphp
+
+            %% Add rank constraints to keep siblings at same level
+            @foreach ($subordinate_groups as $manager => $subordinates)
+                @if (count($subordinates) > 1)
+                    %% Force siblings to be at same rank (horizontal level)
+                    @for ($i = 0; $i < count($subordinates) - 1; $i++)
+                        {{ $subordinates[$i] }} -.-> {{ $subordinates[$i + 1] }}
+                        linkStyle {{ $loop->index * count($subordinates) + $i }} stroke:transparent
+                    @endfor
+                @endif
+            @endforeach
+
+        </div>
     </div>
-</div> --}}
+</div
 
 
     {{-- <div class="mermaid-container">
