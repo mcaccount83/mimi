@@ -23,7 +23,7 @@
 <!-- Main content -->
 <div class="card-body">
 
-    <div class="mermaid-container">
+<div class="mermaid-container">
         <div class="mermaid flowchart" id="mermaid-chart">
             flowchart TD
 
@@ -133,60 +133,20 @@
                 @endforeach
             @endif
 
-            %% Connect Coordinators - SORTED BY MANAGER TO MINIMIZE CROSSINGS
-            @php
-                $connections = [];
-                foreach ($coordinatorList as $coordinator) {
+            %% Connect Coordinators - EXACTLY LIKE YOUR ORIGINAL BUT WITH INVISIBLE LABELS
+            @foreach ($coordinatorList as $coordinator)
+                @php
                     $report_id = $coordinator['report_id'];
                     $id = $coordinator['id'];
                     $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
-
-                    if (!$shouldExclude) {
-                        $connections[] = ['manager' => $report_id, 'subordinate' => $id];
-                    }
-                }
-
-                // Sort connections: first by manager ID, then by subordinate ID
-                usort($connections, function($a, $b) {
-                    if ($a['manager'] === $b['manager']) {
-                        return strcmp($a['subordinate'], $b['subordinate']);
-                    }
-                    return strcmp($a['manager'], $b['manager']);
-                });
-            @endphp
-
-            @foreach ($connections as $connection)
-                {{ $connection['manager'] }} --> {{ $connection['subordinate'] }}
-            @endforeach
-
-            %% FORCE VERTICAL ALIGNMENT WITH RANKING
-            @php
-                // Group subordinates by their manager for rank constraints
-                $subordinate_groups = [];
-                foreach ($connections as $connection) {
-                    $manager = $connection['manager'];
-                    $subordinate = $connection['subordinate'];
-                    if (!isset($subordinate_groups[$manager])) {
-                        $subordinate_groups[$manager] = [];
-                    }
-                    $subordinate_groups[$manager][] = $subordinate;
-                }
-            @endphp
-
-            %% Add rank constraints to keep siblings at same level
-            @foreach ($subordinate_groups as $manager => $subordinates)
-                @if (count($subordinates) > 1)
-                    %% Force siblings to be at same rank (horizontal level)
-                    @for ($i = 0; $i < count($subordinates) - 1; $i++)
-                        {{ $subordinates[$i] }} -.-> {{ $subordinates[$i + 1] }}
-                        linkStyle {{ $loop->index * count($subordinates) + $i }} stroke:transparent
-                    @endfor
+                @endphp
+                @if (!$shouldExclude)
+                    {{ $report_id }} ---|" "| {{ $id }}
                 @endif
             @endforeach
-
         </div>
     </div>
-</div
+</div>
 
 
     {{-- <div class="mermaid-container">
