@@ -49,7 +49,37 @@
                 {{ $id }}["{!! $node_label !!}"]
             @endforeach
 
-            %% Group nodes into subgraphs without redefining them
+            %% Create HIDDEN subgraphs for each manager's direct reports
+            @php
+                $manager_groups = [];
+                foreach ($coordinatorList as $coordinator) {
+                    $report_id = $coordinator['report_id'];
+                    $id = $coordinator['id'];
+                    $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
+
+                    if (!$shouldExclude) {
+                        if (!isset($manager_groups[$report_id])) {
+                            $manager_groups[$report_id] = [];
+                        }
+                        $manager_groups[$report_id][] = $id;
+                    }
+                }
+            @endphp
+
+            %% Create invisible subgraphs to group direct reports
+            @foreach ($manager_groups as $manager_id => $subordinates)
+                @if (count($subordinates) > 1)
+                    subgraph group{{ $manager_id }} [" "]
+                        direction TB
+                        style group{{ $manager_id }} fill:transparent,stroke:transparent
+                        @foreach ($subordinates as $subordinate)
+                            {{ $subordinate }}
+                        @endforeach
+                    end
+                @endif
+            @endforeach
+
+            %% Your original subgraphs for regions/conferences
             @php
                 $conference_groups = [];
                 $region_groups = [];
@@ -133,7 +163,7 @@
                 @endforeach
             @endif
 
-            %% Connect Coordinators - SIMPLE ORDER CHANGE
+            %% Connect Coordinators - EXACTLY like your original
             @foreach ($coordinatorList as $coordinator)
                 @php
                     $report_id = $coordinator['report_id'];
@@ -141,7 +171,7 @@
                     $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
                 @endphp
                 @if (!$shouldExclude)
-                    {{ $report_id }} ---|"{{ $loop->index }}"| {{ $id }}
+                    {{ $report_id }} --- {{ $id }}
                 @endif
             @endforeach
         </div>
