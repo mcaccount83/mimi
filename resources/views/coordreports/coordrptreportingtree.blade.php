@@ -133,7 +133,7 @@
                 @endforeach
             @endif
 
-            %% Connect Coordinators - EXACTLY LIKE YOUR ORIGINAL BUT WITH INVISIBLE LABELS
+            %% Connect Coordinators - SIMPLE ORDER CHANGE
             @foreach ($coordinatorList as $coordinator)
                 @php
                     $report_id = $coordinator['report_id'];
@@ -141,7 +141,7 @@
                     $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
                 @endphp
                 @if (!$shouldExclude)
-                    {{ $report_id }} ---|" "| {{ $id }}
+                    {{ $report_id }} ---|"{{ $loop->index }}"| {{ $id }}
                 @endif
             @endforeach
         </div>
