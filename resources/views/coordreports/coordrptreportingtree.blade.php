@@ -23,7 +23,7 @@
 <!-- Main content -->
 <div class="card-body">
 %% SOLUTION 1: Use explicit positioning with invisible nodes
-<div class="mermaid-container">
+{{-- <div class="mermaid-container">
     <div class="mermaid flowchart" id="mermaid-chart">
         flowchart TD
 
@@ -167,13 +167,13 @@
             @endforeach
         @endif
     </div>
-</div>
+</div> --}}
 
 %% ===================================================
 %% SOLUTION 2: Alternative with forced rank ordering
 %% ===================================================
 
-{{-- <div class="mermaid-container-alt">
+<div class="mermaid-container-alt">
     <div class="mermaid flowchart" id="mermaid-chart-alt">
         graph TD
 
@@ -270,7 +270,7 @@
         linkStyle default stroke:transparent
         classDef invisible fill:transparent,stroke:transparent,color:transparent
     </div>
-</div> --}}
+</div>
 
     {{-- <div class="mermaid-container">
         <div class="mermaid flowchart" id="mermaid-chart">
