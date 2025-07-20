@@ -22,162 +22,232 @@
 
 <!-- Main content -->
 <div class="card-body">
-
 <div class="mermaid-container">
-        <div class="mermaid flowchart" id="mermaid-chart">
-            flowchart TD
+<div class="mermaid flowchart" id="mermaid-chart">
+    flowchart TD
 
-            %% Define all nodes first
-            @foreach ($coordinatorList as $coordinator)
-            @php
-                $id = $coordinator['id'] ?? '';
-                $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
-                $position = htmlspecialchars($coordinator['displayPosition']['short_title'] ?? '');
-                $sec_titles = '';
-                if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
-                    $sec_titles_array = $coordinator->secondaryPosition->pluck('short_title')->toArray();
-                    $sec_titles = htmlspecialchars(implode('/', $sec_titles_array));
+    %% Define all nodes first
+    @foreach ($coordinatorList as $coordinator)
+    @php
+        $id = $coordinator['id'] ?? '';
+        $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
+        $position = htmlspecialchars($coordinator['displayPosition']['short_title'] ?? '');
+        $sec_titles = '';
+        if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+            $sec_titles_array = $coordinator->secondaryPosition->pluck('short_title')->toArray();
+            $sec_titles = htmlspecialchars(implode('/', $sec_titles_array));
+        }
+        $region = htmlspecialchars($coordinator['region']['short_name'] ?? '');
+        $conf = htmlspecialchars($coordinator['conference']['short_name'] ?? '');
+
+        $node_label = "$name<br>$position";
+        if ($sec_titles) $node_label .= "/$sec_titles";
+        if ($region !== "None") $node_label .= "<br>$region";
+        if ($region === "None") $node_label .= "<br>$conf";
+    @endphp
+        {{ $id }}["{!! $node_label !!}"]
+    @endforeach
+
+    %% Build manager groups data structure
+    @php
+        $manager_groups = [];
+        foreach ($coordinatorList as $coordinator) {
+            $report_id = $coordinator['report_id'];
+            $id = $coordinator['id'];
+            $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
+
+            if (!$shouldExclude) {
+                if (!isset($manager_groups[$report_id])) {
+                    $manager_groups[$report_id] = [];
                 }
-                $region = htmlspecialchars($coordinator['region']['short_name'] ?? '');
-                $conf = htmlspecialchars($coordinator['conference']['short_name'] ?? '');
+                $manager_groups[$report_id][] = $id;
+            }
+        }
+    @endphp
 
-                $node_label = "$name<br>$position";
-                if ($sec_titles) $node_label .= "/$sec_titles";
-                if ($region !== "None") $node_label .= "<br>$region";
-                if ($region === "None") $node_label .= "<br>$conf";
-            @endphp
-                {{ $id }}["{!! $node_label !!}"]
-            @endforeach
+    %% Group nodes into geographical subgraphs with nested manager groups
+    @php
+        $conference_groups = [];
+        $region_groups = [];
 
-            %% Create HIDDEN subgraphs for each manager's direct reports
-            @php
-                $manager_groups = [];
-                foreach ($coordinatorList as $coordinator) {
-                    $report_id = $coordinator['report_id'];
-                    $id = $coordinator['id'];
-                    $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
+        foreach ($coordinatorList as $coordinator) {
+            $id = $coordinator['id'] ?? '';
 
-                    if (!$shouldExclude) {
-                        if (!isset($manager_groups[$report_id])) {
-                            $manager_groups[$report_id] = [];
-                        }
-                        $manager_groups[$report_id][] = $id;
+            if ($founderCondition) {
+                $conf = $coordinator['conference']['short_name'];
+                if ($conf !== "Intl") {
+                    if (!isset($conference_groups[$conf])) {
+                        $conference_groups[$conf] = [];
                     }
-                }
-            @endphp
-
-            %% Create invisible subgraphs to group direct reports
-            @foreach ($manager_groups as $manager_id => $subordinates)
-                @if (count($subordinates) > 1)
-                    subgraph group{{ $manager_id }} [" "]
-                        direction TB
-                        style group{{ $manager_id }} fill:transparent,stroke:transparent
-                        @foreach ($subordinates as $subordinate)
-                            {{ $subordinate }}
-                        @endforeach
-                    end
-                @endif
-            @endforeach
-
-            %% Your original subgraphs for regions/conferences
-            @php
-                $conference_groups = [];
-                $region_groups = [];
-
-                foreach ($coordinatorList as $coordinator) {
-                    $id = $coordinator['id'] ?? '';
-
-                    if ($founderCondition) {
-                        $conf = $coordinator['conference']['short_name'];
-                        if ($conf !== "Intl") {
-                            if (!isset($conference_groups[$conf])) {
-                                $conference_groups[$conf] = [];
-                            }
-                            $region = $coordinator['region']['short_name'];
-                            if ($region !== "None") {
-                                if (!isset($conference_groups[$conf][$region])) {
-                                    $conference_groups[$conf][$region] = [];
-                                }
-                                $conference_groups[$conf][$region][] = $id;
-                            } else {
-                                if (!isset($conference_groups[$conf]['_conf'])) {
-                                    $conference_groups[$conf]['_conf'] = [];
-                                }
-                                $conference_groups[$conf]['_conf'][] = $id;
-                            }
+                    $region = $coordinator['region']['short_name'];
+                    if ($region !== "None") {
+                        if (!isset($conference_groups[$conf][$region])) {
+                            $conference_groups[$conf][$region] = [];
                         }
+                        $conference_groups[$conf][$region][] = $id;
                     } else {
-                        $region = $coordinator['region']['short_name'];
-                        if ($region !== "None") {
-                            if (!isset($region_groups[$region])) {
-                                $region_groups[$region] = [];
-                            }
-                            $region_groups[$region][] = $id;
+                        if (!isset($conference_groups[$conf]['_conf'])) {
+                            $conference_groups[$conf]['_conf'] = [];
                         }
+                        $conference_groups[$conf]['_conf'][] = $id;
                     }
                 }
-            @endphp
+            } else {
+                $region = $coordinator['region']['short_name'];
+                if ($region !== "None") {
+                    if (!isset($region_groups[$region])) {
+                        $region_groups[$region] = [];
+                    }
+                    $region_groups[$region][] = $id;
+                }
+            }
+        }
+    @endphp
 
-            %% Founder Condition Subgraphs
-            @if ($founderCondition)
-                @foreach ($conference_groups as $conference => $regions_data)
-                    subgraph {{ $conference }}
-                        direction TB
-                        style {{ $conference }} fill:none,stroke:none
+    %% Founder Condition Subgraphs with nested manager groups
+    @if ($founderCondition)
+        @foreach ($conference_groups as $conference => $regions_data)
+            subgraph {{ $conference }}
+                direction TB
+                style {{ $conference }} fill:none,stroke:none
 
-                        %% Conference-level coordinators (if any)
-                        @if (isset($regions_data['_conf']))
-                            @foreach ($regions_data['_conf'] as $id)
+                %% Conference-level coordinators with their manager groups
+                @if (isset($regions_data['_conf']))
+                    @php
+                        $conf_ids = $regions_data['_conf'];
+                        // Group conference-level coordinators by their managers
+                        $conf_by_manager = [];
+                        foreach ($conf_ids as $id) {
+                            foreach ($coordinatorList as $coordinator) {
+                                if ($coordinator['id'] == $id) {
+                                    $report_id = $coordinator['report_id'];
+                                    if (!isset($conf_by_manager[$report_id])) {
+                                        $conf_by_manager[$report_id] = [];
+                                    }
+                                    $conf_by_manager[$report_id][] = $id;
+                                    break;
+                                }
+                            }
+                        }
+                    @endphp
+
+                    @foreach ($conf_by_manager as $manager_id => $subordinates)
+                        @if (count($subordinates) > 1)
+                            subgraph confmgr{{ $conference }}{{ $manager_id }} [" "]
+                                direction TB
+                                style confmgr{{ $conference }}{{ $manager_id }} fill:transparent,stroke:transparent
+                                @foreach ($subordinates as $id)
+                                    {{ $id }}
+                                @endforeach
+                            end
+                        @else
+                            @foreach ($subordinates as $id)
                                 {{ $id }}
                             @endforeach
                         @endif
+                    @endforeach
+                @endif
 
-                        %% Region subgraphs
-                        @foreach ($regions_data as $region => $ids)
-                            @if ($region !== '_conf')
-                                subgraph {{ $region }}
-                                    direction TB
-                                    style {{ $region }} fill:none,stroke:none
+                %% Region subgraphs with nested manager groups
+                @foreach ($regions_data as $region => $ids)
+                    @if ($region !== '_conf')
+                        subgraph {{ $region }}
+                            direction TB
+                            style {{ $region }} fill:none,stroke:none
 
-                                    %% List node IDs without redefining
-                                    @foreach ($ids as $id)
+                            @php
+                                // Group region coordinators by their managers
+                                $region_by_manager = [];
+                                foreach ($ids as $id) {
+                                    foreach ($coordinatorList as $coordinator) {
+                                        if ($coordinator['id'] == $id) {
+                                            $report_id = $coordinator['report_id'];
+                                            if (!isset($region_by_manager[$report_id])) {
+                                                $region_by_manager[$report_id] = [];
+                                            }
+                                            $region_by_manager[$report_id][] = $id;
+                                            break;
+                                        }
+                                    }
+                                }
+                            @endphp
+
+                            @foreach ($region_by_manager as $manager_id => $subordinates)
+                                @if (count($subordinates) > 1)
+                                    subgraph regmgr{{ $region }}{{ $manager_id }} [" "]
+                                        direction TB
+                                        style regmgr{{ $region }}{{ $manager_id }} fill:transparent,stroke:transparent
+                                        @foreach ($subordinates as $id)
+                                            {{ $id }}
+                                        @endforeach
+                                    end
+                                @else
+                                    @foreach ($subordinates as $id)
                                         {{ $id }}
                                     @endforeach
-                                end
-                            @endif
-                        @endforeach
-                    end
+                                @endif
+                            @endforeach
+                        end
+                    @endif
                 @endforeach
-            @else
-                %% Non-Founder Condition Subgraphs
-                @foreach ($region_groups as $region => $ids)
-                    subgraph {{ $region }}
-                        direction TB
-                        style {{ $region }} fill:none,stroke:none
+            end
+        @endforeach
+    @else
+        %% Non-Founder Condition Subgraphs with nested manager groups
+        @foreach ($region_groups as $region => $ids)
+            subgraph {{ $region }}
+                direction TB
+                style {{ $region }} fill:none,stroke:none
 
-                        %% List node IDs without redefining
-                        @foreach ($ids as $id)
+                @php
+                    // Group region coordinators by their managers
+                    $region_by_manager = [];
+                    foreach ($ids as $id) {
+                        foreach ($coordinatorList as $coordinator) {
+                            if ($coordinator['id'] == $id) {
+                                $report_id = $coordinator['report_id'];
+                                if (!isset($region_by_manager[$report_id])) {
+                                    $region_by_manager[$report_id] = [];
+                                }
+                                $region_by_manager[$report_id][] = $id;
+                                break;
+                            }
+                        }
+                    }
+                @endphp
+
+                @foreach ($region_by_manager as $manager_id => $subordinates)
+                    @if (count($subordinates) > 1)
+                        subgraph regmgr{{ $region }}{{ $manager_id }} [" "]
+                            direction TB
+                            style regmgr{{ $region }}{{ $manager_id }} fill:transparent,stroke:transparent
+                            @foreach ($subordinates as $id)
+                                {{ $id }}
+                            @endforeach
+                        end
+                    @else
+                        @foreach ($subordinates as $id)
                             {{ $id }}
                         @endforeach
-                    end
+                    @endif
                 @endforeach
-            @endif
+            end
+        @endforeach
+    @endif
 
-            %% Connect Coordinators - EXACTLY like your original
-            @foreach ($coordinatorList as $coordinator)
-                @php
-                    $report_id = $coordinator['report_id'];
-                    $id = $coordinator['id'];
-                    $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
-                @endphp
-                @if (!$shouldExclude)
-                    {{ $report_id }} --- {{ $id }}
-                @endif
-            @endforeach
-        </div>
-    </div>
+    %% Connect Coordinators - AFTER all subgraphs are defined
+    @foreach ($coordinatorList as $coordinator)
+        @php
+            $report_id = $coordinator['report_id'];
+            $id = $coordinator['id'];
+            $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
+        @endphp
+        @if (!$shouldExclude)
+            {{ $report_id }} --- {{ $id }}
+        @endif
+    @endforeach
 </div>
-
+</div>
 
     {{-- <div class="mermaid-container">
         <div class="mermaid flowchart" id="mermaid-chart">
