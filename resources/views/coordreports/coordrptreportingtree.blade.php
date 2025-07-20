@@ -90,6 +90,147 @@
             %% Founder Condition Subgraphs
             @if ($founderCondition)
                 @foreach ($conference_groups as $conference => $regions_data)
+                    subgraph {{ $conference }}["{{ $conference }}"]
+                        direction TB
+                        style {{ $conference }} fill:#f9f9f9,stroke:#333,stroke-width:2px
+
+                        %% Conference-level coordinators (if any)
+                        @if (isset($regions_data['_conf']))
+                            @foreach ($regions_data['_conf'] as $id)
+                                {{ $id }}
+                            @endforeach
+                        @endif
+
+                        %% Region subgraphs
+                        @foreach ($regions_data as $region => $ids)
+                            @if ($region !== '_conf')
+                                subgraph {{ $region }}["{{ $region }}"]
+                                    direction TB
+                                    style {{ $region }} fill:#ffffff,stroke:#666,stroke-width:1px
+
+                                    %% List node IDs without redefining
+                                    @foreach ($ids as $id)
+                                        {{ $id }}
+                                    @endforeach
+                                end
+                            @endif
+                        @endforeach
+                    end
+                @endforeach
+            @else
+                %% Non-Founder Condition Subgraphs
+                @foreach ($region_groups as $region => $ids)
+                    subgraph {{ $region }}["{{ $region }}"]
+                        direction TB
+                        style {{ $region }} fill:#ffffff,stroke:#666,stroke-width:1px
+
+                        %% List node IDs without redefining
+                        @foreach ($ids as $id)
+                            {{ $id }}
+                        @endforeach
+                    end
+                @endforeach
+            @endif
+
+            %% Connect Coordinators - AFTER all subgraphs are defined
+            %% Sort connections to maintain hierarchy order
+            @php
+                $connections = [];
+                foreach ($coordinatorList as $coordinator) {
+                    $report_id = $coordinator['report_id'];
+                    $id = $coordinator['id'];
+                    $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
+
+                    if (!$shouldExclude) {
+                        $connections[] = ['from' => $report_id, 'to' => $id];
+                    }
+                }
+
+                // Sort connections by hierarchy level if possible
+                usort($connections, function($a, $b) {
+                    return strcmp($a['from'], $b['from']);
+                });
+            @endphp
+
+            @foreach ($connections as $connection)
+                {{ $connection['from'] }} --> {{ $connection['to'] }}
+            @endforeach
+
+            %% Additional styling for better organization
+            classDef default fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+        </div>
+    </div>
+</div>
+
+
+    {{-- <div class="mermaid-container">
+        <div class="mermaid flowchart" id="mermaid-chart">
+            flowchart TD
+
+            %% Define all nodes first
+            @foreach ($coordinatorList as $coordinator)
+            @php
+                $id = $coordinator['id'] ?? '';
+                $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
+                $position = htmlspecialchars($coordinator['displayPosition']['short_title'] ?? '');
+                $sec_titles = '';
+                if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                    $sec_titles_array = $coordinator->secondaryPosition->pluck('short_title')->toArray();
+                    $sec_titles = htmlspecialchars(implode('/', $sec_titles_array));
+                }
+                $region = htmlspecialchars($coordinator['region']['short_name'] ?? '');
+                $conf = htmlspecialchars($coordinator['conference']['short_name'] ?? '');
+
+                $node_label = "$name<br>$position";
+                if ($sec_titles) $node_label .= "/$sec_titles";
+                if ($region !== "None") $node_label .= "<br>$region";
+                if ($region === "None") $node_label .= "<br>$conf";
+            @endphp
+                {{ $id }}["{!! $node_label !!}"]
+            @endforeach
+
+            %% Group nodes into subgraphs without redefining them
+            @php
+                $conference_groups = [];
+                $region_groups = [];
+
+                foreach ($coordinatorList as $coordinator) {
+                    $id = $coordinator['id'] ?? '';
+
+                    if ($founderCondition) {
+                        $conf = $coordinator['conference']['short_name'];
+                        if ($conf !== "Intl") {
+                            if (!isset($conference_groups[$conf])) {
+                                $conference_groups[$conf] = [];
+                            }
+                            $region = $coordinator['region']['short_name'];
+                            if ($region !== "None") {
+                                if (!isset($conference_groups[$conf][$region])) {
+                                    $conference_groups[$conf][$region] = [];
+                                }
+                                $conference_groups[$conf][$region][] = $id;
+                            } else {
+                                if (!isset($conference_groups[$conf]['_conf'])) {
+                                    $conference_groups[$conf]['_conf'] = [];
+                                }
+                                $conference_groups[$conf]['_conf'][] = $id;
+                            }
+                        }
+                    } else {
+                        $region = $coordinator['region']['short_name'];
+                        if ($region !== "None") {
+                            if (!isset($region_groups[$region])) {
+                                $region_groups[$region] = [];
+                            }
+                            $region_groups[$region][] = $id;
+                        }
+                    }
+                }
+            @endphp
+
+            %% Founder Condition Subgraphs
+            @if ($founderCondition)
+                @foreach ($conference_groups as $conference => $regions_data)
                     subgraph {{ $conference }}
                         direction TB
                         style {{ $conference }} fill:none,stroke:none
@@ -146,7 +287,7 @@
         </div>
 
     </div>
-</div>
+</div> --}}
 
 <div class="card-body">
         <button type="button" class="btn bg-gradient-primary" onclick="showPositionAbbreviations()">Position Abbreviations</button>
