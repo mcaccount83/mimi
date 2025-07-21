@@ -251,7 +251,7 @@ class EmailController extends Controller implements HasMiddleware
             ->cc($emailListCoord)
             ->queue(new NewChapEIN($mailData));
 
-        Log::info('Email queued successfully', ['chapterid' => $chapterid]);
+        // Log::info('Email queued successfully', ['chapterid' => $chapterid]);
 
         $message = 'Email successfully sent';
 
