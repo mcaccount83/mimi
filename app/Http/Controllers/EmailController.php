@@ -220,11 +220,11 @@ class EmailController extends Controller implements HasMiddleware
         $emailListChap = $baseQuery['emailListChap'];  // Full Board
         $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
 
-        Log::info('Email lists retrieved', [
-            'chapterid' => $chapterid,
-            'emailListChap' => $emailListChap,
-            'emailListCoord' => $emailListCoord
-        ]);
+        // Log::info('Email lists retrieved', [
+        //     'chapterid' => $chapterid,
+        //     'emailListChap' => $emailListChap,
+        //     'emailListCoord' => $emailListCoord
+        // ]);
 
         // Check if we have valid email addresses
         if (empty($emailListChap)) {
@@ -241,10 +241,10 @@ class EmailController extends Controller implements HasMiddleware
             $this->baseMailDataController->getUserData($user),
         );
 
-        Log::info('Attempting to send email', [
-            'chapterid' => $chapterid,
-            'mailData' => array_keys($mailData) // Just log the keys, not sensitive data
-        ]);
+        // Log::info('Attempting to send email', [
+        //     'chapterid' => $chapterid,
+        //     'mailData' => array_keys($mailData) // Just log the keys, not sensitive data
+        // ]);
 
         // Try sending the email
         Mail::to($emailListChap)
