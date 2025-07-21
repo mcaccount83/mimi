@@ -210,57 +210,75 @@ class EmailController extends Controller implements HasMiddleware
      * Send Chapter EIN Number Notification Email
      */
     public function sendChapterEIN(Request $request, $chapterid): JsonResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
+{
+    $user = $this->userController->loadUserInformation($request);
 
+    try {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $emailListChap = $baseQuery['emailListChap'];  // Full Board
         $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
 
-        try {
-            DB::beginTransaction();
+        Log::info('Email lists retrieved', [
+            'chapterid' => $chapterid,
+            'emailListChap' => $emailListChap,
+            'emailListCoord' => $emailListCoord
+        ]);
 
-            $mailData = array_merge(
-                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getUserData($user),
-            );
-
-            Mail::to($emailListChap)
-                ->cc($emailListCoord)
-                ->queue(new NewChapEIN($mailData));
-
-            // Commit the transaction
-            DB::commit();
-
-            $message = 'Email successful sent';
-
-            // Return JSON response
-            return response()->json([
-                'status' => 'success',
-                'message' => $message,
-                'redirect' => route('chapters.view', ['id' => $chapterid]),
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
-            $message = 'Something went wrong, Please try again.';
-
-            // Return JSON error response
+        // Check if we have valid email addresses
+        if (empty($emailListChap)) {
+            Log::warning('No chapter email addresses found', ['chapterid' => $chapterid]);
             return response()->json([
                 'status' => 'error',
-                'message' => $message,
+                'message' => 'No chapter email addresses found',
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
             ]);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
         }
-    }
 
+        $mailData = array_merge(
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            $this->baseMailDataController->getUserData($user),
+        );
+
+        Log::info('Attempting to send email', [
+            'chapterid' => $chapterid,
+            'mailData' => array_keys($mailData) // Just log the keys, not sensitive data
+        ]);
+
+        // Try sending the email
+        Mail::to($emailListChap)
+            ->cc($emailListCoord)
+            ->queue(new NewChapEIN($mailData));
+
+        Log::info('Email queued successfully', ['chapterid' => $chapterid]);
+
+        $message = 'Email successfully sent';
+
+        // Return JSON response
+        return response()->json([
+            'status' => 'success',
+            'message' => $message,
+            'redirect' => route('chapters.view', ['id' => $chapterid]),
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('SendChapterEIN error', [
+            'chapterid' => $chapterid,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        $message = 'Something went wrong sending the email: ' . $e->getMessage();
+
+        // Return JSON error response
+        return response()->json([
+            'status' => 'error',
+            'message' => $message,
+            'redirect' => route('chapters.view', ['id' => $chapterid]),
+        ]);
+    }
+}
     /**
      * Function for sending New Chapter Email with Attachments
      */
