@@ -114,6 +114,17 @@ class PublicController extends Controller
         return view('public.chapterlinks', ['chapters' => $chapters, 'international' => $international]);
     }
 
+    public function chapterInfo(Request $request, $id): View
+    {
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+
+        $data = ['id' => $id, 'chDetails', $chDetails, 'stateShortName' => $stateShortName];
+
+        return view('public.chapterinfo')->with($data);
+    }
+
     /**
      * Show the Chapter Resources Page
      */
