@@ -8,28 +8,36 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
 class PaymentsPublicDonationOnline extends BaseMailable
-// class DonationPublicAdminNotice extends BaseMailable
 {
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct($mailData)
+     public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject("Public Donation Received")
-            ->markdown('emails.payments.donationpubliconline');
-            // ->markdown('emails.public.donationpublicadminnotice');
+        $donationType = $this->mailData['donationType'] ?? 'Donation';
+
+        return new Envelope(
+            subject: "Public {$donationType} Received",
+        );
     }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.payments.donationpubliconline',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
+    }
+
 }
+
+            // ->markdown('emails.public.donationpublicadminnotice');
+

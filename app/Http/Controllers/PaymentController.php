@@ -309,6 +309,24 @@ class PaymentController extends Controller implements HasMiddleware
         $chapter = Chapters::find($chId);
         $payments = Payments::find($chId);
 
+         // Determine donation type for email subject and content
+        $hasM2M = $m2mDonation && $m2m > 0;
+        $hasSustaining = $sustainingDonation && $sustaining > 0;
+
+        if ($hasM2M && $hasSustaining) {
+            $donationType = "M2M Fund & Sustaining Chapter Donation";
+            $donationDescription = "Donation to the Mother-to-Mother Fund AND Sustaining Chapter Donation";
+        } elseif ($hasM2M) {
+            $donationType = "M2M Fund Donation";
+            $donationDescription = "Donation to the Mother-to-Mother Fund";
+        } elseif ($hasSustaining) {
+            $donationType = "Sustaining Chapter Donation";
+            $donationDescription = "Sustaining Chapter Donation";
+        } else {
+            $donationType = "Donation";
+            $donationDescription = "Donation";
+        }
+
         DB::beginTransaction();
         try {
             if ($m2mDonation && $m2m > 0) {
@@ -340,6 +358,12 @@ class PaymentController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPresData($PresDetails),
                 $this->baseMailDataController->getPaymentData($chPayments, $input, $paymentType),
+                 [
+                    'donationType' => $donationType,
+                    'donationDescription' => $donationDescription,
+                    'hasM2M' => $hasM2M,
+                    'hasSustaining' => $hasSustaining
+                ]
             );
 
             if ($m2mDonation && $m2m > 0) {

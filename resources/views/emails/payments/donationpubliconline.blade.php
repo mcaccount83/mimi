@@ -1,7 +1,9 @@
 @component('mail::message')
-# Admin Public Donation Notification
+# Admin Public {{ $mailData['donationType'] ?? 'Donation' }} Notification
 
-A public Donation to International MOMS Club. A Thank You email has been sent to the donor.<br>
+A public {{ $mailData['donationDescription'] ?? 'Donation' }} has been made to International MOMS Club. A Thank You email has been sent to the donor.<br>
+<br>
+If this is a donation from a chapter, please forward to the CC so the donation can be entered into their MIMI profile.
 <br>
 <strong>MCL,</strong><br>
 MIMI Database Administrator

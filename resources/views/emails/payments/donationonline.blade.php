@@ -1,7 +1,7 @@
 @component('mail::message')
-# Admin Donation Notification
+# Admin Chapter {{ $mailData['donationType'] ?? 'Donation' }} Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has made a Donation to the Mother-to-Mother Fund.<br>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has made a {{ $mailData['donationDescription'] ?? 'Donation' }}.<br>
 <br>
 The donation has been entered into MIMI and a Thank You email has been sent to the chapter.<br>
 <br>
@@ -70,4 +70,3 @@ MIMI Database Administrator
     </tbody>
 </table>
 @endcomponent
-
