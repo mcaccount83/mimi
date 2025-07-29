@@ -834,9 +834,10 @@ if ($request->has('board') && $request->input('board') === 'active') {
         $check_bank_statement_included = isset($input['checkBankStatementIncluded']) ? $input['checkBankStatementIncluded'] : null;
         $check_bank_statement_matches = isset($input['checkBankStatementMatches']) ? $input['checkBankStatementMatches'] : null;
 
-        $post_balance = $input['post_balance'];
-        $post_balance = str_replace(',', '', $post_balance);
-        $post_balance = $post_balance === '' ? null : $post_balance;
+        $post_balance = isset($input['post_balance']) ? preg_replace('/[^\d.]/', '', $input['post_balance']) : null;
+        // $post_balance = $input['post_balance'];
+        // $post_balance = str_replace(',', '', $post_balance);
+        // $post_balance = $post_balance === '' ? null : $post_balance;
 
         // Step 9 - Questions
         $check_purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;
