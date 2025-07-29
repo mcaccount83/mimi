@@ -1022,7 +1022,7 @@ public function saveFinancialReport(Request $request, $chapterId = null, $PresDe
         $todayFormatted = now()->format('F Y');
 
         $title = 'IRS Updates';
-        $message = "Subordinate corrections. Includes any additions and deletions from $startFormatted - $todayFormatted.";
+        $message = "Subordinate corrections. Includes any additions and deletions as follows.";
         $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
 
         // 1. Generate both DOMPDFs
