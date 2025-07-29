@@ -1,5 +1,5 @@
 @component('mail::message')
-# Admin Chapter {{ $mailData['donationType'] ?? 'Donation' }} Notification
+# Admin {{ $mailData['donationType'] ?? 'Donation' }} Notification
 
 The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has made a {{ $mailData['donationDescription'] ?? 'Donation' }}.<br>
 <br>
