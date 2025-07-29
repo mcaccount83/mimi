@@ -40,14 +40,18 @@ MIMI Database Administrator
         <tr>
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Payment Information</strong></center></td>
         </tr>
-        <tr>
-            <td>Sustaining Chapter Donation:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['sustainingDonation'] }}</td>
-        </tr>
-        <tr>
-            <td>Mother-to-Mother Fund Donation:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['m2mDonation'] }}</td>
-        </tr>
+        @if ($mailData['hasM2M'])
+            <tr>
+                <td>Mother-to-Mother Fund Donation:&nbsp;&nbsp;</td>
+                <td>{{ $mailData['m2mDonation'] }}</td>
+            </tr>
+        @endif
+        @if ($mailData['hasSustaining'])
+            <tr>
+                <td>Sustaining Chapter Donation:&nbsp;&nbsp;</td>
+                <td>{{ $mailData['sustainingDonation'] }}</td>
+            </tr>
+        @endif
         <tr>
             <td>Online Processing Fee:&nbsp;&nbsp;</td>
             <td>{{ $mailData['processingFee'] }}</td>

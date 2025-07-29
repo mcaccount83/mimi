@@ -329,7 +329,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            if ($m2mDonation && $m2m > 0) {
+            if ($hasM2M) {
                 $payments->m2m_donation = $m2m;
                 $payments->m2m_date = $paymentDate;
                 $payments->m2m_invoice = $invoice;
@@ -337,7 +337,7 @@ class PaymentController extends Controller implements HasMiddleware
                 $payments->save();
             }
 
-            if ($sustainingDonation && $sustaining > 0) {
+            if ($hasSustaining) {
                 $payments->sustaining_donation = $sustaining;
                 $payments->sustaining_date = $paymentDate;
                 $payments->donation_invoice = $invoice;
@@ -366,13 +366,13 @@ class PaymentController extends Controller implements HasMiddleware
                 ]
             );
 
-            if ($m2mDonation && $m2m > 0) {
+            if ($hasM2M) {
                 Mail::to($emailListChap)
                     ->cc($pcEmail)
                     ->queue(new PaymentsM2MChapterThankYou($mailData));
             }
 
-            if ($sustainingDonation && $sustaining > 0) {
+            if ($hasSustaining) {
                 Mail::to($emailListChap)
                     ->cc($pcEmail)
                     ->queue(new PaymentsSustainingChapterThankYou($mailData));

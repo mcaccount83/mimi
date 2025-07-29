@@ -541,12 +541,12 @@ class PublicController extends Controller
                 ]
             );
 
-            if ($sustainingDonation && $sustaining > 0) {
+            if ($hasSustaining) {
                 Mail::to($donarEmail)
                     ->queue(new PaymentsSustainingPublicThankYou($mailData));
             }
 
-             if ($m2mDonation && $m2m > 0) {
+             if ($hasM2M) {
                 Mail::to($donarEmail)
                     ->queue(new PaymentsM2MPublicThankYou($mailData));
             }
