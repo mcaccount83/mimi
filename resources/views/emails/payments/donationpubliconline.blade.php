@@ -3,7 +3,7 @@
 
 A public {{ $mailData['donationDescription'] ?? 'Donation' }} has been made to International MOMS Club. A Thank You email has been sent to the donor.<br>
 <br>
-If this is a donation from a chapter, please forward to the CC so the donation can be entered into their MIMI profile.
+If this is a donation from a chapter, please forward to the CC so the donation can be entered into their MIMI profile.<br>
 <br>
 <strong>MCL,</strong><br>
 MIMI Database Administrator
