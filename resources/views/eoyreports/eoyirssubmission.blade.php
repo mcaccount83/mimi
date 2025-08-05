@@ -71,10 +71,11 @@
                         <td @if($list->documents?->irs_issues != 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documents?->irs_issues == 1) YES @else NO @endif
                         </td>
-                        <td @if($list->documents?->irs_wrongdate != 1 && $list->documents?->irs_notfound != 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td @if($list->documents?->irs_wrongdate != 1 && $list->documents?->irs_notfound != 1 && $list->documents?->irs_filedwrong != 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documents?->irs_wrongdate == 1) WRONG DATES @else  @endif
-                            @if($list->documents?->irs_wrongdate == 1 && $list->documents?->irs_notfound == 1) <br> @endif
+                            {{-- @if($list->documents?->irs_wrongdate == 1 && $list->documents?->irs_notfound == 1) <br> @endif --}}
                             @if($list->documents?->irs_notfound == 1) NOT FOUND @else  @endif
+                            @if($list->documents?->irs_filedwrong == 1) FILED W/WRONG DATES @else  @endif
                         </td>
                        <td @if($list->documents?->irs_notified != 1 && $list->documents?->irs_issues == 1) style="background-color:#dc3545; color: #ffffff;"
                             @elseif($list->documents?->irs_notified == 1 && $list->documents?->irs_issues == 1) style="background-color:#28a745; color: #ffffff;"
