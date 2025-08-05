@@ -256,7 +256,7 @@
                         @if($chDetails->active_status == '1')
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
-                                    <label>Chaper in Good Standing Letter:</label>
+                                    <label>Chapter in Good Standing Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>

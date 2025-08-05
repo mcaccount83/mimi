@@ -1536,6 +1536,7 @@ if ($request->has('board') && $request->input('board') === 'active') {
             $documents->irs_issues = (int) $request->has('irs_issues');
             $documents->irs_wrongdate = (int) $request->has('irs_wrongdate');
             $documents->irs_notfound = (int) $request->has('irs_notfound');
+            $documents->irs_filedwrong = (int) $request->has('irs_filedwrong');
             $documents->irs_notified = (int) $request->has('irs_notified');
             $documents->irs_notes = $request->input('irs_notes');
             $documents->save();
