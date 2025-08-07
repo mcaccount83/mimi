@@ -202,7 +202,7 @@
                                 {{$cdDetails->country->short_name}}
                             </div>
                             <div class="col-md-6">
-                                Birthday: {{$cdDetails->birthday_month}} {{$cdDetails->birthday_day}}<br>
+                                Birthday: {{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}<br>
                                 Card Sent: <span class="date-mask">{{ $cdDetails->card_sent }}</span><br>
                                 @if ($assistConferenceCoordinatorCondition)
                                     <button class="btn bg-gradient-primary btn-sm" onclick="updateCardSent()">Update Birthday Card Sent</button>
