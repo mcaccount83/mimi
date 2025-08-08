@@ -213,7 +213,7 @@
                             <br>
                             <p>This will reset password to default "TempPass4You" for this user only.
                             <br>
-                            <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $cdDetails->user_id }}">Reset President Password</button>
+                            <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $cdDetails->user_id }}">Reset Coordinator Password</button>
                             </p>
                       </div>
                     </div>
