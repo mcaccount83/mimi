@@ -16,7 +16,7 @@
         "google/apiclient": "2.15.0",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^12.24",
-        "laravel/sanctum": "^4.1",
+        "laravel/sanctum": "^4.2",
         "laravel/tinker": "^2.10.1",
         "laravel/ui": "^4.6",
         "league/flysystem-aws-s3-v3": "^3.29",
@@ -25,7 +25,7 @@
         "riari/laravel-forum": "^7.0",
         "romanzipp/laravel-queue-monitor": "dev-master",
         "setasign/fpdf": "^1.8",
-        "setasign/fpdi": "^2.0"
+        "setasign/fpdi": "^2.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",
