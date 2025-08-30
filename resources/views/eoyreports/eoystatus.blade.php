@@ -54,7 +54,7 @@
 
                         <tr>
                             <td class="text-center align-middle">
-                                @if($regionalCoordinatorCondition)
+                                @if($coordinatorCondition)
                                     <a href="{{ url("/eoy/editstatus/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                                 @endif
                             </td>

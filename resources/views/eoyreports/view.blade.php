@@ -34,7 +34,11 @@
                             <label class="col-form-label mb-0 mr-2">New Board Submitted:</label>
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="new_board_submitted" id="new_board_submitted" class="custom-control-input"
+                                @if($regionalCoordinatorCondition)
                                         {{$chDetails->documents->new_board_submitted == 1 ? 'checked' : ''}}>
+                                @else
+                                    {{$chDetails->documents->new_board_submitted == 1 ? 'checked' : ''}} disabled>
+                                @endif
                                 <label class="custom-control-label" for="new_board_submitted"></label>
                             </div>
                           </div>
@@ -43,7 +47,11 @@
                             <label class="col-form-label mb-0 mr-2">New Board Activated:</label>
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="new_board_active" id="new_board_active" class="custom-control-input"
+                                @if($regionalCoordinatorCondition)
                                         {{$chDetails->documents->new_board_active == 1 ? 'checked' : ''}}>
+                                        @else
+                                        {{$chDetails->documents->new_board_active == 1 ? 'checked' : ''}} disabled>
+                                        @endif
                                 <label class="custom-control-label" for="new_board_active"></label>
                             </div>
                           </div>
@@ -52,7 +60,11 @@
                             <label class="col-form-label mb-0 mr-2">Financial Report Received:</label>
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="financial_report_received" id="financial_report_received" class="custom-control-input"
-                                        {{$chDetails->documents->financial_report_received == 1 ? 'checked' : ''}}>
+                                @if($regionalCoordinatorCondition)
+                                    {{$chDetails->documents->financial_report_received == 1 ? 'checked' : ''}}>
+                                    @else
+                                    {{$chDetails->documents->financial_report_received == 1 ? 'checked' : ''}} disabled>
+                                     @endif
                                 <label class="custom-control-label" for="financial_report_received"></label>
                             </div>
                           </div>
@@ -61,7 +73,11 @@
                             <label class="col-form-label mb-0 mr-2">Financial Review Complete:</label>
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="financial_review_complete" id="financial_review_complete" class="custom-control-input"
-                                        {{$chDetails->documents->financial_review_complete == 1 ? 'checked' : ''}}>
+                                @if($regionalCoordinatorCondition)
+                                    {{$chDetails->documents->financial_review_complete == 1 ? 'checked' : ''}}>
+                                    @else
+                                    {{$chDetails->documents->financial_review_complete == 1 ? 'checked' : ''}} disabled>
+                                     @endif
                                 <label class="custom-control-label" for="financial_review_complete"></label>
                             </div>
                           </div>
@@ -71,7 +87,11 @@
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="report_extension" id="report_extension" class="custom-control-input"
                                        onchange="toggleExtensionNotes()"
-                                       {{$chDetails->documents->report_extension == 1 ? 'checked' : ''}}>
+                                       @if($regionalCoordinatorCondition)
+                                            {{$chDetails->documents->report_extension == 1 ? 'checked' : ''}}>
+                                            @else
+                                            {{$chDetails->documents->report_extension == 1 ? 'checked' : ''}} disabled>
+                                             @endif
                                 <label class="custom-control-label" for="report_extension"></label>
                             </div>
                         </div>
@@ -81,7 +101,11 @@
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="custom-control-input"
                                        onchange="toggleIRSVerified()"
-                                       {{$chFinancialReport->check_current_990N_verified_IRS == 1 ? 'checked' : ''}}>
+                                       @if($regionalCoordinatorCondition)
+                                            {{$chFinancialReport->check_current_990N_verified_IRS == 1 ? 'checked' : ''}}>
+                                            @else
+                                            {{$chFinancialReport->check_current_990N_verified_IRS == 1 ? 'checked' : ''}} disabled>
+                                             @endif
                                 <label class="custom-control-label" for="irs_verified"></label>
                             </div>
                         </div>
@@ -181,7 +205,7 @@
                         </div>
                         <div class="col-sm-9">
                             <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.reviewfinancialreport', ['id' => $chDetails->id]) }}'">View Financial Report</button>
-<button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="generateFinancialReport()">Regenerate Financial PDF</button>
+                            <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="generateFinancialReport()">Regenerate Financial PDF</button>
                         </div>
                                     </div>
 
@@ -353,7 +377,7 @@
                 @if ($coordinatorCondition)
                     <button class="btn bg-gradient-primary mb-3" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'EOY Reports')">
                         <i class="fa fa-envelope mr-2"></i>Email Board</button>
-                    <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save EOY Information</button>
+                        <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save EOY Information</button>
                     @if ($chDetails->boundary_issues != null)
                         <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editboundaries', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Boundary Issues</button>
                     @else
