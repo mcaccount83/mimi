@@ -377,7 +377,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to toggle probation section visibility
     function toggleProbationSection() {
         const selectedStatusId = parseInt(statusSelect.value);
-        if (selectedStatusId !== 1 && selectedStatusId !== '') {
+        // if (selectedStatusId !== 1 && selectedStatusId !== '') {
+        if (selectedStatusId >= 5 && selectedStatusId !== '') {
             probationLabel.style.display = '';
             probationField.style.display = '';
             probationSelect.setAttribute('required', 'required');
