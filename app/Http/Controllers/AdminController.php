@@ -245,6 +245,23 @@ class AdminController extends Controller implements HasMiddleware
     }
 
     /**
+     * board member with inactive user
+     */
+    public function showNoActiveBoard(): View
+{
+    $noActiveList = User::with(['board'])
+        ->whereHas('board') // This ensures only users WITH a board relationship are included
+        ->where('user_type', 'board')
+        ->where('is_active', '0')
+        ->get();
+
+    $countList = count($noActiveList);
+    $data = ['countList' => $countList, 'noActiveList' => $noActiveList];
+
+    return view('adminreports.noactiveboard')->with($data);
+}
+
+    /**
      * Outgoing Board Members
      */
     public function showOutgoingBoard(): View

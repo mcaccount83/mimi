@@ -140,6 +140,7 @@ Route::get('/adminreports/useradmin', [AdminController::class, 'showUserAdmin'])
 Route::get('/adminreports/duplicateuser', [AdminController::class, 'showDuplicate'])->name('adminreports.duplicateuser');
 Route::get('/adminreports/duplicateboardid', [AdminController::class, 'showDuplicateId'])->name('adminreports.duplicateboardid');
 Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresident'])->name('adminreports.nopresident');
+Route::get('/adminreports/noactiveboard', [AdminController::class, 'showNoActiveBoard'])->name('adminreports.noactiveboard');
 Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('adminreports.outgoingboard');
 Route::get('/adminreports/disbandedboard', [AdminController::class, 'showDisbandedBoard'])->name('adminreports.disbandedboard');
 
