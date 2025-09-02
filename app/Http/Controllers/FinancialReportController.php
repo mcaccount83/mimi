@@ -707,6 +707,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                         $existingUser->last_name = $incomingRecord->last_name;
                         $existingUser->email = $incomingRecord->email;
                         $existingUser->user_type = 'board';
+                        $existingUser->is_active = 1;
                         $existingUser->updated_at = now();
                         $existingUser->save();
                         $userId = $existingUser->id;
