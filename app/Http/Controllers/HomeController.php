@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -34,7 +35,7 @@ class HomeController extends Controller implements HasMiddleware
     /**
      * Home page for Coordinators & Board Members - logic for login redirect
      */
-    public function index(Request $request)
+    public function index(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userType = $user['userType'];

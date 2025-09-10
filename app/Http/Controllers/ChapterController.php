@@ -1883,7 +1883,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Update Pending New Chapter Information
      */
-    public function updateApproveChapter(Request $request)
+    public function updateApproveChapter(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $lastUpdatedBy = $user['user_name'];
@@ -2021,7 +2021,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Update Pending New Chapter Information
      */
-    public function updateDeclineChapter(Request $request)
+    public function updateDeclineChapter(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $lastUpdatedBy = $user['user_name'];
