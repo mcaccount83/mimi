@@ -131,12 +131,11 @@ public function saveFinancialReport(Request $request, $chapterId = null, $PresDe
      * Save & Send Fianncial Reprot
      */
     // public function saveFinalFinancialReport(Request $request, $chapterId, $PresDetails)
-        public function saveFinalFinancialReport(Request $request)
+        public function saveFinalFinancialReport(Request $request, $chapterId, $PresDetails)
 
     {
-
-        $chapterId = $request->chapterId;
-        $PresDetails = $request->PresDetails;
+        // $chapterId = $request->chapterId;
+        // $PresDetails = $request->PresDetails;
 
         $googleDrive = GoogleDrive::first();
         $finalFinancialDrive = $googleDrive->final_financial_report;
@@ -185,9 +184,6 @@ public function saveFinancialReport(Request $request, $chapterId = null, $PresDe
         if ($chActiveId == 0){
         $chFinancialReport = $baseQuery['chFinancialReportFinal'];
         }
-
-        // $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
-        // $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
