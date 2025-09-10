@@ -67,24 +67,22 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-public function saveFinancialReport(Request $request, $chapterId = null, $PresDetails = null)
-// public function saveFinancialReport(Request $request)
-
-{
+    public function saveFinancialReport(Request $request, $chapterId = null, $PresDetails = null)
+    {
         // Prefer route parameters if provided, else fallback to request
-    $chapterId = $chapterId ?? $request->chapterId;
-    $chActiveId = $request->chActiveId ?? null;
+        $chapterId = $chapterId ?? $request->chapterId;
+        $chActiveId = $request->chActiveId ?? null;
 
-    // Only calculate PresDetails if not passed in
-    if ($PresDetails === null) {
-        if ($chActiveId === '1') {
-            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
-            $PresDetails = $baseActiveBoardQuery['PresDetails'];
-        } elseif ($chActiveId === '0') {
-            $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
-            $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+        // Only calculate PresDetails if not passed in
+        if ($PresDetails === null) {
+            if ($chActiveId === '1') {
+                $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+                $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            } elseif ($chActiveId === '0') {
+                $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
+                $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+            }
         }
-    }
 
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
@@ -130,12 +128,22 @@ public function saveFinancialReport(Request $request, $chapterId = null, $PresDe
     /**
      * Save & Send Fianncial Reprot
      */
-    // public function saveFinalFinancialReport(Request $request, $chapterId, $PresDetails)
-        public function saveFinalFinancialReport(Request $request, $chapterId, $PresDetails)
+        public function saveFinalFinancialReport(Request $request, $chapterId = null, $PresDetails = null)
+        {
+        // Prefer route parameters if provided, else fallback to request
+        $chapterId = $chapterId ?? $request->chapterId;
+        $chActiveId = $request->chActiveId ?? null;
 
-    {
-        // $chapterId = $request->chapterId;
-        // $PresDetails = $request->PresDetails;
+        // Only calculate PresDetails if not passed in
+        if ($PresDetails === null) {
+            if ($chActiveId === '1') {
+                $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
+                $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            } elseif ($chActiveId === '0') {
+                $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
+                $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+            }
+        }
 
         $googleDrive = GoogleDrive::first();
         $finalFinancialDrive = $googleDrive->final_financial_report;
