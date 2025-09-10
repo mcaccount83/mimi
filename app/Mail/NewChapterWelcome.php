@@ -22,13 +22,12 @@ class NewChapterWelcome extends BaseMailable
         $this->pdfPath2 = $pdfPath2;
     }
 
-
     public function envelope(): Envelope
     {
         return new Envelope(
             from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
             replyTo: [
-                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+                new Address($this->mailData['userEmail'], $this->mailData['userName']),
             ],
             subject: 'Congratulations on your New Chapter!',
         );
@@ -53,7 +52,7 @@ class NewChapterWelcome extends BaseMailable
             $pdfContent = file_get_contents($this->pdfPath2);
             if ($pdfContent !== false) {
                 $attachments[] = Attachment::fromData(
-                    fn() => $pdfContent,
+                    fn () => $pdfContent,
                     'GroupExemptionLetter.pdf'
                 )->withMime('application/pdf');
             }
@@ -61,5 +60,4 @@ class NewChapterWelcome extends BaseMailable
 
         return $attachments;
     }
-
 }

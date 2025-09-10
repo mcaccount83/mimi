@@ -3,26 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NewChapterThankYou;
-use App\Mail\PaymentsNewChapOnline;
-use App\Mail\PaymentsSustainingPublicThankYou;
-use App\Mail\PaymentsM2MPublicThankYou;
-use App\Mail\PaymentsPublicDonationOnline;
-use App\Mail\NewCoordinatorThankYou;
 use App\Mail\NewCoordApplication;
+use App\Mail\NewCoordinatorThankYou;
+use App\Mail\PaymentsM2MPublicThankYou;
+use App\Mail\PaymentsNewChapOnline;
+use App\Mail\PaymentsPublicDonationOnline;
+use App\Mail\PaymentsSustainingPublicThankYou;
 use App\Models\BoardsPending;
-use App\Models\Chapters;
 use App\Models\ChapterApplication;
-use App\Models\Coordinators;
+use App\Models\Chapters;
 use App\Models\CoordinatorApplication;
+use App\Models\Coordinators;
+use App\Models\Country;
+use App\Models\Month;
 use App\Models\PaymentLog;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\State;
-use App\Models\Country;
-use App\Models\Month;
 use App\Models\User;
 use App\Services\PositionConditionsService;
-use Faker\Core\Coordinates;
 use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -221,7 +220,7 @@ class PublicController extends Controller
         $allStates = State::all();  // Full List for Dropdown Menu
         $allCountries = Country::all();  // Full List for Dropdown Menu
 
-        $data = ['allStates' => $allStates, 'allCountries' => $allCountries
+        $data = ['allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
         return view('public.newchapter')->with($data);
@@ -294,10 +293,9 @@ class PublicController extends Controller
         $shippingZip = $input['ch_pre_zip'];
 
         $shipStateId = intval($input['ch_pre_state']);
-        if ($shipStateId < 52){
+        if ($shipStateId < 52) {
             $shippingCountry = 'USA';
-        }
-        else{
+        } else {
             $countryId = $input['ch_country'];
             $country = Country::find($countryId);
             $countryShortName = $country->short_name;
@@ -313,9 +311,9 @@ class PublicController extends Controller
         $paymentType = 'No Payment Required';
 
         // Only process payment for USA-based chapters
-        if (!$isInternational) {
+        if (! $isInternational) {
             $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-                            $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+                $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
             if (! $paymentResponse['success']) {
                 return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
@@ -409,7 +407,7 @@ class PublicController extends Controller
                 ->queue(new NewChapterThankYou($mailData));
 
             // Only send payment notification if payment was processed
-            if (!$isInternational) {
+            if (! $isInternational) {
                 Mail::to([$emailCC, $paymentsAdmin])
                     ->queue(new PaymentsNewChapOnline($mailData));
             }
@@ -424,6 +422,7 @@ class PublicController extends Controller
 
             // For international applications, show a generic error since there's no payment error
             $errorMessage = $isInternational ? 'There was an error processing your application. Please try again.' : $paymentResponse['error'];
+
             return redirect()->to('/newchapter')->with('fail', $errorMessage);
 
         } finally {
@@ -431,7 +430,7 @@ class PublicController extends Controller
         }
     }
 
-     /**
+    /**
      * Show New Chapter Registration
      */
     public function editDonation(Request $request): View
@@ -444,7 +443,7 @@ class PublicController extends Controller
         return view('public.donation')->with($data);
     }
 
-     /**
+    /**
      * Show New Chapter Registration Success Message
      */
     public function viewDonation(Request $request): View
@@ -480,10 +479,9 @@ class PublicController extends Controller
         $shippingZip = $input['ship_zip'];
 
         $shipStateId = intval($input['ship_state']);
-        if ($shipStateId < 52){
+        if ($shipStateId < 52) {
             $shippingCountry = 'USA';
-        }
-        else{
+        } else {
             $countryId = $input['ship_country'];
             $country = Country::find($countryId);
             $countryShortName = $country->short_name;
@@ -491,7 +489,7 @@ class PublicController extends Controller
         }
 
         $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+            $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
@@ -515,29 +513,29 @@ class PublicController extends Controller
         $hasSustaining = $sustainingDonation && $sustaining > 0;
 
         if ($hasM2M && $hasSustaining) {
-            $donationType = "M2M Fund & Sustaining Chapter Donation";
-            $donationDescription = "Donation to the Mother-to-Mother Fund AND Sustaining Chapter Donation";
+            $donationType = 'M2M Fund & Sustaining Chapter Donation';
+            $donationDescription = 'Donation to the Mother-to-Mother Fund AND Sustaining Chapter Donation';
         } elseif ($hasM2M) {
-            $donationType = "M2M Fund Donation";
-            $donationDescription = "Donation to the Mother-to-Mother Fund";
+            $donationType = 'M2M Fund Donation';
+            $donationDescription = 'Donation to the Mother-to-Mother Fund';
         } elseif ($hasSustaining) {
-            $donationType = "Sustaining Chapter Donation";
-            $donationDescription = "Sustaining Chapter Donation";
+            $donationType = 'Sustaining Chapter Donation';
+            $donationDescription = 'Sustaining Chapter Donation';
         } else {
-            $donationType = "Donation";
-            $donationDescription = "Donation";
+            $donationType = 'Donation';
+            $donationDescription = 'Donation';
         }
 
         DB::beginTransaction();
         try {
-             $mailData = array_merge(
+            $mailData = array_merge(
                 $this->baseMailDataController->getPublicPaymentData($input, $invoice, $paymentType),
                 $this->baseMailDataController->getShippingData($input, $shippingCountry, $shippingState),
-                 [
+                [
                     'donationType' => $donationType,
                     'donationDescription' => $donationDescription,
                     'hasM2M' => $hasM2M,
-                    'hasSustaining' => $hasSustaining
+                    'hasSustaining' => $hasSustaining,
                 ]
             );
 
@@ -546,7 +544,7 @@ class PublicController extends Controller
                     ->queue(new PaymentsSustainingPublicThankYou($mailData));
             }
 
-             if ($hasM2M) {
+            if ($hasM2M) {
                 Mail::to($donarEmail)
                     ->queue(new PaymentsM2MPublicThankYou($mailData));
             }
@@ -554,9 +552,9 @@ class PublicController extends Controller
             Mail::to($paymentsAdmin)
                 ->queue(new PaymentsPublicDonationOnline($mailData));
 
-                DB::commit();
+            DB::commit();
 
-        return redirect()->to('/donationsuccess')->with('success', 'Payment was successfully processed and donation has been submitted!');
+            return redirect()->to('/donationsuccess')->with('success', 'Payment was successfully processed and donation has been submitted!');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -572,7 +570,7 @@ class PublicController extends Controller
      * Process payments with Authorize.net
      */
     public function processPublicPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-                $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
+        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
         if (app()->environment('local')) {
             $transactionTypeDetail = 'authOnlyTransaction';  // Auth Only for testing Purposes
@@ -580,10 +578,10 @@ class PublicController extends Controller
             $transactionTypeDetail = $transactionType;  // Live Traansactions based on type of transaction set from request
         }
 
-        if ($transactionTypeDetail ==  'authCaptureTransaction'){
+        if ($transactionTypeDetail == 'authCaptureTransaction') {
             $shortTransactionType = 'Processed';
         }
-        if ($transactionTypeDetail ==  'authOnlyTransaction'){
+        if ($transactionTypeDetail == 'authOnlyTransaction') {
             $shortTransactionType = 'AuthOnly';
         }
 
@@ -646,7 +644,7 @@ class PublicController extends Controller
         $customerAddress->setCountry('USA');
 
         // Create the customer shipping address
-        $customerShipping = new AnetAPI\CustomerAddressType();
+        $customerShipping = new AnetAPI\CustomerAddressType;
         $customerShipping->setFirstName($shippingFirst);
         $customerShipping->setLastName($shippingLast);
         $customerShipping->setCompany($shippingCompany);
@@ -808,7 +806,7 @@ class PublicController extends Controller
         ];
     }
 
-     /**
+    /**
      * Show New Coordinator Registration
      */
     public function editNewCoordinator(Request $request): View
@@ -887,7 +885,7 @@ class PublicController extends Controller
                 'password' => Hash::make('TempPass4You'),
                 'user_type' => 'coordinator',
                 'is_admin' => 0,
-                'is_active' => 1
+                'is_active' => 1,
             ])->id;
             $coordId = Coordinators::create([
                 'user_id' => $userId,
@@ -914,7 +912,7 @@ class PublicController extends Controller
                 'coordinator_start_date' => $lastupdatedDate,
                 'last_updated_by' => $input['cd_fname'].' '.$input['cd_lname'],
                 'last_updated_date' => $lastupdatedDate,
-                'active_status' => $activeStatus
+                'active_status' => $activeStatus,
             ])->id;
             CoordinatorApplication::create([
                 'coordinator_id' => $coordId,
@@ -954,16 +952,16 @@ class PublicController extends Controller
             Mail::to($emailCC)
                 ->queue(new NewCoordApplication($mailData));
 
-                DB::commit();
+            DB::commit();
 
-                DB::commit();
+            DB::commit();
 
-        return redirect()->to('/newcoordinatorsuccess')->with('success', 'Application was successfully submitted!');
+            return redirect()->to('/newcoordinatorsuccess')->with('success', 'Application was successfully submitted!');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/newcoordinator')->with('fail','Something went wrong, Please try again.');
+            return redirect()->to('/newcoordinator')->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();

@@ -2,8 +2,6 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -19,7 +17,7 @@ class NewChapPCNotice extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Chapter Add Notification",
+            subject: 'Chapter Add Notification',
         );
     }
 
@@ -34,5 +32,4 @@ class NewChapPCNotice extends BaseMailable
     {
         return [];
     }
-
 }

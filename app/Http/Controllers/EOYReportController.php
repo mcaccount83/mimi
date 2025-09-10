@@ -2,22 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\EOYElectionReportReminder;
-use App\Mail\EOYFinancialReportReminder;
-use App\Mail\EOYLateReportReminder;
 use App\Mail\EOYReviewrAssigned;
-use App\Mail\NewBoardWelcome;
-use App\Models\Boards;
+use App\Models\BoardsIncoming;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
-use App\Models\BoardsIncoming;
-use App\Models\BoardsOutgoing;
-use App\Models\Resources;
 use App\Models\State;
-use App\Models\User;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
@@ -26,7 +18,6 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
@@ -140,7 +131,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
             'title' => $title, 'breadcrumb' => $breadcrumb,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('eoyreports.eoystatus')->with($data);
@@ -193,7 +184,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
             'reviewComplete' => $reviewComplete,  'rrList' => $rrList,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('eoyreports.view')->with($data);
@@ -266,7 +257,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * View the Board Info Received list
      */
-   public function showEOYBoardReport(Request $request)
+    public function showEOYBoardReport(Request $request)
     {
         $titles = $this->getPageTitle($request);
         $title = $titles['eoy_reports'];
@@ -284,7 +275,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $userConfName = $user['user_conf_name'];
         $userConfDesc = $user['user_conf_desc'];
 
-       $now = Carbon::now();
+        $now = Carbon::now();
         $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
@@ -304,32 +295,32 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $activationStatuses = [];
 
-// Check if the board activation button was clicked
-if ($request->has('board') && $request->input('board') === 'active') {
-    foreach ($chapterList as $chapter) {
-        // Check if chapter has incoming board members before attempting activation
-        $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $chapter->id)->get();
+        // Check if the board activation button was clicked
+        if ($request->has('board') && $request->input('board') === 'active') {
+            foreach ($chapterList as $chapter) {
+                // Check if chapter has incoming board members before attempting activation
+                $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $chapter->id)->get();
 
-        if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
-            // Each chapter gets its own transaction
-            DB::beginTransaction();
-            try {
-                $activationResult = $this->financialReportController->activateSingleBoard($request, $chapter->id);
+                if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
+                    // Each chapter gets its own transaction
+                    DB::beginTransaction();
+                    try {
+                        $activationResult = $this->financialReportController->activateSingleBoard($request, $chapter->id);
 
-                if ($activationResult === 'success') {
-                    DB::commit();
-                    $activationStatuses[$chapter->id] = 'success';
-                } else {
-                    DB::rollback();
-                    $activationStatuses[$chapter->id] = 'fail';
+                        if ($activationResult === 'success') {
+                            DB::commit();
+                            $activationStatuses[$chapter->id] = 'success';
+                        } else {
+                            DB::rollback();
+                            $activationStatuses[$chapter->id] = 'fail';
+                        }
+                    } catch (\Exception $e) {
+                        DB::rollback();
+                        $activationStatuses[$chapter->id] = 'fail';
+                        Log::error("Board activation uncessful for chapter {$chapter->id}: ".$e->getMessage());
+                    }
                 }
-            } catch (\Exception $e) {
-                DB::rollback();
-                $activationStatuses[$chapter->id] = 'fail';
-                Log::error("Board activation uncessful for chapter {$chapter->id}: " . $e->getMessage());
             }
-        }
-    }
 
             // Process results after all activations are attempted
             $successfulActivations = array_filter($activationStatuses, function ($status) {
@@ -343,6 +334,7 @@ if ($request->has('board') && $request->input('board') === 'active') {
             } elseif (count($successfulActivations) > 0) {
                 $successCount = count($successfulActivations);
                 $totalCount = count($activationStatuses);
+
                 return redirect()->to('/eoy/boardreport')->with('warning', "Board activation completed: {$successCount}/{$totalCount} successful");
             } else {
                 return redirect()->to('/eoy/boardreport')->with('fail', 'Board activation failed for all chapters');
@@ -351,7 +343,7 @@ if ($request->has('board') && $request->input('board') === 'active') {
 
         $countList = count($chapterList);
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-                'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('eoyreports.eoyboardreport')->with($data);
@@ -386,28 +378,31 @@ if ($request->has('board') && $request->input('board') === 'active') {
         // Check if the board activation button was clicked
         if ($request->has('board') && $request->input('board') === 'active') {
             DB::beginTransaction();
-        try {
-            $status = $this->financialReportController->activateSingleBoard($request, $id);
+            try {
+                $status = $this->financialReportController->activateSingleBoard($request, $id);
 
-            if ($status === 'success') {
-                DB::commit();
-                return redirect()->back()->with('success', 'Board activation successful');
-            } else {
+                if ($status === 'success') {
+                    DB::commit();
+
+                    return redirect()->back()->with('success', 'Board activation successful');
+                } else {
+                    DB::rollback();
+
+                    return redirect()->back()->with('fail', 'Board activation failed');
+                }
+            } catch (\Exception $e) {
                 DB::rollback();
+                Log::error('Board activation error: '.$e->getMessage());
+
                 return redirect()->back()->with('fail', 'Board activation failed');
             }
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error("Board activation error: " . $e->getMessage());
-            return redirect()->back()->with('fail', 'Board activation failed');
         }
-    }
 
         $data = [
-        'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-        'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-        'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'allCountries' => $allCountries,
-    ];
+            'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+            'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
+            'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'allCountries' => $allCountries,
+        ];
 
         return view('eoyreports.editboardreport')->with($data);
     }
@@ -746,7 +741,7 @@ if ($request->has('board') && $request->input('board') === 'active') {
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-                    'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('eoyreports.eoyfinancialreport')->with($data);
@@ -777,7 +772,7 @@ if ($request->has('board') && $request->input('board') === 'active') {
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('eoyreports.reviewfinancialreport')->with($data);
@@ -1152,7 +1147,7 @@ if ($request->has('board') && $request->input('board') === 'active') {
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-     $now = Carbon::now();
+        $now = Carbon::now();
         $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
@@ -1426,7 +1421,7 @@ if ($request->has('board') && $request->input('board') === 'active') {
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-       $now = Carbon::now();
+        $now = Carbon::now();
         $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
@@ -1459,7 +1454,7 @@ if ($request->has('board') && $request->input('board') === 'active') {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
 
-       $now = Carbon::now();
+        $now = Carbon::now();
         $currentYear = $now->year;
 
         $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
@@ -1551,6 +1546,4 @@ if ($request->has('board') && $request->input('board') === 'active') {
 
         return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
     }
-
-
 }

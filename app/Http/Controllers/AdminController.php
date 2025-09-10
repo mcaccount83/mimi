@@ -6,24 +6,23 @@ use App\Models\Admin;
 use App\Models\AdminEmail;
 use App\Models\Boards;
 use App\Models\BoardsDisbanded;
-use App\Models\BoardsPending;
+use App\Models\BoardsIncoming;
 use App\Models\BoardsOutgoing;
+use App\Models\BoardsPending;
 use App\Models\Chapters;
 use App\Models\Conference;
-use App\Models\Region;
-use App\Models\Coordinators;
 use App\Models\CoordinatorApplication;
 use App\Models\CoordinatorRecognition;
+use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
-use App\Models\BoardsIncoming;
 use App\Models\Payments;
 use App\Models\ProbationSubmission;
+use App\Models\Region;
 use App\Models\User;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -248,18 +247,18 @@ class AdminController extends Controller implements HasMiddleware
      * board member with inactive user
      */
     public function showNoActiveBoard(): View
-{
-    $noActiveList = User::with(['board'])
-        ->whereHas('board') // This ensures only users WITH a board relationship are included
-        ->where('user_type', 'board')
-        ->where('is_active', '0')
-        ->get();
+    {
+        $noActiveList = User::with(['board'])
+            ->whereHas('board') // This ensures only users WITH a board relationship are included
+            ->where('user_type', 'board')
+            ->where('is_active', '0')
+            ->get();
 
-    $countList = count($noActiveList);
-    $data = ['countList' => $countList, 'noActiveList' => $noActiveList];
+        $countList = count($noActiveList);
+        $data = ['countList' => $countList, 'noActiveList' => $noActiveList];
 
-    return view('adminreports.noactiveboard')->with($data);
-}
+        return view('adminreports.noactiveboard')->with($data);
+    }
 
     /**
      * Outgoing Board Members
@@ -1026,7 +1025,7 @@ class AdminController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      * view Email Addresses not assigned by positionId
      */
     public function showAdminEmail(): View
@@ -1092,12 +1091,10 @@ class AdminController extends Controller implements HasMiddleware
             if ($activeStatus == 'Active') {
                 $boardDetails = Boards::where('chapter_id', $chapterid)->get();
                 Boards::where('chapter_id', $chapterid)->delete(); // Delete from Boards table
-            }
-            elseif ($activeStatus == 'Zapped') {
+            } elseif ($activeStatus == 'Zapped') {
                 $boardDetails = BoardsDisbanded::where('chapter_id', $chapterid)->get();
                 BoardsDisbanded::where('chapter_id', $chapterid)->delete(); // Delete from BoardsDisbanding table
-            }
-            elseif ($activeStatus == 'Pending' || $activeStatus == 'Not Approved') {
+            } elseif ($activeStatus == 'Pending' || $activeStatus == 'Not Approved') {
                 $boardDetails = BoardsPending::where('chapter_id', $chapterid)->get();
                 BoardsPending::where('chapter_id', $chapterid)->delete(); // Delete from BoardsPending table
             }
@@ -1163,16 +1160,16 @@ class AdminController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      * view Conference & Region Lists
      */
     public function showConfRegList(): View
     {
         $confList = Conference::orderBy('id')
-                    ->with(['regions' => function ($query) {
-                        $query->orderBy('short_name');
-                    }])
-                    ->get();
+            ->with(['regions' => function ($query) {
+                $query->orderBy('short_name');
+            }])
+            ->get();
 
         $data = ['confList' => $confList];
 
@@ -1182,64 +1179,65 @@ class AdminController extends Controller implements HasMiddleware
     public function editConfList(): View
     {
         $confList = Conference::orderBy('id')
-                    ->get();
+            ->get();
 
         $data = ['confList' => $confList];
 
         return view('admin.editconflist')->with($data);
     }
 
-public function updateConfList(Request $request)
-{
-    $validated = $request->validate([
-        'id' => 'required|exists:conference,id',
-        'conference_name' => 'required|string|max:255',
-        'short_name' => 'required|string|max:50',
-        'conference_description' => 'required|string|max:500',
-        'short_description' => 'required|string|max:10'
-    ]);
-
-    try {
-        $conference = Conference::findOrFail($validated['id']);
-        $conference->update([
-            'conference_name' => $validated['conference_name'],
-            'short_name' => $validated['short_name'],
-            'conference_description' => $validated['conference_description'],
-            'short_description' => $validated['short_description']
+    public function updateConfList(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:conference,id',
+            'conference_name' => 'required|string|max:255',
+            'short_name' => 'required|string|max:50',
+            'conference_description' => 'required|string|max:500',
+            'short_description' => 'required|string|max:10',
         ]);
 
-        return response()->json(['success' => true]);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        try {
+            $conference = Conference::findOrFail($validated['id']);
+            $conference->update([
+                'conference_name' => $validated['conference_name'],
+                'short_name' => $validated['short_name'],
+                'conference_description' => $validated['conference_description'],
+                'short_description' => $validated['short_description'],
+            ]);
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
     }
-}
 
-public function storeConf(Request $request)
-{
-    $validated = $request->validate([
-        'conference_name' => 'required|string|max:255',
-        'short_name' => 'required|string|max:50',
-        'conference_description' => 'required|string|max:500',
-        'short_description' => 'required|string|max:10'
-    ]);
+    public function storeConf(Request $request)
+    {
+        $validated = $request->validate([
+            'conference_name' => 'required|string|max:255',
+            'short_name' => 'required|string|max:50',
+            'conference_description' => 'required|string|max:500',
+            'short_description' => 'required|string|max:10',
+        ]);
 
-    try {
-        $conference = Conference::create($validated);
-        return response()->json(['success' => true, 'id' => $conference->id]);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        try {
+            $conference = Conference::create($validated);
+
+            return response()->json(['success' => true, 'id' => $conference->id]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
     }
-}
 
-public function deleteConf($id)
-{
-    try {
-        $conference = Conference::findOrFail($id);
-        $conference->delete();
-        return response()->json(['success' => true]);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    public function deleteConf($id)
+    {
+        try {
+            $conference = Conference::findOrFail($id);
+            $conference->delete();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
     }
-}
-
 }

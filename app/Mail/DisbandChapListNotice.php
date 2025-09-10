@@ -2,8 +2,6 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -11,15 +9,15 @@ class DisbandChapListNotice extends BaseMailable
 {
     public $mailData;
 
-     public function __construct($mailData)
+    public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-     public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Chapter Removal ListAdmin Notice",
+            subject: 'Chapter Removal ListAdmin Notice',
         );
     }
 
@@ -34,5 +32,4 @@ class DisbandChapListNotice extends BaseMailable
     {
         return [];
     }
-
 }

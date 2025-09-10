@@ -2,22 +2,19 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
 class DisbandChecklistCompleteCCNotice extends BaseMailable
-
 {
     public $mailData;
 
-     public function __construct($mailData)
+    public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-     public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             subject: "Disband Checklist Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
@@ -35,5 +32,4 @@ class DisbandChecklistCompleteCCNotice extends BaseMailable
     {
         return [];
     }
-
 }

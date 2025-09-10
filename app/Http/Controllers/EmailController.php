@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\NewChapEIN;
 use App\Mail\ChapterEmail;
 use App\Mail\CoordEmail;
+use App\Mail\EOYElectionReportReminder;
+use App\Mail\EOYFinancialReportReminder;
+use App\Mail\EOYLateReportReminder;
+use App\Mail\NewChapEIN;
 use App\Mail\NewChapterSetup;
 use App\Mail\NewChapterWelcome;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
-use App\Mail\EOYElectionReportReminder;
-use App\Mail\EOYFinancialReportReminder;
-use App\Mail\EOYLateReportReminder;
 use App\Models\EmailFields;
 use App\Models\Resources;
 use Illuminate\Http\JsonResponse;
@@ -210,75 +210,77 @@ class EmailController extends Controller implements HasMiddleware
      * Send Chapter EIN Number Notification Email
      */
     public function sendChapterEIN(Request $request, $chapterid): JsonResponse
-{
-    $user = $this->userController->loadUserInformation($request);
+    {
+        $user = $this->userController->loadUserInformation($request);
 
-    try {
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
-        $chDetails = $baseQuery['chDetails'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $emailListChap = $baseQuery['emailListChap'];  // Full Board
-        $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+        try {
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterid);
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $emailListChap = $baseQuery['emailListChap'];  // Full Board
+            $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
 
-        // Log::info('Email lists retrieved', [
-        //     'chapterid' => $chapterid,
-        //     'emailListChap' => $emailListChap,
-        //     'emailListCoord' => $emailListCoord
-        // ]);
+            // Log::info('Email lists retrieved', [
+            //     'chapterid' => $chapterid,
+            //     'emailListChap' => $emailListChap,
+            //     'emailListCoord' => $emailListCoord
+            // ]);
 
-        // Check if we have valid email addresses
-        if (empty($emailListChap)) {
-            Log::warning('No chapter email addresses found', ['chapterid' => $chapterid]);
+            // Check if we have valid email addresses
+            if (empty($emailListChap)) {
+                Log::warning('No chapter email addresses found', ['chapterid' => $chapterid]);
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No chapter email addresses found',
+                    'redirect' => route('chapters.view', ['id' => $chapterid]),
+                ]);
+            }
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+            );
+
+            // Log::info('Attempting to send email', [
+            //     'chapterid' => $chapterid,
+            //     'mailData' => array_keys($mailData) // Just log the keys, not sensitive data
+            // ]);
+
+            // Try sending the email
+            Mail::to($emailListChap)
+                ->cc($emailListCoord)
+                ->queue(new NewChapEIN($mailData));
+
+            // Log::info('Email queued successfully', ['chapterid' => $chapterid]);
+
+            $message = 'Email successfully sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('SendChapterEIN error', [
+                'chapterid' => $chapterid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            $message = 'Something went wrong sending the email: '.$e->getMessage();
+
+            // Return JSON error response
             return response()->json([
                 'status' => 'error',
-                'message' => 'No chapter email addresses found',
+                'message' => $message,
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
             ]);
         }
-
-        $mailData = array_merge(
-            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-            $this->baseMailDataController->getUserData($user),
-        );
-
-        // Log::info('Attempting to send email', [
-        //     'chapterid' => $chapterid,
-        //     'mailData' => array_keys($mailData) // Just log the keys, not sensitive data
-        // ]);
-
-        // Try sending the email
-        Mail::to($emailListChap)
-            ->cc($emailListCoord)
-            ->queue(new NewChapEIN($mailData));
-
-        // Log::info('Email queued successfully', ['chapterid' => $chapterid]);
-
-        $message = 'Email successfully sent';
-
-        // Return JSON response
-        return response()->json([
-            'status' => 'success',
-            'message' => $message,
-            'redirect' => route('chapters.view', ['id' => $chapterid]),
-        ]);
-
-    } catch (\Exception $e) {
-        Log::error('SendChapterEIN error', [
-            'chapterid' => $chapterid,
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-
-        $message = 'Something went wrong sending the email: ' . $e->getMessage();
-
-        // Return JSON error response
-        return response()->json([
-            'status' => 'error',
-            'message' => $message,
-            'redirect' => route('chapters.view', ['id' => $chapterid]),
-        ]);
     }
-}
+
     /**
      * Function for sending New Chapter Email with Attachments
      */
@@ -299,7 +301,7 @@ class EmailController extends Controller implements HasMiddleware
             $pcDetails = $baseQuery['pcDetails'];
 
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterid);
-        $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
             // $PresDetails = $baseQuery['PresDetails'];
             $emailListChap = $baseQuery['emailListChap'];
@@ -533,7 +535,6 @@ class EmailController extends Controller implements HasMiddleware
         }
     }
 
-
     /**
      * Send Chapter Re-Registration Reminder
      */
@@ -654,7 +655,7 @@ class EmailController extends Controller implements HasMiddleware
         }
     }
 
-      /**
+    /**
      * Board Election Report Reminder Auto Send
      */
     public function sendEOYBoardReportReminder(Request $request): RedirectResponse
@@ -705,7 +706,7 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null)
             );
 
         }
@@ -784,7 +785,7 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null)
             );
 
         }
@@ -811,7 +812,7 @@ class EmailController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      * Auto Send EOY Report Status Reminder
      */
     public function sendEOYStatusReminder(Request $request): RedirectResponse
@@ -841,7 +842,7 @@ class EmailController extends Controller implements HasMiddleware
             return redirect()->back()->with('info', 'There are no Chapters with Reports Due.');
         }
 
-         $chapterIds = [];
+        $chapterIds = [];
         $chapterEmails = [];
         $coordinatorEmails = [];
         $mailData = [];
@@ -864,7 +865,7 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null)
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null)
             );
 
         }
@@ -892,6 +893,4 @@ class EmailController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
-
-
 }

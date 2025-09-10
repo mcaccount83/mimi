@@ -24,5 +24,4 @@ class ChapterApplication extends Model
     {
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'coordinator_id' in coordinator_tree BelongsTo 'id' in coordinators
     }
-
 }

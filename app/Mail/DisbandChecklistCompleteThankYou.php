@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -11,7 +10,7 @@ class DisbandChecklistCompleteThankYou extends BaseMailable
 {
     public $mailData;
 
-      public function __construct($mailData)
+    public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
@@ -21,9 +20,9 @@ class DisbandChecklistCompleteThankYou extends BaseMailable
         return new Envelope(
             from: new Address('support@momsclub.org', 'MOMS Club'),
             replyTo: [
-                new Address('support@momsclub.org', 'MOMS Club')
+                new Address('support@momsclub.org', 'MOMS Club'),
             ],
-            subject: "Disband Checklist Submitted",
+            subject: 'Disband Checklist Submitted',
         );
     }
 
@@ -38,5 +37,4 @@ class DisbandChecklistCompleteThankYou extends BaseMailable
     {
         return [];
     }
-
 }

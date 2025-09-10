@@ -2,13 +2,8 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-
 class PaymentsReRegOnline extends BaseMailable
-// class ReRegAdminNotice extends BaseMailable
+    // class ReRegAdminNotice extends BaseMailable
 {
     public $mailData;
 
@@ -30,6 +25,6 @@ class PaymentsReRegOnline extends BaseMailable
         return $this
             ->subject("Re-Registration Payment Received | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.payments.reregonline');
-            // ->markdown('emails.chapter.reregadminnotice');
+        // ->markdown('emails.chapter.reregadminnotice');
     }
 }

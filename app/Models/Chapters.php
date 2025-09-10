@@ -129,7 +129,6 @@ class Chapters extends Model
         return $this->hasOne(FinancialReportLastYear::class, 'chapter_id', 'id');  // 'chapter_id' in financial_report HasOne 'id' in chapters
     }
 
-
     public function documents(): HasOne
     {
         return $this->hasOne(Documents::class, 'chapter_id', 'id');  // 'chapter_id' in documents HasOne 'id' in chapters
@@ -190,17 +189,17 @@ class Chapters extends Model
         return $this->belongsTo(Coordinators::class, 'primary_coordinator_id', 'id');  // 'primary_coordinator_id' in chapters BelongsTo 'id' in coordinators
     }
 
-public function reportReviewer(): HasOneThrough
-{
-    return $this->hasOneThrough(
-        Coordinators::class,     // Final model we want
-        FinancialReport::class,  // Intermediate table
-        'chapter_id',           // Foreign key on financial_reports pointing to chapters
-        'id',                   // Foreign key on coordinators (primary key)
-        'id',                   // Local key on chapters (primary key)
-        'reviewer_id'           // Foreign key on financial_reports pointing to coordinators
-    );
-}
+    public function reportReviewer(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Coordinators::class,     // Final model we want
+            FinancialReport::class,  // Intermediate table
+            'chapter_id',           // Foreign key on financial_reports pointing to chapters
+            'id',                   // Foreign key on coordinators (primary key)
+            'id',                   // Local key on chapters (primary key)
+            'reviewer_id'           // Foreign key on financial_reports pointing to coordinators
+        );
+    }
 
     public function coordinatorTree(): BelongsTo
     {
