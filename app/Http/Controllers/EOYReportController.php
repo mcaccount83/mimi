@@ -253,14 +253,17 @@ class EOYReportController extends Controller implements HasMiddleware
             $chapter->save();
 
             DB::commit();
+
+        return to_route('eoyreports.view', ['id' => $id])->with('success', 'EOY Information successfully updated.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return to_route('eoyreports.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+         } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('eoyreports.view', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
     /**
@@ -326,7 +329,10 @@ if ($request->has('board') && $request->input('board') === 'active') {
             } catch (\Exception $e) {
                 DB::rollback();
                 $activationStatuses[$chapter->id] = 'fail';
-                Log::error("Board activation uncessful for chapter {$chapter->id}: " . $e->getMessage());
+                Log::error("Board activation unnsucessful for chapter {$chapter->id}: " . $e->getMessage());
+             } finally {
+                // This ensures DB connections are released even if exceptions occur
+                DB::disconnect();
             }
         }
     }
@@ -400,6 +406,9 @@ if ($request->has('board') && $request->input('board') === 'active') {
             DB::rollback();
             Log::error("Board activation error: " . $e->getMessage());
             return redirect()->back()->with('fail', 'Board activation failed');
+         } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -697,14 +706,17 @@ if ($request->has('board') && $request->input('board') === 'active') {
             }
 
             DB::commit();
+
+        return redirect()->back()->with('success', 'Board Info has been Saved');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->back()->with('success', 'Board Info has been Saved');
     }
 
     /**
@@ -984,14 +996,17 @@ if ($request->has('board') && $request->input('board') === 'active') {
             $chapter->save();
 
             DB::commit();
+
+        return redirect()->back()->with('success', 'Report has been successfully Unsubmitted.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->back()->with('success', 'Report has been successfully Unsubmitted.');
     }
 
     /**
@@ -1022,14 +1037,17 @@ if ($request->has('board') && $request->input('board') === 'active') {
             $chapter->save();
 
             DB::commit();
+
+        return redirect()->back()->with('success', 'Review Complete has been successfully Cleared.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->back()->with('success', 'Review Complete has been successfully Cleared.');
     }
 
     /**
@@ -1126,14 +1144,17 @@ if ($request->has('board') && $request->input('board') === 'active') {
             $documents->save();
 
             DB::commit();
+
+        return redirect()->to('/eoy/attachments')->with('success', 'Report attachments successfully updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return redirect()->to('/eoy/attachments')->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/eoy/attachments')->with('success', 'Report attachments successfully updated');
     }
 
     /**
@@ -1226,14 +1247,17 @@ if ($request->has('board') && $request->input('board') === 'active') {
             $chapter->save();
 
             DB::commit();
+
+        return to_route('eoyreports.editboundaries', ['id' => $id])->with('success', 'EOY Information successfully updated.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return to_route('eoyreports.editboundaries', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('eoyreports.editboundaries', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
     /**
@@ -1400,14 +1424,17 @@ if ($request->has('board') && $request->input('board') === 'active') {
             $financialReport->save();
 
             DB::commit();
+
+        return to_route('eoyreports.editawards', ['id' => $id])->with('success', 'EOY Information successfully updated.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return to_route('eoyreports.editawards', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('eoyreports.editawards', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
     /**
@@ -1542,14 +1569,17 @@ if ($request->has('board') && $request->input('board') === 'active') {
             $documents->save();
 
             DB::commit();
+
+        return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return redirect()->to('/eoy/irssubmission')->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
     }
 
 

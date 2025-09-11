@@ -358,14 +358,17 @@ class CoordinatorController extends Controller implements HasMiddleware
             }
 
             DB::commit();
+
+        return redirect()->to('/coordinator/coordlist')->with('success', 'Coordinator created successfully.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return redirect()->to('/')->with('fail', 'Something went wrong, Please try again..');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/coordinator/coordlist')->with('success', 'Coordinator created successfully.');
     }
 
      /**
@@ -555,6 +558,9 @@ class CoordinatorController extends Controller implements HasMiddleware
             $message = 'Something went wrong, please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -598,6 +604,9 @@ class CoordinatorController extends Controller implements HasMiddleware
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -650,6 +659,9 @@ class CoordinatorController extends Controller implements HasMiddleware
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
+       } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -783,6 +795,9 @@ class CoordinatorController extends Controller implements HasMiddleware
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -953,7 +968,10 @@ class CoordinatorController extends Controller implements HasMiddleware
         Log::error($e);  // Log the error
 
         return false;
-    }
+    } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
 }
 
     /**
@@ -1054,6 +1072,9 @@ class CoordinatorController extends Controller implements HasMiddleware
             Log::error($e);  // Log the error
 
             return false;
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -1144,6 +1165,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             $userIsAdmin->save();
 
             DB::commit();
+
+        return to_route('coordinators.view', ['id' => $id])->with('success', 'Coordinator Details have been updated');
         } catch (\Exception $e) {
             echo $e->getMessage();
             exit();
@@ -1151,9 +1174,10 @@ class CoordinatorController extends Controller implements HasMiddleware
             Log::error($e);  // Log the error
 
             return to_route('coordinators.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('coordinators.view', ['id' => $id])->with('success', 'Coordinator Details have been updated');
     }
 
     /**
@@ -1242,6 +1266,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->save();
 
             DB::commit();
+
+        return to_route('coordinators.editdetails', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
         } catch (\Exception $e) {
             echo $e->getMessage();
             exit();
@@ -1249,9 +1275,10 @@ class CoordinatorController extends Controller implements HasMiddleware
             Log::error($e);  // Log the error
 
             return to_route('coordinators.editdetails', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('coordinators.editdetails', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
     }
 
     /**
@@ -1344,14 +1371,17 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinatorRecognition->save();
 
             DB::commit();
+
+        return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return to_route('coordinators.editrecognition', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
     }
 
     /**
@@ -1481,14 +1511,17 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->save();
 
             DB::commit();
+
+        return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return redirect()->to('/coordprofile')->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
     }
 
         /**
@@ -1722,6 +1755,9 @@ class CoordinatorController extends Controller implements HasMiddleware
                 'success' => false,
                 'message' => 'Something went wrong, Please try again.'
             ], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -1772,6 +1808,9 @@ class CoordinatorController extends Controller implements HasMiddleware
                 'success' => false,
                 'message' => 'Something went wrong, Please try again.'
             ], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 }

@@ -162,6 +162,8 @@ class AdminController extends Controller implements HasMiddleware
             $payments->save();
 
             DB::commit();
+
+        return redirect()->to('/admin/reregdate')->with('error', 'Failed to update Re-Reg Date.');
         } catch (\Exception $e) {
             echo $e->getMessage();
             exit();
@@ -169,9 +171,10 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e);  // Log the error
 
             return redirect()->to('/admin/reregdate')->with('success', 'Re-Reg Date updated successfully.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/admin/reregdate')->with('error', 'Failed to update Re-Reg Date.');
     }
 
     /**
@@ -319,6 +322,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e); // Log the error
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -462,6 +468,9 @@ class AdminController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('admin.disbandedboard'),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -503,6 +512,9 @@ class AdminController extends Controller implements HasMiddleware
                 'message' => $message,
                 'redirect' => route('admin.outgoingboard'),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -534,6 +546,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e); // Log the error
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -641,6 +656,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e); // Log the error
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -723,6 +741,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e); // Log the error
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -775,6 +796,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e); // Log the error
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -807,6 +831,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e); // Log the error
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -839,6 +866,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e); // Log the error
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -930,6 +960,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e); // Log the error
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -976,6 +1009,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e); // Log the error
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -1023,6 +1059,9 @@ class AdminController extends Controller implements HasMiddleware
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('admin.googledrive')]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -1066,6 +1105,9 @@ class AdminController extends Controller implements HasMiddleware
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('admin.adminemail')]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -1117,6 +1159,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e);  // Log the error
 
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -1160,6 +1205,9 @@ class AdminController extends Controller implements HasMiddleware
             Log::error($e);  // Log the error
 
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 

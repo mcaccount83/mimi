@@ -426,6 +426,9 @@ class ChapterController extends Controller implements HasMiddleware
                 'status' => 'error', 'message' => 'Something went wrong, Please try again.',
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
             ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -846,14 +849,17 @@ class ChapterController extends Controller implements HasMiddleware
 
 
             DB::commit();
+
+        return redirect()->to('/chapter/chapterlist')->with('success', 'Chapter created successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return redirect()->to('/chapter/chapterlist')->with('fail', 'Something went wrong, Please try again...');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return redirect()->to('/chapter/chapterlist')->with('success', 'Chapter created successfully');
     }
 
     /**
@@ -1488,14 +1494,17 @@ class ChapterController extends Controller implements HasMiddleware
             $documents->save();
 
             DB::commit();
+
+        return to_route('chapters.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return to_route('chapters.editirs', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
-
-        return to_route('chapters.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');
     }
 
     /**
@@ -2021,6 +2030,9 @@ class ChapterController extends Controller implements HasMiddleware
                 'success' => false,
                 'message' => 'Something went wrong, Please try again.'
             ], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
@@ -2073,6 +2085,9 @@ class ChapterController extends Controller implements HasMiddleware
                 'success' => false,
                 'message' => 'Something went wrong, Please try again.'
             ], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 }
