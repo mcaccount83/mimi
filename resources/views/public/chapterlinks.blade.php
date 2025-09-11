@@ -71,7 +71,11 @@
 
         <!-- USA Chapters Section -->
         <div class="border-horiz2"></div>
+        @if($international && $international->count() > 0)
         <h4>USA Chapters</h4>
+        @else
+        <h4>Chapters</h4>
+        @endif
         <div class="border-horiz2"></div>
 
         <div class="row" id="usaAccordion">
