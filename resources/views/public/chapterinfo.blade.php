@@ -32,5 +32,30 @@
 
 @section('customscript')
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const links = document.querySelectorAll('.chapter-link');
+    const iframe = document.getElementById('iframe-links');
 
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // prevent normal navigation
+            const chapterId = this.dataset.id;
+            iframe.src = `/chapter-info/${chapterId}`; // set iframe src
+        });
+    });
+
+    iframe.addEventListener('load', function() {
+        adjustIframeHeight();
+    });
+
+    function adjustIframeHeight() {
+        try {
+            const newHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+            iframe.style.height = newHeight + 'px';
+        } catch (err) {
+            console.warn('Cannot access iframe height (cross-origin issue).');
+        }
+    }
+});
 </script>
+
