@@ -12,7 +12,7 @@
                     <form class="form-horizontal" method="POST" action='{{ route("public.updatedonation") }}'>
                         @csrf
 
-                        <div class="col-md-12">
+                        {{-- <div class="col-md-12">
                             <div class="card card-widget widget-user">
                                 <div class="widget-user-header bg-primary">
                                     <div class="widget-user-image">
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <!-- /.card -->
-                    </div>
+                    </div> --}}
 
   <div class="col-md-12">
                         <div class="card card-primary card-outline">
