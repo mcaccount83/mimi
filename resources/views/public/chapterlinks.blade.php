@@ -95,11 +95,10 @@
                 @endif
 
                                     <div class="chapter">
-                                        <a href="{{ route('chapter.info', $chapter->id) }}" target="_blank">
+                                        <a href="#" class="chapter-link" data-id="{{ $chapter->id }}">
                                             {{ $chapter->name }}
                                         </a>
                                     </div>
-
                                     {{-- <div class="chapter">
                                         @if($chapter->website_status == 1)
                                             <a href="{{ $chapter->website_url }}" target="_blank">{{ $chapter->name }}</a>
@@ -150,6 +149,32 @@ $(document).ready(function() {
         columnWidth: '.masonry-item',
         percentPosition: true
     });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const links = document.querySelectorAll('.chapter-link');
+    const iframe = document.getElementById('iframe-links');
+
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // prevent normal navigation
+            const chapterId = this.dataset.id;
+            iframe.src = `/chapter-info/${chapterId}`; // set iframe src
+        });
+    });
+
+    iframe.addEventListener('load', function() {
+        adjustIframeHeight();
+    });
+
+    function adjustIframeHeight() {
+        try {
+            const newHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+            iframe.style.height = newHeight + 'px';
+        } catch (err) {
+            console.warn('Cannot access iframe height (cross-origin issue).');
+        }
+    }
 });
 
 </script>
