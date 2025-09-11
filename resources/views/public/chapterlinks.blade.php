@@ -4,76 +4,70 @@
 
 <div class="container-fluid">
 
-        <!-- International Chapters Section -->
-        <div class="border-horiz2"></div>
-        <h4>International Chapters</h4>
-        <div class="border-horiz2"></div>
+        @if($international && $international->count() > 0)
+    <!-- International Chapters Section -->
+    <div class="border-horiz2"></div>
+    <h4>International Chapters</h4>
+    <div class="border-horiz2"></div>
 
-        <div class="row" id="internationalAccordion">
+    <div class="row" id="internationalAccordion">
+        @php
+            $previousCountry = null;
+        @endphp
+
+        @foreach($international as $chapter)
+            @if($chapter->country_id !== $previousCountry)
+                <div class="col-md-3 mb-1">
+                    <div class="card card-primary">
+                        <div class="card-header" >
+                            <h4 class="card-title w-100">
+                                <a class="d-block"  >
+
+                                </a>
+                            </h4>
+                        </div>
+                        <div >
+                            <div class="card-body">
+            @endif
+                                <div class="chapter">
+                                    <a href="javascript:void(0)"
+                                    onclick="showChapterInfo({
+                                            name: '{{ $chapter->name }}',
+                                            state_short_name: '{{ $chapter->state_short_name }}',
+                                            territory: '{{ $chapter->territory }}',
+                                            inquiries_contact: '{{ $chapter->inquiries_contact }}',
+                                            website_url: '{{ $chapter->website_url }}'
+                                    })">
+                                        {{ $chapter->name }}
+                                    </a>
+                                </div>
+                                {{--<div class="chapter">
+                                         @if($chapter->website_status == 1)
+                                        <a href="{{ $chapter->website_url }}" target="_blank">{{ $chapter->name }}</a>
+                                    @else
+                                        <a href="https://momsclub.org/chapters/find-a-chapter/" target="_blank">{{ $chapter->name }}</a>
+                                    @endif --}}
+                                {{-- </div> --}}
             @php
-                $previousCountry = null;
+                $previousCountry = $chapter->country_id;
             @endphp
 
-            @foreach($international as $chapter)
-                @if($chapter->country_id !== $previousCountry)
-                    <div class="col-md-3 mb-1">
-                        <div class="card card-primary">
-                            <div class="card-header" >
-                                <h4 class="card-title w-100">
-                                    <a class="d-block"  >
-
-                                    </a>
-                                </h4>
+            @if(!$loop->last && $chapter->country_id !== $international[$loop->index + 1]->country_id)
                             </div>
-                            <div >
-                            {{-- <div class="card-header" id="heading{{ $loop->index }}">
-                                <h4 class="card-title w-100">
-                                    <a class="d-block" data-toggle="collapse" href="#collapse{{ $loop->index }}" >
-                                        {{ $chapter->country_id }}
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapse{{ $loop->index }}" class="collapse" data-parent="#internationalAccordion"> --}}
-                                <div class="card-body">
-                @endif
-                                    <div class="chapter">
-                                        <a href="javascript:void(0)"
-                                        onclick="showChapterInfo({
-                                                name: '{{ $chapter->name }}',
-                                                state_short_name: '{{ $chapter->state_short_name }}',
-                                                territory: '{{ $chapter->territory }}',
-                                                inquiries_contact: '{{ $chapter->inquiries_contact }}',
-                                                website_url: '{{ $chapter->website_url }}'
-                                        })">
-                                            {{ $chapter->name }}
-                                        </a>
-                                    </div>
-                                    {{--<div class="chapter">
-                                             @if($chapter->website_status == 1)
-                                            <a href="{{ $chapter->website_url }}" target="_blank">{{ $chapter->name }}</a>
-                                        @else
-                                            <a href="https://momsclub.org/chapters/find-a-chapter/" target="_blank">{{ $chapter->name }}</a>
-                                        @endif --}}
-                                    {{-- </div> --}}
-                @php
-                    $previousCountry = $chapter->country_id;
-                @endphp
-
-                @if(!$loop->last && $chapter->country_id !== $international[$loop->index + 1]->country_id)
-                                </div>
-                           </div>
-                        </div>
+                       </div>
                     </div>
-                @endif
+                </div>
+            @endif
 
-                @if($loop->last)
-                                </div>
+            @if($loop->last)
                             </div>
                         </div>
                     </div>
-                @endif
-            @endforeach
-        </div>
+                </div>
+            @endif
+        @endforeach
+    </div>
+@endif
 
         <!-- USA Chapters Section -->
         <div class="border-horiz2"></div>
