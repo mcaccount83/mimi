@@ -74,7 +74,7 @@
         @if($international && $international->count() > 0)
         <h4>USA Chapters</h4>
         @else
-        <h4></h4>
+        <h4>&nbsp;</h4>
         @endif
         <div class="border-horiz2"></div>
 
