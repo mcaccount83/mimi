@@ -12,30 +12,30 @@ class UpdateConfListAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-'id'                     => [
+            'id' => [
                 'required',
                 'exists:conference,id',
             ],
-'conference_name'        => [
+            'conference_name' => [
                 'required',
                 'string',
                 'max:255',
             ],
-'short_name'             => [
+            'short_name' => [
                 'required',
                 'string',
                 'max:50',
             ],
-'conference_description' => [
+            'conference_description' => [
                 'required',
                 'string',
                 'max:500',
             ],
-'short_description'      => [
+            'short_description' => [
                 'required',
                 'string',
                 'max:10',
             ],
-];
+        ];
     }
 }
