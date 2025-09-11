@@ -93,12 +93,19 @@
                             <div id="collapse{{ $loop->index + count($international) }}" class="collapse" data-parent="#usaAccordion">
                                 <div class="card-body">
                 @endif
-
+{{--
                                    <div class="chapter">
                                         <a href="/chapters-2/chapterinfo?chapter_id={{ $chapter->id }}" target="_blank">
                                             {{ $chapter->name }}
                                         </a>
+                                        </div> --}}
+
+                                        <div class="chapter">
+                                            <a href="#" class="chapter-link" data-id="{{ $chapter->id }}">
+                                                {{ $chapter->name }}
+                                            </a>
                                         </div>
+
 
                                     {{-- <div class="chapter">
                                         @if($chapter->website_status == 1)

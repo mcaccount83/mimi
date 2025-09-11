@@ -87,6 +87,7 @@ Route::get('/test-429', function () {
 
 // Public Page Routes...Public, No login required
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
+Route::get('/api/active-chapters', [PublicController::class, 'getActiveChaptersJson']);
 Route::get('/chapter-info/{id}', [PublicController::class, 'chapterInfo'])->name('chapter.info');
 Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])->name('board.resources');
 Route::get('/pdf-viewer', [PublicController::class, 'showPdf'])->name('pdf-viewer');
