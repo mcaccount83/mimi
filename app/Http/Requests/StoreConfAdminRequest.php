@@ -14,10 +14,26 @@ class StoreConfAdminRequest extends FormRequest
     public function rules()
     {
         return [
-'conference_name'        => 'required|string|max:255',
-'short_name'             => 'required|string|max:50',
-'conference_description' => 'required|string|max:500',
-'short_description'      => 'required|string|max:10',
+'conference_name'        => [
+                'required',
+                'string',
+                'max:255',
+            ],
+'short_name'             => [
+                'required',
+                'string',
+                'max:50',
+            ],
+'conference_description' => [
+                'required',
+                'string',
+                'max:500',
+            ],
+'short_description'      => [
+                'required',
+                'string',
+                'max:10',
+            ],
 ];
     }
 }
