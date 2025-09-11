@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreConfAdminRequest;
+use App\Http\Requests\UpdateConfListAdminRequest;
 use App\Models\Admin;
 use App\Models\AdminEmail;
 use App\Models\Boards;
@@ -1234,15 +1236,9 @@ class AdminController extends Controller implements HasMiddleware
         return view('admin.editconflist')->with($data);
     }
 
-    public function updateConfList(Request $request)
+    public function updateConfList(UpdateConfListAdminRequest $request)
     {
-        $validated = $request->validate([
-            'id' => 'required|exists:conference,id',
-            'conference_name' => 'required|string|max:255',
-            'short_name' => 'required|string|max:50',
-            'conference_description' => 'required|string|max:500',
-            'short_description' => 'required|string|max:10',
-        ]);
+        $validated = $request->validated();
 
         try {
             $conference = Conference::findOrFail($validated['id']);
@@ -1259,14 +1255,9 @@ class AdminController extends Controller implements HasMiddleware
         }
     }
 
-    public function storeConf(Request $request)
+    public function storeConf(StoreConfAdminRequest $request)
     {
-        $validated = $request->validate([
-            'conference_name' => 'required|string|max:255',
-            'short_name' => 'required|string|max:50',
-            'conference_description' => 'required|string|max:500',
-            'short_description' => 'required|string|max:10',
-        ]);
+        $validated = $request->validated();
 
         try {
             $conference = Conference::create($validated);
