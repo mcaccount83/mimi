@@ -908,7 +908,8 @@ class PDFController extends Controller
 
         $title = 'IRS Subordinate Filing';
         $message = "Full subordinate list of updates, additions and deletions from $startFormatted - $todayFormatted.<br><br>Some additions or deletions may have been included in a previous submission, but are included here to ensure a full and complete report.";
-        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        // $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        $pages = $pages ?? $request->query('pages') ?? $request->input('pages') ?? 1;
 
         // 1. Generate both DOMPDFs
         $cover = $this->generateEODeptFaxCover(false, $title, $message, $pages);
@@ -959,7 +960,8 @@ class PDFController extends Controller
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
 
-        $dateInput = request()->query('date') ?? request()->input('date');
+        // $dateInput = request()->query('date') ?? request()->input('date');
+        $dateInput = $request->query('date') ?? $request->input('date');
         $date = $dateInput ? Carbon::parse($dateInput) : Carbon::now();
         $startFormatted = $date->format('F Y');
         $todayDate = Carbon::now();
@@ -1023,7 +1025,8 @@ class PDFController extends Controller
 
         $title = 'IRS Updates';
         $message = 'Subordinate corrections. Includes any additions and deletions as follows.';
-        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        // $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        $pages = $pages ?? $request->query('pages') ?? $request->input('pages') ?? 1;
 
         // 1. Generate both DOMPDFs
         $cover = $this->generateEODeptFaxCover(false, $title, $message, $pages);
@@ -1074,10 +1077,12 @@ class PDFController extends Controller
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
 
-        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        // $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        $pages = $pages ?? $request->query('pages') ?? $request->input('pages') ?? 1;
         $totalPages = (int) $pages;
         $followPages = $totalPages - 1;
-        $dateInput = request()->query('date') ?? request()->input('date');
+        // $dateInput = request()->query('date') ?? request()->input('date');
+        $dateInput = $request->query('date') ?? $request->input('date');
         $date = $dateInput ? Carbon::parse($dateInput) : Carbon::now();
         $startFormatted = $date->format('m-d-Y');
 
@@ -1255,7 +1260,8 @@ class PDFController extends Controller
 
         $title = 'IRS Updates';
         $message = 'Subordinate corrections. Chapters could not file 990N.';
-        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        // $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        $pages = $pages ?? $request->query('pages') ?? $request->input('pages') ?? 1;
 
         // 1. Generate both DOMPDFs
         $cover = $this->generateEODeptFaxCover(false, $title, $message, $pages);
@@ -1306,7 +1312,8 @@ class PDFController extends Controller
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
 
-        $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        // $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
+        $pages = $pages ?? $request->query('pages') ?? $request->input('pages') ?? 1;
         $totalPages = (int) $pages;
         $followPages = $totalPages - 1;
 
