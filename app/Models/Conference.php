@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -17,7 +18,7 @@ class Conference extends Model
     ];
 
     // In your Conference model
-    public function regions()
+    public function regions(): HasMany
     {
         return $this->hasMany(Region::class, 'conference_id', 'id');
     }

@@ -1236,7 +1236,7 @@ class AdminController extends Controller implements HasMiddleware
         return view('admin.editconflist')->with($data);
     }
 
-    public function updateConfList(UpdateConfListAdminRequest $request)
+    public function updateConfList(UpdateConfListAdminRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -1255,7 +1255,7 @@ class AdminController extends Controller implements HasMiddleware
         }
     }
 
-    public function storeConf(StoreConfAdminRequest $request)
+    public function storeConf(StoreConfAdminRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -1268,7 +1268,7 @@ class AdminController extends Controller implements HasMiddleware
         }
     }
 
-    public function deleteConf($id)
+    public function deleteConf($id): JsonResponse
     {
         try {
             $conference = Conference::findOrFail($id);

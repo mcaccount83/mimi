@@ -1649,7 +1649,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      *Update Pending New Coordinator Information
      */
-    public function updateApproveApplication(Request $request)
+    public function updateApproveApplication(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
         $lastUpdatedBy = $user['user_name'];
@@ -1763,7 +1763,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      *Update Pending New Coordinator Information
      */
-    public function updateRejectApplication(Request $request)
+    public function updateRejectApplication(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
         $lastUpdatedBy = $user['user_name'];
