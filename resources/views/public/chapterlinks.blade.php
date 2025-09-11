@@ -37,12 +37,18 @@
                                 <div class="card-body">
                 @endif
                                     <div class="chapter">
-                                        @if($chapter->website_status == 1)
+                                        <a href="{{ route('chapter.info', $chapter->id) }}" target="_blank">
+                                            {{ $chapter->name }}
+                                        </a>
+                                    </div>
+
+                                    {{--<div class="chapter">
+                                             @if($chapter->website_status == 1)
                                             <a href="{{ $chapter->website_url }}" target="_blank">{{ $chapter->name }}</a>
                                         @else
                                             <a href="https://momsclub.org/chapters/find-a-chapter/" target="_blank">{{ $chapter->name }}</a>
-                                        @endif
-                                    </div>
+                                        @endif --}}
+                                    {{-- </div> --}}
                 @php
                     $previousCountry = $chapter->country_id;
                 @endphp
@@ -87,13 +93,20 @@
                             <div id="collapse{{ $loop->index + count($international) }}" class="collapse" data-parent="#usaAccordion">
                                 <div class="card-body">
                 @endif
+
                                     <div class="chapter">
+                                        <a href="{{ route('chapter.info', $chapter->id) }}" target="_blank">
+                                            {{ $chapter->name }}
+                                        </a>
+                                    </div>
+
+                                    {{-- <div class="chapter">
                                         @if($chapter->website_status == 1)
                                             <a href="{{ $chapter->website_url }}" target="_blank">{{ $chapter->name }}</a>
                                         @else
                                             <a href="https://momsclub.org/chapters/find-a-chapter/" target="_blank">{{ $chapter->name }}</a>
                                         @endif
-                                    </div>
+                                    </div> --}}
                 @php
                     $previousState = $chapter->state_long_name;
                 @endphp

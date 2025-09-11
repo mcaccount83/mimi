@@ -118,8 +118,10 @@ class PublicController extends Controller
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
 
-        $data = ['id' => $id, 'chDetails', $chDetails, 'stateShortName' => $stateShortName];
+        $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,];
 
         return view('public.chapterinfo')->with($data);
     }

@@ -154,7 +154,7 @@
 
                         <label>Website:</label>
                             @if($chDetails->website_url == 'http://' || empty($chDetails->website_url))
-                                &nbsp;
+                                No Website
                             @else
                                 <a href="{{$chDetails->website_url}}" target="_blank">{{$chDetails->website_url}}</a>
                             @endif
