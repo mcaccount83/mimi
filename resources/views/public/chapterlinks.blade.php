@@ -95,7 +95,7 @@
                 @endif
 
                                    <div class="chapter">
-                                        <a href="/chapterinfo?chapter_id={{ $chapter->id }}" target="_blank">
+                                        <a href="/chapters-2/chapterinfo?chapter_id={{ $chapter->id }}" target="_blank">
                                             {{ $chapter->name }}
                                         </a>
                                         </div>
