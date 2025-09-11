@@ -41,7 +41,7 @@ class HomeController extends Controller implements HasMiddleware
         $userStatus = $user['userStatus'];
 
         // Reflash session data before redirecting again
-        session()->reflash();
+        $request->session()->reflash();
 
         if ($userStatus != 1) {
             Auth::logout();  // logout inactive user
