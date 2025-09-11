@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewCoordApproveGSuiteNotice;
+use App\Mail\NewCoordApproveRCNotice;
 use App\Mail\NewCoordinatordWelcome;
-use App\Mail\RetireCoordGSuiteNotice;
 use App\Mail\PCChangeChapNotice;
 use App\Mail\PCChangePCNotice;
 use App\Mail\RCChangeCoordNotice;
 use App\Mail\RCChangeRCNotice;
+use App\Mail\RetireCoordGSuiteNotice;
 use App\Models\Chapters;
 use App\Models\CoordinatorRecognition;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
+use App\Models\Country;
 use App\Models\ForumCategorySubscription;
-use App\Mail\NewCoordApproveRCNotice;
-use App\Mail\NewCoordApproveGSuiteNotice;
 use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
-use App\Models\Country;
 use App\Models\User;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
@@ -39,7 +39,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
     protected $positionConditionsService;
 
-        protected $baseChapterController;
+    protected $baseChapterController;
 
     protected $baseCoordinatorController;
 
@@ -54,7 +54,6 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController,
         PositionConditionsService $positionConditionsService, BaseMailDataController $baseMailDataController, EmailController $emailController,
         EmailTableController $emailTableController, BaseChapterController $baseChapterController)
-
     {
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
@@ -99,13 +98,13 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $countList = count($coordinatorList);
         $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord,
-                        'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'userCoordId' => $userCoordId
-];
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'userCoordId' => $userCoordId,
+        ];
 
         return view('coordinators.coordlist')->with($data);
     }
 
-     /**
+    /**
      * Pending Coorinators List
      */
     public function showPendingCoordinator(Request $request): View
@@ -125,7 +124,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         return view('coordinators.coordlistpending')->with($data);
     }
 
-     /**
+    /**
      * Not Approved Coorinators List
      */
     public function showRejectedCoordinator(Request $request): View
@@ -145,7 +144,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         return view('coordinators.coordlistrejected')->with($data);
     }
 
-      /**
+    /**
      * International Pending Coorinators List
      */
     public function showIntPendingCoordinator(Request $request): View
@@ -165,7 +164,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         return view('international.intcoordlistpending')->with($data);
     }
 
-     /**
+    /**
      * International Not Approved Coorinators List
      */
     public function showIntRejectedCoordinator(Request $request): View
@@ -359,7 +358,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             DB::commit();
 
-        return redirect()->to('/coordinator/coordlist')->with('success', 'Coordinator created successfully.');
+            return redirect()->to('/coordinator/coordlist')->with('success', 'Coordinator created successfully.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -371,7 +370,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      * View Coordiantor Detais
      */
     public function viewCoordDetails(Request $request, $id): View
@@ -659,7 +658,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
-       } finally {
+        } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
@@ -892,87 +891,88 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Reassign Chapter
      */
-   public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $check_changed = false)
-{
-    $user = User::find($request->user()->id);
-    $userId = $user->id;
+    public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $check_changed = false)
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-    $cdDetailsUser = $user->coordinator;
-    $cdIdUser = $cdDetailsUser->id;
-    $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $cdDetailsUser = $user->coordinator;
+        $cdIdUser = $cdDetailsUser->id;
+        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
-    if ($check_changed) {
-        $checkPrimaryIdArr = Chapters::find($chapter_id);
-        $current_primary = $checkPrimaryIdArr->primary_coordinator_id;
-        if ($current_primary == $coordinator_id) {
-            return true;
-        }
-    }
-
-    $chapter = Chapters::find($chapter_id);
-
-    // Store the old primary coordinator ID BEFORE updating
-    $oldPrimaryCoordinatorId = $chapter->primary_coordinator_id;
-
-    DB::beginTransaction();
-    try {
-        $chapter->primary_coordinator_id = $coordinator_id;
-        $chapter->last_updated_by = $lastUpdatedBy;
-        $chapter->last_updated_date = date('Y-m-d H:i:s');
-
-        $chapter->save();
-
-        // PC Change Notification - Check if primary coordinator actually changed
-        if ($oldPrimaryCoordinatorId != $coordinator_id) {
-
-            // Get updated chapter details using your base controller
-            $baseQueryUpd = $this->baseChapterController->getChapterDetails($chapter_id);
-            $chDetailsUpd = $baseQueryUpd['chDetails'];
-            $stateShortName = $baseQueryUpd['stateShortName'];
-            $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
-            $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
-            $pcEmail = $pcDetailsUpd->email;  // PC Email
-
-            // Get President details
-            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapter_id);
-            $PresDetails = $baseActiveBoardQuery['PresDetails'];
-
-            // Build mail data using your base controllers
-            $mailData = array_merge(
-                $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
-                $this->baseMailDataController->getPresData($PresDetails),
-                $this->baseMailDataController->getPCUpdatedData($pcDetailsUpd)
-            );
-
-            $mailTable = $this->emailTableController->createPresidentEmailTable($mailData);
-            $mailTablePC = $this->emailTableController->createPrimaryCoordEmailTable($mailData);
-
-            $mailData = array_merge($mailData, [
-                'mailTable' => $mailTable,
-                'mailTablePC' => $mailTablePC,
-            ]);
-
-            // Send notifications
-            Mail::to($emailListChap)
-                ->queue(new PCChangeChapNotice($mailData));
-
-            Mail::to($pcEmail)
-                ->queue(new PCChangePCNotice($mailData));
+        if ($check_changed) {
+            $checkPrimaryIdArr = Chapters::find($chapter_id);
+            $current_primary = $checkPrimaryIdArr->primary_coordinator_id;
+            if ($current_primary == $coordinator_id) {
+                return true;
+            }
         }
 
-        DB::commit();
-        return true; // Add success return
+        $chapter = Chapters::find($chapter_id);
 
-    } catch (\Exception $e) {
-        DB::rollback();  // Rollback Transaction
-        Log::error($e);  // Log the error
+        // Store the old primary coordinator ID BEFORE updating
+        $oldPrimaryCoordinatorId = $chapter->primary_coordinator_id;
 
-        return false;
-    } finally {
+        DB::beginTransaction();
+        try {
+            $chapter->primary_coordinator_id = $coordinator_id;
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = date('Y-m-d H:i:s');
+
+            $chapter->save();
+
+            // PC Change Notification - Check if primary coordinator actually changed
+            if ($oldPrimaryCoordinatorId != $coordinator_id) {
+
+                // Get updated chapter details using your base controller
+                $baseQueryUpd = $this->baseChapterController->getChapterDetails($chapter_id);
+                $chDetailsUpd = $baseQueryUpd['chDetails'];
+                $stateShortName = $baseQueryUpd['stateShortName'];
+                $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
+                $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
+                $pcEmail = $pcDetailsUpd->email;  // PC Email
+
+                // Get President details
+                $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapter_id);
+                $PresDetails = $baseActiveBoardQuery['PresDetails'];
+
+                // Build mail data using your base controllers
+                $mailData = array_merge(
+                    $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
+                    $this->baseMailDataController->getPresData($PresDetails),
+                    $this->baseMailDataController->getPCUpdatedData($pcDetailsUpd)
+                );
+
+                $mailTable = $this->emailTableController->createPresidentEmailTable($mailData);
+                $mailTablePC = $this->emailTableController->createPrimaryCoordEmailTable($mailData);
+
+                $mailData = array_merge($mailData, [
+                    'mailTable' => $mailTable,
+                    'mailTablePC' => $mailTablePC,
+                ]);
+
+                // Send notifications
+                Mail::to($emailListChap)
+                    ->queue(new PCChangeChapNotice($mailData));
+
+                Mail::to($pcEmail)
+                    ->queue(new PCChangePCNotice($mailData));
+            }
+
+            DB::commit();
+
+            return true; // Add success return
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return false;
+        } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
-}
+    }
 
     /**
      * Reassign Coordinator
@@ -1031,7 +1031,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordTree = CoordinatorTree::where('coordinator_id', $coordinator_id)
                 ->update($treeData);
 
-                // RC Change Notification - Check if mentoring coordinator actually changed
+            // RC Change Notification - Check if mentoring coordinator actually changed
             if ($current_report != $new_coordinator_id) {
 
                 // Get updated coorinator details using your base controller
@@ -1166,7 +1166,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             DB::commit();
 
-        return to_route('coordinators.view', ['id' => $id])->with('success', 'Coordinator Details have been updated');
+            return to_route('coordinators.view', ['id' => $id])->with('success', 'Coordinator Details have been updated');
         } catch (\Exception $e) {
             echo $e->getMessage();
             exit();
@@ -1267,7 +1267,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             DB::commit();
 
-        return to_route('coordinators.editdetails', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
+            return to_route('coordinators.editdetails', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
         } catch (\Exception $e) {
             echo $e->getMessage();
             exit();
@@ -1372,7 +1372,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             DB::commit();
 
-        return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
+            return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -1512,7 +1512,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             DB::commit();
 
-        return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
+            return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -1524,7 +1524,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         }
     }
 
-        /**
+    /**
      * View Coordiantor Application
      */
     public function viewCoordApplication(Request $request, $id): View
@@ -1580,7 +1580,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdDetailsUser = $user->coordinator;
         $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
-       // Reassign Report To / Direct Supervisor that Changed
+        // Reassign Report To / Direct Supervisor that Changed
         $coordinator_id = $request->input('coordinator_id');
         $new_coordinator_id = $request->input('cord_report_pc');
         $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
@@ -1617,7 +1617,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             $coordinator->save();
 
-           if ($request->has('cord_sec_pos') && is_array($request->cord_sec_pos)) {
+            if ($request->has('cord_sec_pos') && is_array($request->cord_sec_pos)) {
                 // Filter out any empty values
                 $validPositionIds = array_filter($request->cord_sec_pos, function ($value) {
                     return ! empty($value) && is_numeric($value);
@@ -1633,7 +1633,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             }
 
             DB::commit();
-                return to_route('coordinators.viewapplication', ['id' => $id])->with('success', 'Coordinator Application has been updated');
+
+            return to_route('coordinators.viewapplication', ['id' => $id])->with('success', 'Coordinator Application has been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -1645,12 +1646,10 @@ class CoordinatorController extends Controller implements HasMiddleware
         }
     }
 
-
-
     /**
      *Update Pending New Coordinator Information
      */
-    public function updateApproveApplication(Request $request)
+    public function updateApproveApplication(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
         $lastUpdatedBy = $user['user_name'];
@@ -1743,7 +1742,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             return response()->json([
                 'success' => true,
                 'message' => 'Coordinator approved successfully.',
-                'redirect' => route('coordinators.view', ['id' => $cdId]) // or whatever your route name is
+                'redirect' => route('coordinators.view', ['id' => $cdId]), // or whatever your route name is
             ]);
 
         } catch (\Exception $e) {
@@ -1753,7 +1752,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             // Return JSON error response for AJAX
             return response()->json([
                 'success' => false,
-                'message' => 'Something went wrong, Please try again.'
+                'message' => 'Something went wrong, Please try again.',
             ], 500);
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1764,7 +1763,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      *Update Pending New Coordinator Information
      */
-    public function updateRejectApplication(Request $request)
+    public function updateRejectApplication(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
         $lastUpdatedBy = $user['user_name'];
@@ -1806,7 +1805,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             // Return JSON error response for AJAX
             return response()->json([
                 'success' => false,
-                'message' => 'Something went wrong, Please try again.'
+                'message' => 'Something went wrong, Please try again.',
             ], 500);
         } finally {
             // This ensures DB connections are released even if exceptions occur

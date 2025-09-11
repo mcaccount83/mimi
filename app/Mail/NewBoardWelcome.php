@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class NewBoardWelcome extends BaseMailable
 {
-     public $mailData;
+    public $mailData;
 
     protected $pdfPath;
 
@@ -24,7 +24,7 @@ class NewBoardWelcome extends BaseMailable
         return new Envelope(
             from: new Address($this->mailData['ccEmail'], $this->mailData['ccName']),
             replyTo: [
-                new Address($this->mailData['ccEmail'], $this->mailData['ccName'])
+                new Address($this->mailData['ccEmail'], $this->mailData['ccName']),
             ],
             subject: 'Welcome to the Executive Board!',
         );
@@ -44,7 +44,7 @@ class NewBoardWelcome extends BaseMailable
         $pdfContent = @file_get_contents($this->pdfPath);
         if ($pdfContent !== false) {
             $attachments[] = Attachment::fromData(
-                fn() => $pdfContent,
+                fn () => $pdfContent,
                 $this->mailData['fiscalYear'].'_OfficerPacket.pdf'
             )->withMime('application/pdf');
         }

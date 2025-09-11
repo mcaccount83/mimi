@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsDonationOnline;
+use App\Mail\PaymentsM2MChapterThankYou;
+use App\Mail\PaymentsManualOnline;
+use App\Mail\PaymentsManualOrderReceipt;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegOnline;
-use App\Mail\PaymentsManualOrderReceipt;
-use App\Mail\PaymentsManualOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
+use App\Models\Country;
 use App\Models\PaymentLog;
 use App\Models\Payments;
 use App\Models\State;
-use App\Models\Country;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,14 +35,14 @@ class PaymentController extends Controller implements HasMiddleware
 
     protected $baseMailDataController;
 
-        protected $positionConditionsService;
+    protected $positionConditionsService;
 
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController, PositionConditionsService $positionConditionsService, )
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController, PositionConditionsService $positionConditionsService)
     {
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
         $this->baseMailDataController = $baseMailDataController;
-                $this->positionConditionsService = $positionConditionsService;
+        $this->positionConditionsService = $positionConditionsService;
 
     }
 
@@ -125,10 +125,10 @@ class PaymentController extends Controller implements HasMiddleware
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        if($userType == 'board'){
+        if ($userType == 'board') {
             $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         }
-        if($userType == 'disbanded'){
+        if ($userType == 'disbanded') {
             $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
         }
         $chDetails = $baseQuery['chDetails'];
@@ -157,7 +157,7 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingZip = $PresDetails->zip;
 
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-                        $shippingFirst, $shippingLast,$shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+            $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->back()->with('fail', $paymentResponse['error']);
@@ -201,10 +201,10 @@ class PaymentController extends Controller implements HasMiddleware
                 $payments->save();
             }
 
-            if($userType == 'board'){
+            if ($userType == 'board') {
                 $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
             }
-            if($userType == 'disbanded'){
+            if ($userType == 'disbanded') {
                 $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
             }
             // $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
@@ -252,10 +252,10 @@ class PaymentController extends Controller implements HasMiddleware
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        if($userType == 'board'){
+        if ($userType == 'board') {
             $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         }
-        if($userType == 'disbanded'){
+        if ($userType == 'disbanded') {
             $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
         }
         $chDetails = $baseQuery['chDetails'];
@@ -284,7 +284,7 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingZip = $PresDetails->zip;
 
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-                        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+            $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
             return redirect()->back()->with('fail', $paymentResponse['error']);
@@ -309,22 +309,22 @@ class PaymentController extends Controller implements HasMiddleware
         $chapter = Chapters::find($chId);
         $payments = Payments::find($chId);
 
-         // Determine donation type for email subject and content
+        // Determine donation type for email subject and content
         $hasM2M = $m2mDonation && $m2m > 0;
         $hasSustaining = $sustainingDonation && $sustaining > 0;
 
         if ($hasM2M && $hasSustaining) {
-            $donationType = "M2M Fund & Sustaining Chapter Donation";
-            $donationDescription = "Donation to the Mother-to-Mother Fund AND Sustaining Chapter Donation";
+            $donationType = 'M2M Fund & Sustaining Chapter Donation';
+            $donationDescription = 'Donation to the Mother-to-Mother Fund AND Sustaining Chapter Donation';
         } elseif ($hasM2M) {
-            $donationType = "M2M Fund Donation";
-            $donationDescription = "Donation to the Mother-to-Mother Fund";
+            $donationType = 'M2M Fund Donation';
+            $donationDescription = 'Donation to the Mother-to-Mother Fund';
         } elseif ($hasSustaining) {
-            $donationType = "Sustaining Chapter Donation";
-            $donationDescription = "Sustaining Chapter Donation";
+            $donationType = 'Sustaining Chapter Donation';
+            $donationDescription = 'Sustaining Chapter Donation';
         } else {
-            $donationType = "Donation";
-            $donationDescription = "Donation";
+            $donationType = 'Donation';
+            $donationDescription = 'Donation';
         }
 
         DB::beginTransaction();
@@ -345,10 +345,10 @@ class PaymentController extends Controller implements HasMiddleware
                 $payments->save();
             }
 
-             if($userType == 'board'){
+            if ($userType == 'board') {
                 $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
             }
-            if($userType == 'disbanded'){
+            if ($userType == 'disbanded') {
                 $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
             }
             // $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
@@ -358,11 +358,11 @@ class PaymentController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPresData($PresDetails),
                 $this->baseMailDataController->getPaymentData($chPayments, $input, $paymentType),
-                 [
+                [
                     'donationType' => $donationType,
                     'donationDescription' => $donationDescription,
                     'hasM2M' => $hasM2M,
-                    'hasSustaining' => $hasSustaining
+                    'hasSustaining' => $hasSustaining,
                 ]
             );
 
@@ -424,10 +424,9 @@ class PaymentController extends Controller implements HasMiddleware
         $shippingZip = $input['ship_zip'];
 
         $shipStateId = intval($input['ship_state']);
-        if ($shipStateId < 52){
+        if ($shipStateId < 52) {
             $shippingCountry = 'USA';
-        }
-        else{
+        } else {
             $countryId = $input['ship_country'];
             $country = Country::find($countryId);
             $countryShortName = $country->short_name;
@@ -501,8 +500,8 @@ class PaymentController extends Controller implements HasMiddleware
     /**
      * Process payments with Authorize.net
      */
-     public function processPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-                $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
+    public function processPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
+        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
     {
         if (app()->environment('local')) {
             $transactionTypeDetail = 'authOnlyTransaction';  // Auth Only for testing Purposes
@@ -510,10 +509,10 @@ class PaymentController extends Controller implements HasMiddleware
             $transactionTypeDetail = $transactionType;  // Live Traansactions based on type of transaction set from request
         }
 
-         if ($transactionTypeDetail ==  'authCaptureTransaction'){
+        if ($transactionTypeDetail == 'authCaptureTransaction') {
             $shortTransactionType = 'Processed';
         }
-        if ($transactionTypeDetail ==  'authOnlyTransaction'){
+        if ($transactionTypeDetail == 'authOnlyTransaction') {
             $shortTransactionType = 'AuthOnly';
         }
 
@@ -581,7 +580,7 @@ class PaymentController extends Controller implements HasMiddleware
         $customerAddress->setCountry('USA');
 
         // Create the customer shipping address
-        $customerShipping = new AnetAPI\CustomerAddressType();
+        $customerShipping = new AnetAPI\CustomerAddressType;
         $customerShipping->setFirstName($shippingFirst);
         $customerShipping->setLastName($shippingLast);
         $customerShipping->setCompany($shippingCompany);
@@ -757,7 +756,6 @@ class PaymentController extends Controller implements HasMiddleware
             'error' => $error_message,
         ];
     }
-
 
     /**
      * View Payment Log List

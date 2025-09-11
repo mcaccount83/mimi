@@ -13,7 +13,7 @@ class DisbandReportThankYou extends BaseMailable
 
     protected $pdfPath;
 
-     public function __construct($mailData, $pdfPath)
+    public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
@@ -24,7 +24,7 @@ class DisbandReportThankYou extends BaseMailable
         return new Envelope(
             from: new Address('support@momsclub.org', 'MOMS Club'),
             replyTo: [
-                new Address('support@momsclub.org', 'MOMS Club')
+                new Address('support@momsclub.org', 'MOMS Club'),
             ],
             subject: "Final Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
@@ -45,5 +45,4 @@ class DisbandReportThankYou extends BaseMailable
                 ->withMime('application/pdf'),
         ];
     }
-
 }

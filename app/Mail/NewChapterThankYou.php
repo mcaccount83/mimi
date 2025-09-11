@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -21,9 +20,9 @@ class NewChapterThankYou extends BaseMailable
         return new Envelope(
             from: new Address('support@momsclub.org', 'MOMS Club'),
             replyTo: [
-                new Address('support@momsclub.org', 'MOMS Club')
+                new Address('support@momsclub.org', 'MOMS Club'),
             ],
-            subject: "Thank You for Your New Chapter Application!",
+            subject: 'Thank You for Your New Chapter Application!',
         );
     }
 
@@ -38,5 +37,4 @@ class NewChapterThankYou extends BaseMailable
     {
         return [];
     }
-
 }

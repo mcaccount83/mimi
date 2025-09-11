@@ -2,13 +2,8 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-
 class PaymentsManualOrderReceipt extends BaseMailable
-// class ManualOrderChapterReceipt extends BaseMailable
+    // class ManualOrderChapterReceipt extends BaseMailable
 {
     public $mailData;
 
@@ -31,6 +26,6 @@ class PaymentsManualOrderReceipt extends BaseMailable
             ->from('support@momsclub.org', 'MOMS Club')
             ->subject('Chapter Manual Replacement Order')
             ->markdown('emails.payments.manualorderreceipt');
-            // ->markdown('emails.chapter.manualorderchapterreceipt');
+        // ->markdown('emails.chapter.manualorderchapterreceipt');
     }
 }

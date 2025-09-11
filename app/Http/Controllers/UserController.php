@@ -219,15 +219,15 @@ class UserController extends Controller implements HasMiddleware
         ];
     }
 
-     /**
+    /**
      * load Email Details -- Mail for Coordinator Downline bassed on CoordId
      */
     public function loadCoordEmailDetails($cdId)
-{
-    $cdDetails = Coordinators::with(['coordTree'])->find($cdId);
-    $coordinators = $cdDetails->coordTree()->get();
+    {
+        $cdDetails = Coordinators::with(['coordTree'])->find($cdId);
+        $coordinators = $cdDetails->coordTree()->get();
 
-    $coordinatorList = collect($coordinators)
+        $coordinatorList = collect($coordinators)
             ->filter(function ($coordTree) use ($cdId) {
                 // Only process rows where one of the layers contains our $cdId
                 $attributes = $coordTree->getAttributes();
@@ -236,6 +236,7 @@ class UserController extends Controller implements HasMiddleware
                         return true;
                     }
                 }
+
                 return false;
             })
             ->flatMap(function ($value) use ($cdId) {
@@ -250,7 +251,9 @@ class UserController extends Controller implements HasMiddleware
                     }
                 }
 
-                if (!$foundLayer) return [];
+                if (! $foundLayer) {
+                    return [];
+                }
 
                 // Return $cdId and all layers BEFORE it (upline hierarchy)
                 return collect(range(1, $foundLayer))
@@ -259,47 +262,48 @@ class UserController extends Controller implements HasMiddleware
             })
             ->unique();
 
-    // Get the main coordinator's email (the "to" email)
-    $toEmail = Coordinators::where('id', $cdId)
-        ->where('active_status', 1)
-        ->where('on_leave', '!=', 1)
-        ->pluck('email')
-        ->filter()
-        ->first();
+        // Get the main coordinator's email (the "to" email)
+        $toEmail = Coordinators::where('id', $cdId)
+            ->where('active_status', 1)
+            ->where('on_leave', '!=', 1)
+            ->pluck('email')
+            ->filter()
+            ->first();
 
-    // Get upline emails (excluding the main coordinator for CC)
-    $ccEmailList = Coordinators::whereIn('id', $coordinatorList->reject($cdId))
-        ->where('active_status', 1)
-        ->where('on_leave', '!=', 1)
-        ->pluck('email')
-        ->filter()
-        ->toArray();
+        // Get upline emails (excluding the main coordinator for CC)
+        $ccEmailList = Coordinators::whereIn('id', $coordinatorList->reject($cdId))
+            ->where('active_status', 1)
+            ->where('on_leave', '!=', 1)
+            ->pluck('email')
+            ->filter()
+            ->toArray();
 
-    return [
-        'toCoordEmail' => $toEmail,
-        'ccCoordEmailList' => $ccEmailList,
-    ];
-}
+        return [
+            'toCoordEmail' => $toEmail,
+            'ccCoordEmailList' => $ccEmailList,
+        ];
+    }
 
+    public function loadCoordEmailDownlineDetails($cdId)
+    {
+        // Find all coordinators whose coordTree contains $cdId in any layer
+        $downlineCoordinators = Coordinators::with(['coordTree'])
+            ->where('active_status', 1)
+            ->where('on_leave', '!=', 1)
+            ->whereHas('coordTree', function ($query) use ($cdId) {
+                for ($i = 1; $i <= 8; $i++) {
+                    $query->orWhere("layer{$i}", $cdId);
+                }
+            })
+            ->get();
 
-   public function loadCoordEmailDownlineDetails($cdId)
-{
-    // Find all coordinators whose coordTree contains $cdId in any layer
-    $downlineCoordinators = Coordinators::with(['coordTree'])
-        ->where('active_status', 1)
-        ->where('on_leave', '!=', 1)
-        ->whereHas('coordTree', function($query) use ($cdId) {
-            for ($i = 1; $i <= 8; $i++) {
-                $query->orWhere("layer{$i}", $cdId);
-            }
-        })
-        ->get();
-
-    // Extract only the coordinator IDs that are BELOW $cdId in the hierarchy
-    $coordinatorList = collect($downlineCoordinators)
+        // Extract only the coordinator IDs that are BELOW $cdId in the hierarchy
+        $coordinatorList = collect($downlineCoordinators)
             ->flatMap(function ($coordinator) use ($cdId) {
                 $coordTree = $coordinator->coordTree()->first();
-                if (!$coordTree) return [];
+                if (! $coordTree) {
+                    return [];
+                }
 
                 $attributes = $coordTree->getAttributes();
                 $foundLayer = null;
@@ -312,7 +316,9 @@ class UserController extends Controller implements HasMiddleware
                     }
                 }
 
-                if (!$foundLayer) return [];
+                if (! $foundLayer) {
+                    return [];
+                }
 
                 // Return only layers AFTER the found layer (lower in hierarchy)
                 return collect(range($foundLayer + 1, 8))
@@ -321,17 +327,17 @@ class UserController extends Controller implements HasMiddleware
             })
             ->unique();
 
-    $emailListCoord = Coordinators::whereIn('id', $coordinatorList)
-        ->where('active_status', 1)
-        ->where('on_leave', '!=', 1)
-        ->pluck('email')
-        ->filter()
-        ->toArray();
+        $emailListCoord = Coordinators::whereIn('id', $coordinatorList)
+            ->where('active_status', 1)
+            ->where('on_leave', '!=', 1)
+            ->pluck('email')
+            ->filter()
+            ->toArray();
 
-    return [
-        'emailListCoord' => $emailListCoord,
-    ];
-}
+        return [
+            'emailListCoord' => $emailListCoord,
+        ];
+    }
 
     /**
      * load Coordinator List for a PC selected and their downline
@@ -403,8 +409,8 @@ class UserController extends Controller implements HasMiddleware
 
     public function loadReportToCoord($cdId)
     {
-        $rcDetails =  Coordinators::with(['displayPosition', 'secondaryPosition', 'reportsTo'])
-                ->where('id', '=', $cdId)
+        $rcDetails = Coordinators::with(['displayPosition', 'secondaryPosition', 'reportsTo'])
+            ->where('id', '=', $cdId)
             ->first(); // Returns a single model instance
 
         $rc_id = $rcDetails->reportsTo->id ?? null;
@@ -560,47 +566,47 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Load Reviewer Dropdown List
      */
-     // Remove the reportReviewer relationship entirely and just query coordinators directly
-public function loadReviewerList($chRegId, $chConfId)
-{
-    $rrList = Coordinators::with(['displayPosition', 'secondaryPosition'])
-        ->where(function ($q) use ($chRegId, $chConfId) {
-            $q->where('region_id', $chRegId)
-                ->orWhere(function ($subQuery) use ($chConfId) {
-                    $subQuery->where('region_id', 0)
-                        ->where('conference_id', $chConfId);
-                });
-        })
-        ->whereBetween('position_id', [1, 7])
-        ->where('active_status', 1)
-        ->get();
+    // Remove the reportReviewer relationship entirely and just query coordinators directly
+    public function loadReviewerList($chRegId, $chConfId)
+    {
+        $rrList = Coordinators::with(['displayPosition', 'secondaryPosition'])
+            ->where(function ($q) use ($chRegId, $chConfId) {
+                $q->where('region_id', $chRegId)
+                    ->orWhere(function ($subQuery) use ($chConfId) {
+                        $subQuery->where('region_id', 0)
+                            ->where('conference_id', $chConfId);
+                    });
+            })
+            ->whereBetween('position_id', [1, 7])
+            ->where('active_status', 1)
+            ->get();
 
-    $rrDetails = $rrList->map(function ($coordinator) {
-        $mainTitle = $coordinator->displayPosition->short_title ?? '';
-        $secondaryTitles = '';
+        $rrDetails = $rrList->map(function ($coordinator) {
+            $mainTitle = $coordinator->displayPosition->short_title ?? '';
+            $secondaryTitles = '';
 
-        if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
-            $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
-        }
+            if (! empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
+            }
 
-        $combinedTitle = $mainTitle;
-        if (!empty($secondaryTitles)) {
-            $combinedTitle .= '/' . $secondaryTitles;
-        }
+            $combinedTitle = $mainTitle;
+            if (! empty($secondaryTitles)) {
+                $combinedTitle .= '/'.$secondaryTitles;
+            }
 
-        $cpos = "({$combinedTitle})";
+            $cpos = "({$combinedTitle})";
 
-        return [
-            'cid' => $coordinator->id,
-            'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-            'dpos' => $mainTitle,
-            'cpos' => $cpos,
-            'regid' => $coordinator->region_id,
-        ];
-    });
+            return [
+                'cid' => $coordinator->id,
+                'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
+                'dpos' => $mainTitle,
+                'cpos' => $cpos,
+                'regid' => $coordinator->region_id,
+            ];
+        });
 
-    return $rrDetails->unique('cid');
-}
+        return $rrDetails->unique('cid');
+    }
 
     /**
      * Load Reports To Dropdown List

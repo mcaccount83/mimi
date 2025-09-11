@@ -6,12 +6,12 @@ use App\Models\ActiveStatus;
 use App\Models\Chapters;
 use App\Models\Conference;
 use App\Models\Coordinators;
+use App\Models\Country;
 use App\Models\FinancialReportAwards;
 use App\Models\Month;
 use App\Models\Probation;
 use App\Models\Region;
 use App\Models\State;
-use App\Models\Country;
 use App\Models\Status;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
@@ -409,10 +409,9 @@ class BaseChapterController extends Controller
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
 
-        if ($chDetails->state_id < 52){
+        if ($chDetails->state_id < 52) {
             $stateShortName = $chDetails->state->state_short_name;
-        }
-        else{
+        } else {
             $stateShortName = $chDetails->country->short_name;
         }
 
@@ -477,7 +476,7 @@ class BaseChapterController extends Controller
         ];
     }
 
-     /**
+    /**
      * Board Details Base Query for all active chapters
      */
     public function getActiveBoardDetails($chId)
@@ -496,10 +495,10 @@ class BaseChapterController extends Controller
         $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
 
         return ['PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-         ];
+        ];
     }
 
-     /**
+    /**
      * Board Details Base Query for all disbanded chapters
      */
     public function getDisbandedBoardDetails($chId)
@@ -521,10 +520,10 @@ class BaseChapterController extends Controller
         return ['chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
             'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails,
             'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
-         ];
+        ];
     }
 
-     /**
+    /**
      * Board Details Base Query for all incoming chapters
      */
     public function getIncomingBoardDetails($chId)
@@ -544,10 +543,10 @@ class BaseChapterController extends Controller
 
         return ['PresIncomingDetails' => $PresIncomingDetails, 'AVPIncomingDetails' => $AVPIncomingDetails, 'MVPIncomingDetails' => $MVPIncomingDetails,
             'TRSIncomingDetails' => $TRSIncomingDetails, 'SECIncomingDetails' => $SECIncomingDetails,
-         ];
+        ];
     }
 
-     /**
+    /**
      * Board Details Base Query for all pending chapters
      */
     public function getPendingBoardDetails($chId)
@@ -567,7 +566,6 @@ class BaseChapterController extends Controller
 
         return ['PresPendingDetails' => $PresPendingDetails, 'AVPPendingDetails' => $AVPPendingDetails, 'MVPPendingDetails' => $MVPPendingDetails,
             'TRSPendingDetails' => $TRSPendingDetails, 'SECPendingDetails' => $SECPendingDetails,
-         ];
+        ];
     }
-
 }

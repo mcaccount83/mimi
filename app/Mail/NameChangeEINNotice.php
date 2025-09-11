@@ -2,13 +2,11 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
 class NameChangeEINNotice extends BaseMailable
-
 {
     public $mailData;
 
@@ -38,9 +36,8 @@ class NameChangeEINNotice extends BaseMailable
     {
         return [
             Attachment::fromPath($this->pdfPath)
-                ->as($this->mailData['chapterState'] . '_' . $this->mailData['chapterNameSanitized'] . '_ChapterNameChange.pdf')
+                ->as($this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_ChapterNameChange.pdf')
                 ->withMime('application/pdf'),
         ];
     }
-
 }

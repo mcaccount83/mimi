@@ -19,12 +19,12 @@ class ProbationChapWarningPartyLetter extends BaseMailable
         $this->pdfPath = $pdfPath;
     }
 
-       public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
             replyTo: [
-                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+                new Address($this->mailData['userEmail'], $this->mailData['userName']),
             ],
             subject: "Warning Party Expense Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
@@ -45,5 +45,4 @@ class ProbationChapWarningPartyLetter extends BaseMailable
                 ->withMime('application/pdf'),
         ];
     }
-
 }

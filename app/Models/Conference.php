@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 class Conference extends Model
@@ -13,13 +14,12 @@ class Conference extends Model
 
     protected $table = 'conference';
 
-    protected $fillable = ['id', 'conference_name', 'short_name', 'conference_description', 'short_description'
-        ];
+    protected $fillable = ['id', 'conference_name', 'short_name', 'conference_description', 'short_description',
+    ];
 
     // In your Conference model
-public function regions()
-{
-    return $this->hasMany(Region::class, 'conference_id', 'id');
-}
-
+    public function regions(): HasMany
+    {
+        return $this->hasMany(Region::class, 'conference_id', 'id');
+    }
 }

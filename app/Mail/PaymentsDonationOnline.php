@@ -2,8 +2,6 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -11,7 +9,7 @@ class PaymentsDonationOnline extends BaseMailable
 {
     public $mailData;
 
-     public function __construct($mailData)
+    public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
@@ -36,8 +34,6 @@ class PaymentsDonationOnline extends BaseMailable
     {
         return [];
     }
-
 }
 
-            // ->markdown('emails.chapter.donationchapadminnotice');
-
+// ->markdown('emails.chapter.donationchapadminnotice');

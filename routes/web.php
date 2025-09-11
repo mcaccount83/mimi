@@ -134,7 +134,6 @@ Route::post('/admin/updateconflist', [AdminController::class, 'updateConfList'])
 Route::post('/admin/storeconf', [AdminController::class, 'storeConf'])->name('admin.storeconf');
 Route::delete('/admin/deleteconf/{id}', [AdminController::class, 'deleteConf'])->name('admin.deleteconf');
 
-
 // Admin Controller Routes...Coordinator Login Required
 Route::get('/adminreports/useradmin', [AdminController::class, 'showUserAdmin'])->name('adminreports.useradmin');
 Route::get('/adminreports/duplicateuser', [AdminController::class, 'showDuplicate'])->name('adminreports.duplicateuser');
@@ -212,8 +211,6 @@ Route::post('/chapter/sendchapterrereglate', [EmailController::class, 'sendChapt
 Route::get('/eoy/boardreport/reminder', [EmailController::class, 'sendEOYBoardReportReminder'])->name('eoyreports.eoyboardreportreminder');
 Route::get('/eoy/financialreport/reminder', [EmailController::class, 'sendEOYFinancialReportReminder'])->name('eoyreports.eoyfinancialreportreminder');
 Route::get('/eoy/status/reminder', [EmailController::class, 'sendEOYStatusReminder'])->name('eoyreports.eoystatusreminder');
-
-
 
 // Coordinator Controller Routes...Coordinator Login Required
 Route::get('/coordinator/pending', [CoordinatorController::class, 'showPendingCoordinator'])->name('coordinators.coordpending');
@@ -329,7 +326,6 @@ Route::get('/eoy/editirssubmission/{id}', [EOYReportController::class, 'editIRSS
 Route::post('/eoy/updateirssubmission/{id}', [EOYReportController::class, 'updateIRSSubmission'])->name('eoyreports.updateirssubmission');
 
 Route::get('/eoy/irsintsubmission', [EOYReportController::class, 'showIRSIntSubmission'])->name('eoyreports.eoyirsintsubmission');
-
 
 // PDF Controller Routes...Used for Board & Coordinator Layouts
 Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'generateGoodStanding'])->name('pdf.chapteringoodstanding');
