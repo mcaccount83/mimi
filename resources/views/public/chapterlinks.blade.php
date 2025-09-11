@@ -95,10 +95,10 @@
                 @endif
 
                                    <div class="chapter">
-<a href="/wordpress-page?chapter_id={{ $chapter->id }}" target="_blank">
-    {{ $chapter->name }}
-</a>
-</div>
+                                        <a href="/chapter-info?chapter_id={{ $chapter->id }}" target="_blank">
+                                            {{ $chapter->name }}
+                                        </a>
+                                        </div>
 
                                     {{-- <div class="chapter">
                                         @if($chapter->website_status == 1)
