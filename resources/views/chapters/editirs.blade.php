@@ -87,10 +87,17 @@
 </div>
 
                         <!-- /.form group -->
-                         <div class="row">
-                            <div class="col-sm-2 col-form-label mb-1">
-                                <label>EIN Letter:</label>
+                        @if($chDetails->ein == null && ($conferenceCoordinatorCondition || $einCondition))
+                           <div class="form-group row">
+                                                    <label class="col-sm-2 col-form-label mb-1">EIN Fax Coversheet:</label>
+                                <div class="col-sm-10">
+                                    <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
+                                </div>
                             </div>
+                        @endif
+
+                       <div class="form-group row">
+                                                    <label class="col-sm-2 col-form-label mb-1">EIN Letter:</label>
                             <div class="col-sm-10">
                                 @if($chDocuments->ein_letter_path != null)
                                     <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>

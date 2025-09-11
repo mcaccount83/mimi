@@ -35,7 +35,7 @@
               <thead>
 			    <tr>
                     <th>Details</th>
-                    <th>Letter</th>
+                    <th>Letter/Fax</th>
                     <th>Conf/Reg</th>
                     <th>State</th>
                     <th>Name</th>
@@ -61,6 +61,11 @@
                                 <a href="{{ $list->documents->ein_letter_path }}"
                                     onclick="event.preventDefault(); openPdfViewer('{{ $list->documents->ein_letter_path }}');">
                                     <i class="far fa-file-pdf"></i>
+                                    </a>
+                            @elseif ($list->ein == null)
+                                <a href=#
+                                    onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $list->id]) }}', '_blank')">
+                                    <i class="fa fa-file-import"></i>
                                     </a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->

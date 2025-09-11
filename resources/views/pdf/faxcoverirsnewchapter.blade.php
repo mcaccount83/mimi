@@ -91,7 +91,7 @@
                 <td>
                     SS4 – EIN application for (1) subordinates.<br>
                     <br>
-                    Please note, <u><b>this is a new chapter, in no way affiliated with any former chapter that may have been registered in the same town, or with the same name in the past.</b></u> Other than this newly registered chapter, there is currently no International MOMS Club subordinate in {{ $pdfData['presCity'] }}, {{ $pdfData['chapterState'] }}.<br>
+                    Please note, <u><b>this is a new chapter, in no way affiliated with any former chapter that may have been registered in the same town, or with the same name in the past.</b></u> Other than this newly registered chapter, there is currently no International MOMS Club subordinate in {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}.<br>
                     <br>
                     Thank you.<br>
                     <br>
