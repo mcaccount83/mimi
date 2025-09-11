@@ -9,11 +9,11 @@ use App\Mail\DisbandReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
 use App\Mail\NewBoardWelcome;
-use App\Models\Chapters;
-use App\Models\DisbandedChecklist;
 use App\Models\Boards;
 use App\Models\BoardsIncoming;
 use App\Models\BoardsOutgoing;
+use App\Models\Chapters;
+use App\Models\DisbandedChecklist;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
@@ -374,7 +374,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getPresData($PresDetails),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null),
             );
 
             if ($reportReceived == 1) {
@@ -523,7 +523,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null),
                 $this->baseMailDataController->getPresData($PresDetails),
             );
 
@@ -615,7 +615,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null),
+                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null),
             );
 
             if ($documents->final_financial_report_received == '1' && $checklistComplete) {
@@ -777,12 +777,11 @@ class FinancialReportController extends Controller implements HasMiddleware
             } catch (\Exception $e) {
                 // DB::rollback();  // Rollback Transaction
                 // $status = 'fail'; // Set status to fail if an exception occurs
-                Log::error("Error in activateSingleBoard: " . $e->getMessage());
+                Log::error('Error in activateSingleBoard: '.$e->getMessage());
                 throw $e; // Re-throw so calling function can handle it
             }
         }
 
         return $status;
     }
-
 }

@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Mail\BorUpdateListNoitce;
-use App\Mail\NewChapListNotice;
-use App\Mail\NewChapPCNotice;
-use App\Mail\UnZapChapListNotice;
-use App\Mail\DisbandChapListNotice;
-use App\Mail\PCChangeChapNotice;
-use App\Mail\PCChangePCNotice;
 use App\Mail\BorUpdatePCNotice;
 use App\Mail\ChapDetailsUpdatePCNotice;
+use App\Mail\DisbandChapListNotice;
 use App\Mail\NewChapApproveAdminNotice;
 use App\Mail\NewChapApproveGSuiteNotice;
-use App\Mail\NewWebsiteApproveCoordNotice;
+use App\Mail\NewChapListNotice;
+use App\Mail\NewChapPCNotice;
 use App\Mail\NewWebsiteApproveChapNotice;
+use App\Mail\NewWebsiteApproveCoordNotice;
 use App\Mail\NewWebsiteReviewNotice;
+use App\Mail\PCChangeChapNotice;
+use App\Mail\PCChangePCNotice;
+use App\Mail\UnZapChapListNotice;
 use App\Mail\WebsiteUpdatePCNotice;
 use App\Models\Boards;
 use App\Models\BoardsDisbanded;
@@ -23,6 +23,7 @@ use App\Models\BoardsOutgoing;
 use App\Models\BoardsPending;
 use App\Models\Chapters;
 use App\Models\Coordinators;
+use App\Models\Country;
 use App\Models\DisbandedChecklist;
 use App\Models\Documents;
 use App\Models\FinancialReport;
@@ -33,7 +34,6 @@ use App\Models\ProbationSubmission;
 use App\Models\Region;
 use App\Models\Resources;
 use App\Models\State;
-use App\Models\Country;
 use App\Models\Status;
 use App\Models\User;
 use App\Models\Website;
@@ -49,13 +49,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
-use InvalidArgumentException;
 
 class ChapterController extends Controller implements HasMiddleware
 {
     protected $userController;
 
-            protected $positionConditionsService;
+    protected $positionConditionsService;
 
     protected $pdfController;
 
@@ -71,8 +70,7 @@ class ChapterController extends Controller implements HasMiddleware
 
     public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
         ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, EmailController $emailController,
-        EmailTableController $emailTableController, PositionConditionsService $positionConditionsService,)
-
+        EmailTableController $emailTableController, PositionConditionsService $positionConditionsService, )
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
@@ -135,7 +133,7 @@ class ChapterController extends Controller implements HasMiddleware
         return view('chapters.chaplistdeclined')->with($data);
     }
 
-     /**
+    /**
      * Display the Pending New chapter list mapped with login coordinator
      */
     public function showIntPendingChapters(Request $request): View
@@ -191,7 +189,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $countList = $chapterList->count();
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-                'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('chapters.chaplist')->with($data);
@@ -334,7 +332,7 @@ class ChapterController extends Controller implements HasMiddleware
         $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
         $chDisbanded = $baseDisbandedBoardQuery['chDisbanded'];
 
-        if ($chActiveId == 1){
+        if ($chActiveId == 1) {
             $PresDetails = $baseActiveBoardQuery['PresDetails'];
             $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
             $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
@@ -342,7 +340,7 @@ class ChapterController extends Controller implements HasMiddleware
             $SECDetails = $baseActiveBoardQuery['SECDetails'];
         }
 
-        if ($chActiveId == 0){
+        if ($chActiveId == 0) {
             $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
             $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
             $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
@@ -363,7 +361,7 @@ class ChapterController extends Controller implements HasMiddleware
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate, 'probationReason' => $probationReason,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded' => $chDisbanded,
-            'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+            'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
 
         ];
 
@@ -740,7 +738,7 @@ class ChapterController extends Controller implements HasMiddleware
         $pcDetails = $pcDetails->unique('cid');  // Remove duplicates based on the 'cid' field
 
         $data = ['allRegions' => $allRegions, 'allStatuses' => $allStatuses, 'pcDetails' => $pcDetails,
-            'allStates' => $allStates, 'allCountries' => $allCountries
+            'allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
         return view('chapters.addnew')->with($data);
@@ -847,10 +845,9 @@ class ChapterController extends Controller implements HasMiddleware
             Mail::to($listAdmin)
                 ->queue(new NewChapListNotice($mailData));
 
-
             DB::commit();
 
-        return redirect()->to('/chapter/chapterlist')->with('success', 'Chapter created successfully');
+            return redirect()->to('/chapter/chapterlist')->with('success', 'Chapter created successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -1142,7 +1139,7 @@ class ChapterController extends Controller implements HasMiddleware
             ],
         ];
 
-        if (!isset($positionConfig[$position])) {
+        if (! isset($positionConfig[$position])) {
             return;
         }
 
@@ -1152,12 +1149,12 @@ class ChapterController extends Controller implements HasMiddleware
         $positionId = $config['position_id'];
         $vacantField = $config['vacant_field'];
 
-        $firstName = $requestData->input($prefix . 'fname');
-        $lastName = $requestData->input($prefix . 'lname');
-        $email = $requestData->input($prefix . 'email');
+        $firstName = $requestData->input($prefix.'fname');
+        $lastName = $requestData->input($prefix.'lname');
+        $email = $requestData->input($prefix.'email');
         $isVacant = $vacantField ? $requestData->input($vacantField) === 'on' : false;
 
-        if ($position === 'president' && (!$firstName || !$lastName || !$email)) {
+        if ($position === 'president' && (! $firstName || ! $lastName || ! $email)) {
             return;
         }
 
@@ -1193,7 +1190,7 @@ class ChapterController extends Controller implements HasMiddleware
             }
         } else {
             // No current board member
-            if (!$isVacant) {
+            if (! $isVacant) {
                 $this->createNewBoardMember($chapterWithRelation, $relation, $positionId, $requestData, $prefix, $lastUpdatedBy, $defaultBoardCategories);
             }
         }
@@ -1240,11 +1237,11 @@ class ChapterController extends Controller implements HasMiddleware
 
     private function updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $lastUpdatedBy, $defaultBoardCategories)
     {
-        $firstName = $requestData->input($prefix . 'fname');
-        $lastName = $requestData->input($prefix . 'lname');
-        $email = $requestData->input($prefix . 'email');
-        $stateId = $requestData->input($prefix . 'state');
-        $countryId = $requestData->input($prefix . 'country') ?? '198';
+        $firstName = $requestData->input($prefix.'fname');
+        $lastName = $requestData->input($prefix.'lname');
+        $email = $requestData->input($prefix.'email');
+        $stateId = $requestData->input($prefix.'state');
+        $countryId = $requestData->input($prefix.'country') ?? '198';
 
         $user->update([
             'first_name' => $firstName,
@@ -1257,12 +1254,12 @@ class ChapterController extends Controller implements HasMiddleware
             'first_name' => $firstName,
             'last_name' => $lastName,
             'email' => $email,
-            'street_address' => $requestData->input($prefix . 'street'),
-            'city' => $requestData->input($prefix . 'city'),
+            'street_address' => $requestData->input($prefix.'street'),
+            'city' => $requestData->input($prefix.'city'),
             'state_id' => $stateId,
-            'zip' => $requestData->input($prefix . 'zip'),
+            'zip' => $requestData->input($prefix.'zip'),
             'country_id' => $countryId,
-            'phone' => $requestData->input($prefix . 'phone'),
+            'phone' => $requestData->input($prefix.'phone'),
             'last_updated_by' => $lastUpdatedBy,
             'last_updated_date' => now(),
         ]);
@@ -1272,7 +1269,7 @@ class ChapterController extends Controller implements HasMiddleware
             $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
                 ->where('category_id', $categoryId)
                 ->first();
-            if (!$existingSubscription) {
+            if (! $existingSubscription) {
                 ForumCategorySubscription::create([
                     'user_id' => $user->id,
                     'category_id' => $categoryId,
@@ -1283,16 +1280,16 @@ class ChapterController extends Controller implements HasMiddleware
 
     private function createNewBoardMember($chapter, $relation, $positionId, $requestData, $prefix, $lastUpdatedBy, $defaultBoardCategories)
     {
-        $firstName = $requestData->input($prefix . 'fname');
-        $lastName = $requestData->input($prefix . 'lname');
-        $email = $requestData->input($prefix . 'email');
-        $stateId = $requestData->input($prefix . 'state');
-        $countryId = $requestData->input($prefix . 'country') ?? '198';
+        $firstName = $requestData->input($prefix.'fname');
+        $lastName = $requestData->input($prefix.'lname');
+        $email = $requestData->input($prefix.'email');
+        $stateId = $requestData->input($prefix.'state');
+        $countryId = $requestData->input($prefix.'country') ?? '198';
 
         // Check if user with this email already exists and is not on another active board
         $existingUser = User::where('email', $email)
-                           ->where('user_type', '!=', 'board')
-                        ->first();
+            ->where('user_type', '!=', 'board')
+            ->first();
 
         if ($existingUser) {
             // Update existing user to board type
@@ -1322,12 +1319,12 @@ class ChapterController extends Controller implements HasMiddleware
             'last_name' => $lastName,
             'email' => $email,
             'board_position_id' => $positionId,
-            'street_address' => $requestData->input($prefix . 'street'),
-            'city' => $requestData->input($prefix . 'city'),
+            'street_address' => $requestData->input($prefix.'street'),
+            'city' => $requestData->input($prefix.'city'),
             'state_id' => $stateId,
-            'zip' => $requestData->input($prefix . 'zip'),
+            'zip' => $requestData->input($prefix.'zip'),
             'country_id' => $countryId,
-            'phone' => $requestData->input($prefix . 'phone'),
+            'phone' => $requestData->input($prefix.'phone'),
             'last_updated_by' => $lastUpdatedBy,
             'last_updated_date' => now(),
         ]);
@@ -1412,30 +1409,26 @@ class ChapterController extends Controller implements HasMiddleware
                     $AVPDetailsUpd->email != $AVPDetails->email || $AVPDetailsUpd->first_name != $AVPDetails->first_name || $AVPDetailsUpd->last_name != $AVPDetails->last_name ||
                     $MVPDetailsUpd->email != $MVPDetails->email || $MVPDetailsUpd->first_name != $MVPDetails->first_name || $MVPDetailsUpd->last_name != $MVPDetails->last_name ||
                     $TRSDetailsUpd->email != $TRSDetails->email || $TRSDetailsUpd->first_name != $TRSDetails->first_name || $TRSDetailsUpd->last_name != $TRSDetails->last_name ||
-                    $SECDetailsUpd->email != $SECDetails->email || $SECDetailsUpd->first_name != $SECDetails->first_name || $SECDetailsUpd->last_name != $SECDetails->last_name)
-
-                {
-                    Mail::to($emailPC)
-                        ->queue(new BorUpdatePCNotice($mailData));
-                }
+                    $SECDetailsUpd->email != $SECDetails->email || $SECDetailsUpd->first_name != $SECDetails->first_name || $SECDetailsUpd->last_name != $SECDetails->last_name) {
+                Mail::to($emailPC)
+                    ->queue(new BorUpdatePCNotice($mailData));
+            }
 
             // List Admin Notification
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $listAdmin = $adminEmail['list_admin'];
 
             if ($PresDetailsUpd->email != $PresDetails->email || $AVPDetailsUpd->email != $AVPDetails->email || $MVPDetailsUpd->email != $MVPDetails->email ||
-                    $TRSDetailsUpd->email != $TRSDetails->email || $SECDetailsUpd->email != $SECDetails->email)
-
-                {
-                    Mail::to($listAdmin)
-                        ->queue(new BorUpdateListNoitce($mailData));
-                }
+                    $TRSDetailsUpd->email != $TRSDetails->email || $SECDetailsUpd->email != $SECDetails->email) {
+                Mail::to($listAdmin)
+                    ->queue(new BorUpdateListNoitce($mailData));
+            }
 
             DB::commit();
 
             return to_route('chapters.view', ['id' => $id])->with('success', 'Board Details have been updated');
 
-       } catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
@@ -1495,7 +1488,7 @@ class ChapterController extends Controller implements HasMiddleware
 
             DB::commit();
 
-        return to_route('chapters.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');
+            return to_route('chapters.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -1526,8 +1519,8 @@ class ChapterController extends Controller implements HasMiddleware
         $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $websiteList = $baseQuery['query']->get();
 
-        $data = ['websiteList' => $websiteList, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
-];
+        $data = ['websiteList' => $websiteList, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+        ];
 
         return view('chapters.chapwebsite')->with($data);
     }
@@ -1547,8 +1540,8 @@ class ChapterController extends Controller implements HasMiddleware
         $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
         $websiteList = $baseQuery['query']->get();
 
-        $data = ['websiteList' => $websiteList, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
-];
+        $data = ['websiteList' => $websiteList, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+        ];
 
         return view('international.intchapwebsite')->with($data);
     }
@@ -1614,7 +1607,7 @@ class ChapterController extends Controller implements HasMiddleware
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'conferenceDescription' => $conferenceDescription,
             'chDetails' => $chDetails, 'allWebLinks' => $allWebLinks,
             'chPcId' => $chPcId, 'regionLongName' => $regionLongName,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('chapters.editwebsite')->with($data);
@@ -1705,7 +1698,7 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
             if ($chDetailsUpd->website_url != $chDetails->website_url || $chDetailsUpd->website_status != $chDetails->website_status) {
-                    Mail::to($emailPC)
+                Mail::to($emailPC)
                     ->queue(new WebsiteUpdatePCNotice($mailData));
 
             }
@@ -1883,7 +1876,8 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
             DB::commit();
-                return to_route('chapters.editpending', ['id' => $id])->with('success', 'Chapter Details have been updated');
+
+            return to_route('chapters.editpending', ['id' => $id])->with('success', 'Chapter Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -2018,7 +2012,7 @@ class ChapterController extends Controller implements HasMiddleware
             return response()->json([
                 'success' => true,
                 'message' => 'Coordinator approved successfully.',
-                'redirect' => route('chapters.view', ['id' => $id])
+                'redirect' => route('chapters.view', ['id' => $id]),
             ]);
 
         } catch (\Exception $e) {
@@ -2028,7 +2022,7 @@ class ChapterController extends Controller implements HasMiddleware
             // Return JSON error response for AJAX
             return response()->json([
                 'success' => false,
-                'message' => 'Something went wrong, Please try again.'
+                'message' => 'Something went wrong, Please try again.',
             ], 500);
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -2083,7 +2077,7 @@ class ChapterController extends Controller implements HasMiddleware
             // Return JSON error response for AJAX
             return response()->json([
                 'success' => false,
-                'message' => 'Something went wrong, Please try again.'
+                'message' => 'Something went wrong, Please try again.',
             ], 500);
         } finally {
             // This ensures DB connections are released even if exceptions occur

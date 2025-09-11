@@ -2,13 +2,8 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-
 class PaymentsManualOnline extends BaseMailable
-// class ManualOrderAdminNotice extends BaseMailable
+    // class ManualOrderAdminNotice extends BaseMailable
 {
     public $mailData;
 
@@ -30,6 +25,6 @@ class PaymentsManualOnline extends BaseMailable
         return $this
             ->subject("Donation Received | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.payments.manualonline');
-            // ->markdown('emails.chapter.manualorderadminnotice');
+        // ->markdown('emails.chapter.manualorderadminnotice');
     }
 }

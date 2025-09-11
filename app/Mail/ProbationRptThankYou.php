@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -17,14 +16,14 @@ class ProbationRptThankYou extends BaseMailable
 
     }
 
-     public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             from: new Address('support@momsclub.org', 'MOMS Club'),
             replyTo: [
-                new Address('support@momsclub.org', 'MOMS Club')
+                new Address('support@momsclub.org', 'MOMS Club'),
             ],
-            subject: "Quarterly Financial Report Submitted",
+            subject: 'Quarterly Financial Report Submitted',
         );
     }
 
@@ -39,5 +38,4 @@ class ProbationRptThankYou extends BaseMailable
     {
         return [];
     }
-
 }

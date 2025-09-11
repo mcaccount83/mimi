@@ -15,14 +15,14 @@ class BoardsOutgoing extends Model
 
     protected $table = 'boards_outgoing';
 
-     public $timestamps = false;
+    public $timestamps = false;
 
     protected $fillable = [
         'user_id', 'chapter_id', 'board_position_id', 'first_name', 'last_name', 'email', 'phone', 'street_address', 'city', 'state_id', 'zip', 'country_id',
         'last_updated_by', 'last_updated_date',
     ];
 
-   public function user(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in boards BelongsTo 'id' in user
     }

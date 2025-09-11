@@ -1,4 +1,5 @@
 <?php
+
 // app/Mail/BaseMailable.php
 
 namespace App\Mail;
@@ -9,8 +10,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use romanzipp\QueueMonitor\Traits\IsMonitored;
 use Illuminate\Support\Facades\Log;
+use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 abstract class BaseMailable extends Mailable implements ShouldQueue
 {
@@ -35,7 +36,7 @@ abstract class BaseMailable extends Mailable implements ShouldQueue
             'email_class' => static::class,
             'exception' => $exception->getMessage(),
             'attempts' => $this->attempts(),
-            'trace' => $exception->getTraceAsString()
+            'trace' => $exception->getTraceAsString(),
         ]);
     }
 }

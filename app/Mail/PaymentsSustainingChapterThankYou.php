@@ -2,13 +2,8 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-
 class PaymentsSustainingChapterThankYou extends BaseMailable
-// class DonationSustainingChapterThankYou extends BaseMailable
+    // class DonationSustainingChapterThankYou extends BaseMailable
 {
     public $mailData;
 
@@ -31,6 +26,6 @@ class PaymentsSustainingChapterThankYou extends BaseMailable
             ->from('support@momsclub.org', 'MOMS Club')
             ->subject('Thank You for Your Sustaining Chapter Donation')
             ->markdown('emails.payments.sustainingchapterthankyou');
-            // ->markdown('emails.chapter.donationsustainingchapterthankyou');
+        // ->markdown('emails.chapter.donationsustainingchapterthankyou');
     }
 }

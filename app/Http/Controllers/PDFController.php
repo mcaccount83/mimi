@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\NameChangeEINNotice;
-use App\Mail\NewChapterFaxCover;
 use App\Mail\DisbandChapterLetter;
+use App\Mail\NameChangeEINNotice;
 use App\Mail\ProbationChapNoPmtLetter;
 use App\Mail\ProbationChapNoRptLetter;
 use App\Mail\ProbationChapPartyLetter;
@@ -23,7 +22,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use setasign\Fpdi\Fpdi;
-use Illuminate\Support\Facades\Storage;
 
 class PDFController extends Controller
 {
@@ -128,8 +126,8 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-        public function saveFinalFinancialReport(Request $request, $chapterId = null, $PresDetails = null)
-        {
+    public function saveFinalFinancialReport(Request $request, $chapterId = null, $PresDetails = null)
+    {
         // Prefer route parameters if provided, else fallback to request
         $chapterId = $chapterId ?? $request->chapterId;
         $chActiveId = $request->chActiveId ?? null;
@@ -186,17 +184,17 @@ class PDFController extends Controller
         $chDocuments = $baseQuery['chDocuments'];
         $chActiveId = $baseQuery['chActiveId'];
 
-        if ($chActiveId == 1){
-        $chFinancialReport = $baseQuery['chFinancialReport'];
+        if ($chActiveId == 1) {
+            $chFinancialReport = $baseQuery['chFinancialReport'];
         }
-        if ($chActiveId == 0){
-        $chFinancialReport = $baseQuery['chFinancialReportFinal'];
+        if ($chActiveId == 0) {
+            $chFinancialReport = $baseQuery['chFinancialReportFinal'];
         }
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
-            $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message=null),
+            $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null),
             [
                 'changed_dues' => $chFinancialReport->changed_dues,
                 'different_dues' => $chFinancialReport->different_dues,
@@ -772,7 +770,7 @@ class PDFController extends Controller
         $chapterState = $baseQuery['stateShortName'];
 
         $title = $chapterName.', '.$chapterState.' | Chapter Name Change';
-        $message = "Name change for subordinate.";
+        $message = 'Name change for subordinate.';
         $pages = '2';
 
         // 1. Generate both DOMPDFs
@@ -788,7 +786,7 @@ class PDFController extends Controller
         file_put_contents($reportPath, $report['pdf']->output());
 
         // 3. Merge with FPDI (don't confuse with your PDF alias)
-        $merger = new Fpdi();
+        $merger = new Fpdi;
 
         $addFile = function ($filePath) use ($merger) {
             $pageCount = $merger->setSourceFile($filePath);
@@ -804,9 +802,8 @@ class PDFController extends Controller
         $addFile($reportPath);
 
         // 4. Output final merged PDF
-        $mergedPdfPath = storage_path('app/pdf_reports/' . $filename);
+        $mergedPdfPath = storage_path('app/pdf_reports/'.$filename);
         $merger->Output($mergedPdfPath, 'F'); // ✅ Save to file
-
 
         // 5. Clean up
         @unlink($coverPath);
@@ -823,7 +820,7 @@ class PDFController extends Controller
      */
     // public function generateNameChangeLetter(Request $request, $chapterId, $chNamePrev)
 
-     public function generateNameChangeLetter($chapterId, $chNamePrev)
+    public function generateNameChangeLetter($chapterId, $chNamePrev)
     {
         $baseQueryUpd = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetailsUpd = $baseQueryUpd['chDetails'];
@@ -864,7 +861,7 @@ class PDFController extends Controller
     /**
      * Generate New Chapter IRS Fax Coversheet
      */
-     public function generateNewChapterFaxCover($chapterId, $streamResponse = true)
+    public function generateNewChapterFaxCover($chapterId, $streamResponse = true)
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -902,7 +899,7 @@ class PDFController extends Controller
         ];
     }
 
-     // /**
+    // /**
     //  * Generate Combined IRS Subordinate Filing (Cover Sheet & Report)
     //  */
     public function generateCombinedIRSSubordinateFiling(Request $request)
@@ -927,7 +924,7 @@ class PDFController extends Controller
         file_put_contents($filingPath, $filing['pdf']->output());
 
         // 3. Merge with FPDI (don't confuse with your PDF alias)
-        $merger = new Fpdi();
+        $merger = new Fpdi;
 
         $addFile = function ($filePath) use ($merger) {
             $pageCount = $merger->setSourceFile($filePath);
@@ -958,7 +955,7 @@ class PDFController extends Controller
     // /**
     //  * Generate Subordinate Filing
     //  */
-      public function generateSubordinateFiling(Request $request, $streamResponse = true)
+    public function generateSubordinateFiling(Request $request, $streamResponse = true)
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
@@ -999,7 +996,7 @@ class PDFController extends Controller
             [
                 'chapterList' => $chapterList,
                 'startFormatted' => $startFormatted,
-                'todayFormatted' => $todayFormatted
+                'todayFormatted' => $todayFormatted,
             ]
         );
 
@@ -1017,7 +1014,7 @@ class PDFController extends Controller
         ];
     }
 
-     // /**
+    // /**
     //  * Generate Combined IRS Updates (Cover Sheet & Report)
     //  */
     public function generateCombinedIRSUpdates(Request $request)
@@ -1026,7 +1023,7 @@ class PDFController extends Controller
         $todayFormatted = now()->format('F Y');
 
         $title = 'IRS Updates';
-        $message = "Subordinate corrections. Includes any additions and deletions as follows.";
+        $message = 'Subordinate corrections. Includes any additions and deletions as follows.';
         $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
 
         // 1. Generate both DOMPDFs
@@ -1042,7 +1039,7 @@ class PDFController extends Controller
         file_put_contents($reportPath, $report['pdf']->output());
 
         // 3. Merge with FPDI (don't confuse with your PDF alias)
-        $merger = new Fpdi();
+        $merger = new Fpdi;
 
         $addFile = function ($filePath) use ($merger) {
             $pageCount = $merger->setSourceFile($filePath);
@@ -1070,10 +1067,10 @@ class PDFController extends Controller
         ]);
     }
 
-     // /**
+    // /**
     //  * Generate IRS Updates other than Subordinate Filing
     //  */
-     public function generateIRSUpdates(Request $request, $streamResponse = true)
+    public function generateIRSUpdates(Request $request, $streamResponse = true)
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
@@ -1139,19 +1136,19 @@ class PDFController extends Controller
                 'bd_active.street_address as pres_address',
                 'bd_active.city as pres_city',
                 'state.state_short_name as pres_state',
-                'bd_active.zip as pres_zip'
+                'bd_active.zip as pres_zip',
             ])
             ->whereNotNull('chapters.ein')
             ->where('chapters.ein', '!=', '*********')
             ->where('chapters.country_id', '=', '198')
-            ->where(function($query) use ($date) {
+            ->where(function ($query) use ($date) {
                 $query->where('chapters.start_year', '<', $date->year)
-                    ->orWhere(function($query) use ($date) {
+                    ->orWhere(function ($query) use ($date) {
                         $query->where('chapters.start_year', '=', $date->year)
                             ->where('chapters.start_month_id', '<=', $date->month);
                     });
             })
-            ->leftJoin('boards as bd_active', function($join) {
+            ->leftJoin('boards as bd_active', function ($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
@@ -1175,19 +1172,19 @@ class PDFController extends Controller
                 'bd_active.street_address as pres_address',
                 'bd_active.city as pres_city',
                 'state.state_short_name as pres_state',
-                'bd_active.zip as pres_zip'
+                'bd_active.zip as pres_zip',
             ])
             ->whereNotNull('chapters.ein')
             ->where('chapters.ein', '!=', '*********')
             ->where('chapters.country_id', '=', '198')
-            ->where(function($query) use ($date) {
+            ->where(function ($query) use ($date) {
                 $query->where('chapters.start_year', '>', $date->year)
-                    ->orWhere(function($query) use ($date) {
+                    ->orWhere(function ($query) use ($date) {
                         $query->where('chapters.start_year', '=', $date->year)
-                                ->where('chapters.start_month_id', '>', $date->month);
+                            ->where('chapters.start_month_id', '>', $date->month);
                     });
             })
-            ->leftJoin('boards as bd_active', function($join) {
+            ->leftJoin('boards as bd_active', function ($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
@@ -1211,18 +1208,18 @@ class PDFController extends Controller
                 'bd_active.street_address as pres_address',
                 'bd_active.city as pres_city',
                 'state.state_short_name as pres_state',
-                'bd_active.zip as pres_zip'
+                'bd_active.zip as pres_zip',
             ])
             ->whereNotNull('chapters.ein')
             ->where('chapters.ein', '!=', '*********')
             ->where('chapters.country_id', '=', '198')
             ->leftJoin('documents as doc', 'chapters.id', '=', 'doc.chapter_id')
-            ->leftJoin('boards as bd_active', function($join) {
+            ->leftJoin('boards as bd_active', function ($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
             ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->whereNull('doc.ein_sent')
                     ->orWhere('doc.ein_sent', '!=', 1);
             })
@@ -1239,7 +1236,7 @@ class PDFController extends Controller
 
         return $baseQueryZapped['query']
             ->select([
-                'chapters.*'
+                'chapters.*',
             ])
             ->whereNotNull('chapters.ein')
             ->where('chapters.ein', '!=', '*********')
@@ -1249,7 +1246,7 @@ class PDFController extends Controller
             ->sortBy('ein');
     }
 
-     // /**
+    // /**
     //  * Generate Combined 990N Filing Corrections (Cover Sheet & Report)
     //  */
     public function generateCombinedIRSFilingCorrections(Request $request)
@@ -1258,7 +1255,7 @@ class PDFController extends Controller
         $todayFormatted = now()->format('F Y');
 
         $title = 'IRS Updates';
-        $message = "Subordinate corrections. Chapters could not file 990N.";
+        $message = 'Subordinate corrections. Chapters could not file 990N.';
         $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
 
         // 1. Generate both DOMPDFs
@@ -1274,7 +1271,7 @@ class PDFController extends Controller
         file_put_contents($reportPath, $report['pdf']->output());
 
         // 3. Merge with FPDI (don't confuse with your PDF alias)
-        $merger = new Fpdi();
+        $merger = new Fpdi;
 
         $addFile = function ($filePath) use ($merger) {
             $pageCount = $merger->setSourceFile($filePath);
@@ -1302,10 +1299,10 @@ class PDFController extends Controller
         ]);
     }
 
-      // /**
+    // /**
     //  * Generate 990N Filing Corrections
     //  */
-     public function generateIRSFilingCorrections(Request $request, $streamResponse = true)
+    public function generateIRSFilingCorrections(Request $request, $streamResponse = true)
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
@@ -1349,75 +1346,74 @@ class PDFController extends Controller
         ];
     }
 
-     // /**
+    // /**
     //  * Generate IRS list of 990N Filing Corrections with the Wrong Dates
     //  */
     private function generateIRSWrongDateList($coorId)
-{
-    $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    {
+        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
 
-    return $baseQueryActive['query']
-        ->select([
-            'chapters.*',
-            'bd_active.first_name as pres_first_name',
-            'bd_active.last_name as pres_last_name',
-            'bd_active.street_address as pres_address',
-            'bd_active.city as pres_city',
-            'state.state_short_name as pres_state',
-            'bd_active.zip as pres_zip'
-        ])
-        ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
-        ->leftJoin('boards as bd_active', function($join) {
-            $join->on('chapters.id', '=', 'bd_active.chapter_id')
-                ->where('bd_active.board_position_id', '=', 1);
-        })
-        ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
-        ->where('documents.irs_wrongdate', 1)
-        ->where(function($query) {
-            $query->whereNull('documents.irs_notified')
-                  ->orWhere('documents.irs_notified', '!=', '1');
-        })
-        ->get()
-        ->sortBy('ein');
-}
+        return $baseQueryActive['query']
+            ->select([
+                'chapters.*',
+                'bd_active.first_name as pres_first_name',
+                'bd_active.last_name as pres_last_name',
+                'bd_active.street_address as pres_address',
+                'bd_active.city as pres_city',
+                'state.state_short_name as pres_state',
+                'bd_active.zip as pres_zip',
+            ])
+            ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
+            ->leftJoin('boards as bd_active', function ($join) {
+                $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                    ->where('bd_active.board_position_id', '=', 1);
+            })
+            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->where('documents.irs_wrongdate', 1)
+            ->where(function ($query) {
+                $query->whereNull('documents.irs_notified')
+                    ->orWhere('documents.irs_notified', '!=', '1');
+            })
+            ->get()
+            ->sortBy('ein');
+    }
 
-     // /**
+    // /**
     //  * Generate IRS list of 990N Filing Corrections where chapter was not found
     //  */
     private function generateIRSNotFoundList($coorId)
-{
-    $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    {
+        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
 
-    return $baseQueryActive['query']
-        ->select([
-            'chapters.*',
-            'bd_active.first_name as pres_first_name',
-            'bd_active.last_name as pres_last_name',
-            'bd_active.street_address as pres_address',
-            'bd_active.city as pres_city',
-            'state.state_short_name as pres_state',
-            'bd_active.zip as pres_zip'
-        ])
-        ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
-        ->leftJoin('boards as bd_active', function($join) {
-            $join->on('chapters.id', '=', 'bd_active.chapter_id')
-                ->where('bd_active.board_position_id', '=', 1);
-        })
-        ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
-        ->where('documents.irs_notfound', 1)
-        ->where(function($query) {
-            $query->whereNull('documents.irs_notified')
-                  ->orWhere('documents.irs_notified', '!=', '1');
-        })
-        ->get()
-        ->sortBy('ein');
-}
-
+        return $baseQueryActive['query']
+            ->select([
+                'chapters.*',
+                'bd_active.first_name as pres_first_name',
+                'bd_active.last_name as pres_last_name',
+                'bd_active.street_address as pres_address',
+                'bd_active.city as pres_city',
+                'state.state_short_name as pres_state',
+                'bd_active.zip as pres_zip',
+            ])
+            ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
+            ->leftJoin('boards as bd_active', function ($join) {
+                $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                    ->where('bd_active.board_position_id', '=', 1);
+            })
+            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->where('documents.irs_notfound', 1)
+            ->where(function ($query) {
+                $query->whereNull('documents.irs_notified')
+                    ->orWhere('documents.irs_notified', '!=', '1');
+            })
+            ->get()
+            ->sortBy('ein');
+    }
 
     // /**
     //  * EO Dept IRS Fax Coversheet
     //  */
-     public function generateEODeptFaxCover($streamResponse = true, $title = null, $message = null, $pages = null)
+    public function generateEODeptFaxCover($streamResponse = true, $title = null, $message = null, $pages = null)
     {
         $pages = $pages ?? request()->query('pages') ?? request()->input('pages') ?? 1;
         $message = $message ?? request()->query('message') ?? request()->input('message') ?? '';

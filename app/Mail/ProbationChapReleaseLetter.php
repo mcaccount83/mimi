@@ -19,12 +19,12 @@ class ProbationChapReleaseLetter extends BaseMailable
         $this->pdfPath = $pdfPath;
     }
 
-     public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
             replyTo: [
-                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+                new Address($this->mailData['userEmail'], $this->mailData['userName']),
             ],
             subject: "Probation Release Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
@@ -45,5 +45,4 @@ class ProbationChapReleaseLetter extends BaseMailable
                 ->withMime('application/pdf'),
         ];
     }
-
 }

@@ -24,7 +24,7 @@ class ProbationChapPartyLetter extends BaseMailable
         return new Envelope(
             from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
             replyTo: [
-                new Address($this->mailData['userEmail'], $this->mailData['userName'])
+                new Address($this->mailData['userEmail'], $this->mailData['userName']),
             ],
             subject: "Probation Party Expense Letter | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
@@ -45,5 +45,4 @@ class ProbationChapPartyLetter extends BaseMailable
                 ->withMime('application/pdf'),
         ];
     }
-
 }

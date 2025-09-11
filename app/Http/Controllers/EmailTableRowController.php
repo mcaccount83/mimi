@@ -92,8 +92,6 @@ class EmailTableRowController extends Controller
         return $tableHtml;
     }
 
-
-
     /**
      * Create Rows for President Email
      */
@@ -117,7 +115,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Founder Details
      */
- public function createFounderDetailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createFounderDetailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Chapter & Founder Information</td>
@@ -242,7 +240,7 @@ class EmailTableRowController extends Controller
         return $tableHtml;
     }
 
-/**
+    /**
      * Create Rows for Coordinator Details
      */
     public function createNewCoordinatorDetailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
@@ -294,35 +292,35 @@ class EmailTableRowController extends Controller
             <td style="'.$cellStyle.'">'.$mailData['presEmail'].'</td>
         </tr>';
 
-        if (!empty($mailData['avpName'])) {
+        if (! empty($mailData['avpName'])) {
             $tableHtml .= '<tr>
                 <td style="'.$cellLeftStyle.'">AVP</td>
                 <td style="'.$cellStyle.'">'.$mailData['avpName'].'</td>
                 <td style="'.$cellStyle.'">'.$mailData['avpEmail'].'</td>
             </tr>';
         }
-          if (!empty($mailData['avpName'])) {
+        if (! empty($mailData['avpName'])) {
             $tableHtml .= '<tr>
                 <td style="'.$cellLeftStyle.'">AVP</td>
                 <td style="'.$cellStyle.'">'.$mailData['avpName'].'</td>
                 <td style="'.$cellStyle.'">'.$mailData['avpEmail'].'</td>
             </tr>';
         }
-         if (!empty($mailData['mvpName'])) {
+        if (! empty($mailData['mvpName'])) {
             $tableHtml .= '<tr>
                 <td style="'.$cellLeftStyle.'">AVP</td>
                 <td style="'.$cellStyle.'">'.$mailData['mvpName'].'</td>
                 <td style="'.$cellStyle.'">'.$mailData['mvpEmail'].'</td>
             </tr>';
         }
-         if (!empty($mailData['trsName'])) {
+        if (! empty($mailData['trsName'])) {
             $tableHtml .= '<tr>
                 <td style="'.$cellLeftStyle.'">AVP</td>
                 <td style="'.$cellStyle.'">'.$mailData['trsName'].'</td>
                 <td style="'.$cellStyle.'">'.$mailData['trsEmail'].'</td>
             </tr>';
         }
-         if (!empty($mailData['secName'])) {
+        if (! empty($mailData['secName'])) {
             $tableHtml .= '<tr>
                 <td style="'.$cellLeftStyle.'">AVP</td>
                 <td style="'.$cellStyle.'">'.$mailData['secName'].'</td>
@@ -362,7 +360,6 @@ class EmailTableRowController extends Controller
 
         return $tableHtml;
     }
-
 
     /**
      * Create Rows for Full Board Updates
@@ -589,8 +586,4 @@ class EmailTableRowController extends Controller
 
         return $tableHtml;
     }
-
-
-
-
 }

@@ -2,13 +2,8 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-
 class PaymentsNewChapOnline extends BaseMailable
-// class NewChapterAdminNotice extends BaseMailable
+    // class NewChapterAdminNotice extends BaseMailable
 {
     public $mailData;
 
@@ -30,6 +25,6 @@ class PaymentsNewChapOnline extends BaseMailable
         return $this
             ->subject("New Chapter Application Received | Conference {$this->mailData['chapterConf']}")
             ->markdown('emails.payments.newchaponline');
-            // ->markdown('emails.chapter.newchapteradminnotice');
+        // ->markdown('emails.chapter.newchapteradminnotice');
     }
 }

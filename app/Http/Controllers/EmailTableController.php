@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 class EmailTableController extends Controller
 {
     protected $baseMailDataController;
+
     protected $emailTableRowController;
 
     public function __construct(BaseMailDataController $baseMailDataController, EmailTableRowController $emailTableRowController)
@@ -33,7 +34,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-     public function createNewChapterApprovedTable($mailData)
+    public function createNewChapterApprovedTable($mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -144,7 +145,6 @@ class EmailTableController extends Controller
 
         return $tableHtml;
     }
-
 
     /**
      * List Admin Notification -- Full Board Update
@@ -316,7 +316,7 @@ class EmailTableController extends Controller
     }
 
     /**
-      * Create Table for New Coordinators
+     * Create Table for New Coordinators
      */
     public function createNewCoordinatorTable($mailData)
     {
@@ -333,8 +333,6 @@ class EmailTableController extends Controller
 
         return $tableHtml;
     }
-
-
 
     /**
      * Create Rows for Founder
@@ -743,7 +741,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-     /**
+    /**
      * Create Rows for New Chapter Application
      */
     public function createNewCoordinatorRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
@@ -806,5 +804,4 @@ class EmailTableController extends Controller
 
         return $tableHtml;
     }
-
 }

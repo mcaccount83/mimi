@@ -2,15 +2,12 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
 class NewCoordApplication extends BaseMailable
 {
     public $mailData;
-
 
     public function __construct($mailData)
     {
@@ -35,5 +32,4 @@ class NewCoordApplication extends BaseMailable
     {
         return [];
     }
-
 }

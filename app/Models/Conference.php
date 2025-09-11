@@ -13,13 +13,12 @@ class Conference extends Model
 
     protected $table = 'conference';
 
-    protected $fillable = ['id', 'conference_name', 'short_name', 'conference_description', 'short_description'
-        ];
+    protected $fillable = ['id', 'conference_name', 'short_name', 'conference_description', 'short_description',
+    ];
 
     // In your Conference model
-public function regions()
-{
-    return $this->hasMany(Region::class, 'conference_id', 'id');
-}
-
+    public function regions()
+    {
+        return $this->hasMany(Region::class, 'conference_id', 'id');
+    }
 }
