@@ -113,45 +113,6 @@ class PublicController extends Controller
         return view('public.chapterlinks', ['chapters' => $chapters, 'international' => $international]);
     }
 
-    public function getActiveChaptersJson(Request $request)
-    {
-        // Pass in whatever IDs are needed — or default to 0/null if not needed
-        $coorId = 0;
-        $confId = 0;
-        $regId = 0;
-        $positionId = 0;
-        $secPositionId = 0;
-
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-
-        $chapters = $baseQuery['chapters'] ?? $baseQuery['data'] ?? [];
-        // Adjust this depending on the key your query returns
-
-        $data = collect($chapters)->map(function($chapter) {
-            return [
-                'id' => $chapter->id,
-                'name' => $chapter->name,
-                'state' => $chapter->state_long_name,
-            ];
-        });
-
-        return response()->json($data);
-    }
-
-
-    public function chapterInfo(Request $request, $id): View
-    {
-        $baseQuery = $this->baseChapterController->getChapterDetails($id);
-        $chDetails = $baseQuery['chDetails'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $regionLongName = $baseQuery['regionLongName'];
-        $conferenceDescription = $baseQuery['conferenceDescription'];
-
-        $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,];
-
-        return view('public.chapterinfo')->with($data);
-    }
-
     /**
      * Show the Chapter Resources Page
      */

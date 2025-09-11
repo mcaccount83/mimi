@@ -37,11 +37,17 @@
                                 <div class="card-body">
                 @endif
                                     <div class="chapter">
-                                        <a href="{{ route('chapter.info', $chapter->id) }}" target="_blank">
+                                        <a href="javascript:void(0)"
+                                        onclick="showChapterInfo({
+                                                name: '{{ $chapter->name }}',
+                                                state_short_name: '{{ $chapter->state_short_name }}',
+                                                territory: '{{ $chapter->territory }}',
+                                                inquiries_contact: '{{ $chapter->inquiries_contact }}',
+                                                website_url: '{{ $chapter->website_url }}'
+                                        })">
                                             {{ $chapter->name }}
                                         </a>
                                     </div>
-
                                     {{--<div class="chapter">
                                              @if($chapter->website_status == 1)
                                             <a href="{{ $chapter->website_url }}" target="_blank">{{ $chapter->name }}</a>
@@ -93,15 +99,25 @@
                             <div id="collapse{{ $loop->index + count($international) }}" class="collapse" data-parent="#usaAccordion">
                                 <div class="card-body">
                 @endif
-
-
                                     <div class="chapter">
+                                        <a href="javascript:void(0)"
+                                        onclick="showChapterInfo({
+                                                name: '{{ $chapter->name }}',
+                                                state_short_name: '{{ $chapter->state_short_name }}',
+                                                territory: '{{ $chapter->territory }}',
+                                                inquiries_contact: '{{ $chapter->inquiries_contact }}',
+                                                website_url: '{{ $chapter->website_url }}'
+                                        })">
+                                            {{ $chapter->name }}
+                                        </a>
+                                    </div>
+                                    {{-- <div class="chapter">
                                         @if($chapter->website_status == 1)
                                             <a href="{{ $chapter->website_url }}" target="_blank">{{ $chapter->name }}</a>
                                         @else
                                             <a href="https://momsclub.org/chapters/find-a-chapter/" target="_blank">{{ $chapter->name }}</a>
                                         @endif
-                                    </div>
+                                    </div> --}}
                 @php
                     $previousState = $chapter->state_long_name;
                 @endphp
@@ -146,5 +162,39 @@ $(document).ready(function() {
         percentPosition: true
     });
 });
-
+</script>
+<script>
+function showChapterInfo(chapter) {
+    Swal.fire({
+        title: `<h4><strong>${chapter.name}, ${chapter.state_short_name}</strong><h4>`,
+html: `
+    <div style="text-align: left;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline;">
+                <span style="font-weight: bold; margin-right: 8px; white-space: nowrap;">Boundaries:</span>
+                <span style="flex: 1;">${chapter.territory}</span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline;">
+                <span style="font-weight: bold; margin-right: 8px; white-space: nowrap;">Contact Email:</span>
+                <span style="flex: 1;"><a href="mailto:${chapter.inquiries_contact}">${chapter.inquiries_contact}</a></span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline;">
+                <span style="font-weight: bold; margin-right: 8px; white-space: nowrap;">Website:</span>
+                <span style="flex: 1;">${
+                    (chapter.website_url === 'http://' || chapter.website_url === 'https://'|| !chapter.website_url)
+                    ? 'No Website'
+                    : `<a href="${chapter.website_url}" target="_blank">${chapter.website_url}</a>`
+                }</span>
+            </div>
+        </div>
+    </div>
+`,
+        focusConfirm: false,
+        confirmButtonText: 'Close',
+        customClass: {
+            popup: 'swal-wide',
+            confirmButton: 'btn btn-danger'
+        }
+    });
+}
 </script>
