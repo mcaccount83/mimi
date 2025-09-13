@@ -103,7 +103,7 @@
 
             When you register a MOMS Club, you receive a MOMS Club manual, which helps you step by step through starting a new chapter.  But, that’s not all!   You also are assigned a special MOMS Club volunteer to help you whenever you need it.
 
-            If you’d like more information – check out our website (https://momsclub.org/start-a-chapter/). </textarea>
+            If you’d like more information – check out our website (https://momsclub.org/chapters-2/). </textarea>
           <!-- /.box -->
         </div>
       </div>
