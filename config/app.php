@@ -8,4 +8,6 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
     ])->toArray(),
 
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
+
 ];
