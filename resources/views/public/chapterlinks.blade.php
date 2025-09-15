@@ -29,18 +29,20 @@
                         <div >
                             <div class="card-body">
             @endif
-                                <div class="chapter">
-                                    <a href="javascript:void(0)"
-                                    onclick="showChapterInfo({
-                                            name: '{{ $chapter->name }}',
-                                            state_short_name: '{{ $chapter->state_short_name }}',
-                                            territory: '{{ $chapter->territory }}',
-                                            inquiries_contact: '{{ $chapter->inquiries_contact }}',
-                                            website_url: '{{ $chapter->website_url }}'
-                                    })">
-                                        {{ $chapter->name }}
-                                    </a>
-                                </div>
+                                    <div class="chapter">
+                                        <a href="javascript:void(0)"
+                                        data-chapter="{!! htmlspecialchars(json_encode([
+                                            'name' => $chapter->name,
+                                            'state_short_name' => $chapter->state_short_name,
+                                            'territory' => $chapter->territory,
+                                            'inquiries_contact' => $chapter->inquiries_contact,
+                                            'website_status' => $chapter->website_status,
+                                            'website_url' => $chapter->website_url
+                                        ])) !!}"
+                                        onclick="showChapterInfo(JSON.parse(this.dataset.chapter))">
+                                            {{ $chapter->name }}
+                                        </a>
+                                    </div>
                                 {{--<div class="chapter">
                                          @if($chapter->website_status == 1)
                                         <a href="{{ $chapter->website_url }}" target="_blank">{{ $chapter->name }}</a>
@@ -99,13 +101,15 @@
                 @endif
                                     <div class="chapter">
                                         <a href="javascript:void(0)"
-                                        onclick="showChapterInfo({
-                                                name: '{{ $chapter->name }}',
-                                                state_short_name: '{{ $chapter->state_short_name }}',
-                                                territory: '{{ $chapter->territory }}',
-                                                inquiries_contact: '{{ $chapter->inquiries_contact }}',
-                                                website_url: '{{ $chapter->website_url }}'
-                                        })">
+                                        data-chapter="{!! htmlspecialchars(json_encode([
+                                            'name' => $chapter->name,
+                                            'state_short_name' => $chapter->state_short_name,
+                                            'territory' => $chapter->territory,
+                                            'inquiries_contact' => $chapter->inquiries_contact,
+                                            'website_status' => $chapter->website_status,
+                                            'website_url' => $chapter->website_url
+                                        ])) !!}"
+                                        onclick="showChapterInfo(JSON.parse(this.dataset.chapter))">
                                             {{ $chapter->name }}
                                         </a>
                                     </div>
@@ -179,9 +183,16 @@ html: `
             <div style="display: flex; flex-wrap: wrap; align-items: baseline;">
                 <span style="font-weight: bold; margin-right: 8px; white-space: nowrap;">Website:</span>
                 <span style="flex: 1;">${
-                    (chapter.website_url === 'http://' || chapter.website_url === 'https://'|| !chapter.website_url)
-                    ? 'No Website'
-                    : `<a href="${chapter.website_url}" target="_blank">${chapter.website_url}</a>`
+                    // (chapter.website_url === 'http://' || chapter.website_url === 'https://'|| !chapter.website_url)
+                    // ? 'No Website'
+                    // : `<a href="${chapter.website_url}" target="_blank">${chapter.website_url}</a>`
+                     chapter.website_status == 1 &&
+                    chapter.website_url &&
+                    chapter.website_url !== 'http://' &&
+                    chapter.website_url !== 'https://' &&
+                    chapter.website_url.length > 8  // Ensures it's more than just the protocol
+                    ? `<a href="${chapter.website_url}" target="_blank">${chapter.website_url}</a>`
+                    : 'No Website'
                 }</span>
             </div>
         </div>
