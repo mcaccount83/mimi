@@ -30,7 +30,7 @@
 					<th>Name</th>
                     <th>Status</th>
                     <th>Website</th>
-                    <th>Online Group/App</th>
+                    {{-- <th>Online Group/App</th> --}}
                     <th>Web Reviewer Notes</th>
                 </tr>
                 </thead>
@@ -67,7 +67,7 @@
                             <a href="{{ url($list->website_url) }}" target="_blank">{{ $list->website_url }}</a>
                         @endif
                     </td>
-                    <td>{{ $list->egroup }}</td>
+                    {{-- <td>{{ $list->egroup }}</td> --}}
                     <td>{{ $list->website_notes }}</td>
                     </tr>
                   @endforeach
