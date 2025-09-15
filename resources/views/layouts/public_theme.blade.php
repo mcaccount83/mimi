@@ -134,18 +134,18 @@ color: #6c757d; /* Muted color */
     </div>
 
   <!-- Main Footer -->
-  <footer class="main-footer">
+  {{-- <footer class="main-footer"> --}}
     <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
+    {{-- <div class="float-right d-none d-sm-inline">
         Copyright &copy;
         <script>
             document.write(new Date().getFullYear())
         </script>
         <a href="https://momsclub.org/" target="_blank">MOMS Club</a>. &nbsp;All rights reserved.
-    </div>
+    </div> --}}
     <!-- Default to the left -->
 
-  </footer>
+  {{-- </footer> --}}
 </div>
 <!-- ./wrapper -->
 
