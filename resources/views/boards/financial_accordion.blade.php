@@ -38,11 +38,11 @@
             <label>Did your chapter change your dues this year?<span class="field-required">*</span></label>
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-right: 20px;">
-                    <input class="form-check-input" type="radio" id="optChangeDuesYes" name="optChangeDues" value="1" {{ $chFinancialReport->changed_dues === 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    <input class="form-check-input" type="radio" id="optChangeDuesYes" name="optChangeDues" value="1" {{ $chFinancialReport->changed_dues == 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optChangeDuesYes">Yes</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" id="optChangeDuesNo" name="optChangeDues" value="0" {{ $chFinancialReport->changed_dues === 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    <input class="form-check-input" type="radio" id="optChangeDuesNo" name="optChangeDues" value="0" {{ $chFinancialReport->changed_dues == 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optChangeDuesNo">No</label>
                 </div>
             </div>
@@ -51,11 +51,11 @@
             <label>Did your chapter charge different amounts for new and returning members?<span class="field-required">*</span></label>
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-right: 20px;">
-                    <input class="form-check-input" type="radio" id="optNewOldDifferentYes" name="optNewOldDifferent" value="1" {{ $chFinancialReport->different_dues === 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    <input class="form-check-input" type="radio" id="optNewOldDifferentYes" name="optNewOldDifferent" value="1" {{ $chFinancialReport->different_dues == 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optNewOldDifferentYes">Yes</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" id="optNewOldDifferentNo" name="optNewOldDifferent" value="0" {{ $chFinancialReport->different_dues === 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    <input class="form-check-input" type="radio" id="optNewOldDifferentNo" name="optNewOldDifferent" value="0" {{ $chFinancialReport->different_dues == 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optNewOldDifferentNo">No</label>
                 </div>
             </div>
@@ -64,11 +64,11 @@
             <label>Did your chapter have any members who didn't pay full dues?<span class="field-required">*</span></label>
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-right: 20px;">
-                    <input class="form-check-input" type="radio" id="optNoFullDuesYes" name="optNoFullDues" value="1" {{ $chFinancialReport->not_all_full_dues === 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    <input class="form-check-input" type="radio" id="optNoFullDuesYes" name="optNoFullDues" value="1" {{ $chFinancialReport->not_all_full_dues == 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optNoFullDuesYes">Yes</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" id="optNoFullDuesNo" name="optNoFullDues" value="0" {{ $chFinancialReport->not_all_full_dues === 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    <input class="form-check-input" type="radio" id="optNoFullDuesNo" name="optNoFullDues" value="0" {{ $chFinancialReport->not_all_full_dues == 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optNoFullDuesNo">No</label>
                 </div>
             </div>
