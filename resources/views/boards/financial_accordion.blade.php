@@ -305,11 +305,11 @@
             <label>Did you have speakers at any meetings?<span class="field-required">*</span></label>
             <div class="col-md-12 form-row">
                 <div class="form-check" >
-                    <input class="form-check-input" type="radio" id="MeetingSpeakersYes" name="MeetingSpeakers" value="1" {{ $chFinancialReport->meeting_speakers === 1 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
+                    <input class="form-check-input" type="radio" id="MeetingSpeakersYes" name="MeetingSpeakers" value="1" {{ $chFinancialReport->meeting_speakers == 1 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
                     <label class="form-check-label" for="MeetingSpeakersYes">Yes</label>
                 </div>
                 <div class="form-check" style="margin-left: 20px;">
-                    <input class="form-check-input" type="radio" id="MeetingSpeakersNo" name="MeetingSpeakers" value="0" {{ $chFinancialReport->meeting_speakers === 0 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
+                    <input class="form-check-input" type="radio" id="MeetingSpeakersNo" name="MeetingSpeakers" value="0" {{ $chFinancialReport->meeting_speakers == 0 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
                     <label class="form-check-label" for="MeetingSpeakersNo">No</label>
                 </div>
             </div>
@@ -356,23 +356,23 @@
             <div class="col-md-12 form-row">
                 <div class="col-md-12 row">
                     <div class="form-check" >
-                        <input class="form-check-input" type="radio" id="SpeakerFrequency4" name="SpeakerFrequency" value="4" {{ $chFinancialReport->discussion_topic_frequency === 4 ? 'checked' : '' }} >
+                        <input class="form-check-input" type="radio" id="SpeakerFrequency4" name="SpeakerFrequency" value="4" {{ $chFinancialReport->discussion_topic_frequency == 4 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency4">10+ Times</label>
                     </div>
                     <div class="form-check" style="margin-left: 20px;">
-                        <input class="form-check-input" type="radio" id="SpeakerFrequency3" name="SpeakerFrequency" value="3" {{ $chFinancialReport->discussion_topic_frequency === 3 ? 'checked' : '' }} >
+                        <input class="form-check-input" type="radio" id="SpeakerFrequency3" name="SpeakerFrequency" value="3" {{ $chFinancialReport->discussion_topic_frequency == 3 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency3">7-9 Times</label>
                     </div>
                     <div class="form-check" style="margin-left: 20px;">
-                        <input class="form-check-input" type="radio" id="SpeakerFrequency2" name="SpeakerFrequency" value="2" {{ $chFinancialReport->discussion_topic_frequency === 2 ? 'checked' : '' }} >
+                        <input class="form-check-input" type="radio" id="SpeakerFrequency2" name="SpeakerFrequency" value="2" {{ $chFinancialReport->discussion_topic_frequency == 2 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency2">4-6 Times</label>
                     </div>
                     <div class="form-check" style="margin-left: 20px;">
-                        <input class="form-check-input" type="radio" id="SpeakerFrequency1" name="SpeakerFrequency" value="1" {{ $chFinancialReport->discussion_topic_frequency === 1 ? 'checked' : '' }} >
+                        <input class="form-check-input" type="radio" id="SpeakerFrequency1" name="SpeakerFrequency" value="1" {{ $chFinancialReport->discussion_topic_frequency == 1 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency1">1-3 Times</label>
                     </div>
                     <div class="form-check" style="margin-left: 20px;">
-                        <input class="form-check-input" type="radio" id="SpeakerFrequencyNo" name="SpeakerFrequency" value="0" {{ $chFinancialReport->discussion_topic_frequency === 0 ? 'checked' : '' }} >
+                        <input class="form-check-input" type="radio" id="SpeakerFrequencyNo" name="SpeakerFrequency" value="0" {{ $chFinancialReport->discussion_topic_frequency == 0 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequencyNo">No</label>
                     </div>
                 </div>
@@ -385,15 +385,15 @@
             <label>Did you have a children’s room with babysitters?<span class="field-required">*</span></label>
             <div class="col-md-12 form-row">
                 <div class="form-check" >
-                    <input class="form-check-input" type="radio" id="ChildrensRoomPaid" name="ChildrensRoom" value="2" {{ $chFinancialReport->childrens_room_sitters === 2 ? 'checked' : '' }} >
+                    <input class="form-check-input" type="radio" id="ChildrensRoomPaid" name="ChildrensRoom" value="2" {{ $chFinancialReport->childrens_room_sitters == 2 ? 'checked' : '' }} >
                     <label class="form-check-label" for="ChildrensRoomPaid">Yes, with Paid Sitters</label>
                 </div>
                 <div class="form-check" style="margin-left: 20px;">
-                    <input class="form-check-input" type="radio" id="ChildrensRoomVol" name="ChildrensRoom" value="1" {{ $chFinancialReport->childrens_room_sitters === 1 ? 'checked' : '' }} >
+                    <input class="form-check-input" type="radio" id="ChildrensRoomVol" name="ChildrensRoom" value="1" {{ $chFinancialReport->childrens_room_sitters == 1 ? 'checked' : '' }} >
                     <label class="form-check-label" for="ChildrensRoomVol">Yes, with Volunteer Members</label>
                 </div>
                 <div class="form-check" style="margin-left: 20px;">
-                    <input class="form-check-input" type="radio" id="ChildrensRoomNo" name="ChildrensRoom" value="0" {{ $chFinancialReport->childrens_room_sitters === 0 ? 'checked' : '' }} >
+                    <input class="form-check-input" type="radio" id="ChildrensRoomNo" name="ChildrensRoom" value="0" {{ $chFinancialReport->childrens_room_sitters == 0 ? 'checked' : '' }} >
                     <label class="form-check-label" for="ChildrensRoomNo">No</label>
                 </div>
             </div>
@@ -554,11 +554,11 @@
         <label>Did your chapter perform at least one service project to benefit mothers or children?<span class="field-required">*</span></label>
         <div class="col-md-12 form-row">
             <div class="form-check" >
-                <input class="form-check-input" type="radio" id="PerformServiceProjectYes" name="PerformServiceProject" value="1" {{ $chFinancialReport->at_least_one_service_project === 1 ? 'checked' : '' }} onchange="TogglePerformServiceProjectExplanation()">
+                <input class="form-check-input" type="radio" id="PerformServiceProjectYes" name="PerformServiceProject" value="1" {{ $chFinancialReport->at_least_one_service_project == 1 ? 'checked' : '' }} onchange="TogglePerformServiceProjectExplanation()">
                 <label class="form-check-label" for="PerformServiceProjectYes">Yes</label>
             </div>
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="PerformServiceProjectNo" name="PerformServiceProject" value="0" {{ $chFinancialReport->at_least_one_service_project === 0 ? 'checked' : '' }} onchange="TogglePerformServiceProjectExplanation()">
+                <input class="form-check-input" type="radio" id="PerformServiceProjectNo" name="PerformServiceProject" value="0" {{ $chFinancialReport->at_least_one_service_project == 0 ? 'checked' : '' }} onchange="TogglePerformServiceProjectExplanation()">
                 <label class="form-check-label" for="PerformServiceProjectNo">No</label>
             </div>
         </div>
@@ -574,11 +574,11 @@
         <label>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?<span class="field-required">*</span></label>
         <div class="col-md-12 form-row">
             <div class="form-check">
-                <input class="form-check-input" type="radio" id="ContributionsNotRegNPYes" name="ContributionsNotRegNP" value="1" {{ $chFinancialReport->contributions_not_registered_charity === 1 ? 'checked' : '' }} onchange="ToggleContributionsNotRegNPExplanation()">
+                <input class="form-check-input" type="radio" id="ContributionsNotRegNPYes" name="ContributionsNotRegNP" value="1" {{ $chFinancialReport->contributions_not_registered_charity == 1 ? 'checked' : '' }} onchange="ToggleContributionsNotRegNPExplanation()">
                 <label class="form-check-label" for="ContributionsNotRegNPYes">Yes</label>
             </div>
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="ContributionsNotRegNPNo" name="ContributionsNotRegNP" value="0" {{ $chFinancialReport->contributions_not_registered_charity === 0 ? 'checked' : '' }} onchange="ToggleContributionsNotRegNPExplanation()">
+                <input class="form-check-input" type="radio" id="ContributionsNotRegNPNo" name="ContributionsNotRegNP" value="0" {{ $chFinancialReport->contributions_not_registered_charity == 0 ? 'checked' : '' }} onchange="ToggleContributionsNotRegNPExplanation()">
                 <label class="form-check-label" for="ContributionsNotRegNPNo">No</label>
             </div>
     </div>
@@ -1133,11 +1133,11 @@
         <label>Did your chapter attend an International Event (in person or virtual)?<span class="field-required">*</span></label>
         <div class="col-md-12 form-row">
             <div class="form-check" >
-                <input class="form-check-input" type="radio" id="InternationalEventYes" name="InternationalEvent" value="1" {{ $chFinancialReport->international_event === 1 ? 'checked' : '' }} onchange="ToggleInternationalEventExplanation()">
+                <input class="form-check-input" type="radio" id="InternationalEventYes" name="InternationalEvent" value="1" {{ $chFinancialReport->international_event == 1 ? 'checked' : '' }} onchange="ToggleInternationalEventExplanation()">
                 <label class="form-check-label" for="InternationalEventYes">Yes</label>
             </div>
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="InternationalEventNo" name="InternationalEvent" value="0" {{ $chFinancialReport->international_event === 0 ? 'checked' : '' }} onchange="ToggleInternationalEventExplanation()">
+                <input class="form-check-input" type="radio" id="InternationalEventNo" name="InternationalEvent" value="0" {{ $chFinancialReport->international_event == 0 ? 'checked' : '' }} onchange="ToggleInternationalEventExplanation()">
                 <label class="form-check-label" for="SInternationalEventNo">No</label>
             </div>
         </div>
@@ -2054,11 +2054,11 @@
             <label>Is a copy of your chapter’s most recent bank statement included?<span class="field-required">*</span></label>
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-left: 20px;">
-                    <input class="form-check-input" type="radio" id="BankStatementIncludedYes" name="BankStatementIncluded" value="1" {{ $chFinancialReport->bank_statement_included === 1 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
+                    <input class="form-check-input" type="radio" id="BankStatementIncludedYes" name="BankStatementIncluded" value="1" {{ $chFinancialReport->bank_statement_included == 1 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
                     <label class="form-check-label" for="BankStatementIncludedYes">Yes</label>
                 </div>
                 <div class="form-check" style="margin-left: 20px;">
-                    <input class="form-check-input" type="radio" id="BankStatementIncludedNo" name="BankStatementIncluded" value="0" {{ $chFinancialReport->bank_statement_included === 0 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
+                    <input class="form-check-input" type="radio" id="BankStatementIncludedNo" name="BankStatementIncluded" value="0" {{ $chFinancialReport->bank_statement_included == 0 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
                     <label class="form-check-label" for="BankStatementIncludedNo">No</label>
                 </div>
             </div>
@@ -2082,7 +2082,7 @@
     <div class="col-md-6 ">
         <div class="form-group">
             <label for="AmountReservedFromLastYear">
-                @if($userType === 'disbanded')
+                @if($userType == 'disbanded')
                 Beginning Balance:
                 @else
                 This Year's Beginning Balance (July 1, <?php echo date('Y')-1;?>):
@@ -2101,7 +2101,7 @@
     <div class="col-md-6 ">
         <div class="form-group">
             <label for="LastYearReportEnding">
-                @if($userType === 'disbanded')
+                @if($userType == 'disbanded')
                 Last Report's Ending Balance:
                 @else
                 Last Year's Report Ending Balance (June 30, <?php echo date('Y')-1;?>):
@@ -2151,7 +2151,7 @@
     <div class="col-md-6 ">
         <div class="form-group">
             <label for="BankBalanceNow">
-                @if($userType === 'disbanded')
+                @if($userType == 'disbanded')
                 Ending Bank Statement Balance:
                 @else
                 Ending Bank Statement Balance (June 30, <?php echo date('Y');?>):
@@ -2343,11 +2343,11 @@
             <label>Is a copy of your chpater's most recent 990N Filing included?<span class="field-required">*</span></label>
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-left: 20px;">
-                    <input class="form-check-input" type="radio" id="FileIRSYes" name="FileIRS" value="1" {{ $chFinancialReport->file_irs === 1 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
+                    <input class="form-check-input" type="radio" id="FileIRSYes" name="FileIRS" value="1" {{ $chFinancialReport->file_irs == 1 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
                     <label class="form-check-label" for="FileIRSYes">Yes</label>
                 </div>
                 <div class="form-check" style="margin-left: 20px;">
-                    <input class="form-check-input" type="radio" id="FileIRSNo" name="FileIRS" value="0" {{ $chFinancialReport->file_irs === 0 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
+                    <input class="form-check-input" type="radio" id="FileIRSNo" name="FileIRS" value="0" {{ $chFinancialReport->file_irs == 0 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
                     <label class="form-check-label" for="FileIRSNo">No</label>
                 </div>
             </div>
@@ -2383,7 +2383,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <tr>
         <td>&nbsp;&nbsp;&nbsp;</td>
         @foreach($resources as $resourceItem)
-        @if ($resourceItem->name === '990N Filing Instructions')
+        @if ($resourceItem->name == '990N Filing Instructions')
             <td>
                 <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                     990N Filing Instructions
@@ -2397,7 +2397,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <tr>
         <td>&nbsp;&nbsp;&nbsp;</td>
         @foreach($resources as $resourceItem)
-        @if ($resourceItem->name === '990N Filing FAQs')
+        @if ($resourceItem->name == '990N Filing FAQs')
             <td>
                 <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                     990N Filing FAQs
@@ -2437,11 +2437,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>1. Did you make the Bylaws and/or manual available for any chapter members that requested them?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="ByLawsAvailableYes" name="ByLawsAvailable" value="1" {{ $chFinancialReport->bylaws_available === 1 ? 'checked' : '' }} onchange="ToggleByLawsAvailableExplanation()">
+            <input class="form-check-input" type="radio" id="ByLawsAvailableYes" name="ByLawsAvailable" value="1" {{ $chFinancialReport->bylaws_available == 1 ? 'checked' : '' }} onchange="ToggleByLawsAvailableExplanation()">
             <label class="form-check-label" for="ByLawsAvailableYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="ByLawsAvailableNo" name="ByLawsAvailable" value="0" {{ $chFinancialReport->bylaws_available === 0 ? 'checked' : '' }} onchange="ToggleByLawsAvailableExplanation()">
+            <input class="form-check-input" type="radio" id="ByLawsAvailableNo" name="ByLawsAvailable" value="0" {{ $chFinancialReport->bylaws_available == 0 ? 'checked' : '' }} onchange="ToggleByLawsAvailableExplanation()">
             <label class="form-check-label" for="ByLawsAvailableNo">No</label>
         </div>
     </div>
@@ -2456,11 +2456,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>2. Did your chapter vote on all activities and expenditures during the fiscal year?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="VoteAllActivitiesYes" name="VoteAllActivities" value="1" {{ $chFinancialReport->vote_all_activities === 1 ? 'checked' : '' }} onchange="ToggleVoteAllActivitiesExplanation()">
+            <input class="form-check-input" type="radio" id="VoteAllActivitiesYes" name="VoteAllActivities" value="1" {{ $chFinancialReport->vote_all_activities == 1 ? 'checked' : '' }} onchange="ToggleVoteAllActivitiesExplanation()">
             <label class="form-check-label" for="VoteAllActivitiesYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="VoteAllActivitiesNo" name="VoteAllActivities" value="0" {{ $chFinancialReport->vote_all_activities === 0 ? 'checked' : '' }} onchange="ToggleVoteAllActivitiesExplanation()">
+            <input class="form-check-input" type="radio" id="VoteAllActivitiesNo" name="VoteAllActivities" value="0" {{ $chFinancialReport->vote_all_activities == 0 ? 'checked' : '' }} onchange="ToggleVoteAllActivitiesExplanation()">
             <label class="form-check-label" for="VoteAllActivitiesNo">No</label>
         </div>
     </div>
@@ -2475,11 +2475,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>3. Did you have any child focused outings or activities?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="ChildOutingsYes" name="ChildOutings" value="1" {{ $chFinancialReport->child_outings === 1 ? 'checked' : '' }} onchange="ToggleChildOutingsExplanation()">
+            <input class="form-check-input" type="radio" id="ChildOutingsYes" name="ChildOutings" value="1" {{ $chFinancialReport->child_outings == 1 ? 'checked' : '' }} onchange="ToggleChildOutingsExplanation()">
             <label class="form-check-label" for="ChildOutingsYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="ChildOutingsNo" name="ChildOutings" value="0" {{ $chFinancialReport->child_outings === 0 ? 'checked' : '' }} onchange="ToggleChildOutingsExplanation()">
+            <input class="form-check-input" type="radio" id="ChildOutingsNo" name="ChildOutings" value="0" {{ $chFinancialReport->child_outings == 0 ? 'checked' : '' }} onchange="ToggleChildOutingsExplanation()">
             <label class="form-check-label" for="ChildOutingsNo">No</label>
         </div>
     </div>
@@ -2495,22 +2495,22 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <div class="col-md-12 row">
         <div class="col-md-12 row">
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="PlaygroupsMulti" name="Playgroups" value="2" {{ $chFinancialReport->playgroups === 2 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
+                <input class="form-check-input" type="radio" id="PlaygroupsMulti" name="Playgroups" value="2" {{ $chFinancialReport->playgroups == 2 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
                 <label class="form-check-label" for="PlaygroupsMulti">Yes, Multi-Aged Groups</label>
             </div>
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="PlaygroupsAge" name="Playgroups" value="1" {{ $chFinancialReport->playgroups === 1 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
+                <input class="form-check-input" type="radio" id="PlaygroupsAge" name="Playgroups" value="1" {{ $chFinancialReport->playgroups == 1 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
                 <label class="form-check-label" for="PlaygroupsAge">Yes, Arranged by Age</label>
             </div>
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="PlaygroupsNo" name="Playgroups" value="0" {{ $chFinancialReport->playgroups === 0 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
+                <input class="form-check-input" type="radio" id="PlaygroupsNo" name="Playgroups" value="0" {{ $chFinancialReport->playgroups == 0 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
                 <label class="form-check-label" for="PlaygroupsNo">No</label>
             </div>
         </div>
     </div>
 </div>
 <div class="col-md-12" style="margin-bottom: 10px">
-    <div class="col-sm-12" id="divPlaygroupsExplanation" style="display: {{ $chFinancialReport->playgroups === 0 ? 'block' : 'none' }}">
+    <div class="col-sm-12" id="divPlaygroupsExplanation" style="display: {{ $chFinancialReport->playgroups == 0 ? 'block' : 'none' }}">
         <label for="PlaygroupsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
         <textarea class="form-control" rows="2" name="PlaygroupsExplanation" id="PlaygroupsExplanation">{{ $chFinancialReport->playgroups_explanation }}</textarea>
     </div>
@@ -2520,30 +2520,30 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <div class="col-md-12 row">
         <div class="col-md-12 row">
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="ParkDays4" name="ParkDays" value="4" {{ $chFinancialReport->park_day_frequency === 4 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
+                <input class="form-check-input" type="radio" id="ParkDays4" name="ParkDays" value="4" {{ $chFinancialReport->park_day_frequency == 4 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
                 <label class="form-check-label" for="ParkDays4">10+ Times</label>
             </div>
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="ParkDays3" name="ParkDays" value="3" {{ $chFinancialReport->park_day_frequency === 3 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
+                <input class="form-check-input" type="radio" id="ParkDays3" name="ParkDays" value="3" {{ $chFinancialReport->park_day_frequency == 3 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
                 <label class="form-check-label" for="ParkDays3">7-9 Times</label>
             </div>
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="ParkDays2" name="ParkDays" value="2" {{ $chFinancialReport->park_day_frequency === 2 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
+                <input class="form-check-input" type="radio" id="ParkDays2" name="ParkDays" value="2" {{ $chFinancialReport->park_day_frequency == 2 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
                 <label class="form-check-label" for="ParkDays2">4-6 Times</label>
             </div>
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="ParkDays1" name="ParkDays" value="1" {{ $chFinancialReport->park_day_frequency === 1 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
+                <input class="form-check-input" type="radio" id="ParkDays1" name="ParkDays" value="1" {{ $chFinancialReport->park_day_frequency == 1 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
                 <label class="form-check-label" for="ParkDays1">1-3 Times</label>
             </div>
             <div class="form-check" style="margin-left: 20px;">
-                <input class="form-check-input" type="radio" id="ParkDaysNo" name="ParkDays" value="0" {{ $chFinancialReport->park_day_frequency === 0 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
+                <input class="form-check-input" type="radio" id="ParkDaysNo" name="ParkDays" value="0" {{ $chFinancialReport->park_day_frequency == 0 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
                 <label class="form-check-label" for="ParkDaysNo">No</label>
             </div>
         </div>
     </div>
 </div>
 <div class="col-md-12" style="margin-bottom: 10px">
-    <div class="col-sm-12" id="divParkDaysExplanation" style="display: {{ $chFinancialReport->park_day_frequency === 0 ? 'block' : 'none' }}">
+    <div class="col-sm-12" id="divParkDaysExplanation" style="display: {{ $chFinancialReport->park_day_frequency == 0 ? 'block' : 'none' }}">
         <label for="ParkDaysExplanation">If no, briefly explain:<span class="field-required">*</span></label>
         <textarea class="form-control" rows="2" name="ParkDaysExplanation" id="ParkDaysExplanation">{{ $chFinancialReport->park_day_frequency_explanation }}</textarea>
     </div>
@@ -2552,11 +2552,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>6. Did you have any mother focused outings or activities?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="MotherOutingsYes" name="MotherOutings" value="1" {{ $chFinancialReport->mother_outings === 1 ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
+            <input class="form-check-input" type="radio" id="MotherOutingsYes" name="MotherOutings" value="1" {{ $chFinancialReport->mother_outings == 1 ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
             <label class="form-check-label" for="MotherOutingsYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="MotherOutingsNo" name="MotherOutings" value="0" {{ $chFinancialReport->mother_outings === 0 ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
+            <input class="form-check-input" type="radio" id="MotherOutingsNo" name="MotherOutings" value="0" {{ $chFinancialReport->mother_outings == 0 ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
             <label class="form-check-label" for="MotherOutingsNo">No</label>
         </div>
     </div>
@@ -2611,11 +2611,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>8. Did you offer or inform your members about MOMS Club merchandise?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="OfferedMerchYes" name="OfferedMerch" value="1" {{ $chFinancialReport->offered_merch === 1 ? 'checked' : '' }} onchange="ToggleOfferedMerchExplanation()">
+            <input class="form-check-input" type="radio" id="OfferedMerchYes" name="OfferedMerch" value="1" {{ $chFinancialReport->offered_merch == 1 ? 'checked' : '' }} onchange="ToggleOfferedMerchExplanation()">
             <label class="form-check-label" for="OfferedMerchYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="OfferedMerchNo" name="OfferedMerch" value="0" {{ $chFinancialReport->offered_merch === 0 ? 'checked' : '' }} onchange="ToggleOfferedMerchExplanation()">
+            <input class="form-check-input" type="radio" id="OfferedMerchNo" name="OfferedMerch" value="0" {{ $chFinancialReport->offered_merch == 0 ? 'checked' : '' }} onchange="ToggleOfferedMerchExplanation()">
             <label class="form-check-label" for="OfferedMerchNo">No</label>
         </div>
     </div>
@@ -2630,11 +2630,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>9. Did you purchase any merchandise from International other than pins?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="BoughtMerchYes" name="BoughtMerch" value="1" {{ $chFinancialReport->bought_merch === 1 ? 'checked' : '' }} onchange="ToggleBoughtMerchExplanation()">
+            <input class="form-check-input" type="radio" id="BoughtMerchYes" name="BoughtMerch" value="1" {{ $chFinancialReport->bought_merch == 1 ? 'checked' : '' }} onchange="ToggleBoughtMerchExplanation()">
             <label class="form-check-label" for="BoughtMerchYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="BoughtMerchNo" name="BoughtMerch" value="0" {{ $chFinancialReport->bought_merch === 0 ? 'checked' : '' }} onchange="ToggleBoughtMerchExplanation()">
+            <input class="form-check-input" type="radio" id="BoughtMerchNo" name="BoughtMerch" value="0" {{ $chFinancialReport->bought_merch == 0 ? 'checked' : '' }} onchange="ToggleBoughtMerchExplanation()">
             <label class="form-check-label" for="BoughtMerchNo">No</label>
         </div>
     </div>
@@ -2649,11 +2649,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>10. Did you purchase pins from International?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="BoughtPinsYes" name="BoughtPins" value="1" {{ $chFinancialReport->purchase_pins === 1 ? 'checked' : '' }} onchange="ToggleBoughtPinsExplanation()">
+            <input class="form-check-input" type="radio" id="BoughtPinsYes" name="BoughtPins" value="1" {{ $chFinancialReport->purchase_pins == 1 ? 'checked' : '' }} onchange="ToggleBoughtPinsExplanation()">
             <label class="form-check-label" for="BoughtPinsYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="BoughtPinsNo" name="BoughtPins" value="0" {{ $chFinancialReport->purchase_pins === 0 ? 'checked' : '' }} onchange="ToggleBoughtPinsExplanation()">
+            <input class="form-check-input" type="radio" id="BoughtPinsNo" name="BoughtPins" value="0" {{ $chFinancialReport->purchase_pins == 0 ? 'checked' : '' }} onchange="ToggleBoughtPinsExplanation()">
             <label class="form-check-label" for="BoughtPinsNo">No</label>
         </div>
     </div>
@@ -2668,11 +2668,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>11. Did anyone in your chapter receive any compensation or pay for their work with your chapter?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="ReceiveCompensationYes" name="ReceiveCompensation" value="1" {{ $chFinancialReport->receive_compensation === 1 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
+            <input class="form-check-input" type="radio" id="ReceiveCompensationYes" name="ReceiveCompensation" value="1" {{ $chFinancialReport->receive_compensation == 1 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
             <label class="form-check-label" for="ReceiveCompensationYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="ReceiveCompensationNo" name="ReceiveCompensation" value="0" {{ $chFinancialReport->receive_compensation === 0 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
+            <input class="form-check-input" type="radio" id="ReceiveCompensationNo" name="ReceiveCompensation" value="0" {{ $chFinancialReport->receive_compensation == 0 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
             <label class="form-check-label" for="ReceiveCompensationNo">No</label>
         </div>
     </div>
@@ -2688,11 +2688,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>12. Did any officer, member or family of a member benefit financially in any way from the member’s position with your chapter?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="FinancialBenefitYes" name="FinancialBenefit" value="1" {{ $chFinancialReport->financial_benefit === 1 ? 'checked' : '' }} onchange="ToggleFinancialBenefitExplanation()">
+            <input class="form-check-input" type="radio" id="FinancialBenefitYes" name="FinancialBenefit" value="1" {{ $chFinancialReport->financial_benefit == 1 ? 'checked' : '' }} onchange="ToggleFinancialBenefitExplanation()">
             <label class="form-check-label" for="FinancialBenefitYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="FinancialBenefitNo" name="FinancialBenefit" value="0" {{ $chFinancialReport->financial_benefit === 0 ? 'checked' : '' }} onchange="ToggleFinancialBenefitExplanation()">
+            <input class="form-check-input" type="radio" id="FinancialBenefitNo" name="FinancialBenefit" value="0" {{ $chFinancialReport->financial_benefit == 0 ? 'checked' : '' }} onchange="ToggleFinancialBenefitExplanation()">
             <label class="form-check-label" for="FinancialBenefitNo">No</label>
         </div>
     </div>
@@ -2707,11 +2707,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>13. Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="InfluencePoliticalYes" name="InfluencePolitical" value="1" {{ $chFinancialReport->influence_political === 1 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
+            <input class="form-check-input" type="radio" id="InfluencePoliticalYes" name="InfluencePolitical" value="1" {{ $chFinancialReport->influence_political == 1 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
             <label class="form-check-label" for="InfluencePoliticalYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="InfluencePoliticalNo" name="InfluencePolitical" value="0" {{ $chFinancialReport->influence_political === 0 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
+            <input class="form-check-input" type="radio" id="InfluencePoliticalNo" name="InfluencePolitical" value="0" {{ $chFinancialReport->influence_political == 0 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
             <label class="form-check-label" for="InfluencePoliticalNo">No</label>
         </div>
     </div>
@@ -2726,16 +2726,16 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>14. Did your chapter sister another chapter?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="SisterChapterYes" name="SisterChapter" value="1" {{ $chFinancialReport->sister_chapter === 1 ? 'checked' : '' }} onchange="ToggleSisterChapterExplanation()">
+            <input class="form-check-input" type="radio" id="SisterChapterYes" name="SisterChapter" value="1" {{ $chFinancialReport->sister_chapter == 1 ? 'checked' : '' }} onchange="ToggleSisterChapterExplanation()">
             <label class="form-check-label" for="SisterChapterYes">Yes</label>
         </div>
         <div class="form-check" style="margin-left: 20px;">
-            <input class="form-check-input" type="radio" id="SisterChapterNo" name="SisterChapter" value="0" {{ $chFinancialReport->sister_chapter === 0 ? 'checked' : '' }} onchange="ToggleSisterChapterExplanation()">
+            <input class="form-check-input" type="radio" id="SisterChapterNo" name="SisterChapter" value="0" {{ $chFinancialReport->sister_chapter == 0 ? 'checked' : '' }} onchange="ToggleSisterChapterExplanation()">
             <label class="form-check-label" for="SisterChapterNo">No</label>
         </div>
     </div>
 </div>
-<div class="col-sm-12" id="divSisterChapterExplanation" style="display: {{ $chFinancialReport->sister_chapter === 1 ? 'block' : 'none' }}">
+<div class="col-sm-12" id="divSisterChapterExplanation" style="display: {{ $chFinancialReport->sister_chapter == 1 ? 'block' : 'none' }}">
     <div class="col-md-12" style="margin-bottom: 10px">
         <label for="SisterChapterExplanation">If yes, which chapter?<span class="field-required">*</span></label>
         <textarea class="form-control" rows="2" name="SisterChapterExplanation" id="SisterChapterExplanation" >{{ $chFinancialReport->sister_chapter_explanation }}</textarea>
@@ -2876,11 +2876,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                     <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
                     <div class="col-md-12 row">
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingFollowByLawsYes" name="OutstandingFollowByLaws" value="1" {{ $chFinancialReport->outstanding_follow_bylaws === 1 ? 'checked' : '' }}>
+                            <input class="form-check-input" type="radio" id="OutstandingFollowByLawsYes" name="OutstandingFollowByLaws" value="1" {{ $chFinancialReport->outstanding_follow_bylaws == 1 ? 'checked' : '' }}>
                             <label class="form-check-label" for="OutstandingFollowByLawsYes">Yes</label>
                         </div>
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingFollowByLawsNo" name="OutstandingFollowByLaws" value="0" {{ $chFinancialReport->outstanding_follow_bylaws === 0 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingFollowByLawsNo" name="OutstandingFollowByLaws" value="0" {{ $chFinancialReport->outstanding_follow_bylaws == 0 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingFollowByLawsNo">No</label>
                         </div>
                     </div>
@@ -2893,11 +2893,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
                     <div class="col-md-12 row">
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingWellRoundedYes" name="OutstandingWellRounded" value="1" {{ $chFinancialReport->outstanding_well_rounded === 1 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingWellRoundedYes" name="OutstandingWellRounded" value="1" {{ $chFinancialReport->outstanding_well_rounded == 1 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingWellRoundedYes">Yes</label>
                         </div>
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingWellRoundedNo" name="OutstandingWellRounded" value="0" {{ $chFinancialReport->outstanding_well_rounded === 0 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingWellRoundedNo" name="OutstandingWellRounded" value="0" {{ $chFinancialReport->outstanding_well_rounded == 0 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingWellRoundedNo">No</label>
                         </div>
                     </div>
@@ -2909,11 +2909,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
                     <div class="col-md-12 row">
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingCommunicatedYes" name="OutstandingCommunicated" value="1" {{ $chFinancialReport->outstanding_communicated === 1 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingCommunicatedYes" name="OutstandingCommunicated" value="1" {{ $chFinancialReport->outstanding_communicated == 1 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingCommunicatedYes">Yes</label>
                         </div>
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingCommunicatedNo" name="OutstandingCommunicated" value="0" {{ $chFinancialReport->outstanding_communicated === 0 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingCommunicatedNo" name="OutstandingCommunicated" value="0" {{ $chFinancialReport->outstanding_communicated == 0 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingCommunicatedNo">No</label>
                         </div>
                     </div>
@@ -2931,11 +2931,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         </ul></p>
                     <div class="col-md-12 row">
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClubYes" name="OutstandingSupportMomsClub" value="1" {{ $chFinancialReport->outstanding_support_international === 1 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClubYes" name="OutstandingSupportMomsClub" value="1" {{ $chFinancialReport->outstanding_support_international == 1 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingSupportMomsClubYes">Yes</label>
                         </div>
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClubNo" name="OutstandingSupportMomsClub" value="0" {{ $chFinancialReport->outstanding_support_international === 0 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClubNo" name="OutstandingSupportMomsClub" value="0" {{ $chFinancialReport->outstanding_support_international == 0 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingSupportMomsClubNo">No</label>
                         </div>
                     </div>
@@ -3054,7 +3054,7 @@ $(document).ready(function () {
         var userType = @json($userType);
         var userAdmin = @json($userAdmin);
 
-        var effectiveSubmitted = (userType === 'disbanded') ? submittedfinal : submitted;
+        var effectiveSubmitted = (userType == 'disbanded') ? submittedfinal : submitted;
 
        if (userType == 'coordinator' && userAdmin != 1) {
         $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
@@ -3129,13 +3129,13 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         var MembersReducedDues=false;
 
         var optChangeDuesValue = document.querySelector('input[name="optChangeDues"]:checked')?.value;
-        ChangedMeetingFees = optChangeDuesValue === "1";
+        ChangedMeetingFees = optChangeDuesValue == "1";
 
         var optNewOldDifferentValue = document.querySelector('input[name="optNewOldDifferent"]:checked')?.value;
-        ChargedMembersDifferently = optNewOldDifferentValue === "1";
+        ChargedMembersDifferently = optNewOldDifferentValue == "1";
 
         var optNoFullDuesValue = document.querySelector('input[name="optNoFullDues"]:checked')?.value;
-        MembersReducedDues = optNoFullDuesValue === "1";
+        MembersReducedDues = optNoFullDuesValue == "1";
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         if(ChangedMeetingFees){
@@ -3209,9 +3209,9 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
     }
 
     function ChangeMemberCount(){
-        var ChangedMeetingFees = document.querySelector('input[name="optChangeDues"]:checked') && document.querySelector('input[name="optChangeDues"]:checked').value === "1";
-        var ChargedMembersDifferently = document.querySelector('input[name="optNewOldDifferent"]:checked') && document.querySelector('input[name="optNewOldDifferent"]:checked').value === "1";
-        var MembersReducedDues = document.querySelector('input[name="optNoFullDues"]:checked') && document.querySelector('input[name="optNoFullDues"]:checked').value === "1";
+        var ChangedMeetingFees = document.querySelector('input[name="optChangeDues"]:checked') && document.querySelector('input[name="optChangeDues"]:checked').value == "1";
+        var ChargedMembersDifferently = document.querySelector('input[name="optNewOldDifferent"]:checked') && document.querySelector('input[name="optNewOldDifferent"]:checked').value == "1";
+        var MembersReducedDues = document.querySelector('input[name="optNoFullDues"]:checked') && document.querySelector('input[name="optNoFullDues"]:checked').value == "1";
 
         var NewMembers = Number(document.getElementById("TotalNewMembers") ? document.getElementById("TotalNewMembers").value : 0);
         var RenewedMembers = Number(document.getElementById("TotalRenewedMembers") ? document.getElementById("TotalRenewedMembers").value : 0);
@@ -3713,7 +3713,7 @@ function AddPartyExpenseRow() {
             ExpenseCount--;        // Update the expense count
             document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
 
-            if (ExpenseCount === 1) {
+            if (ExpenseCount == 1) {
                 document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
             }
         }
@@ -3939,7 +3939,7 @@ function DeleteChapterAwardsRow() {
             document.getElementById('BankRecRowCount').value = ExpenseCount;
             ChangeBankRec();
 
-            if (ExpenseCount === 1) {
+            if (ExpenseCount == 1) {
                 document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
             }
         }
@@ -4043,7 +4043,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="ReceiveCompensation"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 1 */
 
-        if (selectedValue === "1") {
+        if (selectedValue == "1") {
             $('#ReceiveCompensationExplanation').addClass('tx-cls');
             document.getElementById("divReceiveCompensationExplanation").style.display = 'block'; // If "Yes" is selected
         } else {
@@ -4056,7 +4056,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="FinancialBenefit"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 2 */
 
-        if (selectedValue === "1") {
+        if (selectedValue == "1") {
             $('#FinancialBenefitExplanation').addClass('tx-cls');
             document.getElementById("divFinancialBenefitExplanation").style.display = 'block'; // If "Yes" is selected
         } else {
@@ -4069,7 +4069,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="InfluencePolitical"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 3 */
 
-        if (selectedValue === "1") {
+        if (selectedValue == "1") {
             $('#InfluencePoliticalExplanation').addClass('tx-cls');
             document.getElementById("divInfluencePoliticalExplanation").style.display = 'block'; // If "Yes" is selected
         } else {
@@ -4082,7 +4082,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="VoteAllActivities"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 4 */
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#VoteAllActivitiesExplanation').addClass('tx-cls');
             document.getElementById("divVoteAllActivitiesExplanation").style.display = 'block'; // If "No" is selected
         } else {
@@ -4095,7 +4095,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="BoughtPins"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 5 */
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#BoughtPinsExplanation').addClass('tx-cls');
             document.getElementById("divBoughtPinsExplanation").style.display = 'block'; // If "No" is selected
         } else {
@@ -4108,7 +4108,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="BoughtMerch"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 6 */
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#BoughtMerchExplanation').addClass('tx-cls');
             document.getElementById("divBoughtMerchExplanation").style.display = 'block'; // If "No" is selected
         } else {
@@ -4121,7 +4121,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="OfferedMerch"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 7 */
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#OfferedMerchExplanation').addClass('tx-cls');
             document.getElementById("divOfferedMerchExplanation").style.display = 'block'; // If "No" is selected
         } else {
@@ -4134,7 +4134,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="ByLawsAvailable"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 8 */
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#ByLawsAvailableExplanation').addClass('tx-cls');
             document.getElementById("divByLawsAvailableExplanation").style.display = 'block'; // If "No" is selected
         } else {
@@ -4147,7 +4147,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="ChildOutings"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 11 */
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#ChildOutingsExplanation').addClass('tx-cls');
             document.getElementById("divChildOutingsExplanation").style.display = 'block'; // If "No" is selected
         } else {
@@ -4160,7 +4160,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="MotherOutings"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 12 */
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#MotherOutingsExplanation').addClass('tx-cls');
             document.getElementById("divMotherOutingsExplanation").style.display = 'block'; // If "No" is selected
         } else {
@@ -4173,12 +4173,12 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="MeetingSpeakers"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null;
 
-        if (selectedValue === null) {
+        if (selectedValue == null) {
             document.getElementById("divMeetingSpeakersTopics").style.display = 'none';
             return;
         }
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#MeetingSpeakersExplanation').addClass('tx-cls');
             document.getElementById("divMeetingSpeakersTopics").style.display = 'none';
         } else {
@@ -4191,7 +4191,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="SisterChapter"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null;
 
-        if (selectedValue === "1") {
+        if (selectedValue == "1") {
             $('#SisterChapterExplanation').addClass('tx-cls');
             document.getElementById("divSisterChapterExplanation").style.display = 'block';
         } else {
@@ -4204,7 +4204,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="Playgroups"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null;
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#PlaygroupsExplanation').addClass('tx-cls');
             document.getElementById("divPlaygroupsExplanation").style.display = 'block';
         } else {
@@ -4217,7 +4217,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="ParkDays"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null;
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#ParkDaysExplanation').addClass('tx-cls');
             document.getElementById("divParkDaysExplanation").style.display = 'block';
         } else {
@@ -4240,7 +4240,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="ContributionsNotRegNP"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 17 */
 
-        if (selectedValue === "1") {
+        if (selectedValue == "1") {
             $('#ContributionsNotRegNPExplanation').addClass('tx-cls');
             document.getElementById("divContributionsNotRegNPExplanation").style.display = 'block'; // If "Yes" is selected
         } else {
@@ -4253,7 +4253,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="PerformServiceProject"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 18 */
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#PerformServiceProjectExplanation').addClass('tx-cls');
             document.getElementById("divPerformServiceProjectExplanation").style.display = 'block'; // If "No" is selected
         } else {
@@ -4266,7 +4266,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="FileIRS"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 21 */
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#FileIRSExplanation').addClass('tx-cls');
             document.getElementById("divFileIRSExplanation").style.display = 'block'; // If "No" is selected
         } else {
@@ -4279,7 +4279,7 @@ window.addEventListener('load', function() {
         var selectedRadio = document.querySelector('input[name="BankStatementIncluded"]:checked');
         var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 21 */
 
-        if (selectedValue === "0") {
+        if (selectedValue == "0") {
             $('#BankStatementIncludedExplanation').addClass('tx-cls');
             document.getElementById("divBankStatementIncludedExplanation").style.display = 'block'; // If "No" is selected
             document.getElementById("WheresTheMoney").style.display = 'block'; // If "No" is selected
@@ -4849,10 +4849,10 @@ function showAwardUploadModal() {
             var missingFields = [];
 
             // Check for missing fields and add to the list
-            if (amountReservedFromLastYear === '' || amountReservedFromLastYear === null) {
+            if (amountReservedFromLastYear == '' || amountReservedFromLastYear == null) {
                 missingFields.push("This Year's Beginning Balance");
             }
-            if (bankBalanceNow === '' || bankBalanceNow === null) {
+            if (bankBalanceNow == '' || bankBalanceNow == null) {
                 missingFields.push("Last Bank Statement Balance");
             }
 

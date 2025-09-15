@@ -92,14 +92,14 @@ class BaseChapterController extends Controller
      */
     private function applySorting($baseQuery, $queryType)
     {
-        $isReregPage = request()->route()->getName() === 'chapters.chapreregistration';
-        $isIntReregPage = request()->route()->getName() === 'international.intregistration';
+        $isReregPage = request()->route()->getName() == 'chapters.chapreregistration';
+        $isIntReregPage = request()->route()->getName() == 'international.intregistration';
 
-        if ($queryType === 'zapped' || $queryType === 'zapped_international') {
+        if ($queryType == 'zapped' || $queryType == 'zapped_international') {
             return ['query' => $baseQuery->orderByDesc('chapters.zap_date'), 'checkBox3Status' => ''];
         }
 
-        if ($queryType === 'pending' || $queryType === 'not_approved' || $queryType === 'pending_international' || $queryType === 'not_approved_international') {
+        if ($queryType == 'pending' || $queryType == 'not_approved' || $queryType == 'pending_international' || $queryType == 'not_approved_international') {
             return ['query' => $baseQuery->orderByDesc('chapters.created_at'), 'checkBox3Status' => ''];
         }
 

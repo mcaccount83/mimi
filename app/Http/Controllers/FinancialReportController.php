@@ -232,10 +232,10 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->bank_balance_now = isset($input['BankBalanceNow']) ? preg_replace('/[^\d.]/', '', $input['BankBalanceNow']) : null;
         // $amount_reserved_from_previous_year = $input['AmountReservedFromLastYear'];
         // $amount_reserved_from_previous_year = str_replace(',', '', $amount_reserved_from_previous_year);
-        // $financialReport->amount_reserved_from_previous_year = $amount_reserved_from_previous_year === '' ? null : $amount_reserved_from_previous_year;
+        // $financialReport->amount_reserved_from_previous_year = $amount_reserved_from_previous_year == '' ? null : $amount_reserved_from_previous_year;
         // $bank_balance_now = $input['BankBalanceNow'];
         // $bank_balance_now = str_replace(',', '', $bank_balance_now);
-        // $financialReport->bank_balance_now = $bank_balance_now === '' ? null : $bank_balance_now;
+        // $financialReport->bank_balance_now = $bank_balance_now == '' ? null : $bank_balance_now;
 
         // Bank Reconciliation (serialized)
         $BankRecArray = null;
