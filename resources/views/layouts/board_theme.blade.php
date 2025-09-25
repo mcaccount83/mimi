@@ -93,7 +93,7 @@
       </div>
       @endif
 
-    @if($userType !== 'coordinator')
+    @if($userType != 'coordinator')
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
 

@@ -23,7 +23,7 @@ class ThreadPolicy extends ForumThreadPolicy
     {
         return $this->forumConditions->canManageLists($user)
             || $this->forumConditions->checkPublicAnnouncements($user, $thread)
-            || $user->getKey() === $thread->author_id;
+            || $user->getKey() == $thread->author_id;
     }
 
     public function reply($user, Thread $thread): bool
@@ -37,14 +37,14 @@ class ThreadPolicy extends ForumThreadPolicy
     {
         return $this->forumConditions->canManageLists($user)
             || $this->forumConditions->checkPublicAnnouncements($user, $thread)
-            || $user->getKey() === $thread->author_id;
+            || $user->getKey() == $thread->author_id;
     }
 
     public function restore($user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user)
             || $this->forumConditions->checkPublicAnnouncements($user, $thread)
-            || $user->getKey() === $thread->author_id;
+            || $user->getKey() == $thread->author_id;
     }
 
     public function deletePosts($user, Thread $thread): bool

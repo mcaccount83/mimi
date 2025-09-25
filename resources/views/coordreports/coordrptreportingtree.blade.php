@@ -42,8 +42,8 @@
 
         $node_label = "$name<br>$position";
         if ($sec_titles) $node_label .= "/$sec_titles";
-        if ($region !== "None") $node_label .= "<br>$region";
-        if ($region === "None") $node_label .= "<br>$conf";
+        if ($region != "None") $node_label .= "<br>$region";
+        if ($region == "None") $node_label .= "<br>$conf";
     @endphp
         {{ $id }}["{!! $node_label !!}"]
     @endforeach
@@ -75,12 +75,12 @@
 
             if ($founderCondition) {
                 $conf = $coordinator['conference']['short_name'];
-                if ($conf !== "Intl") {
+                if ($conf != "Intl") {
                     if (!isset($conference_groups[$conf])) {
                         $conference_groups[$conf] = [];
                     }
                     $region = $coordinator['region']['short_name'];
-                    if ($region !== "None") {
+                    if ($region != "None") {
                         if (!isset($conference_groups[$conf][$region])) {
                             $conference_groups[$conf][$region] = [];
                         }
@@ -94,7 +94,7 @@
                 }
             } else {
                 $region = $coordinator['region']['short_name'];
-                if ($region !== "None") {
+                if ($region != "None") {
                     if (!isset($region_groups[$region])) {
                         $region_groups[$region] = [];
                     }
@@ -150,7 +150,7 @@
 
                 %% Region subgraphs with nested manager groups
                 @foreach ($regions_data as $region => $ids)
-                    @if ($region !== '_conf')
+                    @if ($region != '_conf')
                         subgraph {{ $region }}
                             direction TB
                             style {{ $region }} fill:none,stroke:none
@@ -269,8 +269,8 @@
 
                 $node_label = "$name<br>$position";
                 if ($sec_titles) $node_label .= "/$sec_titles";
-                if ($region !== "None") $node_label .= "<br>$region";
-                if ($region === "None") $node_label .= "<br>$conf";
+                if ($region != "None") $node_label .= "<br>$region";
+                if ($region == "None") $node_label .= "<br>$conf";
             @endphp
                 {{ $id }}["{!! $node_label !!}"]
             @endforeach
@@ -285,12 +285,12 @@
 
                     if ($founderCondition) {
                         $conf = $coordinator['conference']['short_name'];
-                        if ($conf !== "Intl") {
+                        if ($conf != "Intl") {
                             if (!isset($conference_groups[$conf])) {
                                 $conference_groups[$conf] = [];
                             }
                             $region = $coordinator['region']['short_name'];
-                            if ($region !== "None") {
+                            if ($region != "None") {
                                 if (!isset($conference_groups[$conf][$region])) {
                                     $conference_groups[$conf][$region] = [];
                                 }
@@ -304,7 +304,7 @@
                         }
                     } else {
                         $region = $coordinator['region']['short_name'];
-                        if ($region !== "None") {
+                        if ($region != "None") {
                             if (!isset($region_groups[$region])) {
                                 $region_groups[$region] = [];
                             }
@@ -330,7 +330,7 @@
 
                         %% Region subgraphs
                         @foreach ($regions_data as $region => $ids)
-                            @if ($region !== '_conf')
+                            @if ($region != '_conf')
                                 subgraph {{ $region }}
                                     direction TB
                                     style {{ $region }} fill:none,stroke:none
@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded", function() {
     dropdownItems.forEach(item => {
         const itemPath = new URL(item.href).pathname;
 
-        if (itemPath === currentPath) {
+        if (itemPath == currentPath) {
             item.classList.add("active");
         }
     });

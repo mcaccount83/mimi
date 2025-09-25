@@ -334,7 +334,7 @@
                                         $blobData = base64_decode($chFinancialReport['chapter_awards']);
                                         $chapter_awards = unserialize($blobData);
 
-                                        if ($chapter_awards === false) {
+                                        if ($chapter_awards == false) {
                                             echo "<tr><td colspan='3'>Error: Failed to unserialize data.</td></tr>";
                                         } elseif (is_array($chapter_awards) && count($chapter_awards) > 0) {
                                             foreach ($chapter_awards as $row) {

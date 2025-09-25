@@ -401,11 +401,11 @@
                                         <label class="col-sm-12 col-form-label">Are your listed boundaries correct?<span class="field-required">*</span></label>
                                         <div class="col-sm-12 row ml-2 mb-2">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" id="BoundaryStatusYes" name="BoundaryStatus" value="0" {{ $chDetails->boundary_issues === 0 ? 'checked' : '' }} onChange="ShowBoundaryError()">
+                                                <input class="form-check-input" type="radio" id="BoundaryStatusYes" name="BoundaryStatus" value="0" {{ $chDetails->boundary_issues == 0 ? 'checked' : '' }} onChange="ShowBoundaryError()">
                                                 <label class="form-check-label" for="BoundaryStatusYes">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" id="BoundaryStatusNo" name="BoundaryStatus" value="1" {{ $chDetails->boundary_issues === 1 ? 'checked' : '' }} onChange="ShowBoundaryError()">
+                                                <input class="form-check-input" type="radio" id="BoundaryStatusNo" name="BoundaryStatus" value="1" {{ $chDetails->boundary_issues == 1 ? 'checked' : '' }} onChange="ShowBoundaryError()">
                                                 <label class="form-check-label" for="BoundaryStatusNo">No</label>
                                             </div>
                                         </div>
@@ -548,7 +548,7 @@
         function toggleStatusField() {
             const urlValue = websiteUrl.value.trim();
 
-            if (urlValue !== '' && urlValue !== 'http://') {
+            if (urlValue != '' && urlValue != 'http://') {
                 // Show status field if URL has a meaningful value
                 statusContainer.style.display = 'flex';
                 websiteStatus.setAttribute('required', 'required');
@@ -683,7 +683,7 @@ function validateBeforeSubmit() {
     }
 
     // If "No" (value 1) is selected, check if the issue field is filled out
-    if (selectedBoundary.value === "1") {
+    if (selectedBoundary.value == "1") {
         const boundaryIssue = document.getElementById("BoundaryIssue");
         if (!boundaryIssue.value.trim()) {
             Swal.fire({
@@ -714,7 +714,7 @@ function validateBeforeSubmit() {
     const duplicateEmails = [];
 
     emails.forEach(email => {
-        if (email !== '') {
+        if (email != '') {
             if (emailSet.has(email)) {
                 if (!duplicateEmails.includes(email)) {
                     duplicateEmails.push(email);

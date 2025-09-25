@@ -486,17 +486,17 @@
                     }
 
                     infoText += infoText ? ' • ' : '';
-                    infoText += `${pdfDoc.numPages} page${pdfDoc.numPages !== 1 ? 's' : ''}`;
+                    infoText += `${pdfDoc.numPages} page${pdfDoc.numPages != 1 ? 's' : ''}`;
 
                     pdfInfo.textContent = infoText;
                 } else {
                     pdfTitle.textContent = 'Document';
-                    pdfInfo.textContent = `${pdfDoc.numPages} page${pdfDoc.numPages !== 1 ? 's' : ''}`;
+                    pdfInfo.textContent = `${pdfDoc.numPages} page${pdfDoc.numPages != 1 ? 's' : ''}`;
                 }
             } catch (err) {
                 console.log('Could not get metadata:', err);
                 pdfTitle.textContent = 'Document';
-                pdfInfo.textContent = `${pdfDoc.numPages} page${pdfDoc.numPages !== 1 ? 's' : ''}`;
+                pdfInfo.textContent = `${pdfDoc.numPages} page${pdfDoc.numPages != 1 ? 's' : ''}`;
             }
 
             currentPage = 1;
@@ -513,9 +513,9 @@
     async function loadDocument() {
         const fileType = await detectFileType(proxyUrl);
 
-        if (fileType === 'image') {
+        if (fileType == 'image') {
             await loadImage();
-        } else if (fileType === 'pdf') {
+        } else if (fileType == 'pdf') {
             await loadPdf();
         } else {
             // Try PDF first, then image
@@ -626,23 +626,23 @@
     document.addEventListener('keydown', async (e) => {
         if (!isImage) {
             // PDF navigation
-            if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            if (e.key == 'ArrowLeft' || e.key == 'PageUp') {
                 if (currentPage > 1) {
                     currentPage--;
                     await renderPage();
                 }
                 e.preventDefault();
-            } else if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+            } else if (e.key == 'ArrowRight' || e.key == 'PageDown') {
                 if (pdfDoc && currentPage < pdfDoc.numPages) {
                     currentPage++;
                     await renderPage();
                 }
                 e.preventDefault();
-            } else if (e.key === 'Home') {
+            } else if (e.key == 'Home') {
                 currentPage = 1;
                 await renderPage();
                 e.preventDefault();
-            } else if (e.key === 'End') {
+            } else if (e.key == 'End') {
                 if (pdfDoc) {
                     currentPage = pdfDoc.numPages;
                     await renderPage();
@@ -652,7 +652,7 @@
         }
 
         // Zoom controls (work for both PDF and images)
-        if (e.key === '+' || e.key === '=') {
+        if (e.key == '+' || e.key == '=') {
             fitToWidth = false;
             zoomFactor *= 1.1;
 
@@ -663,7 +663,7 @@
                 await renderPage();
             }
             e.preventDefault();
-        } else if (e.key === '-') {
+        } else if (e.key == '-') {
             fitToWidth = false;
             zoomFactor /= 1.1;
             if (zoomFactor < 0.1) zoomFactor = 0.1;

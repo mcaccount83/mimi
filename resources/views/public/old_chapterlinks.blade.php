@@ -15,7 +15,7 @@
             @endphp
 
             @foreach($international as $chapter)
-                @if($chapter->country_id !== $previousCountry)
+                @if($chapter->country_id != $previousCountry)
                     <div class="col-md-3 mb-1">
                         <div class="card card-primary">
                             <div class="card-header" >
@@ -47,7 +47,7 @@
                     $previousCountry = $chapter->country_id;
                 @endphp
 
-                @if(!$loop->last && $chapter->country_id !== $international[$loop->index + 1]->country_id)
+                @if(!$loop->last && $chapter->country_id != $international[$loop->index + 1]->country_id)
                                 </div>
                            </div>
                         </div>
@@ -74,7 +74,7 @@
             @endphp
 
             @foreach($chapters as $chapter)
-                @if($chapter->state_long_name !== $previousState)
+                @if($chapter->state_long_name != $previousState)
                     <div class="col-md-3 mb-1">
                         <div class="card card-primary">
                             <div class="card-header" id="heading{{ $loop->index + count($international) }}">
@@ -98,7 +98,7 @@
                     $previousState = $chapter->state_long_name;
                 @endphp
 
-                @if(!$loop->last && $chapter->state_long_name !== $chapters[$loop->index + 1]->state_long_name)
+                @if(!$loop->last && $chapter->state_long_name != $chapters[$loop->index + 1]->state_long_name)
                                 </div>
                             </div>
                         </div>

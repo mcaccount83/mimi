@@ -137,7 +137,7 @@
                             if (isset($chFinancialReport['chapter_awards'])) {
                                 $blobData = base64_decode($chFinancialReport['chapter_awards']);
                                 $chapter_awards = unserialize($blobData);
-                                if ($chapter_awards === false) {
+                                if ($chapter_awards == false) {
                                     $chapter_awards = [];
                                 }
                             }

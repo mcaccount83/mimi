@@ -1,4 +1,4 @@
-@if (empty($minimal) || $minimal === false)
+@if (empty($minimal) || $minimal == false)
     @component('mail::message')
 
 # MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
@@ -9,7 +9,7 @@
 After receiving your completed reports, your Coordiantor Team will review the report and reach out if they have any questions.<br>
 <br>
 The Financial Report (as well as the Board Election Report) can be accessed by logging into your MIMI account https://momsclub.org/mimi and selecting the buttons on the right hand side of your screen.</p>
-@if (empty($minimal) || $minimal === false)
+@if (empty($minimal) || $minimal == false)
     <br>
     <strong>MCL,</strong><br>
     MIMI Database Administrator

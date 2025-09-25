@@ -23,7 +23,7 @@ class PaymentsReRegChapterThankYou extends BaseMailable
         if (! isset($this->mailData['chapterDate']) || ! strtotime($this->mailData['chapterDate'])) {
             // If 'chapterDate' is not set or invalid, default it to today's date
             $this->mailData['chapterDate'] = Carbon::today()->format('m-d-Y');
-        } elseif (strpos($this->mailData['chapterDate'], '-') !== false) {
+        } elseif (strpos($this->mailData['chapterDate'], '-') != false) {
             // If 'chapterDate' contains '-', assume it's in 'yyyy-mm-dd' format and format it
             $this->mailData['chapterDate'] = date('m-d-Y', strtotime($this->mailData['chapterDate']));
         }

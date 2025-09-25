@@ -232,9 +232,9 @@ class BoardController extends Controller implements HasMiddleware
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
         $email = $requestData->input($prefix.'email');
-        $isVacant = $vacantField ? $requestData->input($vacantField) === 'on' : false;
+        $isVacant = $vacantField ? $requestData->input($vacantField) == 'on' : false;
 
-        if ($position === 'president' && (! $firstName || ! $lastName || ! $email)) {
+        if ($position == 'president' && (! $firstName || ! $lastName || ! $email)) {
             return;
         }
 
@@ -254,8 +254,8 @@ class BoardController extends Controller implements HasMiddleware
 
             } else {
                 // Check if replacing person entirely (name + email changed)
-                $nameChanged = ($user->first_name !== $firstName || $user->last_name !== $lastName);
-                $emailChanged = ($user->email !== $email);
+                $nameChanged = ($user->first_name != $firstName || $user->last_name != $lastName);
+                $emailChanged = ($user->email != $email);
 
                 if ($nameChanged && $emailChanged) {
                     $this->updateUserToOutgoing($user, $lastupdatedDate);
@@ -785,7 +785,7 @@ class BoardController extends Controller implements HasMiddleware
             );
 
             // $mailData = array_merge($mailDataPres);
-            // if ($AVPDetailsUpd !== null) {
+            // if ($AVPDetailsUpd != null) {
             //     $mailDataAvp = ['avpNameUpd' => $AVPDetailsUpd->first_name.' '.$AVPDetailsUpd->last_name,
             //         'avpemailUpd' => $AVPDetailsUpd->email, ];
             //     $mailData = array_merge($mailData, $mailDataAvp);
@@ -794,7 +794,7 @@ class BoardController extends Controller implements HasMiddleware
             //         'avpemailUpd' => '', ];
             //     $mailData = array_merge($mailData, $mailDataAvp);
             // }
-            // if ($MVPDetailsUpd !== null) {
+            // if ($MVPDetailsUpd != null) {
             //     $mailDataMvp = ['mvpNameUpd' => $MVPDetailsUpd->first_name.' '.$MVPDetailsUpd->last_name,
             //         'mvpemailUpd' => $MVPDetailsUpd->email, ];
             //     $mailData = array_merge($mailData, $mailDataMvp);
@@ -803,7 +803,7 @@ class BoardController extends Controller implements HasMiddleware
             //         'mvpemailUpd' => '', ];
             //     $mailData = array_merge($mailData, $mailDataMvp);
             // }
-            // if ($TRSDetailsUpd !== null) {
+            // if ($TRSDetailsUpd != null) {
             //     $mailDatatres = ['tresNameUpd' => $TRSDetailsUpd->first_name.' '.$TRSDetailsUpd->last_name,
             //         'tresemailUpd' => $TRSDetailsUpd->email, ];
             //     $mailData = array_merge($mailData, $mailDatatres);
@@ -812,7 +812,7 @@ class BoardController extends Controller implements HasMiddleware
             //         'tresemailUpd' => '', ];
             //     $mailData = array_merge($mailData, $mailDatatres);
             // }
-            // if ($SECDetailsUpd !== null) {
+            // if ($SECDetailsUpd != null) {
             //     $mailDataSec = ['secNameUpd' => $SECDetailsUpd->first_name.' '.$SECDetailsUpd->last_name,
             //         'secemailUpd' => $SECDetailsUpd->email, ];
             //     $mailData = array_merge($mailData, $mailDataSec);
@@ -822,7 +822,7 @@ class BoardController extends Controller implements HasMiddleware
             //     $mailData = array_merge($mailData, $mailDataSec);
             // }
 
-            // if ($AVPDetails !== null) {
+            // if ($AVPDetails != null) {
             //     $mailDataAvpp = ['avpName' => $AVPDetails->first_name.' '.$AVPDetails->last_name,
             //         'avpemail' => $AVPDetails->email, ];
             //     $mailData = array_merge($mailData, $mailDataAvpp);
@@ -831,7 +831,7 @@ class BoardController extends Controller implements HasMiddleware
             //         'avpemail' => '', ];
             //     $mailData = array_merge($mailData, $mailDataAvpp);
             // }
-            // if ($MVPDetails !== null) {
+            // if ($MVPDetails != null) {
             //     $mailDataMvpp = ['mvpName' => $MVPDetails->first_name.' '.$MVPDetails->last_name,
             //         'mvpemail' => $MVPDetails->email, ];
             //     $mailData = array_merge($mailData, $mailDataMvpp);
@@ -840,7 +840,7 @@ class BoardController extends Controller implements HasMiddleware
             //         'mvpemail' => '', ];
             //     $mailData = array_merge($mailData, $mailDataMvpp);
             // }
-            // if ($TRSDetails !== null) {
+            // if ($TRSDetails != null) {
             //     $mailDatatresp = ['tresName' => $TRSDetails->first_name.' '.$TRSDetails->last_name,
             //         'tresemail' => $TRSDetails->email, ];
             //     $mailData = array_merge($mailData, $mailDatatresp);
@@ -849,7 +849,7 @@ class BoardController extends Controller implements HasMiddleware
             //         'tresemail' => '', ];
             //     $mailData = array_merge($mailData, $mailDatatresp);
             // }
-            // if ($SECDetails !== null) {
+            // if ($SECDetails != null) {
             //     $mailDataSecp = ['secName' => $SECDetails->first_name.' '.$SECDetails->last_name,
             //         'secemail' => $SECDetails->email, ];
             //     $mailData = array_merge($mailData, $mailDataSecp);
@@ -1500,7 +1500,7 @@ class BoardController extends Controller implements HasMiddleware
             if ($month >= 7 && $month <= 12) {
                 $status = $this->financialReportController->activateSingleBoard($request, $chId);
 
-                if ($status === 'success') {
+                if ($status == 'success') {
                     $message = 'Board info has been submitted and activated successfully';
                 }
             }

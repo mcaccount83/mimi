@@ -16,7 +16,7 @@
         @endphp
 
         @foreach($international as $chapter)
-            @if($chapter->country_id !== $previousCountry)
+            @if($chapter->country_id != $previousCountry)
                 <div class="col-md-3 mb-1">
                     <div class="card card-primary">
                         <div class="card-header" >
@@ -54,7 +54,7 @@
                 $previousCountry = $chapter->country_id;
             @endphp
 
-            @if(!$loop->last && $chapter->country_id !== $international[$loop->index + 1]->country_id)
+            @if(!$loop->last && $chapter->country_id != $international[$loop->index + 1]->country_id)
                             </div>
                        </div>
                     </div>
@@ -86,7 +86,7 @@
             @endphp
 
             @foreach($chapters as $chapter)
-                @if($chapter->state_long_name !== $previousState)
+                @if($chapter->state_long_name != $previousState)
                     <div class="col-md-3 mb-1">
                         <div class="card card-primary">
                             <div class="card-header" id="heading{{ $loop->index + count($international) }}">
@@ -124,7 +124,7 @@
                     $previousState = $chapter->state_long_name;
                 @endphp
 
-                @if(!$loop->last && $chapter->state_long_name !== $chapters[$loop->index + 1]->state_long_name)
+                @if(!$loop->last && $chapter->state_long_name != $chapters[$loop->index + 1]->state_long_name)
                                 </div>
                             </div>
                         </div>
@@ -183,13 +183,13 @@ html: `
             <div style="display: flex; flex-wrap: wrap; align-items: baseline;">
                 <span style="font-weight: bold; margin-right: 8px; white-space: nowrap;">Website:</span>
                 <span style="flex: 1;">${
-                    // (chapter.website_url === 'http://' || chapter.website_url === 'https://'|| !chapter.website_url)
+                    // (chapter.website_url == 'http://' || chapter.website_url == 'https://'|| !chapter.website_url)
                     // ? 'No Website'
                     // : `<a href="${chapter.website_url}" target="_blank">${chapter.website_url}</a>`
                      chapter.website_status == 1 &&
                     chapter.website_url &&
-                    chapter.website_url !== 'http://' &&
-                    chapter.website_url !== 'https://' &&
+                    chapter.website_url != 'http://' &&
+                    chapter.website_url != 'https://' &&
                     chapter.website_url.length > 8  // Ensures it's more than just the protocol
                     ? `<a href="${chapter.website_url}" target="_blank">${chapter.website_url}</a>`
                     : 'No Website'

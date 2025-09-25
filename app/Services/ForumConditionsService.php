@@ -25,11 +25,11 @@ class ForumConditionsService
 
                 // If the category isn't private, allow access
                 if (! $thread->category->is_private) {
-                    return $thread->userReadStatus !== null;
+                    return $thread->userReadStatus != null;
                 }
 
                 // For private categories, check if user has access via CategoryAccess
-                return $thread->userReadStatus !== null &&
+                return $thread->userReadStatus != null &&
                        $accessibleCategoryIds->contains($thread->category_id);
             });
 

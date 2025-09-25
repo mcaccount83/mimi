@@ -337,9 +337,9 @@ function filterCoordinators() {
     // Filter options based on the selected region
     Array.from(primaryCorDropdown.options).forEach(option => {
         if (
-            option.value === "" || // Always show the default empty option
-            option.dataset.regionId === selectedRegion || // Match the selected region
-            option.dataset.regionId === "0" // Always include region_id = 0
+            option.value == "" || // Always show the default empty option
+            option.dataset.regionId == selectedRegion || // Match the selected region
+            option.dataset.regionId == "0" // Always include region_id = 0
         ) {
             option.style.display = "block";
         } else {
@@ -348,8 +348,8 @@ function filterCoordinators() {
     });
 
     // Reset the selected value if it's no longer valid
-    if (primaryCorDropdown.value !== "" &&
-        primaryCorDropdown.querySelector(`option[value="${primaryCorDropdown.value}"]`).style.display === "none") {
+    if (primaryCorDropdown.value != "" &&
+        primaryCorDropdown.querySelector(`option[value="${primaryCorDropdown.value}"]`).style.display == "none") {
         primaryCorDropdown.value = "";
     }
 }
@@ -529,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     success: function(response) {
                         // Check if response is JSON (success) or HTML (redirect with error)
-                        if (response && typeof response === 'object') {
+                        if (response && typeof response == 'object') {
                             if (response.success) {
                                 Swal.fire({
                                     title: 'Success!',
@@ -642,7 +642,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     success: function(response) {
                         // Check if response is JSON (success) or HTML (redirect with error)
-                        if (response && typeof response === 'object') {
+                        if (response && typeof response == 'object') {
                             if (response.success) {
                                 Swal.fire({
                                     title: 'Success!',

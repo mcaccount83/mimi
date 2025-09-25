@@ -37,7 +37,7 @@
 
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left">
-                                        @if ($chDocuments->disband_letter_path === null)
+                                        @if ($chDocuments->disband_letter_path == null)
                                             <button type="button" id="btn-download-pdf" class="btn bg-primary" disabled><i class="fas fa-file-pdf mr-2"></i>No Disband Letter on File</button>
                                         @else
                                             <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">
@@ -150,7 +150,7 @@
 
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left">
-                                        @if ($chDocuments->final_financial_pdf_path === null)
+                                        @if ($chDocuments->final_financial_pdf_path == null)
                                             <h4>Financial Report</h4>
                                         @else
                                             <h4>Financial Report has been submitted.</h4>
@@ -161,7 +161,7 @@
                                     </div>
                                 </div>
 
-                                @if ($chDocuments->final_financial_pdf_path === null)
+                                @if ($chDocuments->final_financial_pdf_path == null)
                                     @if ($chFinancialReport)
                                         @include('boards.financial_accordion', [
                                             'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType, 'userName' => $userName,

@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function toggleStatusField() {
             const urlValue = websiteUrl.value.trim();
 
-            if (urlValue !== '' && urlValue !== 'http://') {
+            if (urlValue != '' && urlValue != 'http://') {
                 // Show status field if URL has a meaningful value
                 statusContainer.style.display = 'flex';
                 websiteStatus.setAttribute('required', 'required');

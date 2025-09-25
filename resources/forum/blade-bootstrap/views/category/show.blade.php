@@ -248,7 +248,7 @@
 
             function submit(event)
             {
-                if (actionMethods[state.selectedAction] === 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}"))
+                if (actionMethods[state.selectedAction] == 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}"))
                 {
                     event.preventDefault();
                 }

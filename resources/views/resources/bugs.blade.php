@@ -375,7 +375,7 @@ document.addEventListener("DOMContentLoaded", function() {
     dropdownItems.forEach(item => {
         const itemPath = new URL(item.href).pathname;
 
-        if (itemPath === currentPath) {
+        if (itemPath == currentPath) {
             item.classList.add("active");
         }
     });
@@ -390,13 +390,13 @@ document.addEventListener("DOMContentLoaded", function() {
      let validationErrors = [];
 
       // Collect validation errors
-        if (taskNameNew === '') {
+        if (taskNameNew == '') {
             validationErrors.push('Name is Required.');
         }
         if (taskNameNew.length > 50) {
             validationErrors.push('Name cannot exceed 50 characters.');
         }
-        if (taskDetailsNew === '') {
+        if (taskDetailsNew == '') {
             validationErrors.push('Details are Required.');
         }
         if (taskDetailsNew.length > 255) {

@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     dropdownItems.forEach(item => {
         const itemPath = new URL(item.href).pathname;
-        if (itemPath === currentPath) {
+        if (itemPath == currentPath) {
             item.classList.add("active");
         }
     });
@@ -106,7 +106,7 @@ function editRow(button) {
     const id = row.dataset.id;
 
     // If already editing another row, cancel it
-    if (editingRow && editingRow !== row) {
+    if (editingRow && editingRow != row) {
         cancelEdit(editingRow);
     }
 
@@ -201,7 +201,7 @@ function saveRow(button) {
 }
 
 function cancelEdit(row) {
-    if (row.dataset.id === 'new') {
+    if (row.dataset.id == 'new') {
         row.remove();
     } else {
         location.reload(); // Simple approach to restore original values
@@ -340,7 +340,7 @@ function saveNewRow(button) {
 }
 
 function showMessage(message, type = 'success') {
-    const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+    const alertClass = type == 'success' ? 'alert-success' : 'alert-danger';
     const alertHtml = `
         <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
             ${message}

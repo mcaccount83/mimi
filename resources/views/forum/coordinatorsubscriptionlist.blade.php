@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function() {
     dropdownItems.forEach(item => {
         const itemPath = new URL(item.href).pathname;
 
-        if (itemPath === currentPath) {
+        if (itemPath == currentPath) {
             item.classList.add("active");
         }
     });

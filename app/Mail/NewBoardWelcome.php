@@ -42,7 +42,7 @@ class NewBoardWelcome extends BaseMailable
         $attachments = [];
 
         $pdfContent = @file_get_contents($this->pdfPath);
-        if ($pdfContent !== false) {
+        if ($pdfContent != false) {
             $attachments[] = Attachment::fromData(
                 fn () => $pdfContent,
                 $this->mailData['fiscalYear'].'_OfficerPacket.pdf'

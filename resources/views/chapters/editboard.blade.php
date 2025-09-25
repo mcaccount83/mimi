@@ -539,10 +539,10 @@ $(document).ready(function() {
 //     var emails = [preEmail, avpEmail, mvpEmail, trsEmail, secEmail];
 
 //     // Use a Set to identify duplicates
-//     var uniqueEmails = new Set(emails.filter(email => email !== "")); // filter out empty values
+//     var uniqueEmails = new Set(emails.filter(email => email != "")); // filter out empty values
 
 //     // Check for duplicates
-//     if (uniqueEmails.size !== emails.filter(email => email !== "").length) {
+//     if (uniqueEmails.size != emails.filter(email => email != "").length) {
 //         errMessage = "You entered the same email address for more than one board member. Please enter a unique e-mail address for each board member or mark the position as vacant.";
 //     }
 
@@ -569,7 +569,7 @@ function validateEmailsBeforeSubmit() {
     const duplicateEmails = [];
 
     emails.forEach(email => {
-        if (email !== '') {
+        if (email != '') {
             if (emailSet.has(email)) {
                 // Check if the duplicate email is already in the array to avoid listing it multiple times
                 if (!duplicateEmails.includes(email)) {

@@ -538,9 +538,9 @@ function filterCoordinators() {
     // Filter options based on the selected region
     Array.from(primaryCorDropdown.options).forEach(option => {
         if (
-            option.value === "" || // Always show the default empty option
-            option.dataset.regionId === selectedRegion || // Match the selected region
-            option.dataset.regionId === "0" // Always include region_id = 0
+            option.value == "" || // Always show the default empty option
+            option.dataset.regionId == selectedRegion || // Match the selected region
+            option.dataset.regionId == "0" // Always include region_id = 0
         ) {
             option.style.display = "block";
         } else {
@@ -549,8 +549,8 @@ function filterCoordinators() {
     });
 
     // Reset the selected value if it's no longer valid
-    if (primaryCorDropdown.value !== "" &&
-        primaryCorDropdown.querySelector(`option[value="${primaryCorDropdown.value}"]`).style.display === "none") {
+    if (primaryCorDropdown.value != "" &&
+        primaryCorDropdown.querySelector(`option[value="${primaryCorDropdown.value}"]`).style.display == "none") {
         primaryCorDropdown.value = "";
     }
 }
@@ -622,7 +622,7 @@ function validateEmailsBeforeSubmit() {
     const duplicateEmails = [];
 
     emails.forEach(email => {
-        if (email !== '') {
+        if (email != '') {
             if (emailSet.has(email)) {
                 // Check if the duplicate email is already in the array to avoid listing it multiple times
                 if (!duplicateEmails.includes(email)) {

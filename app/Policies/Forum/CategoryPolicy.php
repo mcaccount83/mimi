@@ -32,7 +32,7 @@ class CategoryPolicy extends ForumCategoryPolicy
 
     public function createThreads(User $user, Category $category): bool
     {
-        if ($category->title === 'Public Announcements') {
+        if ($category->title == 'Public Announcements') {
             return $this->forumConditions->canManageLists($user);
         }
 

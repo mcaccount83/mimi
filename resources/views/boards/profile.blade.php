@@ -542,7 +542,7 @@
                         </div>
 
                         @if ($thisDate->gte($due_date))
-                            @if ($due_date->month === $thisDate->month)
+                            @if ($due_date->month == $thisDate->month)
                                 <span style="color: green;">Your Re-registration payment is due now.</span><br>
                             @else
                                 <span style="color: red;">Your Re-registration payment is now considered overdue.</span><br>
@@ -585,7 +585,7 @@
                       <li class="list-group-item">
                             <h5>End of Year Filing</h5>
 
-                            @if($userType === 'coordinator' && $chDocuments->new_board_active!='1')
+                            @if($userType == 'coordinator' && $chDocuments->new_board_active!='1')
                                 @if($displayTESTING)
                                     <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y') . '-' . (date('Y') + 1) }} Board Report *TESTING*
@@ -597,7 +597,7 @@
                                 @else
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                                 @endif
-                            @elseif($userType === 'coordinator' && $chDocuments->new_board_active =='1')
+                            @elseif($userType == 'coordinator' && $chDocuments->new_board_active =='1')
                                 @if($displayTESTING)
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated *TESTING*</button><br>
                                 @else
@@ -615,7 +615,7 @@
                                 <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
                             @endif
 
-                            @if($userType === 'coordinator')
+                            @if($userType == 'coordinator')
                                 @if($displayTESTING)
                                     <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                         {{ date('Y')-1 .'-'.date('Y') }} Financial Report *TESTING*
@@ -750,7 +750,7 @@ $(document).ready(function () {
         function toggleStatusField() {
             const urlValue = websiteUrl.value.trim();
 
-            if (urlValue !== '' && urlValue !== 'http://') {
+            if (urlValue != '' && urlValue != 'http://') {
                 // Show status field if URL has a meaningful value
                 statusContainer.style.display = 'flex';
                 websiteStatus.setAttribute('required', 'required');
@@ -799,7 +799,7 @@ document.addEventListener("DOMContentLoaded", function() {
 //     // Function to disable options 0 and 1
 //     const disableRestrictedOptions = () => {
 //         Array.from(statusField.options).forEach(option => {
-//             if (option.value === "0" || option.value === "1") {
+//             if (option.value == "0" || option.value == "1") {
 //                 option.disabled = true;
 //             }
 //         });
@@ -807,7 +807,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //     // Function to update status field requirements
 //     const updateStatusRequirement = () => {
-//         if (websiteField.value.trim() === '') {
+//         if (websiteField.value.trim() == '') {
 //             statusField.removeAttribute('required');
 //             statusField.value = ''; // Optionally clear the status
 //         } else {
@@ -826,7 +826,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //     // Add event listener for website URL changes
 //     websiteField.addEventListener("input", function() {
-//         if (this.value !== originalUrl) {
+//         if (this.value != originalUrl) {
 //             statusField.value = "";
 //             disableRestrictedOptions();
 //         }
@@ -898,7 +898,7 @@ function validateEmailsBeforeSubmit() {
     const duplicateEmails = [];
 
     emails.forEach(email => {
-        if (email !== '') {
+        if (email != '') {
             if (emailSet.has(email)) {
                 // Check if the duplicate email is already in the array to avoid listing it multiple times
                 if (!duplicateEmails.includes(email)) {
@@ -965,7 +965,7 @@ function showChangePasswordAlert(user_id) {
                 return false;
             }
 
-            if (newPassword !== confirmNewPassword) {
+            if (newPassword != confirmNewPassword) {
                 Swal.showValidationMessage('New passwords do not match');
                 return false;
             }

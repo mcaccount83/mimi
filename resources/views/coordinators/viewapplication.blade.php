@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     success: function(response) {
                         // Check if response is JSON (success) or HTML (redirect with error)
-                        if (response && typeof response === 'object') {
+                        if (response && typeof response == 'object') {
                             if (response.success) {
                                 Swal.fire({
                                     title: 'Success!',
@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     success: function(response) {
                         // Check if response is JSON (success) or HTML (redirect with error)
-                        if (response && typeof response === 'object') {
+                        if (response && typeof response == 'object') {
                             if (response.success) {
                                 Swal.fire({
                                     title: 'Success!',

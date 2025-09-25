@@ -1,4 +1,4 @@
-@if (empty($minimal) || $minimal === false)
+@if (empty($minimal) || $minimal == false)
     @component('mail::message')
 
 # MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
@@ -20,7 +20,7 @@
     @endif
 </ul>
 Please submit your report through MIMI (https://momsclub.org/mimi) as soon as possible. If you are having trouble submitting, have any questions, or need more time, please contact your Primary Coordinator.</p>
-@if (empty($minimal) || $minimal === false)
+@if (empty($minimal) || $minimal == false)
     <br>
     <strong>MCL,</strong><br>
     MIMI Database Administrator

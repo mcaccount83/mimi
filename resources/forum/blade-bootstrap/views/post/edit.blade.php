@@ -17,7 +17,7 @@
             @method('PATCH')
 
             <div class="mb-3">
-                <textarea name="content" class="form-control">{{ old('content') !== null ? old('content') : $post->content }}</textarea>
+                <textarea name="content" class="form-control">{{ old('content') != null ? old('content') : $post->content }}</textarea>
             </div>
 
             <div class="text-end">

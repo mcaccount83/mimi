@@ -50,7 +50,7 @@ class NewChapterWelcome extends BaseMailable
 
         if ($this->pdfPath2) {
             $pdfContent = file_get_contents($this->pdfPath2);
-            if ($pdfContent !== false) {
+            if ($pdfContent != false) {
                 $attachments[] = Attachment::fromData(
                     fn () => $pdfContent,
                     'GroupExemptionLetter.pdf'

@@ -86,7 +86,7 @@ class GoogleController extends Controller implements HasMiddleware
         $bodyContents = $response->getBody()->getContents();
         $jsonResponse = json_decode($bodyContents, true);
 
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
+        if ($response->getStatusCode() == 200) { // Check for a successful status code
             return $jsonResponse['id'];  // Return just the ID string instead of an array
         }
 
@@ -128,7 +128,7 @@ class GoogleController extends Controller implements HasMiddleware
         $bodyContents = $response->getBody()->getContents();
         $jsonResponse = json_decode($bodyContents, true);
 
-        if ($response->getStatusCode() === 200) {
+        if ($response->getStatusCode() == 200) {
             return $jsonResponse['id'];  // Return just the ID string instead of an array
         }
 

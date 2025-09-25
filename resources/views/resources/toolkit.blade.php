@@ -227,22 +227,22 @@
                                             <option value="2" {{ $resourceItem->file_type == 2 ? 'selected' : '' }}>Link to Webpage</option>
                                         </select>
                                     </div>
-                                    <div class="form-group versionField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="form-group versionField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                         <label for="fileVersion{{ $resourceItem->id }}">Version</label>
                                         <input type="text" class="form-control" id="fileVersion{{ $resourceItem->id }}" name="fileVersion" value="{{ $resourceItem->version }}">
                                     </div>
-                                    <div class="form-group filePathField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="form-group filePathField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                         File Path: <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                             {{ $resourceItem->file_path }}</a>
                                         {{-- <a href="{{ $resourceItem->file_path }}">{{ $resourceItem->file_path }}</a> --}}
                                     </div>
-                                    <div class="form-group linkField" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="form-group linkField" style="{{ $resourceItem->file_type == 2 ? 'display:block;' : 'display:none;' }}">
                                         <label for="link{{ $resourceItem->id }}">Link</label>
                                         <input type="text" class="form-control" id="link{{ $resourceItem->id }}" name="link" value="{{ $resourceItem->link }}">
                                     </div>
                                 </div>
                             <div class="col-md-12">
-                                <div class="form-group fileUpload" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                                <div class="form-group fileUpload" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                     <input type="file" id="fileUpload{{ $resourceItem->id }}" class="form-control" name='fileUpload' required>
                                 </div>
                             </div>
@@ -297,15 +297,15 @@
                                         </select>
 
                                     </div>
-                                    <div class="form-group versionFieldNew" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="form-group versionFieldNew" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                         <label for="fileVersionNew">Version</label>
                                         <input type="text" class="form-control" id="fileVersionNew" name="fileVersionNew">
                                     </div>
-                                    <div class="form-group linkFieldNew" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="form-group linkFieldNew" style="{{ $resourceItem->file_type == 2 ? 'display:block;' : 'display:none;' }}">
                                         <label for="linkNew">Link</label>
                                         <input type="text" class="form-control" id="linkNew" name="linkNew" >
                                     </div>
-                                    <div class="form-group fileUploadNew" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="form-group fileUploadNew" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                         <input type="file" id="fileUploadNew" class="form-control" name="fileUploadNew" required>
                                     </div>
                                 </form>
@@ -345,7 +345,7 @@ document.addEventListener("DOMContentLoaded", function() {
     dropdownItems.forEach(item => {
         const itemPath = new URL(item.href).pathname;
 
-        if (itemPath === currentPath) {
+        if (itemPath == currentPath) {
             item.classList.add("active");
         }
     });
@@ -356,13 +356,13 @@ document.addEventListener("DOMContentLoaded", function() {
             var selectedType = $(this).val();
             var resourceId = $(this).attr('id').replace('fileType', '');
 
-            if (selectedType === '1') {
+            if (selectedType == '1') {
                 $('.versionField').show();
                 $('.filePathField').show();
                 $('.fileUpload').show();
                 $('.filePathBlock').show();
                 $('.linkField').hide();
-            } else if (selectedType === '2') {
+            } else if (selectedType == '2') {
                 $('.linkField').show();
                 $('.versionField').hide();
                 $('.filePathField').hide();
@@ -378,11 +378,11 @@ document.addEventListener("DOMContentLoaded", function() {
         $('#fileTypeNew').change(function() {
             var selectedType = $(this).val();
 
-            if (selectedType === '1') {
+            if (selectedType == '1') {
                 $('.versionFieldNew').show();
                 $('.fileUploadNew').show();
                 $('.linkFieldNew').hide();
-            } else if (selectedType === '2') {
+            } else if (selectedType == '2') {
                 $('.linkFieldNew').show();
                 $('.versionFieldNew').hide();
                 $('.fileUploadNew').hide();
@@ -402,28 +402,28 @@ document.addEventListener("DOMContentLoaded", function() {
         let validationErrors = [];
 
         // Collect validation errors
-        if (fileCategoryNew === '') {
+        if (fileCategoryNew == '') {
             validationErrors.push('Category is Required.');
         }
-        if (fileNameNew === '') {
+        if (fileNameNew == '') {
             validationErrors.push('Name is Required.');
         }
         if (fileNameNew.length > 50) {
             validationErrors.push('Name cannot exceed 50 characters.');
         }
-        if (fileDescriptionNew === '') {
+        if (fileDescriptionNew == '') {
             validationErrors.push('Description is Required.');
         }
         if (fileDescriptionNew.length > 500) {
             validationErrors.push('Description cannot exceed 500 characters.');
         }
-        if (fileTypeNew === '') {
+        if (fileTypeNew == '') {
             validationErrors.push('File Type is Required.');
         }
-        if (fileTypeNew === '1' && fileVersionNew === '') {
+        if (fileTypeNew == '1' && fileVersionNew == '') {
             validationErrors.push('File Version is Required.');
         }
-        if (fileTypeNew === '2' && linkNew === '') {
+        if (fileTypeNew == '2' && linkNew == '') {
             validationErrors.push('Link is Required.');
         }
 
@@ -451,9 +451,9 @@ document.addEventListener("DOMContentLoaded", function() {
         formData.append('fileDescriptionNew', fileDescriptionNew);
         formData.append('fileTypeNew', fileTypeNew);
 
-        if (fileTypeNew === '1') {
+        if (fileTypeNew == '1') {
             formData.append('fileVersionNew', fileVersionNew);
-        } else if (fileTypeNew === '2') {
+        } else if (fileTypeNew == '2') {
             formData.append('linkNew', linkNew); // Include the link
         }
 
@@ -472,7 +472,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 var fileType = response.file_type;
 
                 // Check if file type requires further processing
-                if (fileType === '1') {
+                if (fileType == '1') {
                     Swal.fire({
                         title: 'Processing...',
                         text: 'Please wait while we update the toolkit.',
@@ -554,13 +554,13 @@ function updateFile(id) {
     let validationErrors = [];
 
     // Collect validation errors
-    if (fileDescription === '') {
+    if (fileDescription == '') {
         validationErrors.push('Description is Required.');
     }
     if (fileDescription.length > 500) {
         validationErrors.push('Description cannot exceed 500 characters.');
     }
-    if (fileType === '2' && link === '') {
+    if (fileType == '2' && link == '') {
         validationErrors.push('Link is Required.');
     }
 
@@ -594,7 +594,7 @@ function updateFile(id) {
         },
         success: function(response) {
             // Check if file type requires further processing
-            if (fileType === '1') {
+            if (fileType == '1') {
                  // Show the processing Swal
                 Swal.fire({
                     title: 'Processing...',

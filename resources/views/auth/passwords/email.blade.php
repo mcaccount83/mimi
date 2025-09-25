@@ -61,7 +61,7 @@
 <script>
 function validate(){
 	var email = $("#email").val();
-	if(email !== ""){
+	if(email != ""){
 		$("#email-btn").attr("disabled", "disabled");
 		$("#forgot-pswd").submit();
 	}

@@ -110,7 +110,7 @@
 @section('customscript')
 <script>
 window.onload = function () {
-    if (typeof history.pushState === "function") {
+    if (typeof history.pushState == "function") {
         history.pushState("jibberish", null, null);
         window.onpopstate = function () {
             history.pushState('newjibberish', null, null);

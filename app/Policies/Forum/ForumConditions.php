@@ -19,15 +19,15 @@ class ForumConditions
 
     public function canAccessCoordinatorList(User $user, Category $category): bool
     {
-        if ($user->user_type === 'outgoing') {
+        if ($user->user_type == 'outgoing') {
             return false; // Hide ALL from outgoing
         }
 
-        if ($user->user_type === 'disbanded') {
+        if ($user->user_type == 'disbanded') {
             return false; // Hide ALL from outgoing
         }
 
-        if ($category->title === 'CoordinatorList' && $user->user_type !== 'coordinator') {
+        if ($category->title == 'CoordinatorList' && $user->user_type != 'coordinator') {
             return false; // Hide from everyone except coordinators
         }
 
@@ -53,7 +53,7 @@ class ForumConditions
     {
         $category = $this->getCategoryFromThread($thread);
 
-        if ($category->title === 'Public Announcements') {
+        if ($category->title == 'Public Announcements') {
             return $this->canManageLists($user);
         }
 

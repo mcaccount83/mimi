@@ -456,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function hidePaymentSection() {
         // Hide payment fields section (everything except submit button and authorize notice)
         const paymentHeading = Array.from(document.querySelectorAll('h3')).find(h3 =>
-            h3.textContent.trim() === 'Payment Information'
+            h3.textContent.trim() == 'Payment Information'
         );
 
         if (paymentHeading) {
@@ -522,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showPaymentSection() {
         // Show payment fields section
         const paymentHeading = Array.from(document.querySelectorAll('h3')).find(h3 =>
-            h3.textContent.trim() === 'Payment Information'
+            h3.textContent.trim() == 'Payment Information'
         );
 
         if (paymentHeading) {
@@ -546,7 +546,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     // Restore required attribute (except for readonly fields)
-                    if (fieldId !== 'newchap' && fieldId !== 'fee' && fieldId !== 'total') {
+                    if (fieldId != 'newchap' && fieldId != 'fee' && fieldId != 'total') {
                         field.setAttribute('required', 'required');
                     }
                 }
@@ -593,13 +593,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const matchMessage = document.getElementById('password-match-message');
 
     function checkPasswordMatch() {
-        if (confirmPassword.value === '') {
+        if (confirmPassword.value == '') {
             matchMessage.textContent = '';
             matchMessage.className = 'form-text';
             return;
         }
 
-        if (password.value === confirmPassword.value) {
+        if (password.value == confirmPassword.value) {
             matchMessage.textContent = 'Passwords match!';
             matchMessage.className = 'form-text text-success';
             confirmPassword.setCustomValidity('');

@@ -31,7 +31,7 @@
                            $thisDate = \Illuminate\Support\Carbon::now();
                         @endphp
                         @if ($thisDate->gte($due_date))
-                            @if ($due_date->month === $thisDate->month)
+                            @if ($due_date->month == $thisDate->month)
                                 <div class="col-md-12" style="color: green;"><center>Your chapter's re-registration payment is due this month!</center></div>
                             @else
                                 <div class="col-md-12" style="color: red;"><center>Your chapter's re-registration payment is now considered overdue.</center></div>
@@ -270,7 +270,7 @@ $(document).ready(function () {
     // Function to calculate total re-registration fees
     function calculateTotalRR() {
         var membersInput = document.getElementById('members');
-        var members = membersInput.value.trim() === '' ? 0 : parseFloat(membersInput.value);
+        var members = membersInput.value.trim() == '' ? 0 : parseFloat(membersInput.value);
         var lateFee = parseFloat(document.getElementById('late').value.replace('$', ''));
         var totalRR = 0;
 

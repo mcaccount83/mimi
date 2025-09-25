@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function() {
     dropdownItems.forEach(item => {
         const itemPath = new URL(item.href).pathname;
 
-        if (itemPath === currentPath) {
+        if (itemPath == currentPath) {
             item.classList.add("active");
         }
     });
@@ -176,7 +176,7 @@ function showEODeptCoverSheetModal() {
                 return false;
             }
 
-            if (!emailMessage || emailMessage.trim() === '') {
+            if (!emailMessage || emailMessage.trim() == '') {
                 Swal.showValidationMessage('Please enter a message');
                 return false;
             }
@@ -226,7 +226,7 @@ function showIRSUpdatesModal() {
                 return false;
             }
 
-            if (!fromDate || fromDate.trim() === '') {
+            if (!fromDate || fromDate.trim() == '') {
                 Swal.showValidationMessage('Please enter a start date for report');
                 return false;
             }
@@ -276,7 +276,7 @@ function showSubordinateFilingModal() {
                 return false;
             }
 
-            if (!fromDate || fromDate.trim() === '') {
+            if (!fromDate || fromDate.trim() == '') {
                 Swal.showValidationMessage('Please enter a start date for report');
                 return false;
             }

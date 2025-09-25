@@ -340,10 +340,10 @@ function showPositionInformation() {
 function filterByRegion(dropdown, selectedRegion) {
     Array.from(dropdown.options).forEach(option => {
         if (
-            option.value === "" || // Always show the default empty option
-            selectedRegion === "0" || // If region 0 is selected, show ALL options
-            option.dataset.regionId === selectedRegion || // Match the selected region
-            option.dataset.regionId === "0" // Always show options with region_id = 0
+            option.value == "" || // Always show the default empty option
+            selectedRegion == "0" || // If region 0 is selected, show ALL options
+            option.dataset.regionId == selectedRegion || // Match the selected region
+            option.dataset.regionId == "0" // Always show options with region_id = 0
         ) {
             option.style.display = "block";
         } else {
@@ -353,8 +353,8 @@ function filterByRegion(dropdown, selectedRegion) {
 
     // Reset the selected value if it's no longer valid
     if (
-        dropdown.value !== "" &&
-        dropdown.querySelector(`option[value="${dropdown.value}"]`).style.display === "none"
+        dropdown.value != "" &&
+        dropdown.querySelector(`option[value="${dropdown.value}"]`).style.display == "none"
     ) {
         dropdown.value = "";
     }
@@ -394,7 +394,7 @@ function isCoordinatorAlreadyAssigned(nCoordinatorID) {
     const table = document.getElementById("coordinator-list");
     for (let i = 1; i < table.rows.length; i++) {
         const existingId = document.getElementById(`CoordinatorIDRow${i-1}`);
-        if (existingId && existingId.value === nCoordinatorID) {
+        if (existingId && existingId.value == nCoordinatorID) {
             return true;
         }
     }
@@ -405,7 +405,7 @@ function isChapterAlreadyAssigned(nChapterID) {
     const table = document.getElementById("chapter-list");
     for (let i = 1; i < table.rows.length; i++) {
         const existingId = document.getElementById(`ChapterIDRow${i-1}`);
-        if (existingId && existingId.value === nChapterID) {
+        if (existingId && existingId.value == nChapterID) {
             return true;
         }
     }
@@ -496,12 +496,12 @@ function AddChapter() {
 
 function getSelectedText(elementId) {
     const element = document.getElementById(elementId);
-    return element && element.selectedIndex !== -1 ? element.options[element.selectedIndex].text : null;
+    return element && element.selectedIndex != -1 ? element.options[element.selectedIndex].text : null;
 }
 
 function getSelectedValue(elementId) {
     const element = document.getElementById(elementId);
-    return element && element.selectedIndex !== -1 ? element.options[element.selectedIndex].value : null;
+    return element && element.selectedIndex != -1 ? element.options[element.selectedIndex].value : null;
 }
 
 function ActivateCoordinatorButton(element) {

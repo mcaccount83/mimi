@@ -23,7 +23,7 @@ class ViewServiceProvider extends ServiceProvider
             if (Auth::check()) {
                 $user = Auth::user();
 
-                if ($user->user_type === 'coordinator' && $user->coordinator) {
+                if ($user->user_type == 'coordinator' && $user->coordinator) {
                     $corDetails = $user->coordinator;
                     $corId = $corDetails['coordinator_id'];
                     $positionid = $corDetails['position_id'];

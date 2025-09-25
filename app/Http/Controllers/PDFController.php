@@ -71,11 +71,11 @@ class PDFController extends Controller
         $chActiveId = $request->chActiveId ?? null;
 
         // Only calculate PresDetails if not passed in
-        if ($PresDetails === null) {
-            if ($chActiveId === '1') {
+        if ($PresDetails == null) {
+            if ($chActiveId == '1') {
                 $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
                 $PresDetails = $baseActiveBoardQuery['PresDetails'];
-            } elseif ($chActiveId === '0') {
+            } elseif ($chActiveId == '0') {
                 $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
                 $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
             }
@@ -132,11 +132,11 @@ class PDFController extends Controller
         $chActiveId = $request->chActiveId ?? null;
 
         // Only calculate PresDetails if not passed in
-        if ($PresDetails === null) {
-            if ($chActiveId === '1') {
+        if ($PresDetails == null) {
+            if ($chActiveId == '1') {
                 $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
                 $PresDetails = $baseActiveBoardQuery['PresDetails'];
-            } elseif ($chActiveId === '0') {
+            } elseif ($chActiveId == '0') {
                 $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
                 $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
             }
@@ -578,7 +578,7 @@ class PDFController extends Controller
         if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
             $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
             if ($existingDocRecord) {
-                if ($letterType === 'probation_release') {
+                if ($letterType == 'probation_release') {
                     $existingDocRecord->probation_release_path = $file_id;
                     $existingDocRecord->save();
                 } else {
@@ -588,7 +588,7 @@ class PDFController extends Controller
             } else {
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
                 $newDocData = ['chapter_id' => $chapterId];
-                if ($letterType === 'probation_release') {
+                if ($letterType == 'probation_release') {
                     $newDocData['probation_release_path'] = $file_id;
                 } else {
                     $newDocData['probation_path'] = $file_id;
@@ -1486,7 +1486,7 @@ class PDFController extends Controller
             'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
         ]);
 
-        if ($response->getStatusCode() === 200) {
+        if ($response->getStatusCode() == 200) {
             $responseData = json_decode($response->getBody()->getContents(), true);
             $pdfFileId = $responseData['id'] ?? null; // Extract file ID
 
@@ -1529,7 +1529,7 @@ class PDFController extends Controller
         $bodyContents = $response->getBody()->getContents();
         $jsonResponse = json_decode($bodyContents, true);
 
-        if ($response->getStatusCode() === 200) {
+        if ($response->getStatusCode() == 200) {
             return $jsonResponse['id'];  // Return just the ID string instead of an array
         }
 

@@ -31,7 +31,7 @@
         </span>
     </div>
     <div class="card-body">
-        @if ($post->parent !== null)
+        @if ($post->parent != null)
             @include ('forum::post.partials.quote', ['post' => $post->parent])
         @endif
 

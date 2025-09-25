@@ -64,7 +64,7 @@
                             @for ($posRow = 7; $posRow > 0; $posRow--)
                                 @php $positionFound = false; @endphp
                                 @foreach ($coordinatorArray as $coordinator)
-                                    @if ($coordinator && $coordinator->position === $positionCodes[$posRow - 1])
+                                    @if ($coordinator && $coordinator->position == $positionCodes[$posRow - 1])
                                         <td>{{ $coordinator->first_name }} {{ $coordinator->last_name }}</td>
                                         @php $positionFound = true; @endphp
                                         @break
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
     dropdownItems.forEach(item => {
         const itemPath = new URL(item.href).pathname;
 
-        if (itemPath === currentPath) {
+        if (itemPath == currentPath) {
             item.classList.add("active");
         }
     });

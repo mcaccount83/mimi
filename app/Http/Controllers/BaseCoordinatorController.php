@@ -70,14 +70,14 @@ class BaseCoordinatorController extends Controller
      */
     private function applySorting($baseQuery, $queryType)
     {
-        $isBirthdayPage = request()->route()->getName() === 'coordreports.coordrptbirthdays';
-        $isUtilizationPage = request()->route()->getName() === 'coordreports.coordrptvolutilization';
+        $isBirthdayPage = request()->route()->getName() == 'coordreports.coordrptbirthdays';
+        $isUtilizationPage = request()->route()->getName() == 'coordreports.coordrptvolutilization';
 
-        if ($queryType === 'retired' || $queryType === 'retired_international') {
+        if ($queryType == 'retired' || $queryType == 'retired_international') {
             return ['query' => $baseQuery->orderByDesc('coordinators.zapped_date'), 'checkBoxStatus' => ''];
         }
 
-        if ($queryType === 'pending' || $queryType === 'not_approved' || $queryType === 'pending_international' || $queryType === 'not_approved_international') {
+        if ($queryType == 'pending' || $queryType == 'not_approved' || $queryType == 'pending_international' || $queryType == 'not_approved_international') {
             return ['query' => $baseQuery->orderByDesc(CoordinatorApplication::select('created_at')
                 ->whereColumn('coordinator_application.coordinator_id', 'coordinators.id')
                 ->limit(1)),

@@ -201,12 +201,12 @@ class EOYReportController extends Controller implements HasMiddleware
         $lastupdatedDate = date('Y-m-d H:i:s');
 
         $input = $request->all();
-        $new_board_submitted = ! isset($input['new_board_submitted']) ? null : ($input['new_board_submitted'] === 'on' ? 1 : 0);
-        $new_board_active = ! isset($input['new_board_active']) ? null : ($input['new_board_active'] === 'on' ? 1 : 0);
-        $financial_report_received = ! isset($input['financial_report_received']) ? null : ($input['financial_report_received'] === 'on' ? 1 : 0);
-        $financial_review_complete = ! isset($input['financial_review_complete']) ? null : ($input['financial_review_complete'] === 'on' ? 1 : 0);
-        $report_extension = ! isset($input['report_extension']) ? null : ($input['report_extension'] === 'on' ? 1 : 0);
-        $irs_verified = ! isset($input['irs_verified']) ? null : ($input['irs_verified'] === 'on' ? 1 : 0);
+        $new_board_submitted = ! isset($input['new_board_submitted']) ? null : ($input['new_board_submitted'] == 'on' ? 1 : 0);
+        $new_board_active = ! isset($input['new_board_active']) ? null : ($input['new_board_active'] == 'on' ? 1 : 0);
+        $financial_report_received = ! isset($input['financial_report_received']) ? null : ($input['financial_report_received'] == 'on' ? 1 : 0);
+        $financial_review_complete = ! isset($input['financial_review_complete']) ? null : ($input['financial_review_complete'] == 'on' ? 1 : 0);
+        $report_extension = ! isset($input['report_extension']) ? null : ($input['report_extension'] == 'on' ? 1 : 0);
+        $irs_verified = ! isset($input['irs_verified']) ? null : ($input['irs_verified'] == 'on' ? 1 : 0);
         // $extension_notes = $input['extension_notes'];
         $extension_notes = $request->filled('extension_notes') ? $request->input('extension_notes') : $request->input('hid_extension_notes');
         // $irs_notes = $input['irs_notes'];
@@ -299,7 +299,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $activationStatuses = [];
 
         // Check if the board activation button was clicked
-        if ($request->has('board') && $request->input('board') === 'active') {
+        if ($request->has('board') && $request->input('board') == 'active') {
             foreach ($chapterList as $chapter) {
                 // Check if chapter has incoming board members before attempting activation
                 $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $chapter->id)->get();
@@ -310,7 +310,7 @@ class EOYReportController extends Controller implements HasMiddleware
                     try {
                         $activationResult = $this->financialReportController->activateSingleBoard($request, $chapter->id);
 
-                        if ($activationResult === 'success') {
+                        if ($activationResult == 'success') {
                             DB::commit();
                             $activationStatuses[$chapter->id] = 'success';
                         } else {
@@ -330,7 +330,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
             // Process results after all activations are attempted
             $successfulActivations = array_filter($activationStatuses, function ($status) {
-                return $status === 'success';
+                return $status == 'success';
             });
 
             if (count($activationStatuses) == 0) {
@@ -382,12 +382,12 @@ class EOYReportController extends Controller implements HasMiddleware
         $allCountries = $baseQuery['allCountries'];
 
         // Check if the board activation button was clicked
-        if ($request->has('board') && $request->input('board') === 'active') {
+        if ($request->has('board') && $request->input('board') == 'active') {
             DB::beginTransaction();
             try {
                 $status = $this->financialReportController->activateSingleBoard($request, $id);
 
-                if ($status === 'success') {
+                if ($status == 'success') {
                     DB::commit();
 
                     return redirect()->back()->with('success', 'Board activation successful');
@@ -844,7 +844,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $post_balance = isset($input['post_balance']) ? preg_replace('/[^\d.]/', '', $input['post_balance']) : null;
         // $post_balance = $input['post_balance'];
         // $post_balance = str_replace(',', '', $post_balance);
-        // $post_balance = $post_balance === '' ? null : $post_balance;
+        // $post_balance = $post_balance == '' ? null : $post_balance;
 
         // Step 9 - Questions
         $check_purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;

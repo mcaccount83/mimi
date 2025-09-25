@@ -30,7 +30,7 @@
                     Apply for an EIN:
                     <button class="btn bg-gradient-primary btn-xs ml-1" type="button" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</button>
                     @foreach($resources as $resourceItem)
-                    @if ($resourceItem->name === 'Applying for a Chapter EIN')
+                    @if ($resourceItem->name == 'Applying for a Chapter EIN')
                         <button class="btn bg-gradient-primary btn-xs ml-1" type="button" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</button>
                     @endif
                     @endforeach
@@ -531,10 +531,10 @@
                                         '990N Confirmation' => $chDocuments->irs_path ?? null,
                                     ] : [];
 
-                                    $included = array_keys(array_filter($attachments, fn($path) => $path !== null));
+                                    $included = array_keys(array_filter($attachments, fn($path) => $path != null));
                                     $excluded = array_keys(array_filter(
                                         $attachments,
-                                        fn($path, $label) => $path === null && $label !== 'Additional Statement',
+                                        fn($path, $label) => $path == null && $label != 'Additional Statement',
                                         ARRAY_FILTER_USE_BOTH
                                     ));
 

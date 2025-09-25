@@ -30,7 +30,7 @@
         if (isset($list->financialReport->chapter_awards)) {
             $blobData = base64_decode($list->financialReport->chapter_awards);
             $chapter_awards = unserialize($blobData);
-            if ($chapter_awards !== false && !empty($chapter_awards)) {
+            if ($chapter_awards != false && !empty($chapter_awards)) {
                 // Count only awards that have an actual awards_type selected
                 $validAwards = 0;
                 foreach ($chapter_awards as $award) {
@@ -70,7 +70,7 @@
                 if (isset($list->financialReport->chapter_awards)) {
                     $blobData = base64_decode($list->financialReport->chapter_awards);
                     $chapter_awards = unserialize($blobData);
-                    if ($chapter_awards !== false && !empty($chapter_awards)) {
+                    if ($chapter_awards != false && !empty($chapter_awards)) {
                         // Only include awards that have an awards_type selected
                         foreach ($chapter_awards as $award) {
                             if (!empty($award['awards_type'])) {
@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function() {
     dropdownItems.forEach(item => {
         const itemPath = new URL(item.href).pathname;
 
-        if (itemPath === currentPath) {
+        if (itemPath == currentPath) {
             item.classList.add("active");
         }
     });

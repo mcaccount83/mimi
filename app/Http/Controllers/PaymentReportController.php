@@ -374,7 +374,7 @@ class PaymentReportController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $payments->rereg_notes = $input['ch_regnotes'];
-            $payments->rereg_waivelate = ! isset($input['ch_waive_late']) ? null : ($input['ch_waive_late'] === 'on' ? 1 : 0);
+            $payments->rereg_waivelate = ! isset($input['ch_waive_late']) ? null : ($input['ch_waive_late'] == 'on' ? 1 : 0);
             $payments->save();
 
             $chapter->last_updated_by = $lastUpdatedBy;

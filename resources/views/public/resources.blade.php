@@ -148,7 +148,7 @@
                                             <tr>
                                                 <td>&nbsp;&nbsp;&nbsp;</td>
                                                 @foreach($resources as $resourceItem)
-                                                @if ($resourceItem->name === '990N Filing Instructions')
+                                                @if ($resourceItem->name == '990N Filing Instructions')
                                                     <td>
                                                         <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                                             990N Filing Instructions
@@ -160,7 +160,7 @@
                                             <tr>
                                                 <td>&nbsp;&nbsp;&nbsp;</td>
                                                 @foreach($resources as $resourceItem)
-                                                @if ($resourceItem->name === '990N Filing FAQs')
+                                                @if ($resourceItem->name == '990N Filing FAQs')
                                                     <td>
                                                         <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                                             990N Filing FAQs

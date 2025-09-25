@@ -133,7 +133,7 @@
                     </div>
                     </div>
 
-                    @if ($chDetails->activeStatus->active_status === 'Pending')
+                    @if ($chDetails->activeStatus->active_status == 'Pending')
                     <p>
                         <br>
                         Here are a few things to keep in mind as you start your MOMS Club journey.
@@ -179,9 +179,9 @@
                             </div>
                         </div>
 
-                        @if ($chDetails->activeStatus->active_status === 'Pending')
+                        @if ($chDetails->activeStatus->active_status == 'Pending')
                             <span style="color: #dc3545;"><b>Your chapter will NOT be moved to Active Status until you have made contact with your Coordinator.</b></span><br>
-                        @elseif ($chDetails->activeStatus->active_status === 'Not Approved')
+                        @elseif ($chDetails->activeStatus->active_status == 'Not Approved')
                             <span style="color: #dc3545;"><b>Your application has been declined. Contact your Coordinator for more information.</b></span><br>
                         @endif
 
@@ -296,7 +296,7 @@ function showChangePasswordAlert(user_id) {
                 return false;
             }
 
-            if (newPassword !== confirmNewPassword) {
+            if (newPassword != confirmNewPassword) {
                 Swal.showValidationMessage('New passwords do not match');
                 return false;
             }

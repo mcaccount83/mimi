@@ -1152,9 +1152,9 @@ class ChapterController extends Controller implements HasMiddleware
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
         $email = $requestData->input($prefix.'email');
-        $isVacant = $vacantField ? $requestData->input($vacantField) === 'on' : false;
+        $isVacant = $vacantField ? $requestData->input($vacantField) == 'on' : false;
 
-        if ($position === 'president' && (! $firstName || ! $lastName || ! $email)) {
+        if ($position == 'president' && (! $firstName || ! $lastName || ! $email)) {
             return;
         }
 
@@ -1174,8 +1174,8 @@ class ChapterController extends Controller implements HasMiddleware
 
             } else {
                 // Check if replacing person entirely (name + email changed)
-                $nameChanged = ($user->first_name !== $firstName || $user->last_name !== $lastName);
-                $emailChanged = ($user->email !== $email);
+                $nameChanged = ($user->first_name != $firstName || $user->last_name != $lastName);
+                $emailChanged = ($user->email != $email);
 
                 if ($nameChanged && $emailChanged) {
                     $this->updateUserToOutgoing($user, $lastupdatedDate);

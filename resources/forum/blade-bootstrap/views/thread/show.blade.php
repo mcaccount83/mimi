@@ -376,14 +376,14 @@
             }
 
             function submitThread(event) {
-                if (threadActionMethods[state.selectedThreadAction] === 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}"))
+                if (threadActionMethods[state.selectedThreadAction] == 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}"))
                 {
                     event.preventDefault();
                 }
             }
 
             function submitPosts(event) {
-                if (postActionMethods[state.selectedPostAction] === 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}")) {
+                if (postActionMethods[state.selectedPostAction] == 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}")) {
                     event.preventDefault();
                 }
             }

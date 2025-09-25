@@ -379,7 +379,7 @@ class ExportController extends Controller implements HasMiddleware
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 === 0) {
+                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 == 0) {
                         if (ob_get_level()) {
                             ob_flush();
                         }
@@ -472,7 +472,7 @@ class ExportController extends Controller implements HasMiddleware
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 === 0) {
+                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 == 0) {
                         if (ob_get_level()) {
                             ob_flush();
                         }
@@ -564,7 +564,7 @@ class ExportController extends Controller implements HasMiddleware
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 === 0) {
+                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 == 0) {
                         if (ob_get_level()) {
                             ob_flush();
                         }
@@ -657,7 +657,7 @@ class ExportController extends Controller implements HasMiddleware
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 === 0) {
+                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 == 0) {
                         if (ob_get_level()) {
                             ob_flush();
                         }
@@ -1511,7 +1511,7 @@ class ExportController extends Controller implements HasMiddleware
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 === 0) {
+                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 == 0) {
                         if (ob_get_level()) {
                             ob_flush();
                         }
@@ -1594,7 +1594,7 @@ class ExportController extends Controller implements HasMiddleware
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 === 0) {
+                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 == 0) {
                         if (ob_get_level()) {
                             ob_flush();
                         }
@@ -1678,7 +1678,7 @@ class ExportController extends Controller implements HasMiddleware
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 === 0) {
+                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 == 0) {
                         if (ob_get_level()) {
                             ob_flush();
                         }
@@ -1762,7 +1762,7 @@ class ExportController extends Controller implements HasMiddleware
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 === 0) {
+                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 == 0) {
                         if (ob_get_level()) {
                             ob_flush();
                         }
@@ -1845,7 +1845,7 @@ class ExportController extends Controller implements HasMiddleware
                     fputcsv($file, $rowData);
 
                     // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 === 0) {
+                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 == 0) {
                         if (ob_get_level()) {
                             ob_flush();
                         }
@@ -1939,7 +1939,7 @@ class ExportController extends Controller implements HasMiddleware
                 // Add coordinator positions to row data
                 foreach ($positionCodes as $position) {
                     $coordinator = $coordinators->first(function ($coord) use ($position) {
-                        return $coord->position === $position;
+                        return $coord->position == $position;
                     });
 
                     $rowData[$position] = $coordinator

@@ -67,7 +67,7 @@ class User extends Authenticatable
     public function authorNameWithPosition()
     {
         if ($this->user_type == 'coordinator') {
-            $regionText = ($this->coordinator->region && $this->coordinator->region->long_name !== 'None')
+            $regionText = ($this->coordinator->region && $this->coordinator->region->long_name != 'None')
                 ? ', '.$this->coordinator->region->long_name.' Region'
                 : ', '.$this->coordinator->conference->conference_description;
 

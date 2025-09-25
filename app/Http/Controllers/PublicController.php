@@ -317,7 +317,7 @@ class PublicController extends Controller
         } else {
             $sisteredValue = 0;
         }
-        $sisteredWords = $sisteredValue === 1 ? 'Yes' : 'No';
+        $sisteredWords = $sisteredValue == 1 ? 'Yes' : 'No';
 
         DB::beginTransaction();
         try {

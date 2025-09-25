@@ -47,19 +47,19 @@ class MailController extends Controller implements HasMiddleware
 
         $jobsQuery = QueueMonitor::getModel()->newQuery();
 
-        if ($filters['status'] !== null) {
+        if ($filters['status'] != null) {
             $jobsQuery->where('status', $filters['status']);
         }
 
-        if ($filters['queue'] !== 'all') {
+        if ($filters['queue'] != 'all') {
             $jobsQuery->where('queue', $filters['queue']);
         }
 
-        if ($filters['name'] !== null) {
+        if ($filters['name'] != null) {
             $jobsQuery->where('name', 'like', "%{$filters['name']}%");
         }
 
-        if ($filters['custom_data'] !== null) {
+        if ($filters['custom_data'] != null) {
             $jobsQuery->where('data', 'like', "%{$filters['custom_data']}%");
         }
 
@@ -164,7 +164,7 @@ class MailController extends Controller implements HasMiddleware
             ->where('started_at', '<=', Carbon::now()->subDays($timeFrame))
             ->first();
 
-        if ($aggregatedInfo === null || $aggregatedComparisonInfo === null) {
+        if ($aggregatedInfo == null || $aggregatedComparisonInfo == null) {
             return $metrics;
         }
 

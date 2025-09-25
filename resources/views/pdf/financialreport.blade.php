@@ -228,7 +228,7 @@ if (isset($pdfData['childrens_room_expenses'])) {
     $blobData = base64_decode($pdfData['childrens_room_expenses']);
     $childrens_room = unserialize($blobData);
 
-    if ($childrens_room === false) {
+    if ($childrens_room == false) {
         echo "Error: Failed to unserialize data.";
     } else {
         foreach ($childrens_room as $row) {
@@ -292,7 +292,7 @@ if (isset($pdfData['service_project_array'])) {
     $blobData = base64_decode($pdfData['service_project_array']);
     $service_projects = unserialize($blobData);
 
-    if ($service_projects === false) {
+    if ($service_projects == false) {
         echo "Error: Failed to unserialize data.";
     } else {
         foreach ($service_projects as $row) {
@@ -367,7 +367,7 @@ if (isset($pdfData['party_expense_array'])) {
     $blobData = base64_decode($pdfData['party_expense_array']);
     $party_expenses = unserialize($blobData);
 
-    if ($party_expenses === false) {
+    if ($party_expenses == false) {
         echo "Error: Failed to unserialize data.";
     } else {
         foreach ($party_expenses as $row) {
@@ -442,7 +442,7 @@ if (isset($pdfData['office_other_expenses'])) {
     $blobData = base64_decode($pdfData['office_other_expenses']);
     $other_office_expenses = unserialize($blobData);
 
-    if ($other_office_expenses === false) {
+    if ($other_office_expenses == false) {
         echo "Error: Failed to unserialize data.";
     } else {
         foreach ($other_office_expenses as $row) {
@@ -517,7 +517,7 @@ if (isset($pdfData['international_event_array'])) {
     $blobData = base64_decode($pdfData['international_event_array']);
     $international_event_array = unserialize($blobData);
 
-    if ($international_event_array === false) {
+    if ($international_event_array == false) {
         echo "Error: Failed to unserialize data.";
     } else {
         foreach ($international_event_array as $row) {
@@ -582,7 +582,7 @@ if (isset($pdfData['international_event_array'])) {
                 $blobData = base64_decode($pdfData['monetary_donations_to_chapter']);
                 $monetary_dontations_to_chapter = unserialize($blobData);
 
-                if ($monetary_dontations_to_chapter === false) {
+                if ($monetary_dontations_to_chapter == false) {
                     echo "Error: Failed to unserialize data.";
                 } else {
                     foreach ($monetary_dontations_to_chapter as $row) {
@@ -637,7 +637,7 @@ if (isset($pdfData['international_event_array'])) {
                     $blobData = base64_decode($pdfData['non_monetary_donations_to_chapter']);
                     $non_monetary_dontations_to_chapter = unserialize($blobData);
 
-                    if ($non_monetary_dontations_to_chapter === false) {
+                    if ($non_monetary_dontations_to_chapter == false) {
                         echo "Error: Failed to unserialize data.";
                     } else {
                         foreach ($non_monetary_dontations_to_chapter as $row) {
@@ -678,7 +678,7 @@ if (isset($pdfData['other_income_and_expenses_array'])) {
     $blobData = base64_decode($pdfData['other_income_and_expenses_array']);
     $other_income_and_expenses_array = unserialize($blobData);
 
-    if ($other_income_and_expenses_array === false) {
+    if ($other_income_and_expenses_array == false) {
         echo "Error: Failed to unserialize data.";
     } else {
         foreach ($other_income_and_expenses_array as $row) {
@@ -853,7 +853,7 @@ if (isset($pdfData['other_income_and_expenses_array'])) {
                     $blobData = base64_decode($pdfData['bank_reconciliation_array']);
                     $bank_rec_array = unserialize($blobData);
 
-                    if ($bank_rec_array === false) {
+                    if ($bank_rec_array == false) {
                         echo "Error: Failed to unserialize data.";
                     } else {
                         foreach ($bank_rec_array as $row) {

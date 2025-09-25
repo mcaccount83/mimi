@@ -589,7 +589,7 @@ window.onload = function () {
                             </script>
                         @endif
 
-                        @if(View::shared('errors', false) !== false && $errors->any())
+                        @if(View::shared('errors', false) != false && $errors->any())
                             <script>
                                 document.addEventListener("DOMContentLoaded", function() {
                                     Swal.fire({

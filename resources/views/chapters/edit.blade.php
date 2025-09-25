@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function toggleStatusField() {
             const urlValue = websiteUrl.value.trim();
 
-            if (urlValue !== '' && urlValue !== 'http://') {
+            if (urlValue != '' && urlValue != 'http://') {
                 // Show status field if URL has a meaningful value
                 statusContainer.style.display = 'flex';
                 websiteStatus.setAttribute('required', 'required');
@@ -377,8 +377,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to toggle probation section visibility
     function toggleProbationSection() {
         const selectedStatusId = parseInt(statusSelect.value);
-        // if (selectedStatusId !== 1 && selectedStatusId !== '') {
-        if (selectedStatusId >= 5 && selectedStatusId !== '') {
+        // if (selectedStatusId != 1 && selectedStatusId != '') {
+        if (selectedStatusId >= 5 && selectedStatusId != '') {
             probationLabel.style.display = '';
             probationField.style.display = '';
             probationSelect.setAttribute('required', 'required');

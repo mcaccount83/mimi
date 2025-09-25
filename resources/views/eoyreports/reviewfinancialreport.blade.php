@@ -130,7 +130,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
     $blobData = base64_decode($chFinancialReport['party_expense_array']);
     $party_expenses = unserialize($blobData);
 
-    if ($party_expenses !== false) {
+    if ($party_expenses != false) {
         foreach ($party_expenses as $row) {
             // Clean the numbers by removing commas and casting to float
             $income = is_numeric(str_replace(',', '', $row['party_expense_income']))
@@ -573,11 +573,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <label>Excel roster attached and complete:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="1" {{ $chFinancialReport['check_roster_attached'] === 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="1" {{ $chFinancialReport['check_roster_attached'] == 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="0" {{ $chFinancialReport['check_roster_attached'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="0" {{ $chFinancialReport['check_roster_attached'] == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -586,11 +586,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <label>Number of members listed, dues received, and renewal paid "seem right":<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="1" {{ $chFinancialReport['check_renewal_seems_right'] === 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="1" {{ $chFinancialReport['check_renewal_seems_right'] == 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="0" {{ $chFinancialReport['check_renewal_seems_right'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="0" {{ $chFinancialReport['check_renewal_seems_right'] == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -688,11 +688,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         $totalChildrenSupplies = 0;
                                         $totalChildrenOther = 0;
 
-                                        if (isset($chFinancialReport['childrens_room_expenses']) && $chFinancialReport['childrens_room_expenses'] !== null) {
+                                        if (isset($chFinancialReport['childrens_room_expenses']) && $chFinancialReport['childrens_room_expenses'] != null) {
                                             $blobData = base64_decode($chFinancialReport['childrens_room_expenses']);
                                             $childrens_room = unserialize($blobData);
 
-                                            if ($childrens_room === false) {
+                                            if ($childrens_room == false) {
                                                 echo "Error: Failed to unserialize data.";
                                             } else {
                                                 if (is_array($childrens_room) && count($childrens_room) > 0) {
@@ -813,7 +813,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     $blobData = base64_decode($chFinancialReport['service_project_array']);
                                     $service_projects = unserialize($blobData);
 
-                                    if ($service_projects === false) {
+                                    if ($service_projects == false) {
                                         echo "Error: Failed to unserialize data.";
                                     } else {
                                         foreach ($service_projects as $row) {
@@ -872,11 +872,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <label>Minimum of one service project completed:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="1" {{ $chFinancialReport['check_minimum_service_project'] === 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="1" {{ $chFinancialReport['check_minimum_service_project'] == 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="0" {{ $chFinancialReport['check_minimum_service_project'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="0" {{ $chFinancialReport['check_minimum_service_project'] == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -885,11 +885,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <label>Made a donation to the M2M Fund:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="1" {{ $chFinancialReport['check_m2m_donation'] === 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="1" {{ $chFinancialReport['check_m2m_donation'] == 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="0" {{ $chFinancialReport['check_m2m_donation'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="0" {{ $chFinancialReport['check_m2m_donation'] == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -953,7 +953,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 $blobData = base64_decode($chFinancialReport['party_expense_array']);
                                 $party_expenses = unserialize($blobData);
 
-                                if ($party_expenses === false) {
+                                if ($party_expenses == false) {
                                     echo "Error: Failed to unserialize data.";
                                 } else {
                                     foreach ($party_expenses as $row) {
@@ -1013,15 +1013,15 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         <label>Is the Chapter's Party Expense under 15%?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="2" {{ $chFinancialReport['check_party_percentage'] === 2 ? 'checked' : '' }} required>
+                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="2" {{ $chFinancialReport['check_party_percentage'] == 2 ? 'checked' : '' }} required>
                                                 <label class="form-check-label">They are under 15%</label>
                                             </div>
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="1" {{ $chFinancialReport['check_party_percentage'] === 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="1" {{ $chFinancialReport['check_party_percentage'] == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">They are between 15-20%</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="0" {{ $chFinancialReport['check_party_percentage'] === 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="0" {{ $chFinancialReport['check_party_percentage'] == 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">They are over 20%</label>
                                             </div>
                                         </div>
@@ -1080,11 +1080,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             $other_office_expenses = null;
                             $totalOfficeExpense = 0;
 
-                            if (isset($chFinancialReport['office_other_expenses']) && $chFinancialReport['office_other_expenses'] !== null) {
+                            if (isset($chFinancialReport['office_other_expenses']) && $chFinancialReport['office_other_expenses'] != null) {
                                 $blobData = base64_decode($chFinancialReport['office_other_expenses']);
                                 $other_office_expenses = unserialize($blobData);
 
-                                if ($other_office_expenses === false) {
+                                if ($other_office_expenses == false) {
                                     echo "Error: Failed to unserialize data.";
                                 } else {
                                     if (is_array($other_office_expenses) && count($other_office_expenses) > 0) {
@@ -1192,11 +1192,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 $totalEventIncome = 0;
                                 $totalEventExpense = 0;
 
-                                if (isset($chFinancialReport['international_event_array']) && $chFinancialReport['international_event_array'] !== null) {
+                                if (isset($chFinancialReport['international_event_array']) && $chFinancialReport['international_event_array'] != null) {
                                     $blobData = base64_decode($chFinancialReport['international_event_array']);
                                     $international_event_array = unserialize($blobData);
 
-                                    if ($international_event_array === false) {
+                                    if ($international_event_array == false) {
                                         echo "Error: Failed to unserialize data.";
                                     } else {
                                         if (is_array($international_event_array) && count($international_event_array) > 0) {
@@ -1252,11 +1252,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         <label>Did they attended an in person or virtual International Event?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $chFinancialReport['check_attended_training'] === 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $chFinancialReport['check_attended_training'] == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="checkAttendedTraining" value="0" {{ $chFinancialReport['check_attended_training'] === 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkAttendedTraining" value="0" {{ $chFinancialReport['check_attended_training'] == 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
@@ -1316,11 +1316,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             $monetary_donations_to_chapter = null;
                             $totalDonationAmount = 0;
 
-                            if (isset($chFinancialReport['monetary_donations_to_chapter']) && $chFinancialReport['monetary_donations_to_chapter'] !== null) {
+                            if (isset($chFinancialReport['monetary_donations_to_chapter']) && $chFinancialReport['monetary_donations_to_chapter'] != null) {
                                 $blobData = base64_decode($chFinancialReport['monetary_donations_to_chapter']);
                                 $monetary_donations_to_chapter = unserialize($blobData);
 
-                                if ($monetary_donations_to_chapter === false) {
+                                if ($monetary_donations_to_chapter == false) {
                                     echo "Error: Failed to unserialize data.";
                                 } else {
                                     if (is_array($monetary_donations_to_chapter) && count($monetary_donations_to_chapter) > 0) {
@@ -1376,11 +1376,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             <?php
                                 $non_monetary_donations_to_chapter = null;
 
-                                if (isset($chFinancialReport['non_monetary_donations_to_chapter']) && $chFinancialReport['non_monetary_donations_to_chapter'] !== null) {
+                                if (isset($chFinancialReport['non_monetary_donations_to_chapter']) && $chFinancialReport['non_monetary_donations_to_chapter'] != null) {
                                     $blobData = base64_decode($chFinancialReport['non_monetary_donations_to_chapter']);
                                     $non_monetary_donations_to_chapter = unserialize($blobData);
 
-                                    if ($non_monetary_donations_to_chapter === false) {
+                                    if ($non_monetary_donations_to_chapter == false) {
                                         echo "Error: Failed to unserialize data.";
                                     } else {
                                         if (is_array($non_monetary_donations_to_chapter) && count($non_monetary_donations_to_chapter) > 0) {
@@ -1476,7 +1476,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     $blobData = base64_decode($chFinancialReport['other_income_and_expenses_array']);
                                     $other_income_and_expenses_array = unserialize($blobData);
 
-                                    if ($other_income_and_expenses_array === false) {
+                                    if ($other_income_and_expenses_array == false) {
                                         echo "Error: Failed to unserialize data.";
                                     } else {
                                         if (is_array($other_income_and_expenses_array) && count($other_income_and_expenses_array) > 0) {
@@ -1666,11 +1666,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             <label>Is the Total Income/Revenue less than $50,000?<span class="field-required">*&nbsp;</span></label>
                             <div class="col-12 row">
                                 <div class="form-check" style="margin-right: 20px;">
-                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="1" {{ $chFinancialReport['check_total_income_less'] === 1 ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="1" {{ $chFinancialReport['check_total_income_less'] == 1 ? 'checked' : '' }}>
                                     <label class="form-check-label">Yes</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="0" {{ $chFinancialReport['check_total_income_less'] === 0 ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="0" {{ $chFinancialReport['check_total_income_less'] == 0 ? 'checked' : '' }}>
                                     <label class="form-check-label">No</label>
                                 </div>
                             </div>
@@ -1762,11 +1762,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 $totalPayments = 0;
                                 $totalDeposits = 0;
 
-                                if (isset($chFinancialReport['bank_reconciliation_array']) && $chFinancialReport['bank_reconciliation_array'] !== null) {
+                                if (isset($chFinancialReport['bank_reconciliation_array']) && $chFinancialReport['bank_reconciliation_array'] != null) {
                                     $blobData = base64_decode($chFinancialReport['bank_reconciliation_array']);
                                     $bank_rec_array = unserialize($blobData);
 
-                                    if ($bank_rec_array === false) {
+                                    if ($bank_rec_array == false) {
                                         echo "Error: Failed to unserialize data.";
                                     } else {
                                         if (is_array($bank_rec_array) && count($bank_rec_array) > 0) {
@@ -1874,11 +1874,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         <label>Does this year's Beginning Balance match last year's Ending Balance?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="1" {{ $chFinancialReport['check_beginning_balance'] === 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="1" {{ $chFinancialReport['check_beginning_balance'] == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="0" {{ $chFinancialReport['check_beginning_balance'] === 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="0" {{ $chFinancialReport['check_beginning_balance'] == 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
@@ -1887,11 +1887,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         <label>Current bank statement included and balance matches chapter entry:<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="1" {{ $chFinancialReport['check_bank_statement_included'] === 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="1" {{ $chFinancialReport['check_bank_statement_included'] == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="0" {{ $chFinancialReport['check_bank_statement_included'] === 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="0" {{ $chFinancialReport['check_bank_statement_included'] == 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
@@ -1900,11 +1900,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         <label>Treasury Balance Now matches Reconciled Bank Balance:<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-md-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="1" {{ $chFinancialReport['check_bank_statement_matches'] === 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="1" {{ $chFinancialReport['check_bank_statement_matches'] == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="0" {{ $chFinancialReport['check_bank_statement_matches'] === 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="0" {{ $chFinancialReport['check_bank_statement_matches'] == 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
@@ -2007,11 +2007,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     <label>Did the chapter file their 990N with the date range of <strong>7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?></strong>?<span class="field-required">*&nbsp;</span></label>
                                     <div class="col-12 row">
                                         <div class="form-check" style="margin-right: 20px;">
-                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $chFinancialReport['check_current_990N_included'] === 1 ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $chFinancialReport['check_current_990N_included'] == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0" {{ $chFinancialReport['check_current_990N_included'] === 0 ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0" {{ $chFinancialReport['check_current_990N_included'] == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -2169,11 +2169,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <label>Did they purchase or have leftover pins?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1" {{ $chFinancialReport['check_purchased_pins'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1" {{ $chFinancialReport['check_purchased_pins'] == 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="0" {{ $chFinancialReport['check_purchased_pins'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="0" {{ $chFinancialReport['check_purchased_pins'] == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -2182,11 +2182,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <label>Did they purchase MOMS Club merchandise?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="1" {{ $chFinancialReport['check_purchased_mc_merch'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="1" {{ $chFinancialReport['check_purchased_mc_merch'] == 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="0" {{ $chFinancialReport['check_purchased_mc_merch'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="0" {{ $chFinancialReport['check_purchased_mc_merch'] == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -2195,11 +2195,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <label>Did they offer MOMS Club merchandise or info on how to buy to members?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1" {{ $chFinancialReport['check_offered_merch'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1" {{ $chFinancialReport['check_offered_merch'] == 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="0" {{ $chFinancialReport['check_offered_merch'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="0" {{ $chFinancialReport['check_offered_merch'] == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -2209,11 +2209,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <label>Did they make the Manual/By-Laws available to members?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="1" {{ $chFinancialReport['check_bylaws_available'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="1" {{ $chFinancialReport['check_bylaws_available'] == 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="0" {{ $chFinancialReport['check_bylaws_available'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="0" {{ $chFinancialReport['check_bylaws_available'] == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -2222,11 +2222,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <label>Did they Sistered another chapter?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1" {{ $chFinancialReport['check_sistered_another_chapter'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1" {{ $chFinancialReport['check_sistered_another_chapter'] == 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="0" {{ $chFinancialReport['check_sistered_another_chapter'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="0" {{ $chFinancialReport['check_sistered_another_chapter'] == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>

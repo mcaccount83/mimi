@@ -3,7 +3,7 @@
 @if (! empty($greeting))
 # {{ $greeting }}
 @else
-@if ($level === 'error')
+@if ($level == 'error')
 # {{ __('Whoops!') }}
 @else
 # {{ __('Hello!') }}

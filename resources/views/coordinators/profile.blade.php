@@ -263,7 +263,7 @@ function checkDuplicateEmail(email, id) {
                 return false;
             }
 
-            if (newPassword !== confirmNewPassword) {
+            if (newPassword != confirmNewPassword) {
                 Swal.showValidationMessage('New passwords do not match');
                 return false;
             }
