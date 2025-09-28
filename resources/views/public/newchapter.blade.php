@@ -25,10 +25,10 @@
                                     <div class="col-md-12"><br><br></div>
                                     <h2 class="text-center">New Chapter Application</h2>
                                     </h2>
-                                    {{-- <p class="description text-center">
+                                    <p class="description text-center">
                                         All chapters are in PENDING status until reviewed by our Coordintaor Team. After review, you will receive an email communication from your Coordinator.<br>
-                                        Log in at at <a href="http://momsclub.org/mimi" target="_blank">http://momsclub.org/mimi</a> with the email address and password you registered with to check your application status and view contact information for your assinged Coordinator.<br>
-                                    </p> --}}
+                                        Log in at at <a href="http://momsclub.org/mimi" target="_blank">http://momsclub.org/mimi</a> with the email address and password you registered with to check your application status.<br>
+                                    </p>
 
                                 </div>
                             </div>
@@ -318,6 +318,12 @@
                         </div>
 
                         <div class="card-body text-center">
+                             <div class="col-md-12" ><center>
+                                Please note: your payment will not be processed until your chapter is approved.<br>
+                                After it is approved, your payment will be processed and we will send you your MOMS Club Chapter Manual.<br>
+                                There are no refunds after the payment has been processed.
+                            </center></div>
+                            <br>
                             <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after application submission with success or error message.<br>
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>

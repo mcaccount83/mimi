@@ -9,4 +9,10 @@ return [
         'folder_id' => env('GOOGLE_DRIVE_FOLDER_ID'),
     ],
 
+    'learndash' => [
+        'url' => env('LEARNDASH_API_URL'),
+        'user' => env('LEARNDASH_API_USER'),
+        'password' => env('LEARNDASH_API_PASSWORD'),
+    ],
+
 ];

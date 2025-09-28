@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Events\UserUpdated; // Import the event class
 
 class User extends Authenticatable
 {
@@ -16,12 +17,15 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'user_type', 'is_active',
-
+        'first_name', 'last_name', 'email', 'password', 'user_type', 'is_admin', 'is_active', 'created_at', 'updated_at'
     ];
 
     protected $hidden = [
         'password', 'remember_token',
+    ];
+
+     protected $dispatchesEvents = [
+        'updated' => UserUpdated::class,
     ];
 
     public function coordinator(): HasOne

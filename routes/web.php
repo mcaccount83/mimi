@@ -10,6 +10,7 @@ use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ChapterReportController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CoordinatorReportController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EOYReportController;
 use App\Http\Controllers\ExportController;
@@ -56,6 +57,15 @@ Route::post('/checkpassword', [UserController::class, 'checkCurrentPassword'])->
 Route::put('/updatepassword', [UserController::class, 'updatePassword'])->name('updatepassword');
 Route::get('/load-email-details/{chId}', [UserController::class, 'loadEmailDetails'])->name('load.email.details');
 Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinatorList'])->name('load.coordinator.list');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/my-courses', [CourseController::class, 'myCourses'])->name('my-courses');
+});
+// In routes/web.php
+Route::get('/course/{course_id}/redirect', [CourseController::class, 'redirectToCourse'])
+    ->name('course.redirect')
+    ->middleware('auth');
 
 // Error Log Routes...Public, No login required
 Route::get('admin/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
