@@ -1668,98 +1668,47 @@ class BoardController extends Controller implements HasMiddleware
         ]);
     }
 
-     public function viewELearning(Request $request, $chId): View
+
+    /**
+     * View eLearning Courses
+     */
+    public function viewELearning(Request $request, $chId): View
     {
-
         // $user = $this->userController->loadUserInformation($request);
-
-            $user = User::find($request->user()->id);
-
+        $user = User::find($request->user()->id);
         $userType = $user['userType'];
-        $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
-        $startMonthName = $baseQuery['startMonthName'];
-        $chPayments = $baseQuery['chPayments'];
-        $chFinancialReport = $baseQuery['chFinancialReport'];
-        $chDocuments = $baseQuery['chDocuments'];
-        $boardActive = $chDocuments->new_board_active;
-        $probationReason = $baseQuery['probationReason'];
 
-        $allProbation = $baseQuery['allProbation'];
-        $allWebLinks = $baseQuery['allWebLinks'];
-        $allStates = $baseQuery['allStates'];
-        $allCountries = $baseQuery['allCountries'];
+        $courses = $this->learndashService->getCoursesForUserType($user->user_type);
 
-        $PresDetails = $baseQuery['PresDetails'];
-        $AVPDetails = $baseQuery['AVPDetails'];
-        $MVPDetails = $baseQuery['MVPDetails'];
-        $TRSDetails = $baseQuery['TRSDetails'];
-        $SECDetails = $baseQuery['SECDetails'];
-
-        if ($userType == 'coordinator') {
-            $bdPositionId = '1';
-            $borDetails = $PresDetails;
-        } else {
-            $bdPositionId = $user['user_bdPositionId'];
-            $borDetails = $user['user_bdDetails'];
+        // Add auto-login URLs to each course
+        foreach ($courses as &$course) {
+            $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
         }
 
-        $now = Carbon::now();
-        $month = $now->month;
-        $year = $now->year;
-        $start_month = $chDetails->start_month_id;
-        $next_renewal_year = $chDetails->next_renewal_year;
-        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
-        // $due_date = Carbon::create($next_renewal_year, $start_month, 1)->endOfMonth();
+        // Group by category
+        $coursesByCategory = collect($courses)->groupBy(function($course) {
+            return $course['categories'][0]['slug'] ?? 'uncategorized';  // Use slug instead of name
+        });
 
-        $displayEOY = $baseQuery['displayEOY'];
-        $displayTESTING = $displayEOY['displayTESTING'];
-        $displayLIVE = $displayEOY['displayLIVE'];
+        // Define custom category names
+        $categoryDisplayNames = [
+            'coordinator-training' => 'Training by Position',
+            'coordinator-topic' => 'Training by Topic',
+            'chapter-training' => 'Training by Position',
+            'chapter-topic' => 'Training by Topic',
+        ];
 
-        $admin = Admin::orderByDesc('id')
-            ->limit(1)
-            ->first();
-        $display_testing = ($admin->display_testing == 1);
-        $display_live = ($admin->display_live == 1);
+        $data = [
+            'chDetails' => $chDetails,  'stateShortName' => $stateShortName, 'userType' => $userType, 'courses' => $courses,
+            'coursesByCategory' => $coursesByCategory, 'categoryDisplayNames' => $categoryDisplayNames,
+        ];
 
-
-    $courses = $this->learndashService->getCoursesForUserType($user->user_type);
-
-
-    // Add auto-login URLs to each course
-    foreach ($courses as &$course) {
-        $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
+        return view('boards.elearning')->with($data);
     }
-
-    // Group by category
-    $coursesByCategory = collect($courses)->groupBy(function($course) {
-        return $course['categories'][0]['slug'] ?? 'uncategorized';  // Use slug instead of name
-    });
-
-    // Define custom category names
-    $categoryDisplayNames = [
-        'coordinator-training' => 'Training by Position',
-        'coordinator-topic' => 'Training by Topic',
-        'chapter-training' => 'Training by Position',
-        'chapter-topic' => 'Training by Topic',
-    ];
-
-    $data = [
-        'chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
-            'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
-            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
-            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive,
-        'courses' => $courses,
-        'coursesByCategory' => $coursesByCategory,
-        'categoryDisplayNames' => $categoryDisplayNames,  // Add this
-    ];
-
-    return view('boards.elearning')->with($data);
-}
 
     public function redirectToCourse($courseId, Request $request)
     {

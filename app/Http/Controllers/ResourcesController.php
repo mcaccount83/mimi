@@ -346,20 +346,23 @@ class ResourcesController extends Controller implements HasMiddleware
         $file->save();
     }
 
+    /**
+     * View eLearning Courses
+     */
     public function showELearning(Request $request): View
     {
-        // $user = $this->userController->loadUserInformation($request);
         $user = User::find($request->user()->id);
 
-        $coordinatorCourses = $this->learndashService->getCoursesBySpecificTag('coordinator');
-        $boardCourses = $this->learndashService->getCoursesBySpecificTag('board');
+        // CHANGED: Use getCoursesForUserType() instead of getCoursesBySpecificTag()
+        $coordinatorCourses = $this->learndashService->getCoursesForUserType('coordinator');
+        $boardCourses = $this->learndashService->getCoursesForUserType('board');
 
         // Add auto-login URLs to each course
         foreach ($coordinatorCourses as &$coordinatorCourse) {
             $coordinatorCourse['auto_login_url'] = $this->learndashService->getAutoLoginUrl($coordinatorCourse, $user);
         }
 
-        foreach ($boardCourses as &$boardCourse) {  // <-- ADD & HERE
+        foreach ($boardCourses as &$boardCourse) {
             $boardCourse['auto_login_url'] = $this->learndashService->getAutoLoginUrl($boardCourse, $user);
         }
 
@@ -391,20 +394,19 @@ class ResourcesController extends Controller implements HasMiddleware
         return view('resources.elearning')->with($data);
     }
 
+
     public function redirectToCourse($courseId, Request $request)
     {
         $token = $request->query('token');
         $courseUrl = urldecode($request->query('course_url'));
 
-        // Don't call WordPress API from Laravel
-        // Instead, redirect the user's browser directly to WordPress
         $wpAutoLoginUrl = "https://momsclub.org/elearning/wp-json/auth/v1/auto-login?" . http_build_query([
             'token' => $token,
             'course_url' => $courseUrl
         ]);
 
-        // Direct browser redirect - this ensures cookies are set in the user's browser
         return redirect($wpAutoLoginUrl);
     }
+
 
 }
