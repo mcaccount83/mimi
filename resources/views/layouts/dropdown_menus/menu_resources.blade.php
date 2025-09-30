@@ -8,5 +8,6 @@
     @if ($regionalCoordinatorCondition)
         <a class="dropdown-item" href="{{ route('resources.bugs') }}">MIMI Bugs & Wishes</a>
     @endif
-    <a class="dropdown-item" href="https://momsclub.org/elearning/" target="_blank">eLearning</a>
+    <a class="dropdown-item" href="{{ route('resources.elearning') }}">eLearning Library</a>
+    {{-- <a class="dropdown-item" href="https://momsclub.org/elearning/" target="_blank">eLearning Library</a> --}}
 </div>

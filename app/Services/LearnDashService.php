@@ -19,43 +19,32 @@ class LearnDashService
         $this->password = config('services.learndash.password');
     }
 
-    public function setUser($user)
-    {
-        if ($user && $user->wp_username && $user->wp_app_password) {
-            $this->username = $user->wp_username;
-            $this->password = $user->wp_app_password;
-        }
-        return $this;
-    }
-
-
 public function getAutoLoginUrl($course, $laravelUser)
 {
-    // Create a secure token
     $payload = [
         'user_id' => $laravelUser->id,
         'email' => $laravelUser->email,
         'first_name' => $laravelUser->first_name,
         'last_name' => $laravelUser->last_name,
+        'user_type' => $laravelUser->user_type, // Add this line
         'expires' => time() + 300
     ];
 
-    $token = encrypt($payload);
-
-    // Debug what we're working with
-    Log::info('Building auto-login URL:', [
-        'course_id' => $course['id'],
-        'course_link' => $course['link']
-    ]);
+    $token = base64_encode(json_encode($payload));
 
     return route('course.redirect', [
         'course_id' => $course['id']
     ]) . '?token=' . urlencode($token) . '&course_url=' . urlencode($course['link']);
 }
 
+
 public function getCoursesForUserType($userType)
 {
-    $response = Http::get("https://momsclub.org/elearning/wp-json/public/v1/courses/{$userType}");
+    // Add a cache-busting parameter to force fresh data
+    $response = Http::withHeaders([
+        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        'Pragma' => 'no-cache',
+    ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/{$userType}?nocache=" . time());
 
     if ($response->successful()) {
         return $response->json();
@@ -64,23 +53,18 @@ public function getCoursesForUserType($userType)
     return [];
 }
 
+public function getCoursesBySpecificTag($tagSlug)
+{
+    $response = Http::withHeaders([
+        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        'Pragma' => 'no-cache',
+    ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/{$tagSlug}?nocache=" . time());
 
-
-
-    public function enrollUserInCourse($userId, $courseId)
-    {
-        $response = Http::withBasicAuth($this->username, $this->password)
-            ->post("{$this->baseUrl}users/{$userId}/courses/{$courseId}");
-
+    if ($response->successful()) {
         return $response->json();
     }
 
-    public function createUser(array $userData)
-    {
-            $response = Http::withBasicAuth($this->username, $this->password)
-            ->post("{$this->baseUrl}users", $userData);
-
-        return $response->json();
-    }
+    return [];
+}
 
 }

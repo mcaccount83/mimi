@@ -24,9 +24,9 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-     protected $dispatchesEvents = [
-        'updated' => UserUpdated::class,
-    ];
+    //  protected $dispatchesEvents = [
+    //     'updated' => UserUpdated::class,
+    // ];
 
     public function coordinator(): HasOne
     {

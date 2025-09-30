@@ -59,11 +59,11 @@ Route::get('/load-email-details/{chId}', [UserController::class, 'loadEmailDetai
 Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinatorList'])->name('load.coordinator.list');
 
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/my-courses', [CourseController::class, 'myCourses'])->name('my-courses');
-});
-// In routes/web.php
-Route::get('/course/{course_id}/redirect', [CourseController::class, 'redirectToCourse'])
+// Redirect for eLearning Courses --- Coordinators and Boards
+Route::get('/course/{course_id}/redirect', [CoordinatorController::class, 'redirectToCourse'])
+    ->name('course.redirect')
+    ->middleware('auth');
+Route::get('/course/{course_id}/redirect', [BoardController::class, 'redirectToCourse'])
     ->name('course.redirect')
     ->middleware('auth');
 
@@ -163,6 +163,7 @@ Route::post('/resources/updateresources/{id}', [ResourcesController::class, 'upd
 Route::get('/resources/toolkit', [ResourcesController::class, 'showToolkit'])->name('resources.toolkit');
 Route::post('/resources/addtoolkit', [ResourcesController::class, 'addToolkit'])->name('resources.addtoolkit');
 Route::post('/resources/updatetoolkit/{id}', [ResourcesController::class, 'updateToolkit'])->name('resources.updatetoolkit');
+Route::get('/resources/elearning', [ResourcesController::class, 'showELearning'])->name('resources.elearning');
 
 // Chapter Controller Routes...Coordinator Login Required
 Route::get('/chapter/pendingchapterlist', [ChapterController::class, 'showPendingChapters'])->name('chapters.chaplistpending');
@@ -295,6 +296,7 @@ Route::get('/board/probation/{id}', [BoardController::class, 'editProbationSubmi
 Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
 Route::get('/board/m2mdonation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
 Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
+Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
 
 // Financial Report Controller Routes...Board Login Required
 Route::get('/board/financialreport/{id}', [FinancialReportController::class, 'editFinancialReport'])->name('board.editfinancialreport');

@@ -226,7 +226,8 @@
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
                         @endif
-                        <button type="button" onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-primary"><i class="fas fa-graduation" ></i>&nbsp; eLearning Library</button>
+                        {{-- <button type="button" onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-primary"><i class="fas fa-graduation-cap mr-2" ></i>eLearning Library</button> --}}
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('board.viewelearning', ['id' => $chDetails->id]) }}'"><i class="fas fa-graduation-cap mr-2" ></i>eLearning Library</button>
                     </div>
                 </div>
             </div>

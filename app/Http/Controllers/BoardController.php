@@ -39,6 +39,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use App\Services\LearnDashService;
+
 
 class BoardController extends Controller implements HasMiddleware
 {
@@ -60,8 +62,12 @@ class BoardController extends Controller implements HasMiddleware
 
     protected $financialReportController;
 
+            protected $learndashService;
+
+
     public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController, PositionConditionsService $positionConditionsService,
-        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, FinancialReportController $financialReportController, EmailTableController $emailTableController, BaseChapterController $baseChapterController)
+        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, FinancialReportController $financialReportController, EmailTableController $emailTableController,
+        BaseChapterController $baseChapterController,  LearnDashService $learndashService,)
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
@@ -72,6 +78,7 @@ class BoardController extends Controller implements HasMiddleware
         $this->baseMailDataController = $baseMailDataController;
         $this->emailTableController = $emailTableController;
         $this->financialReportController = $financialReportController;
+        $this->learndashService = $learndashService;
     }
 
     public static function middleware(): array
@@ -1660,4 +1667,119 @@ class BoardController extends Controller implements HasMiddleware
             'Content-Length: '.filesize($file_path),
         ]);
     }
+
+     public function viewELearning(Request $request, $chId): View
+    {
+
+        // $user = $this->userController->loadUserInformation($request);
+
+            $user = User::find($request->user()->id);
+
+        $userType = $user['userType'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $startMonthName = $baseQuery['startMonthName'];
+        $chPayments = $baseQuery['chPayments'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $boardActive = $chDocuments->new_board_active;
+        $probationReason = $baseQuery['probationReason'];
+
+        $allProbation = $baseQuery['allProbation'];
+        $allWebLinks = $baseQuery['allWebLinks'];
+        $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
+
+        $PresDetails = $baseQuery['PresDetails'];
+        $AVPDetails = $baseQuery['AVPDetails'];
+        $MVPDetails = $baseQuery['MVPDetails'];
+        $TRSDetails = $baseQuery['TRSDetails'];
+        $SECDetails = $baseQuery['SECDetails'];
+
+        if ($userType == 'coordinator') {
+            $bdPositionId = '1';
+            $borDetails = $PresDetails;
+        } else {
+            $bdPositionId = $user['user_bdPositionId'];
+            $borDetails = $user['user_bdDetails'];
+        }
+
+        $now = Carbon::now();
+        $month = $now->month;
+        $year = $now->year;
+        $start_month = $chDetails->start_month_id;
+        $next_renewal_year = $chDetails->next_renewal_year;
+        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
+        // $due_date = Carbon::create($next_renewal_year, $start_month, 1)->endOfMonth();
+
+        $displayEOY = $baseQuery['displayEOY'];
+        $displayTESTING = $displayEOY['displayTESTING'];
+        $displayLIVE = $displayEOY['displayLIVE'];
+
+        $admin = Admin::orderByDesc('id')
+            ->limit(1)
+            ->first();
+        $display_testing = ($admin->display_testing == 1);
+        $display_live = ($admin->display_live == 1);
+
+
+    $courses = $this->learndashService->getCoursesForUserType($user->user_type);
+
+
+    // Add auto-login URLs to each course
+    foreach ($courses as &$course) {
+        $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
+    }
+
+    // Group by category
+    $coursesByCategory = collect($courses)->groupBy(function($course) {
+        return $course['categories'][0]['slug'] ?? 'uncategorized';  // Use slug instead of name
+    });
+
+    // Define custom category names
+    $categoryDisplayNames = [
+        'coordinator-training' => 'Training by Position',
+        'coordinator-topic' => 'Training by Topic',
+        'chapter-training' => 'Training by Position',
+        'chapter-topic' => 'Training by Topic',
+    ];
+
+    $data = [
+        'chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+            'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
+            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
+            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments,
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive,
+        'courses' => $courses,
+        'coursesByCategory' => $coursesByCategory,
+        'categoryDisplayNames' => $categoryDisplayNames,  // Add this
+    ];
+
+    return view('boards.elearning')->with($data);
+}
+
+    public function redirectToCourse($courseId, Request $request)
+    {
+        $token = $request->query('token');
+        $courseUrl = urldecode($request->query('course_url'));
+
+        // Don't call WordPress API from Laravel
+        // Instead, redirect the user's browser directly to WordPress
+        $wpAutoLoginUrl = "https://momsclub.org/elearning/wp-json/auth/v1/auto-login?" . http_build_query([
+            'token' => $token,
+            'course_url' => $courseUrl
+        ]);
+
+        Log::info('Redirecting browser to WordPress auto-login:', [
+            'url' => $wpAutoLoginUrl
+        ]);
+
+        // Direct browser redirect - this ensures cookies are set in the user's browser
+        return redirect($wpAutoLoginUrl);
+    }
+
+
 }

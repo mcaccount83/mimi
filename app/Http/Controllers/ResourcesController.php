@@ -13,6 +13,7 @@ use App\Models\Bugs;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\ToolkitCategory;
+use App\Models\User;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,6 +23,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use App\Services\LearnDashService;
+
 
 class ResourcesController extends Controller implements HasMiddleware
 {
@@ -29,10 +32,13 @@ class ResourcesController extends Controller implements HasMiddleware
 
     protected $positionConditionsService;
 
-    public function __construct(UserController $userController, PositionConditionsService $positionConditionsService)
+    protected $learndashService;
+
+    public function __construct(UserController $userController, PositionConditionsService $positionConditionsService, LearnDashService $learndashService)
     {
         $this->userController = $userController;
         $this->positionConditionsService = $positionConditionsService;
+        $this->learndashService = $learndashService;
 
     }
 
@@ -339,4 +345,66 @@ class ResourcesController extends Controller implements HasMiddleware
 
         $file->save();
     }
+
+    public function showELearning(Request $request): View
+    {
+        // $user = $this->userController->loadUserInformation($request);
+        $user = User::find($request->user()->id);
+
+        $coordinatorCourses = $this->learndashService->getCoursesBySpecificTag('coordinator');
+        $boardCourses = $this->learndashService->getCoursesBySpecificTag('board');
+
+        // Add auto-login URLs to each course
+        foreach ($coordinatorCourses as &$coordinatorCourse) {
+            $coordinatorCourse['auto_login_url'] = $this->learndashService->getAutoLoginUrl($coordinatorCourse, $user);
+        }
+
+        foreach ($boardCourses as &$boardCourse) {  // <-- ADD & HERE
+            $boardCourse['auto_login_url'] = $this->learndashService->getAutoLoginUrl($boardCourse, $user);
+        }
+
+        // Group by category
+        $coordinatorCoursesByCategory = collect($coordinatorCourses)->groupBy(function($coordinatorCourse) {
+            return $coordinatorCourse['categories'][0]['slug'] ?? 'uncategorized';
+        });
+
+        $boardCoursesByCategory = collect($boardCourses)->groupBy(function($course) {
+            return $course['categories'][0]['slug'] ?? 'uncategorized';
+        });
+
+        // Define custom category names
+        $categoryDisplayNames = [
+            'coordinator-training' => 'Training by Position',
+            'coordinator-topic' => 'Training by Topic',
+            'chapter-training' => 'Training by Position',
+            'chapter-topic' => 'Training by Topic',
+        ];
+
+        $data = [
+            'coordinatorCourses' => $coordinatorCourses,
+            'boardCourses' => $boardCourses,
+            'coordinatorCoursesByCategory' => $coordinatorCoursesByCategory,
+            'boardCoursesByCategory' => $boardCoursesByCategory,
+            'categoryDisplayNames' => $categoryDisplayNames,
+        ];
+
+        return view('resources.elearning')->with($data);
+    }
+
+    public function redirectToCourse($courseId, Request $request)
+    {
+        $token = $request->query('token');
+        $courseUrl = urldecode($request->query('course_url'));
+
+        // Don't call WordPress API from Laravel
+        // Instead, redirect the user's browser directly to WordPress
+        $wpAutoLoginUrl = "https://momsclub.org/elearning/wp-json/auth/v1/auto-login?" . http_build_query([
+            'token' => $token,
+            'course_url' => $courseUrl
+        ]);
+
+        // Direct browser redirect - this ensures cookies are set in the user's browser
+        return redirect($wpAutoLoginUrl);
+    }
+
 }
