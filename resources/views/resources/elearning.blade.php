@@ -47,13 +47,13 @@
                                 <div class="card-body">
 
                            @if(isset($coordinatorCoursesByCategory) && count($coordinatorCoursesByCategory) > 0)
-                                @foreach($coordinatorCoursesByCategory as $coordinatorCategorySlug => $coordinatorCategoryCourses)
+                                @foreach($coordinatorCoursesByCategory as $coordinatorCategorySlug => $categoryData)
                                     <div class="mb-4">
                                         <h4 class="text-lg font-bold mb-2">
-                                            {{ $categoryDisplayNames[$coordinatorCategorySlug] ?? $coordinatorCategorySlug }}
+                                            {{ $categoryData['name'] }}
                                         </h4>
                                         <ul class="space-y-2">
-                                            @foreach($coordinatorCategoryCourses as $coordinatorCourse)
+                                            @foreach($categoryData['courses'] as $coordinatorCourse)
                                                 <li>
                                                     <a href="{{ $coordinatorCourse['auto_login_url'] }}" target="_blank"
                                                     class="text-blue-600 hover:text-blue-800 text-lg">
@@ -72,40 +72,38 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-
+                    <div class="col-md-4">
                         <div class="grid-item">
                             <div class="card card-secondary">
                                 <div class="card-header">
                                     <h3 class="card-title">Board Courses</h3>
                                 </div>
                                 <div class="card-body">
-                            @if(isset($boardCoursesByCategory) && count($boardCoursesByCategory) > 0)
-                                @foreach($boardCoursesByCategory as $boardCategorySlug => $boardCategoryCourses)
-                                    <div class="mb-4">
-                                        <h4 class="text-lg font-bold mb-2">
-                                            {{ $categoryDisplayNames[$boardCategorySlug] ?? $boardCategorySlug }}
-                                        </h4>
-                                        <ul class="space-y-2">
-                                            @foreach($boardCategoryCourses as $boardCourse)
-                                                <li>
-                                                    <a href="{{ $boardCourse['auto_login_url'] }}" target="_blank"
-                                                    class="text-blue-600 hover:text-blue-800 text-lg">
-                                                        {{ $boardCourse['title']['rendered'] }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endforeach
-                            @else
-                                <p>No board courses found for your user type.</p>
-                            @endif
+                                    @if(isset($boardCoursesByCategory) && count($boardCoursesByCategory) > 0)
+                                        @foreach($boardCoursesByCategory as $boardCategorySlug => $categoryData)
+                                            <div class="mb-4">
+                                                <h4 class="text-lg font-bold mb-2">
+                                                    {{ $categoryData['name'] }}
+                                                </h4>
+                                                <ul class="space-y-2">
+                                                    @foreach($categoryData['courses'] as $boardCourse)
+                                                        <li>
+                                                            <a href="{{ $boardCourse['auto_login_url'] }}" target="_blank"
+                                                            class="text-blue-600 hover:text-blue-800 text-lg">
+                                                                {{ $boardCourse['title']['rendered'] }}
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <p>No board courses found for your user type.</p>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
-  </div>
-
-                </div>
             </div>
                 </div>
             </div>

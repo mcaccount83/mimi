@@ -88,10 +88,9 @@ public function getAutoLoginUrl($course, $laravelUser)
     ]) . '?token=' . urlencode($token) . '&course_url=' . urlencode($course['link']);
 }
 
-// Update this method to use groups instead of tags
+// Get courses for a specific user type - user_type=group -- board=board, coordinator=coordinator
 public function getCoursesForUserType($userType)
 {
-    // Changed from /courses/{userType} to /courses/group/{userType}
     $response = Http::withHeaders([
         'Cache-Control' => 'no-cache, no-store, must-revalidate',
         'Pragma' => 'no-cache',
@@ -106,18 +105,18 @@ public function getCoursesForUserType($userType)
 
 // Keep this if you still need tag-based filtering for other purposes
 // Otherwise you can remove it
-public function getCoursesBySpecificTag($tagSlug)
-{
-    $response = Http::withHeaders([
-        'Cache-Control' => 'no-cache, no-store, must-revalidate',
-        'Pragma' => 'no-cache',
-    ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/{$tagSlug}?nocache=" . time());
+// public function getCoursesBySpecificTag($tagSlug)
+// {
+//     $response = Http::withHeaders([
+//         'Cache-Control' => 'no-cache, no-store, must-revalidate',
+//         'Pragma' => 'no-cache',
+//     ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/{$tagSlug}?nocache=" . time());
 
-    if ($response->successful()) {
-        return $response->json();
-    }
+//     if ($response->successful()) {
+//         return $response->json();
+//     }
 
-    return [];
-}
+//     return [];
+// }
 
 }

@@ -33,31 +33,31 @@
     <div class="card card-primary card-outline">
 
 
-            <div class="col-md-12">
-                <div class="card-body">
-                    @if(isset($coursesByCategory) && count($coursesByCategory) > 0)
-                        @foreach($coursesByCategory as $categorySlug => $categoryCourses)
-                            <div class="mb-4">
-                                <h4 class="text-lg font-bold mb-2">
-                                    {{ $categoryDisplayNames[$categorySlug] ?? $categorySlug }}
-                                </h4>
-                                <ul class="space-y-2">
-                                    @foreach($categoryCourses as $course)
-                                        <li>
-                                            <a href="{{ $course['auto_login_url'] }}" target="_blank"
-                                               class="text-blue-600 hover:text-blue-800 text-lg">
-                                                {{ $course['title']['rendered'] }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
+      <div class="col-md-12">
+    <div class="card-body">
+        @if(isset($coursesByCategory) && count($coursesByCategory) > 0)
+            @foreach($coursesByCategory as $categorySlug => $categoryData)
+                <div class="mb-4">
+                    <h4 class="text-lg font-bold mb-2">
+                        {{ $categoryData['name'] }}
+                    </h4>
+                    <ul class="space-y-2">
+                        @foreach($categoryData['courses'] as $course)
+                            <li>
+                                <a href="{{ $course['auto_login_url'] }}" target="_blank"
+                                   class="text-blue-600 hover:text-blue-800 text-lg">
+                                    {{ $course['title']['rendered'] }}
+                                </a>
+                            </li>
                         @endforeach
-                    @else
-                        <p>No courses found for your user type.</p>
-                    @endif
+                    </ul>
                 </div>
-            </div>
+            @endforeach
+        @else
+            <p>No courses found for your user type.</p>
+        @endif
+    </div>
+</div>
         </div>
     </div>
 

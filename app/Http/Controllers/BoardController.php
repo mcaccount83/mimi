@@ -1672,7 +1672,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * View eLearning Courses
      */
-    public function viewELearning(Request $request, $chId): View
+   public function viewELearning(Request $request, $chId): View
     {
         // $user = $this->userController->loadUserInformation($request);
         $user = User::find($request->user()->id);
@@ -1689,22 +1689,22 @@ class BoardController extends Controller implements HasMiddleware
             $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
         }
 
-        // Group by category
+        // Group by category - store both name and slug
         $coursesByCategory = collect($courses)->groupBy(function($course) {
-            return $course['categories'][0]['slug'] ?? 'uncategorized';  // Use slug instead of name
+            return $course['categories'][0]['slug'] ?? 'uncategorized';
+        })->map(function($courses, $slug) {
+            return [
+                'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
+                'courses' => $courses
+            ];
         });
 
-        // Define custom category names
-        $categoryDisplayNames = [
-            'coordinator-training' => 'Training by Position',
-            'coordinator-topic' => 'Training by Topic',
-            'chapter-training' => 'Training by Position',
-            'chapter-topic' => 'Training by Topic',
-        ];
-
         $data = [
-            'chDetails' => $chDetails,  'stateShortName' => $stateShortName, 'userType' => $userType, 'courses' => $courses,
-            'coursesByCategory' => $coursesByCategory, 'categoryDisplayNames' => $categoryDisplayNames,
+            'chDetails' => $chDetails,
+            'stateShortName' => $stateShortName,
+            'userType' => $userType,
+            'courses' => $courses,
+            'coursesByCategory' => $coursesByCategory,
         ];
 
         return view('boards.elearning')->with($data);

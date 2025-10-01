@@ -353,7 +353,6 @@ class ResourcesController extends Controller implements HasMiddleware
     {
         $user = User::find($request->user()->id);
 
-        // CHANGED: Use getCoursesForUserType() instead of getCoursesBySpecificTag()
         $coordinatorCourses = $this->learndashService->getCoursesForUserType('coordinator');
         $boardCourses = $this->learndashService->getCoursesForUserType('board');
 
@@ -366,29 +365,30 @@ class ResourcesController extends Controller implements HasMiddleware
             $boardCourse['auto_login_url'] = $this->learndashService->getAutoLoginUrl($boardCourse, $user);
         }
 
-        // Group by category
+        // Group by category - store both name and slug
         $coordinatorCoursesByCategory = collect($coordinatorCourses)->groupBy(function($coordinatorCourse) {
             return $coordinatorCourse['categories'][0]['slug'] ?? 'uncategorized';
+        })->map(function($courses, $slug) {
+            return [
+                'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
+                'courses' => $courses
+            ];
         });
 
         $boardCoursesByCategory = collect($boardCourses)->groupBy(function($course) {
             return $course['categories'][0]['slug'] ?? 'uncategorized';
+        })->map(function($courses, $slug) {
+            return [
+                'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
+                'courses' => $courses
+            ];
         });
-
-        // Define custom category names
-        $categoryDisplayNames = [
-            'coordinator-training' => 'Training by Position',
-            'coordinator-topic' => 'Training by Topic',
-            'chapter-training' => 'Training by Position',
-            'chapter-topic' => 'Training by Topic',
-        ];
 
         $data = [
             'coordinatorCourses' => $coordinatorCourses,
             'boardCourses' => $boardCourses,
             'coordinatorCoursesByCategory' => $coordinatorCoursesByCategory,
             'boardCoursesByCategory' => $boardCoursesByCategory,
-            'categoryDisplayNames' => $categoryDisplayNames,
         ];
 
         return view('resources.elearning')->with($data);
