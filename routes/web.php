@@ -60,7 +60,7 @@ Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinat
 
 
 // Redirect for eLearning Courses --- Coordinators and Boards
-Route::get('/course/{course_id}/redirect', [CoordinatorController::class, 'redirectToCourse'])
+Route::get('/course/{course_id}/redirect', [ResourcesController::class, 'redirectToCourse'])
     ->name('course.redirect')
     ->middleware('auth');
 Route::get('/course/{course_id}/redirect', [BoardController::class, 'redirectToCourse'])

@@ -1715,20 +1715,34 @@ class BoardController extends Controller implements HasMiddleware
         $token = $request->query('token');
         $courseUrl = urldecode($request->query('course_url'));
 
-        // Don't call WordPress API from Laravel
-        // Instead, redirect the user's browser directly to WordPress
         $wpAutoLoginUrl = "https://momsclub.org/elearning/wp-json/auth/v1/auto-login?" . http_build_query([
             'token' => $token,
             'course_url' => $courseUrl
         ]);
 
-        Log::info('Redirecting browser to WordPress auto-login:', [
-            'url' => $wpAutoLoginUrl
-        ]);
-
-        // Direct browser redirect - this ensures cookies are set in the user's browser
         return redirect($wpAutoLoginUrl);
     }
+
+
+    // public function redirectToCourse($courseId, Request $request)
+    // {
+    //     $token = $request->query('token');
+    //     $courseUrl = urldecode($request->query('course_url'));
+
+    //     // Don't call WordPress API from Laravel
+    //     // Instead, redirect the user's browser directly to WordPress
+    //     $wpAutoLoginUrl = "https://momsclub.org/elearning/wp-json/auth/v1/auto-login?" . http_build_query([
+    //         'token' => $token,
+    //         'course_url' => $courseUrl
+    //     ]);
+
+    //     // Log::info('Redirecting browser to WordPress auto-login:', [
+    //     //     'url' => $wpAutoLoginUrl
+    //     // ]);
+
+    //     // Direct browser redirect - this ensures cookies are set in the user's browser
+    //     return redirect($wpAutoLoginUrl);
+    // }
 
 
 }
