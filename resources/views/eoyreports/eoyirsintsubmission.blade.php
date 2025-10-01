@@ -65,22 +65,22 @@
                         <td @if($list->documents?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documents?->irs_path != null) YES @else NO @endif
                         </td>
-                        <td @if($list->documents?->irs_verified == 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents?->irs_verified == 1) YES @else NO @endif
-                        </td>
-                        <td @if($list->documents?->irs_issues != 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents?->irs_issues == 1) YES @else NO @endif
-                        </td>
-                        <td @if($list->documents?->irs_wrongdate != 1 && $list->documents?->irs_notfound != 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents?->irs_wrongdate == 1) WRONG DATES @else  @endif
-                            @if($list->documents?->irs_wrongdate == 1 && $list->documents?->irs_notfound == 1) <br> @endif
-                            @if($list->documents?->irs_notfound == 1) NOT FOUND @else  @endif
-                        </td>
-                        <td @if($list->documents?->irs_notified != 1 && $list->documents?->irs_issues == 1) style="background-color:#dc3545; color: #ffffff;"
-                            @elseif($list->documents?->irs_notified == 1 && $list->documents?->irs_issues == 1) style="background-color:#28a745; color: #ffffff;"
-                            @else style="background-color: #transparent;" @endif>
-                            @if($list->documents?->irs_notified == 1) YES @elseif($list->documents?->irs_notified != 1 && $list->documents?->irs_issues == 1) NO @else  @endif
-                        </td>
+                       <td @if($list->documents?->irs_verified) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+    @if($list->documents?->irs_verified) YES @else NO @endif
+</td>
+<td @if(!$list->documents?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+    @if($list->documents?->irs_issues) YES @else NO @endif
+</td>
+<td @if(!$list->documents?->irs_wrongdate && !$list->documents?->irs_notfound && !$list->documents?->irs_filedwrong) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+    @if($list->documents?->irs_wrongdate) WRONG DATES @endif
+    @if($list->documents?->irs_notfound) NOT FOUND @endif
+    @if($list->documents?->irs_filedwrong) FILED W/WRONG DATES @endif
+</td>
+<td @if(!$list->documents?->irs_notified && $list->documents?->irs_issues) style="background-color:#dc3545; color: #ffffff;"
+    @elseif($list->documents?->irs_notified && $list->documents?->irs_issues) style="background-color:#28a745; color: #ffffff;"
+    @else style="background-color: #transparent;" @endif>
+    @if($list->documents?->irs_notified) YES @elseif(!$list->documents?->irs_notified && $list->documents?->irs_issues) NO @endif
+</td>
                         <td>{{ $list->documents?->irs_notes?? null }}</td>
                  </tr>
                   @endforeach

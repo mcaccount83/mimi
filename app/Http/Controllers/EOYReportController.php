@@ -1554,12 +1554,13 @@ class EOYReportController extends Controller implements HasMiddleware
             $chapter->last_updated_date = $lastupdatedDate;
             $chapter->save();
 
-            $documents->irs_verified = (int) $request->has('irs_verified');
-            $documents->irs_issues = (int) $request->has('irs_issues');
-            $documents->irs_wrongdate = (int) $request->has('irs_wrongdate');
-            $documents->irs_notfound = (int) $request->has('irs_notfound');
-            $documents->irs_filedwrong = (int) $request->has('irs_filedwrong');
-            $documents->irs_notified = (int) $request->has('irs_notified');
+            // Correct way to handle checkboxes
+            $documents->irs_verified = $request->filled('irs_verified') ? 1 : 0;
+            $documents->irs_issues = $request->filled('irs_issues') ? 1 : 0;
+            $documents->irs_wrongdate = $request->filled('irs_wrongdate') ? 1 : 0;
+            $documents->irs_notfound = $request->filled('irs_notfound') ? 1 : 0;
+            $documents->irs_filedwrong = $request->filled('irs_filedwrong') ? 1 : 0;
+            $documents->irs_notified = $request->filled('irs_notified') ? 1 : 0;
             $documents->irs_notes = $request->input('irs_notes');
             $documents->save();
 
@@ -1567,13 +1568,10 @@ class EOYReportController extends Controller implements HasMiddleware
 
             return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            DB::rollback();
+            Log::error($e);
 
             return redirect()->to('/eoy/irssubmission')->with('fail', 'Something went wrong, Please try again.');
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
         }
     }
 }

@@ -187,13 +187,13 @@
                             </div>
                         </div>
                           <label class="col-sm-2 col-form-label">FILED w/Wrong Dates</label>
-                        <div class="col-sm-1">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" name="irs_filedwrong" id="irs_filedwrong" class="custom-control-input"
-                                {{ $chDetails->documents->irs_notfound == 1 ? 'checked' : ''}}>
-                                <label class="custom-control-label" for="irs_filedwrong"></label>
+                            <div class="col-sm-1">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="irs_filedwrong" id="irs_filedwrong" class="custom-control-input"
+                                    {{ $chDetails->documents->irs_filedwrong == 1 ? 'checked' : ''}}>
+                                    <label class="custom-control-label" for="irs_filedwrong"></label>
+                                </div>
                             </div>
-                        </div>
 
                          @if($userAdmin == 1 )
                             <label class="col-sm-2 col-form-label">IRS Notified:</label>
