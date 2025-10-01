@@ -1324,6 +1324,7 @@ class PDFController extends Controller
         // Get the add and zap lists
         $wrongDateList = $this->generateIRSWrongDateList($coorId);
         $notFoundList = $this->generateIRSNotFoundList($coorId);
+        $filedWrongList = $this->generateIRSFiledWrongList($coorId);
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
@@ -1335,6 +1336,7 @@ class PDFController extends Controller
                 'followPages' => $followPages,
                 'wrongDateList' => $wrongDateList,
                 'notFoundList' => $notFoundList,
+                'filedWrongList' => $filedWrongList,
             ]
         );
 
@@ -1415,6 +1417,39 @@ class PDFController extends Controller
             ->get()
             ->sortBy('ein');
     }
+
+    // /**
+    //  * Generate IRS list of 990N Filing Corrections where chapter FILED with the wrong date
+    //  */
+    private function generateIRSFiledWrongList($coorId)
+    {
+        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+
+        return $baseQueryActive['query']
+            ->select([
+                'chapters.*',
+                'bd_active.first_name as pres_first_name',
+                'bd_active.last_name as pres_last_name',
+                'bd_active.street_address as pres_address',
+                'bd_active.city as pres_city',
+                'state.state_short_name as pres_state',
+                'bd_active.zip as pres_zip',
+            ])
+            ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
+            ->leftJoin('boards as bd_active', function ($join) {
+                $join->on('chapters.id', '=', 'bd_active.chapter_id')
+                    ->where('bd_active.board_position_id', '=', 1);
+            })
+            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->where('documents.irs_filedwrong', 1)
+            ->where(function ($query) {
+                $query->whereNull('documents.irs_notified')
+                    ->orWhere('documents.irs_notified', '!=', '1');
+            })
+            ->get()
+            ->sortBy('ein');
+    }
+
 
     // /**
     //  * EO Dept IRS Fax Coversheet

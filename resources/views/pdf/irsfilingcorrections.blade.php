@@ -122,6 +122,25 @@
             <p><b>Subordinate Corrections</b><br>
                 Taxpayer ID: 77-0125681<br>
                 Gen Number: 3706</p>
+            @if(count($pdfData['filedWrongList']) > 0)
+                <p>Below is a list of chapters who, while the correct EIN was used for their 990N, did NOT notify us that the fiscal year listed was incorrect at the time of that filing, per our instructions.  Now that we are aware of the issue, we’d like to request that you <b><u>please update their listing to show the correct fiscal year of all MOMS Club subordinates of July 1st-June 30th.</u></b></p>
+                <table class="update-table">
+                    <thead>
+                        <tr>
+                            <th>EIN#</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($pdfData['filedWrongList'] as $chapter)
+                            <tr>
+                                <td>{{ $chapter->ein ?? '' }}</td>
+                                <td>{{ $chapter->name ?? '' }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
             @if(count($pdfData['wrongDateList']) > 0)
                 <p>Below is a list of subordinates unable to file their 990N electronic postcards due to an incorrect fiscal year listed. <b><u>All MOMS Club chapters have the same fiscal year of July 1st-June 30th.</u></b> Please update the fiscal year on these subordinates so that they can complete their required filings.</p>
                 <table class="update-table">
