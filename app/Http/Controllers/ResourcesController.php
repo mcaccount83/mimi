@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\AddBugsAdminRequest;
 use App\Http\Requests\AddResourcesAdminRequest;
 use App\Http\Requests\AddToolkitAdminRequest;
@@ -18,6 +17,7 @@ use App\Models\User;
 use App\Services\LearnDashService;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
