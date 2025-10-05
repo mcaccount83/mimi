@@ -404,6 +404,6 @@ class ResourcesController extends Controller implements HasMiddleware
             'course_url' => $courseUrl,
         ]);
 
-        return redirect($wpAutoLoginUrl);
+        return redirect()->to($wpAutoLoginUrl);
     }
 }
