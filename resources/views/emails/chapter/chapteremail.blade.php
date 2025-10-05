@@ -2,7 +2,7 @@
 
 <p><b>MOMS Club of {{ $mailData['chapterName'] }}:</b></p>
 
-@php
+{{-- @php
     $message = $mailData['message'];
 
     // Convert HTML formatting to text equivalents
@@ -39,9 +39,16 @@
 
     // Fix multiple line breaks
     $message = preg_replace('/\n{3,}/', "\n\n", $message);
+@endphp --}}
+
+@php
+    $message = $mailData['message'];
+    $message = html_entity_decode($message, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $message = trim($message);
 @endphp
 
-{!! nl2br(e($message)) !!}
+{{-- {!! nl2br(e($message)) !!} --}}
+{!! $message !!}
 
 <br>
 <p><strong>MCL</strong>,<br>

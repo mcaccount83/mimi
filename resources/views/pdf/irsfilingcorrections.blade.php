@@ -161,7 +161,7 @@
                 </table>
             @endif
             @if(count($pdfData['notFoundList']) > 0)
-            <p>Below is a list of subordinates unable to file their 990N electronic postcards due to a "Not Found" status in the IRS system. <u><b>These chapters are good standing and should be added to our list of subordinates.  All chapters have the same fiscal year of July 1st-June 30th.</u></b></p>
+            <p>Below is a list of subordinates unable to file their 990N electronic postcards due to a "Not Found" status in the IRS system. <u><b>These chapters are in good standing and should be added to our list of subordinates.  All chapters have the same fiscal year of July 1st-June 30th.</u></b></p>
             <table class="add-table">
                 <thead>
                     <tr>

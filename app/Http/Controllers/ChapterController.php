@@ -102,12 +102,18 @@ class ChapterController extends Controller implements HasMiddleware
         $regId = $user['user_regId'];
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
 
         $baseQuery = $this->baseChapterController->getPendingBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
 
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'userName' => $userName, 'userPosition' => $userPosition,
+            'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+        ];
 
         return view('chapters.chaplistpending')->with($data);
     }

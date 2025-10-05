@@ -1,4 +1,14 @@
 @component('mail::message')
+@php
+    $boundaryDetails = $mailData['boundaryDetails'];
+    $boundaryDetails = html_entity_decode($boundaryDetails, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $boundaryDetails = trim($boundaryDetails);
+
+    $nameDetails = $mailData['nameDetails'];
+    $nameDetails = html_entity_decode($nameDetails, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $nameDetails = trim($nameDetails);
+@endphp
+
 <h1><center>Congratulations on your New Chapter!</center></h1>
 <br>
 <p>I'm super excited that you have decided to start a chapter. My name is {{ $mailData['userName'] }}, I'm the {{ $mailData['userPosition'] }} for your area and will be helping you with the initial setup of your chapter. Once we have your EIN you'll officially be a MOMS Club chapter and will start working with your Primary Coordinator to get the chapter growing in your area!</p>
@@ -6,11 +16,13 @@
 <hr>
 <p><b>Step 1 -  Establish your Boundaries</b></p>
 <p>Choosing the right boundaries is important. Your area should cover what potential members consider to be “local”, allowing a large enough area to sustain a chapter and small enough that members are willing to drive to events in all areas of your boundaries.</p>
-<p>{{ $mailData['boundaryDetails'] }}</p>
+{{-- <p>{{ $mailData['boundaryDetails'] }}</p> --}}
+<p>{!! $boundaryDetails !!}</p>
 <hr>
 <p><b>Step 2 - Choose a Name</b></p>
 <p>You’ll want to choose a name that represents your area at a quick glance. Potential members should be able to tell the areas that you cover based on your chapter’s name.</p>
-<p>{{ $mailData['nameDetails'] }}</p>
+{{-- <p>{{ $mailData['nameDetails'] }}</p> --}}
+<p>{!! $nameDetails !!}</p>
 <hr>
 <p><b>Step 3 - File for an EIN</b></p>
 <p>Once you have your Chapter Name, you can apply for your EIN.  You’ll want to establish your EIN as quickly as possible so that you can be included in our master filings, can open a checking account and begin accepting donations as a 501(C)(3) nonprofit.</p>
