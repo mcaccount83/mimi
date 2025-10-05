@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\AddBugsAdminRequest;
 use App\Http\Requests\AddResourcesAdminRequest;
 use App\Http\Requests\AddToolkitAdminRequest;
@@ -393,7 +394,7 @@ class ResourcesController extends Controller implements HasMiddleware
         return view('resources.elearning')->with($data);
     }
 
-    public function redirectToCourse($courseId, Request $request)
+    public function redirectToCourse($courseId, Request $request): RedirectResponse
     {
         $token = $request->query('token');
         $courseUrl = urldecode($request->query('course_url'));

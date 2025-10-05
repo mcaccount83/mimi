@@ -1707,7 +1707,7 @@ class BoardController extends Controller implements HasMiddleware
         return view('boards.elearning')->with($data);
     }
 
-    public function redirectToCourse($courseId, Request $request)
+    public function redirectToCourse($courseId, Request $request): RedirectResponse
     {
         $token = $request->query('token');
         $courseUrl = urldecode($request->query('course_url'));
