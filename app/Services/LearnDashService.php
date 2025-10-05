@@ -43,8 +43,8 @@ class LearnDashService
         $response = Http::withHeaders([
             'Cache-Control' => 'no-cache, no-store, must-revalidate',
             'Pragma' => 'no-cache',
-        // ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/group/{$userType}?nocache=" . time());
         ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/group/{$userType}?nocache=".time());
+        // ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/group/{$userType}?nocache=" . time());
 
         if ($response->successful()) {
             return $response->json();
