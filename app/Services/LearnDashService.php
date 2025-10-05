@@ -15,7 +15,6 @@ class LearnDashService
     public function __construct()
     {
         $this->baseUrl = config('services.learndash.url');
-        // Set default credentials
         $this->username = config('services.learndash.user');
         $this->password = config('services.learndash.password');
     }
@@ -44,7 +43,8 @@ public function getCoursesForUserType($userType)
     $response = Http::withHeaders([
         'Cache-Control' => 'no-cache, no-store, must-revalidate',
         'Pragma' => 'no-cache',
-    ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/group/{$userType}?nocache=" . time());
+    // ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/group/{$userType}?nocache=" . time());
+    ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/group/{$userType}?nocache=".time());
 
     if ($response->successful()) {
         return $response->json();

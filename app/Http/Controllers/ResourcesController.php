@@ -26,7 +26,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
-
 class ResourcesController extends Controller implements HasMiddleware
 {
     protected $userController;
@@ -401,12 +400,14 @@ class ResourcesController extends Controller implements HasMiddleware
         $token = $request->query('token');
         $courseUrl = urldecode($request->query('course_url'));
 
-        $wpAutoLoginUrl = "https://momsclub.org/elearning/wp-json/auth/v1/auto-login?" . http_build_query([
+        // $wpAutoLoginUrl = "https://momsclub.org/elearning/wp-json/auth/v1/auto-login?" . http_build_query([
+        $wpAutoLoginUrl = 'https://momsclub.org/elearning/wp-json/auth/v1/auto-login?'.http_build_query([
             'token' => $token,
             'course_url' => $courseUrl,
         ]);
 
-        return redirect($wpAutoLoginUrl);
+        // return redirect($wpAutoLoginUrl);
+        return redirect()->to($wpAutoLoginUrl);
     }
 
 

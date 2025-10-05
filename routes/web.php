@@ -57,7 +57,6 @@ Route::put('/updatepassword', [UserController::class, 'updatePassword'])->name('
 Route::get('/load-email-details/{chId}', [UserController::class, 'loadEmailDetails'])->name('load.email.details');
 Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinatorList'])->name('load.coordinator.list');
 
-
 // Redirect for eLearning Courses --- Coordinators and Boards
 Route::get('/course/{course_id}/redirect', [ResourcesController::class, 'redirectToCourse'])
     ->name('course.redirect')
