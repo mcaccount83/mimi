@@ -10,7 +10,6 @@ use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ChapterReportController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CoordinatorReportController;
-use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EOYReportController;
 use App\Http\Controllers\ExportController;

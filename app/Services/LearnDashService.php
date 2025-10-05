@@ -3,12 +3,13 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class LearnDashService
 {
     protected $baseUrl;
+
     protected $username;
+
     protected $password;
 
     public function __construct()
@@ -27,13 +28,13 @@ public function getAutoLoginUrl($course, $laravelUser)
         'first_name' => $laravelUser->first_name,
         'last_name' => $laravelUser->last_name,
         'user_type' => $laravelUser->user_type, // 'coordinator' or 'board'
-        'expires' => time() + 300
+        'expires' => time() + 300,
     ];
 
     $token = base64_encode(json_encode($payload));
 
     return route('course.redirect', [
-        'course_id' => $course['id']
+        'course_id' => $course['id'],
     ]) . '?token=' . urlencode($token) . '&course_url=' . urlencode($course['link']);
 }
 
