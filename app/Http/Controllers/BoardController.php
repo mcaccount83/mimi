@@ -25,6 +25,7 @@ use App\Models\ProbationSubmission;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\User;
+use App\Services\LearnDashService;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -39,8 +40,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use App\Services\LearnDashService;
-
 
 class BoardController extends Controller implements HasMiddleware
 {
@@ -62,12 +61,11 @@ class BoardController extends Controller implements HasMiddleware
 
     protected $financialReportController;
 
-            protected $learndashService;
-
+    protected $learndashService;
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController, PositionConditionsService $positionConditionsService,
         ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, FinancialReportController $financialReportController, EmailTableController $emailTableController,
-        BaseChapterController $baseChapterController,  LearnDashService $learndashService,)
+        BaseChapterController $baseChapterController, LearnDashService $learndashService, )
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
@@ -1668,11 +1666,10 @@ class BoardController extends Controller implements HasMiddleware
         ]);
     }
 
-
     /**
      * View eLearning Courses
      */
-   public function viewELearning(Request $request, $chId): View
+    public function viewELearning(Request $request, $chId): View
     {
         // $user = $this->userController->loadUserInformation($request);
         $user = User::find($request->user()->id);
@@ -1690,12 +1687,12 @@ class BoardController extends Controller implements HasMiddleware
         }
 
         // Group by category - store both name and slug
-        $coursesByCategory = collect($courses)->groupBy(function($course) {
+        $coursesByCategory = collect($courses)->groupBy(function ($course) {
             return $course['categories'][0]['slug'] ?? 'uncategorized';
-        })->map(function($courses, $slug) {
+        })->map(function ($courses, $slug) {
             return [
                 'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
-                'courses' => $courses
+                'courses' => $courses,
             ];
         });
 
@@ -1715,12 +1712,11 @@ class BoardController extends Controller implements HasMiddleware
         $token = $request->query('token');
         $courseUrl = urldecode($request->query('course_url'));
 
-        $wpAutoLoginUrl = "https://momsclub.org/elearning/wp-json/auth/v1/auto-login?" . http_build_query([
+        $wpAutoLoginUrl = 'https://momsclub.org/elearning/wp-json/auth/v1/auto-login?'.http_build_query([
             'token' => $token,
-            'course_url' => $courseUrl
+            'course_url' => $courseUrl,
         ]);
 
         return redirect($wpAutoLoginUrl);
     }
-
 }

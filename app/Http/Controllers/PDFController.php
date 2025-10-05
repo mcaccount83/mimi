@@ -1450,7 +1450,6 @@ class PDFController extends Controller
             ->sortBy('ein');
     }
 
-
     // /**
     //  * EO Dept IRS Fax Coversheet
     //  */

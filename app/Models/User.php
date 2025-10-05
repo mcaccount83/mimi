@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Events\UserUpdated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use App\Events\UserUpdated; // Import the event class
+use Illuminate\Notifications\Notifiable; // Import the event class
 
 class User extends Authenticatable
 {
@@ -17,7 +17,7 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'user_type', 'is_admin', 'is_active', 'created_at', 'updated_at'
+        'first_name', 'last_name', 'email', 'password', 'user_type', 'is_admin', 'is_active', 'created_at', 'updated_at',
     ];
 
     protected $hidden = [

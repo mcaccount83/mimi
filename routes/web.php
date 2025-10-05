@@ -10,7 +10,6 @@ use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ChapterReportController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CoordinatorReportController;
-use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EOYReportController;
 use App\Http\Controllers\ExportController;
@@ -57,7 +56,6 @@ Route::post('/checkpassword', [UserController::class, 'checkCurrentPassword'])->
 Route::put('/updatepassword', [UserController::class, 'updatePassword'])->name('updatepassword');
 Route::get('/load-email-details/{chId}', [UserController::class, 'loadEmailDetails'])->name('load.email.details');
 Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinatorList'])->name('load.coordinator.list');
-
 
 // Redirect for eLearning Courses --- Coordinators and Boards
 Route::get('/course/{course_id}/redirect', [ResourcesController::class, 'redirectToCourse'])

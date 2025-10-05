@@ -14,6 +14,7 @@ use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\ToolkitCategory;
 use App\Models\User;
+use App\Services\LearnDashService;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,8 +24,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
-use App\Services\LearnDashService;
-
 
 class ResourcesController extends Controller implements HasMiddleware
 {
@@ -366,21 +365,21 @@ class ResourcesController extends Controller implements HasMiddleware
         }
 
         // Group by category - store both name and slug
-        $coordinatorCoursesByCategory = collect($coordinatorCourses)->groupBy(function($coordinatorCourse) {
+        $coordinatorCoursesByCategory = collect($coordinatorCourses)->groupBy(function ($coordinatorCourse) {
             return $coordinatorCourse['categories'][0]['slug'] ?? 'uncategorized';
-        })->map(function($courses, $slug) {
+        })->map(function ($courses, $slug) {
             return [
                 'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
-                'courses' => $courses
+                'courses' => $courses,
             ];
         });
 
-        $boardCoursesByCategory = collect($boardCourses)->groupBy(function($course) {
+        $boardCoursesByCategory = collect($boardCourses)->groupBy(function ($course) {
             return $course['categories'][0]['slug'] ?? 'uncategorized';
-        })->map(function($courses, $slug) {
+        })->map(function ($courses, $slug) {
             return [
                 'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
-                'courses' => $courses
+                'courses' => $courses,
             ];
         });
 
@@ -394,19 +393,16 @@ class ResourcesController extends Controller implements HasMiddleware
         return view('resources.elearning')->with($data);
     }
 
-
     public function redirectToCourse($courseId, Request $request)
     {
         $token = $request->query('token');
         $courseUrl = urldecode($request->query('course_url'));
 
-        $wpAutoLoginUrl = "https://momsclub.org/elearning/wp-json/auth/v1/auto-login?" . http_build_query([
+        $wpAutoLoginUrl = 'https://momsclub.org/elearning/wp-json/auth/v1/auto-login?'.http_build_query([
             'token' => $token,
-            'course_url' => $courseUrl
+            'course_url' => $courseUrl,
         ]);
 
         return redirect($wpAutoLoginUrl);
     }
-
-
 }
