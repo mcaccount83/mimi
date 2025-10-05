@@ -394,7 +394,6 @@ class ResourcesController extends Controller implements HasMiddleware
         return view('resources.elearning')->with($data);
     }
 
-
     public function redirectToCourse($courseId, Request $request): RedirectResponse
     {
         $token = $request->query('token');
@@ -409,6 +408,4 @@ class ResourcesController extends Controller implements HasMiddleware
         // return redirect($wpAutoLoginUrl);
         return redirect()->to($wpAutoLoginUrl);
     }
-
-
 }
