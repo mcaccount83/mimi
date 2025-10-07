@@ -12,7 +12,7 @@
 <h1><center>Congratulations on your New Chapter!</center></h1>
 <br>
 <p>I'm super excited that you have decided to start a chapter. My name is {{ $mailData['userName'] }}, I'm the {{ $mailData['userPosition'] }} for your area and will be helping you with the initial setup of your chapter. Once we have your EIN you'll officially be a MOMS Club chapter and will start working with your Primary Coordinator to get the chapter growing in your area!</p>
-<p>Below are the steps that I'll be helping you work through. A Getting Started Guide (with the steps outlined below) as well as the EIN Application and Instructions are also attached for your reference.</p>
+<p>You will find a Getting Started Guide outlined in the steps below that we will work through together.  Also attached, is the EIN Application and Instructions for your reference.</p>
 <hr>
 <p><b>Step 1 -  Establish your Boundaries</b></p>
 <p>Choosing the right boundaries is important. Your area should cover what potential members consider to be “local”, allowing a large enough area to sustain a chapter and small enough that members are willing to drive to events in all areas of your boundaries.</p>

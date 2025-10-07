@@ -63,7 +63,7 @@ class EmailController extends Controller implements HasMiddleware
         $userEmail = $user['user_email'];
         $userConfId = $user['user_confId'];
 
-        $emailCCData = $this->userController->loadConferenceCoord($userId);
+        $emailCCData = $this->userController->loadConferenceCoordConf($userConfId);
 
         $resources = Resources::with('resourceCategory')->get();
         $applicationName = 'EIN Application Conference '.$userConfId;
@@ -82,6 +82,7 @@ class EmailController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $founderEmail = $chDetails->pendingPresident->email;
+        $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
 
         try {
             DB::beginTransaction();
@@ -98,7 +99,7 @@ class EmailController extends Controller implements HasMiddleware
             );
 
             Mail::to($founderEmail)
-                ->cc($userEmail)
+                ->cc($emailListCoord)
                 ->queue(new NewChapterSetup($mailData, $pdfPath, $pdfPath2));
 
             // Commit the transaction

@@ -2017,7 +2017,7 @@ class ChapterController extends Controller implements HasMiddleware
             // Return JSON response for AJAX
             return response()->json([
                 'success' => true,
-                'message' => 'Coordinator approved successfully.',
+                'message' => 'Chapter approved successfully.',
                 'redirect' => route('chapters.view', ['id' => $id]),
             ]);
 
