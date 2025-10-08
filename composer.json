@@ -25,7 +25,8 @@
         "riari/laravel-forum": "^7.0",
         "romanzipp/laravel-queue-monitor": "^5.0",
         "setasign/fpdf": "^1.8",
-        "setasign/fpdi": "^2.6"
+        "setasign/fpdi": "^2.6",
+        "spatie/laravel-sitemap": "^7.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",
