@@ -23,7 +23,7 @@
         "livewire/livewire": "^3.6",
         "rap2hpoutre/laravel-log-viewer": "^2.5",
         "riari/laravel-forum": "^7.0",
-        "romanzipp/laravel-queue-monitor": "^5.0",
+        "romanzipp/laravel-queue-monitor": "^5.4",
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.6",
         "spatie/laravel-sitemap": "^7.3"
