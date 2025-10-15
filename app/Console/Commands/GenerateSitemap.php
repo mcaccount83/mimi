@@ -9,6 +9,7 @@ use Spatie\Sitemap\Tags\Url;
 class GenerateSitemap extends Command
 {
     protected $signature = 'sitemap:generate';
+
     protected $description = 'Generate the sitemap';
 
     public function handle()
@@ -29,6 +30,6 @@ class GenerateSitemap extends Command
             ->writeToFile(public_path('sitemap.xml'));
 
         $this->info('Sitemap generated successfully!');
-        $this->info('Using APP_URL: ' . config('app.url'));
+        $this->info('Using APP_URL: '.config('app.url'));
     }
 }
