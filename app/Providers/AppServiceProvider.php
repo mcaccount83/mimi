@@ -20,6 +20,15 @@ class AppServiceProvider extends ServiceProvider
     public const HOME = '/home';
 
     /**
+     * The path to your application's "home" route.
+     *
+     * Typically, users are redirected here after authentication.
+     *
+     * @var string
+     */
+    public const HOME = '/home';
+
+    /**
      * Bootstrap any application services.
      */
     public function boot(): void
@@ -30,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
         $this->loadViewsFrom(resource_path('views/vendor/mail/html'), 'mail');
 
         $this->bootRoute();
+
+        $this->bootRoute();
     }
 
     /**
@@ -38,6 +49,13 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+    }
+
+    public function bootRoute(): void
+    {
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
     }
 
     public function bootRoute(): void
