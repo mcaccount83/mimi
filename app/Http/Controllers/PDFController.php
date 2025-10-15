@@ -1083,10 +1083,11 @@ class PDFController extends Controller
         $followPages = $totalPages - 1;
         // $dateInput = request()->query('date') ?? request()->input('date');
         $dateInput = $request->query('date') ?? $request->input('date');
-        $date = $dateInput ? Carbon::parse($dateInput) : Carbon::now();
-        $startFormatted = $date->format('m-d-Y');
+        $inputDate = $dateInput ? Carbon::parse($dateInput) : Carbon::now();
+        $startFormatted = $inputDate->format('m-d-Y');
 
         $todayDate = Carbon::now();
+        $date = $todayDate ? Carbon::parse($todayDate) : Carbon::now();
         $sartFormatted2 = $date->format('F Y');
         $todayFormatted = $todayDate->format('F Y');
         $dateFormatted = $todayDate->format('F j, Y');
@@ -1449,7 +1450,6 @@ class PDFController extends Controller
             ->get()
             ->sortBy('ein');
     }
-
 
     // /**
     //  * EO Dept IRS Fax Coversheet
