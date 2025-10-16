@@ -12,7 +12,7 @@ class GenerateSitemap extends Command
 
     protected $description = 'Generate the sitemap';
 
-    public function handle()
+    public function handle(): void
     {
         Sitemap::create()
             ->add(Url::create('/')
