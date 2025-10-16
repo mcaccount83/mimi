@@ -4,12 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Mail\Events\MessageSending;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider
 {
