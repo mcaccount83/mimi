@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BoardPosition;
 use App\Mail\NewCoordApproveGSuiteNotice;
 use App\Mail\NewCoordApproveRCNotice;
 use App\Mail\NewCoordinatordWelcome;
@@ -303,8 +304,8 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'layer_id' => $new_layer_id,
                     'first_name' => $input['cord_fname'],
                     'last_name' => $input['cord_lname'],
-                    'position_id' => 1,
-                    'display_position_id' => 1,
+                    'position_id' => BoardPosition::PRES,
+                    'display_position_id' => BoardPosition::PRES,
                     'email' => $input['cord_email'],
                     'sec_email' => $input['cord_sec_email'],
                     'report_id' => $reportsTo,

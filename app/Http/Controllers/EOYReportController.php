@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BoardPosition;
 use App\Mail\EOYReviewrAssigned;
 use App\Models\BoardsIncoming;
 use App\Models\Chapters;
@@ -419,6 +420,301 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Update Board Report (store)
      */
+    // public function updateEOYBoardReport(Request $request, $chapter_id): RedirectResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $lastUpdatedBy = $user['user_name'];
+    //     $lastupdatedDate = date('Y-m-d H:i:s');
+
+    //     $chapter = Chapters::find($chapter_id);
+    //     $chId = $chapter_id;
+
+    //     $boundaryStatus = $request->input('BoundaryStatus');
+    //     $issue_note = $request->input('BoundaryIssue');
+    //     // Boundary Issues Correct 0 | Not Correct 1
+    //     if ($boundaryStatus == 0) {
+    //         $issue_note = '';
+    //     }
+
+    //     // Handle web status - allow null values
+    //     $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+    //     // Only convert to 0 if the website is not null but status is empty
+    //     if (! is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+    //         $ch_webstatus = 0;
+    //     }
+
+    //     // Handle website URL
+    //     $website = $request->input('ch_website');
+    //     // Only add http:// if the website field is not null or empty
+    //     if (! is_null($website) && ! empty(trim($website))) {
+    //         if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+    //             $website = 'http://'.$website;
+    //         }
+    //     }
+
+    //     $documents = Documents::find($chapter_id);
+
+    //     DB::beginTransaction();
+    //     try {
+    //         $chapter->email = $request->input('ch_inqemailcontact');
+    //         $chapter->inquiries_contact = $request->input('ch_email') ?? null;
+    //         $chapter->boundary_issues = $request->input('BoundaryStatus');
+    //         $chapter->boundary_issue_notes = $issue_note;
+    //         $chapter->website_url = $website;
+    //         $chapter->website_status = $ch_webstatus;
+    //         $chapter->egroup = $request->input('ch_onlinediss');
+    //         $chapter->social1 = $request->input('ch_social1');
+    //         $chapter->social2 = $request->input('ch_social2');
+    //         $chapter->social3 = $request->input('ch_social3');
+    //         $chapter->last_updated_by = $lastUpdatedBy;
+    //         $chapter->last_updated_date = $lastupdatedDate;
+    //         $chapter->save();
+
+    //         $documents->new_board_submitted = 1;
+    //         $documents->save();
+
+    //         // President Info
+    //         if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
+    //             $PREDetails = BoardsIncoming::where('chapter_id', $chId)
+    //                 ->where('board_position_id', '1')
+    //                 ->get();
+    //             $presId = $request->input('presID');
+    //             if (count($PREDetails) != 0) {
+    //                 BoardsIncoming::where('id', $presId)
+    //                     ->update([   // Update board details
+    //                         'first_name' => $request->input('ch_pre_fname'),
+    //                         'last_name' => $request->input('ch_pre_lname'),
+    //                         'email' => $request->input('ch_pre_email'),
+    //                         'street_address' => $request->input('ch_pre_street'),
+    //                         'city' => $request->input('ch_pre_city'),
+    //                         'state_id' => $request->input('ch_pre_state'),
+    //                         'zip' => $request->input('ch_pre_zip'),
+    //                         'country_id' => $request->input('ch_pre_country') ?? '198',
+    //                         'phone' => $request->input('ch_pre_phone'),
+    //                         'last_updated_by' => $lastUpdatedBy,
+    //                         'last_updated_date' => $lastupdatedDate,
+    //                     ]);
+    //             } else {
+    //                 BoardsIncoming::create([  // Create board details if new
+    //                     'chapter_id' => $chId,
+    //                     'board_position_id' => '1',
+    //                     'first_name' => $request->input('ch_pre_fname'),
+    //                     'last_name' => $request->input('ch_pre_lname'),
+    //                     'email' => $request->input('ch_pre_email'),
+    //                     'street_address' => $request->input('ch_pre_street'),
+    //                     'city' => $request->input('ch_pre_city'),
+    //                     'state_id' => $request->input('ch_pre_state'),
+    //                     'zip' => $request->input('ch_pre_zip'),
+    //                     'country_id' => $request->input('ch_pre_country') ?? '198',
+    //                     'phone' => $request->input('ch_pre_phone'),
+    //                     'last_updated_by' => $lastUpdatedBy,
+    //                     'last_updated_date' => $lastupdatedDate,
+    //                 ]);
+    //             }
+    //         }
+
+    //         // AVP Info
+    //         $AVPDetails = BoardsIncoming::where('chapter_id', $chId)
+    //             ->where('board_position_id', '2')
+    //             ->get();
+
+    //         if (count($AVPDetails) > 0) {
+    //             if ($request->input('AVPVacant') == 'on') {
+    //                 BoardsIncoming::where('chapter_id', $chId)
+    //                     ->where('board_position_id', '2')
+    //                     ->delete();  // Delete board member if now Vacant
+    //             } else {
+    //                 $AVPId = $request->input('avpID');
+    //                 BoardsIncoming::where('id', $AVPId)
+    //                     ->update([   // Update board details if already exists
+    //                         'first_name' => $request->input('ch_avp_fname'),
+    //                         'last_name' => $request->input('ch_avp_lname'),
+    //                         'email' => $request->input('ch_avp_email'),
+    //                         'street_address' => $request->input('ch_avp_street'),
+    //                         'city' => $request->input('ch_avp_city'),
+    //                         'state_id' => $request->input('ch_avp_state'),
+    //                         'zip' => $request->input('ch_avp_zip'),
+    //                         'country_id' => $request->input('ch_avp_country') ?? '198',
+    //                         'phone' => $request->input('ch_avp_phone'),
+    //                         'last_updated_by' => $lastUpdatedBy,
+    //                         'last_updated_date' => $lastupdatedDate,
+    //                     ]);
+    //             }
+    //         } else {
+    //             if ($request->input('AVPVacant') != 'on') {
+    //                 BoardsIncoming::create([  // Create board details if new
+    //                     'chapter_id' => $chId,
+    //                     'board_position_id' => '2',
+    //                     'first_name' => $request->input('ch_avp_fname'),
+    //                     'last_name' => $request->input('ch_avp_lname'),
+    //                     'email' => $request->input('ch_avp_email'),
+    //                     'street_address' => $request->input('ch_avp_street'),
+    //                     'city' => $request->input('ch_avp_city'),
+    //                     'state_id' => $request->input('ch_avp_state'),
+    //                     'zip' => $request->input('ch_avp_zip'),
+    //                     'country_id' => $request->input('ch_avp_country') ?? '198',
+    //                     'phone' => $request->input('ch_avp_phone'),
+    //                     'last_updated_by' => $lastUpdatedBy,
+    //                     'last_updated_date' => $lastupdatedDate,
+    //                 ]);
+    //             }
+    //         }
+
+    //         // MVP Info
+    //         $MVPDetails = BoardsIncoming::where('chapter_id', $chId)
+    //             ->where('board_position_id', '3')
+    //             ->get();
+
+    //         if (count($MVPDetails) > 0) {
+    //             if ($request->input('MVPVacant') == 'on') {
+    //                 BoardsIncoming::where('chapter_id', $chId)
+    //                     ->where('board_position_id', '3')
+    //                     ->delete();  // Delete board member if now Vacant
+    //             } else {
+    //                 $MVPId = $request->input('mvpID');
+    //                 BoardsIncoming::where('id', $MVPId)
+    //                     ->update([   // Update board details if already exists
+    //                         'first_name' => $request->input('ch_mvp_fname'),
+    //                         'last_name' => $request->input('ch_mvp_lname'),
+    //                         'email' => $request->input('ch_mvp_email'),
+    //                         'street_address' => $request->input('ch_mvp_street'),
+    //                         'city' => $request->input('ch_mvp_city'),
+    //                         'state_id' => $request->input('ch_mvp_state'),
+    //                         'zip' => $request->input('ch_mvp_zip'),
+    //                         'country_id' => $request->input('ch_mvp_country') ?? '198',
+    //                         'phone' => $request->input('ch_mvp_phone'),
+    //                         'last_updated_by' => $lastUpdatedBy,
+    //                         'last_updated_date' => $lastupdatedDate,
+    //                     ]);
+    //             }
+    //         } else {
+    //             if ($request->input('MVPVacant') != 'on') {
+    //                 BoardsIncoming::create([  // Create board details if new
+    //                     'chapter_id' => $chId,
+    //                     'board_position_id' => '3',
+    //                     'first_name' => $request->input('ch_mvp_fname'),
+    //                     'last_name' => $request->input('ch_mvp_lname'),
+    //                     'email' => $request->input('ch_mvp_email'),
+    //                     'street_address' => $request->input('ch_mvp_street'),
+    //                     'city' => $request->input('ch_mvp_city'),
+    //                     'state_id' => $request->input('ch_mvp_state'),
+    //                     'zip' => $request->input('ch_mvp_zip'),
+    //                     'country_id' => $request->input('ch_mvp_country') ?? '198',
+    //                     'phone' => $request->input('ch_mvp_phone'),
+    //                     'last_updated_by' => $lastUpdatedBy,
+    //                     'last_updated_date' => $lastupdatedDate,
+    //                 ]);
+    //             }
+    //         }
+
+    //         // TRS Info
+    //         $TRSDetails = BoardsIncoming::where('chapter_id', $chId)
+    //             ->where('board_position_id', '4')
+    //             ->get();
+
+    //         if (count($TRSDetails) > 0) {
+    //             if ($request->input('TreasVacant') == 'on') {
+    //                 BoardsIncoming::where('chapter_id', $chId)
+    //                     ->where('board_position_id', '4')
+    //                     ->delete();  // Delete board member if now Vacant
+    //             } else {
+    //                 $TRSId = $request->input('trsID');
+    //                 BoardsIncoming::where('id', $TRSId)
+    //                     ->update([   // Update board details if already exists
+    //                         'first_name' => $request->input('ch_trs_fname'),
+    //                         'last_name' => $request->input('ch_trs_lname'),
+    //                         'email' => $request->input('ch_trs_email'),
+    //                         'street_address' => $request->input('ch_trs_street'),
+    //                         'city' => $request->input('ch_trs_city'),
+    //                         'state_id' => $request->input('ch_trs_state'),
+    //                         'zip' => $request->input('ch_trs_zip'),
+    //                         'country_id' => $request->input('ch_trs_country') ?? '198',
+    //                         'phone' => $request->input('ch_trs_phone'),
+    //                         'last_updated_by' => $lastUpdatedBy,
+    //                         'last_updated_date' => $lastupdatedDate,
+    //                     ]);
+    //             }
+    //         } else {
+    //             if ($request->input('TreasVacant') != 'on') {
+    //                 BoardsIncoming::create([  // Create board details if new
+    //                     'chapter_id' => $chId,
+    //                     'board_position_id' => '4',
+    //                     'first_name' => $request->input('ch_trs_fname'),
+    //                     'last_name' => $request->input('ch_trs_lname'),
+    //                     'email' => $request->input('ch_trs_email'),
+    //                     'street_address' => $request->input('ch_trs_street'),
+    //                     'city' => $request->input('ch_trs_city'),
+    //                     'state_id' => $request->input('ch_trs_state'),
+    //                     'zip' => $request->input('ch_trs_zip'),
+    //                     'country_id' => $request->input('ch_trs_country') ?? '198',
+    //                     'phone' => $request->input('ch_trs_phone'),
+    //                     'last_updated_by' => $lastUpdatedBy,
+    //                     'last_updated_date' => $lastupdatedDate,
+    //                 ]);
+    //             }
+    //         }
+
+    //         // SEC Info
+    //         $SECDetails = BoardsIncoming::where('chapter_id', $chId)
+    //             ->where('board_position_id', '5')
+    //             ->get();
+
+    //         if (count($SECDetails) > 0) {
+    //             if ($request->input('SecVacant') == 'on') {
+    //                 BoardsIncoming::where('chapter_id', $chId)
+    //                     ->where('board_position_id', '5')
+    //                     ->delete();  // Delete board member if now Vacant
+    //             } else {
+    //                 $SECId = $request->input('secID');
+    //                 BoardsIncoming::where('id', $SECId)
+    //                     ->update([   // Update board details if already exists
+    //                         'first_name' => $request->input('ch_sec_fname'),
+    //                         'last_name' => $request->input('ch_sec_lname'),
+    //                         'email' => $request->input('ch_sec_email'),
+    //                         'street_address' => $request->input('ch_sec_street'),
+    //                         'city' => $request->input('ch_sec_city'),
+    //                         'state_id' => $request->input('ch_sec_state'),
+    //                         'zip' => $request->input('ch_sec_zip'),
+    //                         'country_id' => $request->input('ch_sec_country') ?? '198',
+    //                         'phone' => $request->input('ch_sec_phone'),
+    //                         'last_updated_by' => $lastUpdatedBy,
+    //                         'last_updated_date' => $lastupdatedDate,
+    //                     ]);
+    //             }
+    //         } else {
+    //             if ($request->input('SecVacant') != 'on') {
+    //                 BoardsIncoming::create([  // Create board details if new
+    //                     'chapter_id' => $chId,
+    //                     'board_position_id' => '5',
+    //                     'first_name' => $request->input('ch_sec_fname'),
+    //                     'last_name' => $request->input('ch_sec_lname'),
+    //                     'email' => $request->input('ch_sec_email'),
+    //                     'street_address' => $request->input('ch_sec_street'),
+    //                     'city' => $request->input('ch_sec_city'),
+    //                     'state_id' => $request->input('ch_sec_state'),
+    //                     'zip' => $request->input('ch_sec_zip'),
+    //                     'country_id' => $request->input('ch_sec_country') ?? '198',
+    //                     'phone' => $request->input('ch_sec_phone'),
+    //                     'last_updated_by' => $lastUpdatedBy,
+    //                     'last_updated_date' => $lastupdatedDate,
+    //                 ]);
+    //             }
+    //         }
+
+    //         DB::commit();
+
+    //         return redirect()->back()->with('success', 'Board Info has been Saved');
+    //     } catch (\Exception $e) {
+    //         DB::rollback();  // Rollback Transaction
+    //         Log::error($e);  // Log the error
+
+    //         return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+    //     } finally {
+    //         // This ensures DB connections are released even if exceptions occur
+    //         DB::disconnect();
+    //     }
+    // }
+
     public function updateEOYBoardReport(Request $request, $chapter_id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
@@ -438,15 +734,15 @@ class EOYReportController extends Controller implements HasMiddleware
         // Handle web status - allow null values
         $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
         // Only convert to 0 if the website is not null but status is empty
-        if (! is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+        if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
             $ch_webstatus = 0;
         }
 
         // Handle website URL
         $website = $request->input('ch_website');
         // Only add http:// if the website field is not null or empty
-        if (! is_null($website) && ! empty(trim($website))) {
-            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+        if (!is_null($website) && !empty(trim($website))) {
+            if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
                 $website = 'http://'.$website;
             }
         }
@@ -472,244 +768,39 @@ class EOYReportController extends Controller implements HasMiddleware
             $documents->new_board_submitted = 1;
             $documents->save();
 
-            // President Info
+            // President Info - Handle separately since it's required
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
                 $PREDetails = BoardsIncoming::where('chapter_id', $chId)
-                    ->where('board_position_id', '1')
+                    ->where('board_position_id', BoardPosition::PRES)
                     ->get();
                 $presId = $request->input('presID');
+
                 if (count($PREDetails) != 0) {
                     BoardsIncoming::where('id', $presId)
-                        ->update([   // Update board details
-                            'first_name' => $request->input('ch_pre_fname'),
-                            'last_name' => $request->input('ch_pre_lname'),
-                            'email' => $request->input('ch_pre_email'),
-                            'street_address' => $request->input('ch_pre_street'),
-                            'city' => $request->input('ch_pre_city'),
-                            'state_id' => $request->input('ch_pre_state'),
-                            'zip' => $request->input('ch_pre_zip'),
-                            'country_id' => $request->input('ch_pre_country') ?? '198',
-                            'phone' => $request->input('ch_pre_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => $lastupdatedDate,
-                        ]);
+                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $lastUpdatedBy, $lastupdatedDate));
                 } else {
-                    BoardsIncoming::create([  // Create board details if new
-                        'chapter_id' => $chId,
-                        'board_position_id' => '1',
-                        'first_name' => $request->input('ch_pre_fname'),
-                        'last_name' => $request->input('ch_pre_lname'),
-                        'email' => $request->input('ch_pre_email'),
-                        'street_address' => $request->input('ch_pre_street'),
-                        'city' => $request->input('ch_pre_city'),
-                        'state_id' => $request->input('ch_pre_state'),
-                        'zip' => $request->input('ch_pre_zip'),
-                        'country_id' => $request->input('ch_pre_country') ?? '198',
-                        'phone' => $request->input('ch_pre_phone'),
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => $lastupdatedDate,
-                    ]);
+                    BoardsIncoming::create(array_merge(
+                        ['chapter_id' => $chId, 'board_position_id' => BoardPosition::PRES],
+                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $lastUpdatedBy, $lastupdatedDate)
+                    ));
                 }
             }
 
-            // AVP Info
-            $AVPDetails = BoardsIncoming::where('chapter_id', $chId)
-                ->where('board_position_id', '2')
-                ->get();
-
-            if (count($AVPDetails) > 0) {
-                if ($request->input('AVPVacant') == 'on') {
-                    BoardsIncoming::where('chapter_id', $chId)
-                        ->where('board_position_id', '2')
-                        ->delete();  // Delete board member if now Vacant
-                } else {
-                    $AVPId = $request->input('avpID');
-                    BoardsIncoming::where('id', $AVPId)
-                        ->update([   // Update board details if already exists
-                            'first_name' => $request->input('ch_avp_fname'),
-                            'last_name' => $request->input('ch_avp_lname'),
-                            'email' => $request->input('ch_avp_email'),
-                            'street_address' => $request->input('ch_avp_street'),
-                            'city' => $request->input('ch_avp_city'),
-                            'state_id' => $request->input('ch_avp_state'),
-                            'zip' => $request->input('ch_avp_zip'),
-                            'country_id' => $request->input('ch_avp_country') ?? '198',
-                            'phone' => $request->input('ch_avp_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => $lastupdatedDate,
-                        ]);
-                }
-            } else {
-                if ($request->input('AVPVacant') != 'on') {
-                    BoardsIncoming::create([  // Create board details if new
-                        'chapter_id' => $chId,
-                        'board_position_id' => '2',
-                        'first_name' => $request->input('ch_avp_fname'),
-                        'last_name' => $request->input('ch_avp_lname'),
-                        'email' => $request->input('ch_avp_email'),
-                        'street_address' => $request->input('ch_avp_street'),
-                        'city' => $request->input('ch_avp_city'),
-                        'state_id' => $request->input('ch_avp_state'),
-                        'zip' => $request->input('ch_avp_zip'),
-                        'country_id' => $request->input('ch_avp_country') ?? '198',
-                        'phone' => $request->input('ch_avp_phone'),
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => $lastupdatedDate,
-                    ]);
-                }
-            }
-
-            // MVP Info
-            $MVPDetails = BoardsIncoming::where('chapter_id', $chId)
-                ->where('board_position_id', '3')
-                ->get();
-
-            if (count($MVPDetails) > 0) {
-                if ($request->input('MVPVacant') == 'on') {
-                    BoardsIncoming::where('chapter_id', $chId)
-                        ->where('board_position_id', '3')
-                        ->delete();  // Delete board member if now Vacant
-                } else {
-                    $MVPId = $request->input('mvpID');
-                    BoardsIncoming::where('id', $MVPId)
-                        ->update([   // Update board details if already exists
-                            'first_name' => $request->input('ch_mvp_fname'),
-                            'last_name' => $request->input('ch_mvp_lname'),
-                            'email' => $request->input('ch_mvp_email'),
-                            'street_address' => $request->input('ch_mvp_street'),
-                            'city' => $request->input('ch_mvp_city'),
-                            'state_id' => $request->input('ch_mvp_state'),
-                            'zip' => $request->input('ch_mvp_zip'),
-                            'country_id' => $request->input('ch_mvp_country') ?? '198',
-                            'phone' => $request->input('ch_mvp_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => $lastupdatedDate,
-                        ]);
-                }
-            } else {
-                if ($request->input('MVPVacant') != 'on') {
-                    BoardsIncoming::create([  // Create board details if new
-                        'chapter_id' => $chId,
-                        'board_position_id' => '3',
-                        'first_name' => $request->input('ch_mvp_fname'),
-                        'last_name' => $request->input('ch_mvp_lname'),
-                        'email' => $request->input('ch_mvp_email'),
-                        'street_address' => $request->input('ch_mvp_street'),
-                        'city' => $request->input('ch_mvp_city'),
-                        'state_id' => $request->input('ch_mvp_state'),
-                        'zip' => $request->input('ch_mvp_zip'),
-                        'country_id' => $request->input('ch_mvp_country') ?? '198',
-                        'phone' => $request->input('ch_mvp_phone'),
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => $lastupdatedDate,
-                    ]);
-                }
-            }
-
-            // TRS Info
-            $TRSDetails = BoardsIncoming::where('chapter_id', $chId)
-                ->where('board_position_id', '4')
-                ->get();
-
-            if (count($TRSDetails) > 0) {
-                if ($request->input('TreasVacant') == 'on') {
-                    BoardsIncoming::where('chapter_id', $chId)
-                        ->where('board_position_id', '4')
-                        ->delete();  // Delete board member if now Vacant
-                } else {
-                    $TRSId = $request->input('trsID');
-                    BoardsIncoming::where('id', $TRSId)
-                        ->update([   // Update board details if already exists
-                            'first_name' => $request->input('ch_trs_fname'),
-                            'last_name' => $request->input('ch_trs_lname'),
-                            'email' => $request->input('ch_trs_email'),
-                            'street_address' => $request->input('ch_trs_street'),
-                            'city' => $request->input('ch_trs_city'),
-                            'state_id' => $request->input('ch_trs_state'),
-                            'zip' => $request->input('ch_trs_zip'),
-                            'country_id' => $request->input('ch_trs_country') ?? '198',
-                            'phone' => $request->input('ch_trs_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => $lastupdatedDate,
-                        ]);
-                }
-            } else {
-                if ($request->input('TreasVacant') != 'on') {
-                    BoardsIncoming::create([  // Create board details if new
-                        'chapter_id' => $chId,
-                        'board_position_id' => '4',
-                        'first_name' => $request->input('ch_trs_fname'),
-                        'last_name' => $request->input('ch_trs_lname'),
-                        'email' => $request->input('ch_trs_email'),
-                        'street_address' => $request->input('ch_trs_street'),
-                        'city' => $request->input('ch_trs_city'),
-                        'state_id' => $request->input('ch_trs_state'),
-                        'zip' => $request->input('ch_trs_zip'),
-                        'country_id' => $request->input('ch_trs_country') ?? '198',
-                        'phone' => $request->input('ch_trs_phone'),
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => $lastupdatedDate,
-                    ]);
-                }
-            }
-
-            // SEC Info
-            $SECDetails = BoardsIncoming::where('chapter_id', $chId)
-                ->where('board_position_id', '5')
-                ->get();
-
-            if (count($SECDetails) > 0) {
-                if ($request->input('SecVacant') == 'on') {
-                    BoardsIncoming::where('chapter_id', $chId)
-                        ->where('board_position_id', '5')
-                        ->delete();  // Delete board member if now Vacant
-                } else {
-                    $SECId = $request->input('secID');
-                    BoardsIncoming::where('id', $SECId)
-                        ->update([   // Update board details if already exists
-                            'first_name' => $request->input('ch_sec_fname'),
-                            'last_name' => $request->input('ch_sec_lname'),
-                            'email' => $request->input('ch_sec_email'),
-                            'street_address' => $request->input('ch_sec_street'),
-                            'city' => $request->input('ch_sec_city'),
-                            'state_id' => $request->input('ch_sec_state'),
-                            'zip' => $request->input('ch_sec_zip'),
-                            'country_id' => $request->input('ch_sec_country') ?? '198',
-                            'phone' => $request->input('ch_sec_phone'),
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => $lastupdatedDate,
-                        ]);
-                }
-            } else {
-                if ($request->input('SecVacant') != 'on') {
-                    BoardsIncoming::create([  // Create board details if new
-                        'chapter_id' => $chId,
-                        'board_position_id' => '5',
-                        'first_name' => $request->input('ch_sec_fname'),
-                        'last_name' => $request->input('ch_sec_lname'),
-                        'email' => $request->input('ch_sec_email'),
-                        'street_address' => $request->input('ch_sec_street'),
-                        'city' => $request->input('ch_sec_city'),
-                        'state_id' => $request->input('ch_sec_state'),
-                        'zip' => $request->input('ch_sec_zip'),
-                        'country_id' => $request->input('ch_sec_country') ?? '198',
-                        'phone' => $request->input('ch_sec_phone'),
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => $lastupdatedDate,
-                    ]);
-                }
-            }
+            // Handle other board positions
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $lastUpdatedBy, $lastupdatedDate);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $lastUpdatedBy, $lastupdatedDate);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $lastUpdatedBy, $lastupdatedDate);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $lastUpdatedBy, $lastupdatedDate);
 
             DB::commit();
 
             return redirect()->back()->with('success', 'Board Info has been Saved');
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            DB::rollback();
+            Log::error($e);
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
-            // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
     }

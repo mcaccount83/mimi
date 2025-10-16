@@ -386,8 +386,8 @@ class EmailTableController extends Controller
         </tr>';
         $tableHtml .= '<tr>
             <td style="'.$cellLeftStyle.'">Treasurer</td>
-            <td style="'.$cellStyle.'">'.$mailData['tresName'].'</td>
-            <td style="'.$cellStyle.'">'.$mailData['tresEmail'].'</td>
+            <td style="'.$cellStyle.'">'.$mailData['trsName'].'</td>
+            <td style="'.$cellStyle.'">'.$mailData['trsEmail'].'</td>
         </tr>';
         $tableHtml .= '<tr>
             <td style="'.$cellLeftStyle.'">Secretary</td>
@@ -478,17 +478,17 @@ class EmailTableController extends Controller
             <td style="'.$headerStyle.'">Previous</td>
             <td style="'.$headerStyle.'">Updated</td>
         </tr>';
-        $tresNameStyle = ($mailData['tresName'] != $mailData['tresNameUpd']) ? 'background-color: yellow;' : '';
-        $tableHtml .= '<tr style="'.$tresNameStyle.'">
+        $trsNameStyle = ($mailData['trsName'] != $mailData['trsNameUpd']) ? 'background-color: yellow;' : '';
+        $tableHtml .= '<tr style="'.$trsNameStyle.'">
             <td style="'.$cellLeftStyle.'">Name</td>
-            <td style="'.$cellStyle.'">'.$mailData['tresName'].'</td>
-            <td style="'.$cellStyle.'">'.$mailData['tresNameUpd'].'</td>
+            <td style="'.$cellStyle.'">'.$mailData['trsName'].'</td>
+            <td style="'.$cellStyle.'">'.$mailData['trsNameUpd'].'</td>
         </tr>';
-        $tresEmailStyle = ($mailData['tresemail'] != $mailData['tresEmailUpd']) ? 'background-color: yellow;' : '';
-        $tableHtml .= '<tr style="'.$tresEmailStyle.'">
+        $trsEmailStyle = ($mailData['trsEmail'] != $mailData['trsEmailUpd']) ? 'background-color: yellow;' : '';
+        $tableHtml .= '<tr style="'.$trsEmailStyle.'">
             <td style="'.$cellLeftStyle.'">Email</td>
-            <td style="'.$cellStyle.'">'.$mailData['tresEmail'].'</td>
-            <td style="'.$cellStyle.'">'.$mailData['tresEmailUpd'].'</td>
+            <td style="'.$cellStyle.'">'.$mailData['trsEmail'].'</td>
+            <td style="'.$cellStyle.'">'.$mailData['trsEmailUpd'].'</td>
         </tr>';
 
         $tableHtml .= '<tr>
@@ -500,14 +500,14 @@ class EmailTableController extends Controller
             <td style="'.$headerStyle.'">Previous</td>
             <td style="'.$headerStyle.'">Updated</td>
         </tr>';
-        $tresNameStyle = ($mailData['secName'] != $mailData['secNameUpd']) ? 'background-color: yellow;' : '';
-        $tableHtml .= '<tr style="'.$tresNameStyle.'">
+        $secNameStyle = ($mailData['secName'] != $mailData['secNameUpd']) ? 'background-color: yellow;' : '';
+        $tableHtml .= '<tr style="'.$secNameStyle.'">
             <td style="'.$cellLeftStyle.'">Name</td>
             <td style="'.$cellStyle.'">'.$mailData['secName'].'</td>
             <td style="'.$cellStyle.'">'.$mailData['secNameUpd'].'</td>
         </tr>';
-        $tresEmailStyle = ($mailData['secemail'] != $mailData['secEmailUpd']) ? 'background-color: yellow;' : '';
-        $tableHtml .= '<tr style="'.$tresEmailStyle.'">
+        $secEmailStyle = ($mailData['secEmail'] != $mailData['secEmailUpd']) ? 'background-color: yellow;' : '';
+        $tableHtml .= '<tr style="'.$secEmailStyle.'">
             <td style="'.$cellLeftStyle.'">Email</td>
             <td style="'.$cellStyle.'">'.$mailData['secEmail'].'</td>
             <td style="'.$cellStyle.'">'.$mailData['secEmailUpd'].'</td>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BoardPosition;
 use App\Mail\BorUpdateListNoitce;
 use App\Mail\BorUpdatePCNotice;
 use App\Mail\ChapDetailsUpdatePCNotice;
@@ -1115,31 +1116,31 @@ class ChapterController extends Controller implements HasMiddleware
         $positionConfig = [
             'president' => [
                 'relation' => 'president',
-                'position_id' => 1,
+                'position_id' => BoardPosition::PRES,
                 'prefix' => 'ch_pre_',
                 'vacant_field' => null, // President is never vacant
             ],
             'avp' => [
                 'relation' => 'avp',
-                'position_id' => 2,
+                'position_id' => BoardPosition::AVP,
                 'prefix' => 'ch_avp_',
                 'vacant_field' => 'AVPVacant',
             ],
             'mvp' => [
                 'relation' => 'mvp',
-                'position_id' => 3,
+                'position_id' => BoardPosition::MVP,
                 'prefix' => 'ch_mvp_',
                 'vacant_field' => 'MVPVacant',
             ],
             'treasurer' => [
                 'relation' => 'treasurer',
-                'position_id' => 4,
+                'position_id' => BoardPosition::TRS,
                 'prefix' => 'ch_trs_',
                 'vacant_field' => 'TreasVacant',
             ],
             'secretary' => [
                 'relation' => 'secretary',
-                'position_id' => 5,
+                'position_id' => BoardPosition::SEC,
                 'prefix' => 'ch_sec_',
                 'vacant_field' => 'SecVacant',
             ],

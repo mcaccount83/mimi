@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BoardPosition;
 use App\Models\ActiveStatus;
 use App\Models\Chapters;
 use App\Models\Coordinators;
@@ -42,22 +43,21 @@ class BaseBoardController extends Controller
             $stateShortName = $chDetails->country->short_name;
         }
 
-        // $stateShortName = $chDetails->state->state_short_name;
         $chConfId = $chDetails->conference_id;
         $chPcId = $chDetails->primary_coordinator_id;
         $probationReason = $chDetails->probation?->probation_reason;
         $startMonthName = $chDetails->startMonth->month_long_name;
 
-        $allActive = ActiveStatus::all();  // Full List for Dropdown Menu
-        $allProbation = Probation::all();  // Full List for Dropdown Menu
-        $allWebLinks = Website::all(); // Full List for Dropdown Menu
-        $allStates = State::all();  // Full List for Dropdown Menu
-        $allCountries = Country::all();  // Full List for Dropdown Menu
-        $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
+        $allActive = ActiveStatus::all();
+        $allProbation = Probation::all();
+        $allWebLinks = Website::all();
+        $allStates = State::all();
+        $allCountries = Country::all();
+        $allAwards = FinancialReportAwards::all();
 
         $chPayments = $chDetails->payments;
         $chDocuments = $chDetails->documents;
-        $reviewerEmail = $chDetails->reportReviewer?->email;  // Could be null -- no reviewer assigned
+        $reviewerEmail = $chDetails->reportReviewer?->email;
         $chFinancialReport = $chDetails->financialReport;
         $chFinancialReportFinal = $chDetails->financialReportFinal;
         $displayEOY = $this->positionConditionsService->getEOYDisplay();
@@ -69,24 +69,26 @@ class BaseBoardController extends Controller
             $boards = $chDetails->boards()->with(['state', 'country'])->get();
             $bdDetails = $boards->groupBy('board_position_id');
             $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
-            // Fetch board details or fallback to default
-            $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
-            $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
-            $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
-            $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
-            $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
+
+            // Fetch board details using BoardPosition constants
+            $PresDetails = $bdDetails->get(BoardPosition::PRES, collect([$defaultBoardMember]))->first();
+            $AVPDetails = $bdDetails->get(BoardPosition::AVP, collect([$defaultBoardMember]))->first();
+            $MVPDetails = $bdDetails->get(BoardPosition::MVP, collect([$defaultBoardMember]))->first();
+            $TRSDetails = $bdDetails->get(BoardPosition::TRS, collect([$defaultBoardMember]))->first();
+            $SECDetails = $bdDetails->get(BoardPosition::SEC, collect([$defaultBoardMember]))->first();
         }
 
         if ($chActiveId == '0') {
             $bdDisbanded = $chDetails->boardsDisbanded()->with(['state', 'country'])->get();
             $bdDisbandedDetails = $bdDisbanded->groupBy('board_position_id');
             $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
-            // Fetch board details or fallback to default
-            $PresDetails = $bdDisbandedDetails->get(1, collect([$defaultDisbandedBoardMember]))->first(); // President
-            $AVPDetails = $bdDisbandedDetails->get(2, collect([$defaultDisbandedBoardMember]))->first(); // AVP
-            $MVPDetails = $bdDisbandedDetails->get(3, collect([$defaultDisbandedBoardMember]))->first(); // MVP
-            $TRSDetails = $bdDisbandedDetails->get(4, collect([$defaultDisbandedBoardMember]))->first(); // Treasurer
-            $SECDetails = $bdDisbandedDetails->get(5, collect([$defaultDisbandedBoardMember]))->first(); // Secretary
+
+            // Fetch board details using BoardPosition constants
+            $PresDetails = $bdDisbandedDetails->get(BoardPosition::PRES, collect([$defaultDisbandedBoardMember]))->first();
+            $AVPDetails = $bdDisbandedDetails->get(BoardPosition::AVP, collect([$defaultDisbandedBoardMember]))->first();
+            $MVPDetails = $bdDisbandedDetails->get(BoardPosition::MVP, collect([$defaultDisbandedBoardMember]))->first();
+            $TRSDetails = $bdDisbandedDetails->get(BoardPosition::TRS, collect([$defaultDisbandedBoardMember]))->first();
+            $SECDetails = $bdDisbandedDetails->get(BoardPosition::SEC, collect([$defaultDisbandedBoardMember]))->first();
         }
 
         // Load Board and Coordinators for Sending Email

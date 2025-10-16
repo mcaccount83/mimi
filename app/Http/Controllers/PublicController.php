@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BoardPosition;
 use App\Mail\NewChapterThankYou;
 use App\Mail\NewCoordApplication;
 use App\Mail\NewCoordinatorThankYou;
@@ -883,8 +884,8 @@ class PublicController extends Controller
                 'layer_id' => $new_layer_id,
                 'first_name' => $input['cd_fname'],
                 'last_name' => $input['cd_lname'],
-                'position_id' => 1,
-                'display_position_id' => 1,
+                'position_id' => BoardPosition::PRES,
+                'display_position_id' => BoardPosition::PRES,
                 'email' => $new_cd_email,
                 'sec_email' => $input['cd_email'],
                 'report_id' => $reportsTo,

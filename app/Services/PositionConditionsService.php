@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\CoordinatorPosition;
 use App\Models\Admin;
 use App\Models\AdminEmail;
 use Illuminate\Support\Facades\Request;
@@ -32,28 +33,66 @@ class PositionConditionsService
         $secPositionId = array_map('intval', is_array($secPositionId) ? $secPositionId : [$secPositionId]);
 
         return [
-            'ITCondition' => ($positionId == 13 || in_array(13, $secPositionId)),
-            'coordinatorCondition' => ($positionId >= 1 && $positionId <= 8),
-            'founderCondition' => $positionId == 8,
-            'conferenceCoordinatorCondition' => ($positionId >= 7 && $positionId <= 8),
-            'assistConferenceCoordinatorCondition' => ($positionId >= 6 && $positionId <= 8),
-            'regionalCoordinatorCondition' => ($positionId >= 5 && $positionId <= 8),
-            'assistRegionalCoordinatorCondition' => ($positionId >= 4 && $positionId <= 8),
-            'supervisingCoordinatorCondition' => ($positionId >= 3 && $positionId <= 8),
-            'areaCoordinatorCondition' => ($positionId >= 2 && $positionId <= 8),
-            'bigSisterCondition' => ($positionId >= 1 && $positionId <= 8),
-            'eoyTestCondition' => ($positionId >= 6 && $positionId <= 8) || ($positionId == 29 || in_array(29, $secPositionId)),
-            'eoyReportCondition' => ($positionId >= 1 && $positionId <= 8) || ($positionId == 19 || in_array(19, $secPositionId)) || ($positionId == 29 || in_array(29, $secPositionId)),
-            'eoyReportConditionDISABLED' => ($positionId == 13 || in_array(13, $secPositionId)),
-            'inquiriesCondition' => ($positionId == 15 || in_array(15, $secPositionId) || $positionId == 18 || in_array(18, $secPositionId)),
-            'inquiriesInternationalCondition' => ($positionId == 18 || in_array(18, $secPositionId)),
-            'inquiriesConferenceCondition' => ($positionId == 15 || in_array(15, $secPositionId)),
-            'webReviewCondition' => ($positionId == 9 || in_array(9, $secPositionId)),
-            'einCondition' => ($positionId == 12 || in_array(12, $secPositionId)),
-            'm2mCondition' => ($positionId == 21 || in_array(21, $secPositionId) || $positionId == 20 || in_array(20, $secPositionId)),
-            'listAdminCondition' => ($positionId == 23 || in_array(23, $secPositionId)),
+            'founderCondition' => ($positionId == CoordinatorPosition::FOUNDER),
+            'conferenceCoordinatorCondition' => ($positionId >= CoordinatorPosition::CC && $positionId <= CoordinatorPosition::FOUNDER),
+            'assistConferenceCoordinatorCondition' => ($positionId >= CoordinatorPosition::ACC && $positionId <= CoordinatorPosition::FOUNDER),
+            'regionalCoordinatorCondition' => ($positionId >= CoordinatorPosition::RC && $positionId <= CoordinatorPosition::FOUNDER),
+            'assistRegionalCoordinatorCondition' => ($positionId >= CoordinatorPosition::ARC && $positionId <= CoordinatorPosition::FOUNDER),
+            'supervisingCoordinatorCondition' => ($positionId >= CoordinatorPosition::SC && $positionId <= CoordinatorPosition::FOUNDER),
+            'areaCoordinatorCondition' => ($positionId >= CoordinatorPosition::AC && $positionId <= CoordinatorPosition::FOUNDER),
+            'bigSisterCondition' => ($positionId >= CoordinatorPosition::BS && $positionId <= CoordinatorPosition::FOUNDER),
+            'coordinatorCondition' => ($positionId >= CoordinatorPosition::BS && $positionId <= CoordinatorPosition::FOUNDER),
+            'eoyTestCondition' => ($positionId >= CoordinatorPosition::ACC && $positionId <= CoordinatorPosition::FOUNDER) || $this->hasPosition(CoordinatorPosition::ART, $positionId, $secPositionId),
+            'eoyReportCondition' => ($positionId >= CoordinatorPosition::BS && $positionId <= CoordinatorPosition::FOUNDER) || $this->hasPosition(CoordinatorPosition::ART, $positionId, $secPositionId) || $this->hasPosition(CoordinatorPosition::ARR, $positionId, $secPositionId),
+            'eoyReportConditionDISABLED' => $this->hasPosition(CoordinatorPosition::IT, $positionId, $secPositionId),
+            'inquiriesCondition' => $this->hasPosition(CoordinatorPosition::IC, $positionId, $secPositionId) || $this->hasPosition(CoordinatorPosition::IIC, $positionId, $secPositionId),
+            'inquiriesInternationalCondition' => $this->hasPosition(CoordinatorPosition::IIC, $positionId, $secPositionId),
+            'inquiriesConferenceCondition' => $this->hasPosition(CoordinatorPosition::IC, $positionId, $secPositionId),
+            'webReviewCondition' => $this->hasPosition(CoordinatorPosition::WR, $positionId, $secPositionId),
+            'einCondition' => $this->hasPosition(CoordinatorPosition::EIN, $positionId, $secPositionId),
+            'm2mCondition' => $this->hasPosition(CoordinatorPosition::M2M, $positionId, $secPositionId) || $this->hasPosition(CoordinatorPosition::M2M2, $positionId, $secPositionId),
+            'listAdminCondition' => $this->hasPosition(CoordinatorPosition::LIST, $positionId, $secPositionId),
+            'ITCondition' => $this->hasPosition(CoordinatorPosition::IT, $positionId, $secPositionId),
         ];
     }
+
+    /**
+    * Check if user has a position (primary or secondary)
+    */
+    private function hasPosition(int $position, int $primaryPositionId, array $secondaryPositionIds): bool
+    {
+        return $primaryPositionId == $position || in_array($position, $secondaryPositionIds);
+    }
+
+    // public function getConditionsForUser($positionId, $secPositionId = [])
+    // {
+    //     // Handle null values gracefully
+    //     $positionId = (int) ($positionId ?? 0);
+    //     $secPositionId = array_map('intval', is_array($secPositionId) ? $secPositionId : [$secPositionId]);
+
+    //     return [
+    //         'ITCondition' => ($positionId == 13 || in_array(13, $secPositionId)),
+    //         'coordinatorCondition' => ($positionId >= 1 && $positionId <= 8),
+    //         'founderCondition' => $positionId == 8,
+    //         'conferenceCoordinatorCondition' => ($positionId >= 7 && $positionId <= 8),
+    //         'assistConferenceCoordinatorCondition' => ($positionId >= 6 && $positionId <= 8),
+    //         'regionalCoordinatorCondition' => ($positionId >= 5 && $positionId <= 8),
+    //         'assistRegionalCoordinatorCondition' => ($positionId >= 4 && $positionId <= 8),
+    //         'supervisingCoordinatorCondition' => ($positionId >= 3 && $positionId <= 8),
+    //         'areaCoordinatorCondition' => ($positionId >= 2 && $positionId <= 8),
+    //         'bigSisterCondition' => ($positionId >= 1 && $positionId <= 8),
+    //         'eoyTestCondition' => ($positionId >= 6 && $positionId <= 8) || ($positionId == 29 || in_array(29, $secPositionId)),
+    //         'eoyReportCondition' => ($positionId >= 1 && $positionId <= 8) || ($positionId == 19 || in_array(19, $secPositionId)) || ($positionId == 29 || in_array(29, $secPositionId)),
+    //         'eoyReportConditionDISABLED' => ($positionId == 13 || in_array(13, $secPositionId)),
+    //         'inquiriesCondition' => ($positionId == 15 || in_array(15, $secPositionId) || $positionId == 18 || in_array(18, $secPositionId)),
+    //         'inquiriesInternationalCondition' => ($positionId == 18 || in_array(18, $secPositionId)),
+    //         'inquiriesConferenceCondition' => ($positionId == 15 || in_array(15, $secPositionId)),
+    //         'webReviewCondition' => ($positionId == 9 || in_array(9, $secPositionId)),
+    //         'einCondition' => ($positionId == 12 || in_array(12, $secPositionId)),
+    //         'm2mCondition' => ($positionId == 21 || in_array(21, $secPositionId) || $positionId == 20 || in_array(20, $secPositionId)),
+    //         'listAdminCondition' => ($positionId == 23 || in_array(23, $secPositionId)),
+    //     ];
+    // }
 
     /**
      * Get user admin status

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BoardPosition;
 use App\Mail\DisbandChecklistCompleteCCNotice;
 use App\Mail\DisbandChecklistCompleteThankYou;
 use App\Mail\DisbandReportCCNotice;
@@ -639,6 +640,61 @@ class FinancialReportController extends Controller implements HasMiddleware
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
+    }
+
+    /**
+    * Update or create incoming board member
+    */
+    public function updateIncomingBoardMember($chapterId, $positionId, $positionPrefix, $vacantField, $idField, $request, $lastUpdatedBy, $lastupdatedDate)
+    {
+        $boardDetails = BoardsIncoming::where('chapter_id', $chapterId)
+            ->where('board_position_id', $positionId)
+            ->get();
+
+        $isVacant = $request->input($vacantField) == 'on';
+        $hasExisting = count($boardDetails) > 0;
+
+        if ($hasExisting) {
+            if ($isVacant) {
+                // Delete board member if now vacant
+                BoardsIncoming::where('chapter_id', $chapterId)
+                    ->where('board_position_id', $positionId)
+                    ->delete();
+            } else {
+                // Update existing board member
+                $memberId = $request->input($idField);
+                BoardsIncoming::where('id', $memberId)
+                    ->update($this->getBoardMemberData($request, $positionPrefix, $lastUpdatedBy, $lastupdatedDate));
+            }
+        } else {
+            if (!$isVacant) {
+                // Create new board member
+                BoardsIncoming::create(array_merge(
+                    ['chapter_id' => $chapterId, 'board_position_id' => $positionId],
+                    $this->getBoardMemberData($request, $positionPrefix, $lastUpdatedBy, $lastupdatedDate)
+                ));
+            }
+        }
+    }
+
+    /**
+    * Get board member data from request
+    */
+    public function getBoardMemberData($request, $prefix, $lastUpdatedBy, $lastupdatedDate)
+    {
+        return [
+            'first_name' => $request->input($prefix.'fname'),
+            'last_name' => $request->input($prefix.'lname'),
+            'email' => $request->input($prefix.'email'),
+            'street_address' => $request->input($prefix.'street'),
+            'city' => $request->input($prefix.'city'),
+            'state_id' => $request->input($prefix.'state'),
+            'zip' => $request->input($prefix.'zip'),
+            'country_id' => $request->input($prefix.'country') ?? '198',
+            'phone' => $request->input($prefix.'phone'),
+            'last_updated_by' => $lastUpdatedBy,
+            'last_updated_date' => $lastupdatedDate,
+        ];
     }
 
     // Unified method that handles both single and batch activations
