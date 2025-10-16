@@ -306,7 +306,7 @@
                     <br>
                 @endif
                 @if($regionalCoordinatorCondition)
-                    @if ($cdPositionid == 1 && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
+                @if ($cdPositionid == \App\Enums\CoordinatorPosition::BS && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
                         <button id="BigSister" type="button" class="btn bg-gradient-primary mb-3" onclick="showBigSisterEmailModal({{ $cdDetails->id }})"><i class="fas fa-envelope mr-2"></i>Send Big Sister Welcome Email</button>
                     @endif
 
@@ -389,7 +389,7 @@ function showPositionInformation() {
         title: '<strong>Position Information</strong>',
         html: `
             <h4>Display Position</h4>
-            <p>The Display Position will be used in areas that are publically visible. Examples: MIMI chpater screens, emails, pdf letters, forum signature, etc.</p>
+            <p>The Display Position will be used in areas that are publically visible. Examples: MIMI chapter screens, emails, pdf letters, forum signature, etc.</p>
             <br>
             <h4>MIMI Position</h4>
             <p>The MIMI Position is used for chapter hierarchy/level purposes and is required for anyone who oversees chapters. Even if this is not their role title, one of

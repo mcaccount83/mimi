@@ -55,7 +55,7 @@
                     </div>
                     <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">Secondary Email:</b>
-                        <input type="text" name="cord_sec_email" id="cord_sec_email" class="form-control" value="{{ $cdDetails->sec_email }}" placeholder="Seconary Email" required>
+                        <input type="text" name="cord_sec_email" id="cord_sec_email" class="form-control" value="{{ $cdDetails->sec_email }}" placeholder="Secondary Email" required>
                     </div>
                     <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">Phone:</b>

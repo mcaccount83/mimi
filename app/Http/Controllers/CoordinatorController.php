@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
+use App\Enums\CoordinatorPosition;
 use App\Mail\NewCoordApproveGSuiteNotice;
 use App\Mail\NewCoordApproveRCNotice;
 use App\Mail\NewCoordinatordWelcome;
@@ -840,7 +841,8 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         // $drDetails = $baseQuery['drDetails'];  // DirectReport Selection List
         $drDetails = Coordinators::where('conference_id', $cdConfId)  // DirectReport Dropdown List
-            ->whereBetween('position_id', [1, 6])
+            ->whereBetween('position_id', [CoordinatorPosition::BS, CoordinatorPosition::ACC])
+            // ->whereBetween('position_id', [1, 6])
             ->where('position_id', '<=', $cdPositionid)
             ->where('id', '!=', $cdId)
             ->where('active_status', 1)
@@ -850,7 +852,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             ->get();
 
         $drOptions = Coordinators::where('conference_id', $cdConfId)  // DirectReport Dropdown List
-            ->whereBetween('position_id', [1, 7])
+            ->whereBetween('position_id', [CoordinatorPosition::BS, CoordinatorPosition::CC])
+            // ->whereBetween('position_id', [1, 7])
             ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->orderBy('first_name')
@@ -870,7 +873,8 @@ class CoordinatorController extends Controller implements HasMiddleware
             ->get();
 
         $pcOptions = Coordinators::where('conference_id', $cdConfId)  // Primary Coordinator Dropdown List
-            ->whereBetween('position_id', [1, 7])
+            ->whereBetween('position_id', [CoordinatorPosition::BS, CoordinatorPosition::CC])
+            // ->whereBetween('position_id', [1, 7])
             ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->orderBy('first_name')

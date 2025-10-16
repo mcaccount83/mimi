@@ -52,15 +52,15 @@
                                     <div class="col-md-12"><br><br></div>
                                     <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
 
-                                    @if ($bdPositionId == 1)
+                                    @if ($bdPositionId == \App\Enums\BoardPosition::PRES)
                                         <h2 class="text-center">{{$PresDetails->first_name}} {{$PresDetails->last_name}}, {{$PresDetails->position?->position}}</h2>
-                                    @elseif ($bdPositionId == 2)
+                                    @elseif ($bdPositionId == \App\Enums\BoardPosition::AVP)
                                         <h2 class="text-center">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}, {{$AVPDetails->position?->position}}</h2>
-                                    @elseif ($bdPositionId == 3)
+                                    @elseif ($bdPositionId == \App\Enums\BoardPosition::MVP)
                                         <h2 class="text-center">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}, {{$MVPDetails->position?->position}}</h2>
-                                    @elseif ($bdPositionId == 4)
+                                    @elseif ($bdPositionId == \App\Enums\BoardPosition::TRS)
                                         <h2 class="text-center">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}, {{$TRSDetails->position?->position}}</h2>
-                                    @elseif ($bdPositionId == 5)
+                                    @elseif ($bdPositionId == \App\Enums\BoardPosition::SEC)
                                         <h2 class="text-center">{{$SECDetails->first_name}} {{$SECDetails->last_name}}, {{$SECDetails->position?->position}}</h2>
                                     @endif
 
@@ -74,16 +74,7 @@
                                             (($thisDate->month == 7 || $thisDate->month == 8)  && $chDetails->documents->new_board_active != '1'))
                                             <p><span style="color: red;">All Board Member Information is currently <strong>READ ONLY</strong>.<br>
                                                 In order to add new board members to MIMI, please complete the Board Election Report.<br>
-                                        {{-- @elseif($thisDate->month == 5 || $thisDate->month == )
-                                                @if($chDetails->documents->new_board_active != '1')
-                                                    In order to add new board members to MIMI, please complete the Board Election Report.<br>
-                                                @endif
-                                                @if($chDetails->documents->new_board_active == '1')
-                                                    If you need to make updates to your listed officers, please contact your Primary Coordinator.</span></p>
-                                                <p>Incoming Board Members have been activated and have full MIMI access.<br>
-                                                    Outgoing Board Members can still log in and access Financial Reports Only.</p>
-                                                @endif --}}
-                                            @endif
+                                        @endif
                                     </div>
                                 </div>
                             </div>

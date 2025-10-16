@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
+use App\Enums\CoordinatorPosition;
 use App\Mail\NewChapterThankYou;
 use App\Mail\NewCoordApplication;
 use App\Mail\NewCoordinatorThankYou;
@@ -266,7 +267,7 @@ class PublicController extends Controller
 
         $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $confId)
-            ->where('position_id', 7)
+            ->where('position_id', CoordinatorPosition::CC)
             ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->first();
@@ -854,7 +855,8 @@ class PublicController extends Controller
 
         $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $confId)
-            ->where('position_id', 7)
+            ->where('position_id', CoordinatorPosition::CC)
+            // ->where('position_id', 7)
             ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->first();

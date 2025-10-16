@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CoordinatorPosition;
 use App\Http\Requests\CheckCurrentPasswordUserRequest;
 use App\Http\Requests\UpdatePasswordUserRequest;
 use App\Models\Boards;
@@ -459,7 +460,8 @@ class UserController extends Controller implements HasMiddleware
     {
         $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $cdConfId)
-            ->where('position_id', 7)
+            ->where('position_id', CoordinatorPosition::CC)
+            // ->where('position_id', 7)
             ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->first();
@@ -527,7 +529,8 @@ class UserController extends Controller implements HasMiddleware
                                     ->where('conference_id', $chConfId);
                             });
                     })
-                    ->whereBetween('position_id', [1, 7])
+                    ->whereBetween('position_id', [CoordinatorPosition::BS, CoordinatorPosition::CC])
+                    // ->whereBetween('position_id', [1, 7])
                     ->where('active_status', 1);
             },
         ])->get();
@@ -577,7 +580,8 @@ class UserController extends Controller implements HasMiddleware
                             ->where('conference_id', $chConfId);
                     });
             })
-            ->whereBetween('position_id', [1, 7])
+            ->whereBetween('position_id', [CoordinatorPosition::BS, CoordinatorPosition::CC])
+            //->whereBetween('position_id', [1, 7])
             ->where('active_status', 1)
             ->get();
 
@@ -613,9 +617,10 @@ class UserController extends Controller implements HasMiddleware
      */
     public function loadReportsToList($cdId, $cdConfId, $cdPositionid)
     {
-        if ($cdConfId == 0 || $cdPositionid == 7) {
+        if ($cdConfId == 0 || $cdPositionid == CoordinatorPosition::CC) {
             $rcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
-                ->where('position_id', '>', 7)
+                ->where('position_id', '>', CoordinatorPosition::CC)
+                // ->where('position_id', '>', 7)
                 ->where('position_id', '>=', $cdPositionid)
                 ->where('id', '!=', $cdId)
                 ->where('active_status', 1)
@@ -624,7 +629,8 @@ class UserController extends Controller implements HasMiddleware
         } else {
             $rcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
                 ->where('conference_id', $cdConfId)
-                ->whereBetween('position_id', [3, 7])
+                ->whereBetween('position_id', [CoordinatorPosition::SC, CoordinatorPosition::CC])
+                // ->whereBetween('position_id', [3, 7])
                 ->where('position_id', '>=', $cdPositionid)
                 ->where('id', '!=', $cdId)
                 ->where('active_status', 1)

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
+use App\Enums\CoordinatorPosition;
 use App\Mail\BorUpdateListNoitce;
 use App\Mail\BorUpdatePCNotice;
 use App\Mail\ChapDetailsUpdatePCNotice;
@@ -713,7 +714,8 @@ class ChapterController extends Controller implements HasMiddleware
 
         $pcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $chConfId)
-            ->whereBetween('position_id', [1, 7])
+            ->whereBetween('position_id', [CoordinatorPosition::BS, CoordinatorPosition::CC])
+            // ->whereBetween('position_id', [1, 7])
             ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->get();
@@ -1784,7 +1786,8 @@ class ChapterController extends Controller implements HasMiddleware
 
         $pcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $chConfId)
-            ->whereBetween('position_id', [1, 7])
+            ->whereBetween('position_id', [CoordinatorPosition::BS, CoordinatorPosition::CC])
+            // ->whereBetween('position_id', [1, 7])
             ->where('active_status', 1)
             ->where('on_leave', '!=', '1')
             ->get();

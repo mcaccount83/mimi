@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CoordinatorPosition;
 use App\Http\Requests\StoreConfAdminRequest;
 use App\Http\Requests\UpdateConfListAdminRequest;
 use App\Models\Admin;
@@ -337,7 +338,8 @@ class AdminController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
+        $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
+        // $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 
         $admin = DB::table('admin')
             ->select('admin.*',

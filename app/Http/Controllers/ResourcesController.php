@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CoordinatorPosition;
 use App\Http\Requests\AddBugsAdminRequest;
 use App\Http\Requests\AddResourcesAdminRequest;
 use App\Http\Requests\AddToolkitAdminRequest;
@@ -77,7 +78,8 @@ class ResourcesController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditDetails = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
+        $canEditDetails = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
+        // $canEditDetails = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 
         $admin = DB::table('bugs')
             ->select('bugs.*',
@@ -174,7 +176,8 @@ class ResourcesController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 7 || in_array(7, $secPositionId));  // CC Coordinator
+        $canEditFiles = ($positionId == CoordinatorPosition::CC || in_array(CoordinatorPosition::CC, $secPositionId));
+        // $canEditFiles = ($positionId == 7 || in_array(7, $secPositionId));  // CC Coordinator
 
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
@@ -264,7 +267,8 @@ class ResourcesController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
+        $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
+        // $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 
         $resources = Resources::with('toolkitCategory')->get();
         $toolkitCategories = ToolkitCategory::all();
