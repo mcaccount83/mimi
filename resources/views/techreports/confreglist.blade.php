@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin')
+@section('page_title', 'IT Reports')
 @section('breadcrumb', 'Conferences & Regions')
 
 @section('content')
@@ -15,7 +15,7 @@
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Conferences & Regions
                         </h3>
-                        @include('layouts.dropdown_menus.menu_admin')
+                        @include('layouts.dropdown_menus.menu_reports_tech')
                     </div>
                 </div>
                  <!-- /.card-header -->

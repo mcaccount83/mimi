@@ -1,7 +1,7 @@
 <!-- resources/views/payment-logs/index.blade.php -->
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin Tasks/Reports')
+@section('page_title', 'IT Reports')
 @section('breadcrumb', 'Payment Logs')
 
 @section('content')
@@ -14,9 +14,9 @@
                     <div class="card-header">
                         <div class="dropdown">
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Payment Logs
+                                International Payment List
                             </h3>
-                            @include('layouts.dropdown_menus.menu_admin')
+                            @include('layouts.dropdown_menus.menu_reports_admin')
                         </div>
                     </div>
             <!-- /.card-header -->
@@ -122,3 +122,21 @@
 
 <!-- /.content -->
 @endsection
+
+@section('customscript')
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath == currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+</script>
+@endsection
+

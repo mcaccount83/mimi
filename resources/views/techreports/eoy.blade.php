@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin')
+@section('page_title', 'IT Reports')
 @section('breadcrumb', 'EOY Procedures')
 
 <style>
@@ -34,7 +34,7 @@
                               <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   End of Year Procedures
                               </h3>
-                              @include('layouts.dropdown_menus.menu_admin')
+                              @include('layouts.dropdown_menus.menu_reports_tech')
                           </div>
                       </div>
                       <!-- /.card-header -->
@@ -295,14 +295,14 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    var eoyBaseUrl = '{{ url("/admin/updateeoydatabase") }}';  // URL for resetting financial data tables
-    var dataBaseUrl = '{{ url("/admin/updatedatadatabase") }}';   // URL for resetting user data tables
-    var afterTestingBaseUrl = '{{ url("/admin/updateeoydatabaseafter") }}';  // URL for  resting database AFTER testing to go LIVE
-    var resetBaseUrl = '{{ url("/admin/resetyear") }}';  // URL for reseting New Year
-    var testingBaseUrl = '{{ url("/admin/updateeoytesting") }}';  // URL for displaying menues/buttons for testers
-    var liveBaseUrl = '{{ url("/admin/updateeoylive") }}';  // URL for displaying menues/buttons for allusers
-    var subscribeBaseUrl = '{{ url("/admin/updatesubscribelists") }}';  // URL for subscribing users to BoardList
-    var unsubscribeBaseUrl = '{{ url("/admin/updateunsubscribelists") }}';  // URL for unsubscribing users to BoardList
+    var eoyBaseUrl = '{{ url("/techreports/updateeoydatabase") }}';  // URL for resetting financial data tables
+    var dataBaseUrl = '{{ url("/techreports/updatedatadatabase") }}';   // URL for resetting user data tables
+    var afterTestingBaseUrl = '{{ url("/techreports/updateeoydatabaseafter") }}';  // URL for  resting database AFTER testing to go LIVE
+    var resetBaseUrl = '{{ url("/techreports/resetyear") }}';  // URL for reseting New Year
+    var testingBaseUrl = '{{ url("/techreports/updateeoytesting") }}';  // URL for displaying menues/buttons for testers
+    var liveBaseUrl = '{{ url("/techreports/updateeoylive") }}';  // URL for displaying menues/buttons for allusers
+    var subscribeBaseUrl = '{{ url("/techreports/updatesubscribelists") }}';  // URL for subscribing users to BoardList
+    var unsubscribeBaseUrl = '{{ url("/techreports/updateunsubscribelists") }}';  // URL for unsubscribing users to BoardList
 
     function handleAjaxRequest(baseUrl) {
         $.ajax({

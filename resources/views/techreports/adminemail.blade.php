@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin')
+@section('page_title', 'IT Reports')
 @section('breadcrumb', 'Admin Email Settings')
 
 @section('content')
@@ -13,9 +13,9 @@
                 <div class="card-header">
                     <div class="dropdown">
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           Admin Email Settings
+                           System Email Settings
                         </h3>
-                        @include('layouts.dropdown_menus.menu_admin')
+                        @include('layouts.dropdown_menus.menu_reports_tech')
                     </div>
                 </div>
                  <!-- /.card-header -->
@@ -55,7 +55,7 @@
                             <h3 class="modal-title" id="editDrive">Admin Email Addresses</h3>
                         </div>
                         <div class="modal-body">
-                            <form method="POST" action="{{ route('admin.updateadminemail', $adminEmail[0]->id) }}">
+                            <form method="POST" action="{{ route('techreports.updateadminemail', $adminEmail[0]->id) }}">
                                 @csrf
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -155,7 +155,7 @@ function updateEmail() {
             Swal.showLoading();
 
             $.ajax({
-                url: '{{ route('admin.updateadminemail') }}',
+                url: '{{ route('techreports.updateadminemail') }}',
                 method: 'POST',
                 data: formData,
                 processData: false,

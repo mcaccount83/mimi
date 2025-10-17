@@ -1,7 +1,7 @@
 <!-- resources/views/payment-logs/show.blade.php -->
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin Tasks/Reports')
+@section('page_title', 'IT Reports')
 @section('breadcrumb', 'Payment Log Details')
 
 @section('content')
@@ -16,7 +16,7 @@
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Payment Log Details
                             </h3>
-                            @include('layouts.dropdown_menus.menu_admin')
+                            @include('layouts.dropdown_menus.menu_reports_admin')
                         </div>
                     </div>
             <!-- /.card-header -->
@@ -108,3 +108,5 @@
 
 <!-- /.content -->
 @endsection
+
+

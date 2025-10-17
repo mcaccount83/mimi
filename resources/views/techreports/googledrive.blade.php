@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin')
+@section('page_title', 'IT Reports')
 @section('breadcrumb', 'Google Drive Settings')
 
 @section('content')
@@ -15,7 +15,7 @@
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Google Drive Settings
                         </h3>
-                        @include('layouts.dropdown_menus.menu_admin')
+                        @include('layouts.dropdown_menus.menu_reports_tech')
                     </div>
                 </div>
                  <!-- /.card-header -->
@@ -64,7 +64,7 @@
                             <h3 class="modal-title" id="editDrive">Google Drive for Uploads</h3>
                         </div>
                         <div class="modal-body">
-                            <form method="POST" action="{{ route('admin.updategoogledrive', $googleDrive[0]->id) }}">
+                            <form method="POST" action="{{ route('techreports.updategoogledrive', $googleDrive[0]->id) }}">
                                 @csrf
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -196,7 +196,7 @@ function updateDrive() {
             Swal.showLoading();
 
             $.ajax({
-                url: '{{ route('admin.updategoogledrive') }}',
+                url: '{{ route('techreports.updategoogledrive') }}',
                 method: 'POST',
                 data: formData,
                 processData: false,

@@ -24,7 +24,7 @@ class AdminNewMIMIBugWish extends BaseMailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.admin.newmimibugwish',
+            markdown: 'emails.techreports.newmimibugwish',
         );
     }
 

@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin')
+@section('page_title', 'IT Reports')
 @section('breadcrumb', 'Re-Registration Renewal Dates')
 
 @section('content')
@@ -36,7 +36,7 @@
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Re-Registration Renewal Dates
                             </h3>
-                            @include('layouts.dropdown_menus.menu_admin')
+                            @include('layouts.dropdown_menus.menu_reports_tech')
                         </div>
                     </div>
                  <!-- /.card-header -->
@@ -57,7 +57,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                   <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/admin/reregdate/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/techreports/reregdate/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>
                             @if ($list->region?->short_name != "None" )
                                 {{ $list->conference->short_name }} / {{ $list->region?->short_name }}

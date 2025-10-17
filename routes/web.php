@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TechReportController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
@@ -24,6 +24,7 @@ use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,12 +68,14 @@ Route::get('/course/{course_id}/redirect', [BoardController::class, 'redirectToC
     ->middleware('auth');
 
 // Error Log Routes...Public, No login required
-Route::get('admin/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
+Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/payment-logs', [PaymentController::class, 'index'])->name('payment-logs.index');
-    Route::get('/payment-logs/{id}', [PaymentController::class, 'show'])->name('payment-logs.show');
-});
+// // Payment Controller Routes
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/payment-logs', [PaymentController::class, 'index'])->name('payment-logs.index');
+//     Route::get('/payment-logs/{id}', [PaymentController::class, 'show'])->name('payment-logs.show');
+// });
+
 
 // Error Pages Test Routes...Public, No login required
 Route::get('/test-500', function () {
@@ -111,45 +114,56 @@ Route::post('/updatenewcoordinator', [PublicController::class, 'updateNewCoordin
 Route::get('/newcoordinatorsuccess', [PublicController::class, 'viewNewCoordinator'])->name('public.newcoordinatorsuccess');
 
 // Admin Controller Routes...Coordinator Login Required
-Route::get('/admin/reregdate', [AdminController::class, 'showReRegDate'])->name('admin.reregdate');
-Route::get('/admin/reregdate/{id}', [AdminController::class, 'EditReRegDate'])->name('admin.editreregdate');
-Route::post('/admin/updatereregdate/{id}', [AdminController::class, 'UpdateReRegDate'])->name('admin.updatereregdate');
-Route::post('/admin/resetProbationSubmission', [AdminController::class, 'resetProbationSubmission'])->name('admin.resetProbationSubmission');
-Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
-Route::post('/admin/resetdisbandedusers', [AdminController::class, 'resetDisbandedUsers'])->name('admin.resetdisbandedusers');
-Route::post('/admin/resetoutgoingusers', [AdminController::class, 'resetOutgoingUsers'])->name('admin.resetoutgoingusers');
-Route::post('/admin/resetyear', [AdminController::class, 'resetYear'])->name('resetyear');
-Route::post('/admin/updateeoydatabase', [AdminController::class, 'updateEOYDatabase'])->name('admin.updateeoydatabase');
-Route::post('/admin/updateeoydatabaseafter', [AdminController::class, 'updateEOYDatabaseAFTERTesting'])->name('admin.updateeoydatabaseafter');
-Route::post('/admin/updatedatadatabase', [AdminController::class, 'updateDataDatabase'])->name('admin.updatedatadatabase');
-Route::post('/admin/updateeoytesting', [AdminController::class, 'updateEOYTesting'])->name('admin.updateeoytesting');
-Route::post('/admin/updateeoylive', [AdminController::class, 'updateEOYLive'])->name('admin.updateeoylive');
-Route::post('/admin/updatesubscribelists', [AdminController::class, 'updateSubscribeLists'])->name('admin.updatesubscribelists');
-Route::post('/admin/updateunsubscribelists', [AdminController::class, 'updateUnsubscribeLists'])->name('admin.updateunsubscribelists');
-Route::get('/admin/chapterlist', [AdminController::class, 'listActiveChapters'])->name('admin.chapterlist');
-Route::get('/admin/chapterlistzapped', [AdminController::class, 'listZappedChapters'])->name('admin.chapterlistzapped');
-Route::get('/admin/googledrive', [AdminController::class, 'showGoogleDrive'])->name('admin.googledrive');
-Route::post('/admin/updategoogledrive', [AdminController::class, 'updateGoogleDrive'])->name('admin.updategoogledrive');
-Route::get('/admin/adminemail', [AdminController::class, 'showAdminEmail'])->name('admin.adminemail');
-Route::post('/admin/updateadminemail', [AdminController::class, 'updateAdminEmail'])->name('admin.updateadminemail');
-Route::post('/admin/updatechapterdelete', [AdminController::class, 'updateChapterDelete'])->name('admin.updatechapterdelete');
-Route::post('/admin/updatecoordinatordelete', [AdminController::class, 'updateCoordinatorDelete'])->name('admin.updatecoordinatordelete');
+// Route::get('/techreports/reregdate', [TechReportController::class, 'showReRegDate'])->name('techreports.reregdate');
+// Route::get('/techreports/reregdate/{id}', [TechReportController::class, 'EditReRegDate'])->name('techreports.editreregdate');
+// Route::post('/techreports/updatereregdate/{id}', [TechReportController::class, 'UpdateReRegDate'])->name('techreports.updatereregdate');
+Route::post('/techreports/resetProbationSubmission', [TechReportController::class, 'resetProbationSubmission'])->name('techreports.resetProbationSubmission');
+Route::get('/techreports/eoy', [TechReportController::class, 'showEOY'])->name('techreports.eoy');
+Route::post('/techreports/resetdisbandedusers', [TechReportController::class, 'resetDisbandedUsers'])->name('techreports.resetdisbandedusers');
+Route::post('/techreports/resetoutgoingusers', [TechReportController::class, 'resetOutgoingUsers'])->name('techreports.resetoutgoingusers');
+Route::post('/techreports/resetyear', [TechReportController::class, 'resetYear'])->name('resetyear');
+Route::post('/techreports/updateeoydatabase', [TechReportController::class, 'updateEOYDatabase'])->name('techreports.updateeoydatabase');
+Route::post('/techreports/updateeoydatabaseafter', [TechReportController::class, 'updateEOYDatabaseAFTERTesting'])->name('techreports.updateeoydatabaseafter');
+Route::post('/techreports/updatedatadatabase', [TechReportController::class, 'updateDataDatabase'])->name('techreports.updatedatadatabase');
+Route::post('/techreports/updateeoytesting', [TechReportController::class, 'updateEOYTesting'])->name('techreports.updateeoytesting');
+Route::post('/techreports/updateeoylive', [TechReportController::class, 'updateEOYLive'])->name('techreports.updateeoylive');
+Route::post('/techreports/updatesubscribelists', [TechReportController::class, 'updateSubscribeLists'])->name('techreports.updatesubscribelists');
+Route::post('/techreports/updateunsubscribelists', [TechReportController::class, 'updateUnsubscribeLists'])->name('techreports.updateunsubscribelists');
+Route::get('/techreports/chapterlist', [TechReportController::class, 'listActiveChapters'])->name('techreports.chapterlist');
+Route::get('/techreports/chapterlistzapped', [TechReportController::class, 'listZappedChapters'])->name('techreports.chapterlistzapped');
+Route::get('/techreports/googledrive', [TechReportController::class, 'showGoogleDrive'])->name('techreports.googledrive');
+Route::post('/adtechreportsmin/updategoogledrive', [TechReportController::class, 'updateGoogleDrive'])->name('techreports.updategoogledrive');
+Route::get('/techreports/adminemail', [TechReportController::class, 'showAdminEmail'])->name('techreports.adminemail');
+Route::post('/techreports/updateadminemail', [TechReportController::class, 'updateAdminEmail'])->name('techreports.updateadminemail');
+Route::post('/techreports/updatechapterdelete', [TechReportController::class, 'updateChapterDelete'])->name('techreports.updatechapterdelete');
+Route::post('/techreports/updatecoordinatordelete', [TechReportController::class, 'updateCoordinatorDelete'])->name('techreports.updatecoordinatordelete');
 
-Route::get('/admin/confreglist', [AdminController::class, 'showConfRegList'])->name('admin.confreglist');
-// Update these routes in your web.php
-Route::get('/admin/editconflist', [AdminController::class, 'editConfList'])->name('admin.editconflist');
-Route::post('/admin/updateconflist', [AdminController::class, 'updateConfList'])->name('admin.updateconflist');
-Route::post('/admin/storeconf', [AdminController::class, 'storeConf'])->name('admin.storeconf');
-Route::delete('/admin/deleteconf/{id}', [AdminController::class, 'deleteConf'])->name('admin.deleteconf');
+Route::get('/techreports/confreglist', [TechReportController::class, 'showConfRegList'])->name('techreports.confreglist');
+Route::get('/techreports/editconflist', [TechReportController::class, 'editConfList'])->name('techreports.editconflist');
+Route::post('/techreports/updateconflist', [TechReportController::class, 'updateConfList'])->name('techreports.updateconflist');
+Route::post('/techreports/storeconf', [TechReportController::class, 'storeConf'])->name('techreports.storeconf');
+Route::delete('/techreports/deleteconf/{id}', [TechReportController::class, 'deleteConf'])->name('techreports.deleteconf');
 
 // Admin Controller Routes...Coordinator Login Required
-Route::get('/adminreports/useradmin', [AdminReportController::class, 'showUserAdmin'])->name('adminreports.useradmin');
-Route::get('/adminreports/duplicateuser', [AdminReportController::class, 'showDuplicate'])->name('adminreports.duplicateuser');
-Route::get('/adminreports/duplicateboardid', [AdminReportController::class, 'showDuplicateId'])->name('adminreports.duplicateboardid');
-Route::get('/adminreports/nopresident', [AdminReportController::class, 'showNoPresident'])->name('adminreports.nopresident');
-Route::get('/adminreports/noactiveboard', [AdminReportController::class, 'showNoActiveBoard'])->name('adminreports.noactiveboard');
-Route::get('/adminreports/outgoingboard', [AdminReportController::class, 'showOutgoingBoard'])->name('adminreports.outgoingboard');
-Route::get('/adminreports/disbandedboard', [AdminReportController::class, 'showDisbandedBoard'])->name('adminreports.disbandedboard');
+// Route::get('/adminreports/payment-logs', [PaymentController::class, 'index'])->name('payment-logs.index');
+// Route::get('/adminreports/payment-logs/{id}', [PaymentController::class, 'show'])->name('payment-logs.show');
+Route::get('/adminreports/intpaymentlist', [AdminReportController::class, 'intPaymentList'])->name('adminreports.intpaymentlist');
+Route::get('/adminreports/paymentlist', [AdminReportController::class, 'paymentList'])->name('adminreports.paymentlist');
+Route::get('/adminreports/paymentdetails/{id}', [AdminReportController::class, 'paymentDetails'])->name('adminreports.paymentdetails');
+Route::get('/adminreports/reregdate', [AdminReportController::class, 'showReRegDate'])->name('adminreports.reregdate');
+Route::get('/adminreports/intreregdate', [AdminReportController::class, 'showIntReRegDate'])->name('adminreports.intreregdate');
+Route::get('/adminreports/reregdate/{id}', [AdminReportController::class, 'EditReRegDate'])->name('adminreports.editreregdate');
+Route::post('/adminreports/updatereregdate/{id}', [AdminReportController::class, 'UpdateReRegDate'])->name('adminreports.updatereregdate');
+
+
+// User Controller Routes...Coordinator Login Required
+Route::get('/userreports/useradmin', [UserReportController::class, 'showUserAdmin'])->name('userreports.useradmin');
+Route::get('/userreports/duplicateuser', [UserReportController::class, 'showDuplicate'])->name('userreports.duplicateuser');
+Route::get('/userreports/duplicateboardid', [UserReportController::class, 'showDuplicateId'])->name('userreports.duplicateboardid');
+Route::get('/userreports/nopresident', [UserReportController::class, 'showNoPresident'])->name('userreports.nopresident');
+Route::get('/userreports/noactiveboard', [UserReportController::class, 'showNoActiveBoard'])->name('userreports.noactiveboard');
+Route::get('/userreports/outgoingboard', [UserReportController::class, 'showOutgoingBoard'])->name('userreports.outgoingboard');
+Route::get('/userreports/disbandedboard', [UserReportController::class, 'showDisbandedBoard'])->name('userreports.disbandedboard');
 
 // Resources Controller Routes...Coordinator Login Required
 Route::get('/resources/bugs', [ResourcesController::class, 'showBugs'])->name('resources.bugs');

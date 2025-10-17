@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 $(document).ready(function() {
-    var resetBaseUrl = '{{ url("/admin/resetProbationSubmission") }}';
+    var resetBaseUrl = '{{ url("/techreports/resetProbationSubmission") }}';
 
     function handleAjaxRequest(baseUrl) {
         $.ajax({

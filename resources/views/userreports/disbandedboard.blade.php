@@ -1,7 +1,7 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin Reports')
-@section('breadcrumb', 'Outgoing Board Members')
+@section('page_title', 'User Reports')
+@section('breadcrumb', 'Disbanded Board Members')
 
 @section('content')
     <!-- Main content -->
@@ -13,51 +13,52 @@
                         <div class="card-header">
                             <div class="dropdown">
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Outgoing Board Members
+                                    Disbanded Board Members
                                 </h3>
-                                @include('layouts.dropdown_menus.menu_reports_admin')
+                                @include('layouts.dropdown_menus.menu_reports_user')
                             </div>
                         </div>
                      <!-- /.card-header -->
         <div class="card-body">
             <table id="chapterlist" class="table table-sm table-hover" >
-                <thead>
-                    <tr>
-                      <th>Conf/Reg</th>
+              <thead>
+			    <tr>
+                    <th>Conf/Reg</th>
                     <th>State</th>
                     <th>Chapter</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                    <th>User Type</th>
+                    <th>Board Member</th>
+                  <th>Email</th>
+                <th>User Type</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @foreach($disbandedList as $list)
+                    <tr>
+                        <td>
+                            @if ($list->boardDisbanded?->chapters->region->short_name != "None")
+                                {{ $list->boardDisbanded?->chapters->conference->short_name }} / {{ $list->boardDisbanded?->chapters->region->short_name }}
+                            @else
+                                {{ $list->boardDisbanded?->chapters->conference->short_name }}
+                            @endif
+                        </td>
+                        <td>
+                           @if($list->boardDisbanded?->state_id < 52)
+                                {{$list->boardDisbanded?->state->state_short_name}}
+                            @else
+                                {{$list->boardDisbanded?->country->short_name}}
+                            @endif
+                        </td>
+                        <td>{{ $list->boardDisbanded?->chapters->name }}</td>
+                        <td>{{ $list->first_name }} {{ $list->last_name }}</td>
+                        <td class="email-column">
+                            <a href="mailto:{{ $list->email }}">{{ $list->email }}</a>
+                        </td>
+                        <td>{{ $list->user_type }}</td>
                     </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($outgoingList as $list)
-                        <td>
-                            @if ($list->boardOutgoing?->chapters->region->short_name != "None")
-                                {{ $list->boardOutgoing?->chapters->conference->short_name }} / {{ $list->boardOutgoing?->chapters->region->short_name }}
-                            @else
-                                {{ $list->boardOutgoing?->chapters->conference->short_name }}
-                            @endif
-                        </td>
-                        <td>
-                           @if($list->boardOutgoing?->state_id < 52)
-                                {{$list->boardOutgoing?->state->state_short_name}}
-                            @else
-                                {{$list->boardOutgoing?->country->short_name}}
-                            @endif
-                        </td>
-                        <td>{{ $list->boardOutgoing?->chapters->name }}</td>
-                            <td>{{ $list->first_name }} {{ $list->last_name }}</td>
-                            <td class="email-column">
-                                <a href="mailto:{{ $list->email }}">{{ $list->email }}</a>
-                            </td>
-                            <td>{{ $list->user_type }}</td>
-                        </tr>
-                        @endforeach
-                      </tbody>
-                    </table>
-                </div>
+                    @endforeach
+                </tbody>
+                </table>
+            </div>
             <div class="card-body text-center">
 				@if ($regionalCoordinatorCondition)
                     @if ($countList > '0')
@@ -92,9 +93,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function showUserInactiveModel() {
     Swal.fire({
-        title: 'Make All Outgoing Users Inactive',
+        title: 'Make All Disbanded Users Inactive',
         html: `
-            <p>This will make all outgoing users inactive.  They will no longer have access to edit the Chapter's Fiancial Report</p>
+            <p>This will make all disbanded users inactive.  They will no longer have access to edit the Disbanding Checklist and/or Final Fiancial Report</p>
             </div>
         `,
         showCancelButton: true,
@@ -121,7 +122,7 @@ function showUserInactiveModel() {
 
                     // Perform the AJAX request
                     $.ajax({
-                        url: '{{ route('admin.resetoutgoingusers') }}',
+                        url: '{{ route('techreports.resetdisbandedusers') }}',
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}'
@@ -157,5 +158,6 @@ function showUserInactiveModel() {
         }
     });
 }
+
 </script>
 @endsection

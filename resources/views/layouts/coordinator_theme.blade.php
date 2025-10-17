@@ -419,7 +419,7 @@ window.onload = function () {
                             @if (isset($eoyReportsRoute))
                                 <li class="nav-item">
                                     <a href="{{ $eoyReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeEOYReportsRoutes) }}">
-                                        <i class="nav-icon fas fa-chart-line"></i>
+                                        <i class="nav-icon fas fa-clipboard-check"></i>
                                         <p>EOY Reports
                                             @if ($userAdmin && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                                             @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
@@ -428,28 +428,10 @@ window.onload = function () {
                                 </li>
                             @endif
 
-                        <!-- Admin Menu Item -->
-                        @php
-                            if ($userAdmin) {
-                                $adminReportsRoute = route('admin.reregdate');
-                            }
-                            $activeAdminReportsRoutes = [
-                                'admin/*'
-                            ];
-                        @endphp
-                        @if (isset($adminReportsRoute))
-                            <li class="nav-item">
-                                <a href="{{ $adminReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeAdminReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-unlock-keyhole"></i>
-                                    <p>Admin</p>
-                                </a>
-                            </li>
-                        @endif
-
                         <!-- Admin Reports Menu Item -->
                         @php
-                            if ($userAdmin) {
-                                $adminReportsRoute = route('adminreports.useradmin');
+                            if ($conferenceCoordinatorCondition) {
+                                $adminReportsRoute = route('adminreports.paymentlist');
                             }
                             $activeAdminReportsRoutes = [
                                 'adminreports/*'
@@ -458,8 +440,44 @@ window.onload = function () {
                         @if (isset($adminReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $adminReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeAdminReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-clipboard-check"></i>
+                                    <i class="nav-icon fas fa-clipboard"></i>
                                     <p>Admin Reports</p>
+                                </a>
+                            </li>
+                        @endif
+
+                         <!-- User Reports Menu Item -->
+                        @php
+                            if ($userAdmin) {
+                                $userReportsRoute = route('userreports.useradmin');
+                            }
+                            $activeUserReportsRoutes = [
+                                'userreports/*'
+                            ];
+                        @endphp
+                        @if (isset($userReportsRoute))
+                            <li class="nav-item">
+                                <a href="{{ $userReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeUserReportsRoutes) }}">
+                                    <i class="nav-icon fas fa-paste"></i>
+                                    <p>User Reports</p>
+                                </a>
+                            </li>
+                        @endif
+
+                         <!-- Tech Reports Menu Item -->
+                        @php
+                            if ($userAdmin) {
+                                $techReportsRoute = route('techreports.eoy');
+                            }
+                            $activeTechReportsRoutes = [
+                                'techreports/*'
+                            ];
+                        @endphp
+                        @if (isset($techReportsRoute))
+                            <li class="nav-item">
+                                <a href="{{ $techReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeTechReportsRoutes) }}">
+                                    <i class="nav-icon fas fa-clipboard-question"></i>
+                                    <p>IT Reports</p>
                                 </a>
                             </li>
                         @endif

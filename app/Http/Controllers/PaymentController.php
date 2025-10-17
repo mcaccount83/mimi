@@ -757,35 +757,35 @@ class PaymentController extends Controller implements HasMiddleware
         ];
     }
 
-    /**
-     * View Payment Log List
-     */
-    public function index(Request $request): View
-    {
-        $query = PaymentLog::with('board');
+    // /**
+    //  * View Payment Log List
+    //  */
+    // public function index(Request $request): View
+    // {
+    //     $query = PaymentLog::with('board');
 
-        // Add filters if needed
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
+    //     // Add filters if needed
+    //     if ($request->has('status')) {
+    //         $query->where('status', $request->status);
+    //     }
 
-        if ($request->has('date')) {
-            $query->whereDate('created_at', $request->date);
-        }
+    //     if ($request->has('date')) {
+    //         $query->whereDate('created_at', $request->date);
+    //     }
 
-        // $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(100);
-        $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
+    //     // $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(100);
+    //     $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
 
-        return view('payment-logs.index', compact('paymentLogs'));
-    }
+    //     return view('payment-logs.index', compact('paymentLogs'));
+    // }
 
-    /**
-     * View Payment Log Transaction Details
-     */
-    public function show($id): View
-    {
-        $log = PaymentLog::findOrFail($id);
+    // /**
+    //  * View Payment Log Transaction Details
+    //  */
+    // public function show($id): View
+    // {
+    //     $log = PaymentLog::findOrFail($id);
 
-        return view('payment-logs.show', compact('log'));
-    }
+    //     return view('payment-logs.show', compact('log'));
+    // }
 }

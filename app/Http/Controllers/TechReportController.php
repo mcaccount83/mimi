@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
-class AdminController extends Controller implements HasMiddleware
+class TechReportController extends Controller implements HasMiddleware
 {
     protected $userController;
 
@@ -64,7 +64,7 @@ class AdminController extends Controller implements HasMiddleware
     public function getPageTitle(Request $request)
     {
         $titles = [
-            'admin_reports' => 'Admin Tasks/Reports',
+            'admin_reports' => 'IT Reports',
             'admin_details' => 'Chapter Details',
             'resource_reports' => 'Resources',
             'resource_details' => 'Resource Details',
@@ -87,7 +87,7 @@ class AdminController extends Controller implements HasMiddleware
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
 
-        return view('admin.chapterlist')->with($data);
+        return view('techreports.chapterlist')->with($data);
 
     }
 
@@ -105,7 +105,7 @@ class AdminController extends Controller implements HasMiddleware
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
 
-        return view('admin.chapterlistzapped')->with($data);
+        return view('techreports.chapterlistzapped')->with($data);
 
     }
 
@@ -122,7 +122,7 @@ class AdminController extends Controller implements HasMiddleware
 
         $data = ['chapterList' => $chapterList];
 
-        return view('admin.reregdate')->with($data);
+        return view('techreports.reregdate')->with($data);
     }
 
     public function editReRegDate(Request $request, $id): View
@@ -135,7 +135,7 @@ class AdminController extends Controller implements HasMiddleware
 
         $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chPayments' => $chPayments, 'allMonths' => $allMonths];
 
-        return view('admin.editreregdate')->with($data);
+        return view('techreports.editreregdate')->with($data);
     }
 
     public function updateReRegDate(Request $request, $id): RedirectResponse
@@ -163,14 +163,14 @@ class AdminController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->to('/admin/reregdate')->with('error', 'Failed to update Re-Reg Date.');
+            return redirect()->to('/techreports/reregdate')->with('error', 'Failed to update Re-Reg Date.');
         } catch (\Exception $e) {
             echo $e->getMessage();
             exit();
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/admin/reregdate')->with('success', 'Re-Reg Date updated successfully.');
+            return redirect()->to('/techreports/reregdate')->with('success', 'Re-Reg Date updated successfully.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -309,7 +309,7 @@ class AdminController extends Controller implements HasMiddleware
             'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems,
         ];
 
-        return view('admin.eoy')->with($data);
+        return view('techreports.eoy')->with($data);
     }
 
     /**
@@ -335,7 +335,7 @@ class AdminController extends Controller implements HasMiddleware
             return response()->json([
                 'status' => 'success',
                 'message' => $message,
-                'redirect' => route('admin.disbandedboard'),
+                'redirect' => route('techreports.disbandedboard'),
             ]);
 
         } catch (\Exception $e) {
@@ -348,7 +348,7 @@ class AdminController extends Controller implements HasMiddleware
             return response()->json([
                 'status' => 'error',
                 'message' => $message,
-                'redirect' => route('admin.disbandedboard'),
+                'redirect' => route('techreports.disbandedboard'),
             ]);
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -379,7 +379,7 @@ class AdminController extends Controller implements HasMiddleware
             return response()->json([
                 'status' => 'success',
                 'message' => $message,
-                'redirect' => route('admin.outgoingboard'),
+                'redirect' => route('techreports.outgoingboard'),
             ]);
 
         } catch (\Exception $e) {
@@ -392,7 +392,7 @@ class AdminController extends Controller implements HasMiddleware
             return response()->json([
                 'status' => 'error',
                 'message' => $message,
-                'redirect' => route('admin.outgoingboard'),
+                'redirect' => route('userreports.outgoingboard'),
             ]);
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -906,7 +906,7 @@ class AdminController extends Controller implements HasMiddleware
 
         $data = ['googleDrive' => $googleDrive];
 
-        return view('admin.googledrive')->with($data);
+        return view('techreports.googledrive')->with($data);
     }
 
     /**
@@ -932,7 +932,7 @@ class AdminController extends Controller implements HasMiddleware
 
             $message = 'Google Drive ID updated successfully';
 
-            return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('admin.googledrive')]);
+            return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('techreports.googledrive')]);
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
@@ -940,7 +940,7 @@ class AdminController extends Controller implements HasMiddleware
 
             $message = 'Something went wrong, Please try again.';
 
-            return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('admin.googledrive')]);
+            return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('techreports.googledrive')]);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -956,7 +956,7 @@ class AdminController extends Controller implements HasMiddleware
 
         $data = ['adminEmail' => $adminEmail];
 
-        return view('admin.adminemail')->with($data);
+        return view('techreports.adminemail')->with($data);
     }
 
     /**
@@ -978,7 +978,7 @@ class AdminController extends Controller implements HasMiddleware
 
             $message = 'Admin Emails updated successfully';
 
-            return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('admin.adminemail')]);
+            return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('techreports.adminemail')]);
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
@@ -986,7 +986,7 @@ class AdminController extends Controller implements HasMiddleware
 
             $message = 'Something went wrong, Please try again.';
 
-            return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('admin.adminemail')]);
+            return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('techreports.adminemail')]);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -1104,7 +1104,7 @@ class AdminController extends Controller implements HasMiddleware
 
         $data = ['confList' => $confList];
 
-        return view('admin.confreglist')->with($data);
+        return view('techreports.confreglist')->with($data);
     }
 
     public function editConfList(): View
@@ -1114,7 +1114,7 @@ class AdminController extends Controller implements HasMiddleware
 
         $data = ['confList' => $confList];
 
-        return view('admin.editconflist')->with($data);
+        return view('techreports.editconflist')->with($data);
     }
 
     public function updateConfList(Request $request): JsonResponse

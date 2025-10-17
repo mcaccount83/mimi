@@ -144,7 +144,7 @@ function showDeleteChapterModal(chapterId, chapterName, activeStatus) {
 
                     // Perform the AJAX request
                     $.ajax({
-                url: '{{ route('admin.updatechapterdelete') }}',
+                url: '{{ route('techreports.updatechapterdelete') }}',
                 type: 'POST',
                 data: {
                     chapterid: data.chapter_id,

@@ -51,7 +51,7 @@ class ResourcesController extends Controller implements HasMiddleware
     public function getPageTitle(Request $request)
     {
         $titles = [
-            'admin_reports' => 'Admin Tasks/Reports',
+            'admin_reports' => 'IT Reports',
             'admin_details' => 'Chapter Details',
             'resource_reports' => 'Resources',
             'resource_details' => 'Resource Details',

@@ -9,7 +9,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-4">
-            <form method="POST" name="admin-rereg-date" action='{{ route("admin.updatereregdate",$chDetails->id) }}'>
+            <form method="POST" name="admin-rereg-date" action='{{ route("adminreports.updatereregdate",$chDetails->id) }}'>
                 @csrf
 
           <!-- Profile Image -->
@@ -133,7 +133,7 @@
             <div class="card-body text-center">
                 <button type="submit" class="btn bg-gradient-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
 
-              <a href="{{ route('admin.reregdate') }}" class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
+              <a href="{{ route('adminreports.reregdate') }}" class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
               </div>
 
             <!-- /.box-body -->

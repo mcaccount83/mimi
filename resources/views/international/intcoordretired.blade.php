@@ -140,7 +140,7 @@ function showDeleteCoordModal(coordId, firstName, lastName, activeStatus) {
 
                     // Perform the AJAX request
                     $.ajax({
-                        url: '{{ route('admin.updatecoordinatordelete') }}',
+                        url: '{{ route('techreports.updatecoordinatordelete') }}',
                         type: 'POST',
                         data: {
                             coordid: data.coord_id,

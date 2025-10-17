@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin')
+@section('page_title', 'IT Reports')
 @section('breadcrumb', 'Admin Acitve Board Pages')
 
 @section('content')
@@ -13,10 +13,10 @@
                         <div class="card-header">
                             <div class="dropdown">
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Admin Acitve Board Pages
+                                    Acitve Board Pages
                                 </h3>
                                 <span class="ml-2">View Board Pages as President</span>
-                                @include('layouts.dropdown_menus.menu_admin')
+                                @include('layouts.dropdown_menus.menu_reports_tech')
                             </div>
                         </div>
                      <!-- /.card-header -->
@@ -66,4 +66,20 @@
         <!-- /.row -->
     </section>
     <!-- /.content -->
+@endsection
+@section('customscript')
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath == currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+</script>
 @endsection

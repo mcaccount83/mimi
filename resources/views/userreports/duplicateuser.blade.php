@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin Reports')
+@section('page_title', 'User Reports')
 @section('breadcrumb', 'Duplicate Users')
 
 @section('content')
@@ -15,7 +15,7 @@
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Duplicate Users
                                 </h3>
-                                @include('layouts.dropdown_menus.menu_reports_admin')
+                                @include('layouts.dropdown_menus.menu_reports_user')
                             </div>
                         </div>
                      <!-- /.card-header -->

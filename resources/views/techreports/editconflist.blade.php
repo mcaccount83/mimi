@@ -1,6 +1,6 @@
 @extends('layouts.coordinator_theme')
 
-@section('page_title', 'Admin')
+@section('page_title', 'IT Reports')
 @section('breadcrumb', 'Conference List')
 
 @section('content')
@@ -15,7 +15,7 @@
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Conference List
                             </h3>
-                            @include('layouts.dropdown_menus.menu_admin')
+                            @include('layouts.dropdown_menus.menu_reports_tech')
                         </div>
                         <div class="card-tools">
                             <button class="btn btn-success btn-sm" onclick="addNewRow()">
@@ -158,7 +158,7 @@ function saveRow(button) {
 
     // Make AJAX call to save
     $.ajax({
-        url: '{{ route("admin.updateconflist") }}',
+        url: '{{ route("techreports.updateconflist") }}',
         method: 'POST',
         data: {
             id: id,
@@ -220,7 +220,7 @@ function deleteRow(button) {
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
         $.ajax({
-            url: `/admin/deleteconf/${id}`,
+            url: `/adminreports/deleteconf/${id}`,
             method: 'DELETE',
             success: function(response) {
                 if (response.success) {
@@ -294,7 +294,7 @@ function saveNewRow(button) {
 
     // Make AJAX call to create
     $.ajax({
-        url: '{{ route("admin.storeconf") }}',
+        url: '{{ route("techreports.storeconf") }}',
         method: 'POST',
         data: {
             conference_name: confName,
