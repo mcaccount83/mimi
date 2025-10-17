@@ -2,14 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Store990NGoogleRequest;
-use App\Http\Requests\StoreAwardGoogleRequest;
-use App\Http\Requests\StoreEINGoogleRequest;
-use App\Http\Requests\StoreResourcesGoogleRequest;
-use App\Http\Requests\StoreRosterGoogleRequest;
-use App\Http\Requests\StoreStatement1GoogleRequest;
-use App\Http\Requests\StoreStatement2GoogleRequest;
-use App\Http\Requests\StoreToolkitGoogleRequest;
 use App\Models\Chapters;
 use App\Models\Documents;
 use App\Models\FolderRecord;
@@ -17,6 +9,7 @@ use App\Models\GoogleDrive;
 use App\Models\Resources;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Http;
@@ -136,358 +129,452 @@ class GoogleController extends Controller implements HasMiddleware
     }
 
     /**
-     *  Save Chapter EIN Letter
-     */
-    public function storeEIN(StoreEINGoogleRequest $request, $id): JsonResponse
+    *  Save Chapter EIN Letter
+    */
+    public function storeEIN(Request $request, $id): JsonResponse
     {
-        $chapter = Chapters::with('documents', 'state')->find($id);
-        $ein = $chapter->ein;
-        $chapterName = $chapter->name;
-        $state = $chapter->state->state_short_name;
-        $name = $ein.'_'.$chapterName.'_'.$state;
+        try {
+            $request->validate([
+                'file' => 'required|file',
+            ]);
 
-        $googleDrive = GoogleDrive::first();
-        $einDrive = $googleDrive->ein_letter_uploads;
-        $sharedDriveId = $einDrive;  // Shared Drive -> EOY Uploads
+            $chapter = Chapters::with('documents', 'state')->find($id);
+            $ein = $chapter->ein;
+            $chapterName = $chapter->name;
+            $state = $chapter->state->state_short_name;
+            $name = $ein.'_'.$chapterName.'_'.$state;
 
-        $file = $request->file('file');
-        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
-        $mimetype = $file->getMimeType();
-        $filecontent = file_get_contents($file->getPathname());
+            $googleDrive = GoogleDrive::first();
+            $einDrive = $googleDrive->ein_letter_uploads;
+            $sharedDriveId = $einDrive;  // Shared Drive -> EOY Uploads
 
-        if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
-            $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            if ($existingDocRecord) {
-                $existingDocRecord->ein_letter_path = $file_id;
-                $existingDocRecord->save();
-            } else {
-                Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id];
-                $newDocData['ein_letter_path'] = $file_id;
-                $newDocData['ein_letter'] = '1';
-                Documents::create($newDocData);
+            $file = $request->file('file');
+            $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+            $mimetype = $file->getMimeType();
+            $filecontent = file_get_contents($file->getPathname());
+
+            if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                if ($existingDocRecord) {
+                    $existingDocRecord->ein_letter_path = $file_id;
+                    $existingDocRecord->save();
+                } else {
+                    Log::error("Expected document record for chapter_id {$id} not found");
+                    $newDocData = ['chapter_id' => $id];
+                    $newDocData['ein_letter_path'] = $file_id;
+                    $newDocData['ein_letter'] = '1';
+                    Documents::create($newDocData);
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'EIN Letter uploaded successfully.',
+                ]);
             }
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'EIN Letter uploaded successfully.',
-            ]);
+                'status' => 'error',
+                'message' => 'Failed to upload file.',
+            ], 500);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while uploading the file.',
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Failed to upload file.',
-        ], 500);
     }
 
     /**
      *  Save Chapter Resource Items
      */
-    public function storeResources(StoreResourcesGoogleRequest $request, $id): JsonResponse
+    public function storeResources(Request $request, $id): JsonResponse
     {
-        $googleDrive = GoogleDrive::first();
-        $resourcesDrive = $googleDrive->resources_uploads;
-        $sharedDriveId = $resourcesDrive;  // Shared Drive -> EOY Uploads
+        try {
+            $request->validate([
+                'file' => 'required|file',
+            ]);
 
-        $file = $request->file('file');
-        $name = Str::ascii($file->getClientOriginalName());
-        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
-        $mimetype = $file->getMimeType();
-        $filecontent = file_get_contents($file->getPathname());
+            $googleDrive = GoogleDrive::first();
+            $resourcesDrive = $googleDrive->resources_uploads;
+            $sharedDriveId = $resourcesDrive;  // Shared Drive -> EOY Uploads
 
-        if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
-            $existingDocRecord = Resources::find($id);
-            if ($existingDocRecord) {
-                $existingDocRecord->file_path = $file_id;
-                $existingDocRecord->save();
-            } else {
-                Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id];
-                $newDocData['file_path'] = $file_id;
-                Resources::create($newDocData);
+            $file = $request->file('file');
+            $name = Str::ascii($file->getClientOriginalName());
+            $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+            $mimetype = $file->getMimeType();
+            $filecontent = file_get_contents($file->getPathname());
+
+            if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+                $existingDocRecord = Resources::find($id);
+                if ($existingDocRecord) {
+                    $existingDocRecord->file_path = $file_id;
+                    $existingDocRecord->save();
+                } else {
+                    Log::error("Expected document record for chapter_id {$id} not found");
+                    $newDocData = ['chapter_id' => $id];
+                    $newDocData['file_path'] = $file_id;
+                    Resources::create($newDocData);
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'File uploaded successfully.',
+                ]);
             }
 
-            // $existingDocRecord = Resources::find($id);
-            // $existingDocRecord->update([
-            //     'file_path' => $file_id,
-            // ]);
-
             return response()->json([
-                'status' => 'success',
-                'message' => 'File uploaded successfully.',
-            ]);
+                'status' => 'error',
+                'message' => 'Failed to upload file.',
+            ], 500);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while uploading the file.',
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Failed to upload file.',
-        ], 500);
     }
 
     /**
-     *  Save Coordinator Toolkit Itesm
+     *  Save Coordinator Toolkit Items
      */
-    public function storeToolkit(StoreToolkitGoogleRequest $request, $id): JsonResponse
+    public function storeToolkit(Request $request, $id): JsonResponse
     {
-        $googleDrive = GoogleDrive::first();
-        $resourcesDrive = $googleDrive->resources_uploads;
-        $sharedDriveId = $resourcesDrive;  // Shared Drive -> EOY Uploads
+        try {
+            $request->validate([
+                'file' => 'required|file',
+            ]);
 
-        $file = $request->file('file');
-        $name = Str::ascii($file->getClientOriginalName());
-        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
-        $mimetype = $file->getMimeType();
-        $filecontent = file_get_contents($file->getPathname());
+            $googleDrive = GoogleDrive::first();
+            $resourcesDrive = $googleDrive->resources_uploads;
+            $sharedDriveId = $resourcesDrive;  // Shared Drive -> EOY Uploads
 
-        if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
-            $existingDocRecord = Resources::find($id);
-            if ($existingDocRecord) {
-                $existingDocRecord->file_path = $file_id;
-                $existingDocRecord->save();
-            } else {
-                Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id];
-                $newDocData['file_path'] = $file_id;
-                Resources::create($newDocData);
+            $file = $request->file('file');
+            $name = Str::ascii($file->getClientOriginalName());
+            $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+            $mimetype = $file->getMimeType();
+            $filecontent = file_get_contents($file->getPathname());
+
+            if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+                $existingDocRecord = Resources::find($id);
+                if ($existingDocRecord) {
+                    $existingDocRecord->file_path = $file_id;
+                    $existingDocRecord->save();
+                } else {
+                    Log::error("Expected document record for chapter_id {$id} not found");
+                    $newDocData = ['chapter_id' => $id];
+                    $newDocData['file_path'] = $file_id;
+                    Resources::create($newDocData);
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'File uploaded successfully.',
+                ]);
             }
 
-            // $existingDocRecord = Resources::find($id);
-            // $existingDocRecord->update([
-            //     'file_path' => $file_id,
-            // ]);
-
             return response()->json([
-                'status' => 'success',
-                'message' => 'File uploaded successfully.',
-            ]);
+                'status' => 'error',
+                'message' => 'Failed to upload file.',
+            ], 500);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while uploading the file.',
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Failed to upload file.',
-        ], 500);
     }
 
     /**
      *  Save Roster for EOY Report Attachments
      */
-    public function storeRoster(StoreRosterGoogleRequest $request, $id): JsonResponse
+    public function storeRoster(Request $request, $id): JsonResponse
     {
-        $chapter = Chapters::with('documents', 'state')->find($id);
-        $conf = $chapter->conference_id;
-        $state = $chapter->state->state_short_name;
-        $chapterName = $chapter->name;
-        $name = $state.'_'.$chapterName.'_Roster';
+        try {
+            $request->validate([
+                'file' => 'required|file',
+            ]);
 
-        $googleDrive = GoogleDrive::first();
-        $eoyDrive = $googleDrive->eoy_uploads;
-        $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
+            $chapter = Chapters::with('documents', 'state')->find($id);
+            $conf = $chapter->conference_id;
+            $state = $chapter->state->state_short_name;
+            $chapterName = $chapter->name;
+            $name = $state.'_'.$chapterName.'_Roster';
 
-        $file = $request->file('file');
-        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
-        $mimetype = $file->getMimeType();
-        $filecontent = file_get_contents($file->getPathname());
+            $googleDrive = GoogleDrive::first();
+            $eoyDrive = $googleDrive->eoy_uploads;
+            $year = $googleDrive->eoy_uploads_year;
+            $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-            $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            if ($existingDocRecord) {
-                $existingDocRecord->roster_path = $file_id;
-                $existingDocRecord->save();
-            } else {
-                Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id];
-                $newDocData['roster_path'] = $file_id;
-                Documents::create($newDocData);
+            $file = $request->file('file');
+            $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+            $mimetype = $file->getMimeType();
+            $filecontent = file_get_contents($file->getPathname());
+
+            if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                if ($existingDocRecord) {
+                    $existingDocRecord->roster_path = $file_id;
+                    $existingDocRecord->save();
+                } else {
+                    Log::error("Expected document record for chapter_id {$id} not found");
+                    $newDocData = ['chapter_id' => $id];
+                    $newDocData['roster_path'] = $file_id;
+                    Documents::create($newDocData);
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Roster uploaded successfully.',
+                ]);
             }
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'Roster uploaded successfully.',
-            ]);
+                'status' => 'error',
+                'message' => 'Failed to upload file.',
+            ], 500);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while uploading the file.',
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Failed to upload file.',
-        ], 500);
     }
 
     /**
      *  Save 990N Confirmation for EOY Report Attachments
      */
-    public function store990N(Store990NGoogleRequest $request, $id): JsonResponse
+    public function store990N(Request $request, $id): JsonResponse
     {
-        $chapter = Chapters::with('documents', 'state')->find($id);
-        $conf = $chapter->conference_id;
-        $state = $chapter->state->state_short_name;
-        $chapterName = $chapter->name;
-        $name = $state.'_'.$chapterName.'_990N';
+        try {
+            $request->validate([
+                'file' => 'required|file',
+            ]);
 
-        $googleDrive = GoogleDrive::first();
-        $eoyDrive = $googleDrive->eoy_uploads;
-        $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
+            $chapter = Chapters::with('documents', 'state')->find($id);
+            $conf = $chapter->conference_id;
+            $state = $chapter->state->state_short_name;
+            $chapterName = $chapter->name;
+            $name = $state.'_'.$chapterName.'_990N';
 
-        $file = $request->file('file');
-        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
-        $mimetype = $file->getMimeType();
-        $filecontent = file_get_contents($file->getPathname());
+            $googleDrive = GoogleDrive::first();
+            $eoyDrive = $googleDrive->eoy_uploads;
+            $year = $googleDrive->eoy_uploads_year;
+            $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-            $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            if ($existingDocRecord) {
-                $existingDocRecord->irs_path = $file_id;
-                $existingDocRecord->save();
-            } else {
-                Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id];
-                $newDocData['irs_path'] = $file_id;
-                Documents::create($newDocData);
+            $file = $request->file('file');
+            $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+            $mimetype = $file->getMimeType();
+            $filecontent = file_get_contents($file->getPathname());
+
+            if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                if ($existingDocRecord) {
+                    $existingDocRecord->irs_path = $file_id;
+                    $existingDocRecord->save();
+                } else {
+                    Log::error("Expected document record for chapter_id {$id} not found");
+                    $newDocData = ['chapter_id' => $id];
+                    $newDocData['irs_path'] = $file_id;
+                    Documents::create($newDocData);
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => '990N Confirmation uploaded successfully.',
+                ]);
             }
 
             return response()->json([
-                'status' => 'success',
-                'message' => '990N Confirmation uploaded successfully.',
-            ]);
+                'status' => 'error',
+                'message' => 'Failed to upload file.',
+            ], 500);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while uploading the file.',
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Failed to upload file.',
-        ], 500);
     }
 
     /**
      *  Save BankStatement for EOY Report Attachments
      */
-    public function storeStatement1(StoreStatement1GoogleRequest $request, $id): JsonResponse
+    public function storeStatement1(Request $request, $id): JsonResponse
     {
-        $chapter = Chapters::with('documents', 'state')->find($id);
-        $conf = $chapter->conference_id;
-        $state = $chapter->state->state_short_name;
-        $chapterName = $chapter->name;
-        $name = $state.'_'.$chapterName.'_Statement';
+        try {
+            $request->validate([
+                'file' => 'required|file',
+            ]);
 
-        $googleDrive = GoogleDrive::first();
-        $eoyDrive = $googleDrive->eoy_uploads;
-        $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
+            $chapter = Chapters::with('documents', 'state')->find($id);
+            $conf = $chapter->conference_id;
+            $state = $chapter->state->state_short_name;
+            $chapterName = $chapter->name;
+            $name = $state.'_'.$chapterName.'_Statement';
 
-        $file = $request->file('file');
-        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
-        $mimetype = $file->getMimeType();
-        $filecontent = file_get_contents($file->getPathname());
+            $googleDrive = GoogleDrive::first();
+            $eoyDrive = $googleDrive->eoy_uploads;
+            $year = $googleDrive->eoy_uploads_year;
+            $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-            $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            if ($existingDocRecord) {
-                $existingDocRecord->statement_1_path = $file_id;
-                $existingDocRecord->save();
-            } else {
-                Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id];
-                $newDocData['statement_1_path'] = $file_id;
-                Documents::create($newDocData);
+            $file = $request->file('file');
+            $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+            $mimetype = $file->getMimeType();
+            $filecontent = file_get_contents($file->getPathname());
+
+            if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                if ($existingDocRecord) {
+                    $existingDocRecord->statement_1_path = $file_id;
+                    $existingDocRecord->save();
+                } else {
+                    Log::error("Expected document record for chapter_id {$id} not found");
+                    $newDocData = ['chapter_id' => $id];
+                    $newDocData['statement_1_path'] = $file_id;
+                    Documents::create($newDocData);
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Statement uploaded successfully.',
+                ]);
             }
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'Statement uploaded successfully.',
-            ]);
+                'status' => 'error',
+                'message' => 'Failed to upload file.',
+            ], 500);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while uploading the file.',
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Failed to upload file.',
-        ], 500);
     }
 
     /**
      *  Save Additional Bank Statement for EOY Report Attachments
      */
-    public function storeStatement2(StoreStatement2GoogleRequest $request, $id): JsonResponse
+    public function storeStatement2(Request $request, $id): JsonResponse
     {
-        $chapter = Chapters::with('documents', 'state')->find($id);
-        $conf = $chapter->conference_id;
-        $state = $chapter->state->state_short_name;
-        $chapterName = $chapter->name;
-        $name = $state.'_'.$chapterName.'_Statement_2';
+        try {
+            $request->validate([
+                'file' => 'required|file',
+            ]);
 
-        $googleDrive = GoogleDrive::first();
-        $eoyDrive = $googleDrive->eoy_uploads;
-        $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
+            $chapter = Chapters::with('documents', 'state')->find($id);
+            $conf = $chapter->conference_id;
+            $state = $chapter->state->state_short_name;
+            $chapterName = $chapter->name;
+            $name = $state.'_'.$chapterName.'_Statement_2';
 
-        $file = $request->file('file');
-        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
-        $mimetype = $file->getMimeType();
-        $filecontent = file_get_contents($file->getPathname());
+            $googleDrive = GoogleDrive::first();
+            $eoyDrive = $googleDrive->eoy_uploads;
+            $year = $googleDrive->eoy_uploads_year;
+            $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-            $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            if ($existingDocRecord) {
-                $existingDocRecord->statement_2_path = $file_id;
-                $existingDocRecord->save();
-            } else {
-                Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id];
-                $newDocData['statement_2_path'] = $file_id;
-                Documents::create($newDocData);
+            $file = $request->file('file');
+            $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+            $mimetype = $file->getMimeType();
+            $filecontent = file_get_contents($file->getPathname());
+
+            if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                if ($existingDocRecord) {
+                    $existingDocRecord->statement_2_path = $file_id;
+                    $existingDocRecord->save();
+                } else {
+                    Log::error("Expected document record for chapter_id {$id} not found");
+                    $newDocData = ['chapter_id' => $id];
+                    $newDocData['statement_2_path'] = $file_id;
+                    Documents::create($newDocData);
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Additional Statement uploaded successfully.',
+                ]);
             }
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'Additional Statement uploaded successfully.',
-            ]);
+                'status' => 'error',
+                'message' => 'Failed to upload file.',
+            ], 500);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while uploading the file.',
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Failed to upload file.',
-        ], 500);
     }
 
-    public function storeAward(StoreAwardGoogleRequest $request, $id): JsonResponse
+    public function storeAward(Request $request, $id): JsonResponse
     {
-        $chapter = Chapters::with('documents', 'state')->find($id);
-        $conf = $chapter->conference_id;
-        $state = $chapter->state->state_short_name;
-        $chapterName = $chapter->name;
-        $name = $state.'_'.$chapterName.'_Award';
+        try {
+            $request->validate([
+                'file' => 'required|file',
+            ]);
 
-        $googleDrive = GoogleDrive::first();
-        $eoyDrive = $googleDrive->eoy_uploads;
-        $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
+            $chapter = Chapters::with('documents', 'state')->find($id);
+            $conf = $chapter->conference_id;
+            $state = $chapter->state->state_short_name;
+            $chapterName = $chapter->name;
+            $name = $state.'_'.$chapterName.'_Award';
 
-        $file = $request->file('file');
-        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
-        $mimetype = $file->getMimeType();
-        $filecontent = file_get_contents($file->getPathname());
+            $googleDrive = GoogleDrive::first();
+            $eoyDrive = $googleDrive->eoy_uploads;
+            $year = $googleDrive->eoy_uploads_year;
+            $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
-        if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-            $existingDocRecord = Documents::where('chapter_id', $id)->first();
-            if ($existingDocRecord) {
-                $existingDocRecord->award_path = $file_id;
-                $existingDocRecord->save();
-            } else {
-                Log::error("Expected document record for chapter_id {$id} not found");
-                $newDocData = ['chapter_id' => $id];
-                $newDocData['award_path'] = $file_id;
-                Documents::create($newDocData);
+            $file = $request->file('file');
+            $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+            $mimetype = $file->getMimeType();
+            $filecontent = file_get_contents($file->getPathname());
+
+            if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                if ($existingDocRecord) {
+                    $existingDocRecord->award_path = $file_id;
+                    $existingDocRecord->save();
+                } else {
+                    Log::error("Expected document record for chapter_id {$id} not found");
+                    $newDocData = ['chapter_id' => $id];
+                    $newDocData['award_path'] = $file_id;
+                    Documents::create($newDocData);
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Award File uploaded successfully.',
+                ]);
             }
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'Award File uploaded successfully.',
-            ]);
+                'status' => 'error',
+                'message' => 'Failed to upload file.',
+            ], 500);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while uploading the file.',
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Failed to upload file.',
-        ], 500);
     }
 
     /**

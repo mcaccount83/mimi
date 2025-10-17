@@ -3,12 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CoordinatorPosition;
-use App\Http\Requests\AddBugsAdminRequest;
-use App\Http\Requests\AddResourcesAdminRequest;
-use App\Http\Requests\AddToolkitAdminRequest;
-use App\Http\Requests\UpdateBugsAdminRequest;
-use App\Http\Requests\UpdateResourcesAdminRequest;
-use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Bugs;
 use App\Models\ResourceCategory;
@@ -102,56 +96,80 @@ class ResourcesController extends Controller implements HasMiddleware
     /**
      * Add New Task to Bugs & Enhancements List
      */
-    public function addBugs(AddBugsAdminRequest $request)
+    public function addBugs(Request $request)
     {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $validatedData = $request->validated();
+            $validatedData = $request->validate([
+                'taskNameNew' => 'required|string|max:255',
+                'taskDetailsNew' => 'required|string',
+                'taskPriorityNew' => 'required',
+            ]);
 
-        $task = new Bugs;
-        $task->task = $validatedData['taskNameNew'];
-        $task->details = $validatedData['taskDetailsNew'];
-        $task->priority = $validatedData['taskPriorityNew'];
-        $task->reported_id = $coorId;
-        $task->reported_date = $lastupdatedDate;
+            $task = new Bugs;
+            $task->task = $validatedData['taskNameNew'];
+            $task->details = $validatedData['taskDetailsNew'];
+            $task->priority = $validatedData['taskPriorityNew'];
+            $task->reported_id = $coorId;
+            $task->reported_date = $lastupdatedDate;
 
-        $mailData = [
-            'taskNameNew' => $task->task,
-            'taskDetailsNew' => $task->details,
-            'ReportedId' => $coorId,
-            'ReportedDate' => $task->reported_date,
-        ];
+            $mailData = [
+                'taskNameNew' => $task->task,
+                'taskDetailsNew' => $task->details,
+                'ReportedId' => $coorId,
+                'ReportedDate' => $task->reported_date,
+            ];
 
-        // $to_email = 'jackie.mchenry@momsclub.org';
-        $adminEmail = $this->positionConditionsService->getAdminEmail();
-        $mimiAdmin = $adminEmail['mimi_admin'];  // Gsuite Coor Email
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $mimiAdmin = $adminEmail['mimi_admin'];
 
-        Mail::to($mimiAdmin)->queue(new AdminNewMIMIBugWish($mailData));
+            Mail::to($mimiAdmin)->queue(new AdminNewMIMIBugWish($mailData));
 
-        $task->save();
+            $task->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while submitting the bug report.'], 500);
+        }
     }
 
     /**
      * Update Task on Bugs & Enhancements List
      */
-    public function updateBugs(UpdateBugsAdminRequest $request, $id)
+    public function updateBugs(Request $request, $id)
     {
-        $validatedData = $request->validated();
+        try {
+            $validatedData = $request->validate([
+                'taskDetails' => 'required|string',
+                'taskNotes' => 'nullable|string',
+                'taskStatus' => 'required',
+                'taskPriority' => 'required',
+            ]);
 
-        $task = Bugs::findOrFail($id);
-        $task->details = $validatedData['taskDetails'];
-        $task->notes = $validatedData['taskNotes'];
-        $task->status = $validatedData['taskStatus'];
-        $task->priority = $validatedData['taskPriority'];
+            $task = Bugs::findOrFail($id);
+            $task->details = $validatedData['taskDetails'];
+            $task->notes = $validatedData['taskNotes'];
+            $task->status = $validatedData['taskStatus'];
+            $task->priority = $validatedData['taskPriority'];
 
-        if ($validatedData['taskStatus'] == 3) {
-            $task->completed_date = Carbon::today();
+            if ($validatedData['taskStatus'] == 3) {
+                $task->completed_date = Carbon::today();
+            }
+
+            $task->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while updating the bug report.'], 500);
         }
-
-        $task->save();
     }
 
     /**
@@ -194,69 +212,98 @@ class ResourcesController extends Controller implements HasMiddleware
     /**
      * Add New Files or Links to the Resources List
      */
-    public function addResources(AddResourcesAdminRequest $request): JsonResponse
+    public function addResources(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $validatedData = $request->validated();
+            $validatedData = $request->validate([
+                'fileCategoryNew' => 'required',
+                'fileNameNew' => 'required|string|max:50',
+                'fileDescriptionNew' => 'required|string|max:500',
+                'fileTypeNew' => 'required',
+                'fileVersionNew' => 'nullable|string|max:25',
+                'LinkNew' => 'nullable|string|max:255',
+                'filePathNew' => 'nullable|string|max:255',
+            ]);
 
-        $file = new Resources;
-        $file->category = $validatedData['fileCategoryNew'];
-        $file->name = $validatedData['fileNameNew'];
-        $file->description = $validatedData['fileDescriptionNew'];
-        $file->file_type = $validatedData['fileTypeNew'];
-        $file->version = $validatedData['fileVersionNew'] ?? null;
-        $file->link = $validatedData['LinkNew'] ?? null;
-        $file->file_path = $validatedData['filePathNew'] ?? null;
-        $file->updated_id = $coorId;
-        $file->updated_date = $lastupdatedDate;
+            $file = new Resources;
+            $file->category = $validatedData['fileCategoryNew'];
+            $file->name = $validatedData['fileNameNew'];
+            $file->description = $validatedData['fileDescriptionNew'];
+            $file->file_type = $validatedData['fileTypeNew'];
+            $file->version = $validatedData['fileVersionNew'] ?? null;
+            $file->link = $validatedData['LinkNew'] ?? null;
+            $file->file_path = $validatedData['filePathNew'] ?? null;
+            $file->updated_id = $coorId;
+            $file->updated_date = $lastupdatedDate;
 
-        $file->save();
+            $file->save();
 
-        $id = $file->id;
-        $fileType = $file->file_type;
+            $id = $file->id;
+            $fileType = $file->file_type;
 
-        return response()->json(['id' => $id, 'file_type' => $fileType]);
+            return response()->json(['success' => true, 'id' => $id, 'file_type' => $fileType]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while adding the resource.'], 500);
+        }
     }
 
     /**
      * Update Files or Links on the Resources List
      */
-    public function updateResources(UpdateResourcesAdminRequest $request, $id)
+    public function updateResources(Request $request, $id)
     {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
-        // Fetch admin details
-        $file = DB::table('resources')
-            ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-            ->first(); // Fetch only one record
-        $validatedData = $request->validated();
+            $validatedData = $request->validate([
+                'fileDescription' => 'required|string|max:500',
+                'fileType' => 'required',
+                'fileVersion' => 'nullable|string|max:25',
+                'link' => 'nullable|string|max:255',
+            ]);
 
-        $file = Resources::findOrFail($id);
-        $file->description = $validatedData['fileDescription'];
-        $file->file_type = $validatedData['fileType'];
+            // Fetch admin details (note: this query fetches but doesn't use the result - you may want to review this)
+            $fileInfo = DB::table('resources')
+                ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+                ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+                ->where('resources.id', $id)
+                ->first();
 
-        // Check file_type value and set version and link accordingly
-        if ($validatedData['fileType'] == 1) {
-            $file->link = null;
-            $file->version = $validatedData['fileVersion'] ?? null;
-        } elseif ($validatedData['fileType'] == 2) {
-            $file->version = null;
-            $file->file_path = null;
-            $file->link = $validatedData['link'] ?? null;
+            $file = Resources::findOrFail($id);
+            $file->description = $validatedData['fileDescription'];
+            $file->file_type = $validatedData['fileType'];
+
+            // Check file_type value and set version and link accordingly
+            if ($validatedData['fileType'] == 1) {
+                $file->link = null;
+                $file->version = $validatedData['fileVersion'] ?? null;
+            } elseif ($validatedData['fileType'] == 2) {
+                $file->version = null;
+                $file->file_path = null;
+                $file->link = $validatedData['link'] ?? null;
+            }
+
+            $file->updated_id = $coorId;
+            $file->updated_date = $lastupdatedDate;
+
+            $file->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while updating the resource.'], 500);
         }
-
-        $file->updated_id = $coorId;
-        $file->updated_date = $lastupdatedDate;
-
-        $file->save();
     }
 
     /**
@@ -281,73 +328,103 @@ class ResourcesController extends Controller implements HasMiddleware
     /**
      * Add New Files or Links to the Toolkit List
      */
-    public function addToolkit(AddToolkitAdminRequest $request): JsonResponse
+    public function addToolkit(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $validatedData = $request->validated();
+            $validatedData = $request->validate([
+                'fileCategoryNew' => 'required',
+                'fileNameNew' => 'required|string|max:50',
+                'fileDescriptionNew' => 'required|string|max:255',
+                'fileTypeNew' => 'required',
+                'fileVersionNew' => 'nullable|string|max:25',
+                'linkNew' => 'nullable|string|max:255',
+                'filePathNew' => 'nullable|string|max:255',
+            ]);
 
-        $file = new Resources;
-        $file->category = $request->fileCategoryNew;
-        $file->name = $request->fileNameNew;
-        $file->description = $request->fileDescriptionNew;
-        $file->file_type = $request->fileTypeNew;
+            $file = new Resources;
+            $file->category = $validatedData['fileCategoryNew'];
+            $file->name = $validatedData['fileNameNew'];
+            $file->description = $validatedData['fileDescriptionNew'];
+            $file->file_type = $validatedData['fileTypeNew'];
 
-        if ($request->fileTypeNew == 1) {
-            $file->link = null;
-            $file->version = $request->fileVersionNew ?? null;
-        } elseif ($request->fileTypeNew == 2) {
-            $file->version = null;
-            $file->file_path = null;
-            $file->link = $request->linkNew ?? null;
+            if ($validatedData['fileTypeNew'] == 1) {
+                $file->link = null;
+                $file->version = $validatedData['fileVersionNew'] ?? null;
+            } elseif ($validatedData['fileTypeNew'] == 2) {
+                $file->version = null;
+                $file->file_path = null;
+                $file->link = $validatedData['linkNew'] ?? null;
+            }
+
+            $file->updated_id = $coorId;
+            $file->updated_date = $lastupdatedDate;
+
+            $file->save();
+
+            return response()->json(['success' => true, 'id' => $file->id, 'file_type' => $file->file_type]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while adding the toolkit item.'], 500);
         }
-
-        $file->updated_id = $coorId;
-        $file->updated_date = $lastupdatedDate;
-
-        $file->save();
-
-        return response()->json(['id' => $file->id, 'file_type' => $file->file_type]);
     }
 
     /**
      * Update Files or Links on the Toolkit List
      */
-    public function updateToolkit(UpdateToolkitAdminRequest $request, $id)
+    public function updateToolkit(Request $request, $id)
     {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $lastUpdatedBy = $user['user_name'];
+            $lastupdatedDate = date('Y-m-d H:i:s');
 
-        // Fetch admin details
-        $file = DB::table('resources')
-            ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-            ->first(); // Fetch only one record
-        $validatedData = $request->validated();
+            $validatedData = $request->validate([
+                'fileDescription' => 'required|string|max:255',
+                'fileType' => 'required',
+                'fileVersion' => 'nullable|string|max:25',
+                'link' => 'nullable|string|max:255',
+                'filePath' => 'nullable|string|max:255',
+            ]);
 
-        $file = Resources::findOrFail($id);
-        $file->description = $validatedData['fileDescription'];
-        $file->file_type = $validatedData['fileType'];
+            // Fetch admin details (note: this query fetches but doesn't use the result - you may want to review this)
+            $fileInfo = DB::table('resources')
+                ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+                ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+                ->where('resources.id', $id)
+                ->first();
 
-        // Check file_type value and set version and link accordingly
-        if ($validatedData['fileType'] == 1) {
-            $file->link = null;
-            $file->version = $validatedData['fileVersion'] ?? null;
-        } elseif ($validatedData['fileType'] == 2) {
-            $file->version = null;
-            $file->file_path = null;
-            $file->link = $validatedData['link'] ?? null;
+            $file = Resources::findOrFail($id);
+            $file->description = $validatedData['fileDescription'];
+            $file->file_type = $validatedData['fileType'];
+
+            // Check file_type value and set version and link accordingly
+            if ($validatedData['fileType'] == 1) {
+                $file->link = null;
+                $file->version = $validatedData['fileVersion'] ?? null;
+            } elseif ($validatedData['fileType'] == 2) {
+                $file->version = null;
+                $file->file_path = null;
+                $file->link = $validatedData['link'] ?? null;
+            }
+
+            $file->updated_id = $coorId;
+            $file->updated_date = $lastupdatedDate;
+
+            $file->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while updating the toolkit item.'], 500);
         }
-
-        $file->updated_id = $coorId;
-        $file->updated_date = $lastupdatedDate;
-
-        $file->save();
     }
 
     /**

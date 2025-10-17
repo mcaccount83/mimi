@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
-use App\Http\Requests\CheckCurrentPasswordBoardRequest;
-use App\Http\Requests\UpdatePasswordBoardRequest;
 use App\Mail\BorUpdateListNoitce;
 use App\Mail\ChapProfileUpdatePCNotice;
 use App\Mail\EOYElectionReportSubmitted;
@@ -91,32 +89,53 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Reset Password
      */
-    public function updatePassword(UpdatePasswordBoardRequest $request): JsonResponse
+    public function updatePassword(Request $request): JsonResponse
     {
-        $user = $request->user();
+        try {
+            $request->validate([
+                'current_password' => 'required',
+                'new_password' => 'required|string|min:8|confirmed',
+            ]);
 
-        // Ensure the current password is correct
-        if (! Hash::check($request->current_password, $user->password)) {
-            return response()->json(['error' => 'Current password is incorrect'], 400);
+            $user = $request->user();
+
+            // Ensure the current password is correct
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json(['error' => 'Current password is incorrect'], 400);
+            }
+
+            // Update the user's password
+            $user->password = Hash::make($request->new_password);
+            $user->remember_token = null; // Reset the remember token
+            $user->save();
+
+            return response()->json(['message' => 'Password updated successfully']);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while updating the password.'], 500);
         }
-
-        // Update the user's password
-        $user->password = Hash::make($request->new_password);
-        $user->remember_token = null; // Reset the remember token
-        $user->save();
-
-        return response()->json(['message' => 'Password updated successfully']);
     }
 
     /**
      * Verify Current Passwor for Reset
      */
-    public function checkCurrentPassword(CheckCurrentPasswordBoardRequest $request): JsonResponse
+    public function checkCurrentPassword(Request $request): JsonResponse
     {
-        $user = $request->user();
-        $isValid = Hash::check($request->current_password, $user->password);
+        try {
+            $request->validate([
+                'current_password' => 'required',
+            ]);
 
-        return response()->json(['isValid' => $isValid]);
+            $user = $request->user();
+            $isValid = Hash::check($request->current_password, $user->password);
+
+            return response()->json(['isValid' => $isValid]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while checking the password.'], 500);
+        }
     }
 
     /**

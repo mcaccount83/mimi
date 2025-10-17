@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -142,13 +143,13 @@ Route::post('/admin/storeconf', [AdminController::class, 'storeConf'])->name('ad
 Route::delete('/admin/deleteconf/{id}', [AdminController::class, 'deleteConf'])->name('admin.deleteconf');
 
 // Admin Controller Routes...Coordinator Login Required
-Route::get('/adminreports/useradmin', [AdminController::class, 'showUserAdmin'])->name('adminreports.useradmin');
-Route::get('/adminreports/duplicateuser', [AdminController::class, 'showDuplicate'])->name('adminreports.duplicateuser');
-Route::get('/adminreports/duplicateboardid', [AdminController::class, 'showDuplicateId'])->name('adminreports.duplicateboardid');
-Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresident'])->name('adminreports.nopresident');
-Route::get('/adminreports/noactiveboard', [AdminController::class, 'showNoActiveBoard'])->name('adminreports.noactiveboard');
-Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('adminreports.outgoingboard');
-Route::get('/adminreports/disbandedboard', [AdminController::class, 'showDisbandedBoard'])->name('adminreports.disbandedboard');
+Route::get('/adminreports/useradmin', [AdminReportController::class, 'showUserAdmin'])->name('adminreports.useradmin');
+Route::get('/adminreports/duplicateuser', [AdminReportController::class, 'showDuplicate'])->name('adminreports.duplicateuser');
+Route::get('/adminreports/duplicateboardid', [AdminReportController::class, 'showDuplicateId'])->name('adminreports.duplicateboardid');
+Route::get('/adminreports/nopresident', [AdminReportController::class, 'showNoPresident'])->name('adminreports.nopresident');
+Route::get('/adminreports/noactiveboard', [AdminReportController::class, 'showNoActiveBoard'])->name('adminreports.noactiveboard');
+Route::get('/adminreports/outgoingboard', [AdminReportController::class, 'showOutgoingBoard'])->name('adminreports.outgoingboard');
+Route::get('/adminreports/disbandedboard', [AdminReportController::class, 'showDisbandedBoard'])->name('adminreports.disbandedboard');
 
 // Resources Controller Routes...Coordinator Login Required
 Route::get('/resources/bugs', [ResourcesController::class, 'showBugs'])->name('resources.bugs');

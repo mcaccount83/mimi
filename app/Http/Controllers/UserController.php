@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CoordinatorPosition;
-use App\Http\Requests\CheckCurrentPasswordUserRequest;
-use App\Http\Requests\UpdatePasswordUserRequest;
 use App\Models\Boards;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
@@ -40,31 +38,53 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Reset Password Button for Board Member or Coordinator -- Triggered by Coordinator
      */
-    public function updatePassword(UpdatePasswordUserRequest $request): JsonResponse
+    public function updatePassword(Request $request): JsonResponse
     {
-        $user = User::find($request->user_id);
-        if ($user) {
-            $user->password = Hash::make($request->new_password);
-            $user->remember_token = null;
-            $user->save();
+        try {
+            $validatedData = $request->validate([
+                'user_id' => 'required',
+                'new_password' => 'required|string|min:8',
+            ]);
 
-            return response()->json(['message' => 'Password updated successfully']);
+            $user = User::find($validatedData['user_id']);
+
+            if ($user) {
+                $user->password = Hash::make($validatedData['new_password']);
+                $user->remember_token = null;
+                $user->save();
+
+                return response()->json(['message' => 'Password updated successfully']);
+            }
+
+            Log::warning('User not found with ID: ', [$validatedData['user_id']]);
+
+            return response()->json(['error' => 'User not found'], 404);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while updating the password.'], 500);
         }
-
-        Log::warning('User not found with ID: ', [$request->user_id]);
-
-        return response()->json(['error' => 'User not found'], 404);
     }
 
     /**
      * Verify Current Password for Reset
      */
-    public function checkCurrentPassword(CheckCurrentPasswordUserRequest $request): JsonResponse
+    public function checkCurrentPassword(Request $request): JsonResponse
     {
-        $user = $request->user();
-        $isValid = Hash::check($request->current_password, $user->password);
+        try {
+            $request->validate([
+                'current_password' => 'required',
+            ]);
 
-        return response()->json(['isValid' => $isValid]);
+            $user = $request->user();
+            $isValid = Hash::check($request->current_password, $user->password);
+
+            return response()->json(['isValid' => $isValid]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while checking the password.'], 500);
+        }
     }
 
     /**

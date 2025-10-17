@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\IndexMailRequest;
 use Illuminate\Database as DatabaseConnections;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use romanzipp\QueueMonitor\Controllers\Payloads\Metric;
 use romanzipp\QueueMonitor\Controllers\Payloads\Metrics;
 use romanzipp\QueueMonitor\Enums\MonitorStatus;
@@ -31,90 +32,105 @@ class MailController extends Controller implements HasMiddleware
         ];
     }
 
-    public function index(IndexMailRequest $request)
+    public function index(Request $request)
     {
-        // Fetch pending jobs
-        $pendingJobs = DB::table('jobs')->get();
+        try {
+            // Fetch pending jobs
+            $pendingJobs = DB::table('jobs')->get();
 
-        $data = $request->validated();
+            $data = $request->validate([
+                'status' => [
+                    'nullable',
+                    'numeric',
+                    Rule::in(MonitorStatus::toArray()),
+                ],
+                'queue' => 'nullable|string',
+                'name' => 'nullable|string',
+                'custom_data' => 'nullable|string',
+            ]);
 
-        $filters = [
-            'status' => isset($data['status']) ? (int) $data['status'] : null,
-            'queue' => $data['queue'] ?? 'all',
-            'name' => $data['name'] ?? null,
-            'custom_data' => $data['custom_data'] ?? null,
-        ];
+            $filters = [
+                'status' => isset($data['status']) ? (int) $data['status'] : null,
+                'queue' => $data['queue'] ?? 'all',
+                'name' => $data['name'] ?? null,
+                'custom_data' => $data['custom_data'] ?? null,
+            ];
 
-        $jobsQuery = QueueMonitor::getModel()->newQuery();
+            $jobsQuery = QueueMonitor::getModel()->newQuery();
 
-        if ($filters['status'] != null) {
-            $jobsQuery->where('status', $filters['status']);
-        }
-
-        if ($filters['queue'] != 'all') {
-            $jobsQuery->where('queue', $filters['queue']);
-        }
-
-        if ($filters['name'] != null) {
-            $jobsQuery->where('name', 'like', "%{$filters['name']}%");
-        }
-
-        if ($filters['custom_data'] != null) {
-            $jobsQuery->where('data', 'like', "%{$filters['custom_data']}%");
-        }
-
-        $connection = DB::connection();
-        if (config('queue-monitor.ui.order_queued_first')) {
-            if ($connection instanceof DatabaseConnections\MySqlConnection) {
-                $jobsQuery->orderByRaw('-`started_at`');
+            if ($filters['status'] != null) {
+                $jobsQuery->where('status', $filters['status']);
             }
 
-            if ($connection instanceof DatabaseConnections\SqlServerConnection) {
-                $jobsQuery->orderByRaw('(CASE WHEN [started_at] IS NULL THEN 0 ELSE 1 END)');
+            if ($filters['queue'] != 'all') {
+                $jobsQuery->where('queue', $filters['queue']);
             }
 
-            if ($connection instanceof DatabaseConnections\SQLiteConnection) {
-                $jobsQuery->orderByRaw('started_at DESC NULLS FIRST');
+            if ($filters['name'] != null) {
+                $jobsQuery->where('name', 'like', "%{$filters['name']}%");
             }
-        } elseif ($connection instanceof DatabaseConnections\PostgresConnection) {
-            $jobsQuery->orderByRaw('started_at DESC NULLS LAST');
+
+            if ($filters['custom_data'] != null) {
+                $jobsQuery->where('data', 'like', "%{$filters['custom_data']}%");
+            }
+
+            $connection = DB::connection();
+            if (config('queue-monitor.ui.order_queued_first')) {
+                if ($connection instanceof DatabaseConnections\MySqlConnection) {
+                    $jobsQuery->orderByRaw('-`started_at`');
+                }
+
+                if ($connection instanceof DatabaseConnections\SqlServerConnection) {
+                    $jobsQuery->orderByRaw('(CASE WHEN [started_at] IS NULL THEN 0 ELSE 1 END)');
+                }
+
+                if ($connection instanceof DatabaseConnections\SQLiteConnection) {
+                    $jobsQuery->orderByRaw('started_at DESC NULLS FIRST');
+                }
+            } elseif ($connection instanceof DatabaseConnections\PostgresConnection) {
+                $jobsQuery->orderByRaw('started_at DESC NULLS LAST');
+            }
+
+            $jobsQuery
+                ->orderByDesc('started_at')
+                ->orderByDesc('started_at_exact');
+
+            $jobs = $jobsQuery
+                ->paginate(config('queue-monitor.ui.per_page'))
+                ->appends(
+                    $request->all()
+                );
+
+            $queues = QueueMonitor::getModel()
+                ->newQuery()
+                ->select('queue')
+                ->groupBy('queue')
+                ->get()
+                ->map(function (MonitorContract $monitor) {
+                    /** @var \romanzipp\QueueMonitor\Models\Monitor $monitor */
+                    return $monitor->queue;
+                })
+                ->toArray();
+
+            $metrics = null;
+
+            if (config('queue-monitor.ui.show_metrics')) {
+                $metrics = $this->collectMetrics();
+            }
+
+            return view('admin.jobs', [
+                'pendingJobs' => $pendingJobs,
+                'jobs' => $jobs,
+                'filters' => $filters,
+                'queues' => $queues,
+                'metrics' => $metrics,
+                'statuses' => MonitorStatus::toNamedArray(),
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while loading the jobs page.');
         }
-
-        $jobsQuery
-            ->orderByDesc('started_at')
-            ->orderByDesc('started_at_exact');
-
-        $jobs = $jobsQuery
-            ->paginate(config('queue-monitor.ui.per_page'))
-            ->appends(
-                $request->all()
-            );
-
-        $queues = QueueMonitor::getModel()
-            ->newQuery()
-            ->select('queue')
-            ->groupBy('queue')
-            ->get()
-            ->map(function (MonitorContract $monitor) {
-                /** @var \romanzipp\QueueMonitor\Models\Monitor $monitor */
-                return $monitor->queue;
-            })
-            ->toArray();
-
-        $metrics = null;
-
-        if (config('queue-monitor.ui.show_metrics')) {
-            $metrics = $this->collectMetrics();
-        }
-
-        return view('admin.jobs', [
-            'pendingJobs' => $pendingJobs,
-            'jobs' => $jobs,
-            'filters' => $filters,
-            'queues' => $queues,
-            'metrics' => $metrics,
-            'statuses' => MonitorStatus::toNamedArray(),
-        ]);
     }
 
     public function collectMetrics(): Metrics

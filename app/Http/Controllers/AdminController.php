@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CoordinatorPosition;
-use App\Http\Requests\StoreConfAdminRequest;
-use App\Http\Requests\UpdateConfListAdminRequest;
 use App\Models\Admin;
 use App\Models\AdminEmail;
 use App\Models\Boards;
@@ -177,125 +175,6 @@ class AdminController extends Controller implements HasMiddleware
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
-    }
-
-    /**
-     * User Admins
-     */
-    public function showUserAdmin(): View
-    {
-        $adminList = User::where('is_admin', '1')
-            ->where('is_active', '1')
-            ->get();
-
-        $countList = count($adminList);
-        $data = ['countList' => $countList, 'adminList' => $adminList];
-
-        return view('adminreports.useradmin')->with($data);
-    }
-
-    /**
-     * List of Duplicate Users
-     */
-    public function showDuplicate(): View
-    {
-        $userData = User::where('is_active', '=', '1')
-            ->groupBy('email')
-            ->having(DB::raw('count(email)'), '>', 1)
-            ->pluck('email');
-
-        $userList = User::where('is_active', '=', '1')
-            ->whereIn('email', $userData)
-            ->get();
-
-        $data = ['userList' => $userList];
-
-        return view('adminreports.duplicateuser')->with($data);
-    }
-
-    /**
-     *List of duplicate Board IDs
-     */
-    public function showDuplicateId(): View
-    {
-        $userData = Boards::groupBy('email')
-            ->having(DB::raw('count(email)'), '>', 1)
-            ->pluck('email');
-
-        $userList = Boards::whereIn('email', $userData)
-            ->get();
-
-        $data = ['userList' => $userList];
-
-        return view('adminreports.duplicateboardid')->with($data);
-    }
-
-    /**
-     * boards with no president
-     */
-    public function showNoPresident(): View
-    {
-        $PresId = DB::table('boards')
-            ->where('board_position_id', '=', '1')
-            ->pluck('chapter_id');
-
-        $ChapterPres = DB::table('chapters')
-            ->where('active_status', '=', '1')
-            ->whereNotIn('id', $PresId)
-            ->get();
-
-        $data = ['ChapterPres' => $ChapterPres];
-
-        return view('adminreports.nopresident')->with($data);
-    }
-
-    /**
-     * board member with inactive user
-     */
-    public function showNoActiveBoard(): View
-    {
-        $noActiveList = User::with(['board'])
-            ->whereHas('board') // This ensures only users WITH a board relationship are included
-            ->where('user_type', 'board')
-            ->where('is_active', '0')
-            ->get();
-
-        $countList = count($noActiveList);
-        $data = ['countList' => $countList, 'noActiveList' => $noActiveList];
-
-        return view('adminreports.noactiveboard')->with($data);
-    }
-
-    /**
-     * Outgoing Board Members
-     */
-    public function showOutgoingBoard(): View
-    {
-        $outgoingList = User::with(['boardOutgoing', 'boardOutgoing.chapters'])
-            ->where('user_type', 'outgoing')
-            ->where('is_active', '1')
-            ->get();
-
-        $countList = count($outgoingList);
-        $data = ['countList' => $countList, 'outgoingList' => $outgoingList];
-
-        return view('adminreports.outgoingboard')->with($data);
-    }
-
-    /**
-     * Disbanded Board Members
-     */
-    public function showDisbandedBoard(): View
-    {
-        $disbandedList = User::with(['boardDisbanded', 'boardDisbanded.chapters'])
-            ->where('user_type', 'disbanded')
-            ->where('is_active', '1')
-            ->get();
-
-        $countList = count($disbandedList);
-        $data = ['countList' => $countList, 'disbandedList' => $disbandedList];
-
-        return view('adminreports.disbandedboard')->with($data);
     }
 
     /**
@@ -1238,11 +1117,17 @@ class AdminController extends Controller implements HasMiddleware
         return view('admin.editconflist')->with($data);
     }
 
-    public function updateConfList(UpdateConfListAdminRequest $request): JsonResponse
+    public function updateConfList(Request $request): JsonResponse
     {
-        $validated = $request->validated();
-
         try {
+            $validated = $request->validate([
+                'id' => 'required|exists:conference,id',
+                'conference_name' => 'required|string|max:255',
+                'short_name' => 'required|string|max:50',
+                'conference_description' => 'required|string|max:500',
+                'short_description' => 'required|string|max:10',
+            ]);
+
             $conference = Conference::findOrFail($validated['id']);
             $conference->update([
                 'conference_name' => $validated['conference_name'],
@@ -1257,11 +1142,17 @@ class AdminController extends Controller implements HasMiddleware
         }
     }
 
-    public function storeConf(StoreConfAdminRequest $request): JsonResponse
+    public function storeConf(Request $request): JsonResponse
     {
-        $validated = $request->validated();
-
         try {
+
+            $validated = $request->validate([
+                'conference_name' => 'required|string|max:255',
+                'short_name' => 'required|string|max:50',
+                'conference_description' => 'required|string|max:500',
+                'short_description' => 'required|string|max:10',
+            ]);
+
             $conference = Conference::create($validated);
 
             return response()->json(['success' => true, 'id' => $conference->id]);
