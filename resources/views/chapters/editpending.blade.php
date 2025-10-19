@@ -257,7 +257,7 @@
                             @endif
                         @endif
                     @endif
-                    <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $chDetails->pendingPresident->user_id }}">Reset Founder Password</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3 reset-password-btn" data-user-id="{{ $chDetails->pendingPresident->user_id }}"><i class="fas fa-lock mr-2"></i>Reset Founder Password</button>
 
                 @endif
             </div>
