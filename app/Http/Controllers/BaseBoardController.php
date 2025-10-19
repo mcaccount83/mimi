@@ -25,125 +25,101 @@ class BaseBoardController extends Controller
         $this->userController = $userController;
     }
 
-/**
- * Get chapter details with appropriate board members based on active status
- * Simplified version for board member access (no lists, filters, or sorting needed)
- */
-public function getChapterDetails($id)
-{
-    // Load chapter with common relations
-    $chDetails = Chapters::with([
-        'country', 'state', 'conference', 'region', 'startMonth', 'webLink',
-        'documents', 'financialReport', 'financialReportFinal', 'payments',
-        'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck',
-        'activeStatus'
-    ])->find($id);
+    /**
+     * Get chapter details with appropriate board members based on active status
+     * Simplified version for board member access (no lists, filters, or sorting needed)
+     */
+    public function getChapterDetails($id)
+    {
+        // Load chapter with common relations
+        $chDetails = Chapters::with([
+            'country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments',
+            'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus'
+        ])->find($id);
 
-    $chId = $chDetails->id;
-    $chActiveId = $chDetails->active_status;
-    $chActiveStatus = $chDetails->activeStatus->active_status;
+        $chId = $chDetails->id;
+        $chActiveId = $chDetails->active_status;
+        $chActiveStatus = $chDetails->activeStatus->active_status;
 
-    // Get board details from the appropriate table based on active status
-    $boardDetails = $this->getBoardDetailsByStatus($chId, $chActiveId);
+        // Get board details from the appropriate table based on active status
+        $boardDetails = $this->getBoardDetailsByStatus($chId, $chActiveId);
 
-    // State/Country logic
-    if ($chDetails->state_id < 52) {
-        $stateShortName = $chDetails->state->state_short_name;
-    } else {
-        $stateShortName = $chDetails->country->short_name;
+        // State/Country logic
+        if ($chDetails->state_id < 52) {
+            $stateShortName = $chDetails->state->state_short_name;
+        } else {
+            $stateShortName = $chDetails->country->short_name;
+        }
+
+        $chConfId = $chDetails->conference_id;
+        $chPcId = $chDetails->primary_coordinator_id;
+        $probationReason = $chDetails->probation?->probation_reason;
+        $startMonthName = $chDetails->startMonth->month_long_name;
+
+        // Full lists for dropdown menus
+        $allActive = ActiveStatus::all();
+        $allProbation = Probation::all();
+        $allWebLinks = Website::all();
+        $allStates = State::all();
+        $allCountries = Country::all();
+        $allAwards = FinancialReportAwards::all();
+
+        // Chapter data
+        $chPayments = $chDetails->payments;
+        $chDocuments = $chDetails->documents;
+        $reviewerEmail = $chDetails->reportReviewer?->email;
+        $chFinancialReport = $chDetails->financialReport;
+        $chFinancialReportFinal = $chDetails->financialReportFinal;
+        $displayEOY = $this->positionConditionsService->getEOYDisplay();
+        $chDisbanded = $chDetails->disbandCheck;
+
+        // Load Board and Coordinators for Sending Email
+        $emailData = $this->userController->loadEmailDetails($chId);
+        $emailListChap = $emailData['emailListChap'];
+        $emailListCoord = $emailData['emailListCoord'];
+
+        // PC Details for Sending Email
+        $pcDetails = Coordinators::find($chPcId);
+        $pcEmail = $pcDetails->email;
+        $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
+
+        // Load Conference Coordinators for Sending Email
+        $ccEmailData = $this->userController->loadConferenceCoord($chPcId);
+        $cc_id = $ccEmailData['cc_id'];
+        $emailCC = $ccEmailData['cc_email'];
+
+        // Merge everything together
+        return array_merge([
+            'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'cc_id' => $cc_id, 'chFinancialReportFinal' => $chFinancialReportFinal,
+            'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments, 'allActive' => $allActive,
+            'chActiveId' => $chActiveId, 'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord,
+            'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus, 'reviewerEmail' => $reviewerEmail, 'awards' => $chFinancialReport, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail,
+            'displayEOY' => $displayEOY, 'allCountries' => $allCountries, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'allProbation' => $allProbation,
+            'probationReason' => $probationReason,
+        ], $boardDetails); // Add board member details from appropriate table
     }
 
-    $chConfId = $chDetails->conference_id;
-    $chPcId = $chDetails->primary_coordinator_id;
-    $probationReason = $chDetails->probation?->probation_reason;
-    $startMonthName = $chDetails->startMonth->month_long_name;
+    /**
+     * Route to correct board details table based on active status
+     */
+    private function getBoardDetailsByStatus($chId, $activeStatus)
+    {
+        switch ($activeStatus) {
+            case 0: // Zapped/Disbanded
+                return $this->getDisbandedBoardDetails($chId);
 
-    // Full lists for dropdown menus
-    $allActive = ActiveStatus::all();
-    $allProbation = Probation::all();
-    $allWebLinks = Website::all();
-    $allStates = State::all();
-    $allCountries = Country::all();
-    $allAwards = FinancialReportAwards::all();
+            case 1: // Active
+                return $this->getActiveBoardDetails($chId);
 
-    // Chapter data
-    $chPayments = $chDetails->payments;
-    $chDocuments = $chDetails->documents;
-    $reviewerEmail = $chDetails->reportReviewer?->email;
-    $chFinancialReport = $chDetails->financialReport;
-    $chFinancialReportFinal = $chDetails->financialReportFinal;
-    $displayEOY = $this->positionConditionsService->getEOYDisplay();
-    $chDisbanded = $chDetails->disbandCheck;
+            case 2: // Pending
+            case 3: // Not Approved
+                return $this->getPendingBoardDetails($chId);
 
-    // Load Board and Coordinators for Sending Email
-    $emailData = $this->userController->loadEmailDetails($chId);
-    $emailListChap = $emailData['emailListChap'];
-    $emailListCoord = $emailData['emailListCoord'];
-
-    // PC Details for Sending Email
-    $pcDetails = Coordinators::find($chPcId);
-    $pcEmail = $pcDetails->email;
-    $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
-
-    // Load Conference Coordinators for Sending Email
-    $ccEmailData = $this->userController->loadConferenceCoord($chPcId);
-    $cc_id = $ccEmailData['cc_id'];
-    $emailCC = $ccEmailData['cc_email'];
-
-    // Merge everything together
-    return array_merge([
-        'chDetails' => $chDetails,
-        'stateShortName' => $stateShortName,
-        'chConfId' => $chConfId,
-        'chPcId' => $chPcId,
-        'cc_id' => $cc_id,
-        'chFinancialReportFinal' => $chFinancialReportFinal,
-        'chFinancialReport' => $chFinancialReport,
-        'startMonthName' => $startMonthName,
-        'chDocuments' => $chDocuments,
-        'chPayments' => $chPayments,
-        'allActive' => $allActive,
-        'chActiveId' => $chActiveId,
-        'allWebLinks' => $allWebLinks,
-        'allStates' => $allStates,
-        'emailListChap' => $emailListChap,
-        'emailListCoord' => $emailListCoord,
-        'emailCC' => $emailCC,
-        'chActiveStatus' => $chActiveStatus,
-        'reviewerEmail' => $reviewerEmail,
-        'awards' => $chFinancialReport,
-        'allAwards' => $allAwards,
-        'pcEmail' => $pcEmail,
-        'displayEOY' => $displayEOY,
-        'allCountries' => $allCountries,
-        'pcDetails' => $pcDetails,
-        'chDisbanded' => $chDisbanded,
-        'allProbation' => $allProbation,
-        'probationReason' => $probationReason,
-    ], $boardDetails); // Add board member details from appropriate table
-}
-
-/**
- * Route to correct board details table based on active status
- */
-private function getBoardDetailsByStatus($chId, $activeStatus)
-{
-    switch ($activeStatus) {
-        case 0: // Zapped/Disbanded
-            return $this->getDisbandedBoardDetails($chId);
-
-        case 1: // Active
-            return $this->getActiveBoardDetails($chId);
-
-        case 2: // Pending
-        case 3: // Not Approved
-            return $this->getPendingBoardDetails($chId);
-
-        default:
-            // Fallback to active board details
-            return $this->getActiveBoardDetails($chId);
+            default:
+                // Fallback to active board details
+                return $this->getActiveBoardDetails($chId);
+        }
     }
-}
 
      /**
      * Board Details Base Query for all active chapters
