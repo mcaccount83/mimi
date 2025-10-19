@@ -141,7 +141,6 @@ class BaseChapterController extends Controller
      */
     private function buildChapterQuery($params)
     {
-        // $zapDateAfter = $params['zapDateAfter'] ?? null;
         $baseQuery = $this->getBaseQueryWithRelations($params['activeStatus']);
         $checkboxStatus = [];
         $isPending = ($params['activeStatus'] == 2 || $params['activeStatus'] == 3);
@@ -219,19 +218,6 @@ class BaseChapterController extends Controller
             'checkBox4Status' => $checkboxStatus['checkBox4Status'] ?? '',
         ];
     }
-
-    // Add new method for zapped with date filter
-    // public function getZappedInternationalBaseQuerySinceDate($coorId, $zapDateAfter)
-    // {
-    //     return $this->buildChapterQuery([
-    //         'activeStatus' => 0, // 0 = zapped
-    //         'coorId' => $coorId,
-    //         'inquiriesConditions' => false,
-    //         'conditions' => false,
-    //         'queryType' => 'international',
-    //         'zapDateAfter' => $zapDateAfter,
-    //     ]);
-    // }
 
     /**
      * Public methods for different query types

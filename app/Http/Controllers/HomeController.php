@@ -63,7 +63,7 @@ class HomeController extends Controller implements HasMiddleware
             // Send Pending Founders to Status Inquiry Screen
             $user_pendChapterId = $user['user_pendChapterId'];
 
-            return redirect()->to('board/newchapterstatus');
+            return redirect()->to('board/newchapterstatus/'.$user_pendChapterId);
         }
 
         if ($userType == 'board') {

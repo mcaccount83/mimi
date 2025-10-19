@@ -201,7 +201,7 @@
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                 <div class="col-sm-3 mb-1">
-                                <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" value="{{ $PresDetails->city }}"  required placeholder="City">
+                                <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" value="{{ $chDetails->pendingPresident->city }}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select name="ch_pre_state" id="ch_pre_state" class="form-control" style="width: 100%;" required>
@@ -215,7 +215,7 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" value="{{ $PresDetails->zip }}"  required placeholder="Zip">
+                                    <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" value="{{ $chDetails->pendingPresident->zip }}"  required placeholder="Zip">
                                 </div>
                                 <div class="col-sm-2" id="ch_pre_country-container" style="display: none;">
                                     <select name="ch_pre_country" id="ch_pre_country" class="form-control" style="width: 100%;" required>
@@ -257,6 +257,8 @@
                             @endif
                         @endif
                     @endif
+                    <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $chDetails->pendingPresident->user_id }}">Reset Founder Password</button>
+
                 @endif
             </div>
         </div>
@@ -707,6 +709,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+});
+
+document.querySelectorAll('.reset-password-btn').forEach(button => {
+    button.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const userId = this.getAttribute('data-user-id');
+        const newPassword = "TempPass4You";
+
+        $.ajax({
+            url: '{{ route('updatepassword') }}',
+            type: 'PUT',
+            data: {
+                user_id: userId,
+                new_password: newPassword,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(result) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: result.message.replace('<br>', '\n'),
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success'
+                    }
+                });
+            },
+            error: function(jqXHR, exception) {
+                console.log(jqXHR.responseText); // Log error response
+            }
+        });
+    });
 });
 
 </script>
