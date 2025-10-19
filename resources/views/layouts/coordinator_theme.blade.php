@@ -467,7 +467,7 @@ window.onload = function () {
                          <!-- Tech Reports Menu Item -->
                         @php
                             if ($userAdmin) {
-                                $techReportsRoute = route('techreports.eoy');
+                                $techReportsRoute = route('logs');
                             }
                             $activeTechReportsRoutes = [
                                 'techreports/*'
