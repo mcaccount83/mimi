@@ -66,11 +66,6 @@ class BaseChapterController extends Controller
     {
         $query = Chapters::query()->where('active_status', $activeStatus);
 
-        // Add zap_date filter if provided (only for zapped chapters)
-        // if ($zapDateAfter && $activeStatus == 0) {
-        //     $query->where('chapters.zap_date', '>', $zapDateAfter);
-        // }
-
         // For pending (2) or not approved (3) status, we need to use relations from the BoardsPending table
         if ($activeStatus == 2 || $activeStatus == 3) {
             return $query->with([

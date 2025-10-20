@@ -154,7 +154,10 @@ Route::get('/adminreports/reregdate', [AdminReportController::class, 'showReRegD
 Route::get('/adminreports/intreregdate', [AdminReportController::class, 'showIntReRegDate'])->name('adminreports.intreregdate');
 Route::get('/adminreports/reregdate/{id}', [AdminReportController::class, 'EditReRegDate'])->name('adminreports.editreregdate');
 Route::post('/adminreports/updatereregdate/{id}', [AdminReportController::class, 'UpdateReRegDate'])->name('adminreports.updatereregdate');
-
+Route::get('/adminreports/downloads', [ResourcesController::class, 'showDownloads'])->name('adminreports.downloads');
+Route::get('/adminreports/bugs', [ResourcesController::class, 'showBugs'])->name('adminreports.bugs');
+Route::post('/adminreports/addbugs', [ResourcesController::class, 'addBugs'])->name('adminreports.addbugs');
+Route::post('/adminreports/updatebugs/{id}', [ResourcesController::class, 'updateBugs'])->name('adminreports.updatebugs');
 
 // User Controller Routes...Coordinator Login Required
 Route::get('/userreports/useradmin', [UserReportController::class, 'showUserAdmin'])->name('userreports.useradmin');
@@ -169,7 +172,6 @@ Route::get('/userreports/disbandedboard', [UserReportController::class, 'showDis
 Route::get('/resources/bugs', [ResourcesController::class, 'showBugs'])->name('resources.bugs');
 Route::post('/resources/addbugs', [ResourcesController::class, 'addBugs'])->name('resources.addbugs');
 Route::post('/resources/updatebugs/{id}', [ResourcesController::class, 'updateBugs'])->name('resources.updatebugs');
-Route::get('/resources/downloads', [ResourcesController::class, 'showDownloads'])->name('resources.downloads');
 Route::get('/resources/resources', [ResourcesController::class, 'showResources'])->name('resources.resources');
 Route::post('/resources/addresources', [ResourcesController::class, 'addResources'])->name('resources.addresources');
 Route::post('/resources/updateresources/{id}', [ResourcesController::class, 'updateResources'])->name('resources.updateresources');

@@ -14,7 +14,7 @@
                           <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             MIMI Bugs & Wishes
                           </h3>
-                          @include('layouts.dropdown_menus.menu_resources')
+                            @include('layouts.dropdown_menus.menu_reports_admin')
                       </div>
                   </div>
                   <!-- /.card-header -->
