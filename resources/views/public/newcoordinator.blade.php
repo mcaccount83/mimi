@@ -130,7 +130,10 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">How long have you been a MOMS Club Member?</label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="start_date" id="start_date" class="form-control" required>
+                                    <input type="text" name="start_date" id="start_date" class="form-control" maxlength="25" required>
+                                    <small class="form-text text-muted">
+<span id="char-count-date">0</span>/25 characters
+        </small>
                                 </div>
                             </div>
 
@@ -238,33 +241,92 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Define all textareas and their corresponding counter IDs
-    const textareaConfigs = [
-        { name: 'jobs_programs', counterId: 'char-count-jobs' },
-        { name: 'helped_me', counterId: 'char-count-helped' },
-        { name: 'problems', counterId: 'char-count-problems' },
-        { name: 'why_volunteer', counterId: 'char-count-volunteer' },
-        { name: 'other_volunteer', counterId: 'char-count-other' },
-        { name: 'special_skills', counterId: 'char-count-skills' },
-        { name: 'enjoy_volunteering', counterId: 'char-count-enjoy' }
-    ];
+    // const textareaConfigs = [
+    //     { name: 'jobs_programs', counterId: 'char-count-jobs' },
+    //     { name: 'helped_me', counterId: 'char-count-helped' },
+    //     { name: 'problems', counterId: 'char-count-problems' },
+    //     { name: 'why_volunteer', counterId: 'char-count-volunteer' },
+    //     { name: 'other_volunteer', counterId: 'char-count-other' },
+    //     { name: 'special_skills', counterId: 'char-count-skills' },
+    //     { name: 'enjoy_volunteering', counterId: 'char-count-enjoy' }
+    // ];
 
-    const maxLength = 520;
+    // const maxLength = 520;
+
+    // // Loop through each textarea configuration
+    // textareaConfigs.forEach(config => {
+    //     const textarea = document.querySelector(`textarea[name="${config.name}"]`);
+    //     const charCount = document.getElementById(config.counterId);
+
+    //     if (textarea && charCount) {
+    //         textarea.addEventListener('input', function() {
+    //             const currentLength = this.value.length;
+    //             charCount.textContent = currentLength;
+
+    //             // Change color based on usage
+    //             const parent = charCount.parentElement;
+    //             if (currentLength >= maxLength * 0.9) { // 90% full
+    //                 parent.className = 'form-text text-danger';
+    //             } else if (currentLength >= maxLength * 0.8) { // 80% full
+    //                 parent.className = 'form-text text-warning';
+    //             } else {
+    //                 parent.className = 'form-text text-muted';
+    //             }
+    //         });
+    //     }
+    // });
+
+    // // Handle the start_date input field separately (25 character limit)
+    // const startDateInput = document.querySelector('input[name="start_date"]');
+    // const startDateCounter = document.getElementById('char-count-date');
+    // const startDateMaxLength = 25;
+
+    // if (startDateInput && startDateCounter) {
+    //     startDateInput.addEventListener('input', function() {
+    //         const currentLength = this.value.length;
+    //         startDateCounter.textContent = currentLength;
+
+    //         // Change color based on usage
+    //         const parent = startDateCounter.parentElement;
+    //         if (currentLength >= startDateMaxLength * 0.9) { // 90% full
+    //             parent.className = 'form-text text-danger';
+    //         } else if (currentLength >= startDateMaxLength * 0.8) { // 80% full
+    //             parent.className = 'form-text text-warning';
+    //         } else {
+    //             parent.className = 'form-text text-muted';
+    //         }
+    //     });
+    // }
+
+    // Define all textareas and their corresponding counter IDs with their max lengths
+    const textareaConfigs = [
+        { name: 'start_date', counterId: 'char-count-date', maxLength: 25, isInput: true },
+        { name: 'jobs_programs', counterId: 'char-count-jobs', maxLength: 520 },
+        { name: 'helped_me', counterId: 'char-count-helped', maxLength: 520 },
+        { name: 'problems', counterId: 'char-count-problems', maxLength: 520 },
+        { name: 'why_volunteer', counterId: 'char-count-volunteer', maxLength: 520 },
+        { name: 'other_volunteer', counterId: 'char-count-other', maxLength: 520 },
+        { name: 'special_skills', counterId: 'char-count-skills', maxLength: 520 },
+        { name: 'enjoy_volunteering', counterId: 'char-count-enjoy', maxLength: 520 }
+    ];
 
     // Loop through each textarea configuration
     textareaConfigs.forEach(config => {
-        const textarea = document.querySelector(`textarea[name="${config.name}"]`);
+        // Select either input or textarea based on config
+        const selector = config.isInput ? `input[name="${config.name}"]` : `textarea[name="${config.name}"]`;
+        const field = document.querySelector(selector);
         const charCount = document.getElementById(config.counterId);
 
-        if (textarea && charCount) {
-            textarea.addEventListener('input', function() {
+        if (field && charCount) {
+            field.addEventListener('input', function() {
                 const currentLength = this.value.length;
                 charCount.textContent = currentLength;
 
                 // Change color based on usage
                 const parent = charCount.parentElement;
-                if (currentLength >= maxLength * 0.9) { // 90% full
+                if (currentLength >= config.maxLength * 0.9) { // 90% full
                     parent.className = 'form-text text-danger';
-                } else if (currentLength >= maxLength * 0.8) { // 80% full
+                } else if (currentLength >= config.maxLength * 0.8) { // 80% full
                     parent.className = 'form-text text-warning';
                 } else {
                     parent.className = 'form-text text-muted';
@@ -272,6 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
 
     // Chapter state and country
     const stateDropdown = document.getElementById('cd_state');
