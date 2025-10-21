@@ -156,7 +156,7 @@
                         </div>
                     </div>
 
-<div class="form-group row align-middle">
+                    <div class="form-group row align-middle">
                         <label class="col-sm-3 col-form-label">990N Submission Issues:<br>
                             <small>(Wrong Dates, Not Found, etc)</small></label>
                         <div class="col-sm-3">
@@ -168,34 +168,34 @@
                         </div>
                     </div>
 
-                        <!-- /.form group -->
-                    <div class="form-group row align-middle">
+                    <!-- This row is hidden by default and shows when irs_issues is checked -->
+                    <div class="form-group row align-middle" id="irs_details_row" style="display: {{ $chDetails->documents->irs_issues == 1 ? 'flex' : 'none' }};">
                         <label class="col-sm-2 col-form-label">Wrong Dates Listed:</label>
                         <div class="col-sm-1">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" name="irs_wrongdate" id="irs_wrongdate" class="custom-control-input"
+                                <input type="checkbox" name="irs_wrongdate" id="irs_wrongdate" class="custom-control-input exclusive-toggle"
                                 {{ $chDetails->documents->irs_wrongdate == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="irs_wrongdate"></label>
                             </div>
                         </div>
-                         <label class="col-sm-2 col-form-label">Chapter Not Found:</label>
+                        <label class="col-sm-2 col-form-label">Chapter Not Found:</label>
                         <div class="col-sm-1">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" name="irs_notfound" id="irs_notfound" class="custom-control-input"
+                                <input type="checkbox" name="irs_notfound" id="irs_notfound" class="custom-control-input exclusive-toggle"
                                 {{ $chDetails->documents->irs_notfound == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="irs_notfound"></label>
                             </div>
                         </div>
-                          <label class="col-sm-2 col-form-label">FILED w/Wrong Dates</label>
-                            <div class="col-sm-1">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="irs_filedwrong" id="irs_filedwrong" class="custom-control-input"
-                                    {{ $chDetails->documents->irs_filedwrong == 1 ? 'checked' : ''}}>
-                                    <label class="custom-control-label" for="irs_filedwrong"></label>
-                                </div>
+                        <label class="col-sm-2 col-form-label">FILED w/Wrong Dates</label>
+                        <div class="col-sm-1">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="irs_filedwrong" id="irs_filedwrong" class="custom-control-input exclusive-toggle"
+                                {{ $chDetails->documents->irs_filedwrong == 1 ? 'checked' : ''}}>
+                                <label class="custom-control-label" for="irs_filedwrong"></label>
                             </div>
+                        </div>
 
-                         @if($userAdmin == 1 )
+                        @if($userAdmin == 1 )
                             <label class="col-sm-2 col-form-label">IRS Notified:</label>
                             <div class="col-sm-1">
                                 <div class="custom-control custom-switch">
@@ -276,6 +276,38 @@ $(document).ready(function () {
         // Re-enable the specific "Back" buttons
         $('#back-eoy').prop('disabled', false);
     }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const irsIssuesToggle = document.getElementById('irs_issues');
+    const irsDetailsRow = document.getElementById('irs_details_row');
+    const exclusiveToggles = document.querySelectorAll('.exclusive-toggle');
+
+    // Show/hide details row based on irs_issues toggle
+    irsIssuesToggle.addEventListener('change', function() {
+        if (this.checked) {
+            irsDetailsRow.style.display = 'flex';
+        } else {
+            irsDetailsRow.style.display = 'none';
+            // Optionally uncheck all exclusive toggles when hiding
+            exclusiveToggles.forEach(toggle => {
+                toggle.checked = false;
+            });
+        }
+    });
+
+    // Make the three issue toggles mutually exclusive
+    exclusiveToggles.forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            if (this.checked) {
+                exclusiveToggles.forEach(otherToggle => {
+                    if (otherToggle !== this) {
+                        otherToggle.checked = false;
+                    }
+                });
+            }
+        });
+    });
 });
 
 $(document).ready(function() {
