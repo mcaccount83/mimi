@@ -11,6 +11,7 @@ use App\Mail\PCChangeChapNotice;
 use App\Mail\PCChangePCNotice;
 use App\Mail\RCChangeCoordNotice;
 use App\Mail\RCChangeRCNotice;
+use App\Mail\ReactivateCoordGSuiteNotice;
 use App\Mail\RetireCoordGSuiteNotice;
 use App\Models\Chapters;
 use App\Models\CoordinatorRecognition;
@@ -427,16 +428,18 @@ class CoordinatorController extends Controller implements HasMiddleware
      */
     public function sendBigSisterEmail(Request $request): JsonResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
 
-        $cdDetailsUser = $user->coordinator;
-        $cdIdUser = $cdDetailsUser->id;
-        $cdNameUser = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
-        $cdEmailUser = $cdDetailsUser->email;
-        $cdPositionUser = $cdDetailsUser->displayPosition->long_title;
-        $cdConfIdUser = $cdDetailsUser->conference_id;
-        $cdCoferenceDescriptionUser = $cdDetailsUser->conference->conference_description;
+        // $user = User::find($request->user()->id);
+        // $userId = $user->id;
+
+        // $cdDetailsUser = $user->coordinator;
+        // $cdIdUser = $cdDetailsUser->id;
+        // $cdNameUser = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        // $cdEmailUser = $cdDetailsUser->email;
+        // $cdPositionUser = $cdDetailsUser->displayPosition->long_title;
+        // $cdConfIdUser = $cdDetailsUser->conference_id;
+        // $cdCoferenceDescriptionUser = $cdDetailsUser->conference->conference_description;
 
         $input = $request->all();
         $id = $input['chapterid'];
@@ -469,23 +472,13 @@ class CoordinatorController extends Controller implements HasMiddleware
         try {
             DB::beginTransaction();
 
-            $mailData = [
-                'conf_name' => $conferenceDescription,
-                'reg_name' => $regionLongName,
-                'cdName' => $cdName,
-                'cor_fname' => $RptFName,
-                'cor_lname' => $RptLName,
-                'cor_name' => $ReportTo,
-                'cor_email' => $ReportEmail,
-                'cor_phone' => $ReportPhone,
-                'email' => $cdEmail,
-                'chapters' => $chList,
-                'userName' => $cdNameUser,
-                'userEmail' => $cdEmailUser,
-                'positionTitle' => $cdPositionUser,
-                'conf' => $cdConfIdUser,
-                'conf_name' => $cdCoferenceDescriptionUser,
-            ];
+            // Build mail data using your base controllers
+            $mailData = array_merge(
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getCoordDetailsData($cdDetails),
+                $this->baseMailDataController->getCoordChapterData($conferenceDescription, $regionLongName, $chList),
+                $this->baseMailDataController->getCoordReportToData($RptFName, $RptLName, $ReportTo, $ReportEmail, $ReportPhone)
+            );
 
             Mail::to($toCoordEmail)
                 ->cc($ccCoordEmailList)
@@ -671,12 +664,15 @@ class CoordinatorController extends Controller implements HasMiddleware
      */
     public function updateRetire(Request $request): JsonResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
 
-        $cdDetailsUser = $user->coordinator;
-        $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        // $user = User::find($request->user()->id);
+        // $userId = $user->id;
+
+        // $cdDetailsUser = $user->coordinator;
+        // $cdIdUser = $cdDetailsUser->id;
+        // $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $input = $request->all();
         $coordId = $input['coord_id'];
@@ -684,7 +680,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $coordinator = Coordinators::find($coordId);
         $cdUserId = $coordinator->user_id;
-        $user = User::find($cdUserId);
+        $cdUser = User::find($cdUserId);
 
         DB::beginTransaction();
         try {
@@ -696,23 +692,32 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             $coordinator->save();
 
-            $user->is_active = 0;
-            $user->updated_at = date('Y-m-d');
+            $cdUser->is_active = 0;
+            $cdUser->updated_at = date('Y-m-d');
 
-            $user->save();
+            $cdUser->save();
 
             ForumCategorySubscription::where('user_id', $cdUserId)->delete();
 
             // Get Mail Data
-            $coordName = $coordinator->fisrt_name.' '.$coordinator->last_name;
-            $coordConf = $coordinator->conference_id;
-            $email = $coordinator->email;
+            // $coordName = $coordinator->fisrt_name.' '.$coordinator->last_name;
+            // $coordConf = $coordinator->conference_id;
+            // $email = $coordinator->email;
 
-            $mailData = [
-                'coordName' => $coordName,
-                'confNumber' => $coordConf,
-                'email' => $email,
-            ];
+            $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($coordId);
+            $cdDetails = $baseQuery['cdDetails'];
+
+            // Build mail data using your base controllers
+            $mailData = array_merge(
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getCoordDetailsData($cdDetails),
+            );
+
+            // $mailData = [
+            //     'coordName' => $coordName,
+            //     'confNumber' => $coordConf,
+            //     'email' => $email,
+            // ];
 
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $gsuiteAdmin = $adminEmail['gsuite_admin'];  // Gsuite Coor Email
@@ -744,19 +749,22 @@ class CoordinatorController extends Controller implements HasMiddleware
      */
     public function updateUnRetire(Request $request): JsonResponse
     {
-        $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
 
-        $cdDetailsUser = $user->coordinator;
-        $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        // $user = User::find($request->user()->id);
+        // $userId = $user->id;
+
+        // $cdDetailsUser = $user->coordinator;
+        // $cdIdUser = $cdDetailsUser->id;
+        // $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $input = $request->all();
         $coordId = $input['coord_id'];
 
         $coordinator = Coordinators::find($coordId);
         $cdUserId = $coordinator->user_id;
-        $user = User::find($cdUserId);
+        $cdUser = User::find($cdUserId);
 
         $defaultCategories = $this->forumSubscriptionController->defaultCategories();
         $defaultCoordinatorCategories = $defaultCategories['coordinatorCategories'];
@@ -771,10 +779,10 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             $coordinator->save();
 
-            $user->is_active = 1;
-            $user->updated_at = date('Y-m-d');
+            $cdUser->is_active = 1;
+            $cdUser->updated_at = date('Y-m-d');
 
-            $user->save();
+            $cdUser->save();
 
             foreach ($defaultCoordinatorCategories as $categoryId) {
                 ForumCategorySubscription::create([
@@ -782,6 +790,22 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'category_id' => $categoryId,
                 ]);
             }
+
+            $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($coordId);
+            $cdDetails = $baseQuery['cdDetails'];
+
+             // Build mail data using your base controllers
+            $mailData = array_merge(
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getCoordDetailsData($cdDetails),
+            );
+
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $gsuiteAdmin = $adminEmail['gsuite_admin'];  // Gsuite Coor Email
+
+            Mail::to($gsuiteAdmin)
+                ->queue(new ReactivateCoordGSuiteNotice($mailData));
+
 
             DB::commit();
 

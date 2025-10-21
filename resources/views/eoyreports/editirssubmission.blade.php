@@ -241,7 +241,13 @@
                     <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Filing Information</button>
                     <br>
                 @endif
-                <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission') }}'"><i class="fas fa-reply mr-2"></i>Back to Filing Report</button>
+                @if ($confId == $chConfId)
+                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission') }}'"><i class="fas fa-reply mr-2"></i>Back to Filing Report</button>
+                @elseif ($confId != $chConfId)
+                    @if ($einCondition || $userAdmin )
+                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyirsintsubmission') }}'"><i class="fas fa-reply mr-2"></i>Back to International Filing Report</button>
+                    @endif
+                @endif
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
             </div>
         </div>

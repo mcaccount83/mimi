@@ -133,6 +133,35 @@ class BaseMailDataController extends Controller
         ];
     }
 
+    public function getCoordDetailsData($cdDetails)
+    {
+        return [
+            'cdName' => $cdDetails->first_name.' '.$cdDetails->last_name,
+            'cdEmail' => $cdDetails->email,
+            'cdPhone' => $cdDetails->phone,
+        ];
+    }
+
+    public function getCoordChapterData($conferenceDescription, $regionLongName, $chList)
+    {
+        return [
+            'cdConf' => $conferenceDescription,
+            'cdRegion' => $regionLongName,
+            'cdChapters' => $chList,
+        ];
+    }
+
+    public function getCoordReportToData($RptFName, $RptLName, $ReportTo, $ReportEmail, $ReportPhone)
+    {
+        return [
+            'cdReportFName' => $RptFName,
+            'cdReportLName' => $RptLName,
+            'cdReportTo' => $ReportTo,
+            'cdReportEmail' => $ReportEmail,
+            'cdReportPhone' => $ReportPhone,
+        ];
+    }
+
     public function getPCData($pcDetails)
     {
         return [

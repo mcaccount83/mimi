@@ -3,7 +3,7 @@
     <img src="{{ config('settings.base_url') }}images/logo-mc.png" alt="MC" style="width: 125px;">
 </center>
 <br>
-<h1><center>{{ $mailData['conf_name'] }} Conference @if($mailData['reg_name'] != 'None')| {{ $mailData['reg_name'] }} Region @endif</center></h1>
+<h1><center>{{ $mailData['cdConf'] }} Conference @if($mailData['cdRegion'] != 'None')| {{ $mailData['cdRegion'] }} Region @endif</center></h1>
 <h4> {{ $mailData['cdName'] }}, Welcome to Our Team!</h4>
 <p>Congratulations on your appointment to Big Sister! We are looking forward to working with you and hope you find your new role interesting, fulfilling and especially enjoyable!</p>
 <hr>
@@ -17,9 +17,9 @@
 <hr>
 <br>
 <center><b>YOUR MENTORING COORDINATOR</b></center>
-    <p><center>{{ $mailData['cor_fname'] }} {{ $mailData['cor_lname'] }}<br>
-                <a href="mailto:{{ $mailData['cor_email'] }}">{{ $mailData['cor_email'] }}</a><br>
-               {{ $mailData['cor_phone'] }}</center></p>
+    <p><center>{{ $mailData['cdReportTo'] }}<br>
+                <a href="mailto:{{ $mailData['cdReportEmail'] }}">{{ $mailData['cdReportEmail'] }}</a><br>
+               {{ $mailData['cdReportPhone'] }}</center></p>
 <br>
 <hr>
 <b>LET'S GET STARTED!</b>
@@ -30,12 +30,12 @@
 <b>GSUITE</b>
 <p>All coordinators will receive and are expected to use an @momsclub.org email address when representing MOMS Club.</p>
 <p>A wide variety of documents, spreadsheets and presentations are created, stored and shared using Google Drive and Google Meet is used to interact face-to-face one on one, in small groups or events to hold virtual workshops and other Conference or International level events.</p>
-<p>Your assigned email address is {{ $mailData['email'] }}. You should have received an email from Google to activate your account. If you did not receive the email, or if the link has expired, just let me know and we'll send you a new link!
+<p>Your assigned email address is {{ $mailData['cdEmail'] }}. You should have received an email from Google to activate your account. If you did not receive the email, or if the link has expired, just let me know and we'll send you a new link!
 <hr>
 <b>MIMI</b>
 <p>Although you are probably familiar with MIMI as a board member of your chapter, you will also use MIMI as a coordinator.</p>
 <p><center>https://momsclub.org/mimi/login<br>
-    Username: {{ $mailData['email'] }}<br>
+    Username: {{ $mailData['cdEmail'] }}<br>
     Password: TempPass4You</center></p>
 <br>
 <p>After logging in you will see the coordinator dashboard instead of your chapter's profile page.</p>
@@ -43,11 +43,11 @@
 <hr>
 <br>
 <center><b>YOUR CHAPTER LIST</b></center>
-@if (count($mailData['chapters']) > 0)
+@if (count($mailData['cdChapters']) > 0)
     <center>
         <table id="chapterlist" class="table table-bordered table-hover" style="padding-top: 15px">
             <tbody>
-                @foreach ($mailData['chapters'] as $chapter)
+                @foreach ($mailData['cdChapters'] as $chapter)
                     <tr>
                         <td style="padding: 0px; line-height: 1.5;"><center>{{ $chapter->name }}, {{ $chapter->state->state_short_name }}</center></td>
                     </tr>
@@ -68,12 +68,12 @@
     https://momsclub.org/mimi/adminreports/resources</p>
 <hr>
 <b>YOUR COORDINATOR TEAM</b>
-<p>You are never alone! No matter how seasoned you are, you will always have a Coordinator Team around you. Your full coordinator team is cc'd here and listed in your MIMI profile so you have all of their information and I'm also here for anything that you need!  But, as your Mentoring Coordinator, {{ $mailData['cor_fname'] }} should always be your first point of contact.</p>
+<p>You are never alone! No matter how seasoned you are, you will always have a Coordinator Team around you. Your full coordinator team is cc'd here and listed in your MIMI profile so you have all of their information and I'm also here for anything that you need!  But, as your Mentoring Coordinator, {{ $mailData['cdReportFName'] }} should always be your first point of contact.</p>
 
 <br>
 <p><strong>MCL</strong>,<br>
     {{ $mailData['userName'] }}<br>
-    {{ $mailData['positionTitle'] }}<br>
-    Conference {{ $mailData['conf'] }}, {{ $mailData['conf_name'] }}<br>
+    {{ $mailData['userPosition'] }}<br>
+    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
     International MOMS Club</p>
 @endcomponent

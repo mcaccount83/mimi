@@ -1657,12 +1657,15 @@ class EOYReportController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
+            return to_route('eoyreports.editirssubmission', ['id' => $id])->with('success', 'Report attachments successfully updated');
+            // return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
-            return redirect()->to('/eoy/irssubmission')->with('fail', 'Something went wrong, Please try again.');
+
+            return to_route('eoyreports.editirssubmission', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+            // return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
         }
     }
 }
