@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class UserReportController extends Controller implements HasMiddleware
@@ -26,7 +25,6 @@ class UserReportController extends Controller implements HasMiddleware
             \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
         ];
     }
-
 
     /**
      * User Admins
@@ -146,5 +144,4 @@ class UserReportController extends Controller implements HasMiddleware
 
         return view('userreports.disbandedboard')->with($data);
     }
-
 }
