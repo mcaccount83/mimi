@@ -1663,7 +1663,6 @@ class EOYReportController extends Controller implements HasMiddleware
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-
             return to_route('eoyreports.editirssubmission', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
             // return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
         }

@@ -601,7 +601,6 @@ class UserController extends Controller implements HasMiddleware
                     });
             })
             ->whereBetween('position_id', [CoordinatorPosition::BS, CoordinatorPosition::CC])
-            //->whereBetween('position_id', [1, 7])
             ->where('active_status', 1)
             ->get();
 

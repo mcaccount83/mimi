@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BoardPosition;
 use App\Mail\DisbandChecklistCompleteCCNotice;
 use App\Mail\DisbandChecklistCompleteThankYou;
 use App\Mail\DisbandReportCCNotice;
@@ -643,8 +642,8 @@ class FinancialReportController extends Controller implements HasMiddleware
     }
 
     /**
-    * Update or create incoming board member
-    */
+     * Update or create incoming board member
+     */
     public function updateIncomingBoardMember($chapterId, $positionId, $positionPrefix, $vacantField, $idField, $request, $lastUpdatedBy, $lastupdatedDate)
     {
         $boardDetails = BoardsIncoming::where('chapter_id', $chapterId)
@@ -678,8 +677,8 @@ class FinancialReportController extends Controller implements HasMiddleware
     }
 
     /**
-    * Get board member data from request
-    */
+     * Get board member data from request
+     */
     public function getBoardMemberData($request, $prefix, $lastUpdatedBy, $lastupdatedDate)
     {
         return [

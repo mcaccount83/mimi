@@ -794,7 +794,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($coordId);
             $cdDetails = $baseQuery['cdDetails'];
 
-             // Build mail data using your base controllers
+            // Build mail data using your base controllers
             $mailData = array_merge(
                 $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getCoordDetailsData($cdDetails),
@@ -805,7 +805,6 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             Mail::to($gsuiteAdmin)
                 ->queue(new ReactivateCoordGSuiteNotice($mailData));
-
 
             DB::commit();
 
