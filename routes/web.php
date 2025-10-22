@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\TechReportController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
@@ -23,6 +22,7 @@ use App\Http\Controllers\PaymentReportController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\ResourcesController;
+use App\Http\Controllers\TechReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserReportController;
 use Illuminate\Support\Facades\Route;
@@ -75,7 +75,6 @@ Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerControlle
 //     Route::get('/payment-logs', [PaymentController::class, 'index'])->name('payment-logs.index');
 //     Route::get('/payment-logs/{id}', [PaymentController::class, 'show'])->name('payment-logs.show');
 // });
-
 
 // Error Pages Test Routes...Public, No login required
 Route::get('/test-500', function () {

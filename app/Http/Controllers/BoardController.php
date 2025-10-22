@@ -100,7 +100,7 @@ class BoardController extends Controller implements HasMiddleware
             $user = $request->user();
 
             // Ensure the current password is correct
-            if (!Hash::check($request->current_password, $user->password)) {
+            if (! Hash::check($request->current_password, $user->password)) {
                 return response()->json(['error' => 'Current password is incorrect'], 400);
             }
 
@@ -1110,126 +1110,124 @@ class BoardController extends Controller implements HasMiddleware
     //     }
     // }
 
-
     public function updateBoardReport(Request $request, $chId): RedirectResponse
-{
-    $user = $this->userController->loadUserInformation($request);
-    $lastUpdatedBy = $user['user_name'];
-    $lastupdatedDate = date('Y-m-d H:i:s');
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
-    $baseQuery = $this->baseBoardController->getChapterDetails($chId);
-    $chDetails = $baseQuery['chDetails'];
-    $stateShortName = $baseQuery['stateShortName'];
-    $emailListChap = $baseQuery['emailListChap'];
-    $emailListCoord = $baseQuery['emailListCoord'];
-    $emailCC = $baseQuery['emailCC'];
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailListCoord = $baseQuery['emailListCoord'];
+        $emailCC = $baseQuery['emailCC'];
 
-    $input = $request->all();
+        $input = $request->all();
 
-    // Handle web status - allow null values
-    $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
-    if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
-        $ch_webstatus = 0;
-    }
-
-    // Handle website URL
-    $website = $request->input('ch_website');
-    if (!is_null($website) && !empty(trim($website))) {
-        if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
-            $website = 'http://'.$website;
+        // Handle web status - allow null values
+        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+        if (! is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+            $ch_webstatus = 0;
         }
-    }
 
-    $boundaryStatus = $request->input('BoundaryStatus');
-    $issue_note = $request->input('BoundaryIssue');
-    if ($boundaryStatus == 0) {
-        $issue_note = '';
-    }
-
-    $chapter = Chapters::find($chId);
-    $documents = Documents::find($chId);
-
-    DB::beginTransaction();
-    try {
-        $chapter->email = $request->input('ch_inqemailcontact');
-        $chapter->inquiries_contact = $request->input('ch_email') ?? null;
-        $chapter->boundary_issues = $request->input('BoundaryStatus');
-        $chapter->boundary_issue_notes = $issue_note;
-        $chapter->website_url = $website;
-        $chapter->website_status = $ch_webstatus;
-        $chapter->egroup = $request->input('ch_onlinediss');
-        $chapter->social1 = $request->input('ch_social1');
-        $chapter->social2 = $request->input('ch_social2');
-        $chapter->social3 = $request->input('ch_social3');
-        $chapter->last_updated_by = $lastUpdatedBy;
-        $chapter->last_updated_date = $lastupdatedDate;
-        $chapter->save();
-
-        $documents->new_board_submitted = 1;
-        $documents->save();
-
-        // President Info - Handle separately since it's required
-        if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
-            $PREDetails = BoardsIncoming::where('chapter_id', $chId)
-                ->where('board_position_id', BoardPosition::PRES)
-                ->get();
-            $presId = $request->input('presID');
-
-            if (count($PREDetails) != 0) {
-                BoardsIncoming::where('id', $presId)
-                    ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $lastUpdatedBy, $lastupdatedDate));
-            } else {
-                BoardsIncoming::create(array_merge(
-                    ['chapter_id' => $chId, 'board_position_id' => BoardPosition::PRES],
-                    $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $lastUpdatedBy, $lastupdatedDate)
-                ));
+        // Handle website URL
+        $website = $request->input('ch_website');
+        if (! is_null($website) && ! empty(trim($website))) {
+            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+                $website = 'http://'.$website;
             }
         }
 
-        // Handle other board positions
-        $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $lastUpdatedBy, $lastupdatedDate);
-        $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $lastUpdatedBy, $lastupdatedDate);
-        $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $lastUpdatedBy, $lastupdatedDate);
-        $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $lastUpdatedBy, $lastupdatedDate);
-
-        $now = Carbon::now();
-        $month = $now->month;
-
-        $mailData = array_merge(
-            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-        );
-
-        if ($month >= 1 && $month <= 6) {
-            $message = 'Board info has been Submitted';
-
-            Mail::to($emailCC)
-                ->queue(new EOYElectionReportSubmitted($mailData));
-
-            Mail::to($emailListChap)
-                ->queue(new EOYElectionReportThankYou($mailData));
+        $boundaryStatus = $request->input('BoundaryStatus');
+        $issue_note = $request->input('BoundaryIssue');
+        if ($boundaryStatus == 0) {
+            $issue_note = '';
         }
 
-        if ($month >= 7 && $month <= 12) {
-            $status = $this->financialReportController->activateSingleBoard($request, $chId);
+        $chapter = Chapters::find($chId);
+        $documents = Documents::find($chId);
 
-            if ($status == 'success') {
-                $message = 'Board info has been submitted and activated successfully';
+        DB::beginTransaction();
+        try {
+            $chapter->email = $request->input('ch_inqemailcontact');
+            $chapter->inquiries_contact = $request->input('ch_email') ?? null;
+            $chapter->boundary_issues = $request->input('BoundaryStatus');
+            $chapter->boundary_issue_notes = $issue_note;
+            $chapter->website_url = $website;
+            $chapter->website_status = $ch_webstatus;
+            $chapter->egroup = $request->input('ch_onlinediss');
+            $chapter->social1 = $request->input('ch_social1');
+            $chapter->social2 = $request->input('ch_social2');
+            $chapter->social3 = $request->input('ch_social3');
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->save();
+
+            $documents->new_board_submitted = 1;
+            $documents->save();
+
+            // President Info - Handle separately since it's required
+            if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
+                $PREDetails = BoardsIncoming::where('chapter_id', $chId)
+                    ->where('board_position_id', BoardPosition::PRES)
+                    ->get();
+                $presId = $request->input('presID');
+
+                if (count($PREDetails) != 0) {
+                    BoardsIncoming::where('id', $presId)
+                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $lastUpdatedBy, $lastupdatedDate));
+                } else {
+                    BoardsIncoming::create(array_merge(
+                        ['chapter_id' => $chId, 'board_position_id' => BoardPosition::PRES],
+                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $lastUpdatedBy, $lastupdatedDate)
+                    ));
+                }
             }
+
+            // Handle other board positions
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $lastUpdatedBy, $lastupdatedDate);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $lastUpdatedBy, $lastupdatedDate);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $lastUpdatedBy, $lastupdatedDate);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $lastUpdatedBy, $lastupdatedDate);
+
+            $now = Carbon::now();
+            $month = $now->month;
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            );
+
+            if ($month >= 1 && $month <= 6) {
+                $message = 'Board info has been Submitted';
+
+                Mail::to($emailCC)
+                    ->queue(new EOYElectionReportSubmitted($mailData));
+
+                Mail::to($emailListChap)
+                    ->queue(new EOYElectionReportThankYou($mailData));
+            }
+
+            if ($month >= 7 && $month <= 12) {
+                $status = $this->financialReportController->activateSingleBoard($request, $chId);
+
+                if ($status == 'success') {
+                    $message = 'Board info has been submitted and activated successfully';
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->back()->with('success', $message);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            DB::disconnect();
         }
-
-        DB::commit();
-
-        return redirect()->back()->with('success', $message);
-    } catch (\Exception $e) {
-        DB::rollback();
-        Log::error($e);
-
-        return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-    } finally {
-        DB::disconnect();
     }
-}
-
 
     /**
      * Show EOY Financial Report All Board Members

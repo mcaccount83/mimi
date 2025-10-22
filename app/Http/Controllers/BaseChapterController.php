@@ -499,7 +499,7 @@ class BaseChapterController extends Controller
         $bdDisbandedDetails = $bdDisbanded->groupBy('board_position_id');
         $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
-         // Fetch board details using BoardPosition constants
+        // Fetch board details using BoardPosition constants
         $PresDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::PRES, collect([$defaultDisbandedBoardMember]))->first();
         $AVPDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::AVP, collect([$defaultDisbandedBoardMember]))->first();
         $MVPDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::MVP, collect([$defaultDisbandedBoardMember]))->first();
@@ -530,7 +530,7 @@ class BaseChapterController extends Controller
         $bdIncomingDetails = $bdIncoming->groupBy('board_position_id');
         $defaultIncomingBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
-         // Fetch board details using BoardPosition constants
+        // Fetch board details using BoardPosition constants
         $PresIncomingDetails = $bdIncomingDetails->get(BoardPosition::PRES, collect([$defaultIncomingBoardMember]))->first();
         $AVPIncomingDetails = $bdIncomingDetails->get(BoardPosition::AVP, collect([$defaultIncomingBoardMember]))->first();
         $MVPIncomingDetails = $bdIncomingDetails->get(BoardPosition::MVP, collect([$defaultIncomingBoardMember]))->first();
@@ -560,7 +560,7 @@ class BaseChapterController extends Controller
         $bdPendingDetails = $bdPending->groupBy('board_position_id');
         $defaultPendingBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
-         // Fetch board details using BoardPosition constants
+        // Fetch board details using BoardPosition constants
         $PresPendingDetails = $bdPendingDetails->get(BoardPosition::PRES, collect([$defaultPendingBoardMember]))->first();
         $AVPPendingDetails = $bdPendingDetails->get(BoardPosition::AVP, collect([$defaultPendingBoardMember]))->first();
         $MVPPendingDetails = $bdPendingDetails->get(BoardPosition::MVP, collect([$defaultPendingBoardMember]))->first();
