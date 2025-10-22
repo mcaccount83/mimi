@@ -666,7 +666,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                     ->update($this->getBoardMemberData($request, $positionPrefix, $lastUpdatedBy, $lastupdatedDate));
             }
         } else {
-            if (!$isVacant) {
+            if (! $isVacant) {
                 // Create new board member
                 BoardsIncoming::create(array_merge(
                     ['chapter_id' => $chapterId, 'board_position_id' => $positionId],
