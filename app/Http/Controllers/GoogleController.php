@@ -129,8 +129,8 @@ class GoogleController extends Controller implements HasMiddleware
     }
 
     /**
-    *  Save Chapter EIN Letter
-    */
+     *  Save Chapter EIN Letter
+     */
     public function storeEIN(Request $request, $id): JsonResponse
     {
         try {

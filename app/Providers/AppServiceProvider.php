@@ -22,8 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public const HOME = '/home';
 
     /**
-    * Bootstrap any application services.
-    */
+     * Bootstrap any application services.
+     */
     public function boot(): void
     {
         Schema::defaultStringLength(191);
@@ -44,8 +44,8 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-    * Register any application services.
-    */
+     * Register any application services.
+     */
     public function register(): void
     {
         //

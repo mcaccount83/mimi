@@ -57,8 +57,8 @@ class PositionConditionsService
     }
 
     /**
-    * Check if user has a position (primary or secondary)
-    */
+     * Check if user has a position (primary or secondary)
+     */
     private function hasPosition(int $position, int $primaryPositionId, array $secondaryPositionIds): bool
     {
         return $primaryPositionId == $position || in_array($position, $secondaryPositionIds);

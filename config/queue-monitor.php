@@ -28,7 +28,7 @@ return [
         // Accepts route group configuration
         'route' => [
             'prefix' => 'techreports/queue',
-    'middleware' => ['web', 'auth'],  // Uncomment and add web + auth
+            'middleware' => ['web', 'auth'],  // Uncomment and add web + auth
         ],
 
         // Set the monitored jobs count to be displayed per page.

@@ -2,36 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CoordinatorPosition;
-use App\Models\Admin;
-use App\Models\AdminEmail;
-use App\Models\Boards;
-use App\Models\BoardsDisbanded;
-use App\Models\BoardsIncoming;
-use App\Models\BoardsOutgoing;
-use App\Models\BoardsPending;
 use App\Models\Chapters;
 use App\Models\Conference;
-use App\Models\CoordinatorApplication;
-use App\Models\CoordinatorRecognition;
-use App\Models\Coordinators;
-use App\Models\CoordinatorTree;
-use App\Models\Documents;
-use App\Models\FinancialReport;
-use App\Models\ForumCategorySubscription;
-use App\Models\GoogleDrive;
 use App\Models\PaymentLog;
 use App\Models\Payments;
-use App\Models\ProbationSubmission;
-use App\Models\Region;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class AdminReportController extends Controller implements HasMiddleware
@@ -204,6 +185,4 @@ class AdminReportController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
-
-
 }

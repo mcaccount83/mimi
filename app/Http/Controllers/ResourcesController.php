@@ -96,7 +96,7 @@ class ResourcesController extends Controller implements HasMiddleware
     /**
      * Add New Task to Bugs & Enhancements List
      */
-    public function addBugs(Request $request)
+    public function addBugs(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -142,7 +142,7 @@ class ResourcesController extends Controller implements HasMiddleware
     /**
      * Update Task on Bugs & Enhancements List
      */
-    public function updateBugs(Request $request, $id)
+    public function updateBugs(Request $request, $id): JsonResponse
     {
         try {
             $validatedData = $request->validate([
@@ -257,7 +257,7 @@ class ResourcesController extends Controller implements HasMiddleware
     /**
      * Update Files or Links on the Resources List
      */
-    public function updateResources(Request $request, $id)
+    public function updateResources(Request $request, $id): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -377,7 +377,7 @@ class ResourcesController extends Controller implements HasMiddleware
     /**
      * Update Files or Links on the Toolkit List
      */
-    public function updateToolkit(Request $request, $id)
+    public function updateToolkit(Request $request, $id): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
