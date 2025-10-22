@@ -734,15 +734,15 @@ class EOYReportController extends Controller implements HasMiddleware
         // Handle web status - allow null values
         $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
         // Only convert to 0 if the website is not null but status is empty
-        if (!is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
+        if (! is_null($request->input('ch_website')) && empty(trim($ch_webstatus))) {
             $ch_webstatus = 0;
         }
 
         // Handle website URL
         $website = $request->input('ch_website');
         // Only add http:// if the website field is not null or empty
-        if (!is_null($website) && !empty(trim($website))) {
-            if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+        if (! is_null($website) && ! empty(trim($website))) {
+            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
                 $website = 'http://'.$website;
             }
         }
