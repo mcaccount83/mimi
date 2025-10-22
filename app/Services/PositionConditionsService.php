@@ -64,36 +64,6 @@ class PositionConditionsService
         return $primaryPositionId == $position || in_array($position, $secondaryPositionIds);
     }
 
-    // public function getConditionsForUser($positionId, $secPositionId = [])
-    // {
-    //     // Handle null values gracefully
-    //     $positionId = (int) ($positionId ?? 0);
-    //     $secPositionId = array_map('intval', is_array($secPositionId) ? $secPositionId : [$secPositionId]);
-
-    //     return [
-    //         'ITCondition' => ($positionId == 13 || in_array(13, $secPositionId)),
-    //         'coordinatorCondition' => ($positionId >= 1 && $positionId <= 8),
-    //         'founderCondition' => $positionId == 8,
-    //         'conferenceCoordinatorCondition' => ($positionId >= 7 && $positionId <= 8),
-    //         'assistConferenceCoordinatorCondition' => ($positionId >= 6 && $positionId <= 8),
-    //         'regionalCoordinatorCondition' => ($positionId >= 5 && $positionId <= 8),
-    //         'assistRegionalCoordinatorCondition' => ($positionId >= 4 && $positionId <= 8),
-    //         'supervisingCoordinatorCondition' => ($positionId >= 3 && $positionId <= 8),
-    //         'areaCoordinatorCondition' => ($positionId >= 2 && $positionId <= 8),
-    //         'bigSisterCondition' => ($positionId >= 1 && $positionId <= 8),
-    //         'eoyTestCondition' => ($positionId >= 6 && $positionId <= 8) || ($positionId == 29 || in_array(29, $secPositionId)),
-    //         'eoyReportCondition' => ($positionId >= 1 && $positionId <= 8) || ($positionId == 19 || in_array(19, $secPositionId)) || ($positionId == 29 || in_array(29, $secPositionId)),
-    //         'eoyReportConditionDISABLED' => ($positionId == 13 || in_array(13, $secPositionId)),
-    //         'inquiriesCondition' => ($positionId == 15 || in_array(15, $secPositionId) || $positionId == 18 || in_array(18, $secPositionId)),
-    //         'inquiriesInternationalCondition' => ($positionId == 18 || in_array(18, $secPositionId)),
-    //         'inquiriesConferenceCondition' => ($positionId == 15 || in_array(15, $secPositionId)),
-    //         'webReviewCondition' => ($positionId == 9 || in_array(9, $secPositionId)),
-    //         'einCondition' => ($positionId == 12 || in_array(12, $secPositionId)),
-    //         'm2mCondition' => ($positionId == 21 || in_array(21, $secPositionId) || $positionId == 20 || in_array(20, $secPositionId)),
-    //         'listAdminCondition' => ($positionId == 23 || in_array(23, $secPositionId)),
-    //     ];
-    // }
-
     /**
      * Get user admin status
      */

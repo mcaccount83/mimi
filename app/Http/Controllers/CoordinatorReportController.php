@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CoordinatorPosition;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CoordinatorReportController extends Controller implements HasMiddleware
@@ -164,4 +166,25 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         return view('coordreports.coordrptreportingtree')->with($data);
     }
+
+    /**
+     * View the International Reporting Tree
+     */
+public function showIntRptReportingTree(): View
+{
+    // Don't load user info - just hardcode Mary's data
+    $coorId = 1;  // Mary's ID
+    $confId = 0;  // Mary's conference
+    $regId = 0;   // Mary's region
+    $positionId = 8;  // Founder
+    $secPositionId = null;
+
+    $baseQuery = $this->baseCoordinatorController->getReportingTreeBaseQuery($coorId, $confId, $positionId, $secPositionId);
+    $coordinatorList = $baseQuery['query']->get();
+
+    $data = ['coordinatorList' => $coordinatorList];
+
+    return view('coordreports.intcoordrptreportingtree')->with($data);
+
+}
 }
