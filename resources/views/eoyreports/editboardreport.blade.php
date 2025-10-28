@@ -505,9 +505,9 @@
         </div>
 
             <div class="card-body text-center">
-                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboardreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Board Election Report</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
-                <br>
+                    {{-- <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboardreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Board Election Report</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button> --}}
+                {{-- <br> --}}
                   @if ($chDetails->documents->new_board_active != '1')
                     <div class="d-flex justify-content-center align-items-start flex-wrap">
                             <form method="POST" action="#" onsubmit="return validateBeforeSubmit(true)">
@@ -530,6 +530,13 @@
                             @endif
                         </div>
                     @endif
+
+                    @if ($confId == $chConfId)
+                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboardreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Board Election Report</button>
+                    @elseif ($confId != $chConfId && $ITCondition)
+                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboardreport', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Board Election Report</button>
+                    @endif
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
             </div>
     </div>
     <!-- /.container- -->

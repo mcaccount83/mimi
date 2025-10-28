@@ -93,6 +93,16 @@
                   </tbody>
                 </table>
             </div>
+
+              @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
       </div>
@@ -114,5 +124,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function showAll() {
+    var base_url = '{{ url("/adminreports/reregdate") }}';
+    if ($("#showAll").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
 </script>
 @endsection

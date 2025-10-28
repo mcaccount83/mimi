@@ -46,7 +46,7 @@
                                 <label class="col-form-label">Region:</label>
                             </div>
                             <div class="col-sm-6">
-                                <select name="cord_region" id="cord_region" class="form-control select2-sb4" style="width: 100%;" required>
+                                <select name="cord_region" id="cord_region" class="form-control" style="width: 100%;" required>
                                     @foreach($allRegions as $region)
                                         <option value="{{$region->id}}"
                                             @if($cdDetails->region_id == $region->id) selected @endif>
@@ -62,7 +62,7 @@
                                 <label class="col-form-label">Reports To:</label>
                             </div>
                             <div class="col-sm-6">
-                                <select name="cord_report_pc" id="cord_report_pc" class="form-control select2-sb4" style="width: 100%;" required>
+                                <select name="cord_report_pc" id="cord_report_pc" class="form-control" style="width: 100%;" required>
                                     @foreach($rcDetails as $coordinator)
                                         <option value="{{ $coordinator['cid'] }}"
                                             @if($cdDetails->report_id == $coordinator['cid']) selected @endif
@@ -79,7 +79,7 @@
                                 <label class="col-form-label">Display Position:</label>
                             </div>
                             <div class="col-sm-6">
-                                <select name="cord_disp_pos" id="cord_disp_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
+                                <select name="cord_disp_pos" id="cord_disp_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
                                     @foreach($allPositions as $pos)
                                             <option value="{{ $pos->id }}" {{ $cdDetails->display_position_id == $pos->id ? 'selected' : '' }}>
                                                 {{ $pos->long_title }}
@@ -95,7 +95,7 @@
                                     <i class="fas fa-circle-question text-primary"></i></a></label>
                             </div>
                             <div class="col-sm-6">
-                                <select name="cord_pos" id="cord_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
+                                <select name="cord_pos" id="cord_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
                                     @foreach($allPositions as $pos)
                                         @if($pos->id >= 1 && $pos->id <= 7)
                                             <option value="{{$pos->id}}" {{$cdDetails->position_id == $pos->id  ? 'selected' : ''}}>
@@ -112,7 +112,7 @@
                                 <label class="col-form-label">Secondary Position:</label>
                             </div>
                             <div class="col-sm-6">
-                                <select name="cord_sec_pos[]" id="cord_sec_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" multiple>
+                                <select name="cord_sec_pos[]" id="cord_sec_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" multiple>
                                     <option value="" {{ (!isset($cdDetails->secondaryPosition) || $cdDetails->secondaryPosition->isEmpty()) ? 'selected' : '' }}>None</option>
                                     @foreach($allPositions as $pos)
                                         @if($pos->id >= 9)
@@ -135,13 +135,13 @@
                             </div>
                         </div>
 
-                        @if ($userAdmin)
+                        @if ($ITCondition)
                             <div class="row align-items-center">
                                 <div class="col-sm-6 mt-1">
                                     <label class="col-form-label">MIMI Admin:</label>
                                 </div>
                                 <div class="col-sm-6">
-                                    <select name="is_admin" id="is_admin" class="form-control select2-sb4" style="width: 100%;" required>
+                                    <select name="is_admin" id="is_admin" class="form-control" style="width: 100%;" required>
                                         @foreach($allAdminRoles as $admin)
                                                 <option value="{{$admin->id}}" {{$cdUserAdmin == $admin->id  ? 'selected' : ''}}>
                                                     {{$admin->admin_role}}

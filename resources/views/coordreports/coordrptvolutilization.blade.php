@@ -36,7 +36,7 @@
                 <tbody>
                 @foreach($coordinatorList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -64,6 +64,29 @@
                   </tbody>
                 </table>
             </div>
+             <div class="col-sm-12">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" name="showDirect" id="showDirect" class="custom-control-input" {{$checkBoxStatus}} onchange="showDirect()" />
+                        <label class="custom-control-label" for="showDirect">Only show my Direct Reports</label>
+                    </div>
+                </div>
+                @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showAllConf()" />
+                            <label class="custom-control-label" for="showAllConf">Show All Coordinators</label>
+                        </div>
+                    </div>
+                @endif
+                @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Coordinators</label>
+                        </div>
+                    </div>
+                @endif
+
             <!-- /.card-body -->
             </div>
             <div class="card-body text-center">&nbsp;</div>
@@ -89,6 +112,33 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function showDirect() {
+    var base_url = '{{ url("/coordreports/volunteerutilization") }}';
+    if ($("#showDirect").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::DIRECT_REPORT }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
+function showAllConf() {
+    var base_url = '{{ url("/coordreports/volunteerutilization") }}';
+    if ($("#showAllConf").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::CONFERENCE_REGION }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
+function showAll() {
+    var base_url = '{{ url("/coordreports/volunteerutilization") }}';
+    if ($("#showAll").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::INTERNATIONAL }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
 
 </script>
 @endsection

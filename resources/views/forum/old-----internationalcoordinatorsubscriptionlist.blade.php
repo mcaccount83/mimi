@@ -56,7 +56,7 @@
                 <tbody>
                     @foreach($coordinatorList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
 
                         <td>
                             @if ($list->region?->short_name != "None" )

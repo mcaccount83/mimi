@@ -249,11 +249,11 @@
                             <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistdeclined') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Chapter List</button>
                         @endif
                      @elseif ($confId != $chConfId)
-                        @if ($userAdmin )
+                        @if ($ITCondition )
                             @if ($chActiveId == '2')
-                                <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchaplistpending') }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Chapter List</button>
+                                <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Chapter List</button>
                             @elseif ($chActiveId == '3')
-                                <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchaplistdeclined') }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Chapter List</button>
+                                <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistdeclined', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Chapter List</button>
                             @endif
                         @endif
                     @endif
@@ -270,10 +270,17 @@
 @endsection
 @section('customscript')
 <script>
-    var $chActiveId = @json($chActiveId);
-    $(document).ready(function () {
-        // Disable fields for chapters that are not active
-        if (($chActiveId != 2)) {
+     var $chActiveId = @json($chActiveId);
+    var $coordinatorCondition = @json($coordinatorCondition);
+    var $ITCondition = @json($ITCondition);
+    var $chPcId = @json($chPcId);
+    var $coorId = @json($coorId);
+    var $chConfId = @json($chConfId);
+    var $confId = @json($confId);
+
+$(document).ready(function () {
+// Disable fields for chapters that are not active & Coordinators who should not have edit access
+    if (($chActiveId != 1) || (!$coordinatorCondition && ($confId != $chConfId)) || (!$ITCondition && ($coorId != $chPcId))) {
             $('input, select, textarea, button').prop('disabled', true);
 
             $('a[href^="mailto:"]').each(function() {

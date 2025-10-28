@@ -48,7 +48,7 @@
                                 @endforelse
                             </span>
                         </div>
-                        @if ($userAdmin)
+                        @if ($ITCondition)
                         <b>MIMI Admin:</b> <span class="float-right">{{ $cdAdminRole->admin_role }}</span>
                         @endif
 
@@ -335,15 +335,15 @@
                         @endif
                     @else
                         @if ($cdConfId != $confId)
-                            @if ($userAdmin)
+                            @if ($ITCondition)
                                 @if ($cdActiveId == '1')
-                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
+                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
                                 @elseif ($cdActiveId == '2')
-                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
+                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
                                 @elseif ($cdActiveId == '3')
-                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
+                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
                                 @elseif ($cdActiveId == '0')
-                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
+                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
                                 @endif
                             @endif
                         @endif
@@ -360,11 +360,16 @@
 @section('customscript')
 <script>
 
-var $cdActiveId = {{ $cdActiveId }};
+    var $cdActiveId = @json($cdActiveId);
+    var $supervisingCoordinatorCondition = @json($supervisingCoordinatorCondition);
+    var $ITCondition = @json($ITCondition);
+    var $cdConfId = @json($cdConfId);
+    var $confId = @json($confId);
 
 $(document).ready(function () {
-    // Disable fields for chapters that are not active
-    if ($cdActiveId != 1)
+    // Disable fields for coordinators that are not active & Coordinators who should not have edit access
+        if (($cdActiveId != 1) || (!$supervisingCoordinatorCondition && ($confId != $cdConfId)) || (!$ITCondition)) {
+
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
@@ -381,7 +386,7 @@ $(document).ready(function () {
             $('#back-declined').prop('disabled', false);
             $('#back-zapped').prop('disabled', false);
         $('#unretire').prop('disabled', false);
-
+    }
 });
 
 function showPositionInformation() {

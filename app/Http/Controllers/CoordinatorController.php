@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CoordinatorCheckbox;
 use App\Enums\BoardPosition;
 use App\Enums\CoordinatorPosition;
 use App\Mail\NewCoordApproveGSuiteNotice;
@@ -93,15 +94,18 @@ class CoordinatorController extends Controller implements HasMiddleware
         $userConfName = $user['user_conf_name'];
         $userConfDesc = $user['user_conf_desc'];
 
-        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
+        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $emailListCord = $coordinatorList->pluck('email')->filter()->implode(';');
 
         $countList = count($coordinatorList);
         $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'userCoordId' => $userCoordId,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
         ];
 
         return view('coordinators.coordlist')->with($data);
@@ -119,10 +123,11 @@ class CoordinatorController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getPendingBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(2, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
+        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox5Status' => $checkBox5Status];
 
         return view('coordinators.coordlistpending')->with($data);
     }
@@ -139,52 +144,13 @@ class CoordinatorController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getNotApprovedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(3, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
+        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox5Status' => $checkBox5Status];
 
         return view('coordinators.coordlistrejected')->with($data);
-    }
-
-    /**
-     * International Pending Coorinators List
-     */
-    public function showIntPendingCoordinator(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-
-        $baseQuery = $this->baseCoordinatorController->getPendingInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $coordinatorList = $baseQuery['query']->get();
-
-        $data = ['coordinatorList' => $coordinatorList];
-
-        return view('international.intcoordlistpending')->with($data);
-    }
-
-    /**
-     * International Not Approved Coorinators List
-     */
-    public function showIntRejectedCoordinator(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-
-        $baseQuery = $this->baseCoordinatorController->getNotApprovedInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $coordinatorList = $baseQuery['query']->get();
-
-        $data = ['coordinatorList' => $coordinatorList];
-
-        return view('international.intcoordlistrejected')->with($data);
     }
 
     /**
@@ -199,48 +165,17 @@ class CoordinatorController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getRetiredBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
+        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox5Status' => $checkBox5Status];
 
         return view('coordinators.coordretired')->with($data);
     }
 
     /**
-     * International Coordinators List
-     */
-    public function showIntCoordinator(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-
-        $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($coorId);
-        $coordinatorList = $baseQuery['query']->get();
-
-        $data = ['coordinatorList' => $coordinatorList];
-
-        return view('international.intcoord')->with($data);
-    }
-
-    /**
-     * International Retired Coordinator List
-     */
-    public function showIntCoordinatorRetired(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-
-        $baseQuery = $this->baseCoordinatorController->getRetiredInternationalBaseQuery($coorId);
-        $coordinatorList = $baseQuery['query']->get();
-
-        $data = ['coordinatorList' => $coordinatorList];
-
-        return view('international.intcoordretired')->with($data);
-    }
-
-    /**
-     * Add New Coordiantor
+     * Add New Coordinator
      */
     public function addCoordNew(Request $request): View
     {
@@ -1540,12 +1475,12 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
+            return redirect()->to('/profile/coordprofile')->with('success', 'Coordinator profile updated successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/coordprofile')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->to('/profile/coordprofile')->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();

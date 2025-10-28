@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
+use App\Enums\ChapterCheckbox;
 use App\Models\ActiveStatus;
 use App\Models\Chapters;
 use App\Models\Conference;
@@ -35,25 +36,54 @@ class BaseChapterController extends Controller
     /**
      * Apply checkbox filters to the query
      */
-    private function applyCheckboxFilters($baseQuery, $coorId)
+    private function applyCheckboxFilters($baseQuery, $coorId, $conditions = null, $confId = null, $regId = null)
     {
-        $checkboxStatus = ['checkBoxStatus' => '', 'checkBox2Status' => '', 'checkBox3Status' => '', 'checkBox4Status' => ''];
+        $checkboxStatus = [
+            ChapterCheckbox::CHECK_PRIMARY => '',
+            ChapterCheckbox::CHECK_REVIEWER => '',
+            ChapterCheckbox::CHECK_CONFERENCE_REGION => '',
+            ChapterCheckbox::CHECK_PROBATION => '',
+            ChapterCheckbox::CHECK_INTERNATIONAL => '',
+        ];
 
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkboxStatus['checkBoxStatus'] = 'checked';
+        // Checkbox
+        if (isset($_GET[ChapterCheckbox::PRIMARY_COORDINATOR]) && $_GET[ChapterCheckbox::PRIMARY_COORDINATOR] == 'yes') {
+            $checkboxStatus[ChapterCheckbox::CHECK_PRIMARY] = 'checked';
             $baseQuery->where('primary_coordinator_id', '=', $coorId);
         }
 
-        if (isset($_GET['check2']) && $_GET['check2'] == 'yes') {
-            $checkboxStatus['checkBox2Status'] = 'checked';
+        // Checkbox2
+        if (isset($_GET[ChapterCheckbox::REVIEWER]) && $_GET[ChapterCheckbox::REVIEWER] == 'yes') {
+            $checkboxStatus[ChapterCheckbox::CHECK_REVIEWER] = 'checked';
             $baseQuery->whereHas('financialReport', function ($query) use ($coorId) {
                 $query->where('reviewer_id', '=', $coorId);
             });
         }
 
-        if (isset($_GET['check4']) && $_GET['check4'] == 'yes') {
-            $checkboxStatus['checkBox4Status'] = 'checked';
+        //Checkbox3
+        if (isset($_GET[ChapterCheckbox::CONFERENCE_REGION]) && $_GET[ChapterCheckbox::CONFERENCE_REGION] == 'yes') {
+            $checkboxStatus[ChapterCheckbox::CHECK_CONFERENCE_REGION] = 'checked';
+            // Position conditions already applied in buildChapterQuery
+        }
+
+        //Checkbox4
+        if (isset($_GET[ChapterCheckbox::PROBATION]) && $_GET[ChapterCheckbox::PROBATION] == 'yes') {
+            $checkboxStatus[ChapterCheckbox::CHECK_PROBATION] = 'checked';
+            // Position conditions already applied in buildChapterQuery
             $baseQuery->where('status_id', '!=', '1');
+        }
+
+        //Checkbox5
+        if (isset($_GET[ChapterCheckbox::INTERNATIONAL]) && $_GET[ChapterCheckbox::INTERNATIONAL] == 'yes') {
+            $checkboxStatus[ChapterCheckbox::CHECK_INTERNATIONAL] = 'checked';
+            // Position conditions were skipped in buildChapterQuery
+            if ($conditions && (
+                !$conditions['inquiriesInternationalCondition'] &&
+                !$conditions['ITCondition'] &&
+                !$conditions['einCondition'])) {
+                // User doesn't have international permissions, show nothing
+                $baseQuery->whereRaw('1 = 0');
+            }
         }
 
         return ['query' => $baseQuery, 'status' => $checkboxStatus];
@@ -86,39 +116,30 @@ class BaseChapterController extends Controller
     /**
      * Apply sorting based on query type and page
      */
-    private function applySorting($baseQuery, $queryType)
+    private function applySorting($baseQuery)
     {
-        $isReregPage = request()->route()->getName() == 'chapters.chapreregistration';
-        $isIntReregPage = request()->route()->getName() == 'international.intregistration';
+        $isPendingPage = request()->route()->getName() == 'chapters.chappending';
+        $isNotApprovedPage = request()->route()->getName() == 'chapters.chapnotapproved';
+        $isZappedPage = request()->route()->getName() == 'chapters.chapzapped';
+        $isReregPage = request()->route()->getName() == 'payment.chapreregistration';
 
-        if ($queryType == 'zapped' || $queryType == 'zapped_international') {
-            return ['query' => $baseQuery->orderByDesc('chapters.zap_date'), 'checkBox3Status' => ''];
+        if ($isPendingPage || $isNotApprovedPage) {
+            $baseQuery->orderByDesc('chapters.created_at');
+
+            return ['query' => $baseQuery];
         }
 
-        if ($queryType == 'pending' || $queryType == 'not_approved' || $queryType == 'pending_international' || $queryType == 'not_approved_international') {
-            return ['query' => $baseQuery->orderByDesc('chapters.created_at'), 'checkBox3Status' => ''];
+        if ($isZappedPage) {
+            $baseQuery->orderByDesc('chapters.zap_date');
+
+            return ['query' => $baseQuery];
         }
 
-        if ($isIntReregPage) {
+        if ($isReregPage && !((isset($_GET['check3']) && $_GET['check3'] == 'yes') || (isset($_GET['check5']) && $_GET['check5'] == 'yes'))) {
             $baseQuery->orderByDesc('next_renewal_year')
                 ->orderByDesc('start_month_id');
 
-            return ['query' => $baseQuery, 'checkBox3Status' => ''];
-        }
-
-        if ($isReregPage) {
-            if (isset($_GET['check3']) && $_GET['check3'] == 'yes') {
-                $baseQuery->orderBy(State::select('state_short_name')
-                    ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-                    ->orderBy('chapters.name');
-
-                return ['query' => $baseQuery, 'checkBox3Status' => 'checked'];
-            }
-
-            $baseQuery->orderByDesc('next_renewal_year')
-                ->orderByDesc('start_month_id');
-
-            return ['query' => $baseQuery, 'checkBox3Status' => ''];
+            return ['query' => $baseQuery];
         }
 
         return ['query' => $baseQuery->orderBy(Conference::select('short_name')
@@ -128,7 +149,7 @@ class BaseChapterController extends Controller
             ->orderBy(State::select('state_short_name')
                 ->whereColumn('state.id', 'chapters.state_id'), 'asc')
             ->orderBy('chapters.name'),
-            'checkBox3Status' => ''];
+        ];
     }
 
     /**
@@ -138,247 +159,80 @@ class BaseChapterController extends Controller
     {
         $baseQuery = $this->getBaseQueryWithRelations($params['activeStatus']);
         $checkboxStatus = [];
-        $isPending = ($params['activeStatus'] == 2 || $params['activeStatus'] == 3);
 
         if (isset($params['coorId'])) {
-            // Only apply position conditions if this is not an international or inquiries
-            if (isset($params['conditions']) && $params['conditions']) {
-                $secPositionId = is_array($params['secPositionId']) ? array_map('intval', $params['secPositionId']) : [intval($params['secPositionId'])];
+            $secPositionId = is_array($params['secPositionId']) ? array_map('intval', $params['secPositionId']) : [intval($params['secPositionId'])];
 
-                $conditionsData = $this->baseConditionsController->getConditions(
-                    $params['coorId'],
-                    $params['positionId'],
-                    $secPositionId  // Use the formatted variable here instead of $params['secPositionId']
+            $conditionsData = $this->baseConditionsController->getConditions(
+                $params['coorId'],
+                $params['positionId'],
+                $secPositionId
+            );
+
+            // Only apply position conditions if check5 is NOT selected
+            if (!isset($_GET[ChapterCheckbox::INTERNATIONAL]) || $_GET[ChapterCheckbox::INTERNATIONAL] !== 'yes') {
+                $baseQuery = $this->baseConditionsController->applyPositionConditions(
+                    $baseQuery,
+                    $conditionsData['conditions'],
+                    $params['confId'] ?? null,
+                    $params['regId'] ?? null,
+                    $conditionsData['inQryArr']
                 );
-
-                // Use the appropriate method based on active status
-                $baseQuery = $isPending
-                    ? $this->baseConditionsController->applyPendingPositionConditions(
-                        $baseQuery,
-                        $conditionsData['conditions'],
-                        $params['confId'] ?? null,
-                        $params['regId'] ?? null,
-                        $conditionsData['inQryArr']
-                    )
-                    : $this->baseConditionsController->applyPositionConditions(
-                        $baseQuery,
-                        $conditionsData['conditions'],
-                        $params['confId'] ?? null,
-                        $params['regId'] ?? null,
-                        $conditionsData['inQryArr']
-                    );
-
-                $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
-                $baseQuery = $checkboxResults['query'];
-                $checkboxStatus = $checkboxResults['status'];
-
             }
 
-            if (isset($params['inquiriesConditions']) && $params['inquiriesConditions']) {
-                $secPositionId = isset($params['secPositionId']) ? $params['secPositionId'] : [];
-                $secPositionId = is_array($secPositionId) ? array_map('intval', $secPositionId) : [intval($secPositionId)];
+            // Apply checkbox filters with conditions
+            $checkboxResults = $this->applyCheckboxFilters(
+                $baseQuery,
+                $params['coorId'],
+                $conditionsData['conditions'],
+                $params['confId'] ?? null,
+                $params['regId'] ?? null
+            );
 
-                $conditionsData = $this->baseConditionsController->getConditions(
-                    $params['coorId'],
-                    $params['positionId'],
-                    $secPositionId  // Use the formatted variable here instead of $params['secPositionId']
-                );
-
-                // Use the appropriate method based on active status
-                $baseQuery = $isPending
-                    ? $this->baseConditionsController->applyPendingInquiriesPositionConditions(
-                        $baseQuery,
-                        $conditionsData['conditions'],
-                        $params['confId'] ?? null,
-                        $params['regId'] ?? null,
-                        $conditionsData['inQryArr']
-                    )
-                    : $this->baseConditionsController->applyInquiriesPositionConditions(
-                        $baseQuery,
-                        $conditionsData['conditions'],
-                        $params['confId'] ?? null,
-                        $params['regId'] ?? null,
-                        $conditionsData['inQryArr']
-                    );
-            }
+            $baseQuery = $checkboxResults['query'];
+            $checkboxStatus = $checkboxResults['status'];
         }
 
-        $sortingResults = $this->applySorting($baseQuery, $params['queryType']);
+        $sortingResults = $this->applySorting($baseQuery);
 
         return [
             'query' => $sortingResults['query'],
-            'checkBoxStatus' => $checkboxStatus['checkBoxStatus'] ?? '',
-            'checkBox2Status' => $checkboxStatus['checkBox2Status'] ?? '',
-            'checkBox3Status' => $sortingResults['checkBox3Status'],
-            'checkBox4Status' => $checkboxStatus['checkBox4Status'] ?? '',
+            ChapterCheckbox::CHECK_PRIMARY => $checkboxStatus[ChapterCheckbox::CHECK_PRIMARY] ?? '',
+            ChapterCheckbox::CHECK_REVIEWER => $checkboxStatus[ChapterCheckbox::CHECK_REVIEWER] ?? '',
+            ChapterCheckbox::CHECK_CONFERENCE_REGION => $checkboxStatus[ChapterCheckbox::CHECK_CONFERENCE_REGION] ?? '',
+            ChapterCheckbox::CHECK_PROBATION => $checkboxStatus[ChapterCheckbox::CHECK_PROBATION] ?? '',
+            ChapterCheckbox::CHECK_INTERNATIONAL => $checkboxStatus[ChapterCheckbox::CHECK_INTERNATIONAL] ?? '',
         ];
     }
 
     /**
-     * Public methods for different query types
+     * Get base query for chapters with any active status
      */
-    public function getPendingBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
+    public function getBaseQuery($activeStatus, $coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildChapterQuery([
-            'activeStatus' => 2, // 2 = pending
+            'activeStatus' => $activeStatus,
             'coorId' => $coorId,
             'confId' => $confId,
             'regId' => $regId,
             'positionId' => $positionId,
             'secPositionId' => $secPositionId,
-            'inquiriesConditions' => false,
-            'conditions' => true,
-            'queryType' => 'pending',
+            'queryType' => $this->getQueryType($activeStatus),
         ]);
     }
 
-    public function getNotApprovedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
+    /**
+     * Helper to determine query type from active status
+     */
+    private function getQueryType($activeStatus)
     {
-        return $this->buildChapterQuery([
-            'activeStatus' => 3, // 3 = not approved
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'inquiriesConditions' => false,
-            'conditions' => true,
-            'queryType' => 'not_approved',
-        ]);
-    }
-
-    public function getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 1, // 1 = active
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'inquiriesConditions' => false,
-            'conditions' => true,
-            'queryType' => 'regular',
-        ]);
-    }
-
-    public function getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 0, // 0 = zapped
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'inquiriesConditions' => false,
-            'conditions' => true,
-            'queryType' => 'zapped',
-        ]);
-    }
-
-    public function getActiveInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 1, // 1 = active
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'inquiriesConditions' => true,
-            'conditions' => false,
-            'queryType' => 'inquiries',
-        ]);
-    }
-
-    public function getZappedInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 0, // 0 = zapped
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'inquiriesConditions' => true,
-            'conditions' => false,
-            'queryType' => 'inquiries',
-        ]);
-    }
-
-    public function getPendingInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 2, // 2 = pending
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'inquiriesConditions' => true,
-            'conditions' => false,
-            'queryType' => 'pending_inquiries',
-        ]);
-    }
-
-    public function getNotApprovedInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 3, // 3 = not approved
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'inquiriesConditions' => true,
-            'conditions' => false,
-            'queryType' => 'not_approved_inquiries',
-        ]);
-    }
-
-    public function getActiveInternationalBaseQuery($coorId)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 1, // 1 = active
-            'coorId' => $coorId,
-            'inquiriesConditions' => false,
-            'conditions' => false,
-            'queryType' => 'international',
-        ]);
-    }
-
-    public function getZappedInternationalBaseQuery($coorId)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 0, // 0 = zapped
-            'coorId' => $coorId,
-            'inquiriesConditions' => false,
-            'conditions' => false,
-            'queryType' => 'zapped_international',
-        ]);
-    }
-
-    public function getPendingInternationalBaseQuery($coorId)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 2, // 2 = pending
-            'coorId' => $coorId,
-            'inquiriesConditions' => false,
-            'conditions' => false,
-            'queryType' => 'pending_international',
-        ]);
-    }
-
-    public function getNotApprovedInternationalBaseQuery($coorId)
-    {
-        return $this->buildChapterQuery([
-            'activeStatus' => 3, // 3 = not approved
-            'coorId' => $coorId,
-            'inquiriesConditions' => false,
-            'conditions' => false,
-            'queryType' => 'not_approved_international',
-        ]);
+        return match($activeStatus) {
+            0 => 'zapped',
+            1 => 'active',
+            2 => 'pending',
+            3 => 'not_approved',
+            default => 'active',
+        };
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ChapterCheckbox;
+use App\Enums\CoordinatorCheckbox;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\ForumCategorySubscription;
@@ -96,12 +98,16 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
         $countList = $chapterList->count();
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,];
 
         return view('forum.chaptersubscriptionlist')->with($data);
     }
@@ -118,14 +124,18 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
+        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $emailListCord = $coordinatorList->pluck('email')->filter()->implode(';');
 
         $countList = count($coordinatorList);
-        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord];
+        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,'emailListCord' => $emailListCord];
 
         return view('forum.coordinatorsubscriptionlist')->with($data);
     }
@@ -133,35 +143,35 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      *  Show list of intrnational chapters subscribitios by email
      */
-    public function showInternationalChapterListSubscriptions(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    // public function showInternationalChapterListSubscriptions(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $chapterList = $baseQuery['query']->get();
 
-        $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+    //     $countList = count($chapterList);
+    //     $data = ['countList' => $countList, 'chapterList' => $chapterList];
 
-        return view('forum.internationalchaptersubscriptionlist')->with($data);
-    }
+    //     return view('forum.internationalchaptersubscriptionlist')->with($data);
+    // }
 
     /**
      *  Show list of intrnational coordinators subscribitios by email
      */
-    public function showInternationalCoordinatorListSubscriptions(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    // public function showInternationalCoordinatorListSubscriptions(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($coorId);
-        $coordinatorList = $baseQuery['query']->get();
+    //     $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($coorId);
+    //     $coordinatorList = $baseQuery['query']->get();
 
-        $data = ['coordinatorList' => $coordinatorList];
+    //     $data = ['coordinatorList' => $coordinatorList];
 
-        return view('forum.internationalcoordinatorsubscriptionlist')->with($data);
-    }
+    //     return view('forum.internationalcoordinatorsubscriptionlist')->with($data);
+    // }
 
     /**
      * Add all active coordinators to CoordinatorList Subscribe by Email
@@ -641,5 +651,26 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
             return redirect()->back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * BoardList -- OLD LISTING VIEW
+     */
+    public function showChapterBoardlist(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
+
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $activeChapterList = $baseQuery['query']->get();
+
+        $countList = count($activeChapterList);
+        $data = ['countList' => $countList, 'activeChapterList' => $activeChapterList];
+
+        return view('chapters.chapboardlist')->with($data);
     }
 }

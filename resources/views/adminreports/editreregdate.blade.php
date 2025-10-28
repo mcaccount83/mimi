@@ -131,10 +131,16 @@
             </div>
             <!-- /.box-body -->
             <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
-
-              <a href="{{ route('adminreports.reregdate') }}" class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
-              </div>
+                @if ($coordinatorCondition)
+                    <button type="submit" class="btn bg-gradient-primary mb-3"><i class="fas fa-save" ></i>&nbsp; Save</button>
+                @endif
+                 @if ($confId == $chConfId)
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('adminreports.reregdate') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Reg Report</button>
+                @elseif ($confId != $chConfId)
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('adminreports.reregdate', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Reg Report</button>
+                @endif
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+            </div>
 
             <!-- /.box-body -->
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CoordinatorCheckbox;
 use App\Models\AdminRole;
 use App\Models\Conference;
 use App\Models\CoordinatorApplication;
@@ -30,13 +31,37 @@ class BaseCoordinatorController extends Controller
     /**
      * Apply checkbox filters to the query
      */
-    private function applyCheckboxFilters($baseQuery, $coorId)
+    private function applyCheckboxFilters($baseQuery, $coorId, $conditions = null, $confId = null, $regId = null)
     {
-        $checkboxStatus = ['checkBoxStatus' => ''];
+        $checkboxStatus = [
+            CoordinatorCheckbox::CHECK_DIRECT => '',
+            CoordinatorCheckbox::CHECK_CONFERENCE_REGION => '',
+            CoordinatorCheckbox::CHECK_INTERNATIONAL => '',
+        ];
 
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkboxStatus['checkBoxStatus'] = 'checked';
+        // Checkbox
+        if (isset($_GET[CoordinatorCheckbox::DIRECT_REPORT]) && $_GET[CoordinatorCheckbox::DIRECT_REPORT] == 'yes') {
+            $checkboxStatus[CoordinatorCheckbox::CHECK_DIRECT] = 'checked';
             $baseQuery->where('report_id', '=', $coorId);
+        }
+
+        //Checkbox3
+        if (isset($_GET[CoordinatorCheckbox::CONFERENCE_REGION]) && $_GET[CoordinatorCheckbox::CONFERENCE_REGION] == 'yes') {
+            $checkboxStatus[CoordinatorCheckbox::CHECK_CONFERENCE_REGION] = 'checked';
+            // Position conditions already applied in buildChapterQuery
+        }
+
+        //Checkbox5
+        if (isset($_GET[CoordinatorCheckbox::INTERNATIONAL]) && $_GET[CoordinatorCheckbox::INTERNATIONAL] == 'yes') {
+            $checkboxStatus[CoordinatorCheckbox::CHECK_INTERNATIONAL] = 'checked';
+            // Position conditions were skipped in buildChapterQuery
+            if ($conditions && (
+                !$conditions['inquiriesInternationalCondition'] &&
+                !$conditions['ITCondition'] &&
+                !$conditions['einCondition'])) {
+                // User doesn't have international permissions, show nothing
+                $baseQuery->whereRaw('1 = 0');
+            }
         }
 
         return ['query' => $baseQuery, 'status' => $checkboxStatus];
@@ -68,21 +93,10 @@ class BaseCoordinatorController extends Controller
     /**
      * Apply sorting based on query type and page
      */
-    private function applySorting($baseQuery, $queryType)
+    private function applySorting($baseQuery)
     {
         $isBirthdayPage = request()->route()->getName() == 'coordreports.coordrptbirthdays';
         $isUtilizationPage = request()->route()->getName() == 'coordreports.coordrptvolutilization';
-
-        if ($queryType == 'retired' || $queryType == 'retired_international') {
-            return ['query' => $baseQuery->orderByDesc('coordinators.zapped_date'), 'checkBoxStatus' => ''];
-        }
-
-        if ($queryType == 'pending' || $queryType == 'not_approved' || $queryType == 'pending_international' || $queryType == 'not_approved_international') {
-            return ['query' => $baseQuery->orderByDesc(CoordinatorApplication::select('created_at')
-                ->whereColumn('coordinator_application.coordinator_id', 'coordinators.id')
-                ->limit(1)),
-                'checkBoxStatus' => ''];
-        }
 
         if ($isBirthdayPage) {
             $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
@@ -109,7 +123,8 @@ class BaseCoordinatorController extends Controller
         return ['query' => $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
             ->whereColumn('conference.id', 'coordinators.conference_id')
             ->limit(1))
-            ->orderBy('coordinator_start_date'), 'checkBoxStatus' => ''];
+            ->orderBy('coordinator_start_date'),
+        ];
     }
 
     /**
@@ -119,210 +134,78 @@ class BaseCoordinatorController extends Controller
     {
         $baseQuery = $this->getBaseQueryWithRelations($params['activeStatus']);
         $checkboxStatus = [];
-        $isPending = ($params['activeStatus'] == 2 || $params['activeStatus'] == 3);
 
         if (isset($params['coorId'])) {
-            // Only apply position conditions if this is not an international or tree query
-            if (isset($params['conditions']) && $params['conditions']) {
-                $secPositionId = is_array($params['secPositionId']) ? array_map('intval', $params['secPositionId']) : [intval($params['secPositionId'])];
+            $secPositionId = is_array($params['secPositionId']) ? array_map('intval', $params['secPositionId']) : [intval($params['secPositionId'])];
 
-                $conditionsData = $this->baseConditionsController->getConditions(
-                    $params['coorId'],
-                    $params['positionId'],
-                    $secPositionId  // Use the formatted variable here instead of $params['secPositionId']
+            $conditionsData = $this->baseConditionsController->getConditions(
+                $params['coorId'],
+                $params['positionId'],
+                $secPositionId
+            );
+
+            // Only apply position conditions if check5 is NOT selected
+            if (!isset($_GET[CoordinatorCheckbox::INTERNATIONAL]) || $_GET[CoordinatorCheckbox::INTERNATIONAL] !== 'yes') {
+                $baseQuery = $this->baseConditionsController->applyPositionConditions(
+                    $baseQuery,
+                    $conditionsData['conditions'],
+                    $params['confId'] ?? null,
+                    $params['regId'] ?? null,
+                    $conditionsData['inQryArr']
                 );
-
-                // Use the appropriate method based on active status
-                $baseQuery = $isPending
-                    ? $this->baseConditionsController->applyPendingPositionConditions(
-                        $baseQuery,
-                        $conditionsData['conditions'],
-                        $params['confId'] ?? null,
-                        $params['regId'] ?? null,
-                        $conditionsData['inQryArr']
-                    )
-                    : $this->baseConditionsController->applyPositionCoordConditions(
-                        $baseQuery,
-                        $conditionsData['conditions'],
-                        $params['confId'] ?? null,
-                        $params['regId'] ?? null,
-                        $conditionsData['inQryArr']
-                    );
-
-                $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
-                $baseQuery = $checkboxResults['query'];
-                $checkboxStatus = $checkboxResults['status'];
-
             }
 
-            // $baseQuery = $this->baseConditionsController->applyPositionCoordConditions(
-            //     $baseQuery,
-            //     $conditionsData['conditions'],
-            //     $params['confId'] ?? null,
-            //     $params['regId'] ?? null,
-            //     $conditionsData['inQryArr']
-            // );
+    // Apply checkbox filters with conditions
+                $checkboxResults = $this->applyCheckboxFilters(
+                $baseQuery,
+                $params['coorId'],
+                $conditionsData['conditions'],
+                $params['confId'] ?? null,
+                $params['regId'] ?? null
+            );
 
-            // $checkboxResults = $this->applyCheckboxFilters($baseQuery, $params['coorId']);
-            // $baseQuery = $checkboxResults['query'];
-            // $checkboxStatus = $checkboxResults['status'];
-
-            // }
-
-            // Only apply position conditions if this is tree query
-            if (isset($params['treeConditions']) && $params['treeConditions']) {
-                $conditionsData = $conditionsData ?? $this->baseConditionsController->getConditions(
-                    $params['coorId'],
-                    $params['positionId'],
-                    $params['secPositionId']
-                );
-
-                $baseQuery->where('on_leave', '!=', '1');
-                $conditions = $conditionsData['conditions'] ?? [];
-
-                if (! ($conditions['founderCondition'] ?? false)) {
-                    $baseQuery->where('conference_id', $params['confId']);
-                }
-            }
+            $baseQuery = $checkboxResults['query'];
+            $checkboxStatus = $checkboxResults['status'];
         }
 
-        // $sortingResults = $this->applySorting($baseQuery, $params['cdIsActive'] ? 'active' : 'retired');
-        $sortingResults = $this->applySorting($baseQuery, $params['queryType']);
+        $sortingResults = $this->applySorting($baseQuery);
 
         return [
             'query' => $sortingResults['query'],
-            'checkBoxStatus' => $checkboxStatus['checkBoxStatus'] ?? '',
+            CoordinatorCheckbox::CHECK_DIRECT => $checkboxStatus[CoordinatorCheckbox::CHECK_DIRECT] ?? '',
+            CoordinatorCheckbox::CHECK_CONFERENCE_REGION => $checkboxStatus[CoordinatorCheckbox::CHECK_CONFERENCE_REGION] ?? '',
+            CoordinatorCheckbox::CHECK_INTERNATIONAL => $checkboxStatus[CoordinatorCheckbox::CHECK_INTERNATIONAL] ?? '',
         ];
     }
 
     /**
      * Public methods for different query types
      */
-    public function getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
+    public function getBaseQuery($activeStatus, $coorId, $confId, $regId, $positionId, $secPositionId)
     {
         return $this->buildCoordinatorQuery([
-            'activeStatus' => 1, // 1 = active
-            'cdIsActive' => 1,
+            'activeStatus' => $activeStatus,
             'coorId' => $coorId,
             'confId' => $confId,
             'regId' => $regId,
             'positionId' => $positionId,
             'secPositionId' => $secPositionId,
-            'treeConditions' => false,
-            'conditions' => true,
-            'queryType' => 'regular',
+            'queryType' => $this->getQueryType($activeStatus),
         ]);
     }
 
-    public function getPendingBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
+    /**
+     * Helper to determine query type from active status
+     */
+    private function getQueryType($activeStatus)
     {
-        return $this->buildCoordinatorQuery([
-            'activeStatus' => 2, // 2 = pending
-            'cdIsActive' => 1,
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'treeConditions' => false,
-            'conditions' => true,
-            'queryType' => 'pending',
-        ]);
-    }
-
-    public function getNotApprovedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
-    {
-        return $this->buildCoordinatorQuery([
-            'activeStatus' => 3, // 3 = not approved
-            'cdIsActive' => 0,
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'treeConditions' => false,
-            'conditions' => true,
-            'queryType' => 'not_approved',
-        ]);
-    }
-
-    public function getRetiredBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId)
-    {
-        return $this->buildCoordinatorQuery([
-            'activeStatus' => 0, // 0 = zapped
-            'cdIsActive' => 0,
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'treeConditions' => false,
-            'conditions' => true,
-            'queryType' => 'retired',
-        ]);
-    }
-
-    public function getActiveInternationalBaseQuery($coorId)
-    {
-        return $this->buildCoordinatorQuery([
-            'activeStatus' => 1,
-            'cdIsActive' => 1,
-            'coorId' => $coorId,
-            'treeConditions' => false,
-            'conditions' => false,
-            'queryType' => 'international',
-        ]);
-    }
-
-    public function getPendingInternationalBaseQuery($coorId)
-    {
-        return $this->buildCoordinatorQuery([
-            'activeStatus' => 2,
-            'cdIsActive' => 0,
-            'coorId' => $coorId,
-            'treeConditions' => false,
-            'conditions' => false,
-            'queryType' => 'pending_international',
-        ]);
-    }
-
-    public function getNotApprovedInternationalBaseQuery($coorId)
-    {
-        return $this->buildCoordinatorQuery([
-            'activeStatus' => 3,
-            'cdIsActive' => 1,
-            'coorId' => $coorId,
-            'treeConditions' => false,
-            'conditions' => false,
-            'queryType' => 'not_approved_international',
-        ]);
-    }
-
-    public function getRetiredInternationalBaseQuery($coorId)
-    {
-        return $this->buildCoordinatorQuery([
-            'activeStatus' => 0,
-            'cdIsActive' => 0,
-            'coorId' => $coorId,
-            'treeConditions' => false,
-            'conditions' => false,
-            'queryType' => 'retired_international',
-        ]);
-    }
-
-    public function getReportingTreeBaseQuery($coorId, $confId, $positionId, $secPositionId)
-    {
-        return $this->buildCoordinatorQuery([
-            'activeStatus' => 1,
-            'cdIsActive' => 1,
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
-            'treeConditions' => true,
-            'conditions' => false,
-            'queryType' => 'conference',
-        ]);
+        return match($activeStatus) {
+            0 => 'zapped',
+            1 => 'active',
+            2 => 'pending',
+            3 => 'not_approved',
+            default => 'active',
+        };
     }
 
     /**

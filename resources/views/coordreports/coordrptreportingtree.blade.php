@@ -4,6 +4,10 @@
 @section('breadcrumb', 'Coordinator Reporting Tree')
 
 @section('content')
+@php
+    $founderCondition = isset($checkBox6Status) && $checkBox6Status === 'checked' ? true : $founderCondition;
+@endphp
+
     <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
@@ -249,137 +253,21 @@
 </div>
 </div>
 
-    {{-- <div class="mermaid-container">
-        <div class="mermaid flowchart" id="mermaid-chart">
-            flowchart TD
-
-            %% Define all nodes first
-            @foreach ($coordinatorList as $coordinator)
-            @php
-                $id = $coordinator['id'] ?? '';
-                $name = htmlspecialchars(($coordinator['first_name'] ?? '') . ' ' . ($coordinator['last_name'] ?? ''));
-                $position = htmlspecialchars($coordinator['displayPosition']['short_title'] ?? '');
-                $sec_titles = '';
-                if (!empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
-                    $sec_titles_array = $coordinator->secondaryPosition->pluck('short_title')->toArray();
-                    $sec_titles = htmlspecialchars(implode('/', $sec_titles_array));
-                }
-                $region = htmlspecialchars($coordinator['region']['short_name'] ?? '');
-                $conf = htmlspecialchars($coordinator['conference']['short_name'] ?? '');
-
-                $node_label = "$name<br>$position";
-                if ($sec_titles) $node_label .= "/$sec_titles";
-                if ($region != "None") $node_label .= "<br>$region";
-                if ($region == "None") $node_label .= "<br>$conf";
-            @endphp
-                {{ $id }}["{!! $node_label !!}"]
-            @endforeach
-
-            %% Group nodes into subgraphs without redefining them
-            @php
-                $conference_groups = [];
-                $region_groups = [];
-
-                foreach ($coordinatorList as $coordinator) {
-                    $id = $coordinator['id'] ?? '';
-
-                    if ($founderCondition) {
-                        $conf = $coordinator['conference']['short_name'];
-                        if ($conf != "Intl") {
-                            if (!isset($conference_groups[$conf])) {
-                                $conference_groups[$conf] = [];
-                            }
-                            $region = $coordinator['region']['short_name'];
-                            if ($region != "None") {
-                                if (!isset($conference_groups[$conf][$region])) {
-                                    $conference_groups[$conf][$region] = [];
-                                }
-                                $conference_groups[$conf][$region][] = $id;
-                            } else {
-                                if (!isset($conference_groups[$conf]['_conf'])) {
-                                    $conference_groups[$conf]['_conf'] = [];
-                                }
-                                $conference_groups[$conf]['_conf'][] = $id;
-                            }
-                        }
-                    } else {
-                        $region = $coordinator['region']['short_name'];
-                        if ($region != "None") {
-                            if (!isset($region_groups[$region])) {
-                                $region_groups[$region] = [];
-                            }
-                            $region_groups[$region][] = $id;
-                        }
-                    }
-                }
-            @endphp
-
-            %% Founder Condition Subgraphs
-            @if ($founderCondition)
-                @foreach ($conference_groups as $conference => $regions_data)
-                    subgraph {{ $conference }}
-                        direction TB
-                        style {{ $conference }} fill:none,stroke:none
-
-                        %% Conference-level coordinators (if any)
-                        @if (isset($regions_data['_conf']))
-                            @foreach ($regions_data['_conf'] as $id)
-                                {{ $id }}
-                            @endforeach
-                        @endif
-
-                        %% Region subgraphs
-                        @foreach ($regions_data as $region => $ids)
-                            @if ($region != '_conf')
-                                subgraph {{ $region }}
-                                    direction TB
-                                    style {{ $region }} fill:none,stroke:none
-
-                                    %% List node IDs without redefining
-                                    @foreach ($ids as $id)
-                                        {{ $id }}
-                                    @endforeach
-                                end
-                            @endif
-                        @endforeach
-                    end
-                @endforeach
-            @else
-                %% Non-Founder Condition Subgraphs
-                @foreach ($region_groups as $region => $ids)
-                    subgraph {{ $region }}
-                        direction TB
-                        style {{ $region }} fill:none,stroke:none
-
-                        %% List node IDs without redefining
-                        @foreach ($ids as $id)
-                            {{ $id }}
-                        @endforeach
-                    end
-                @endforeach
-            @endif
-
-            %% Connect Coordinators - AFTER all subgraphs are defined
-            @foreach ($coordinatorList as $coordinator)
-                @php
-                    $report_id = $coordinator['report_id'];
-                    $id = $coordinator['id'];
-                    $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
-                @endphp
-                @if (!$shouldExclude)
-                    {{ $report_id }} --- {{ $id }}
-                @endif
-            @endforeach
-        </div>
-
-    </div>
-</div> --}}
 
 <div class="card-body">
     <br>
         <button type="button" class="btn bg-gradient-primary" onclick="showPositionAbbreviations()">Position Abbreviations</button>
 
 </div>
+
+@if ($ITCondition)
+    <div class="col-sm-12">
+        <div class="custom-control custom-switch">
+            <input type="checkbox" name="showFullTree" id="showFullTree" class="custom-control-input" {{$checkBox6Status}} onchange="showFullTree()" />
+            <label class="custom-control-label" for="showFullTree">Show Full International Reporting Tree</label>
+        </div>
+    </div>
+@endif
 
 </section>
 @endsection
@@ -449,6 +337,15 @@ function showPositionAbbreviations() {
             confirmButton: 'btn btn-danger'
         }
     });
+}
+
+function showFullTree() {
+    var base_url = '{{ route("coordreports.coordrptreportingtree") }}';
+    if ($("#showFullTree").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::REPORTING_TREE }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
 }
 
 </script>

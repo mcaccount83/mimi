@@ -7,6 +7,7 @@ use App\Services\PositionConditionsService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Log;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -25,7 +26,7 @@ class ViewServiceProvider extends ServiceProvider
 
                 if ($user->user_type == 'coordinator' && $user->coordinator) {
                     $corDetails = $user->coordinator;
-                    $corId = $corDetails['coordinator_id'];
+                    $corId = $corDetails['id'];
                     $positionid = $corDetails['position_id'];
                     $secpositionid = $corDetails->secondaryPosition->pluck('id')->toArray(); // Get all secondary position IDs
                     $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -38,7 +39,7 @@ class ViewServiceProvider extends ServiceProvider
             $positionConditionsService = app(PositionConditionsService::class);
             $forumConditionsService = app(ForumConditionsService::class);
 
-            $positionConditions = $positionConditionsService->getConditionsForUser($positionid, $secpositionid);
+            $positionConditions = $positionConditionsService->getConditionsForUser($positionid, $secpositionid, $corId); // ADD $corId HERE!
             $eoyDisplay = $positionConditionsService->getEOYDisplay();
             $forumCount = $forumConditionsService->getUnreadForumCount();
 
@@ -63,13 +64,9 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     public function register(): void
-    {
-        // Register as a singleton
-        $this->app->singleton(PositionConditionsService::class, function ($app) {
-            return new PositionConditionsService;
-        });
-        $this->app->singleton(ForumConditionsService::class, function ($app) {
-            return new ForumConditionsService;
-        });
-    }
+{
+    // Register as a singleton - let Laravel auto-resolve dependencies
+    $this->app->singleton(PositionConditionsService::class);
+    $this->app->singleton(ForumConditionsService::class);
+}
 }

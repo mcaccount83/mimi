@@ -459,10 +459,10 @@
                   <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
                         <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information
-                            @if ($userAdmin && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
+                            @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                             @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
                         </h3>
-                        @if($userAdmin || $eoyTestCondition && $displayTESTING || $displayLIVE)
+                        @if($ITCondition || $eoyTestCondition && $displayTESTING || $displayLIVE)
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label>Boundary Issues:</label>
@@ -867,22 +867,21 @@
                 @endphp
                     <button class="btn bg-gradient-primary mb-3" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
                         <i class="fa fa-envelope mr-2"></i>Email Board</button>
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Chapter Information</button>
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Chapter Information</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
                 @endif
-
-                @if ( $userAdmin || $eoyTestCondition && $displayTESTING || $regionalCoordinatorCondition && $displayLIVE )
+                @if ( $ITCondition || $eoyTestCondition && $displayTESTING || $regionalCoordinatorCondition && $displayLIVE )
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information
-                        @if ($userAdmin && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
+                        @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                         @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
                     </button>
                 @endif
-                @if($conferenceCoordinatorCondition)
+                @if($coordinatorCondition && $conferenceCoordinatorCondition)
                     <br>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editpayment', ['id' => $chDetails->id]) }}'"><i class="fas fa-dollar-sign mr-2"></i>Enter Payment/Donation</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="fas fa-dollar-sign mr-2"></i>Enter Payment/Donation</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
                 @endif
-                @if($regionalCoordinatorCondition)
+                @if($coordinatorCondition && $regionalCoordinatorCondition)
                     <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDocuments->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
                     @if($chActiveId == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal()"><i class="fas fa-ban mr-2"></i>Disband Chapter</button>
@@ -893,33 +892,31 @@
                 <br>
                 @if($coordinatorCondition)
                     @if ($confId == $chConfId)
-                            @if ($inquiriesCondition  && ($coorId != $chPcId))
+                            @if ($chActiveId == '1')
+                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Chapter List</button>
+                            @elseif ($chActiveId == '0')
+                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
+                            @endif
+                            @if ($inquiriesCondition || $assistConferenceCoordinatorCondition)
                                 @if ($chActiveId == '1')
-                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Active Chapter List</button>
+                                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check3' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to Active Inquiries List</button>
                                 @elseif ($chActiveId == '0')
-                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquirieszapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Zapped Chapter List</button>
-                                @endif
-                            @else
-                                @if ($chActiveId == '1')
-                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Chapter List</button>
-                                @elseif ($chActiveId == '2')
-                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Chapter List</button>
-                                @elseif ($chActiveId == '3')
-                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistdeclined') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Chapter List</button>
-                                @elseif ($chActiveId == '0')
-                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
+                                    <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check3' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Inquiries List</button>
                                 @endif
                             @endif
                      @elseif ($confId != $chConfId)
-                        @if ($einCondition || $inquiriesCondition  || $userAdmin )
+                        @if ($einCondition || $inquiriesInternationalCondition || $ITCondition)
                             @if ($chActiveId == '1')
-                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Chapter List</button>
-                            @elseif ($chActiveId == '2')
-                                <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchaplistpending') }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Chapter List</button>
-                            @elseif ($chActiveId == '3')
-                                <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchaplistdeclined') }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Chapter List</button>
+                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Chapter List</button>
                             @elseif ($chActiveId == '0')
-                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapterzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Chapter List</button>
+                            @endif
+                        @endif
+                         @if ($inquiriesInternationalCondition || $ITCondition)
+                            @if ($chActiveId == '1')
+                                <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Inquiries List</button>
+                            @elseif ($chActiveId == '0')
+                                <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Inquiries List</button>
                             @endif
                         @endif
                     @endif
@@ -935,15 +932,16 @@
 @section('customscript')
 <script>
     var $chActiveId = @json($chActiveId);
-    var $einCondition = @json($einCondition);
-    var $inquiriesCondition = @json($inquiriesCondition);
+    var $coordinatorCondition = @json($coordinatorCondition);
+    var $ITCondition = @json($ITCondition);
     var $chPcId = @json($chPcId);
     var $coorId = @json($coorId);
+    var $chConfId = @json($chConfId);
     var $confId = @json($confId);
 
 $(document).ready(function () {
-    // Disable fields for chapters that are not active or EIN & Inquiries Coordinators who are not PC for the Chapter
-    if (($chActiveId != 1) || ($inquiriesCondition && ($coorId != $chPCid)) || ($einCondition && ($coorId != $chPCid))) {
+    // Disable fields for chapters that are not active & Coordinators who should not have edit access
+    if (($chActiveId != 1) || (!$coordinatorCondition && ($confId != $chConfId)) || (!$ITCondition && ($coorId != $chPcId))) {
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
@@ -954,18 +952,17 @@ $(document).ready(function () {
             });
         });
 
-        // Re-enable the specific "Back" buttons
+        // Re-enable the specific buttons
         $('#disband-letter').prop('disabled', false);
         $('#final-pdf').prop('disabled', false);
         $('#ein-letter').prop('disabled', false);
         $('#roster-file').prop('disabled', false);
+        $('#viewdisband').prop('disabled', false);
+        $('#back-list').prop('disabled', false);
         $('#back-zapped').prop('disabled', false);
         $('#back-inquiries').prop('disabled', false);
         $('#back-inquiries-zapped').prop('disabled', false);
-        $('#back-international').prop('disabled', false);
-        $('#back-international-zapped').prop('disabled', false);
         $('#unzap').prop('disabled', false);
-        $('#viewdisband').prop('disabled', false);
     }
 });
 

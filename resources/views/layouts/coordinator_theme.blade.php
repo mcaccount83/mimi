@@ -1,55 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Google Font: Source Sans Pro -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-<!-- Bootstrap CSS -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<!-- Font Awesome -->
-{{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css"> --}}
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/brands.css" rel="stylesheet" />
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/css/v5-font-face.css" rel="stylesheet" />
-<!-- overlayScrollbars -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-<!-- Theme style -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{config('app.name')}}</title>
+    {{-- <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> --}}
 
-<!-- Bootstrap Switch -->
-  <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/bootstrap-switch/css/bootstrap-switch.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css"> --}}
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/brands.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/css/v5-font-face.css" rel="stylesheet" />
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <!-- Bootstrap Switch -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/bootstrap-switch/css/bootstrap-switch.min.css">
     <!-- BS Stepper -->
-  <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/bs-stepper/css/bs-stepper.min.css">
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/bs-stepper/css/bs-stepper.min.css">
+    <!-- Summernote CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
 
-<!-- Summernote CSS and JS -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-
-<!-- SweetAlert2 -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-<!-- daterange picker -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
-<!-- iCheck for checkboxes and radio inputs -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-<!-- Tempusdominus Bootstrap 4 -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-<!-- Select2 -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/select2/css/select2.min.css">
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-
-<!-- DataTables -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-
-<!-- CSRF Token -->
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<title>{{config('app.name')}}</title>
-<!-- Tell the browser to be responsive to screen width -->
-<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
 <script>
 window.onload = function () {
@@ -61,15 +54,6 @@ window.onload = function () {
     }
 };
 </script>
-
-
-<script>
-    function openPdfViewer(filePath) {
-        var base_url = '{{ url("/pdf-viewer") }}';
-        window.open(base_url + '?id=' + encodeURIComponent(filePath), '_blank');
-    }
-</script>
-
 
 <style>
     .email-column a {
@@ -188,9 +172,6 @@ window.onload = function () {
         </nav>
         <!-- /.navbar -->
 
-        <!-- Menu for Logged In Users -->
-        @auth
-
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
@@ -203,9 +184,12 @@ window.onload = function () {
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
 
+                    <!-- Menu for Logged In Users -->
+                    @auth
+
                         <!-- Coordinator Dashboard Menu Item -->
                         <li class="nav-item">
-                            <a href="{{ route('coordinators.viewprofile') }}" class="nav-link {{ Request::is('coordviewprofile') ? 'active' : '' }}">
+                            <a href="{{ route('coordinators.viewprofile') }}" class="nav-link {{ Request::is('viewprofile') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>Dashboard</p>
                             </a>
@@ -215,14 +199,15 @@ window.onload = function () {
                         @php
                             if ($coordinatorCondition) {
                                 $chaptersRoute = route('chapters.chaplist');
+                            } elseif ($einCondition || $ITCondition) {
+                                $chaptersRoute = route('chapters.chaplist', ['check5' => 'yes']);
                             } elseif ($inquiriesCondition) {
-                                $chaptersRoute = route('chapters.chapinquiries');
-                            } elseif ($einCondition || $userAdmin) {
-                                $chaptersRoute = route('international.intchapter');
+                                $chaptersRoute = route('chapters.chapinquiries', ['check3' => 'yes']);
+                            } elseif ($inquiriesInternationalCondition) {
+                                $chaptersRoute = route('chapters.chapinquiries', ['check5' => 'yes']);
                             }
                             $activeChpaterRoutes = [
-                                'chapter/chapterlist', 'chapterdetails/*', 'chapterdetailsedit/*', 'chapterboardedit/*', 'chapter/chapternew',
-                                'chapter/zapped', 'chapter/inquiries', 'chapter/inquirieszapped', 'international/chapter', 'international/chapterzapped'
+                                'chapter/*',
                             ];
                         @endphp
                         @if (isset($chaptersRoute))
@@ -238,13 +223,11 @@ window.onload = function () {
                         @php
                             if ($supervisingCoordinatorCondition) {
                                 $coordinatorsRoute = route('coordinators.coordlist');
-                            } elseif ($einCondition || $userAdmin) {
-                                $coordinatorsRoute = route('international.intcoord');
+                            } elseif ($ITCondition) {
+                                $coordinatorsRoute = route('coordinators.coordlist', ['check5' => 'yes']);
                             }
                             $activeCoordinatorsRoutes = [
-                                'coordinator/coordlist', 'coordinator/retired', 'coordnew', 'coorddetails/*',
-                                'coorddetailsedit/*', 'coorddetailseditrole/*', 'coorddetailseditrecognition/*',
-                                'international/coordinator', 'international/coordinatorretired'
+                                'coordinator/*',
                             ];
                         @endphp
                         @if (isset($coordinatorsRoute))
@@ -258,13 +241,13 @@ window.onload = function () {
 
                         <!-- Payments/Donations Menu Item -->
                         @php
-                            if ($regionalCoordinatorCondition) {
-                                $paymentsRoute = route('chapters.chapreregistration');
-                            } elseif ($m2mCondition || $userAdmin) {
-                                $paymentsRoute = route('international.intdonation');
+                            if ($coordinatorCondition && $regionalCoordinatorCondition) {
+                                $paymentsRoute = route('payment.chapreregistration');
+                            } elseif ($m2mCondition || $ITCondition) {
+                                $paymentsRoute = route('payment.chapreregistration', ['check5' => 'yes']);
                             }
                             $activePaymentsRoutes = [
-                                'chapter/reregistration', 'international/reregistration', 'chapter/donations', 'international/donation','chapterpaymentedit/*'
+                                'payment/*'
                             ];
                         @endphp
                         @if (isset($paymentsRoute))
@@ -278,17 +261,16 @@ window.onload = function () {
 
                         <!-- Website Review Menu Item -->
                         @php
-                            if ($webReviewCondition) {
+                            if ($coordinatorCondition && !$webReviewCondition) {
                                 $websiteRoute = route('chapters.chapwebsite');
-                                $activeWebsiteRoutes = [
-                                    'chapter/website', 'chapterdetails/*'
-                                ];
-                            } elseif ($regionalCoordinatorCondition) {
-                                $websiteRoute = route('chapters.chapwebsite');
-                                $activeWebsiteRoutes = [
-                                    'chapter/website', 'international/website', 'chapter/socialmedia', 'international/socialmedia', 'chapterwebsiteedit/*'
-                                ];
+                            } elseif ($webReviewCondition) {
+                                $websiteRoute = route('chapters.chapwebsite', ['check3' => 'yes']);
+                            } elseif ($ITCondition) {
+                                $websiteRoute = route('chapters.chapwebsite', ['check5' => 'yes']);
                             }
+                            $activeWebsiteRoutes = [
+                                'online/*'
+                            ];
                         @endphp
                         @if (isset($websiteRoute))
                             <li class="nav-item">
@@ -301,14 +283,13 @@ window.onload = function () {
 
                           <!-- New Menu Item -->
                           @php
-                            if ($conferenceCoordinatorCondition) {
+                            if ($coordinatorCondition && $conferenceCoordinatorCondition) {
                                 $newChaptersRoute = route('chapters.chaplistpending');
-                            } elseif ($userAdmin) {
-                                $newChaptersRoute = route('international.intchapterpending');
+                            } elseif ($ITCondition) {
+                                $newChaptersRoute = route('chapters.chaplistpending', ['check5' => 'yes']);
                             }
                             $activeNewChpaterRoutes = [
-                                'chapter/pendingchapterlist', 'chapter/declinedchapterlist', 'international/pendingchapterlist', 'international/declinedchapterlist',
-                                'coordinator/pending', 'coordinator/rejected', 'international/pending', 'international/rejected'
+                                'application/*',
                             ];
                         @endphp
                         @if (isset($newChaptersRoute))
@@ -322,15 +303,13 @@ window.onload = function () {
 
                         <!-- List Subscription Menu Item -->
                         @php
-                            // if ($coordinatorCondition) {
-                            if ($listAdminCondition || $userAdmin) {
+                            if ($listAdminCondition || $ITCondition) {
                                 $listSubscriptionRoute = route('forum.chaptersubscriptionlist');
-                            } elseif ($listAdminCondition || $userAdmin) {
-                                $listSubscriptionRoute = route('forum.internationalchaptersubscriptionlist');
+                            } elseif ($listAdminCondition || $ITCondition) {
+                                $listSubscriptionRoute = route('forum.chaptersubscriptionlist', ['check5' => 'yes']);
                             }
                             $activeChpaterRoutes = [
                                 'forum/chaptersubscriptionlist', 'forum/coordinatorsubscriptionlist',
-                                'forum/internationalchaptersubscriptionlist', 'forum/internationalcoordinatorsubscriptionlist'
                             ];
                         @endphp
                         @if (isset($listSubscriptionRoute))
@@ -344,11 +323,11 @@ window.onload = function () {
 
                         <!-- BoardList Email Menu Item -->
                         @php
-                            if ($listAdminCondition || $userAdmin) {
+                            if ($listAdminCondition || $ITCondition) {
                                 $boardlistRoute = route('chapters.chapboardlist');
                             }
                             $activeBoardlistRoutes = [
-                                'chapter/boardlist'
+                                'forum/boardlist'
                             ];
                         @endphp
                         @if (isset($boardlistRoute))
@@ -360,19 +339,12 @@ window.onload = function () {
                             </li>
                         @endif
 
-                        @if ($einCondition && !$coordinatorCondition)
-                        <li class="nav-item">
-                            <a href="{{ route('international.inteinstatus') }}" class="nav-link {{ Request::is('chapterreports/inteinstatus') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-university"></i>
-                                <p>International EIN Status</p>
-                            </a>
-                        </li>
-                        @endif
-
                         <!-- Chapter Reports Menu Item -->
                         @php
-                            if ($coordinatorCondition) {
+                            if ($coordinatorCondition && $conferenceCoordinatorCondition || $ITCondition) {
                                 $chapterReportsRoute = route('chapreports.chaprptchapterstatus');
+                            } elseif ($einCoondition) {
+                                $coordReportsRoute = route('chapreports.chaprpteinstatus', ['check5' => 'yes']);
                             }
                             $activeChapterReportsRoutes = [
                                 'chapterreports/*'
@@ -389,7 +361,7 @@ window.onload = function () {
 
                         <!-- Coordinator Reports Menu Item -->
                         @php
-                            if ($supervisingCoordinatorCondition) {
+                            if ($supervisingCoordinatorCondition || $ITCondition) {
                                 $coordReportsRoute = route('coordreports.coordrptvolutilization');
                             } elseif ($coordinatorCondition) {
                                 $coordReportsRoute = route('coordreports.coordrptreportingtree');
@@ -409,11 +381,13 @@ window.onload = function () {
 
                         <!-- End of Year Reports Menu Item-->
                             @php
-                                if ($userAdmin || ($eoyTestCondition && $displayTESTING) || ($eoyReportCondition && $displayLIVE)) {
+                                if (($coordinatorCondition && $displayLIVE) || ($eoyTestCondition && $displayTESTING) || ($eoyReportCondition && $displayLIVE || $ITCondition)) {
                                     $eoyReportsRoute = route('eoyreports.eoystatus');
+                                } elseif ($einCondition) {
+                                    $eoyReportsRoute = route('eoyreports.eoyirssubmission', ['check5' => 'yes']);
                                 }
                                 $activeEOYReportsRoutes = [
-                                    'eoy/*', 'eoydetails/*', 'eoydetailseditboundaries/*', 'eoydetailseditawards/*'
+                                    'eoy/*',
                                 ];
                             @endphp
                             @if (isset($eoyReportsRoute))
@@ -421,7 +395,7 @@ window.onload = function () {
                                     <a href="{{ $eoyReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeEOYReportsRoutes) }}">
                                         <i class="nav-icon fas fa-clipboard-check"></i>
                                         <p>EOY Reports
-                                            @if ($userAdmin && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
+                                            @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                                             @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
                                         </p>
                                     </a>
@@ -430,7 +404,7 @@ window.onload = function () {
 
                         <!-- Admin Reports Menu Item -->
                         @php
-                            if ($conferenceCoordinatorCondition) {
+                            if ($coordinatorCondition && $conferenceCoordinatorCondition || $ITCondition) {
                                 $adminReportsRoute = route('adminreports.paymentlist');
                             }
                             $activeAdminReportsRoutes = [
@@ -448,7 +422,7 @@ window.onload = function () {
 
                          <!-- User Reports Menu Item -->
                         @php
-                            if ($userAdmin) {
+                            if ($ITCondition) {
                                 $userReportsRoute = route('userreports.useradmin');
                             }
                             $activeUserReportsRoutes = [
@@ -466,7 +440,7 @@ window.onload = function () {
 
                          <!-- Tech Reports Menu Item -->
                         @php
-                            if ($userAdmin) {
+                            if ($ITCondition) {
                                 $techReportsRoute = route('logs');
                             }
                             $activeTechReportsRoutes = [
@@ -500,12 +474,10 @@ window.onload = function () {
 
                          <!-- CoordinatorList Menu Item -->
                          <li class="nav-item position-relative">
-                            {{-- <a href="{{ url(config('forum.frontend.router.prefix') . '/c/2-coordinatorlist') }}" target="_blank" class="nav-link"> --}}
                             <a href="{{ url(config('forum.frontend.router.prefix') . '/unread') }}" target="_blank" class="nav-link">
                                 <i class="nav-icon fas fa-comments"></i>
                                 <p>
                                     CoordinatorList
-                                    {{-- @if( $forumCount->getUnreadForumCount() > 0) --}}
                                     @if( $unreadForumCount > 0)
                                         <span class="badge badge-danger badge-pill notification-badge">
                                             UNREAD
@@ -533,94 +505,83 @@ window.onload = function () {
                             </form>
                         </li>
 
+                        @else
+                        <!-- Menu for Non-Logged In Users -->
+
+                        <br>
+                       <li style="padding: 0 20px;">
+                    @isset($url)
+                    <form method="POST" action='{{ url("login/$url") }}' aria-label="{{ __('Login') }}">
+                    @else
+                    <form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
+                    @endisset
+
+                    @csrf
+
+                    <div class="input-group mb-3">
+                        <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus placeholder="Email">
+                        @if ($errors->has('email'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('email') }}</strong>
+                            </span>
+                        @endif
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="Password">
+                        @if ($errors->has('password'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('password') }}</strong>
+                            </span>
+                        @endif
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- /.col -->
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-secondary btn-block" onClick="this.form.submit(); this.disabled=true;">{{ __('Login') }}</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+                </li>
+                 <li class="nav-item">
+                            <a href="{{ route('login') }}" class="nav-link">
+                                <i class="nav-icon fas fa-sign-in-alt"></i>
+                                <p>Main Login Page</p>
+                            </a>
+                        </li>
+                    </form>
+
+                        </li>
+                    @endauth
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->
         </aside>
-
-        @endauth
         <!-- /.menu -->
 
         <!-- Main content -->
         <section class="content">
+            @include('layouts.scripts.messages')
+
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
                         <!-- Default box -->
                         <div class="content-wrapper">
-
-                            @if ($message = Session::get('success'))
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'success',
-                                        title: @json($message),
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                });
-                            </script>
-                        @endif
-
-                        @if ($message = Session::get('info'))
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'info',
-                                        title: @json($message),
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                });
-                            </script>
-                        @endif
-
-                        @if ($message = Session::get('warning'))
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'warning',
-                                        title: @json($message),
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                });
-                            </script>
-                        @endif
-
-                        @if ($message = Session::get('fail'))
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'error',
-                                        title: @json($message),
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                });
-                            </script>
-                        @endif
-
-                        @if(View::shared('errors', false) != false && $errors->any())
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'error',
-                                        title: 'There were some errors!',
-                                        html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
-                                        showConfirmButton: true,
-                                    });
-                                });
-                            </script>
-                        @endif
-
                         <section class="content-header">
                             <div class="container-fluid">
                                 <div class="row mb-2">
@@ -663,20 +624,14 @@ window.onload = function () {
 <script src="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-
 <!-- Bootstrap Switch -->
 <script src="{{ config('settings.base_url') }}theme/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 <!-- BS-Stepper -->
 <script src="{{ config('settings.base_url') }}theme/plugins/bs-stepper/js/bs-stepper.min.js"></script>
-
 <!-- Summernote -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<!-- Select2 -->
-<script src="{{ config('settings.base_url') }}theme/plugins/select2/js/select2.full.min.js"></script>
 <!-- InputMask -->
 <script src="{{ config('settings.base_url') }}theme/plugins/moment/moment.min.js"></script>
 <script src="{{ config('settings.base_url') }}theme/plugins/inputmask/jquery.inputmask.min.js"></script>
@@ -699,1237 +654,19 @@ window.onload = function () {
 <script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
- <script>
-        $(document).ready(function() {
-            $("input[data-bootstrap-switch]").bootstrapSwitch();
-        });
-    </script>
-
-<script>
-
-   $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
-
-    //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
-
-    //Datemask dd/mm/yyyy
-    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-    //Datemask2 mm/dd/yyyy hh:mm:ss
-    $('#datemask2').inputmask('mm/dd/yyyy hh:mm:ss', { 'placeholder': 'mm/dd/yyyy hh:mm:ss' })
-    //Money Euro
-    $('[data-mask]').inputmask()
-
-    //Date picker
-    $('#datepicker').datetimepicker({
-        format: 'L'
-    });
-     //Date picker
-     $('#datepicker1').datetimepicker({
-        format: 'L'
-    });
-
-    //Date and time picker
-    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
-
-    //Date range picker
-    $('#reservation').daterangepicker()
-    //Date range picker with time picker
-    $('#reservationtime').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 30,
-      locale: {
-        format: 'MM/DD/YYYY hh:mm A'
-      }
-    })
-
-    //Date range as a button
-    $('#daterange-btn').daterangepicker(
-      {
-        ranges   : {
-          'Today'       : [moment(), moment()],
-          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        startDate: moment().subtract(29, 'days'),
-        endDate  : moment()
-      },
-      function (start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-      }
-    )
-
-    //Timepicker
-    $('#timepicker').datetimepicker({
-      format: 'LT'
-    })
-
-
-  })
-
-  //Cusotmize AJAX Popups to Match Theme
-  function customSuccessAlert(message) {
-        Swal.fire({
-            title: 'Success!',
-            html: message,
-            icon: 'success',
-            confirmButtonText: 'OK',
-            customClass: {
-                confirmButton: 'btn-sm btn-success', // Match your theme button class
-            },
-            buttonsStyling: false // Disable default button styling
-        });
-    }
-
-function customWarningAlert(message) {
-    Swal.fire({
-        title: 'Oops!',
-        html: message,
-        icon: 'warning',
-        confirmButtonText: 'OK',
-        customClass: {
-            confirmButton: 'btn-sm btn-success', // Match your theme button class
-        },
-        buttonsStyling: false // Disable default button styling
-    });
-}
-
-function customInfoAlert(message) {
-    Swal.fire({
-        title: 'Did You Know?',
-        html: message,
-        icon: 'info',
-        confirmButtonText: 'OK',
-        customClass: {
-            confirmButton: 'btn-sm btn-success', // Match your theme button class
-        },
-        buttonsStyling: false // Disable default button styling
-    });
-}
-
-function customErrorAlert(message) {
-    Swal.fire({
-        title: 'Oops!',
-        html: message,
-        icon: 'error',
-        confirmButtonText: 'OK',
-        customClass: {
-            confirmButton: 'btn-sm btn-success', // Match your theme button class
-        },
-        buttonsStyling: false // Disable default button styling
-    });
-}
-
- </script>
-
- <script>
-
- $(function () {
-    $('#chapterlist').DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-
-    $('#coordinatorlist').DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-
-  });
-
-  function convertDateFormat(dateString) {
-        var parts = dateString.split('-');
-        return parts[1] + '/' + parts[2] + '/' + parts[0];
-    }
-
-    function applyDateMask() {
-        $('.date-mask').each(function() {
-            var originalDate = $(this).text();
-            var formattedDate = convertDateFormat(originalDate);
-            $(this).text(formattedDate);
-        });
-        Inputmask({"mask": "99/99/9999"}).mask(".date-mask");
-    }
-
-    $(document).ready(function() {
-        var table = $('#coordinatorlist').DataTable();
-
-        applyDateMask();
-
-        table.on('draw', function() {
-            applyDateMask();
-        });
-    });
-
-
-  function applyPhoneMask() {
-        Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
-    }
-
-    function applyHttpMask() {
-        Inputmask({"mask": "http://*{1,250}"}).mask(".http-mask");
-    }
-
-    $(document).ready(function() {
-        var table = $('#chapterlist').DataTable();
-
-        applyPhoneMask();
-
-        table.on('draw', function() {
-            applyPhoneMask();
-        });
-
-        applyDateMask();
-
-        table.on('draw', function() {
-            applyDateMask();
-        });
-
-        applyHttpMask();
-
-        table.on('draw', function() {
-            applyHttpMask();
-        });
-
-    });
-
-    function startExport(exportType, exportName) {
-    // Define routes for each export type
-    const routes = {
-        'chapter': '{{ route("export.chapter") }}',
-        'zapchapter': '{{ route("export.zapchapter") }}',
-        'coordinator': '{{ route("export.coordinator", 0) }}',
-        'retiredcoordinator': '{{ route("export.retiredcoordinator") }}',
-        'appreciation': '{{ route("export.appreciation") }}',
-        'chaptercoordinator': '{{ route("export.chaptercoordinator") }}',
-        'reregoverdue': '{{ route("export.rereg") }}',
-        'einstatus': '{{ route("export.einstatus") }}',
-        'eoystatus': '{{ route("export.eoystatus") }}',
-
-        'intchapter': '{{ route("export.intchapter") }}',
-        'intzapchapter': '{{ route("export.intzapchapter") }}',
-        'intcoordinator': '{{ route("export.intcoordinator", 0) }}',
-        'intretiredcoordinator': '{{ route("export.intretcoordinator") }}',
-        'intreregoverdue': '{{ route("export.intrereg") }}',
-        'inteinstatus': '{{ route("export.inteinstatus") }}',
-        'intirsfiling': '{{ route("export.intirsfiling") }}',
-        'inteoystatus': '{{ route("export.inteoystatus") }}',
-    };
-
-    // Get the route for this export type
-    const route = routes[exportType];
-
-    // Check if we need to use AJAX (recommended approach that gives better control)
-    const useAjax = true;
-
-    if (useAjax) {
-        // Show processing dialog
-        Swal.fire({
-            title: `Exporting ${exportName}`,
-            text: 'Please wait while your download is being prepared...',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-
-                // Use AJAX to request the file and track its progress
-                $.ajax({
-                    url: route,
-                    type: 'GET',
-                    xhrFields: {
-                        responseType: 'blob' // Important for handling file downloads
-                    },
-                    success: function(blob) {
-                        // Create a URL for the blob
-                        const url = window.URL.createObjectURL(blob);
-
-                        // Create a temporary link and trigger the download
-                        const a = document.createElement('a');
-                        a.style.display = 'none';
-                        a.href = url;
-
-                        // Set filename from Content-Disposition header if available, otherwise use a default
-                        const filename = exportType + '-export.csv'; // Default filename
-                        a.download = filename;
-
-                        document.body.appendChild(a);
-                        a.click();
-
-                        // Clean up
-                        window.URL.revokeObjectURL(url);
-                        document.body.removeChild(a);
-
-                        // Show success message
-                        Swal.fire({
-                            title: 'Download Complete!',
-                            text: `Your ${exportName} has been downloaded successfully.`,
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            customClass: {
-                                confirmButton: 'btn-sm btn-success'
-                            }
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        // Show error message if download fails
-                        Swal.fire({
-                            title: 'Download Failed',
-                            text: 'There was a problem generating your export. Please try again.',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            customClass: {
-                                confirmButton: 'btn-sm btn-danger'
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    } else {
-        // Fallback approach using iframe if AJAX doesn't work with your server setup
-        // Show processing dialog
-        Swal.fire({
-            title: `Exporting ${exportName}`,
-            text: 'Please wait while your download begins...',
-            allowOutsideClick: false,
-            showConfirmButton: true,
-            confirmButtonText: 'Download Complete',
-            customClass: {
-                confirmButton: 'btn-sm btn-success'
-            },
-            didOpen: () => {
-                // Create a hidden iframe to handle the download
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
-
-                // Start the download
-                iframe.src = route;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // User confirmed download is complete
-                Swal.fire({
-                    title: 'Download Complete!',
-                    text: `Your ${exportName} has been downloaded successfully.`,
-                    icon: 'success',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-            }
-        });
-    }
-}
-
-// Functions for Chapter Email Models
-    function showChapterEmailModal(chapterName, chapterId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
-        Swal.fire({
-            title: 'Chapter Email Message',
-            html: `
-                <p>This will send your message to the full board and full coordinator list for <b>${chapterName}</b>.<br>
-                <small>To send a message through your email client go to: Chapter Details->Documents->Blank Email to Board.</small></p>
-                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
-                </div>
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
-                <p><br><b>MOMS Club of ${chapterName}:</b></p>
-                </div>
-                <div style="width: 100%; margin-bottom: 10px;">
-                    <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
-                </div>
-                <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
-                <p><b>MCL,</b><br>
-                    ${userName}<br>
-                    ${userPosition}<br>
-                    ${userConfName}, ${userConfDesc}<br>
-                    International MOMS Club</p>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger',
-                popup: 'swal-wide-popup'
-            },
-            didOpen: () => {
-                $('#email_message').summernote({
-                    height: 150,
-                    toolbar: [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough']],
-                        ['para', ['ul', 'ol']],
-                        ['insert', ['link']]
-                    ],
-                    callbacks: {
-                        onChange: function(contents) {
-                            $(this).val(contents);
-                        }
-                    }
-                });
-
-                if (!document.getElementById('swal-wide-popup-style')) {
-                    const style = document.createElement('style');
-                    style.id = 'swal-wide-popup-style';
-                    style.innerHTML = `
-                        .swal-wide-popup {
-                            width: 80% !important;
-                            max-width: 800px !important;
-                        }
-                        .note-editor {
-                            margin-bottom: 10px !important;
-                            width: 100% !important;
-                        }
-                        .note-editable {
-                            text-align: left !important;
-                        }
-                        .note-editing-area {
-                            width: 100% !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-            },
-            preConfirm: () => {
-                const subject = Swal.getPopup().querySelector('#email_subject').value;
-                // Get the HTML content from Summernote
-                const message = $('#email_message').summernote('code');
-                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-                if (!subject) {
-                    Swal.showValidationMessage('Please enter subject.');
-                    return false;
-                }
-                if (!message) {
-                    Swal.showValidationMessage('Please enter message.');
-                    return false;
-                }
-                return {
-                    email_subject: subject,
-                    email_message: message,
-                    chapter_id: chapterId,
-                };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-                        $.ajax({
-                            url: '{{ route('chapters.sendchapter') }}',
-                            type: 'POST',
-                            data: {
-                                subject: data.email_subject,
-                                message: data.email_message,
-                                chapterId: data.chapter_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    function showChapterSetupEmailModal(chapterId, userName, userPosition, userConfName, userConfDesc, predefinedBoundaries = '', predefinedName = '') {
-    Swal.fire({
-        title: 'Chapter Startup Message',
-        html: `
-            <p>This will send the initial chapter startup email to potential founder to facilitate the discussion on boundaries and name. Please enter additional boundary and name details to include in the email and press OK to send.</p>
-            <div style="width: 100%; margin-bottom: 10px;">
-                <textarea id="boundary_details" name="boundary_details" class="rich-editor" ${predefinedBoundaries ? '' : 'placeholder="Boundary Details/Options"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedBoundaries}</textarea>
-            </div>
-            <div style="width: 100%; margin-bottom: 10px;">
-                <textarea id="name_details" name="name_details" class="rich-editor" ${predefinedName ? '' : 'placeholder="Name Details/Options"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedName}</textarea>
-            </div>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
-            <p><b>MCL,</b><br>
-                ${userName}<br>
-                ${userPosition}<br>
-                ${userConfName}, ${userConfDesc}<br>
-                International MOMS Club</p>
-            </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger',
-            popup: 'swal-wide-popup'
-        },
-        didOpen: () => {
-            $('#boundary_details').summernote({
-                height: 150,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough']],
-                    ['para', ['ul', 'ol']],
-                    ['insert', ['link']]
-                ],
-                callbacks: {
-                    onChange: function(contents) {
-                        $(this).val(contents);
-                    }
-                }
-            });
-
-            $('#name_details').summernote({
-                height: 150,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough']],
-                    ['para', ['ul', 'ol']],
-                    ['insert', ['link']]
-                ],
-                callbacks: {
-                    onChange: function(contents) {
-                        $(this).val(contents);
-                    }
-                }
-            });
-
-            if (!document.getElementById('swal-wide-popup-style')) {
-                const style = document.createElement('style');
-                style.id = 'swal-wide-popup-style';
-                style.innerHTML = `
-                    .swal-wide-popup {
-                        width: 80% !important;
-                        max-width: 800px !important;
-                    }
-                    .note-editor {
-                        margin-bottom: 10px !important;
-                        width: 100% !important;
-                    }
-                    .note-editable {
-                        text-align: left !important;
-                    }
-                    .note-editing-area {
-                        width: 100% !important;
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-        },
-        preConfirm: () => {
-            const boundaryDetails = $('#boundary_details').summernote('code');
-            const nameDetails = $('#name_details').summernote('code');
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-
-            if (!boundaryDetails) {
-                Swal.showValidationMessage('Please enter boundary details.');
-                return false;
-            }
-
-            if (!nameDetails) {
-                Swal.showValidationMessage('Please enter name details.');
-                return false;
-            }
-
-            return {
-                chapter_id: chapterId,
-                boundary_details: boundaryDetails,
-                name_details: nameDetails,
-            };
-        }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        $.ajax({
-                            url: '{{ route('chapters.sendstartup') }}',
-                            type: 'POST',
-                            data: {
-                                chapterId: data.chapter_id,
-                                boundaryDetails: data.boundary_details,
-                                nameDetails: data.name_details,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    function showNewChapterEmailModal(chapterId) {
-    Swal.fire({
-        title: 'New Chapter Email',
-        html: `
-            <p>This will automatically send the New Chapter Email to the full board and coordinator team. It will include their Letter of Good Standing and Group Exemption Letter.</p>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Send',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-
-            return {
-                chapter_id: chapterId,
-            };
-        }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        // Perform the AJAX request
-                        $.ajax({
-                            url: '{{ route('chapters.sendnewchapter') }}',
-                            type: 'POST',
-                            data: {
-                                chapterid: data.chapter_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    function showChapterReRegEmailModal(chapterName, chapterId) {
-    Swal.fire({
-        title: 'Chapter Re-Registration Reminder',
-        html: `
-            <p>This will send the regular re-registration reminder for <b>${chapterName}</b> to the full board and all coordinators.</p>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-
-            return {
-                chapter_id: chapterId,
-            };
-        }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        // Perform the AJAX request
-                        $.ajax({
-                            url: '{{ route('chapters.sendchapterrereg') }}',
-                            type: 'POST',
-                            data: {
-                                chapterId: data.chapter_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    function showChapterReRegLateEmailModal(chapterName, chapterId) {
-    Swal.fire({
-        title: 'Chapter Re-Registration Late Notice',
-        html: `
-            <p>This will send the regular re-registration late notice for <b>${chapterName}</b> to the full board and all coordinators.</p>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-
-            return {
-                chapter_id: chapterId,
-            };
-        }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        $.ajax({
-                            url: '{{ route('chapters.sendchapterrereglate') }}',
-                            type: 'POST',
-                            data: {
-                                chapterId: data.chapter_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-// Functions for Coordinator Email Modals
-    function showCoordEmailModal(coordFName, coordLName, coordId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
-        Swal.fire({
-            title: 'Coordinator Email Message',
-            html: `
-                <p>This will send your message to <b>${coordFName} ${coordLName}</b> and their full upline.<br>
-                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
-                </div>
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
-                <p><br><b>${coordFName}:</b></p>
-                </div>
-                <div style="width: 100%; margin-bottom: 10px;">
-                    <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
-                </div>
-                <input type="hidden" id="coord_id" name="coord_id" value="${coordId}">
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
-                <p><b>MCL,</b><br>
-                    ${userName}<br>
-                    ${userPosition}<br>
-                    ${userConfName}, ${userConfDesc}<br>
-                    International MOMS Club</p>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger',
-                popup: 'swal-wide-popup'
-            },
-            didOpen: () => {
-                $('#email_message').summernote({
-                    height: 150,
-                    toolbar: [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough']],
-                        ['para', ['ul', 'ol']],
-                        ['insert', ['link']]
-                    ],
-                    callbacks: {
-                        onChange: function(contents) {
-                            $(this).val(contents);
-                        }
-                    }
-                });
-
-                if (!document.getElementById('swal-wide-popup-style')) {
-                    const style = document.createElement('style');
-                    style.id = 'swal-wide-popup-style';
-                    style.innerHTML = `
-                        .swal-wide-popup {
-                            width: 80% !important;
-                            max-width: 800px !important;
-                        }
-                        .note-editor {
-                            margin-bottom: 10px !important;
-                            width: 100% !important;
-                        }
-                        .note-editable {
-                            text-align: left !important;
-                        }
-                        .note-editing-area {
-                            width: 100% !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-            },
-            preConfirm: () => {
-                const subject = Swal.getPopup().querySelector('#email_subject').value;
-                const message = $('#email_message').summernote('code');
-                const coordId = Swal.getPopup().querySelector('#coord_id').value;
-                if (!subject) {
-                    Swal.showValidationMessage('Please enter subject.');
-                    return false;
-                }
-                if (!message) {
-                    Swal.showValidationMessage('Please enter message.');
-                    return false;
-                }
-                return {
-                    email_subject: subject,
-                    email_message: message,
-                    coord_id: coordId,
-                };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        $.ajax({
-                            url: '{{ route('coordinators.sendcoord') }}',
-                            type: 'POST',
-                            data: {
-                                subject: data.email_subject,
-                                message: data.email_message,
-                                coordId: data.coord_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    function showCoordUplineEmailModal(userCoordId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
-        Swal.fire({
-            title: 'Coordinator Email Message',
-            html: `
-                <p>This will send your message to all Coordinators reporting to <b>${userName}</b>.<br>
-                    <small>This does not include any Coordinaors marked "On Leave".</small>
-                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
-                </div>
-                <div style="width: 100%; margin-bottom: 10px;">
-                    <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
-                </div>
-                <input type="hidden" id="coord_id" name="coord_id" value="${userCoordId}">
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
-                <p><b>MCL,</b><br>
-                    ${userName}<br>
-                    ${userPosition}<br>
-                    ${userConfName}, ${userConfDesc}<br>
-                    International MOMS Club</p>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger',
-                popup: 'swal-wide-popup'
-            },
-            didOpen: () => {
-                $('#email_message').summernote({
-                    height: 150,
-                    toolbar: [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough']],
-                        ['para', ['ul', 'ol']],
-                        ['insert', ['link']]
-                    ],
-                    callbacks: {
-                        onChange: function(contents) {
-                            $(this).val(contents);
-                        }
-                    }
-                });
-
-                if (!document.getElementById('swal-wide-popup-style')) {
-                    const style = document.createElement('style');
-                    style.id = 'swal-wide-popup-style';
-                    style.innerHTML = `
-                        .swal-wide-popup {
-                            width: 80% !important;
-                            max-width: 800px !important;
-                        }
-                        .note-editor {
-                            margin-bottom: 10px !important;
-                            width: 100% !important;
-                        }
-                        .note-editable {
-                            text-align: left !important;
-                        }
-                        .note-editing-area {
-                            width: 100% !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-            },
-            preConfirm: () => {
-                const subject = Swal.getPopup().querySelector('#email_subject').value;
-                const message = $('#email_message').summernote('code');
-                const userCoordId = Swal.getPopup().querySelector('#coord_id').value;
-
-                if (!subject) {
-                    Swal.showValidationMessage('Please enter subject.');
-                    return false;
-                }
-
-                if (!message) {
-                    Swal.showValidationMessage('Please enter message.');
-                    return false;
-                }
-
-                return {
-                    email_subject: subject,
-                    email_message: message,
-                    coord_id: userCoordId,
-                };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        $.ajax({
-                            url: '{{ route('coordinators.sendcoordup') }}',
-                            type: 'POST',
-                            data: {
-                                subject: data.email_subject,
-                                message: data.email_message,
-                                userCoordId: data.coord_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    function showBigSisterEmailModal(chapterId) {
-    Swal.fire({
-        title: 'Big Sister Welcome Email',
-        html: `
-            <p>This will automatically send the Big Sister Welcome Email to the Big Sister, her Mentoring Coordinator and Full Coordinator Team.</p>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Send',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-
-            return {
-                chapter_id: chapterId,
-            };
-        }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        $.ajax({
-                            url: '{{ route('coordinators.sendbigsister') }}',
-                            type: 'POST',
-                            data: {
-                                chapterid: data.chapter_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
- </script>
- @yield('customscript')
- </html>
+<!-- Sript Functions -->
+@include('layouts.scripts.email')
+@include('layouts.scripts.alert')
+@include('layouts.scripts.datatable')
+@include('layouts.scripts.datetime')
+@include('layouts.scripts.masks')
+@include('layouts.scripts.export')
+@include('layouts.scripts.pdfviewer')
+@include('layouts.scripts.bootstrapswitch')
+
+@yield('customscript')
+@stack('scripts')
+
+</body>
+</html>
 

@@ -33,18 +33,40 @@ class BaseConditionsController extends Controller
     }
 
     /**
-     * Apply position-based conditions to the query
+     * Apply position-based conditions to the chapter query
      */
     public function applyPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
     {
         if ($conditions['founderCondition']) {
-            // No restrictions for founder
+            // View Full International List - no filter
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('conference_id', '=', $cdConfId);
+        } elseif ($conditions['regionalCoordinatorCondition'] || $conditions['inquiriesConferenceCondition']) {
+            $baseQuery->where('region_id', '=', $cdRegId);
+        } elseif ($conditions['inquiriesInternationalCondition'] || $conditions['ITCondition'] || $conditions['einCondition']) {
+            // View Full International List - no filter
+        } else {
+            $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
+        }
+
+        return $baseQuery;
+    }
+
+    /**
+     * Apply position-based conditions to the coordinatorquery
+     */
+     public function applyPositionCoordConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
+    {
+        if ($conditions['founderCondition']) {
+            // View Full International List - no filter
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('conference_id', '=', $cdConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('region_id', '=', $cdRegId);
+        } elseif ($conditions['ITCondition']) {
+            // View Full International List - no filter
         } else {
-            $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
+            $baseQuery->whereIn('report_id', $inQryArr);
         }
 
         return $baseQuery;
@@ -71,21 +93,6 @@ class BaseConditionsController extends Controller
         return $baseQuery;
     }
 
-    public function applyPositionCoordConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
-    {
-        if ($conditions['founderCondition']) {
-            // No restrictions for founder
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        } else {
-            $baseQuery->whereIn('report_id', $inQryArr);
-        }
-
-        return $baseQuery;
-    }
-
     /**
      * Apply position coordinator conditions to the query for pending chapters
      * This method handles chapters with active_status = 2 (pending) or 3 (not approved)
@@ -107,38 +114,4 @@ class BaseConditionsController extends Controller
         return $baseQuery;
     }
 
-    /**
-     * Apply position-based inquiries conditions to the query
-     */
-    public function applyInquiriesPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
-    {
-        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
-            // No restrictions for founder
-        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferenceCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } else {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        }
-
-        return $baseQuery;
-    }
-
-    /**
-     * Apply position-based inquiries conditions to the query for pending chapters
-     * This method handles chapters with active_status = 2 (pending) or 3 (not approved)
-     */
-    public function applyPendingInquiriesPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
-    {
-        // For pending chapters, the inquiries conditions are the same as for active chapters
-        // The difference is in how the relations are loaded in the query builder
-        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
-            // No restrictions for founder
-        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferenceCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } else {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        }
-
-        return $baseQuery;
-    }
 }

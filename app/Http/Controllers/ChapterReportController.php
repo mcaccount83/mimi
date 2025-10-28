@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ChapterCheckbox;
+use App\Models\Chapters;
+use App\Models\Documents;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -42,7 +47,7 @@ class ChapterReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox4Status = $baseQuery['checkBox4Status'];
@@ -64,30 +69,102 @@ class ChapterReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+
+        $data = ['chapterList' => $chapterList,'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status, ];
 
         return view('chapreports.chaprpteinstatus')->with($data);
+    }
+
+     /**
+     *Edit Chapter EIN Notes
+     */
+    public function editChapterIRS(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $startMonthName = $baseQuery['startMonthName'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $chPcId = $baseQuery['chPcId'];
+        $chDocuments = $baseQuery['chDocuments'];
+
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'conferenceDescription' => $conferenceDescription,
+            'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'startMonthName' => $startMonthName,
+            'chPcId' => $chPcId, 'chDocuments' => $chDocuments, 'confId' => $confId, 'chConfId' => $chConfId,
+        ];
+
+        return view('chapreports.editirs')->with($data);
+    }
+
+    /**
+     *Update Chapter EIN Notes
+     */
+    public function updateChapterIRS(Request $request, $id): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $lastUpdatedBy = $user['user_name'];
+        $lastupdatedDate = date('Y-m-d H:i:s');
+
+        $chapter = Chapters::find($id);
+        $documents = Documents::find($id);
+
+        DB::beginTransaction();
+        try {
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->save();
+
+            $documents->ein_letter = $request->has('ch_ein_letter') ? 1 : 0;
+            $documents->ein_notes = $request->input('ein_notes');
+            $documents->irs_verified = $request->has('irs_verified') ? 1 : 0;
+            $documents->ein_sent = $request->has('ein_sent') ? 1 : 0;
+            $documents->irs_notes = $request->input('irs_notes');
+            $documents->save();
+
+            DB::commit();
+
+            return to_route('chapters.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return to_route('chapters.editirs', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
     }
 
     /**
      * View the International EIN Status
      */
-    public function showIntEINstatus(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    // public function showIntEINstatus(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $chapterList = $baseQuery['query']->get();
 
-        $data = ['chapterList' => $chapterList];
+    //     $data = ['chapterList' => $chapterList];
 
-        return view('international.inteinstatus')->with($data);
-    }
+    //     return view('international.inteinstatus')->with($data);
+    // }
 
     /**
      * New Chapter Report
@@ -104,7 +181,7 @@ class ChapterReportController extends Controller implements HasMiddleware
         $now = Carbon::now();
         $oneYearAgo = $now->copy()->subYear();
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where(function ($query) use ($oneYearAgo) {
                 $query->where(function ($q) use ($oneYearAgo) {
@@ -135,7 +212,7 @@ class ChapterReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->whereHas('payments', function ($query) {
                 $query->where('rereg_members', '>=', 75);
@@ -160,7 +237,7 @@ class ChapterReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where('status_id', '!=', 1)
             ->get();
@@ -183,7 +260,7 @@ class ChapterReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
 

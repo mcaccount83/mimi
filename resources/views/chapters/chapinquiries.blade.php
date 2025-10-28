@@ -46,7 +46,7 @@
 				<?php $row = 0;?>
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center "><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyEmail(<?php echo $row?>);" style="background-color: transparent; border: none;">
                             <i class="far fa-copy fa-lg text-primary" ></i></button></td>
 
@@ -92,6 +92,15 @@
                   </tbody>
                 </table>
             </div>
+            <!-- /.card-body -->
+              @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                        </div>
+                    </div>
+                @endif
 
             <div class="card-body text-center">
               <button type="button" class="btn bg-gradient-primary" onclick="CopyNoChapter()" id="btnNoChapter" name="nochapter"><i class="fas fa-copy mr-2" ></i>Copy NO Chapter Response</button>
@@ -219,5 +228,15 @@ function clearSelection() {
 		return false;
 
 	}
+
+function showAll() {
+    var base_url = '{{ url("/chapter/inquiries") }}';
+    if ($("#showAll").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
 </script>
 @endsection

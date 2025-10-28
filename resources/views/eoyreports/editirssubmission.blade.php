@@ -195,7 +195,7 @@
                             </div>
                         </div>
 
-                        @if($userAdmin == 1 )
+                        @if($ITCondition == 1 )
                             <label class="col-sm-2 col-form-label">IRS Notified:</label>
                             <div class="col-sm-1">
                                 <div class="custom-control custom-switch">
@@ -244,8 +244,8 @@
                 @if ($confId == $chConfId)
                     <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission') }}'"><i class="fas fa-reply mr-2"></i>Back to Filing Report</button>
                 @elseif ($confId != $chConfId)
-                    @if ($einCondition || $userAdmin )
-                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyirsintsubmission') }}'"><i class="fas fa-reply mr-2"></i>Back to International Filing Report</button>
+                    @if ($einCondition || $ITCondition )
+                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Filing Report</button>
                     @endif
                 @endif
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>

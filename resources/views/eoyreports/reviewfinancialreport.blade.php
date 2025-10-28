@@ -2271,9 +2271,15 @@ if (isset($chFinancialReport['party_expense_array'])) {
             </div>
 
             <div class="card-body text-center">
+                @if ($confId == $chConfId)
+                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Financial Report</button>
+                @elseif ($confId != $chConfId && $ITCondition)
+                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Financial Report</button>
+                @endif
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
 
-                <button type="button" id="back-list" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Financial Report List</button>
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
+                {{-- <button type="button" id="back-list" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Financial Report List</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button> --}}
             </div>
         </form>
     </div>

@@ -78,11 +78,22 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function listActiveChapters(Request $request): View
     {
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+
         $chapters = $baseQuery['query']->get();
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
 
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
@@ -96,11 +107,21 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function listZappedChapters(Request $request): View
     {
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapters = $baseQuery['query']->orderByDesc('chapters.zap_date')->get();
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
 
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
@@ -112,70 +133,70 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * View List of ReReg Payments if Dates Need to be Udpated
      */
-    public function showReRegDate(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    // public function showReRegDate(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $chapterList = $baseQuery['query']->get();
 
-        $data = ['chapterList' => $chapterList];
+    //     $data = ['chapterList' => $chapterList];
 
-        return view('techreports.reregdate')->with($data);
-    }
+    //     return view('techreports.reregdate')->with($data);
+    // }
 
-    public function editReRegDate(Request $request, $id): View
-    {
-        $baseQuery = $this->baseChapterController->getChapterDetails($id);
-        $chDetails = $baseQuery['chDetails'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $chPayments = $baseQuery['chPayments'];
-        $allMonths = $baseQuery['allMonths'];
+    // public function editReRegDate(Request $request, $id): View
+    // {
+    //     $baseQuery = $this->baseChapterController->getChapterDetails($id);
+    //     $chDetails = $baseQuery['chDetails'];
+    //     $stateShortName = $baseQuery['stateShortName'];
+    //     $chPayments = $baseQuery['chPayments'];
+    //     $allMonths = $baseQuery['allMonths'];
 
-        $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chPayments' => $chPayments, 'allMonths' => $allMonths];
+    //     $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chPayments' => $chPayments, 'allMonths' => $allMonths];
 
-        return view('techreports.editreregdate')->with($data);
-    }
+    //     return view('techreports.editreregdate')->with($data);
+    // }
 
-    public function updateReRegDate(Request $request, $id): RedirectResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+    // public function updateReRegDate(Request $request, $id): RedirectResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $lastUpdatedBy = $user['user_name'];
+    //     $lastupdatedDate = date('Y-m-d H:i:s');
 
-        $chapter = Chapters::find($id);
-        $payments = Payments::find($id);
+    //     $chapter = Chapters::find($id);
+    //     $payments = Payments::find($id);
 
-        DB::beginTransaction();
-        try {
-            $chapter->start_month_id = $request->input('ch_founddate');
-            $chapter->next_renewal_year = $request->input('ch_renewyear');
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+    //     DB::beginTransaction();
+    //     try {
+    //         $chapter->start_month_id = $request->input('ch_founddate');
+    //         $chapter->next_renewal_year = $request->input('ch_renewyear');
+    //         $chapter->last_updated_by = $lastUpdatedBy;
+    //         $chapter->last_updated_date = $lastupdatedDate;
 
-            $chapter->save();
+    //         $chapter->save();
 
-            $payments->rereg_date = $request->input('ch_duespaid');
-            $payments->rereg_members = $request->input('ch_members');
+    //         $payments->rereg_date = $request->input('ch_duespaid');
+    //         $payments->rereg_members = $request->input('ch_members');
 
-            $payments->save();
+    //         $payments->save();
 
-            DB::commit();
+    //         DB::commit();
 
-            return redirect()->to('/techreports/reregdate')->with('error', 'Failed to update Re-Reg Date.');
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+    //         return redirect()->to('/techreports/reregdate')->with('error', 'Failed to update Re-Reg Date.');
+    //     } catch (\Exception $e) {
+    //         echo $e->getMessage();
+    //         exit();
+    //         DB::rollback();  // Rollback Transaction
+    //         Log::error($e);  // Log the error
 
-            return redirect()->to('/techreports/reregdate')->with('success', 'Re-Reg Date updated successfully.');
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
+    //         return redirect()->to('/techreports/reregdate')->with('success', 'Re-Reg Date updated successfully.');
+    //     } finally {
+    //         // This ensures DB connections are released even if exceptions occur
+    //         DB::disconnect();
+    //     }
+    // }
 
     /**
      * Reset Quarterly Report Data

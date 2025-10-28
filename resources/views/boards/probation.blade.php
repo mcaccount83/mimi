@@ -222,7 +222,7 @@
             @if ($userType == 'coordinator')
                 <button type="button" id="btn-back" class="btn btn-primary" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
             @else
-                <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
+                <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
             @endif
                 <button id="logout-btn" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

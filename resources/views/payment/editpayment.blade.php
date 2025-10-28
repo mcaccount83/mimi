@@ -21,7 +21,7 @@
 </style>
 @section('content')
     <!-- Main content -->
-    <form class="form-horizontal" method="POST" action='{{ route("chapters.updatepayment", $chDetails->id) }}'>
+    <form class="form-horizontal" method="POST" action='{{ route("payment.updatepayment", $chDetails->id) }}'>
     @csrf
     <section class="content">
       <div class="container-fluid">
@@ -208,9 +208,13 @@
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Payment Information</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapreregistration') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Registration Report</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprptdonations') }}'"><i class="fas fa-reply mr-2"></i>Back to Donations Report</button>
-
+                @if ($confId == $chConfId)
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapreregistration') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Registration Report</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapdonations') }}'"><i class="fas fa-reply mr-2"></i>Back to Donations Report</button>
+                @elseif ($confId != $chConfId)
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapreregistration', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Registration Report</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapdonations', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Donations Report</button>
+                @endif
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>

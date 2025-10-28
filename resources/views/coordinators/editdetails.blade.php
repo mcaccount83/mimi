@@ -49,7 +49,7 @@
                                 @endforelse
                             </span>
                         </div>
-                        @if ($userAdmin)
+                        @if ($ITCondition)
                         <b>MIMI Admin:</b> <span class="float-right">{{ $cdAdminRole->admin_role }}</span>
                         @endif
 

@@ -107,7 +107,6 @@ class EmailController extends Controller implements HasMiddleware
 
             $message = 'Email successful sent';
 
-            // Return JSON response
             return response()->json([
                 'status' => 'success',
                 'message' => $message,
@@ -120,92 +119,15 @@ class EmailController extends Controller implements HasMiddleware
 
             $message = 'Something went wrong, Please try again.';
 
-            // Return JSON error response
             return response()->json([
                 'status' => 'error',
                 'message' => $message,
                 'redirect' => route('chapters.chaplist'),
             ]);
         } finally {
-            // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
     }
-
-    // public function sendChapterStartupOLD(Request $request): JsonResponse
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $userId = $user['userId'];
-    //     $userEmail = $user['user_email'];
-    //     $userConfId = $user['user_confId'];
-
-    //     $emailCCData = $this->userController->loadConferenceCoord($userId);
-
-    //     $resources = Resources::with('resourceCategory')->get();
-    //     $applicationName = 'EIN Application Conference '.$userConfId;
-    //     $matchingApplication = $resources->where('name', $applicationName)->first();
-    //     $pdfPath = 'https://drive.google.com/uc?export=download&id='.$matchingApplication->file_path;
-    //     $instructionsName = 'EIN Application Instructions';
-    //     $matchingInstructions = $resources->where('name', $instructionsName)->first();
-    //     $pdfPath2 = 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path;
-
-    //     $input = $request->all();
-    //     $founderEmail = $input['founderEmail'];
-    //     $founderFirstName = $input['founderFirstName'];
-    //     $founderLastName = $input['founderLastName'];
-    //     $boundaryDetails = $input['boundaryDetails'];
-    //     $nameDetails = $input['nameDetails'];
-
-    //     try {
-    //         DB::beginTransaction();
-
-    //         EmailFields::create([
-    //             'to_email' => $founderEmail,
-    //             'founder_first_name' => $founderFirstName,
-    //             'founder_last_name' => $founderLastName,
-    //             'boundary_details' => $boundaryDetails,
-    //             'name_details' => $nameDetails,
-    //         ]);
-
-    //         $mailData = array_merge(
-    //             $this->baseMailDataController->getUserData($user),
-    //             $this->baseMailDataController->getMessageData($input),
-    //             $this->baseMailDataController->getCCData($emailCCData),
-    //         );
-
-    //         Mail::to($founderEmail)
-    //             ->cc($userEmail)
-    //             ->queue(new NewChapterSetup($mailData, $pdfPath, $pdfPath2));
-
-    //         // Commit the transaction
-    //         DB::commit();
-
-    //         $message = 'Email successful sent';
-
-    //         // Return JSON response
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => $message,
-    //             'redirect' => route('chapters.chaplist'),
-    //         ]);
-
-    //     } catch (\Exception $e) {
-    //         DB::rollback();  // Rollback Transaction
-    //         Log::error($e);  // Log the error
-
-    //         $message = 'Something went wrong, Please try again.';
-
-    //         // Return JSON error response
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => $message,
-    //             'redirect' => route('chapters.chaplist'),
-    //         ]);
-    //     } finally {
-    //         // This ensures DB connections are released even if exceptions occur
-    //         DB::disconnect();
-    //     }
-    // }
 
     /**
      * Send Chapter EIN Number Notification Email
@@ -221,13 +143,6 @@ class EmailController extends Controller implements HasMiddleware
             $emailListChap = $baseQuery['emailListChap'];  // Full Board
             $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
 
-            // Log::info('Email lists retrieved', [
-            //     'chapterid' => $chapterid,
-            //     'emailListChap' => $emailListChap,
-            //     'emailListCoord' => $emailListCoord
-            // ]);
-
-            // Check if we have valid email addresses
             if (empty($emailListChap)) {
                 Log::warning('No chapter email addresses found', ['chapterid' => $chapterid]);
 
@@ -243,21 +158,12 @@ class EmailController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getUserData($user),
             );
 
-            // Log::info('Attempting to send email', [
-            //     'chapterid' => $chapterid,
-            //     'mailData' => array_keys($mailData) // Just log the keys, not sensitive data
-            // ]);
-
-            // Try sending the email
             Mail::to($emailListChap)
                 ->cc($emailListCoord)
                 ->queue(new NewChapEIN($mailData));
 
-            // Log::info('Email queued successfully', ['chapterid' => $chapterid]);
-
             $message = 'Email successfully sent';
 
-            // Return JSON response
             return response()->json([
                 'status' => 'success',
                 'message' => $message,
@@ -273,7 +179,6 @@ class EmailController extends Controller implements HasMiddleware
 
             $message = 'Something went wrong sending the email: '.$e->getMessage();
 
-            // Return JSON error response
             return response()->json([
                 'status' => 'error',
                 'message' => $message,
@@ -668,7 +573,7 @@ class EmailController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->whereHas('documents', function ($query) {
                 $query->where('report_extension', '0')
@@ -747,7 +652,7 @@ class EmailController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->whereHas('documents', function ($query) {
                 $query->where('report_extension', '0')
@@ -825,7 +730,7 @@ class EmailController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->whereHas('documents', function ($query) {
                 $query->where('report_extension', '0')

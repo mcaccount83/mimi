@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CoordinatorCheckbox;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\View;
+use App\Services\ReportingService;
 
 class CoordinatorReportController extends Controller implements HasMiddleware
 {
@@ -15,12 +17,15 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
     protected $baseCoordinatorController;
 
-    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, BaseChapterController $baseChapterController)
-    {
+    protected $reportingService;
 
+    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, BaseChapterController $baseChapterController,
+            ReportingService $reportingService)
+    {
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
+        $this->reportingService = $reportingService;
     }
 
     public static function middleware(): array
@@ -43,49 +48,27 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
+        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         foreach ($coordinatorList as $list) {
             $cdCoorId = $list->id;
-            $cdConfId = $list->conference_id;
-            $cdRegId = $list->region_id;
-            $cdPositionId = $list->position_id;
-            $cdSecPositionId = $list->sec_position_id;
-
-            $reportingData = $this->calculateReporting($cdCoorId, $cdConfId, $cdRegId, $cdPositionId, $cdSecPositionId);
+            $reportingData = $this->reportingService->calculateChapterReporting($cdCoorId);
 
             $list->direct_report = $reportingData['direct_report'];
             $list->indirect_report = $reportingData['indirect_report'];
             $list->total_report = $reportingData['total_report'];
         }
 
-        $data = ['coordinatorList' => $coordinatorList];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
+                 'checkBox3Status' => $checkBox3Status,
+                 'checkBox5Status' => $checkBox5Status,
+                ];
 
         return view('coordreports.coordrptvolutilization')->with($data);
-    }
-
-    /**
-     * Calculate Direct/Indirect Reports
-     */
-    private function calculateReporting($coorId, $confId, $regId, $positionId, $secPositionId)
-    {
-        $baseDirectQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $directReportList = $baseDirectQuery['query']->where('primary_coordinator_id', $coorId)->get();
-        $direct_report = count($directReportList);
-
-        $coordinatorData = $this->userController->loadReportingTree($coorId);
-        $inQryArr = $coordinatorData['inQryArr'];
-        $inQryArr = array_filter($inQryArr, fn ($id) => $id != $coorId);
-
-        $baseIndirectQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $indirectReportList = $baseIndirectQuery['query']->whereIn('primary_coordinator_id', $inQryArr)->get();
-
-        $indirect_report = count($indirectReportList);
-
-        $total_report = $direct_report + $indirect_report;
-
-        return ['direct_report' => $direct_report, 'indirect_report' => $indirect_report, 'total_report' => $total_report];
     }
 
     /**
@@ -100,10 +83,16 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
+        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
+                 'checkBox3Status' => $checkBox3Status,
+                 'checkBox5Status' => $checkBox5Status,
+                ];
 
         return view('coordreports.coordrptappreciation')->with($data);
     }
@@ -117,10 +106,16 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
+        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
+                 'checkBox3Status' => $checkBox3Status,
+                 'checkBox5Status' => $checkBox5Status,
+                ];
 
         return view('coordreports.old_coordrptappreciation')->with($data);
     }
@@ -137,10 +132,16 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
+        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
+                 'checkBox3Status' => $checkBox3Status,
+                 'checkBox5Status' => $checkBox5Status,
+                ];
 
         return view('coordreports.coordrptbirthdays')->with($data);
     }
@@ -148,41 +149,81 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     /**
      * View the Reporting Tree
      */
-    public function showRptReportingTree(Request $request): View
-    {
+  public function showRptReportingTree(Request $request): View
+{
+    // Check if International's reporting tree checkbox is selected
+    $showFullTree = $request->has(CoordinatorCheckbox::REPORTING_TREE) &&
+                    $request->get(CoordinatorCheckbox::REPORTING_TREE) == 'yes';
+
+    if ($showFullTree) {
+        // Show International's full reporting tree based on Founder Data
+        $coorId = 1;
+        $confId = 0;
+        $regId = 0;
+        $positionId = 8;
+        $secPositionId = null;
+    } else {
+        // Normal view - logged in user's tree
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
         $regId = $user['user_regId'];
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-
-        $baseQuery = $this->baseCoordinatorController->getReportingTreeBaseQuery($coorId, $confId, $positionId, $secPositionId);
-        $coordinatorList = $baseQuery['query']->get();
-
-        $data = ['coordinatorList' => $coordinatorList];
-
-        return view('coordreports.coordrptreportingtree')->with($data);
     }
 
-    /**
-     * View the International Reporting Tree
-     */
-    public function showIntRptReportingTree(): View
-    {
-        // Don't load user info - just hardcode Mary's data
-        $coorId = 1;  // Mary's ID
-        $confId = 0;  // Mary's conference
-        $regId = 0;   // Mary's region
-        $positionId = 8;  // Founder
-        $secPositionId = null;
+    $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+    $coordinatorList = $baseQuery['query']->get();
 
-        $baseQuery = $this->baseCoordinatorController->getReportingTreeBaseQuery($coorId, $confId, $positionId, $secPositionId);
-        $coordinatorList = $baseQuery['query']->get();
+    $checkBox6Status = $showFullTree ? 'checked' : '';
 
-        $data = ['coordinatorList' => $coordinatorList];
+    $data = [
+        'coordinatorList' => $coordinatorList,
+        'checkBox6Status' => $checkBox6Status,
+    ];
 
-        return view('coordreports.intcoordrptreportingtree')->with($data);
+    return view('coordreports.coordrptreportingtree')->with($data);
+}
 
-    }
+    // public function showRptReportingTree(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
+    //     $confId = $user['user_confId'];
+    //     $regId = $user['user_regId'];
+    //     $positionId = $user['user_positionId'];
+    //     $secPositionId = $user['user_secPositionId'];
+
+    //     // $baseQuery = $this->baseCoordinatorController->getReportingTreeBaseQuery($coorId, $confId, $positionId, $secPositionId);
+    //             $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+
+    //     $coordinatorList = $baseQuery['query']->get();
+
+    //     $data = ['coordinatorList' => $coordinatorList];
+
+    //     return view('coordreports.coordrptreportingtree')->with($data);
+    // }
+
+    // /**
+    //  * View the International Reporting Tree
+    //  */
+    // public function showIntRptReportingTree(): View
+    // {
+    //     // Don't load user info - just hardcode Mary's data
+    //     $coorId = 1;  // Mary's ID
+    //     $confId = 0;  // Mary's conference
+    //     $regId = 0;   // Mary's region
+    //     $positionId = 8;  // Founder
+    //     $secPositionId = null;
+
+    //     // $baseQuery = $this->baseCoordinatorController->getReportingTreeBaseQuery($coorId, $confId, $positionId, $secPositionId);
+    //             $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+
+    //     $coordinatorList = $baseQuery['query']->get();
+
+    //     $data = ['coordinatorList' => $coordinatorList];
+
+    //     return view('coordreports.intcoordrptreportingtree')->with($data);
+
+    // }
 }

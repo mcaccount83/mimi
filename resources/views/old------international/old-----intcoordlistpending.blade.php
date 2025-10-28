@@ -1,7 +1,7 @@
 @extends('layouts.coordinator_theme')
 
 @section('page_title', 'Chapters')
-@section('breadcrumb', 'International Not Approved Coordinator List')
+@section('breadcrumb', 'International Pending Coordinator List')
 
 @section('content')
      <!-- Main content -->
@@ -13,9 +13,9 @@
                     <div class="card-header">
                     <div class="dropdown">
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            International Not Approved Coordinator List
+                            International Pending Coordinator List
                         </h3>
-                        <span class="ml-2">New Coordinator Applications Not Approved</span>
+                        <span class="ml-2">New Coordinator Applications Waiting for Review</span>
                         @include('layouts.dropdown_menus.menu_chapters_new')
                     </div>
                 </div>
@@ -32,14 +32,15 @@
                     <th>Coordinator Name</th>
 					<th>Display Position</th>
 					<th>Application Date</th>
-                    <th>Reason Not Approved</th>
-                    <th>Rejected By</th>
+                    <th>Contact Email</th>
+                    <th>Phone</th>
+                    <th>Reports To</th>
                 </tr>
                 </thead>
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coordapplication/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coordinator/application/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     @if ($userAdmin == 'Admin')
                         <td class="text-center align-middle"><i class="fa fa-ban"
                             onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
@@ -56,7 +57,8 @@
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                             <td>{{ $list->displayPosition->long_title }}</td>
                 	  <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
-                      <td>{{ $list->reason_retired }}</td>
+                      <td><a href="mailto:{{ $list->sec_email }}">{{ $list->sec_email }}</a></td>
+                    <td>{{ $list->phone }}</td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
                     </tr>
                   @endforeach
@@ -401,3 +403,4 @@ function showDeleteCoordModal(coordId, firstName, lastName, activeStatus) {
 
 </script>
 @endsection
+

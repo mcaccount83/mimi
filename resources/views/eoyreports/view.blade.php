@@ -386,7 +386,11 @@
                         <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Award Information</button>
                     <br>
                     @endif
-                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoystatus') }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Status Report</button>
+                      @if ($confId == $chConfId)
+                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoystatus') }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Status Report</button>
+                    @elseif ($confId != $chConfId && $ITCondition)
+                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoystatus', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International EOY Status Report</button>
+                    @endif
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
 
             </div>

@@ -48,7 +48,7 @@ class HomeController extends Controller implements HasMiddleware
         }
 
         if ($userType == 'coordinator') {
-            return redirect()->to('coordviewprofile');
+            return redirect()->to('viewprofile');
         }
 
         if ($userType == 'pending') {

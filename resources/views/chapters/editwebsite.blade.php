@@ -139,9 +139,13 @@
                     <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Website Information</button>
                 <br>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapwebsite') }}'"><i class="fas fa-reply mr-2"></i>Back to Website Report</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprptsocialmedia') }}'"><i class="fas fa-reply mr-2"></i>Back to Social Media Report</button>
-
+                 @if ($confId == $chConfId)
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapwebsite') }}'"><i class="fas fa-reply mr-2"></i>Back to Website Report</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapsocialmedia') }}'"><i class="fas fa-reply mr-2"></i>Back to Social Media Report</button>
+                @elseif ($confId != $chConfId)
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapwebsite', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Website Report</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapsocialmedia', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Social Media Report</button>
+                @endif
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>

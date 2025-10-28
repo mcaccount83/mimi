@@ -1,12 +1,8 @@
 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    @if ($coordinatorCondition)
+    @if ($supervisingCoordinatorCondition || $ITCondition)
         <a class="dropdown-item" href="{{ route('coordinators.coordlist') }}">Active Coordinator List</a>
     @endif
-    @if ($regionalCoordinatorCondition)
+    @if (($supervisingCoordinatorCondition && $regionalCoordinatorCondition) || $ITCondition)
         <a class="dropdown-item" href="{{ route('coordinators.coordretired') }}">Retired Coordinator List</a>
-    @endif
-    @if ($userAdmin)
-        <a class="dropdown-item" href="{{ route('international.intcoord') }}">International Active Coordinator List</a>
-        <a class="dropdown-item" href="{{ route('international.intcoordretired') }}">International Retired Coordinator List</a>
     @endif
 </div>

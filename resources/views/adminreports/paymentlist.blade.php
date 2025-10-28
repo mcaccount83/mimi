@@ -65,7 +65,10 @@
                             @foreach ($paymentLogs as $log)
                             <tr>
                                 <td  class="text-center align-middle">
-                                    {{-- <a href="{{ route('adminreports.paymentdetails', $log->id) }}"><i class="fas fa-eye"></i></a> --}}
+                                    @if ($ITCondition)
+                                    <a href="{{ route('adminreports.paymentdetails', $log->id) }}"><i class="fas fa-eye"></i></a>
+                                    @else
+                                    @endif
                                 </td>
                                 <td>
                                     {{ $log->conf ?? 'N/A' }}
@@ -112,9 +115,17 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
 
+                @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                        </div>
+                    </div>
+                @endif
 
-</div>
 </div>
 <!-- /.box -->
 </div>
@@ -139,6 +150,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function showAll() {
+    var base_url = '{{ url("/adminreports/paymentlist") }}';
+    if ($("#showAll").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
 </script>
 @endsection
 

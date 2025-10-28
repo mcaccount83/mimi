@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{config('app.name')}}</title>
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -21,37 +19,32 @@
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/css/v5-font-face.css" rel="stylesheet" />
     <!-- Theme style -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
     <!-- daterange picker -->
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
     <!-- iCheck for checkboxes and radio inputs -->
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-    <!-- Select2 -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 
-    <script>
-        window.onload = function () {
-            if (window.history && window.history.pushState) {
-                window.history.pushState('preventBack', null, '');
-                window.onpopstate = function () {
-                    location.reload();
-                };
-            }
-        };
+<script>
+    window.onload = function () {
+        if (window.history && window.history.pushState) {
+            window.history.pushState('preventBack', null, '');
+            window.onpopstate = function () {
+                location.reload();
+            };
+        }
+    };
+</script>
 
-    </script>
-    <style>
-            .disabled-link {
+<style>
+    .disabled-link {
     pointer-events: none; /* Prevent click events */
     cursor: default; /* Change cursor to default */
     color: #6c757d; /* Muted color */
-}
+    }
 </style>
 
 </head>
@@ -65,7 +58,7 @@
             $userType = $user->user_type;
         @endphp
 
-          <!-- Navbar -->
+    <!-- Navbar -->
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
     <div class="container">
 
@@ -136,9 +129,9 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container">
-        @if($userAdmin == 1 )
+        @if($ITCondition == 1 )
             <p class="description text-center"><span style="color: red;">You are Viewing Chapter Pages as an Admin Coordinator -- All Information is Editable just as it is for Chapter Members.</p>
-        @elseif($userType == 'coordinator' && $userAdmin != 1)
+        @elseif($userType == 'coordinator' && $ITCondition != 1)
             <p class="description text-center"><span style="color: red;">You are Viewing Chapter Pages as a Coordinator -- All Information is READ ONLY.</p>
         @endif
       </div><!-- /.container-fluid -->
@@ -147,75 +140,8 @@
 
     <!-- Main content -->
     <div class="content">
-        @if ($message = Session::get('success'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
 
-    @if ($message = Session::get('info'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'info',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-    @if ($message = Session::get('warning'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'warning',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-    @if ($message = Session::get('fail'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'error',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-        @if ($errors->any())
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: 'There were some errors!',
-                        html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
-                        showConfirmButton: true,
-                    });
-                });
-            </script>
-        @endif
+        @include('layouts.scripts.messages')
 
         @yield('content')
     </div>
@@ -236,7 +162,6 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- REQUIRED SCRIPTS -->
 
 <!-- jQuery -->
 <script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>
@@ -249,12 +174,8 @@
 <script src="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<!-- Select2 -->
-<script src="{{ config('settings.base_url') }}theme/plugins/select2/js/select2.full.min.js"></script>
 <!-- InputMask -->
 <script src="{{ config('settings.base_url') }}theme/plugins/moment/moment.min.js"></script>
 <script src="{{ config('settings.base_url') }}theme/plugins/inputmask/jquery.inputmask.min.js"></script>
@@ -263,124 +184,13 @@
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 
-<script>
-     //Datemask dd/mm/yyyy
-     $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-    //Datemask2 mm/dd/yyyy hh:mm:ss
-    $('#datemask2').inputmask('mm/dd/yyyy hh:mm:ss', { 'placeholder': 'mm/dd/yyyy hh:mm:ss' })
-    //Money Euro
-    $('[data-mask]').inputmask()
-
-    //Date picker
-    $('#datepicker').datetimepicker({
-        format: 'L'
-    });
-     //Date picker
-     $('#datepicker1').datetimepicker({
-        format: 'L'
-    });
-
-    //Date and time picker
-    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
-
-    //Date range picker
-    $('#reservation').daterangepicker()
-    //Date range picker with time picker
-    $('#reservationtime').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 30,
-      locale: {
-        format: 'MM/DD/YYYY hh:mm A'
-      }
-    })
-</script>
-
-<script>
-    function openPdfViewer(filePath) {
-        var base_url = '{{ url("/pdf-viewer") }}';
-        window.open(base_url + '?id=' + encodeURIComponent(filePath), '_blank');
-    }
-</script>
-
-<script>
-  function convertDateFormat(dateString) {
-        var parts = dateString.split('-');
-        return parts[1] + '/' + parts[2] + '/' + parts[0];
-    }
-
-    function applyDateMask() {
-        $('.date-mask').each(function() {
-            var originalDate = $(this).text();
-            var formattedDate = convertDateFormat(originalDate);
-            $(this).text(formattedDate);
-        });
-        Inputmask({"mask": "99/99/9999"}).mask(".date-mask");
-    }
-
-  function applyPhoneMask() {
-        Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
-    }
-
-    function applyHttpMask() {
-        Inputmask({"mask": "http://*{1,250}"}).mask(".http-mask");
-    }
-
-    //Cusotmize AJAX Popups to Match Theme
-    function customSuccessAlert(message) {
-        Swal.fire({
-            title: 'Success',
-            html: message,
-            icon: 'success',
-            confirmButtonText: 'OK',
-            customClass: {
-                confirmButton: 'btn-sm btn-success', // Match your theme button class
-            },
-            buttonsStyling: false // Disable default button styling
-        });
-    }
-
-    function customWarningAlert(message) {
-        Swal.fire({
-            title: 'Warning',
-            html: message,
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            customClass: {
-                confirmButton: 'btn-sm btn-success', // Match your theme button class
-            },
-            buttonsStyling: false // Disable default button styling
-        });
-    }
-
-    function customInfoAlert(message) {
-        Swal.fire({
-            title: 'Info',
-            html: message,
-            icon: 'info',
-            confirmButtonText: 'OK',
-            customClass: {
-                confirmButton: 'btn-sm btn-success', // Match your theme button class
-            },
-            buttonsStyling: false // Disable default button styling
-        });
-    }
-
-    function customErrorAlert(message) {
-        Swal.fire({
-            title: 'Error',
-            html: message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-            customClass: {
-                confirmButton: 'btn-sm btn-success', // Match your theme button class
-            },
-            buttonsStyling: false // Disable default button styling
-        });
-    }
-</script>
+<!-- Sript Functions -->
+@include('layouts.scripts.alert')
+@include('layouts.scripts.datetime')
+@include('layouts.scripts.masks')
+@include('layouts.scripts.pdfviewer')
 
 @yield('customscript')
-
 @stack('scripts')
 
 </body>

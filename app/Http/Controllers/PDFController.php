@@ -957,8 +957,15 @@ class PDFController extends Controller
     //  */
     public function generateSubordinateFiling(Request $request, $streamResponse = true)
     {
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
         // $dateInput = request()->query('date') ?? request()->input('date');
         $dateInput = $request->query('date') ?? $request->input('date');
@@ -969,9 +976,12 @@ class PDFController extends Controller
         $year = $todayDate->format('Y');
 
         // Get the update, add and zap lists
-        $chapterUpdateList = $this->generateIRSUpdateList($coorId, $date);
-        $chapterAddList = $this->generateIRSAddList($coorId, $date);
-        $chapterZapList = $this->generateIRSZapList($coorId, $date);
+        $chapterUpdateList = $this->generateIRSUpdateList($coorId, $confId, $regId, $positionId, $secPositionId, $date);
+        $chapterAddList = $this->generateIRSAddList($coorId, $confId, $regId, $positionId, $secPositionId, $date);
+        $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $date);
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
 
         $chapterList = collect();
 
@@ -1074,8 +1084,15 @@ class PDFController extends Controller
     //  */
     public function generateIRSUpdates(Request $request, $streamResponse = true)
     {
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
         // $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
         $pages = $pages ?? $request->query('pages') ?? $request->input('pages') ?? 1;
@@ -1093,8 +1110,11 @@ class PDFController extends Controller
         $dateFormatted = $todayDate->format('F j, Y');
 
         // Get the add and zap lists
-        $chapterAddList = $this->generateIRSAddList2($coorId, $date);
-        $chapterZapList = $this->generateIRSZapList($coorId, $date);
+        $chapterAddList = $this->generateIRSAddList2($coorId, $confId, $regId, $positionId, $secPositionId, $date);
+        $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $date);
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
@@ -1129,11 +1149,12 @@ class PDFController extends Controller
     // /**
     //  * Generate IRS list of Updated Chapters
     //  */
-    private function generateIRSUpdateList($coorId, $date)
+    private function generateIRSUpdateList($coorId, $confId, $regId, $positionId, $secPositionId, $date)
     {
-        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        return $baseQueryActive['query']
+
+        return $baseQuery['query']
             ->select([
                 'chapters.*',
                 'bd_active.first_name as pres_first_name',
@@ -1165,11 +1186,11 @@ class PDFController extends Controller
     // /**
     //  * Generate IRS list of Added Chapters
     //  */
-    private function generateIRSAddList($coorId, $date)
+    private function generateIRSAddList($coorId, $confId, $regId, $positionId, $secPositionId, $date)
     {
-        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        return $baseQueryActive['query']
+        return $baseQuery['query']
             ->select([
                 'chapters.*',
                 'bd_active.first_name as pres_first_name',
@@ -1201,11 +1222,11 @@ class PDFController extends Controller
     // /**
     //  * Generate IRS list of Added Chapters that have not been reported
     //  */
-    private function generateIRSAddList2($coorId, $date)
+    private function generateIRSAddList2($coorId, $confId, $regId, $positionId, $secPositionId, $date)
     {
-        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        return $baseQueryActive['query']
+        return $baseQuery['query']
             ->select([
                 'chapters.*',
                 'bd_active.first_name as pres_first_name',
@@ -1235,11 +1256,11 @@ class PDFController extends Controller
     // /**
     //  * Generate IRS list of Zapped Chapters
     //  */
-    private function generateIRSZapList($coorId, $date)
+    private function generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $date)
     {
-        $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        return $baseQueryZapped['query']
+        return $baseQuery['query']
             ->select([
                 'chapters.*',
             ])
@@ -1310,8 +1331,15 @@ class PDFController extends Controller
     //  */
     public function generateIRSFilingCorrections(Request $request, $streamResponse = true)
     {
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
         // $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
         $pages = $pages ?? $request->query('pages') ?? $request->input('pages') ?? 1;
@@ -1323,9 +1351,12 @@ class PDFController extends Controller
         $dateFormatted = $todayDate->format('F j, Y');
 
         // Get the add and zap lists
-        $wrongDateList = $this->generateIRSWrongDateList($coorId);
-        $notFoundList = $this->generateIRSNotFoundList($coorId);
-        $filedWrongList = $this->generateIRSFiledWrongList($coorId);
+        $wrongDateList = $this->generateIRSWrongDateList($coorId, $confId, $regId, $positionId, $secPositionId);
+        $notFoundList = $this->generateIRSNotFoundList($coorId, $confId, $regId, $positionId, $secPositionId);
+        $filedWrongList = $this->generateIRSFiledWrongList($coorId, $confId, $regId, $positionId, $secPositionId);
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
@@ -1358,11 +1389,12 @@ class PDFController extends Controller
     // /**
     //  * Generate IRS list of 990N Filing Corrections with the Wrong Dates
     //  */
-    private function generateIRSWrongDateList($coorId)
+    private function generateIRSWrongDateList($coorId, $confId, $regId, $positionId, $secPositionId)
     {
-        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        return $baseQueryActive['query']
+
+        return $baseQuery['query']
             ->select([
                 'chapters.*',
                 'bd_active.first_name as pres_first_name',
@@ -1390,11 +1422,11 @@ class PDFController extends Controller
     // /**
     //  * Generate IRS list of 990N Filing Corrections where chapter was not found
     //  */
-    private function generateIRSNotFoundList($coorId)
+    private function generateIRSNotFoundList($coorId, $confId, $regId, $positionId, $secPositionId)
     {
-        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        return $baseQueryActive['query']
+        return $baseQuery['query']
             ->select([
                 'chapters.*',
                 'bd_active.first_name as pres_first_name',
@@ -1422,11 +1454,11 @@ class PDFController extends Controller
     // /**
     //  * Generate IRS list of 990N Filing Corrections where chapter FILED with the wrong date
     //  */
-    private function generateIRSFiledWrongList($coorId)
+    private function generateIRSFiledWrongList($coorId, $confId, $regId, $positionId, $secPositionId)
     {
-        $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        return $baseQueryActive['query']
+        return $baseQuery['query']
             ->select([
                 'chapters.*',
                 'bd_active.first_name as pres_first_name',

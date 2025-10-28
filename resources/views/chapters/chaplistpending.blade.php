@@ -32,12 +32,15 @@
                     <th>President</th>
                     <th>Email</th>
                     <th>Phone</th>
+                    @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        <th>Delete</th>
+                    @endif
                   </tr>
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/pendingchapterdetailsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/application/chapterpendingedit/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                             <td class="text-center align-middle">
                                 <a onclick="showChapterSetupEmailModal({{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
                            </td>
@@ -61,12 +64,27 @@
                                 <a href="mailto:{{ $list->pendingPresident->email }}">{{ $list->pendingPresident->email }}</a>
                             </td>
                             <td><span class="phone-mask">{{ $list->pendingPresident->phone }}</span></td>
+                            @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        <td class="text-center align-middle"><i class="fa fa-ban"
+                            onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
+                            style="cursor: pointer; color: #dc3545;"></i>
+                        </td>
+                    @endif
                         </tr>
                     @endforeach
                 </tbody>
             </table>
             </div>
             <!-- /.card-body -->
+
+                 @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                        </div>
+                    </div>
+                @endif
                 <div class="col-sm-12">
 
                 </div>
@@ -105,6 +123,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function showAll() {
+    var base_url = '{{ url("/application/chapterpending") }}';
+    if ($("#showAll").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
 
 </script>
 @endsection

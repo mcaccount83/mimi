@@ -33,12 +33,15 @@
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Primary Coordinator</th>
+                    @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        <th>Delete</th>
+                    @endif
                   </tr>
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                             <td class="text-center align-middle">
                                 <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
                            </td>
@@ -64,6 +67,12 @@
                             </td>
                             <td><span class="phone-mask">{{ $list->president->phone }}</span></td>
                             <td>{{ $list->primaryCoordinator?->first_name }} {{ $list->primaryCoordinator?->last_name }}</td>
+                           @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        <td class="text-center align-middle"><i class="fa fa-ban"
+                            onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
+                            style="cursor: pointer; color: #dc3545;"></i>
+                        </td>
+                    @endif
                         </tr>
                     @endforeach
                 </tbody>
@@ -76,17 +85,32 @@
                         <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
+                @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showAllConf()" />
+                            <label class="custom-control-label" for="showAllConf">Show All Chapters</label>
+                        </div>
+                    </div>
+                @endif
+                @if ($ITCondition || $einCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                        </div>
+                    </div>
+                @endif
                 <div class="card-body text-center">
-                    @if ($regionalCoordinatorCondition)
-                        {{-- <button type="button" class="btn bg-gradient-primary" onclick="showChapterSetupModal()"><i class="fas fa-envelope mr-2"></i>Send Chapter Startup Email</button> --}}
-                        {{-- <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Chapter</a> --}}
-                        <a class="btn bg-gradient-primary" href="{{ route('chapters.chaplistpending') }}"><i class="fas fa-share mr-2" ></i>New Chapters Pending</a>
-                    @endif
-                    @if ($regionalCoordinatorCondition)
-                        @if ($checkBoxStatus)
-                            <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
+                    @if ($coordinatorCondition && $regionalCoordinatorCondition)
+                        <a class="btn bg-gradient-primary mb-3" href="{{ route('chapters.chaplistpending') }}"><i class="fas fa-share mr-2" ></i>New Chapters Pending</a>
+
+                        @if ($checkBox3Status)
+                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('chapter', 'Chapter List')"><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
+                        @elseif ($checkBox5Status)
+                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('intchapter', 'International Chapter List')"><i class="fas fa-download"></i>&nbsp; Export International Chapter List</button>
                         @else
-                            <button class="btn bg-gradient-primary" onclick="startExport('chapter', 'Chapter List')"><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
+                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('chapter', 'Chapter List')" disabled><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
                         @endif
                     @endif
                     </div>
@@ -274,16 +298,31 @@ function showChapterSetupModal() {
     });
 }
 
-
 function showPrimary() {
-var base_url = '{{ url("/chapter/chapterlist") }}';
-
+    var base_url = '{{ url("/chapter/chapterlist") }}';
     if ($("#showPrimary").prop("checked") == true) {
-        window.location.href = base_url + '?check=yes';
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::PRIMARY_COORDINATOR }}=yes';
     } else {
         window.location.href = base_url;
     }
 }
 
+function showAllConf() {
+    var base_url = '{{ url("/chapter/chapterlist") }}';
+    if ($("#showAllConf").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::CONFERENCE_REGION }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
+function showAll() {
+    var base_url = '{{ url("/chapter/chapterlist") }}';
+    if ($("#showAll").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
 </script>
 @endsection

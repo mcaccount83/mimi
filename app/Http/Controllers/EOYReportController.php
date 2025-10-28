@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ChapterCheckbox;
 use App\Enums\BoardPosition;
 use App\Mail\EOYReviewrAssigned;
 use App\Models\BoardsIncoming;
@@ -114,7 +115,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $now = Carbon::now();
         $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where(function ($query) use ($currentYear) {
                 $query->where(function ($q) use ($currentYear) {
@@ -126,12 +127,15 @@ class EOYReportController extends Controller implements HasMiddleware
                 });
             })
             ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
-        $checkBox2Status = $baseQuery['checkBox2Status'];
+
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-            'title' => $title, 'breadcrumb' => $breadcrumb,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'title' => $title, 'breadcrumb' => $breadcrumb,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
@@ -282,7 +286,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $now = Carbon::now();
         $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where(function ($query) use ($currentYear) {
                 $query->where(function ($q) use ($currentYear) {
@@ -294,8 +298,11 @@ class EOYReportController extends Controller implements HasMiddleware
                 });
             })
             ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
-        $checkBox2Status = $baseQuery['checkBox2Status'];
+
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
         $activationStatuses = [];
 
@@ -350,7 +357,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $countList = count($chapterList);
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('eoyreports.eoyboardreport')->with($data);
@@ -363,10 +370,13 @@ class EOYReportController extends Controller implements HasMiddleware
     public function editBoardReport(Request $request, $id)
     {
         $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
         $lastUpdatedBy = $user['user_name'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -411,7 +421,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = [
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'allCountries' => $allCountries,
+            'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'allCountries' => $allCountries, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
 
         return view('eoyreports.editboardreport')->with($data);
@@ -828,7 +838,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $now = Carbon::now();
         $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where(function ($query) use ($currentYear) {
                 $query->where(function ($q) use ($currentYear) {
@@ -840,11 +850,14 @@ class EOYReportController extends Controller implements HasMiddleware
                 });
             })
             ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
-        $checkBox2Status = $baseQuery['checkBox2Status'];
+
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('eoyreports.eoyfinancialreport')->with($data);
@@ -856,7 +869,10 @@ class EOYReportController extends Controller implements HasMiddleware
     public function reviewFinancialReport(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
         $loggedInName = $user['user_name'];
+        $lastUpdatedBy = $user['user_name'];
         $userName = $user['user_name'];
         $userPosition = $user['user_position'];
         $userConfName = $user['user_conf_name'];
@@ -864,6 +880,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -875,7 +892,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
 
         return view('eoyreports.reviewfinancialreport')->with($data);
@@ -1155,7 +1172,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $now = Carbon::now();
         $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where(function ($query) use ($currentYear) {
                 $query->where(function ($q) use ($currentYear) {
@@ -1167,11 +1184,15 @@ class EOYReportController extends Controller implements HasMiddleware
                 });
             })
             ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
-        $checkBox2Status = $baseQuery['checkBox2Status'];
+
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyattachments')->with($data);
     }
@@ -1262,7 +1283,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $now = Carbon::now();
         $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where(function ($query) use ($currentYear) {
                 $query->where(function ($q) use ($currentYear) {
@@ -1274,10 +1295,14 @@ class EOYReportController extends Controller implements HasMiddleware
                 });
             })
             ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
-        $checkBox2Status = $baseQuery['checkBox2Status'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyboundaries')->with($data);
     }
@@ -1366,7 +1391,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $now = Carbon::now();
         $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where(function ($query) use ($currentYear) {
                 $query->where(function ($q) use ($currentYear) {
@@ -1378,8 +1403,11 @@ class EOYReportController extends Controller implements HasMiddleware
                 });
             })
             ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
-        $checkBox2Status = $baseQuery['checkBox2Status'];
+
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
         $allAwards = FinancialReportAwards::all();
 
@@ -1395,56 +1423,56 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $countList = count($chapterList);
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-            'allAwards' => $allAwards, 'maxAwards' => $maxAwards,
+            'allAwards' => $allAwards, 'maxAwards' => $maxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
         ];
 
         return view('eoyreports.eoyawards', $data);
     }
 
-    public function showEOYIntAwards(Request $request): View
-    {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_reports'];
-        $breadcrumb = 'International Chapter Awards Report';
+    // public function showEOYIntAwards(Request $request): View
+    // {
+    //     $titles = $this->getPageTitle($request);
+    //     $title = $titles['eoy_reports'];
+    //     $breadcrumb = 'International Chapter Awards Report';
 
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $now = Carbon::now();
-        $currentYear = $now->year;
+    //     $now = Carbon::now();
+    //     $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($currentYear) {
-                $query->where(function ($q) use ($currentYear) {
-                    $q->where('start_year', '<', $currentYear)
-                        ->orWhere(function ($q) use ($currentYear) {
-                            $q->where('start_year', '=', $currentYear)
-                                ->where('start_month_id', '<', 7); // July is month 7
-                        });
-                });
-            })
-            ->get();
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $chapterList = $baseQuery['query']
+    //         ->where(function ($query) use ($currentYear) {
+    //             $query->where(function ($q) use ($currentYear) {
+    //                 $q->where('start_year', '<', $currentYear)
+    //                     ->orWhere(function ($q) use ($currentYear) {
+    //                         $q->where('start_year', '=', $currentYear)
+    //                             ->where('start_month_id', '<', 7); // July is month 7
+    //                     });
+    //             });
+    //         })
+    //         ->get();
 
-        $allAwards = FinancialReportAwards::all();
+    //     $allAwards = FinancialReportAwards::all();
 
-        $maxAwards = 0;
-        foreach ($chapterList as $list) {
-            if (isset($list->financialReport->chapter_awards)) {
-                $awards = unserialize(base64_decode($list->financialReport->chapter_awards));
-                if ($awards) {
-                    $maxAwards = max($maxAwards, count($awards));
-                }
-            }
-        }
+    //     $maxAwards = 0;
+    //     foreach ($chapterList as $list) {
+    //         if (isset($list->financialReport->chapter_awards)) {
+    //             $awards = unserialize(base64_decode($list->financialReport->chapter_awards));
+    //             if ($awards) {
+    //                 $maxAwards = max($maxAwards, count($awards));
+    //             }
+    //         }
+    //     }
 
-        $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList,
-            'allAwards' => $allAwards, 'maxAwards' => $maxAwards,
-        ];
+    //     $countList = count($chapterList);
+    //     $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList,
+    //         'allAwards' => $allAwards, 'maxAwards' => $maxAwards,
+    //     ];
 
-        return view('eoyreports.eoyintawards', $data);
-    }
+    //     return view('eoyreports.eoyintawards', $data);
+    // }
 
     /**
      * View the EOY Award Details
@@ -1542,7 +1570,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $now = Carbon::now();
         $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->where(function ($query) use ($currentYear) {
                 $query->where(function ($q) use ($currentYear) {
@@ -1554,47 +1582,51 @@ class EOYReportController extends Controller implements HasMiddleware
                 });
             })
             ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
-        $checkBox2Status = $baseQuery['checkBox2Status'];
+
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyirssubmission')->with($data);
     }
 
-    public function showIRSIntSubmission(Request $request): View
-    {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_reports'];
-        $breadcrumb = 'Financial Report Attacchments';
+    // public function showIRSIntSubmission(Request $request): View
+    // {
+    //     $titles = $this->getPageTitle($request);
+    //     $title = $titles['eoy_reports'];
+    //     $breadcrumb = 'Financial Report Attacchments';
 
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $now = Carbon::now();
-        $currentYear = $now->year;
+    //     $now = Carbon::now();
+    //     $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($currentYear) {
-                $query->where(function ($q) use ($currentYear) {
-                    $q->where('start_year', '<', $currentYear)
-                        ->orWhere(function ($q) use ($currentYear) {
-                            $q->where('start_year', '=', $currentYear)
-                                ->where('start_month_id', '<', 7); // July is month 7
-                        });
-                });
-            })
-            ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
-        $checkBox2Status = $baseQuery['checkBox2Status'];
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $chapterList = $baseQuery['query']
+    //         ->where(function ($query) use ($currentYear) {
+    //             $query->where(function ($q) use ($currentYear) {
+    //                 $q->where('start_year', '<', $currentYear)
+    //                     ->orWhere(function ($q) use ($currentYear) {
+    //                         $q->where('start_year', '=', $currentYear)
+    //                             ->where('start_month_id', '<', 7); // July is month 7
+    //                     });
+    //             });
+    //         })
+    //         ->get();
+    //     $checkBoxStatus = $baseQuery['checkBoxStatus'];
+    //     $checkBox2Status = $baseQuery['checkBox2Status'];
 
-        $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+    //     $countList = count($chapterList);
+    //     $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 
-        return view('eoyreports.eoyirsintsubmission')->with($data);
-    }
+    //     return view('eoyreports.eoyirsintsubmission')->with($data);
+    // }
 
     /**
      * View the 990N Filing Details

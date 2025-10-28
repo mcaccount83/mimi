@@ -32,12 +32,15 @@
 					<th>Hire Date</th>
                     <th>Email</th>
                     <th>Reports To</th>
+                     @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        <th>Delete</th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
                         <a onclick="showCoordEmailModal('{{ $list->first_name }}', '{{ $list->last_name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
                     </td>
@@ -63,18 +66,40 @@
                 	  <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
                       <td><a href="mailto:{{ $list->email }}">{{ $list->email }}</a></td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
+                      @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        <td class="text-center align-middle"><i class="fa fa-ban"
+                            onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
+                            style="cursor: pointer; color: #dc3545;"></i>
+                        </td>
+                    @endif
                     </tr>
                   @endforeach
                 </tbody>
               </table>
             </div>
               <!-- /.card-body -->
-              <div class="col-sm-12">
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" name="showDirect" id="showDirect" class="custom-control-input" {{$checkBoxStatus}} onchange="showDirect()" />
-                    <label class="custom-control-label" for="showDirect">Show only my direct reports</label>
+             <div class="col-sm-12">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" name="showDirect" id="showDirect" class="custom-control-input" {{$checkBoxStatus}} onchange="showDirect()" />
+                        <label class="custom-control-label" for="showDirect">Only show my Direct Reports</label>
+                    </div>
                 </div>
-            </div>
+                @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showAllConf()" />
+                            <label class="custom-control-label" for="showAllConf">Show All Coordinators</label>
+                        </div>
+                    </div>
+                @endif
+                @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Coordinators</label>
+                        </div>
+                    </div>
+                @endif
 
                 <div class="card-body text-center">
                 @if($conferenceCoordinatorCondition)
@@ -116,13 +141,29 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function showDirect() {
     var base_url = '{{ url("/coordinator/coordlist") }}';
-
     if ($("#showDirect").prop("checked") == true) {
-        window.location.href = base_url + '?check=yes';
+        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::DIRECT_REPORT }}=yes';
     } else {
         window.location.href = base_url;
     }
 }
 
+function showAllConf() {
+    var base_url = '{{ url("/coordinator/coordlist") }}';
+    if ($("#showAllConf").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::CONFERENCE_REGION }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
+function showAll() {
+    var base_url = '{{ url("/coordinator/coordlist") }}';
+    if ($("#showAll").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::INTERNATIONAL }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
 </script>
 @endsection

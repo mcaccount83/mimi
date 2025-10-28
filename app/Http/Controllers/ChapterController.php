@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
+use App\Enums\ChapterCheckbox;
 use App\Enums\CoordinatorPosition;
 use App\Mail\BorUpdateListNoitce;
 use App\Mail\BorUpdatePCNotice;
@@ -109,12 +110,21 @@ class ChapterController extends Controller implements HasMiddleware
         $userConfName = $user['user_conf_name'];
         $userConfDesc = $user['user_conf_desc'];
 
-        $baseQuery = $this->baseChapterController->getPendingBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        // Pending chapters
+        $baseQuery = $this->baseChapterController->getBaseQuery(2, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'userName' => $userName, 'userPosition' => $userPosition,
-            'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+        $chapterList = $baseQuery['query']->get();
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+
+        $countList = $chapterList->count();
+        $data = [
+            'countList' => $countList,
+            'chapterList' => $chapterList,
+            'checkBox5Status' => $checkBox5Status,
+             'userName' => $userName,
+            'userPosition' => $userPosition,
+            'userConfName' => $userConfName,
+            'userConfDesc' => $userConfDesc,
         ];
 
         return view('chapters.chaplistpending')->with($data);
@@ -132,47 +142,20 @@ class ChapterController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getNotApprovedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        // Not Approved chapters
+        $baseQuery = $this->baseChapterController->getBaseQuery(3, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+        $chapterList = $baseQuery['query']->get();
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+
+        $countList = $chapterList->count();
+        $data = [
+            'countList' => $countList,
+            'chapterList' => $chapterList,
+            'checkBox5Status' => $checkBox5Status,
+        ];
 
         return view('chapters.chaplistdeclined')->with($data);
-    }
-
-    /**
-     * Display the Pending New chapter list mapped with login coordinator
-     */
-    public function showIntPendingChapters(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-
-        $baseQuery = $this->baseChapterController->getPendingInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
-
-        $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList];
-
-        return view('international.intchaplistpending')->with($data);
-    }
-
-    /**
-     * Display the Pending New chapter list mapped with login coordinator
-     */
-    public function showIntNotApprovedChapters(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-
-        $baseQuery = $this->baseChapterController->getNotApprovedInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
-
-        $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList];
-
-        return view('international.intchaplistdeclined')->with($data);
     }
 
     /**
@@ -191,13 +174,24 @@ class ChapterController extends Controller implements HasMiddleware
         $userConfName = $user['user_conf_name'];
         $userConfDesc = $user['user_conf_desc'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        // Active chapters
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
         $countList = $chapterList->count();
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+        $data = [
+            'countList' => $countList,
+            'chapterList' => $chapterList,
+            'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,
+            'userName' => $userName,
+            'userPosition' => $userPosition,
+            'userConfName' => $userConfName,
+            'userConfDesc' => $userConfDesc,
         ];
 
         return view('chapters.chaplist')->with($data);
@@ -215,11 +209,18 @@ class ChapterController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        // Zapped chapters
+        $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+        $chapterList = $baseQuery['query']->get();
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+
+        $countList = $chapterList->count();
+        $data = [
+            'countList' => $countList,
+            'chapterList' => $chapterList,
+            'checkBox5Status' => $checkBox5Status,
+        ];
 
         return view('chapters.chapzapped')->with($data);
     }
@@ -236,12 +237,18 @@ class ChapterController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        // Active chapters
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
         $countList = $chapterList->count();
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $data = [
+            'countList' => $countList,
+            'chapterList' => $chapterList,
+            'checkBox5Status' => $checkBox5Status,
+        ];
 
         return view('chapters.chapinquiries')->with($data);
     }
@@ -258,11 +265,18 @@ class ChapterController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getZappedInquiriesBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        // Zapped chapters
+        $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-        $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+        $chapterList = $baseQuery['query']->get();
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+
+        $countList = $chapterList->count();
+        $data = [
+            'countList' => $countList,
+            'chapterList' => $chapterList,
+            'checkBox5Status' => $checkBox5Status,
+        ];
 
         return view('chapters.chapinquirieszapped')->with($data);
     }
@@ -270,36 +284,36 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      * Display the International chapter list
      */
-    public function showIntChapter(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    // public function showIntChapter(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $chapterList = $baseQuery['query']->get();
 
-        $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+    //     $countList = count($chapterList);
+    //     $data = ['countList' => $countList, 'chapterList' => $chapterList];
 
-        return view('international.intchapter')->with($data);
-    }
+    //     return view('international.intchapter')->with($data);
+    // }
 
     /**
      * Display the International Zapped chapter list
      */
-    public function showIntZappedChapter(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    // public function showIntZappedChapter(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
+    //     $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
+    //     $chapterList = $baseQuery['query']->get();
 
-        $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList];
+    //     $countList = count($chapterList);
+    //     $data = ['countList' => $countList, 'chapterList' => $chapterList];
 
-        return view('international.intchapterzapped')->with($data);
-    }
+    //     return view('international.intchapterzapped')->with($data);
+    // }
 
     /**
      * Display the Chapter Details for ALL lists - Active, Zapped, Inquiries, International
@@ -1448,68 +1462,6 @@ class ChapterController extends Controller implements HasMiddleware
     }
 
     /**
-     *Edit Chapter EIN Notes
-     */
-    public function editChapterIRS(Request $request, $id): View
-    {
-        $baseQuery = $this->baseChapterController->getChapterDetails($id);
-        $chDetails = $baseQuery['chDetails'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $regionLongName = $baseQuery['regionLongName'];
-        $conferenceDescription = $baseQuery['conferenceDescription'];
-        $startMonthName = $baseQuery['startMonthName'];
-        $chActiveId = $baseQuery['chActiveId'];
-        $chPcId = $baseQuery['chPcId'];
-        $chDocuments = $baseQuery['chDocuments'];
-
-        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'conferenceDescription' => $conferenceDescription,
-            'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'startMonthName' => $startMonthName,
-            'chPcId' => $chPcId, 'chDocuments' => $chDocuments,
-        ];
-
-        return view('chapters.editirs')->with($data);
-    }
-
-    /**
-     *Update Chapter EIN Notes
-     */
-    public function updateChapterIRS(Request $request, $id): RedirectResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
-
-        $chapter = Chapters::find($id);
-        $documents = Documents::find($id);
-
-        DB::beginTransaction();
-        try {
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
-            $chapter->save();
-
-            $documents->ein_letter = $request->has('ch_ein_letter') ? 1 : 0;
-            $documents->ein_notes = $request->input('ein_notes');
-            $documents->irs_verified = $request->has('irs_verified') ? 1 : 0;
-            $documents->ein_sent = $request->has('ein_sent') ? 1 : 0;
-            $documents->irs_notes = $request->input('irs_notes');
-            $documents->save();
-
-            DB::commit();
-
-            return to_route('chapters.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
-            return to_route('chapters.editirs', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
-
-    /**
      * Display the Website Details
      */
     public function showChapterWebsite(Request $request): View
@@ -1525,10 +1477,15 @@ class ChapterController extends Controller implements HasMiddleware
         $userConfName = $user['user_conf_name'];
         $userConfDesc = $user['user_conf_desc'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $websiteList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['websiteList' => $websiteList, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+        $data = ['websiteList' => $websiteList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('chapters.chapwebsite')->with($data);
@@ -1537,23 +1494,23 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      * Display the Website Details
      */
-    public function showIntWebsite(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+    // public function showIntWebsite(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
+    //     $userName = $user['user_name'];
+    //     $userPosition = $user['user_position'];
+    //     $userConfName = $user['user_conf_name'];
+    //     $userConfDesc = $user['user_conf_desc'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $websiteList = $baseQuery['query']->get();
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $websiteList = $baseQuery['query']->get();
 
-        $data = ['websiteList' => $websiteList, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
-        ];
+    //     $data = ['websiteList' => $websiteList, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+    //     ];
 
-        return view('international.intchapwebsite')->with($data);
-    }
+    //     return view('international.intchapwebsite')->with($data);
+    // }
 
     /**
      * Display the Social Media Information
@@ -1567,29 +1524,35 @@ class ChapterController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['chapterList' => $chapterList];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,
+        ];
 
-        return view('chapreports.chaprptsocialmedia')->with($data);
+        return view('chapters.chapsocialmedia', )->with($data);
     }
 
     /**
      * Display the Social Media Information
      */
-    public function showIntSocialMedia(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    // public function showIntSocialMedia(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $chapterList = $baseQuery['query']->get();
 
-        $data = ['chapterList' => $chapterList];
+    //     $data = ['chapterList' => $chapterList];
 
-        return view('international.intchapsocialmedia')->with($data);
-    }
+    //     return view('international.intchapsocialmedia')->with($data);
+    // }
 
     /**
      *Edit Website & Social Information
@@ -1598,6 +1561,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
         $userName = $user['user_name'];
         $userPosition = $user['user_position'];
         $userConfName = $user['user_conf_name'];
@@ -1605,6 +1569,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
         $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -1614,8 +1579,7 @@ class ChapterController extends Controller implements HasMiddleware
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'conferenceDescription' => $conferenceDescription,
-            'chDetails' => $chDetails, 'allWebLinks' => $allWebLinks,
-            'chPcId' => $chPcId, 'regionLongName' => $regionLongName,
+            'chDetails' => $chDetails, 'allWebLinks' => $allWebLinks, 'chPcId' => $chPcId, 'regionLongName' => $regionLongName, 'confId' => $confId, 'chConfId' => $chConfId,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
@@ -1727,27 +1691,6 @@ class ChapterController extends Controller implements HasMiddleware
     }
 
     /**
-     * BoardList
-     */
-    public function showChapterBoardlist(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $activeChapterList = $baseQuery['query']->get();
-
-        $countList = count($activeChapterList);
-        $data = ['countList' => $countList, 'activeChapterList' => $activeChapterList];
-
-        return view('chapters.chapboardlist')->with($data);
-    }
-
-    /**
      *Edit Pending New Chapter Information
      */
     public function editPendingChapterDetails(Request $request, $id): View
@@ -1819,7 +1762,7 @@ class ChapterController extends Controller implements HasMiddleware
         $pcDetails = $pcDetails->unique('cid');
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chapterId' => $chapterId,
-            'chDetails' => $chDetails, 'allActive' => $allActive,
+            'chDetails' => $chDetails, 'allActive' => $allActive, 'coorId' => $coorId,
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'allStates' => $allStates,

@@ -1,10 +1,12 @@
 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="{{ route('adminreports.paymentlist') }}">Payment List</a>
-    <a class="dropdown-item" href="{{ route('adminreports.reregdate') }}">Re-Registration Dates</a>
-    <a class="dropdown-item" href="{{ route('adminreports.downloads') }}">Download Reports</a>
-    <a class="dropdown-item" href="{{ route('adminreports.bugs') }}">MIMI Bugs & Wishes</a>
-    @if (($userAdmin))
-          <a class="dropdown-item" href="{{ route('adminreports.intpaymentlist') }}">International Payments List</a>
-        <a class="dropdown-item" href="{{ route('adminreports.intreregdate') }}">International Re-Registration Dates</a>
+    @if ($coordinatorCondition && $conferenceCoordinatorCondition)
+        <a class="dropdown-item" href="{{ route('adminreports.paymentlist') }}">Payment Log Report</a>
+        <a class="dropdown-item" href="{{ route('adminreports.reregdate') }}">Re-Registration Report</a>
+        <a class="dropdown-item" href="{{ route('adminreports.downloads') }}">Export All Reports</a>
+        {{-- <a class="dropdown-item" href="{{ route('adminreports.bugs') }}">MIMI Bugs Report</a> --}}
+    @elseif ($ITCondition)
+        <a class="dropdown-item" href="{{ route('adminreports.paymentlist', ['check5' => 'yes']) }}">International Payments Report</a>
+        <a class="dropdown-item" href="{{ route('adminreports.reregdate', ['check5' => 'yes']) }}">International Re-Registration Report</a>
+        <a class="dropdown-item" href="{{ route('adminreports.downloads') }}">Export International Reports</a>
     @endif
 </div>

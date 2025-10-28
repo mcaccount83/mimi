@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ChapterCheckbox;
 use App\Models\Chapters;
 use App\Models\PaymentLog;
 use App\Models\Payments;
@@ -39,24 +40,24 @@ class AdminReportController extends Controller implements HasMiddleware
     /**
      * View Payment Log List
      */
-    public function intPaymentList(Request $request): View
-    {
-        $query = PaymentLog::with('board');
+    // public function intPaymentList(Request $request): View
+    // {
+    //     $query = PaymentLog::with('board');
 
-        // Add filters if needed
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
+    //     // Add filters if needed
+    //     if ($request->has('status')) {
+    //         $query->where('status', $request->status);
+    //     }
 
-        if ($request->has('date')) {
-            $query->whereDate('created_at', $request->date);
-        }
+    //     if ($request->has('date')) {
+    //         $query->whereDate('created_at', $request->date);
+    //     }
 
-        // $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(100);
-        $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
+    //     // $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(100);
+    //     $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
 
-        return view('adminreports.intpaymentlist', compact('paymentLogs'));
-    }
+    //     return view('adminreports.intpaymentlist', compact('paymentLogs'));
+    // }
 
     /**
      * View Payment Log List
@@ -68,8 +69,14 @@ class AdminReportController extends Controller implements HasMiddleware
 
         $query = PaymentLog::with('board');
 
-        // Always filter by the user's conference ID
-        $query = PaymentLog::with('board')->where('conf', $confId);
+        // Check if international checkbox is selected
+        $showInternational = $request->has(ChapterCheckbox::INTERNATIONAL) &&
+                            $request->get(ChapterCheckbox::INTERNATIONAL) == 'yes';
+
+        // Filter by conference unless international is selected
+        if (!$showInternational) {
+            $query->where('conf', $confId);
+        }
 
         // Add additional filters if needed
         if ($request->has('status')) {
@@ -80,20 +87,29 @@ class AdminReportController extends Controller implements HasMiddleware
             $query->whereDate('created_at', $request->date);
         }
 
-        // $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(100);
         $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
 
-        return view('adminreports.paymentlist', compact('paymentLogs'));
+        // Set checkbox status based on URL parameter
+        $checkBox5Status = $showInternational ? 'checked' : '';
+
+        $data = [
+            'paymentLogs' => $paymentLogs,
+            'checkBox5Status' => $checkBox5Status,
+        ];
+
+        return view('adminreports.paymentlist')->with($data);
     }
 
     /**
      * View Payment Log Transaction Details
      */
-    public function paymentDetails($id): View
+     public function paymentDetails($id): View
     {
         $log = PaymentLog::findOrFail($id);
 
-        return view('adminreports.paymentdetails', compact('log'));
+        $data = ['log' => $log];
+
+        return view('adminreports.paymentdetails')->with($data);
     }
 
     /**
@@ -108,10 +124,11 @@ class AdminReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['chapterList' => $chapterList];
+        $data = ['chapterList' => $chapterList, 'checkBox5Status' => $checkBox5Status];
 
         return view('adminreports.reregdate')->with($data);
     }
@@ -119,28 +136,34 @@ class AdminReportController extends Controller implements HasMiddleware
     /**
      * View List of International ReReg Payments if Dates Need to be Udpated
      */
-    public function showIntReRegDate(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    // public function showIntReRegDate(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $chapterList = $baseQuery['query']->get();
 
-        $data = ['chapterList' => $chapterList];
+    //     $data = ['chapterList' => $chapterList];
 
-        return view('adminreports.intreregdate')->with($data);
-    }
+    //     return view('adminreports.intreregdate')->with($data);
+    // }
 
     public function editReRegDate(Request $request, $id): View
     {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
         $stateShortName = $baseQuery['stateShortName'];
         $chPayments = $baseQuery['chPayments'];
         $allMonths = $baseQuery['allMonths'];
 
-        $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chPayments' => $chPayments, 'allMonths' => $allMonths];
+        $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chPayments' => $chPayments, 'allMonths' => $allMonths,
+                 'confId' => $confId, 'chConfId' => $chConfId];
 
         return view('adminreports.editreregdate')->with($data);
     }

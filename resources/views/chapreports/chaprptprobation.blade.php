@@ -37,7 +37,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td class="text-center align-middle">
                         @if ($list->probation_id == '3')
                             <a href="{{ url("/board/probation/{$list->id}") }}"><i class="fas fa-file"></i></a>
@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <div class="card-body text-center">
-                    @if ($userAdmin)
+                    @if ($ITCondition)
                         <button type="button" id="reset-probation" class="btn bg-gradient-primary"><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
                     @endif
                 </div>

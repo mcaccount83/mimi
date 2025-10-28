@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Request;
 
 class PositionConditionsService
 {
+    public function __construct(
+        private ReportingService $reportingService
+    ) {}
+
     /**
      * Check if route is active
      */
@@ -26,22 +30,27 @@ class PositionConditionsService
     /**
      * Get all position-based conditions for a user
      */
-    public function getConditionsForUser($positionId, $secPositionId = [])
+    public function getConditionsForUser($positionId, $secPositionId = [], $coorId = null)
     {
         // Handle null values gracefully
         $positionId = (int) ($positionId ?? 0);
         $secPositionId = array_map('intval', is_array($secPositionId) ? $secPositionId : [$secPositionId]);
 
+        $hasChapterReports = $coorId ? $this->reportingService->hasAnyChapterReports($coorId) : false;
+        $hasCoordinatorReports = $coorId ? $this->reportingService->hasAnyCoordinatorReports($coorId) : false;
+
         return [
+            'coordinatorCondition' => $hasChapterReports,
+            'supervisingCoordinatorCondition' => $hasCoordinatorReports,
             'founderCondition' => ($positionId == CoordinatorPosition::FOUNDER),
             'conferenceCoordinatorCondition' => ($positionId >= CoordinatorPosition::CC && $positionId <= CoordinatorPosition::FOUNDER),
             'assistConferenceCoordinatorCondition' => ($positionId >= CoordinatorPosition::ACC && $positionId <= CoordinatorPosition::FOUNDER),
             'regionalCoordinatorCondition' => ($positionId >= CoordinatorPosition::RC && $positionId <= CoordinatorPosition::FOUNDER),
             'assistRegionalCoordinatorCondition' => ($positionId >= CoordinatorPosition::ARC && $positionId <= CoordinatorPosition::FOUNDER),
-            'supervisingCoordinatorCondition' => ($positionId >= CoordinatorPosition::SC && $positionId <= CoordinatorPosition::FOUNDER),
+            // 'supervisingCoordinatorCondition' => ($positionId >= CoordinatorPosition::SC && $positionId <= CoordinatorPosition::FOUNDER),
             'areaCoordinatorCondition' => ($positionId >= CoordinatorPosition::AC && $positionId <= CoordinatorPosition::FOUNDER),
             'bigSisterCondition' => ($positionId >= CoordinatorPosition::BS && $positionId <= CoordinatorPosition::FOUNDER),
-            'coordinatorCondition' => ($positionId >= CoordinatorPosition::BS && $positionId <= CoordinatorPosition::FOUNDER),
+            // 'coordinatorCondition' => ($positionId >= CoordinatorPosition::BS && $positionId <= CoordinatorPosition::FOUNDER),
             'eoyTestCondition' => ($positionId >= CoordinatorPosition::ACC && $positionId <= CoordinatorPosition::FOUNDER) || $this->hasPosition(CoordinatorPosition::ART, $positionId, $secPositionId),
             'eoyReportCondition' => ($positionId >= CoordinatorPosition::BS && $positionId <= CoordinatorPosition::FOUNDER) || $this->hasPosition(CoordinatorPosition::ART, $positionId, $secPositionId) || $this->hasPosition(CoordinatorPosition::ARR, $positionId, $secPositionId),
             'eoyReportConditionDISABLED' => $this->hasPosition(CoordinatorPosition::IT, $positionId, $secPositionId),

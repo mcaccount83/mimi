@@ -31,12 +31,15 @@
 					<th>Application Date</th>
                     <th>Reason Not Approved</th>
                     <th>Rejected By</th>
+                    @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        <th>Delete</th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coordapplication/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -49,12 +52,27 @@
                 	  <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
                       <td>{{ $list->reason_retired }}</td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
+                      @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        <td class="text-center align-middle"><i class="fa fa-ban"
+                            onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
+                            style="cursor: pointer; color: #dc3545;"></i>
+                        </td>
+                    @endif
                     </tr>
                   @endforeach
                 </tbody>
               </table>
             </div>
               <!-- /.card-body -->
+              @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Coordinators</label>
+                        </div>
+                    </div>
+                @endif
+
               <div class="col-sm-12">
 
 
@@ -308,6 +326,13 @@ function showChapterSetupModalOLD() {
     });
 }
 
-
+function showAll() {
+    var base_url = '{{ url("/application/coordrejected") }}';
+    if ($("#showAll").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::INTERNATIONAL }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
 </script>
 @endsection

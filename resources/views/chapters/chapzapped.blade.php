@@ -30,12 +30,15 @@
                     <th>EIN</th>
                     <th>Disband Date</th>
                     <th>Reason</th>
+                    @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        <th>Delete</th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
                         @if ($list->region?->short_name && $list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -54,11 +57,27 @@
                     <td>{{ $list->ein }}</td>
                     <td><span class="date-mask">{{ $list->zap_date }}</span></td>
                     <td>{{ $list->disband_reason }}</td>
+                   @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        <td class="text-center align-middle"><i class="fa fa-ban"
+                            onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
+                            style="cursor: pointer; color: #dc3545;"></i>
+                        </td>
+                    @endif
                 </tr>
                   @endforeach
                   </tbody>
                 </table>
             </div>
+
+             <!-- /.card-body -->
+                @if ($ITCondition || $einCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                        </div>
+                    </div>
+                @endif
 
             <div class="card-body text-center">
                 @if ($assistConferenceCoordinatorCondition)
@@ -88,6 +107,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function showAll() {
+    var base_url = '{{ url("/chapter/zapped") }}';
+    if ($("#showAll").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
 
 </script>
 @endsection

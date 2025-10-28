@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ChapterCheckbox;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
@@ -58,11 +59,12 @@ class PaymentReportController extends Controller implements HasMiddleware
         $currentYear = date('Y');
         $currentMonth = date('m');
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
-        $checkBox3Status = $baseQuery['checkBox3Status'];
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
-        if ($checkBox3Status) {
+        if ($checkBox3Status || $checkBox5Status) {
             $reChapterList = $baseQuery['query']
                 ->get();
         } else {
@@ -78,38 +80,40 @@ class PaymentReportController extends Controller implements HasMiddleware
         }
 
         $countList = count($reChapterList);
-        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
+        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,];
 
-        return view('chapters.chapreregistration')->with($data);
+        return view('payment.chapreregistration')->with($data);
     }
 
     /**
      * ReRegistration List
      */
-    public function showIntReRegistration(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    // public function showIntReRegistration(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $currentYear = date('Y');
-        $currentMonth = date('m');
+    //     $currentYear = date('Y');
+    //     $currentMonth = date('m');
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
 
-        $reChapterList = $baseQuery['query']
-            ->where(function ($query) use ($currentYear, $currentMonth) {
-                $query->where('next_renewal_year', '<', $currentYear)
-                    ->orWhere(function ($query) use ($currentYear, $currentMonth) {
-                        $query->where('next_renewal_year', '=', $currentYear)
-                            ->where('start_month_id', '<=', $currentMonth);
-                    });
-            })
-            ->get();
+    //     $reChapterList = $baseQuery['query']
+    //         ->where(function ($query) use ($currentYear, $currentMonth) {
+    //             $query->where('next_renewal_year', '<', $currentYear)
+    //                 ->orWhere(function ($query) use ($currentYear, $currentMonth) {
+    //                     $query->where('next_renewal_year', '=', $currentYear)
+    //                         ->where('start_month_id', '<=', $currentMonth);
+    //                 });
+    //         })
+    //         ->get();
 
-        $data = ['reChapterList' => $reChapterList];
+    //     $data = ['reChapterList' => $reChapterList];
 
-        return view('international.intregistration')->with($data);
-    }
+    //     return view('international.intregistration')->with($data);
+    // }
 
     /**
      * ReRegistration Reminders Auto Send
@@ -183,7 +187,7 @@ class PaymentReportController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->to('/chapter/reregistration')->with('success', 'Re-Registration Reminders have been successfully sent.');
+            return redirect()->to('/payment/reregistration')->with('success', 'Re-Registration Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -273,7 +277,7 @@ class PaymentReportController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->to('/chapter/reregistration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
+            return redirect()->to('/payment/reregistration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -297,38 +301,48 @@ class PaymentReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,];
 
-        return view('chapters.chapdonations')->with($data);
+        return view('payment.chapdonations')->with($data);
     }
 
     /**
      * View the International M2M Doantions
      */
-    public function showIntdonation(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+    // public function showIntdonation(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['user_coorId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-        $chapterList = $baseQuery['query']->get();
+    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+    //     $chapterList = $baseQuery['query']->get();
 
-        $data = ['chapterList' => $chapterList];
+    //     $data = ['chapterList' => $chapterList];
 
-        return view('international.intdonation')->with($data);
-    }
+    //     return view('international.intdonation')->with($data);
+    // }
 
     /**
      *Edit Chapter Information
      */
     public function editChapterPayment(Request $request, $id): View
     {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -339,9 +353,10 @@ class PaymentReportController extends Controller implements HasMiddleware
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'chPayments' => $chPayments,
             'chDetails' => $chDetails, 'chapterStatus' => $chapterStatus, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+            'coorId' => $coorId, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
 
-        return view('chapters.editpayment')->with($data);
+        return view('payment.editpayment')->with($data);
     }
 
     /**
@@ -429,12 +444,12 @@ class PaymentReportController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return to_route('chapters.editpayment', ['id' => $id])->with('success', 'Chapter Payments/Donations have been updated');
+            return to_route('payment.editpayment', ['id' => $id])->with('success', 'Chapter Payments/Donations have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return to_route('chapters.editpayment', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+            return to_route('payment.editpayment', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();

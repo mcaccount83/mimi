@@ -40,7 +40,7 @@
 
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle"><a href="{{ url("/pendingchapterdetailsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
-                            @if ($userAdmin == 'Admin')
+                            @if ($ITCondition == 'Admin')
                         <td class="text-center align-middle"><i class="fa fa-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>

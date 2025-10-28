@@ -338,7 +338,7 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         // Get all chapter IDs first
         $chapterIds = $baseQuery['query']->pluck('id')->toArray();
@@ -430,7 +430,7 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getZappedBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         // Get all chapter IDs first
         $chapterIds = $baseQuery['query']->pluck('id')->toArray();
@@ -516,6 +516,9 @@ class ExportController extends Controller implements HasMiddleware
             'Expires' => '0',
         ];
 
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
@@ -523,10 +526,11 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-
-        // Get all chapter IDs first
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterIds = $baseQuery['query']->pluck('id')->toArray();
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
 
         if (empty($chapterIds)) {
             return redirect()->to('/home');
@@ -608,6 +612,9 @@ class ExportController extends Controller implements HasMiddleware
             'Expires' => '0',
         ];
 
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
@@ -615,10 +622,11 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-
-        // Get all chapter IDs first
+        $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterIds = $baseQuery['query']->pluck('id')->toArray();
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
 
         if (empty($chapterIds)) {
             return redirect()->to('/home');
@@ -713,7 +721,7 @@ class ExportController extends Controller implements HasMiddleware
         $lastMonth = $now->copy()->subMonth()->format('m');
         $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         $reChapterIds = $baseQuery['query']
             ->where(function ($query) use ($currentYear, $lastMonth) {
@@ -785,6 +793,9 @@ class ExportController extends Controller implements HasMiddleware
             'Expires' => '0',
         ];
 
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
@@ -797,7 +808,7 @@ class ExportController extends Controller implements HasMiddleware
         $lastMonth = $now->copy()->subMonth()->format('m');
         $currentYear = $now->year;
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         $reChapterIds = $baseQuery['query']
             ->where(function ($query) use ($currentYear, $lastMonth) {
@@ -811,6 +822,9 @@ class ExportController extends Controller implements HasMiddleware
             ->orderByDesc('next_renewal_year')
             ->pluck('id')
             ->toArray();
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
 
         if (empty($reChapterIds)) {
             return redirect()->to('/home');
@@ -876,7 +890,7 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterIds = $baseQuery['query']->pluck('id')->toArray();
 
         if (empty($chapterIds)) {
@@ -939,6 +953,9 @@ class ExportController extends Controller implements HasMiddleware
             'Expires' => '0',
         ];
 
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
@@ -946,8 +963,11 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterIds = $baseQuery['query']->pluck('id')->toArray();
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
 
         if (empty($chapterIds)) {
             return redirect()->to('/home');
@@ -1012,7 +1032,7 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
 
         if (count($chapterList) > 0) {
@@ -1081,11 +1101,21 @@ class ExportController extends Controller implements HasMiddleware
             'Expires' => '0',
         ];
 
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+        $regId = $user['user_regId'];
+        $positionId = $user['user_positionId'];
+        $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
 
         if (count($chapterList) > 0) {
             $exportChapterList = [];
@@ -1138,90 +1168,6 @@ class ExportController extends Controller implements HasMiddleware
 
         return redirect()->to('/home');
     }
-
-    /**
-     * Export International Chapter List with enhanced error handling
-     */
-    // public function indexInternationalIRSFiling(Request $request)
-    // {
-    //     $fileName = 'int_subordinate_'.date('Y-m-d').'.csv';
-    //     $headers = [
-    //         'Content-type' => 'text/csv',
-    //         'Content-Disposition' => "attachment; filename=$fileName",
-    //         'Pragma' => 'no-cache',
-    //         'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-    //         'Expires' => '0',
-    //     ];
-
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     // Get January 1st of the previous year
-    //     $previousYear = Carbon::now()->subYear()->startOfYear();
-
-    //     // Get the base queries
-    //     $baseQueryActive = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $baseQueryZapped = $this->baseChapterController->getZappedInternationalBaseQuerySinceDate($coorId, $previousYear);
-
-    //     // Build optimized queries with all needed data in one go
-    //    $activeSubquery = $baseQueryActive['query']
-    //     ->select([
-    //         'chapters.*',
-    //         'bd_active.first_name as pres_first_name',
-    //         'bd_active.last_name as pres_last_name',
-    //         'bd_active.street_address as pres_address',
-    //         'bd_active.city as pres_city',
-    //         'state.state_short_name as pres_state',
-    //         'bd_active.zip as pres_zip'
-    //     ])
-    //     ->leftJoin('boards as bd_active', function($join) {
-    //         $join->on('chapters.id', '=', 'bd_active.chapter_id')
-    //              ->where('bd_active.board_position_id', '=', 1); // Assuming 1 is President
-    //     })
-    //     ->leftJoin('state', 'bd_active.state_id', '=', 'state.id');
-
-    // $zappedSubquery = $baseQueryZapped['query']
-    //     ->select([
-    //         'chapters.*',
-    //         'bd_disbanded.first_name as pres_first_name',
-    //         'bd_disbanded.last_name as pres_last_name',
-    //         'bd_disbanded.street_address as pres_address',
-    //         'bd_disbanded.city as pres_city',
-    //         'state.state_short_name as pres_state',
-    //         'bd_disbanded.zip as pres_zip'
-    //     ])
-    //     ->leftJoin('boards as bd_disbanded', function($join) {
-    //         $join->on('chapters.id', '=', 'bd_disbanded.chapter_id')
-    //              ->where('bd_disbanded.board_position_id', '=', 1); // Assuming 1 is President
-    //     })
-    //     ->leftJoin('state', 'bd_disbanded.state_id', '=', 'state.id');
-
-    //     // Stream the response directly without building array in memory
-    //     $callback = function () use ($activeSubquery, $zappedSubquery, $previousYear) {
-    //         $file = fopen('php://output', 'w');
-
-    //         // Write headers
-    //         fputcsv($file, ['delete', 'EIN', 'Name', 'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip']);
-
-    //         // Process active chapters
-    //         $activeSubquery->chunk(100, function ($chapters) use ($file, $previousYear) {
-    //             foreach ($chapters as $chapter) {
-    //                 $this->writeChapterRow($file, $chapter, true, $previousYear);
-    //             }
-    //         });
-
-    //         // Process zapped chapters
-    //         $zappedSubquery->chunk(100, function ($chapters) use ($file, $previousYear) {
-    //             foreach ($chapters as $chapter) {
-    //                 $this->writeChapterRow($file, $chapter, false, $previousYear);
-    //             }
-    //         });
-
-    //         fclose($file);
-    //     };
-
-    //     return Response::stream($callback, 200, $headers);
-    // }
 
     /**
      * Helper method to write a single chapter row
@@ -1479,7 +1425,7 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         // Get all chapter IDs first
         $coordIds = $baseQuery['query']->pluck('id')->toArray();
@@ -1555,6 +1501,9 @@ class ExportController extends Controller implements HasMiddleware
             'Expires' => '0',
         ];
 
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\CoordinatorCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
@@ -1562,10 +1511,11 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
-
-        // Get all chapter IDs first
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordIds = $baseQuery['query']->pluck('id')->toArray();
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\CoordinatorCheckbox::INTERNATIONAL]);
 
         if (empty($coordIds)) {
             return redirect()->to('/home');
@@ -1645,7 +1595,7 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getRetiredBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         // Get all chapter IDs first
         $coordIds = $baseQuery['query']->pluck('id')->toArray();
@@ -1722,6 +1672,9 @@ class ExportController extends Controller implements HasMiddleware
             'Expires' => '0',
         ];
 
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\CoordinatorCheckbox::INTERNATIONAL] = 'yes';
+
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
@@ -1729,10 +1682,13 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getRetiredInternationalBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         // Get all chapter IDs first
         $coordIds = $baseQuery['query']->pluck('id')->toArray();
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\CoordinatorCheckbox::INTERNATIONAL]);
 
         if (empty($coordIds)) {
             return redirect()->to('/home');
@@ -1813,7 +1769,7 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseCoordinatorController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         // Get all chapter IDs first
         $coordIds = $baseQuery['query']->pluck('id')->toArray();
@@ -1892,7 +1848,7 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $baseQuery = $this->baseChapterController->getActiveBaseQuery($coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
 
         if ($chapterList->isEmpty()) {

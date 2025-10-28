@@ -59,22 +59,13 @@ Route::put('/updatepassword', [UserController::class, 'updatePassword'])->name('
 Route::get('/load-email-details/{chId}', [UserController::class, 'loadEmailDetails'])->name('load.email.details');
 Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinatorList'])->name('load.coordinator.list');
 
-// Redirect for eLearning Courses --- Coordinators and Boards
+// Redirect for eLearning Courses...Used for Board & Coordinator Layouts
 Route::get('/course/{course_id}/redirect', [ResourcesController::class, 'redirectToCourse'])
     ->name('course.redirect')
     ->middleware('auth');
 Route::get('/course/{course_id}/redirect', [BoardController::class, 'redirectToCourse'])
     ->name('course.redirect')
     ->middleware('auth');
-
-// Error Log Routes...Public, No login required
-Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
-
-// // Payment Controller Routes
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/payment-logs', [PaymentController::class, 'index'])->name('payment-logs.index');
-//     Route::get('/payment-logs/{id}', [PaymentController::class, 'show'])->name('payment-logs.show');
-// });
 
 // Error Pages Test Routes...Public, No login required
 Route::get('/test-500', function () {
@@ -112,40 +103,37 @@ Route::get('/newcoordinator', [PublicController::class, 'editNewCoordinator'])->
 Route::post('/updatenewcoordinator', [PublicController::class, 'updateNewCoordinator'])->name('public.updatenewcoordinator');
 Route::get('/newcoordinatorsuccess', [PublicController::class, 'viewNewCoordinator'])->name('public.newcoordinatorsuccess');
 
-// Admin Controller Routes...Coordinator Login Required
-// Route::get('/techreports/reregdate', [TechReportController::class, 'showReRegDate'])->name('techreports.reregdate');
-// Route::get('/techreports/reregdate/{id}', [TechReportController::class, 'EditReRegDate'])->name('techreports.editreregdate');
-// Route::post('/techreports/updatereregdate/{id}', [TechReportController::class, 'UpdateReRegDate'])->name('techreports.updatereregdate');
-Route::post('/techreports/resetProbationSubmission', [TechReportController::class, 'resetProbationSubmission'])->name('techreports.resetProbationSubmission');
-Route::get('/techreports/eoy', [TechReportController::class, 'showEOY'])->name('techreports.eoy');
-Route::post('/techreports/resetdisbandedusers', [TechReportController::class, 'resetDisbandedUsers'])->name('techreports.resetdisbandedusers');
-Route::post('/techreports/resetoutgoingusers', [TechReportController::class, 'resetOutgoingUsers'])->name('techreports.resetoutgoingusers');
-Route::post('/techreports/resetyear', [TechReportController::class, 'resetYear'])->name('resetyear');
-Route::post('/techreports/updateeoydatabase', [TechReportController::class, 'updateEOYDatabase'])->name('techreports.updateeoydatabase');
-Route::post('/techreports/updateeoydatabaseafter', [TechReportController::class, 'updateEOYDatabaseAFTERTesting'])->name('techreports.updateeoydatabaseafter');
-Route::post('/techreports/updatedatadatabase', [TechReportController::class, 'updateDataDatabase'])->name('techreports.updatedatadatabase');
-Route::post('/techreports/updateeoytesting', [TechReportController::class, 'updateEOYTesting'])->name('techreports.updateeoytesting');
-Route::post('/techreports/updateeoylive', [TechReportController::class, 'updateEOYLive'])->name('techreports.updateeoylive');
-Route::post('/techreports/updatesubscribelists', [TechReportController::class, 'updateSubscribeLists'])->name('techreports.updatesubscribelists');
-Route::post('/techreports/updateunsubscribelists', [TechReportController::class, 'updateUnsubscribeLists'])->name('techreports.updateunsubscribelists');
-Route::get('/techreports/chapterlist', [TechReportController::class, 'listActiveChapters'])->name('techreports.chapterlist');
-Route::get('/techreports/chapterlistzapped', [TechReportController::class, 'listZappedChapters'])->name('techreports.chapterlistzapped');
-Route::get('/techreports/googledrive', [TechReportController::class, 'showGoogleDrive'])->name('techreports.googledrive');
-Route::post('/adtechreportsmin/updategoogledrive', [TechReportController::class, 'updateGoogleDrive'])->name('techreports.updategoogledrive');
+// Tech Controller Routes...Coordinator Login Required
+Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
+// Sent Mail Log
+// Mail Queue
 Route::get('/techreports/adminemail', [TechReportController::class, 'showAdminEmail'])->name('techreports.adminemail');
 Route::post('/techreports/updateadminemail', [TechReportController::class, 'updateAdminEmail'])->name('techreports.updateadminemail');
+Route::get('/techreports/googledrive', [TechReportController::class, 'showGoogleDrive'])->name('techreports.googledrive');
+Route::post('/techreports/updategoogledrive', [TechReportController::class, 'updateGoogleDrive'])->name('techreports.updategoogledrive');
+Route::get('/techreports/chapterlist', [TechReportController::class, 'listActiveChapters'])->name('techreports.chapterlist');
+Route::get('/techreports/chapterlistzapped', [TechReportController::class, 'listZappedChapters'])->name('techreports.chapterlistzapped');
+// Route::get('/techreports/confreglist', [TechReportController::class, 'showConfRegList'])->name('techreports.confreglist');
+// Route::get('/techreports/editconflist', [TechReportController::class, 'editConfList'])->name('techreports.editconflist');
+// Route::post('/techreports/updateconflist', [TechReportController::class, 'updateConfList'])->name('techreports.updateconflist');
+// Route::post('/techreports/storeconf', [TechReportController::class, 'storeConf'])->name('techreports.storeconf');
+// Route::delete('/techreports/deleteconf/{id}', [TechReportController::class, 'deleteConf'])->name('techreports.deleteconf');
 Route::post('/techreports/updatechapterdelete', [TechReportController::class, 'updateChapterDelete'])->name('techreports.updatechapterdelete');
 Route::post('/techreports/updatecoordinatordelete', [TechReportController::class, 'updateCoordinatorDelete'])->name('techreports.updatecoordinatordelete');
-
-Route::get('/techreports/confreglist', [TechReportController::class, 'showConfRegList'])->name('techreports.confreglist');
-Route::get('/techreports/editconflist', [TechReportController::class, 'editConfList'])->name('techreports.editconflist');
-Route::post('/techreports/updateconflist', [TechReportController::class, 'updateConfList'])->name('techreports.updateconflist');
-Route::post('/techreports/storeconf', [TechReportController::class, 'storeConf'])->name('techreports.storeconf');
-Route::delete('/techreports/deleteconf/{id}', [TechReportController::class, 'deleteConf'])->name('techreports.deleteconf');
+Route::post('/techreports/resetProbationSubmission', [TechReportController::class, 'resetProbationSubmission'])->name('techreports.resetProbationSubmission');
+Route::get('/techreports/eoy', [TechReportController::class, 'showEOY'])->name('techreports.eoy');
+Route::post('/techreports/eoy/resetyear', [TechReportController::class, 'resetYear'])->name('resetyear');
+Route::post('/techreports/eoy/resetdisbandedusers', [TechReportController::class, 'resetDisbandedUsers'])->name('techreports.resetdisbandedusers');
+Route::post('/techreports/eoy/resetoutgoingusers', [TechReportController::class, 'resetOutgoingUsers'])->name('techreports.resetoutgoingusers');
+Route::post('/techreports/eoy/updateeoydatabase', [TechReportController::class, 'updateEOYDatabase'])->name('techreports.updateeoydatabase');
+Route::post('/techreports/eoy/updateeoydatabaseafter', [TechReportController::class, 'updateEOYDatabaseAFTERTesting'])->name('techreports.updateeoydatabaseafter');
+Route::post('/techreports/eoy/updatedatadatabase', [TechReportController::class, 'updateDataDatabase'])->name('techreports.updatedatadatabase');
+Route::post('/techreports/eoy/updateeoytesting', [TechReportController::class, 'updateEOYTesting'])->name('techreports.updateeoytesting');
+Route::post('/techreports/eoy/updateeoylive', [TechReportController::class, 'updateEOYLive'])->name('techreports.updateeoylive');
+Route::post('/techreports/eoy/updateunsubscribelists', [TechReportController::class, 'updateUnsubscribeLists'])->name('techreports.updateunsubscribelists');
+Route::post('/techreports/eoy/updatesubscribelists', [TechReportController::class, 'updateSubscribeLists'])->name('techreports.updatesubscribelists');
 
 // Admin Controller Routes...Coordinator Login Required
-// Route::get('/adminreports/payment-logs', [PaymentController::class, 'index'])->name('payment-logs.index');
-// Route::get('/adminreports/payment-logs/{id}', [PaymentController::class, 'show'])->name('payment-logs.show');
 Route::get('/adminreports/intpaymentlist', [AdminReportController::class, 'intPaymentList'])->name('adminreports.intpaymentlist');
 Route::get('/adminreports/paymentlist', [AdminReportController::class, 'paymentList'])->name('adminreports.paymentlist');
 Route::get('/adminreports/paymentdetails/{id}', [AdminReportController::class, 'paymentDetails'])->name('adminreports.paymentdetails');
@@ -180,45 +168,31 @@ Route::post('/resources/updatetoolkit/{id}', [ResourcesController::class, 'updat
 Route::get('/resources/elearning', [ResourcesController::class, 'showELearning'])->name('resources.elearning');
 
 // Chapter Controller Routes...Coordinator Login Required
-Route::get('/chapter/pendingchapterlist', [ChapterController::class, 'showPendingChapters'])->name('chapters.chaplistpending');
-Route::get('/international/pendingchapterlist', [ChapterController::class, 'showIntPendingChapters'])->name('international.intchaplistpending');
-Route::get('/pendingchapterdetailsedit/{id}', [ChapterController::class, 'editPendingChapterDetails'])->name('chapters.editpending');
-Route::post('/pendingchapterdetailsupdate/{id}', [ChapterController::class, 'updatePendingChapterDetails'])->name('chapters.updatepending');
-Route::post('/chapter/updateapprove', [ChapterController::class, 'updateApproveChapter'])->name('chapters.updateapprove');
-Route::post('/chapter/updatedecline', [ChapterController::class, 'updateDeclineChapter'])->name('chapters.updatedecline');
-Route::get('/chapter/declinedchapterlist', [ChapterController::class, 'showNotApprovedChapters'])->name('chapters.chaplistdeclined');
-Route::get('/international/declinedchapterlist', [ChapterController::class, 'showIntNotApprovedChapters'])->name('international.intchaplistdeclined');
 Route::get('/chapter/chapterlist', [ChapterController::class, 'showChapters'])->name('chapters.chaplist');
 Route::get('/chapter/zapped', [ChapterController::class, 'showZappedChapter'])->name('chapters.chapzapped');
 Route::get('/chapter/inquiries', [ChapterController::class, 'showChapterInquiries'])->name('chapters.chapinquiries');
 Route::get('/chapter/inquirieszapped', [ChapterController::class, 'showZappedChapterInquiries'])->name('chapters.chapinquirieszapped');
-Route::get('/international/chapter', [ChapterController::class, 'showIntChapter'])->name('international.intchapter');
-Route::get('/international/chapterzapped', [ChapterController::class, 'showIntZappedChapter'])->name('international.intchapterzapped');
-Route::get('/chapterdetails/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
+Route::get('/chapter/details/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
 Route::get('/chapters/checkein', [ChapterController::class, 'checkEIN'])->name('chapters.checkein');
-Route::post('/chapterdetails/updateein', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
+Route::post('/chapter/details/updateein', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
 Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterDisband'])->name('chapters.updatechapdisband');
 Route::post('/chapter/unzap', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
-Route::get('/chapternew', [ChapterController::class, 'addChapterNew'])->name('chapters.addnew');
-Route::post('/chapternewupdate', [ChapterController::class, 'updateChapterNew'])->name('chapters.updatenew');
-Route::get('/chapterdetailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
-Route::post('/chapterdetailsupdate/{id}', [ChapterController::class, 'updateChapterDetails'])->name('chapters.update');
-Route::get('/chapterboardedit/{id}', [ChapterController::class, 'editChapterBoard'])->name('chapters.editboard');
-Route::post('/chapterboardupdate/{id}', [ChapterController::class, 'updateChapterBoard'])->name('chapters.updateboard');
+Route::get('/chapter/new', [ChapterController::class, 'addChapterNew'])->name('chapters.addnew');
+Route::post('/chapter/newupdate', [ChapterController::class, 'updateChapterNew'])->name('chapters.updatenew');
+Route::get('/chapter/detailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
+Route::post('/chapter/detailsupdate/{id}', [ChapterController::class, 'updateChapterDetails'])->name('chapters.update');
+Route::get('/chapter/boardedit/{id}', [ChapterController::class, 'editChapterBoard'])->name('chapters.editboard');
+Route::post('/chapter/boardupdate/{id}', [ChapterController::class, 'updateChapterBoard'])->name('chapters.updateboard');
 Route::get('/chapter/website', [ChapterController::class, 'showChapterWebsite'])->name('chapters.chapwebsite');
-Route::get('/international/website', [ChapterController::class, 'showIntWebsite'])->name('international.chapwebsite');
-Route::get('/chapter/socialmedia', [ChapterController::class, 'showRptSocialMedia'])->name('chapreports.chaprptsocialmedia');
-Route::get('/international/socialmedia', [ChapterController::class, 'showIntSocialMedia'])->name('international.chaprptsocialmedia');
-Route::get('/chapterwebsiteedit/{id}', [ChapterController::class, 'editChapterWebsite'])->name('chapters.editwebsite');
-Route::post('/chapterwebsiteupdate/{id}', [ChapterController::class, 'updateChapterWebsite'])->name('chapters.updatewebsite');
-Route::get('/chapter/boardlist', [ChapterController::class, 'showChapterBoardlist'])->name('chapters.chapboardlist');
+Route::get('/chapter/socialmedia', [ChapterController::class, 'showRptSocialMedia'])->name('chapters.chapsocialmedia');
+Route::get('/chapter/websiteedit/{id}', [ChapterController::class, 'editChapterWebsite'])->name('chapters.editwebsite');
+Route::post('/chapter/websiteupdate/{id}', [ChapterController::class, 'updateChapterWebsite'])->name('chapters.updatewebsite');
 
 // ChapterReport Controller Routes...Coordinator Login Required
 Route::get('/chapterreports/chapterstatus', [ChapterReportController::class, 'showRptChapterStatus'])->name('chapreports.chaprptchapterstatus');
 Route::get('/chapterreports/einstatus', [ChapterReportController::class, 'showRptEINstatus'])->name('chapreports.chaprpteinstatus');
-Route::get('/chapterreports/inteinstatus', [ChapterReportController::class, 'showIntEINstatus'])->name('international.inteinstatus');
-Route::get('/chapterirsedit/{id}', [ChapterController::class, 'editChapterIRS'])->name('chapters.editirs');
-Route::post('/chapterirsupdate/{id}', [ChapterController::class, 'updateChapterIRS'])->name('chapters.updateirs');
+Route::get('/chapterreports/irsedit/{id}', [ChapterReportController::class, 'editChapterIRS'])->name('chapreports.editirs');
+Route::post('/chapterreports/irsupdate/{id}', [ChapterReportController::class, 'updateChapterIRS'])->name('chapreports.updateirs');
 Route::get('/chapterreports/newchapters', [ChapterReportController::class, 'showRptNewChapters'])->name('chapreports.chaprptnewchapters');
 Route::get('/chapterreports/largechapters', [ChapterReportController::class, 'showRptLargeChapters'])->name('chapreports.chaprptlargechapters');
 Route::get('/chapterreports/probation', [ChapterReportController::class, 'showRptProbation'])->name('chapreports.chaprptprobation');
@@ -236,44 +210,48 @@ Route::get('/eoy/boardreport/reminder', [EmailController::class, 'sendEOYBoardRe
 Route::get('/eoy/financialreport/reminder', [EmailController::class, 'sendEOYFinancialReportReminder'])->name('eoyreports.eoyfinancialreportreminder');
 Route::get('/eoy/status/reminder', [EmailController::class, 'sendEOYStatusReminder'])->name('eoyreports.eoystatusreminder');
 
+// New Chapter/Coordinator Controller Routes...Coordinator Login Required
+Route::get('/application/chapterpending', [ChapterController::class, 'showPendingChapters'])->name('chapters.chaplistpending');
+Route::get('/application/chapterpendingedit/{id}', [ChapterController::class, 'editPendingChapterDetails'])->name('chapters.editpending');
+Route::post('/application/chapterpendingupdate/{id}', [ChapterController::class, 'updatePendingChapterDetails'])->name('chapters.updatepending');
+Route::post('/application/chapterupdateapprove', [ChapterController::class, 'updateApproveChapter'])->name('chapters.updateapprove');
+Route::post('/application/chapterupdatedecline', [ChapterController::class, 'updateDeclineChapter'])->name('chapters.updatedecline');
+Route::get('/application/chapterdeclined', [ChapterController::class, 'showNotApprovedChapters'])->name('chapters.chaplistdeclined');
+Route::get('/application/coordapplication/{id}', [CoordinatorController::class, 'viewCoordApplication'])->name('coordinators.viewapplication');
+Route::get('/application/coordpending', [CoordinatorController::class, 'showPendingCoordinator'])->name('coordinators.coordpending');
+Route::post('/application/coordpendingdetailsupdate/{id}', [CoordinatorController::class, 'updatePendingCoordinatorDetails'])->name('coordinators.updatepending');
+Route::post('/application/coordupdateapprove', [CoordinatorController::class, 'updateApproveApplication'])->name('coordinators.updateapprove');
+Route::post('/application/coordupdatedecline', [CoordinatorController::class, 'updateRejectApplication'])->name('coordinators.updatereject');
+Route::get('/application/coordrejected', [CoordinatorController::class, 'showRejectedCoordinator'])->name('coordinators.coordrejected');
+
 // Coordinator Controller Routes...Coordinator Login Required
-Route::get('/coordinator/pending', [CoordinatorController::class, 'showPendingCoordinator'])->name('coordinators.coordpending');
-Route::get('/international/pending', [CoordinatorController::class, 'showIntPendingCoordinator'])->name('international.intcoordpending');
-Route::get('/coordapplication/{id}', [CoordinatorController::class, 'viewCoordApplication'])->name('coordinators.viewapplication');
-Route::post('/pendingcoordinatordetailsupdate/{id}', [CoordinatorController::class, 'updatePendingCoordinatorDetails'])->name('coordinators.updatepending');
-Route::post('/coordinator/updateapprove', [CoordinatorController::class, 'updateApproveApplication'])->name('coordinators.updateapprove');
-Route::post('/coordinator/updatedecline', [CoordinatorController::class, 'updateRejectApplication'])->name('coordinators.updatereject');
-Route::get('/coordinator/rejected', [CoordinatorController::class, 'showRejectedCoordinator'])->name('coordinators.coordrejected');
-Route::get('/international/rejected', [CoordinatorController::class, 'showIntRejectedCoordinator'])->name('international.intcoordrejected');
 Route::get('/coordinator/coordlist', [CoordinatorController::class, 'showCoordinators'])->name('coordinators.coordlist');
 Route::get('/coordinator/retired', [CoordinatorController::class, 'showRetiredCoordinator'])->name('coordinators.coordretired');
-Route::get('/international/coordinator', [CoordinatorController::class, 'showIntCoordinator'])->name('international.intcoord');
-Route::get('/international/coordinatorretired', [CoordinatorController::class, 'showIntCoordinatorRetired'])->name('international.intcoordretired');
-Route::get('/coordnew', [CoordinatorController::class, 'addCoordNew'])->name('coordinators.editnew');
-Route::post('/coordnewupdate', [CoordinatorController::class, 'updateCoordNew'])->name('coordinators.updatenew');
-Route::get('/coorddetails/{id}', [CoordinatorController::class, 'viewCoordDetails'])->name('coordinators.view');
-Route::post('/coorddetails/sendbigsister', [CoordinatorController::class, 'sendBigSisterEmail'])->name('coordinators.sendbigsister');
-Route::post('/coorddetails/updatecardsent', [CoordinatorController::class, 'updateCardSent'])->name('coordinators.updatecardsent');
-Route::post('/coorddetails/updateonleave', [CoordinatorController::class, 'updateOnLeave'])->name('coordinators.updateonleave');
-Route::post('/coorddetails/updateremoveleave', [CoordinatorController::class, 'updateRemoveLeave'])->name('coordinators.updateremoveleave');
-Route::post('/coorddetails/updateretire', [CoordinatorController::class, 'updateRetire'])->name('coordinators.updateretire');
-Route::post('/coorddetails/updateunretire', [CoordinatorController::class, 'updateUnRetire'])->name('coordinators.updateunretire');
-Route::get('/coorddetailseditrole/{id}', [CoordinatorController::class, 'editCoordRole'])->name('coordinators.editrole');
-Route::post('/coorddetailsupdaterole/{id}', [CoordinatorController::class, 'updateCoordRole'])->name('coordinators.updaterole');
-Route::get('/coorddetailsedit/{id}', [CoordinatorController::class, 'editCoordDetails'])->name('coordinators.editdetails');
-Route::post('/coorddetailsupdate/{id}', [CoordinatorController::class, 'updateCoordDetails'])->name('coordinators.updatedetails');
-Route::get('/coorddetailseditrecognition/{id}', [CoordinatorController::class, 'editCoordRecognition'])->name('coordinators.editrecognition');
-Route::post('/coorddetailsupdaterecognition/{id}', [CoordinatorController::class, 'updateCoordRecognition'])->name('coordinators.updaterecognition');
-Route::get('/coordviewprofile', [CoordinatorController::class, 'viewCoordProfile'])->name('coordinators.viewprofile');
-Route::get('/coordprofile', [CoordinatorController::class, 'editCoordProfile'])->name('coordinators.profile');
-Route::post('/coordprofileupdate', [CoordinatorController::class, 'updateCoordProfile'])->name('coordinators.profileupdate');
+Route::get('/coordinator/new', [CoordinatorController::class, 'addCoordNew'])->name('coordinators.editnew');
+Route::post('/coordinator/newupdate', [CoordinatorController::class, 'updateCoordNew'])->name('coordinators.updatenew');
+Route::get('/coordinator/details/{id}', [CoordinatorController::class, 'viewCoordDetails'])->name('coordinators.view');
+Route::post('/coordinator/details/sendbigsister', [CoordinatorController::class, 'sendBigSisterEmail'])->name('coordinators.sendbigsister');
+Route::post('/coordinator/details/updatecardsent', [CoordinatorController::class, 'updateCardSent'])->name('coordinators.updatecardsent');
+Route::post('/coordinator/details/updateonleave', [CoordinatorController::class, 'updateOnLeave'])->name('coordinators.updateonleave');
+Route::post('/coordinator/details/updateremoveleave', [CoordinatorController::class, 'updateRemoveLeave'])->name('coordinators.updateremoveleave');
+Route::post('/coordinator/details/updateretire', [CoordinatorController::class, 'updateRetire'])->name('coordinators.updateretire');
+Route::post('/coordinator/details/updateunretire', [CoordinatorController::class, 'updateUnRetire'])->name('coordinators.updateunretire');
+Route::get('/coordinator/details/editrole/{id}', [CoordinatorController::class, 'editCoordRole'])->name('coordinators.editrole');
+Route::post('/coordinator/details/updaterole/{id}', [CoordinatorController::class, 'updateCoordRole'])->name('coordinators.updaterole');
+Route::get('/coordinator/details/edit/{id}', [CoordinatorController::class, 'editCoordDetails'])->name('coordinators.editdetails');
+Route::post('/coordinator/details/update/{id}', [CoordinatorController::class, 'updateCoordDetails'])->name('coordinators.updatedetails');
+Route::get('/coordinator/details/editrecognition/{id}', [CoordinatorController::class, 'editCoordRecognition'])->name('coordinators.editrecognition');
+Route::post('/coordinator/details/updaterecognition/{id}', [CoordinatorController::class, 'updateCoordRecognition'])->name('coordinators.updaterecognition');
+Route::get('viewprofile', [CoordinatorController::class, 'viewCoordProfile'])->name('coordinators.viewprofile');
+Route::get('/profile/profile', [CoordinatorController::class, 'editCoordProfile'])->name('coordinators.profile');
+Route::post('/profile/profileupdate', [CoordinatorController::class, 'updateCoordProfile'])->name('coordinators.profileupdate');
 
 // CoordinatorReport Controller Routes...Coordinator Login Required
 Route::get('/coordreports/volunteerutilization', [CoordinatorReportController::class, 'showRptVolUtilization'])->name('coordreports.coordrptvolutilization');
 Route::get('/coordreports/appreciation', [CoordinatorReportController::class, 'showRptAppreciation'])->name('coordreports.coordrptappreciation');
 Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
 Route::get('/coordreports/reportingtree', [CoordinatorReportController::class, 'showRptReportingTree'])->name('coordreports.coordrptreportingtree');
-Route::get('/coordreports/intreportingtree', [CoordinatorReportController::class, 'showIntRptReportingTree'])->name('coordreports.intcoordrptreportingtree');
+// Route::get('/coordreports/intreportingtree', [CoordinatorReportController::class, 'showIntRptReportingTree'])->name('coordreports.intcoordrptreportingtree');
 
 // Export Controller Routes...Coordinator Login Required
 Route::get('/export/chapter', [ExportController::class, 'indexChapter'])->name('export.chapter');
@@ -294,18 +272,38 @@ Route::get('/export/inteinstatus', [ExportController::class, 'indexIntEINStatus'
 Route::get('/export/intirsfiling', [ExportController::class, 'indexInternationalIRSFiling'])->name('export.intirsfiling');
 Route::get('/export/inteoystatus', [ExportController::class, 'indexIntEOYStatus'])->name('export.inteoystatus');
 
+// EOYReports Controller Routes...Coordinator Login Required
+Route::get('/eoy/status', [EOYReportController::class, 'showEOYStatus'])->name('eoyreports.eoystatus');
+Route::get('/eoy/editstatus/{id}', [EOYReportController::class, 'editEOYDetails'])->name('eoyreports.view');
+Route::post('/eoy/updatestatus/{id}', [EOYReportController::class, 'updateEOYDetails'])->name('eoyreports.update');
+Route::get('/eoy/boardreport', [EOYReportController::class, 'showEOYBoardReport'])->name('eoyreports.eoyboardreport');
+Route::get('/eoy/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.editboardreport');
+Route::post('/eoy/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.activateboardreport');
+Route::post('eoy/updateboardreport/{id}', [EOYReportController::class, 'updateEOYBoardReport'])->name('eoyreports.updateboardreport');
+Route::get('/eoy/financialreport', [EOYReportController::class, 'showEOYFinancialReport'])->name('eoyreports.eoyfinancialreport');
+Route::get('/eoy/reviewfinancialreport/{id}', [EOYReportController::class, 'reviewFinancialReport'])->name('eoyreports.reviewfinancialreport');
+Route::post('/eoy/updatefinancialreport/{id}', [EOYReportController::class, 'updateEOYFinancialReport'])->name('eoyreports.updatefinancialreport');
+Route::get('/eoy/unsubmit/{id}', [EOYReportController::class, 'updateUnsubmit']);
+Route::get('/eoy/clearreview/{id}', [EOYReportController::class, 'updateClearReview']);
+Route::get('/eoy/attachments', [EOYReportController::class, 'showEOYAttachments'])->name('eoyreports.eoyattachments');
+Route::get('/eoy/editattachments/{id}', [EOYReportController::class, 'editEOYAttachments'])->name('eoyreports.editattachments');
+Route::post('/eoy/updateattachments/{id}', [EOYReportController::class, 'updateEOYAttachments'])->name('eoyreports.updateattachments');
+Route::get('/eoy/boundaries', [EOYReportController::class, 'showEOYBoundaries'])->name('eoyreports.eoyboundaries');
+Route::get('/eoy/editboundaries/{id}', [EOYReportController::class, 'editEOYBoundaries'])->name('eoyreports.editboundaries');
+Route::post('/eoy/updateboundaries/{id}', [EOYReportController::class, 'updateEOYBoundaries'])->name('eoyreports.updateboundaries');
+Route::get('/eoy/awards', [EOYReportController::class, 'showEOYAwards'])->name('eoyreports.eoyawards');
+Route::get('/eoy/editawards/{id}', [EOYReportController::class, 'editEOYAwards'])->name('eoyreports.editawards');
+Route::post('/eoy/updateawards/{id}', [EOYReportController::class, 'updateEOYAwards'])->name('eoyreports.updateawards');
+Route::get('/eoy/irssubmission', [EOYReportController::class, 'showIRSSubmission'])->name('eoyreports.eoyirssubmission');
+Route::get('/eoy/editirssubmission/{id}', [EOYReportController::class, 'editIRSSubmission'])->name('eoyreports.editirssubmission');
+Route::post('/eoy/updateirssubmission/{id}', [EOYReportController::class, 'updateIRSSubmission'])->name('eoyreports.updateirssubmission');
+
 // Board Controller Routes...Board Login Required
 Route::get('/board/newchapterstatus/{id}', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
 Route::get('/board/profile/{id}', [BoardController::class, 'editProfile'])->name('board.editprofile');
 Route::post('/board/profileupdate/{id}', [BoardController::class, 'updateProfile'])->name('board.updateprofile');
-// Route::get('/board/president/{id}', [BoardController::class, 'editPresident'])->name('board.editpresident');
-// Route::post('/board/presidentupdate/{id}', [BoardController::class, 'updatePresident'])->name('board.updatepresident');
-// Route::get('/board/member/{id}', [BoardController::class, 'editMember'])->name('board.editmember');
-// Route::post('/board/memberupdate/{id}', [BoardController::class, 'updateMember'])->name('board.updatemember');
 Route::get('/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
 Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
-// Route::get('/board/reregpayment/{id}', [BoardController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
-// Route::get('/board/donation/{id}', [BoardController::class, 'editDonationForm'])->name('board.editdonate');
 Route::get('/board/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
 Route::get('/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
 Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
@@ -320,45 +318,10 @@ Route::get('/board/disbandchecklist/{id}', [FinancialReportController::class, 'e
 Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
 Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
 
-// EOYReports Controller Routes...Coordinator Login Required
-Route::get('/eoy/status', [EOYReportController::class, 'showEOYStatus'])->name('eoyreports.eoystatus');
-// Route::get('/eoy/status/reminder', [EOYReportController::class, 'sendEOYStatusReminder'])->name('eoyreports.eoystatusreminder');
-Route::get('/eoy/editstatus/{id}', [EOYReportController::class, 'editEOYDetails'])->name('eoyreports.view');
-Route::post('/eoy/updatestatus/{id}', [EOYReportController::class, 'updateEOYDetails'])->name('eoyreports.update');
-Route::get('/eoy/boardreport', [EOYReportController::class, 'showEOYBoardReport'])->name('eoyreports.eoyboardreport');
-// Route::get('/eoy/activateboardreport/{id}', [EOYReportController::class, 'activateBoard'])->name('eoyreports.activateboardreport');
-// Route::get('/eoy/boardreport/reminder', [EOYReportController::class, 'sendEOYBoardReportReminder'])->name('eoyreports.eoyboardreportreminder');
-Route::get('/eoy/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.editboardreport');
-Route::post('/eoy/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.activateboardreport');
-Route::post('eoy/updateboardreport/{id}', [EOYReportController::class, 'updateEOYBoardReport'])->name('eoyreports.updateboardreport');
-Route::get('/eoy/financialreport', [EOYReportController::class, 'showEOYFinancialReport'])->name('eoyreports.eoyfinancialreport');
-// Route::get('/eoy/financialreport/reminder', [EOYReportController::class, 'sendEOYFinancialReportReminder'])->name('eoyreports.eoyfinancialreportreminder');
-Route::get('/eoy/reviewfinancialreport/{id}', [EOYReportController::class, 'reviewFinancialReport'])->name('eoyreports.reviewfinancialreport');
-Route::post('/eoy/updatefinancialreport/{id}', [EOYReportController::class, 'updateEOYFinancialReport'])->name('eoyreports.updatefinancialreport');
-Route::get('/eoy/unsubmit/{id}', [EOYReportController::class, 'updateUnsubmit']);
-Route::get('/eoy/clearreview/{id}', [EOYReportController::class, 'updateClearReview']);
-Route::get('/eoy/attachments', [EOYReportController::class, 'showEOYAttachments'])->name('eoyreports.eoyattachments');
-Route::get('/eoy/editattachments/{id}', [EOYReportController::class, 'editEOYAttachments'])->name('eoyreports.editattachments');
-Route::post('/eoy/updateattachments/{id}', [EOYReportController::class, 'updateEOYAttachments'])->name('eoyreports.updateattachments');
-Route::get('/eoy/boundaries', [EOYReportController::class, 'showEOYBoundaries'])->name('eoyreports.eoyboundaries');
-Route::get('/eoy/editboundaries/{id}', [EOYReportController::class, 'editEOYBoundaries'])->name('eoyreports.editboundaries');
-Route::post('/eoy/updateboundaries/{id}', [EOYReportController::class, 'updateEOYBoundaries'])->name('eoyreports.updateboundaries');
-Route::get('/eoy/awards', [EOYReportController::class, 'showEOYAwards'])->name('eoyreports.eoyawards');
-Route::get('/eoy/intawards', [EOYReportController::class, 'showEOYIntAwards'])->name('eoyreports.eoyintawards');
-Route::get('/eoy/editawards/{id}', [EOYReportController::class, 'editEOYAwards'])->name('eoyreports.editawards');
-Route::post('/eoy/updateawards/{id}', [EOYReportController::class, 'updateEOYAwards'])->name('eoyreports.updateawards');
-Route::get('/eoy/irssubmission', [EOYReportController::class, 'showIRSSubmission'])->name('eoyreports.eoyirssubmission');
-Route::get('/eoy/editirssubmission/{id}', [EOYReportController::class, 'editIRSSubmission'])->name('eoyreports.editirssubmission');
-Route::post('/eoy/updateirssubmission/{id}', [EOYReportController::class, 'updateIRSSubmission'])->name('eoyreports.updateirssubmission');
-
-Route::get('/eoy/irsintsubmission', [EOYReportController::class, 'showIRSIntSubmission'])->name('eoyreports.eoyirsintsubmission');
-
 // PDF Controller Routes...Used for Board & Coordinator Layouts
 Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'generateGoodStanding'])->name('pdf.chapteringoodstanding');
 Route::get('/board/financialreport/pdf/{id}', [PDFController::class, 'generateFinancialReport'])->name('pdf.financialreport');
-// Route::get('/financial-report-pdf', [PDFController::class, 'saveFinancialReport'])->name('pdf.generatefinancialreport');
 Route::post('/financial-report-pdf', [PDFController::class, 'saveFinancialReport'])->name('pdf.generatefinancialreport');
-// Route::get('/financial-report-pdf/{id}/{presDetails}', [PDFController::class, 'saveFinancialReport'])->name('pdf.generatefinancialreport');
 Route::post('/generate-probation-letter', [PDFController::class, 'saveProbationLetter'])->name('pdf.generateProbationLetter');
 Route::get('/board/newchapfaxcover/pdf/{id}', [PDFController::class, 'generateNewChapterFaxCover'])->name('pdf.newchapfaxcover');
 Route::get('/board/eodeptfaxcover/pdf', [PDFController::class, 'generateEODeptFaxCover'])->name('pdf.eodeptfaxcover');
@@ -377,26 +340,22 @@ Route::post('/files/storeAward/{id}', [GoogleController::class, 'storeAward']);
 Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
 Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
 
-// Payment Controller Routes...Coordinator Login Required
-Route::get('/board/reregpayment/{id}', [PaymentController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
-Route::get('/board/donation/{id}', [PaymentController::class, 'editDonationForm'])->name('board.editdonate');
+// Payment Controller Routes...Used for Board & Coordinator Layouts
 Route::post('/process-payment', [PaymentController::class, 'reRegistrationPayment'])->name('process.payment');
 Route::post('/process-donation', [PaymentController::class, 'm2mPayment'])->name('process.donation');
 Route::post('/process-manual', [PaymentController::class, 'manualPayment'])->name('process.manual');
-Route::get('/chapter/reregistration', [PaymentReportController::class, 'showChapterReRegistration'])->name('chapters.chapreregistration');
-Route::get('/international/reregistration', [PaymentReportController::class, 'showIntReRegistration'])->name('international.intregistration');
-Route::get('/chapter/reregistrationreminder', [PaymentReportController::class, 'createChapterReRegistrationReminder'])->name('chapters.chapreregreminder');
-Route::get('/chapter/reregistrationlatereminder', [PaymentReportController::class, 'createChapterReRegistrationLateReminder'])->name('chapters.chaprereglatereminder');
-Route::get('/chapter/donations', [PaymentReportController::class, 'showRptDonations'])->name('chapreports.chaprptdonations');
-Route::get('/international/donation', [PaymentReportController::class, 'showIntdonation'])->name('international.intdonation');
-Route::get('/chapterpaymentedit/{id}', [PaymentReportController::class, 'editChapterPayment'])->name('chapters.editpayment');
-Route::post('/chapterpaymentupdate/{id}', [PaymentReportController::class, 'updateChapterPayment'])->name('chapters.updatepayment');
+Route::get('/board/reregpayment/{id}', [PaymentController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
+Route::get('/board/donation/{id}', [PaymentController::class, 'editDonationForm'])->name('board.editdonate');
+Route::get('/payment/reregistration', [PaymentReportController::class, 'showChapterReRegistration'])->name('payment.chapreregistration');
+Route::get('/payment/donations', [PaymentReportController::class, 'showRptDonations'])->name('payment.chapdonations');
+Route::get('/payment/chapterpaymentedit/{id}', [PaymentReportController::class, 'editChapterPayment'])->name('payment.editpayment');
+Route::post('/payment/chapterpaymentupdate/{id}', [PaymentReportController::class, 'updateChapterPayment'])->name('payment.updatepayment');
+Route::get('/payment/reregistrationreminder', [PaymentReportController::class, 'createChapterReRegistrationReminder'])->name('payment.chapreregreminder');
+Route::get('/payment/reregistrationlatereminder', [PaymentReportController::class, 'createChapterReRegistrationLateReminder'])->name('payment.chaprereglatereminder');
 
 // Forum Subscription Controller Routes...Used for Board & Coordinator Layouts
 Route::get('/forum/chaptersubscriptionlist', [ForumSubscriptionController::class, 'showChapterListSubscriptions'])->name('forum.chaptersubscriptionlist');
 Route::get('/forum/coordinatorsubscriptionlist', [ForumSubscriptionController::class, 'showCoordinatorListSubscriptions'])->name('forum.coordinatorsubscriptionlist');
-Route::get('/forum/internationalchaptersubscriptionlist', [ForumSubscriptionController::class, 'showInternationalChapterListSubscriptions'])->name('forum.internationalchaptersubscriptionlist');
-Route::get('/forum/internationalcoordinatorsubscriptionlist', [ForumSubscriptionController::class, 'showInternationalCoordinatorListSubscriptions'])->name('forum.internationalcoordinatorsubscriptionlist');
 Route::post('/forum/subscribecategory', [ForumSubscriptionController::class, 'subscribeCategory'])->name('forum.subscribecategory');
 Route::post('/forum/unsubscribecategory', [ForumSubscriptionController::class, 'unsubscribeCategory'])->name('forum.unsubscribecategory');
 Route::post('/forum/coordinatorlist/bulk-subscribe', [ForumSubscriptionController::class, 'bulkAddCoordinatorsList'])->name('forum.coordinatorlist.bulk-subscribe');
@@ -410,3 +369,4 @@ Route::post('/forum/boardboardlist/bulk-subscribe', [ForumSubscriptionController
 Route::post('/forum/boardpublcannouncements/bulk-subscribe', [ForumSubscriptionController::class, 'bulkAddBoardPublicAnnouncements'])->name('forum.boardpublcannouncements.bulk-subscribe');
 Route::post('/forum/boardboardlist/bulk-unsubscribe', [ForumSubscriptionController::class, 'bulkRemoveBoardBoardList'])->name('forum.boardboardlist.bulk-unsubscribe');
 Route::post('/forum/boardpublcannouncements/bulk-unsubscribe', [ForumSubscriptionController::class, 'bulkRemoveBoardPublicAnnouncements'])->name('forum.boardpublcannouncements.bulk-unsubscribe');
+Route::get('/forum/boardlist', [ForumSubscriptionController::class, 'showChapterBoardlist'])->name('chapters.chapboardlist');

@@ -64,7 +64,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
 
                         <td>
                             @if ($list->region?->short_name != "None" )

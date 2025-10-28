@@ -44,7 +44,7 @@
                         @endphp
                         <tr>
                             <td class="text-center align-middle">
-                                <a href="{{ url('/chapterdetails/' . $chapter->id) }}"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url('/chapter/details/' . $chapter->id) }}"><i class="fas fa-eye"></i></a>
                             </td>
                             <td>
                                 @if ($chapter->region->short_name != "None")

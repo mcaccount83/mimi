@@ -37,7 +37,7 @@
 
 <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">Region:</b>
-                  <select name="cord_region" id="cord_region" class="form-control select2-sb4" style="width: 100%;" required>
+                  <select name="cord_region" id="cord_region" class="form-control" style="width: 100%;" required>
                                     @foreach($allRegions as $region)
                                         <option value="{{$region->id}}"
                                             @if($cdDetails->region_id == $region->id) selected @endif>
@@ -93,7 +93,7 @@
 
                       <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">Display Position:</b>
-                                <select name="cord_disp_pos" id="cord_disp_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
+                                <select name="cord_disp_pos" id="cord_disp_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
                                     @foreach($allPositions as $pos)
                                             <option value="{{ $pos->id }}" {{ $cdDetails->display_position_id == $pos->id ? 'selected' : '' }}>
                                                 {{ $pos->long_title }}
@@ -105,7 +105,7 @@
                         <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">MIMI Position:<a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
                                     <i class="fas fa-circle-question text-primary"></i></a></b>
-                                <select name="cord_pos" id="cord_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
+                                <select name="cord_pos" id="cord_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
                                     @foreach($allPositions as $pos)
                                         @if($pos->id >= 1 && $pos->id <= 7)
                                             <option value="{{$pos->id}}" {{$cdDetails->position_id == $pos->id  ? 'selected' : ''}}>
@@ -118,7 +118,7 @@
 
                          <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">Secondary Position:</b>
-                                <select name="cord_sec_pos[]" id="cord_sec_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" multiple>
+                                <select name="cord_sec_pos[]" id="cord_sec_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" multiple>
                                     <option value="" {{ (!isset($cdDetails->secondaryPosition) || $cdDetails->secondaryPosition->isEmpty()) ? 'selected' : '' }}>None</option>
                                     @foreach($allPositions as $pos)
                                         @if($pos->id >= 9)
@@ -146,7 +146,7 @@
                     </div> --}}
                       <div class="d-flex">
                         <b class="me-3" style="min-width: 200px;">Supervising Coordinator:</b>
-                           <select name="cord_report_pc" id="cord_report_pc" class="form-control select2-sb4" style="width: 100%;" required>
+                           <select name="cord_report_pc" id="cord_report_pc" class="form-control" style="width: 100%;" required>
                                     @foreach($rcDetails as $coordinator)
                                         <option value="{{ $coordinator['cid'] }}"
                                             @if($cdDetails->report_id == $coordinator['cid']) selected @endif
@@ -266,28 +266,30 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($cdConfId == $confId)
-                    @if ($userAdmin  && ($cdConfId != $confId))
-                        @if ($cdDetails->active_status == '1')
-                            <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
-                        @elseif ($cdDetails->active_status == '2')
-                            <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
-                        @elseif ($cdDetails->active_status == '3')
-                            <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
-                        @elseif ($cdDetails->active_status == '0')
-                            <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
-                        @endif
-                    @else
-                        @if ($cdDetails->active_status == '1')
+                        @if ($cdActiveId == '1')
                             <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
-                        @elseif ($cdDetails->active_status == '2')
+                        @elseif ($cdActiveId == '2')
                             <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Coordinator List</button>
-                        @elseif ($cdDetails->active_status == '3')
+                        @elseif ($cdActiveId == '3')
                             <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Coordinator List</button>
-                        @elseif ($cdDetails->active_status == '0')
+                        @elseif ($cdActiveId == '0')
                             <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
                         @endif
+                    @else
+                        @if ($cdConfId != $confId)
+                            @if ($ITCondition)
+                                @if ($cdActiveId == '1')
+                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
+                                @elseif ($cdActiveId == '2')
+                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
+                                @elseif ($cdActiveId == '3')
+                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
+                                @elseif ($cdActiveId == '0')
+                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
+                                @endif
+                            @endif
+                        @endif
                     @endif
-                @endif
             </div>
         </div>
         </div>
@@ -298,12 +300,15 @@
 @endsection
 @section('customscript')
 <script>
-
-var $cdActiveId = {{ $cdActiveId }};
+  var $cdActiveId = @json($cdActiveId);
+    var $supervisingCoordinatorCondition = @json($supervisingCoordinatorCondition);
+    var $ITCondition = @json($ITCondition);
+    var $cdConfId = @json($cdConfId);
+    var $confId = @json($confId);
 
 $(document).ready(function () {
-    // Disable fields for chapters that are not active
-    if ($cdActiveId != 2)
+    // Disable fields for coordinators that are not active & Coordinators who should not have edit access
+        if (($cdActiveId != 2) || (!$supervisingCoordinatorCondition && ($confId != $cdConfId)) || (!$ITCondition)) {
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
@@ -314,12 +319,12 @@ $(document).ready(function () {
             });
         });
 
-        // Re-enable the specific "Back" buttons
+        // Re-enable the specific buttons
             $('#back-list').prop('disabled', false);
             $('#back-pending').prop('disabled', false);
             $('#back-declined').prop('disabled', false);
             $('#back-zapped').prop('disabled', false);
-
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {

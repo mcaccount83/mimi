@@ -21,7 +21,7 @@
 </style>
 @section('content')
     <!-- Main content -->
-    <form class="form-horizontal" method="POST" action='{{ route("chapters.updateirs", $chDetails->id) }}'>
+    <form class="form-horizontal" method="POST" action='{{ route("chapreports.updateirs", $chDetails->id) }}'>
     @csrf
     <section class="content">
       <div class="container-fluid">
@@ -116,7 +116,7 @@
                                                 </div>
 
                                                  <!-- /.form group -->
- @if($userAdmin == 1 )
+ @if($ITCondition == 1 )
     <div class="form-group row align-items-center  mb-3">
         <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
         <div class="col-sm-10 custom-control custom-switch">
@@ -196,12 +196,16 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
-                <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDocuments->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
-<br>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
+                    <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDocuments->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
+                    <br>
                     <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return PreSaveValidate();"><i class="fas fa-save mr-2"></i>Save IRS Information</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus') }}'"><i class="fas fa-reply mr-2"></i>Back to IRS Status Report</button>
+                @if ($confId == $chConfId)
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus') }}'"><i class="fas fa-reply mr-2"></i>Back to IRS Status Report</button>
+                @elseif ($confId != $chConfId)
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International IRS Status Report</button>
+                @endif
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>

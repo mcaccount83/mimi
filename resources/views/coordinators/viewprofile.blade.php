@@ -167,18 +167,20 @@
 
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.profile') }}'"><i class="fas fa-edit mr-2"></i>Update Profile</button>
 
-                @if ($coordinatorCondition)
+                @if ($coordinatorCondition || $ITCondition)
                     <button type="button" id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-eye mr-2"></i>View Chapter List</button>
-                @elseif($inquiriesCondition)
+                @elseif($inquiriesCondition || ($ITCondition && !$coordinatorCondition))
                     <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-eye mr-2"></i>View Inquiries Chapter List</button>
-                @elseif($einCondition || $inquiriesCondition || $userAdmin)
-                    <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-eye mr-2"></i>View International Chapter List</button>
+                @elseif($einCondition || $ITCondition)
+                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>View International Active Chapter List</button>
+                @elseif($inquiriesInternationalCondition || ($ITCondition && !$coordinatorCondition))
+                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>View International Active Inquiries List</button>
                 @endif
 
-                @if ($coordinatorCondition)
+                @if ($supervisingCoordinatorCondition || $ITCondition)
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-eye mr-2"></i>View Coordinator List</button>
-                @elseif($userAdmin)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-eye mr-2"></i>View International Coordinator List</button>
+                @elseif($ITCondition && !$supervisingCoordinatorCondition)
+                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>View International Active Coordinator List</button>
                 @endif
 
         </div>

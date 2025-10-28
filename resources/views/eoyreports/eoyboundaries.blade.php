@@ -78,6 +78,23 @@
                     <label class="custom-control-label" for="showReviewer">Only show chapters I am Assigned Reviewer for</label>
                 </div>
             </div>
+             @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showAllConf()" />
+                            <label class="custom-control-label" for="showAllConf">Show All Chapters</label>
+                        </div>
+                    </div>
+                @endif
+                @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="card-body text-center">&nbsp;</div>
               </div>
           <!-- /.box -->
@@ -104,9 +121,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function showPrimary() {
     var base_url = '{{ url("/eoy/boundaries") }}';
-
     if ($("#showPrimary").prop("checked") == true) {
-        window.location.href = base_url + '?check=yes';
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::PRIMARY_COORDINATOR }}=yes';
     } else {
         window.location.href = base_url;
     }
@@ -114,9 +130,26 @@ function showPrimary() {
 
 function showReviewer() {
     var base_url = '{{ url("/eoy/boundaries") }}';
-
     if ($("#showReviewer").prop("checked") == true) {
-        window.location.href = base_url + '?check2=yes';
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::REVIEWER }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
+function showAllConf() {
+    var base_url = '{{ url("/eoy/boundaries") }}';
+    if ($("#showAllConf").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::CONFERENCE_REGION }}=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
+function showAll() {
+    var base_url = '{{ url("/eoy/boundaries") }}';
+    if ($("#showAll").prop("checked") == true) {
+        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
     } else {
         window.location.href = base_url;
     }
