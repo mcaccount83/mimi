@@ -3,3 +3,6 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/momsclub/public_html/mimi
     - /bin/cp -R . $DEPLOYPATH
+    - rm -f $DEPLOYPATH/.git
+    - rm -f $DEPLOYPATH/.gitignore
+    - rm -f $DEPLOYPATH/.gitattributes
