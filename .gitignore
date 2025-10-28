@@ -64,13 +64,14 @@ yarn-error.log
 .DS_Store
 Thumbs.db
 
+#VS Code
 composer.phar
 docker-compose.yml
+
+# Specific Files/Folders
 old-----package-lock.json
 old-----package.json
 old-----vite.config.mjs
-
-# Specific Files/Folders
 /public/old-----build
 /public/old-----hot
 /public/old-----vendor
