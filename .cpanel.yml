@@ -3,3 +3,4 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/momsclub/public_html/mimi
     - /bin/cp -R * $DEPLOYPATH
+    - /bin/cp -R .[^.]* $DEPLOYPATH
