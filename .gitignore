@@ -72,6 +72,7 @@ docker-compose.yml
 old-----package-lock.json
 old-----package.json
 old-----vite.config.mjs
+old-----web.config
 /public/old-----build
 /public/old-----hot
 /public/old-----vendor
