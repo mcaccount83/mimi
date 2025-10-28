@@ -343,7 +343,7 @@ window.onload = function () {
                         @php
                             if ($coordinatorCondition && $conferenceCoordinatorCondition || $ITCondition) {
                                 $chapterReportsRoute = route('chapreports.chaprptchapterstatus');
-                            } elseif ($einCoondition) {
+                            } elseif ($einCondition) {
                                 $coordReportsRoute = route('chapreports.chaprpteinstatus', ['check5' => 'yes']);
                             }
                             $activeChapterReportsRoutes = [
