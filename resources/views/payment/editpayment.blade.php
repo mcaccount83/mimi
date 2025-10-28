@@ -209,13 +209,13 @@
                     <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Payment Information</button>
                 @endif
                 @if ($confId == $chConfId)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapreregistration') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Registration Report</button>
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapdonations') }}'"><i class="fas fa-reply mr-2"></i>Back to Donations Report</button>
+                        <button type="button" id="back-rereg" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapreregistration') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Registration Report</button>
+                        <button type="button" id="back-donation" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapdonations') }}'"><i class="fas fa-reply mr-2"></i>Back to Donations Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapreregistration', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Registration Report</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapdonations', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Donations Report</button>
+                    <button type="button" id="back-rereg" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapreregistration', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Registration Report</button>
+                    <button type="button" id="back-donation" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.chapdonations', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Donations Report</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->
@@ -226,11 +226,18 @@
 @endsection
 @section('customscript')
 <script>
-// Disable fields, links and buttons
-var $chActiveId = @json($chActiveId);
+    var $chActiveId = @json($chActiveId);
+    var $coordinatorCondition = @json($coordinatorCondition);
+    var $ITCondition = @json($ITCondition);
+    var $chConfId = @json($chConfId);
+    var $confId = @json($confId);
+
+    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
+    var hasITAccess = $ITCondition;
+    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasITAccess);
+
 $(document).ready(function () {
-    // Disable fields for chapters that are not active
-    if (($chActiveId != 1)) {
+    if (!shouldEnable) {
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
@@ -240,6 +247,11 @@ $(document).ready(function () {
                 e.preventDefault(); // Prevent link click
             });
         });
+
+        // Re-enable the specific buttons
+        $('#back-rereg').prop('disabled', false);
+        $('#back-donation').prop('disabled', false);
+        $('#back-details').prop('disabled', false);
     }
 });
 

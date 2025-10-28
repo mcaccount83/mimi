@@ -167,11 +167,11 @@
                     <br>
                 @endif
                 @if ($confId == $chConfId)
-                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboundaries') }}'"><i class="fas fa-reply mr-2"></i>Back to Boundaries Report</button>
+                    <button type="button" id="back-boundaries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboundaries') }}'"><i class="fas fa-reply mr-2"></i>Back to Boundaries Report</button>
                 @elseif ($confId != $chConfId && $ITCondition)
-                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboundaries', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Boundaries Report</button>
+                    <button type="button" id="back-boundaries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboundaries', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Boundaries Report</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
+                <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
             </div>
         </div>
         </div>
@@ -182,16 +182,22 @@
 @endsection
 @section('customscript')
 <script>
-    var $chActiveId = @json($chActiveId);
-    var $einCondition = @json($einCondition);
-    var $inquiriesCondition = @json($inquiriesCondition);
-    var $chPcId = @json($chPcId);
-    var $coorId = @json($coorId);
+   var $chActiveId = @json($chActiveId);
+    var $coordinatorCondition = @json($coordinatorCondition);
+    var $eoyTestCondition = @json($eoyTestCondition);
+    var $eoyReportCondition = @json($eoyReportCondition);
+    var $ITCondition = @json($ITCondition);
+    var $chConfId = @json($chConfId);
     var $confId = @json($confId);
 
+    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
+    var hasEoyTestCondition = $eoyTestCondition && ($confId == $chConfId);
+    var hasEoyReportCondition = $eoyReportCondition && ($confId == $chConfId);
+    var hasITAccess = $ITCondition;
+    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasEoyTestCondition || hasEoyReportCondition || hasITAccess);
+
 $(document).ready(function () {
-    // Disable fields for chapters that are not active
-    if (($chActiveId != 1)) {
+    if (!shouldEnable) {
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
@@ -203,6 +209,7 @@ $(document).ready(function () {
         });
 
         // Re-enable the specific "Back" buttons
+        $('#back-boundaries').prop('disabled', false);
         $('#back-eoy').prop('disabled', false);
     }
 });

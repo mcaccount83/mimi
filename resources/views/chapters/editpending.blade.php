@@ -278,9 +278,13 @@
     var $chConfId = @json($chConfId);
     var $confId = @json($confId);
 
+    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
+    var hasITAccess = $ITCondition;
+    var shouldEnable = ($chActiveId == 2) && (hasCoordinatorAccess || hasITAccess);
+
 $(document).ready(function () {
 // Disable fields for chapters that are not active & Coordinators who should not have edit access
-    if (($chActiveId != 1) || (!$coordinatorCondition && ($confId != $chConfId)) || (!$ITCondition && ($coorId != $chPcId))) {
+    if (!shouldEnable) {
             $('input, select, textarea, button').prop('disabled', true);
 
             $('a[href^="mailto:"]').each(function() {

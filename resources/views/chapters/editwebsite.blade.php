@@ -140,13 +140,13 @@
                 <br>
                 @endif
                  @if ($confId == $chConfId)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapwebsite') }}'"><i class="fas fa-reply mr-2"></i>Back to Website Report</button>
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapsocialmedia') }}'"><i class="fas fa-reply mr-2"></i>Back to Social Media Report</button>
+                        <button type="button" id="back-web" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapwebsite') }}'"><i class="fas fa-reply mr-2"></i>Back to Website Report</button>
+                        <button type="button" id="back-social" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapsocialmedia') }}'"><i class="fas fa-reply mr-2"></i>Back to Social Media Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapwebsite', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Website Report</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapsocialmedia', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Social Media Report</button>
+                    <button type="button" id="back-web" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapwebsite', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Website Report</button>
+                    <button type="button" id="back-social" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapsocialmedia', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Social Media Report</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->
@@ -157,6 +157,38 @@
 @endsection
 @section('customscript')
 <script>
+    var $chActiveId = @json($chActiveId);
+    var $coordinatorCondition = @json($coordinatorCondition);
+    var $ITCondition = @json($ITCondition);
+    var $webReviewCondition = @json($webReviewCondition);
+    var $chConfId = @json($chConfId);
+    var $confId = @json($confId);
+
+    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
+    var hasWebReviewCondition = $webReviewCondition && ($confId == $chConfId);
+    var hasITAccess = $ITCondition;
+    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasWebReviewCondition || hasITAccess );
+
+$(document).ready(function () {
+    // Disable fields for chapters that are not active
+    if (!shouldEnable) {
+        $('input, select, textarea, button').prop('disabled', true);
+
+        $('a[href^="mailto:"]').each(function() {
+            $(this).addClass('disabled-link'); // Add disabled class for styling
+            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
+            $(this).on('click', function(e) {
+                e.preventDefault(); // Prevent link click
+            });
+        });
+
+        // Re-enable the specific buttons
+        $('#back-web').prop('disabled', false);
+        $('#back-social').prop('disabled', false);
+        $('#back-details').prop('disabled', false);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const websiteUrl = document.getElementById('ch_website');
     const statusContainer = document.getElementById('ch_webstatus-container');
@@ -187,23 +219,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add event listeners for real-time updates
         websiteUrl.addEventListener('input', toggleStatusField);
         websiteUrl.addEventListener('change', toggleStatusField);
-    }
-});
-
-// Disable fields, links and buttons
-var $chActiveId = @json($chActiveId);
-$(document).ready(function () {
-    // Disable fields for chapters that are not active
-    if (($chActiveId != 1)) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
     }
 });
 

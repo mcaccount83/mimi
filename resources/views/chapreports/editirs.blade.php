@@ -202,11 +202,11 @@
                     <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return PreSaveValidate();"><i class="fas fa-save mr-2"></i>Save IRS Information</button>
                 @endif
                 @if ($confId == $chConfId)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus') }}'"><i class="fas fa-reply mr-2"></i>Back to IRS Status Report</button>
+                    <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus') }}'"><i class="fas fa-reply mr-2"></i>Back to IRS Status Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International IRS Status Report</button>
+                    <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International IRS Status Report</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->
@@ -217,11 +217,18 @@
 @endsection
 @section('customscript')
 <script>
-// Disable fields, links and buttons
-var $chActiveId = @json($chActiveId);
+    var $chActiveId = @json($chActiveId);
+    var $coordinatorCondition = @json($coordinatorCondition);
+    var $ITCondition = @json($ITCondition);
+    var $chConfId = @json($chConfId);
+    var $confId = @json($confId);
+
+    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
+    var hasITAccess = $ITCondition;
+    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasITAccess);
+
 $(document).ready(function () {
-    // Disable fields for chapters that are not active
-    if (($chActiveId != 1)) {
+    if (!shouldEnable) {
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
@@ -231,6 +238,10 @@ $(document).ready(function () {
                 e.preventDefault(); // Prevent link click
             });
         });
+
+        // Re-enable the specific buttons
+        $('#back-irs').prop('disabled', false);
+        $('#back-details').prop('disabled', false);
     }
 });
 

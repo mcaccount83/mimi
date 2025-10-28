@@ -404,7 +404,7 @@
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();"><i class="fas fa-save mr-2"></i>Save Board Information</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->
@@ -415,6 +415,33 @@
 @endsection
 @section('customscript')
 <script>
+    var $chActiveId = @json($chActiveId);
+    var $coordinatorCondition = @json($coordinatorCondition);
+    var $ITCondition = @json($ITCondition);
+    var $chConfId = @json($chConfId);
+    var $confId = @json($confId);
+
+    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
+    var hasITAccess = $ITCondition;
+    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasITAccess);
+
+$(document).ready(function () {
+    if (!shouldEnable) {
+        $('input, select, textarea, button').prop('disabled', true);
+
+        $('a[href^="mailto:"]').each(function() {
+            $(this).addClass('disabled-link'); // Add disabled class for styling
+            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
+            $(this).on('click', function(e) {
+                e.preventDefault(); // Prevent link click
+            });
+        });
+
+        // Re-enable the specific buttons
+        $('#back-details').prop('disabled', false);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // Define the sections we need to handle
     const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
@@ -451,24 +478,6 @@ document.addEventListener('DOMContentLoaded', function() {
             stateDropdown.addEventListener('change', toggleCountryField);
         }
     });
-});
-
-
-// Disable fields, links and buttons
-var $chActiveId = @json($chActiveId);
-$(document).ready(function () {
-    // Disable fields for chapters that are not active or EIN & Inquiries Coordinators who are not PC for the Chapter
-    if (($chActiveId != 1)) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-    }
 });
 
 // Function to handle show/hide logic for vacant checkboxes

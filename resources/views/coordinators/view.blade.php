@@ -366,10 +366,13 @@
     var $cdConfId = @json($cdConfId);
     var $confId = @json($confId);
 
+    var hasCoordinatorAccess = $supervisingCoordinatorCondition && ($confId == $cdConfId);
+    var hasITAccess = $ITCondition;
+    var shouldEnable = ($cdActiveId == 1) && (hasCoordinatorAccess || hasITAccess);
+
 $(document).ready(function () {
     // Disable fields for coordinators that are not active & Coordinators who should not have edit access
-        if (($cdActiveId != 1) || (!$supervisingCoordinatorCondition && ($confId != $cdConfId)) || (!$ITCondition)) {
-
+    if (!shouldEnable) {
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {

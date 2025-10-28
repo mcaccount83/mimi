@@ -887,8 +887,13 @@ class ChapterController extends Controller implements HasMiddleware
      */
     public function editChapterDetails(Request $request, $id): View
     {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
         $chActiveId = $baseQuery['chActiveId'];
         $chDocuments = $baseQuery['chDocuments'];
         $chPayments = $baseQuery['chPayments'];
@@ -915,7 +920,7 @@ class ChapterController extends Controller implements HasMiddleware
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'probationReason' => $probationReason,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'allStatuses' => $allStatuses, 'allWebLinks' => $allWebLinks,
-            'pcList' => $pcList,
+            'pcList' => $pcList, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
 
         return view('chapters.edit')->with($data);
@@ -1097,8 +1102,13 @@ class ChapterController extends Controller implements HasMiddleware
      */
     public function editChapterBoard(Request $request, $id): View
     {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['user_coorId'];
+        $confId = $user['user_confId'];
+
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
         $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
@@ -1117,7 +1127,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries,
             'chDetails' => $chDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
-            'chPcId' => $chPcId, 'allStates' => $allStates, 'PresDetails' => $PresDetails,
+            'chPcId' => $chPcId, 'allStates' => $allStates, 'PresDetails' => $PresDetails, 'confId' => $confId, 'chConfId' => $chConfId,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
         ];
 
