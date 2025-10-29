@@ -1,16 +1,6 @@
 @extends('layouts.board_theme')
 
-<style>
-    .disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #6c757d; /* Muted color */
-}
-
-</style>
-
 @section('content')
-
 {{-- <div class="container" id="test"> --}}
     <div class="container">
         <div class="row">

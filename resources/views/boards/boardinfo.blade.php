@@ -1,28 +1,5 @@
 @extends('layouts.board_theme')
 
-
-<style>
-    .ml-2 {
-        margin-left: 0.5rem !important; /* Adjust the margin to control spacing for Vacant Buttons */
-    }
-
-    .custom-control-input:checked ~ .custom-control-label {
-        color: black; /* Label color when toggle is ON for Vacant Buttons */
-    }
-
-    .custom-control-input:not(:checked) ~ .custom-control-label {
-        color: #b0b0b0; /* Subdued label color when toggle is OFF for Vacant Buttons */
-        opacity: 0.6;   /* Optional: Adds a subdued effectfor Vacant Buttons */
-    }
-
-    .disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #6c757d; /* Muted color */
-}
-
-</style>
-
 @section('content')
         <div class="container">
             <div class="row">
@@ -463,26 +440,6 @@
                                 </div>
                             </div>
 
-                                {{-- <div class="form-group row">
-                                    <label class="col-sm-12 col-form-label">Website:</label>
-                                    <div class="col-sm-12 mb-2">
-                                        <input type="text" name="ch_website" id="ch_website" class="form-control"
-                                               value="{{$chDetails->website_url}}"
-                                               placeholder="Chapter Website">
-                                    </div>
-                            <div class="col-sm-8">
-                                <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;" required>
-                                    <option value="">Select Status</option>
-                                    @foreach($allWebLinks as $status)
-                                        <option value="{{$status->id}}"
-                                            @if($chDetails->website_status == $status->id) selected @endif>
-                                            {{$status->link_status}}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div> --}}
-
                         <!-- /.form group -->
                         <div class="form-group row">
                             <label class="col-sm-12 col-form-label">Social Media:</label>
@@ -500,8 +457,6 @@
                                 <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
                             </div>
                         </div>
-
-
 
                             </div>
                         <!-- /.card-body -->
