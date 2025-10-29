@@ -217,7 +217,7 @@
                 </div>
 
             <div class="card-body text-center">
-                <button id="Save" type="submit" class="btn btn-primary" onclick="return validateEmailsBeforeSubmit()"><i class="fas fa-share" ></i>&nbsp; Submit</button>
+                <button id="Save" type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp; Submit</button>
 
             @if ($userType == 'coordinator')
                 <button type="button" id="btn-back" class="btn btn-primary" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
@@ -333,17 +333,8 @@ document.addEventListener("DOMContentLoaded", function() {
 function ChangeQ1Fees() {
     var q1DuesInput = document.getElementById("q1_dues");
     var q1BenefitInput = document.getElementById("q1_benefit");
-    // var q1PercentageInput = document.getElementById("q1_percentage");
-
     var q1Dues = parseNumericValue(q1DuesInput.value);
     var q1Benefit = parseNumericValue(q1BenefitInput.value);
-
-    // var percentage = 0;
-    // if (q1Dues > 0) {
-    //     percentage = (q1Benefit / q1Dues) * 100;
-    // }
-
-    // q1PercentageInput.value = percentage.toFixed(2) + "%";
 
     ReCalculateTotal();
 }
@@ -351,17 +342,8 @@ function ChangeQ1Fees() {
 function ChangeQ2Fees() {
     var q2DuesInput = document.getElementById("q2_dues");
     var q2BenefitInput = document.getElementById("q2_benefit");
-    // var q2PercentageInput = document.getElementById("q2_percentage");
-
     var q2Dues = parseNumericValue(q2DuesInput.value);
     var q2Benefit = parseNumericValue(q2BenefitInput.value);
-
-    // var percentage = 0;
-    // if (q2Dues > 0) {
-    //     percentage = (q2Benefit / q2Dues) * 100;
-    // }
-
-    // q2PercentageInput.value = percentage.toFixed(2) + "%";
 
     ReCalculateTotal();
 }
@@ -369,17 +351,8 @@ function ChangeQ2Fees() {
 function ChangeQ3Fees() {
     var q3DuesInput = document.getElementById("q3_dues");
     var q3BenefitInput = document.getElementById("q3_benefit");
-    // var q3PercentageInput = document.getElementById("q3_percentage");
-
     var q3Dues = parseNumericValue(q3DuesInput.value);
     var q3Benefit = parseNumericValue(q3BenefitInput.value);
-
-    // var percentage = 0;
-    // if (q3Dues > 0) {
-    //     percentage = (q3Benefit / q3Dues) * 100;
-    // }
-
-    // q3PercentageInput.value = percentage.toFixed(2) + "%";
 
     ReCalculateTotal();
 }
@@ -387,17 +360,8 @@ function ChangeQ3Fees() {
 function ChangeQ4Fees() {
     var q4DuesInput = document.getElementById("q4_dues");
     var q4BenefitInput = document.getElementById("q4_benefit");
-    // var q4PercentageInput = document.getElementById("q4_percentage");
-
     var q4Dues = parseNumericValue(q4DuesInput.value);
     var q4Benefit = parseNumericValue(q4BenefitInput.value);
-
-    // var percentage = 0;
-    // if (q4Dues > 0) {
-    //     percentage = (q4Benefit / q4Dues) * 100;
-    // }
-
-    // q4PercentageInput.value = percentage.toFixed(2) + "%";
 
     ReCalculateTotal();
 }

@@ -442,171 +442,139 @@ $(document).ready(function () {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Define the sections we need to handle
-    const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
+// document.addEventListener('DOMContentLoaded', function() {
+//     // Define the sections we need to handle
+//     const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
 
-    // Special state IDs that should show the country field
-    const specialStates = [52, 53, 54, 55];
+//     // Special state IDs that should show the country field
+//     const specialStates = [52, 53, 54, 55];
 
-    // Process each section
-    sections.forEach(section => {
-        const stateDropdown = document.getElementById(`ch_${section}_state`);
-        const countryContainer = document.getElementById(`ch_${section}_country-container`);
-        const countrySelect = document.getElementById(`ch_${section}_country`);
+//     // Process each section
+//     sections.forEach(section => {
+//         const stateDropdown = document.getElementById(`ch_${section}_state`);
+//         const countryContainer = document.getElementById(`ch_${section}_country-container`);
+//         const countrySelect = document.getElementById(`ch_${section}_country`);
 
-        // Only proceed if all elements exist
-        if (stateDropdown && countryContainer && countrySelect) {
-            // Function to toggle country field visibility
-            function toggleCountryField() {
-                const selectedStateId = parseInt(stateDropdown.value) || 0;
+//         // Only proceed if all elements exist
+//         if (stateDropdown && countryContainer && countrySelect) {
+//             // Function to toggle country field visibility
+//             function toggleCountryField() {
+//                 const selectedStateId = parseInt(stateDropdown.value) || 0;
 
-                if (specialStates.includes(selectedStateId)) {
-                    countryContainer.style.display = 'flex';
-                    countrySelect.setAttribute('required', 'required');
-                } else {
-                    countryContainer.style.display = 'none';
-                    countrySelect.removeAttribute('required');
-                    countrySelect.value = "";
-                }
-            }
+//                 if (specialStates.includes(selectedStateId)) {
+//                     countryContainer.style.display = 'flex';
+//                     countrySelect.setAttribute('required', 'required');
+//                 } else {
+//                     countryContainer.style.display = 'none';
+//                     countrySelect.removeAttribute('required');
+//                     countrySelect.value = "";
+//                 }
+//             }
 
-            // Set initial state
-            toggleCountryField();
+//             // Set initial state
+//             toggleCountryField();
 
-            // Add event listener
-            stateDropdown.addEventListener('change', toggleCountryField);
-        }
-    });
-});
+//             // Add event listener
+//             stateDropdown.addEventListener('change', toggleCountryField);
+//         }
+//     });
+// });
 
-// Function to handle show/hide logic for vacant checkboxes
-function handleVacantCheckbox(checkboxId, fieldClass) {
-    var fields = $("." + fieldClass);
+// // Function to handle show/hide logic for vacant checkboxes
+// function handleVacantCheckbox(checkboxId, fieldClass) {
+//     var fields = $("." + fieldClass);
 
-    $("#" + checkboxId).change(function () {
-        if ($(this).prop("checked")) {
-            fields.hide().find('input, select, textarea').prop('required', false).val(null);
-        } else {
-            fields.show().find('input, select, textarea').prop('required', true);
-        }
-    });
+//     $("#" + checkboxId).change(function () {
+//         if ($(this).prop("checked")) {
+//             fields.hide().find('input, select, textarea').prop('required', false).val(null);
+//         } else {
+//             fields.show().find('input, select, textarea').prop('required', true);
+//         }
+//     });
 
-    // Initial show/hide logic on page load
-    if ($("#" + checkboxId).prop("checked")) {
-        fields.hide().find('input, select, textarea').prop('required', false).val(null);
-    } else {
-        fields.show().find('input, select, textarea').prop('required', true);
-    }
-}
-
-// Apply the logic for each checkbox with a specific class
-handleVacantCheckbox("MVPVacant", "mvp-field");
-handleVacantCheckbox("AVPVacant", "avp-field");
-handleVacantCheckbox("SecVacant", "sec-field");
-handleVacantCheckbox("TreasVacant", "trs-field");
-
-$(document).ready(function() {
-    // Function to load the coordinator list based on the selected value
-    function loadCoordinatorList(corId) {
-        if (corId != "") {
-            $.ajax({
-                url: '{{ url("/load-coordinator-list") }}' + '/' + corId,
-                type: "GET",
-                success: function(result) {
-                    $("#display_corlist").html(result);
-                },
-                error: function (jqXHR, exception) {
-                    console.log("Error: ", jqXHR, exception);
-                }
-            });
-        }
-    }
-
-    // Get the selected coordinator ID on page load
-    var selectedCorId = $("#ch_primarycor").val();
-    loadCoordinatorList(selectedCorId);
-
-    // Update the coordinator list when the dropdown changes
-    $("#ch_primarycor").change(function() {
-        var selectedValue = $(this).val();
-        loadCoordinatorList(selectedValue);
-    });
-});
-
-// function validateEmailsBeforeSubmit() {
-//     var errMessage = "";
-
-//     // Get email values and trim whitespace
-//     var preEmail = $("#ch_pre_email").val().trim();
-//     var avpEmail = $("#ch_avp_email").val().trim();
-//     var mvpEmail = $("#ch_mvp_email").val().trim();
-//     var trsEmail = $("#ch_trs_email").val().trim();
-//     var secEmail = $("#ch_sec_email").val().trim();
-
-//     // Create an array of emails
-//     var emails = [preEmail, avpEmail, mvpEmail, trsEmail, secEmail];
-
-//     // Use a Set to identify duplicates
-//     var uniqueEmails = new Set(emails.filter(email => email != "")); // filter out empty values
-
-//     // Check for duplicates
-//     if (uniqueEmails.size != emails.filter(email => email != "").length) {
-//         errMessage = "You entered the same email address for more than one board member. Please enter a unique e-mail address for each board member or mark the position as vacant.";
+//     // Initial show/hide logic on page load
+//     if ($("#" + checkboxId).prop("checked")) {
+//         fields.hide().find('input, select, textarea').prop('required', false).val(null);
+//     } else {
+//         fields.show().find('input, select, textarea').prop('required', true);
 //     }
-
-//     if (errMessage.length > 0) {
-//         customErrorAlert(errMessage);
-//         return false;
-//     }
-
-//     return true;
 // }
 
-function validateEmailsBeforeSubmit() {
-    // Get the values from the input fields
-    const emails = [
-        $('#ch_pre_email').val().trim(),
-        $('#ch_avp_email').val().trim(),
-        $('#ch_mvp_email').val().trim(),
-        $('#ch_trs_email').val().trim(),
-        $('#ch_sec_email').val().trim()
-    ];
+// // Apply the logic for each checkbox with a specific class
+// handleVacantCheckbox("MVPVacant", "mvp-field");
+// handleVacantCheckbox("AVPVacant", "avp-field");
+// handleVacantCheckbox("SecVacant", "sec-field");
+// handleVacantCheckbox("TreasVacant", "trs-field");
 
-    // Filter out empty emails and check for duplicates
-    const emailSet = new Set();
-    const duplicateEmails = [];
+// $(document).ready(function() {
+//     // Function to load the coordinator list based on the selected value
+//     function loadCoordinatorList(corId) {
+//         if (corId != "") {
+//             $.ajax({
+//                 url: '{{ url("/load-coordinator-list") }}' + '/' + corId,
+//                 type: "GET",
+//                 success: function(result) {
+//                     $("#display_corlist").html(result);
+//                 },
+//                 error: function (jqXHR, exception) {
+//                     console.log("Error: ", jqXHR, exception);
+//                 }
+//             });
+//         }
+//     }
 
-    emails.forEach(email => {
-        if (email != '') {
-            if (emailSet.has(email)) {
-                // Check if the duplicate email is already in the array to avoid listing it multiple times
-                if (!duplicateEmails.includes(email)) {
-                    duplicateEmails.push(email);
-                }
-            } else {
-                emailSet.add(email);
-            }
-        }
-    });
+//     // Get the selected coordinator ID on page load
+//     var selectedCorId = $("#ch_primarycor").val();
+//     loadCoordinatorList(selectedCorId);
 
-    // If duplicates are found, show an alert
-    if (duplicateEmails.length > 0) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Duplicate Emails Found',
-            html: 'The following emails are duplicates: <br>' + duplicateEmails.join('<br>') + '<br>Please correct them before submitting.',
-            confirmButtonText: 'OK',
-            customClass: {
-                confirmButton: 'btn-sm btn-success'
-            }
-        });
-        return false;
-    }
-    return true;
-}
+//     // Update the coordinator list when the dropdown changes
+//     $("#ch_primarycor").change(function() {
+//         var selectedValue = $(this).val();
+//         loadCoordinatorList(selectedValue);
+//     });
+// });
 
+// function validateEmailsBeforeSubmit() {
+//     // Get the values from the input fields
+//     const emails = [
+//         $('#ch_pre_email').val().trim(),
+//         $('#ch_avp_email').val().trim(),
+//         $('#ch_mvp_email').val().trim(),
+//         $('#ch_trs_email').val().trim(),
+//         $('#ch_sec_email').val().trim()
+//     ];
 
+//     // Filter out empty emails and check for duplicates
+//     const emailSet = new Set();
+//     const duplicateEmails = [];
 
+//     emails.forEach(email => {
+//         if (email != '') {
+//             if (emailSet.has(email)) {
+//                 // Check if the duplicate email is already in the array to avoid listing it multiple times
+//                 if (!duplicateEmails.includes(email)) {
+//                     duplicateEmails.push(email);
+//                 }
+//             } else {
+//                 emailSet.add(email);
+//             }
+//         }
+//     });
+
+//     // If duplicates are found, show an alert
+//     if (duplicateEmails.length > 0) {
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Duplicate Emails Found',
+//             html: 'The following emails are duplicates: <br>' + duplicateEmails.join('<br>') + '<br>Please correct them before submitting.',
+//             confirmButtonText: 'OK',
+//             customClass: {
+//                 confirmButton: 'btn-sm btn-success'
+//             }
+//         });
+//         return false;
+//     }
+//     return true;
+// }
 </script>
 @endsection

@@ -134,10 +134,16 @@
 
                 <div class="card-body text-center">
                 @if ($regionalCoordinatorCondition)
-                    <a href="{{ route('eoyreports.eoystatusreminder') }}" onclick="return confirmSendReminder();"> <button class="btn bg-gradient-primary"><i class="fas fa-envelope"></i>&nbsp;&nbsp;&nbsp;Send EOY Late Notices </button> </a>
+                    <a href="{{ route('eoyreports.eoystatusreminder') }}" onclick="return confirmSendReminder();"> <button class="btn bg-gradient-primary mb-3"><i class="fas fa-envelope"></i>&nbsp;&nbsp;&nbsp;Send EOY Late Notices </button> </a>
                 @endif
                 @if ($assistConferenceCoordinatorCondition)
-                    <button class="btn bg-gradient-primary" onclick="startExport('eoystatus', 'EOY Status List')"><i class="fas fa-download mr-2" ></i>Export EOY Status List</button>
+                    @if ($checkBox3Status)
+                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('eoystatus', 'EOY Status Lis')"><i class="fas fa-download mr-2" ></i>Export EOY Status List</button>
+                    @elseif ($checkBox5Status)
+                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteoystatus', 'International EOY Status List')"><i class="fas fa-download"></i>&nbsp; Export International EOY Status List</button>
+                    @else
+                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('eoystatus', 'EOY Status Lis')" disabled><i class="fas fa-download mr-2" ></i>Export EOY Status List</button>
+                    @endif
                 @endif
                 </div>
           <!-- /.box -->

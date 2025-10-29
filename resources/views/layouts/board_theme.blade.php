@@ -189,6 +189,12 @@
 @include('layouts.scripts.datetime')
 @include('layouts.scripts.masks')
 @include('layouts.scripts.pdfviewer')
+@include('layouts.scripts.password')
+@include('layouts.scripts.email')
+@include('layouts.scripts.website')
+@include('layouts.scripts.bdcoordinatorlist')
+@include('layouts.scripts.boards')
+
 
 @yield('customscript')
 @stack('scripts')

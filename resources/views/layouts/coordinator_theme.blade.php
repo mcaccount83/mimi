@@ -655,7 +655,7 @@ window.onload = function () {
 <script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 <!-- Sript Functions -->
-@include('layouts.scripts.email')
+@include('layouts.scripts.sendemail')
 @include('layouts.scripts.alert')
 @include('layouts.scripts.datatable')
 @include('layouts.scripts.datetime')
@@ -663,6 +663,15 @@ window.onload = function () {
 @include('layouts.scripts.export')
 @include('layouts.scripts.pdfviewer')
 @include('layouts.scripts.bootstrapswitch')
+@include('layouts.scripts.password')
+@include('layouts.scripts.email')
+@include('layouts.scripts.website')
+@include('layouts.scripts.uploads')
+@include('layouts.scripts.coordinatorlist')
+@include('layouts.scripts.boards')
+@include('layouts.scripts.ein')
+
+
 
 @yield('customscript')
 @stack('scripts')

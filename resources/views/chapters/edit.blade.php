@@ -307,38 +307,38 @@ $(document).ready(function () {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    const websiteUrl = document.getElementById('ch_website');
-    const statusContainer = document.getElementById('ch_webstatus-container');
-    const websiteStatus = document.getElementById('ch_webstatus');
+// document.addEventListener('DOMContentLoaded', function() {
+//     const websiteUrl = document.getElementById('ch_website');
+//     const statusContainer = document.getElementById('ch_webstatus-container');
+//     const websiteStatus = document.getElementById('ch_webstatus');
 
-    // Only proceed if all elements exist
-    if (websiteUrl && statusContainer && websiteStatus) {
+//     // Only proceed if all elements exist
+//     if (websiteUrl && statusContainer && websiteStatus) {
 
-        // Function to toggle status field visibility
-        function toggleStatusField() {
-            const urlValue = websiteUrl.value.trim();
+//         // Function to toggle status field visibility
+//         function toggleStatusField() {
+//             const urlValue = websiteUrl.value.trim();
 
-            if (urlValue != '' && urlValue != 'http://') {
-                // Show status field if URL has a meaningful value
-                statusContainer.style.display = 'flex';
-                websiteStatus.setAttribute('required', 'required');
-            } else {
-                // Hide status field if URL is empty or just the default "http://"
-                statusContainer.style.display = 'none';
-                websiteStatus.removeAttribute('required');
-                websiteStatus.value = ""; // Clear the selection
-            }
-        }
+//             if (urlValue != '' && urlValue != 'http://') {
+//                 // Show status field if URL has a meaningful value
+//                 statusContainer.style.display = 'flex';
+//                 websiteStatus.setAttribute('required', 'required');
+//             } else {
+//                 // Hide status field if URL is empty or just the default "http://"
+//                 statusContainer.style.display = 'none';
+//                 websiteStatus.removeAttribute('required');
+//                 websiteStatus.value = ""; // Clear the selection
+//             }
+//         }
 
-        // Set initial state on page load
-        toggleStatusField();
+//         // Set initial state on page load
+//         toggleStatusField();
 
-        // Add event listeners for real-time updates
-        websiteUrl.addEventListener('input', toggleStatusField);
-        websiteUrl.addEventListener('change', toggleStatusField);
-    }
-});
+//         // Add event listeners for real-time updates
+//         websiteUrl.addEventListener('input', toggleStatusField);
+//         websiteUrl.addEventListener('change', toggleStatusField);
+//     }
+// });
 
 //If Chapter Name Change Warning
 function PreviousNameReminder(){
@@ -350,33 +350,33 @@ function updateWebsiteStatus() {
     customWarningAlert("If you are changing the chapter website url, please be sure to update the 'Link Status' accordingly.");
 }
 
-$(document).ready(function() {
-    // Function to load the coordinator list based on the selected value
-    function loadCoordinatorList(id) {
-        if(id != "") {
-            $.ajax({
-                url: '{{ url("/load-coordinator-list") }}' + '/' + id,
-                type: "GET",
-                success: function(result) {
-                $("#display_corlist").html(result);
-                },
-                error: function (jqXHR, exception) {
-                console.log("Error: ", jqXHR, exception);
-                }
-            });
-        }
-    }
+// $(document).ready(function() {
+//     // Function to load the coordinator list based on the selected value
+//     function loadCoordinatorList(id) {
+//         if(id != "") {
+//             $.ajax({
+//                 url: '{{ url("/load-coordinator-list") }}' + '/' + id,
+//                 type: "GET",
+//                 success: function(result) {
+//                 $("#display_corlist").html(result);
+//                 },
+//                 error: function (jqXHR, exception) {
+//                 console.log("Error: ", jqXHR, exception);
+//                 }
+//             });
+//         }
+//     }
 
-    // Get the selected coordinator ID on page load
-    var selectedCorId = $("#ch_primarycor").val();
-        loadCoordinatorList(selectedCorId);
+//     // Get the selected coordinator ID on page load
+//     var selectedCorId = $("#ch_primarycor").val();
+//         loadCoordinatorList(selectedCorId);
 
-        // Update the coordinator list when the dropdown changes
-        $("#ch_primarycor").change(function() {
-            var selectedValue = $(this).val();
-            loadCoordinatorList(selectedValue);
-    });
-});
+//         // Update the coordinator list when the dropdown changes
+//         $("#ch_primarycor").change(function() {
+//             var selectedValue = $(this).val();
+//             loadCoordinatorList(selectedValue);
+//     });
+// });
 
 document.addEventListener('DOMContentLoaded', function() {
     const statusSelect = document.getElementById('ch_status');

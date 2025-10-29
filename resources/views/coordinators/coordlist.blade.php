@@ -103,16 +103,18 @@
 
                 <div class="card-body text-center">
                 @if($conferenceCoordinatorCondition)
-                    <a class="btn bg-gradient-primary" href="{{ route('coordinators.coordpending') }}"><i class="fas fa-share mr-2" ></i>New Coordinators Pending</a>
+                    <a class="btn bg-gradient-primary mb-3" href="{{ route('coordinators.coordpending') }}"><i class="fas fa-share mr-2" ></i>New Coordinators Pending</a>
                 @endif
                 @if ($regionalCoordinatorCondition)
-                    @if($checkBoxStatus == null)
-                        <button class="btn bg-gradient-primary" onclick="startExport('coordinator', 'Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
+                    @if ($checkBox3Status)
+                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('coordinator', 'Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
+                    @elseif ($checkBox5Status)
+                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('intcoordinator', 'International Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export International Coordinator List</button>
                     @else
-                        <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button></a>
+                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('coordinator', 'Coordinator List')" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
                     @endif
                 @endif
-                <a class="btn bg-gradient-primary" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope mr-2"></i>E-mail Coordinators</a>
+                <a class="btn bg-gradient-primary mb-3" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope mr-2"></i>E-mail Coordinators</a>
             </div>
          </div>
           <!-- /.box -->

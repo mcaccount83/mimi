@@ -1708,6 +1708,11 @@ class ChapterController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
+        $positionId = $user['user_positionId'];
+        $userName = $user['user_name'];
+        $userPosition = $user['user_position'];
+        $userConfName = $user['user_conf_name'];
+        $userConfDesc = $user['user_conf_desc'];
         $lastUpdatedBy = $user['user_name'];
         $lastupdatedDate = date('Y-m-d H:i:s');
 
@@ -1779,6 +1784,7 @@ class ChapterController extends Controller implements HasMiddleware
             'pcList' => $pcList, 'allRegions' => $allRegions, 'pcDetails' => $pcDetails, 'allCountries' => $allCountries,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails,
             'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails, 'confId' => $confId,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
         ];
 
         return view('chapters.editpending')->with($data);

@@ -214,33 +214,33 @@ $(document).ready(function () {
     }
 });
 
-$(document).ready(function() {
-    // Function to load the coordinator list based on the selected value
-    function loadCoordinatorList(id) {
-        if(id != "") {
-            $.ajax({
-                url: '{{ url("/load-coordinator-list") }}' + '/' + id,
-                type: "GET",
-                success: function(result) {
-                $("#display_corlist").html(result);
-                },
-                error: function (jqXHR, exception) {
-                console.log("Error: ", jqXHR, exception);
-                }
-            });
-        }
-    }
+// $(document).ready(function() {
+//     // Function to load the coordinator list based on the selected value
+//     function loadCoordinatorList(id) {
+//         if(id != "") {
+//             $.ajax({
+//                 url: '{{ url("/load-coordinator-list") }}' + '/' + id,
+//                 type: "GET",
+//                 success: function(result) {
+//                 $("#display_corlist").html(result);
+//                 },
+//                 error: function (jqXHR, exception) {
+//                 console.log("Error: ", jqXHR, exception);
+//                 }
+//             });
+//         }
+//     }
 
-    // Get the selected coordinator ID on page load
-    var selectedCorId = $("#ch_primarycor").val();
-        loadCoordinatorList(selectedCorId);
+//     // Get the selected coordinator ID on page load
+//     var selectedCorId = $("#ch_primarycor").val();
+//         loadCoordinatorList(selectedCorId);
 
-        // Update the coordinator list when the dropdown changes
-        $("#ch_primarycor").change(function() {
-            var selectedValue = $(this).val();
-            loadCoordinatorList(selectedValue);
-    });
-});
+//         // Update the coordinator list when the dropdown changes
+//         $("#ch_primarycor").change(function() {
+//             var selectedValue = $(this).val();
+//             loadCoordinatorList(selectedValue);
+//     });
+// });
 
 
 </script>

@@ -97,7 +97,9 @@
                    @if ($chDetails->active_status == '2')
                     <li class="list-group-item">
                         <div class="card-body text-center">
-                            <button type="button" class="btn bg-gradient-primary mb-3" onclick="showChapterSetupModal()"><i class="fas fa-envelope mr-2"></i>Send Startup Email</button>
+                                <button type="button" class="btn bg-gradient-primary mb-3"
+                                    onclick="showChapterSetupEmailModal({{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
+                                    <i class="fas fa-envelope mr-2"></i>Send Startup Email</button>
                             <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Updates</button>
                             <br>
                             Save all changes before approval!
@@ -303,43 +305,43 @@ $(document).ready(function () {
         }
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-    // Define the sections we need to handle
-    const sections = ['pre'];
+//     document.addEventListener('DOMContentLoaded', function() {
+//     // Define the sections we need to handle
+//     const sections = ['pre'];
 
-    // Special state IDs that should show the country field
-    const specialStates = [52, 53, 54, 55];
+//     // Special state IDs that should show the country field
+//     const specialStates = [52, 53, 54, 55];
 
-    // Process each section
-    sections.forEach(section => {
-        const stateDropdown = document.getElementById(`ch_${section}_state`);
-        const countryContainer = document.getElementById(`ch_${section}_country-container`);
-        const countrySelect = document.getElementById(`ch_${section}_country`);
+//     // Process each section
+//     sections.forEach(section => {
+//         const stateDropdown = document.getElementById(`ch_${section}_state`);
+//         const countryContainer = document.getElementById(`ch_${section}_country-container`);
+//         const countrySelect = document.getElementById(`ch_${section}_country`);
 
-        // Only proceed if all elements exist
-        if (stateDropdown && countryContainer && countrySelect) {
-            // Function to toggle country field visibility
-            function toggleCountryField() {
-                const selectedStateId = parseInt(stateDropdown.value) || 0;
+//         // Only proceed if all elements exist
+//         if (stateDropdown && countryContainer && countrySelect) {
+//             // Function to toggle country field visibility
+//             function toggleCountryField() {
+//                 const selectedStateId = parseInt(stateDropdown.value) || 0;
 
-                if (specialStates.includes(selectedStateId)) {
-                    countryContainer.style.display = 'flex';
-                    countrySelect.setAttribute('required', 'required');
-                } else {
-                    countryContainer.style.display = 'none';
-                    countrySelect.removeAttribute('required');
-                    countrySelect.value = "";
-                }
-            }
+//                 if (specialStates.includes(selectedStateId)) {
+//                     countryContainer.style.display = 'flex';
+//                     countrySelect.setAttribute('required', 'required');
+//                 } else {
+//                     countryContainer.style.display = 'none';
+//                     countrySelect.removeAttribute('required');
+//                     countrySelect.value = "";
+//                 }
+//             }
 
-            // Set initial state
-            toggleCountryField();
+//             // Set initial state
+//             toggleCountryField();
 
-            // Add event listener
-            stateDropdown.addEventListener('change', toggleCountryField);
-        }
-    });
-});
+//             // Add event listener
+//             stateDropdown.addEventListener('change', toggleCountryField);
+//         }
+//     });
+// });
 
 // Function to filter the coordinator dropdown
 function filterCoordinators() {
@@ -373,130 +375,33 @@ document.getElementById('ch_region').addEventListener('change', filterCoordinato
 // Run the filtering logic on page load
 document.addEventListener('DOMContentLoaded', filterCoordinators);
 
-$(document).ready(function() {
-    // Function to load the coordinator list based on the selected value
-    function loadCoordinatorList(id) {
-        if(id != "") {
-            $.ajax({
-                url: '{{ url("/load-coordinator-list") }}' + '/' + id,
-                type: "GET",
-                success: function(result) {
-                $("#display_corlist").html(result);
-                },
-                error: function (jqXHR, exception) {
-                console.log("Error: ", jqXHR, exception);
-                }
-            });
-        }
-    }
+// $(document).ready(function() {
+//     // Function to load the coordinator list based on the selected value
+//     function loadCoordinatorList(id) {
+//         if(id != "") {
+//             $.ajax({
+//                 url: '{{ url("/load-coordinator-list") }}' + '/' + id,
+//                 type: "GET",
+//                 success: function(result) {
+//                 $("#display_corlist").html(result);
+//                 },
+//                 error: function (jqXHR, exception) {
+//                 console.log("Error: ", jqXHR, exception);
+//                 }
+//             });
+//         }
+//     }
 
-    // Get the selected coordinator ID on page load
-    var selectedCorId = $("#ch_primarycor").val();
-        loadCoordinatorList(selectedCorId);
+//     // Get the selected coordinator ID on page load
+//     var selectedCorId = $("#ch_primarycor").val();
+//         loadCoordinatorList(selectedCorId);
 
-        // Update the coordinator list when the dropdown changes
-        $("#ch_primarycor").change(function() {
-            var selectedValue = $(this).val();
-            loadCoordinatorList(selectedValue);
-    });
-});
-
-function showChapterSetupModal() {
-    Swal.fire({
-        title: 'Chapter Startup Details',
-        html: `
-            <p>This will send the initial chapter startup email to the potential founder to facilitate the discussion on boundaries and name. Please enter additional boundary and name details to include in the email and press OK to send.</p>
-            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                <textarea id="boundary_details" name="boundary_details" class="swal2-textarea" placeholder="Boundary Details" required style="width: 100%; height: 80px; margin: 0 !important; box-sizing: border-box;"></textarea>
-            </div>
-            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                <textarea id="name_details" name="name_details" class="swal2-textarea" placeholder="Name Details" required style="width: 100%; height: 80px; margin: 0 !important; box-sizing: border-box;"></textarea>
-            </div>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-            const boundaryDetails = Swal.getPopup().querySelector('#boundary_details').value;
-            const nameDetails = Swal.getPopup().querySelector('#name_details').value;
-
-            if (!boundaryDetails) {
-                Swal.showValidationMessage('Please enter the boundary details.');
-                return false;
-            }
-            if (!nameDetails) {
-                Swal.showValidationMessage('Please enter the chapter name details.');
-                return false;
-            }
-
-            return {
-                chapter_id: chapterId,
-                boundary_details: boundaryDetails,
-                name_details: nameDetails,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we process your request.',
-                allowOutsideClick: false,
-                customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
-                },
-                didOpen: () => {
-                    Swal.showLoading();
-
-                    // Perform the AJAX request
-                    $.ajax({
-                        url: '{{ route('chapters.sendstartup') }}',
-                        type: 'POST',
-                        data: {
-                            chapterId: data.chapter_id,
-                            boundaryDetails: data.boundary_details,
-                            nameDetails: data.name_details,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: response.message,
-                                icon: 'success',
-                                showConfirmButton: false,  // Automatically close without "OK" button
-                                timer: 1500,
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function(jqXHR, exception) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong, Please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
+//         // Update the coordinator list when the dropdown changes
+//         $("#ch_primarycor").change(function() {
+//             var selectedValue = $(this).val();
+//             loadCoordinatorList(selectedValue);
+//     });
+// });
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('chap-approve').addEventListener('click', function() {
@@ -722,38 +627,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-document.querySelectorAll('.reset-password-btn').forEach(button => {
-    button.addEventListener('click', function (e) {
-        e.preventDefault();
+// document.querySelectorAll('.reset-password-btn').forEach(button => {
+//     button.addEventListener('click', function (e) {
+//         e.preventDefault();
 
-        const userId = this.getAttribute('data-user-id');
-        const newPassword = "TempPass4You";
+//         const userId = this.getAttribute('data-user-id');
+//         const newPassword = "TempPass4You";
 
-        $.ajax({
-            url: '{{ route('updatepassword') }}',
-            type: 'PUT',
-            data: {
-                user_id: userId,
-                new_password: newPassword,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(result) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: result.message.replace('<br>', '\n'),
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success'
-                    }
-                });
-            },
-            error: function(jqXHR, exception) {
-                console.log(jqXHR.responseText); // Log error response
-            }
-        });
-    });
-});
+//         $.ajax({
+//             url: '{{ route('updatepassword') }}',
+//             type: 'PUT',
+//             data: {
+//                 user_id: userId,
+//                 new_password: newPassword,
+//                 _token: '{{ csrf_token() }}'
+//             },
+//             success: function(result) {
+//                 Swal.fire({
+//                     title: 'Success!',
+//                     text: result.message.replace('<br>', '\n'),
+//                     icon: 'success',
+//                     confirmButtonText: 'OK',
+//                     customClass: {
+//                         confirmButton: 'btn-sm btn-success'
+//                     }
+//                 });
+//             },
+//             error: function(jqXHR, exception) {
+//                 console.log(jqXHR.responseText); // Log error response
+//             }
+//         });
+//     });
+// });
 
 </script>
 @endsection

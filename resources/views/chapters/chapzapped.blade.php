@@ -81,7 +81,11 @@
 
             <div class="card-body text-center">
                 @if ($assistConferenceCoordinatorCondition)
-                    <button class="btn bg-gradient-primary" onclick="startExport('einstatus', 'EIN Status List')"><i class="fas fa-download mr-2" ></i>Export Zapped Chapter List</button>
+                    @if ($checkBox5Status)
+                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('intzapchapter', 'International Zapped Chapter List')"><i class="fas fa-download"></i>&nbsp; Export International Zapped Chapter List</button>
+                    @else
+                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="fas fa-download mr-2" ></i>Export Zapped Chapter List</button>
+                    @endif
                 @endif
              </div>
           </div>

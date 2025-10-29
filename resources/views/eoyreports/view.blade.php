@@ -239,10 +239,10 @@
                                 @if (!empty($chDocuments->roster_path))
                                     {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->roster_path }}'">View Chapter Roster</button> --}}
                                     <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chDocuments->roster_path }}')">View Chapter Roster</button>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()">Replace Roster File</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Replace Roster File</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()">Upload Roster File</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Upload Roster File</button>
                                 @endif
                         </div>
                     </div>
@@ -255,10 +255,10 @@
                             @if (!empty($chDocuments->statement_1_path))
                                 {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->statement_1_path }}'">View Bank Statement</button> --}}
                                 <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chDocuments->statement_1_path }}')">View Bank Statement</button>
-                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()">Replace Bank Statement</button>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Replace Bank Statement</button>
                             @else
                                 <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
-                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()">Upload Bank Statement</button>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Upload Bank Statement</button>
                             @endif
                         </div>
                     </div>
@@ -271,10 +271,10 @@
                                 @if (!empty($chDocuments->statement_2_path))
                                     {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->statement_2_path }}'">View Additional Bank Statement</button> --}}
                                     <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chDocuments->statement_2_path }}')">View Additional Bank Statement</button>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()">Replace Additional Bank Statement</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Replace Additional Bank Statement</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()">Upload Additional Bank Statement</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Upload Additional Bank Statement</button>
                                 @endif
                         </div>
                     </div>
@@ -305,10 +305,10 @@
                                 @if (!empty($chDocuments->irs_path))
                                     {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->irs_path }}'">View 990N Confirmation</button> --}}
                                     <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chDocuments->irs_path }}')">View 990N Confirmation</button>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()">Replace 990N Confirmation</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()">Upload 990N Confirmation</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
                                 @endif
                         </div>
                     </div>
@@ -435,32 +435,30 @@ $(document).ready(function () {
     }
 });
 
-    $(document).ready(function() {
-    function loadCoordinatorList(coorId) {
-        if (coorId != "") {
-            $.ajax({
-                url: '{{ url("/load-coordinator-list") }}' + '/' + coorId,
-                type: "GET",
-                success: function(result) {
-                    $("#display_corlist").html(result);
-                },
-                error: function (jqXHR, exception) {
-                    console.log("Error: ", jqXHR, exception);
-                }
-            });
-        }
-    }
+//     $(document).ready(function() {
+//     function loadCoordinatorList(coorId) {
+//         if (coorId != "") {
+//             $.ajax({
+//                 url: '{{ url("/load-coordinator-list") }}' + '/' + coorId,
+//                 type: "GET",
+//                 success: function(result) {
+//                     $("#display_corlist").html(result);
+//                 },
+//                 error: function (jqXHR, exception) {
+//                     console.log("Error: ", jqXHR, exception);
+//                 }
+//             });
+//         }
+//     }
 
-    var selectedCorId = $("#ch_primarycor").val();
-    loadCoordinatorList(selectedCorId);
+//     var selectedCorId = $("#ch_primarycor").val();
+//     loadCoordinatorList(selectedCorId);
 
-    $("#ch_primarycor").change(function() {
-        var selectedValue = $(this).val();
-        loadCoordinatorList(selectedValue);
-    });
-});
-
-
+//     $("#ch_primarycor").change(function() {
+//         var selectedValue = $(this).val();
+//         loadCoordinatorList(selectedValue);
+//     });
+// });
 
 // document.addEventListener("DOMContentLoaded", function() {
 //     // Initialize the state when the page loads
@@ -570,324 +568,253 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-//   function generateFinancialReport() {
-//     // Show confirmation dialog
+// function showRosterUploadModal() {
+//     var chapter_id = "{{ $chDetails->id }}";
+
 //     Swal.fire({
-//         title: 'Generate Financial Report',
-//         text: 'This will generate the financial report PDF.',
+//         title: 'Upload Chapter Roster',
+//         html: `
+//             <form id="uploadRosterForm" enctype="multipart/form-data">
+//                 @csrf
+//                 <input type="file" name='file' required>
+//             </form>
+//         `,
 //         showCancelButton: true,
-//         confirmButtonText: 'Generate',
-//         cancelButtonText: 'Cancel',
+//         confirmButtonText: 'Upload',
+//         cancelButtonText: 'Close',
+//         preConfirm: () => {
+//             var formData = new FormData(document.getElementById('uploadRosterForm'));
+
+//             Swal.fire({
+//                 title: 'Processing...',
+//                 text: 'Please wait while we upload your file.',
+//                 allowOutsideClick: false,
+//                 didOpen: () => {
+//                     Swal.showLoading();
+
+//                     $.ajax({
+//                         url: '{{ url('/files/storeRoster', '') }}' + '/' + chapter_id,
+//                         type: 'POST',
+//                         data: formData,
+//                         contentType: false,
+//                         processData: false,
+//                         success: function(response) {
+//                             Swal.fire({
+//                                 title: 'Success!',
+//                                 text: 'Roster uploaded successfully!',
+//                                 icon: 'success',
+//                                 showConfirmButton: false,
+//                                 timer: 1500
+//                             }).then(() => {
+//                                 location.reload(); // Reload the page to reflect changes
+//                             });
+//                         },
+//                         error: function(jqXHR, exception) {
+//                             Swal.fire({
+//                                 title: 'Error!',
+//                                 text: 'Something went wrong, please try again.',
+//                                 icon: 'error',
+//                                 confirmButtonText: 'OK'
+//                             });
+//                         }
+//                     });
+//                 }
+//             });
+
+//             return false;
+//         },
 //         customClass: {
 //             confirmButton: 'btn-sm btn-success',
 //             cancelButton: 'btn-sm btn-danger'
 //         }
-//     }).then((result) => {
-//         if (result.isConfirmed) {
-//             // Show loading
+//     });
+// }
+
+// function showStatement1UploadModal() {
+//     var chapter_id = "{{ $chDetails->id }}";
+
+//     Swal.fire({
+//         title: 'Upload Statement',
+//         html: `
+//             <form id="uploadStatement1Form" enctype="multipart/form-data">
+//                 @csrf
+//                 <input type="file" name='file' required>
+//             </form>
+//         `,
+//         showCancelButton: true,
+//         confirmButtonText: 'Upload',
+//         cancelButtonText: 'Close',
+//         preConfirm: () => {
+//             var formData = new FormData(document.getElementById('uploadStatement1Form'));
+
 //             Swal.fire({
-//                 title: 'Generating...',
-//                 text: 'Please wait while the PDF is being generated.',
+//                 title: 'Processing...',
+//                 text: 'Please wait while we upload your file.',
 //                 allowOutsideClick: false,
 //                 didOpen: () => {
 //                     Swal.showLoading();
+
+//                     $.ajax({
+//                         url: '{{ url('/files/storeStatement1', '') }}' + '/' + chapter_id,
+//                         type: 'POST',
+//                         data: formData,
+//                         contentType: false,
+//                         processData: false,
+//                         success: function(response) {
+//                             Swal.fire({
+//                                 title: 'Success!',
+//                                 text: 'Statement uploaded successfully!',
+//                                 icon: 'success',
+//                                 showConfirmButton: false,
+//                                 timer: 1500
+//                             }).then(() => {
+//                                 location.reload(); // Reload the page to reflect changes
+//                             });
+//                         },
+//                         error: function(jqXHR, exception) {
+//                             Swal.fire({
+//                                 title: 'Error!',
+//                                 text: 'Something went wrong, please try again.',
+//                                 icon: 'error',
+//                                 confirmButtonText: 'OK'
+//                             });
+//                         }
+//                     });
 //                 }
 //             });
 
-//             // Create and submit form dynamically
-//             const form = document.createElement('form');
-//             form.method = 'POST';
-//             form.action = '{{ route("pdf.generatefinancialreport") }}';
-//             // Removed form.target = '_blank'; to prevent opening in new tab
-
-//             // Add CSRF token
-//             const csrfInput = document.createElement('input');
-//             csrfInput.type = 'hidden';
-//             csrfInput.name = '_token';
-//             csrfInput.value = '{{ csrf_token() }}';
-//             form.appendChild(csrfInput);
-
-//             // Add chapter ID
-//             const chapterInput = document.createElement('input');
-//             chapterInput.type = 'hidden';
-//             chapterInput.name = 'chapter_id';
-//             chapterInput.value = '{{ $chDetails->id }}';
-//             form.appendChild(chapterInput);
-
-//             // Add PresDetails as JSON
-//             const presInput = document.createElement('input');
-//             presInput.type = 'hidden';
-//             presInput.name = 'pres_details';
-//             presInput.value = JSON.stringify(@json($PresDetails));
-//             form.appendChild(presInput);
-
-//             document.body.appendChild(form);
-//             form.submit();
-//             document.body.removeChild(form);
-
-//             // Show success message after form submission
-//             setTimeout(() => {
-//                 Swal.fire({
-//                     title: 'Success!',
-//                     text: 'Financial report has been generated successfully.',
-//                     icon: 'success',
-//                     confirmButtonText: 'OK',
-//                     customClass: {
-//                         confirmButton: 'btn-sm btn-success'
-//                     }
-//                 });
-//             }, 2000);
+//             return false;
+//         },
+//         customClass: {
+//             confirmButton: 'btn-sm btn-success',
+//             cancelButton: 'btn-sm btn-danger'
 //         }
 //     });
 // }
 
-function showRosterUploadModal() {
-    var chapter_id = "{{ $chDetails->id }}";
+// function showStatement2UploadModal() {
+//     var chapter_id = "{{ $chDetails->id }}";
 
-    Swal.fire({
-        title: 'Upload Chapter Roster',
-        html: `
-            <form id="uploadRosterForm" enctype="multipart/form-data">
-                @csrf
-                <input type="file" name='file' required>
-            </form>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Upload',
-        cancelButtonText: 'Close',
-        preConfirm: () => {
-            var formData = new FormData(document.getElementById('uploadRosterForm'));
+//     Swal.fire({
+//         title: 'Upload Additional Statement',
+//         html: `
+//             <form id="uploadStatement2Form" enctype="multipart/form-data">
+//                 @csrf
+//                 <input type="file" name='file' required>
+//             </form>
+//         `,
+//         showCancelButton: true,
+//         confirmButtonText: 'Upload',
+//         cancelButtonText: 'Close',
+//         preConfirm: () => {
+//             var formData = new FormData(document.getElementById('uploadStatement2Form'));
 
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we upload your file.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
+//             Swal.fire({
+//                 title: 'Processing...',
+//                 text: 'Please wait while we upload your file.',
+//                 allowOutsideClick: false,
+//                 didOpen: () => {
+//                     Swal.showLoading();
 
-                    $.ajax({
-                        url: '{{ url('/files/storeRoster', '') }}' + '/' + chapter_id,
-                        type: 'POST',
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Roster uploaded successfully!',
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function(jqXHR, exception) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong, please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    });
-                }
-            });
+//                     $.ajax({
+//                         url: '{{ url('/files/storeStatement2', '') }}' + '/' + chapter_id,
+//                         type: 'POST',
+//                         data: formData,
+//                         contentType: false,
+//                         processData: false,
+//                         success: function(response) {
+//                             Swal.fire({
+//                                 title: 'Success!',
+//                                 text: 'Additional Statement uploaded successfully!',
+//                                 icon: 'success',
+//                                 showConfirmButton: false,
+//                                 timer: 1500
+//                             }).then(() => {
+//                                 location.reload(); // Reload the page to reflect changes
+//                             });
+//                         },
+//                         error: function(jqXHR, exception) {
+//                             Swal.fire({
+//                                 title: 'Error!',
+//                                 text: 'Something went wrong, please try again.',
+//                                 icon: 'error',
+//                                 confirmButtonText: 'OK'
+//                             });
+//                         }
+//                     });
+//                 }
+//             });
 
-            return false;
-        },
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        }
-    });
-}
+//             return false;
+//         },
+//         customClass: {
+//             confirmButton: 'btn-sm btn-success',
+//             cancelButton: 'btn-sm btn-danger'
+//         }
+//     });
+// }
 
-function showStatement1UploadModal() {
-    var chapter_id = "{{ $chDetails->id }}";
+// function show990NUploadModal() {
+//     var chapter_id = "{{ $chDetails->id }}";
 
-    Swal.fire({
-        title: 'Upload Statement',
-        html: `
-            <form id="uploadStatement1Form" enctype="multipart/form-data">
-                @csrf
-                <input type="file" name='file' required>
-            </form>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Upload',
-        cancelButtonText: 'Close',
-        preConfirm: () => {
-            var formData = new FormData(document.getElementById('uploadStatement1Form'));
+//     Swal.fire({
+//         title: 'Upload 990N',
+//         html: `
+//             <form id="upload990NForm" enctype="multipart/form-data">
+//                 @csrf
+//                 <input type="file" name='file' required>
+//             </form>
+//         `,
+//         showCancelButton: true,
+//         confirmButtonText: 'Upload',
+//         cancelButtonText: 'Close',
+//         preConfirm: () => {
+//             var formData = new FormData(document.getElementById('upload990NForm'));
 
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we upload your file.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
+//             Swal.fire({
+//                 title: 'Processing...',
+//                 text: 'Please wait while we upload your file.',
+//                 allowOutsideClick: false,
+//                 didOpen: () => {
+//                     Swal.showLoading();
 
-                    $.ajax({
-                        url: '{{ url('/files/storeStatement1', '') }}' + '/' + chapter_id,
-                        type: 'POST',
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Statement uploaded successfully!',
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function(jqXHR, exception) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong, please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    });
-                }
-            });
+//                     $.ajax({
+//                         url: '{{ url('/files/store990n', '') }}' + '/' + chapter_id,
+//                         type: 'POST',
+//                         data: formData,
+//                         contentType: false,
+//                         processData: false,
+//                         success: function(response) {
+//                             Swal.fire({
+//                                 title: 'Success!',
+//                                 text: '990N uploaded successfully!',
+//                                 icon: 'success',
+//                                 showConfirmButton: false,
+//                                 timer: 1500
+//                             }).then(() => {
+//                                 location.reload(); // Reload the page to reflect changes
+//                             });
+//                         },
+//                         error: function(jqXHR, exception) {
+//                             Swal.fire({
+//                                 title: 'Error!',
+//                                 text: 'Something went wrong, please try again.',
+//                                 icon: 'error',
+//                                 confirmButtonText: 'OK'
+//                             });
+//                         }
+//                     });
+//                 }
+//             });
 
-            return false;
-        },
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        }
-    });
-}
-
-function showStatement2UploadModal() {
-    var chapter_id = "{{ $chDetails->id }}";
-
-    Swal.fire({
-        title: 'Upload Additional Statement',
-        html: `
-            <form id="uploadStatement2Form" enctype="multipart/form-data">
-                @csrf
-                <input type="file" name='file' required>
-            </form>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Upload',
-        cancelButtonText: 'Close',
-        preConfirm: () => {
-            var formData = new FormData(document.getElementById('uploadStatement2Form'));
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we upload your file.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-
-                    $.ajax({
-                        url: '{{ url('/files/storeStatement2', '') }}' + '/' + chapter_id,
-                        type: 'POST',
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Additional Statement uploaded successfully!',
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function(jqXHR, exception) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong, please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    });
-                }
-            });
-
-            return false;
-        },
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        }
-    });
-}
-
-function show990NUploadModal() {
-    var chapter_id = "{{ $chDetails->id }}";
-
-    Swal.fire({
-        title: 'Upload 990N',
-        html: `
-            <form id="upload990NForm" enctype="multipart/form-data">
-                @csrf
-                <input type="file" name='file' required>
-            </form>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Upload',
-        cancelButtonText: 'Close',
-        preConfirm: () => {
-            var formData = new FormData(document.getElementById('upload990NForm'));
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we upload your file.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-
-                    $.ajax({
-                        url: '{{ url('/files/store990n', '') }}' + '/' + chapter_id,
-                        type: 'POST',
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: '990N uploaded successfully!',
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function(jqXHR, exception) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong, please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    });
-                }
-            });
-
-            return false;
-        },
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        }
-    });
-}
+//             return false;
+//         },
+//         customClass: {
+//             confirmButton: 'btn-sm btn-success',
+//             cancelButton: 'btn-sm btn-danger'
+//         }
+//     });
+// }
 
 
  //submit validation function

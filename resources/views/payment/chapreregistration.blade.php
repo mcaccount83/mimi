@@ -117,14 +117,20 @@
                 @endif
                 <div class="card-body text-center">
                     @if($conferenceCoordinatorCondition)
-                    @if($checkBoxStatus == null && $checkBox3Status == null)
-                        <a class="btn bg-gradient-primary" href="{{ route('payment.chapreregreminder') }}"><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</a>
-                        <a class="btn bg-gradient-primary" href="{{ route('payment.chaprereglatereminder') }}"><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</a>
-                    @else
-                        <button class="btn bg-gradient-primary" disabled><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button>
-                        <button class="btn bg-gradient-primary" disabled><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</button>
-                    @endif
-                        <a href="{{ route('export.rereg')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export Overdue Chapter List</button></a>
+                        @if($checkBoxStatus || $checkBox3Status || $checkBox5Status)
+                            <button class="btn bg-gradient-primary mb-3" disabled><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button>
+                            <button class="btn bg-gradient-primary mb-3" disabled><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</button>
+                        @else
+                            <a class="btn bg-gradient-primary mb-3" href="{{ route('payment.chapreregreminder') }}"><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</a>
+                            <a class="btn bg-gradient-primary mb-3" href="{{ route('payment.chaprereglatereminder') }}"><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</a>
+                        @endif
+                        @if ($checkBox3Status)
+                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')"><i class="fas fa-download mr-2" ></i>Export Overdue Re-Reg List</button>
+                        @elseif ($checkBox5Status)
+                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('intreregoverdue', 'International Overdue Re-Reg List')"><i class="fas fa-download"></i>&nbsp; Export International Overdue Re-Reg List</button>
+                        @else
+                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')" disabled><i class="fas fa-download mr-2" ></i>Export Overdue Re-Reg List</button>
+                        @endif
                     @endif
             </div>
         </div>

@@ -135,10 +135,10 @@
                                 @if (!empty($chDetails->documents->irs_path))
                                     {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDetails->documents->irs_path }}'">View 990N Confirmation</button> --}}
                                     <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chDetails->documents->irs_path }}')">View 990N Confirmation</button>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()">Replace 990N Confirmation</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()">Upload 990N Confirmation</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
                                 @endif
                         </div>
                     </div>
@@ -323,33 +323,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-$(document).ready(function() {
-    // Function to load the coordinator list based on the selected value
-    function loadCoordinatorList(id) {
-        if(id != "") {
-            $.ajax({
-                url: '{{ url("/load-coordinator-list") }}' + '/' + id,
-                type: "GET",
-                success: function(result) {
-                $("#display_corlist").html(result);
-                },
-                error: function (jqXHR, exception) {
-                console.log("Error: ", jqXHR, exception);
-                }
-            });
-        }
-    }
+// $(document).ready(function() {
+//     // Function to load the coordinator list based on the selected value
+//     function loadCoordinatorList(id) {
+//         if(id != "") {
+//             $.ajax({
+//                 url: '{{ url("/load-coordinator-list") }}' + '/' + id,
+//                 type: "GET",
+//                 success: function(result) {
+//                 $("#display_corlist").html(result);
+//                 },
+//                 error: function (jqXHR, exception) {
+//                 console.log("Error: ", jqXHR, exception);
+//                 }
+//             });
+//         }
+//     }
 
-    // Get the selected coordinator ID on page load
-    var selectedCorId = $("#ch_primarycor").val();
-        loadCoordinatorList(selectedCorId);
+//     // Get the selected coordinator ID on page load
+//     var selectedCorId = $("#ch_primarycor").val();
+//         loadCoordinatorList(selectedCorId);
 
-        // Update the coordinator list when the dropdown changes
-        $("#ch_primarycor").change(function() {
-            var selectedValue = $(this).val();
-            loadCoordinatorList(selectedValue);
-    });
-});
+//         // Update the coordinator list when the dropdown changes
+//         $("#ch_primarycor").change(function() {
+//             var selectedValue = $(this).val();
+//             loadCoordinatorList(selectedValue);
+//     });
+// });
 
 function show990NUploadModal() {
     var chapter_id = "{{ $chDetails->id }}";

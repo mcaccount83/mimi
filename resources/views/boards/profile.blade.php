@@ -665,377 +665,329 @@
 @endsection
 @section('customscript')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    // Define the sections we need to handle
-    const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
+    /* Disable fields and buttons  */
+    $(document).ready(function () {
+        var currentMonth = {{ $thisDate->month }};
+        var userType = @json($userType);
+        var userAdmin = @json($userAdmin);
+        var boardActive = @json($boardActive);
 
-    // Special state IDs that should show the country field
-    const specialStates = [52, 53, 54, 55];
-
-    // Process each section
-    sections.forEach(section => {
-        const stateDropdown = document.getElementById(`ch_${section}_state`);
-        const countryContainer = document.getElementById(`ch_${section}_country-container`);
-        const countrySelect = document.getElementById(`ch_${section}_country`);
-
-        // Only proceed if all elements exist
-        if (stateDropdown && countryContainer && countrySelect) {
-            // Function to toggle country field visibility
-            function toggleCountryField() {
-                const selectedStateId = parseInt(stateDropdown.value) || 0;
-
-                if (specialStates.includes(selectedStateId)) {
-                    countryContainer.style.display = 'flex';
-                    countrySelect.setAttribute('required', 'required');
-                } else {
-                    countryContainer.style.display = 'none';
-                    countrySelect.removeAttribute('required');
-                    countrySelect.value = "";
-                }
-            }
-
-            // Set initial state
-            toggleCountryField();
-
-            // Add event listener
-            stateDropdown.addEventListener('change', toggleCountryField);
+        if (userAdmin == 1) {
+            // Admin - ALWAYS allow edits for testing purposes
+            $('#logout-btn').prop('disabled', true);
+        } else if (userType == 'coordinator' && userAdmin != 1) {
+            // Coordinators - ALWAYS disable (never enabled)
+            $('input, select, textarea').prop('disabled', true);
+            $('#Save, #Password, #logout-btn').prop('disabled', true);
+            $('#display_corlist').addClass('disabled-link').attr('href', '#');
+        } else if (currentMonth == 5 || currentMonth == 6 ) {
+            // Board members in month 5-6 - always disable
+            $('input, select, textarea').prop('disabled', true);
+            $('#Save, #Password').prop('disabled', true);
+        } else if ((currentMonth == 7 || currentMonth == 8) && boardActive != 1) {
+            // Board members in months 7-8 - only disable if boardActive != 1
+            $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
+            $('#Save').prop('disabled', true);
         }
+        // Board members in months 9-12 & 1-4 will be editable for everyone
     });
-});
 
+//     document.addEventListener('DOMContentLoaded', function() {
+//     // Define the sections we need to handle
+//     const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
 
-/* Disable fields and buttons  */
-$(document).ready(function () {
-    var currentMonth = {{ $thisDate->month }};
-    var userType = @json($userType);
-    var userAdmin = @json($userAdmin);
-    var boardActive = @json($boardActive);
+//     // Special state IDs that should show the country field
+//     const specialStates = [52, 53, 54, 55];
 
-    if (userAdmin == 1) {
-        // Admin - ALWAYS allow edits for testing purposes
-        $('#logout-btn').prop('disabled', true);
-    } else if (userType == 'coordinator' && userAdmin != 1) {
-        // Coordinators - ALWAYS disable (never enabled)
-        $('input, select, textarea').prop('disabled', true);
-        $('#Save, #Password, #logout-btn').prop('disabled', true);
-        $('#display_corlist').addClass('disabled-link').attr('href', '#');
-    } else if (currentMonth == 5 || currentMonth == 6 ) {
-        // Board members in month 5-6 - always disable
-        $('input, select, textarea').prop('disabled', true);
-        $('#Save, #Password').prop('disabled', true);
-    } else if ((currentMonth == 7 || currentMonth == 8) && boardActive != 1) {
-        // Board members in months 7-8 - only disable if boardActive != 1
-        $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
-        $('#Save').prop('disabled', true);
-    }
-    // Board members in months 9-12 & 1-4 will be editable for everyone
-});
+//     // Process each section
+//     sections.forEach(section => {
+//         const stateDropdown = document.getElementById(`ch_${section}_state`);
+//         const countryContainer = document.getElementById(`ch_${section}_country-container`);
+//         const countrySelect = document.getElementById(`ch_${section}_country`);
 
- document.addEventListener('DOMContentLoaded', function() {
-    const websiteUrl = document.getElementById('ch_website');
-    const statusContainer = document.getElementById('ch_webstatus-container');
-    const websiteStatus = document.getElementById('ch_webstatus');
+//         // Only proceed if all elements exist
+//         if (stateDropdown && countryContainer && countrySelect) {
+//             // Function to toggle country field visibility
+//             function toggleCountryField() {
+//                 const selectedStateId = parseInt(stateDropdown.value) || 0;
 
-    // Only proceed if all elements exist
-    if (websiteUrl && statusContainer && websiteStatus) {
+//                 if (specialStates.includes(selectedStateId)) {
+//                     countryContainer.style.display = 'flex';
+//                     countrySelect.setAttribute('required', 'required');
+//                 } else {
+//                     countryContainer.style.display = 'none';
+//                     countrySelect.removeAttribute('required');
+//                     countrySelect.value = "";
+//                 }
+//             }
 
-        // Function to toggle status field visibility
-        function toggleStatusField() {
-            const urlValue = websiteUrl.value.trim();
+//             // Set initial state
+//             toggleCountryField();
 
-            if (urlValue != '' && urlValue != 'http://') {
-                // Show status field if URL has a meaningful value
-                statusContainer.style.display = 'flex';
-                websiteStatus.setAttribute('required', 'required');
-            } else {
-                // Hide status field if URL is empty or just the default "http://"
-                statusContainer.style.display = 'none';
-                websiteStatus.removeAttribute('required');
-                websiteStatus.value = ""; // Clear the selection
-            }
-        }
+//             // Add event listener
+//             stateDropdown.addEventListener('change', toggleCountryField);
+//         }
+//     });
+// });
 
-        // Set initial state on page load
-        toggleStatusField();
+//  document.addEventListener('DOMContentLoaded', function() {
+//     const websiteUrl = document.getElementById('ch_website');
+//     const statusContainer = document.getElementById('ch_webstatus-container');
+//     const websiteStatus = document.getElementById('ch_webstatus');
 
-        // Add event listeners for real-time updates
-        websiteUrl.addEventListener('input', toggleStatusField);
-        websiteUrl.addEventListener('change', toggleStatusField);
-    }
-});
+//     // Only proceed if all elements exist
+//     if (websiteUrl && statusContainer && websiteStatus) {
 
-document.addEventListener("DOMContentLoaded", function() {
-    const websiteField = document.getElementById("ch_website");
-    const statusField = document.getElementById("ch_webstatus");
+//         // Function to toggle status field visibility
+//         function toggleStatusField() {
+//             const urlValue = websiteUrl.value.trim();
 
-    websiteField.addEventListener("input", function() {
-        // Enable options 2 and 3, disable options 1 and 2
-        Array.from(statusField.options).forEach(option => {
-            if (["0", "1"].includes(option.value)) {
-                option.disabled = true;
-            } else if (["2", "3"].includes(option.value)) {
-                option.disabled = false;
-            }
-        });
-    });
-});
+//             if (urlValue != '' && urlValue != 'http://') {
+//                 // Show status field if URL has a meaningful value
+//                 statusContainer.style.display = 'flex';
+//                 websiteStatus.setAttribute('required', 'required');
+//             } else {
+//                 // Hide status field if URL is empty or just the default "http://"
+//                 statusContainer.style.display = 'none';
+//                 websiteStatus.removeAttribute('required');
+//                 websiteStatus.value = ""; // Clear the selection
+//             }
+//         }
+
+//         // Set initial state on page load
+//         toggleStatusField();
+
+//         // Add event listeners for real-time updates
+//         websiteUrl.addEventListener('input', toggleStatusField);
+//         websiteUrl.addEventListener('change', toggleStatusField);
+//     }
+// });
 
 // document.addEventListener("DOMContentLoaded", function() {
 //     const websiteField = document.getElementById("ch_website");
 //     const statusField = document.getElementById("ch_webstatus");
-//     const hiddenStatus = document.querySelector('input[name="ch_hid_webstatus"]');
 
-//     // Get the current saved value
-//     const savedValue = hiddenStatus.value;
-//     const originalUrl = websiteField.value;
-
-//     // Function to disable options 0 and 1
-//     const disableRestrictedOptions = () => {
+//     websiteField.addEventListener("input", function() {
+//         // Enable options 2 and 3, disable options 1 and 2
 //         Array.from(statusField.options).forEach(option => {
-//             if (option.value == "0" || option.value == "1") {
+//             if (["0", "1"].includes(option.value)) {
 //                 option.disabled = true;
+//             } else if (["2", "3"].includes(option.value)) {
+//                 option.disabled = false;
 //             }
 //         });
-//     };
-
-//     // Function to update status field requirements
-//     const updateStatusRequirement = () => {
-//         if (websiteField.value.trim() == '') {
-//             statusField.removeAttribute('required');
-//             statusField.value = ''; // Optionally clear the status
-//         } else {
-//             statusField.setAttribute('required', 'required');
-//         }
-//     };
-
-//     // Initial setup
-//     disableRestrictedOptions();
-//     updateStatusRequirement();
-
-//     // Ensure the saved value is selected if URL exists
-//     if (originalUrl && statusField.value) {
-//         statusField.value = savedValue;
-//     }
-
-//     // Add event listener for website URL changes
-//     websiteField.addEventListener("input", function() {
-//         if (this.value != originalUrl) {
-//             statusField.value = "";
-//             disableRestrictedOptions();
-//         }
-//         updateStatusRequirement();
 //     });
 // });
 
-// Function to handle show/hide logic for vacant checkboxes
-function handleVacantCheckbox(checkboxId, fieldClass) {
-    var fields = $("." + fieldClass);
+// // Function to handle show/hide logic for vacant checkboxes
+// function handleVacantCheckbox(checkboxId, fieldClass) {
+//     var fields = $("." + fieldClass);
 
-    $("#" + checkboxId).change(function () {
-        if ($(this).prop("checked")) {
-            fields.hide().find('input, select, textarea').prop('required', false).val(null);
-        } else {
-            fields.show().find('input, select, textarea').prop('required', true);
-        }
-    });
+//     $("#" + checkboxId).change(function () {
+//         if ($(this).prop("checked")) {
+//             fields.hide().find('input, select, textarea').prop('required', false).val(null);
+//         } else {
+//             fields.show().find('input, select, textarea').prop('required', true);
+//         }
+//     });
 
-    // Initial show/hide logic on page load
-    if ($("#" + checkboxId).prop("checked")) {
-        fields.hide().find('input, select, textarea').prop('required', false).val(null);
-    } else {
-        fields.show().find('input, select, textarea').prop('required', true);
-    }
-}
+//     // Initial show/hide logic on page load
+//     if ($("#" + checkboxId).prop("checked")) {
+//         fields.hide().find('input, select, textarea').prop('required', false).val(null);
+//     } else {
+//         fields.show().find('input, select, textarea').prop('required', true);
+//     }
+// }
 
-// Apply the logic for each checkbox with a specific class
-handleVacantCheckbox("MVPVacant", "mvp-field");
-handleVacantCheckbox("AVPVacant", "avp-field");
-handleVacantCheckbox("SecVacant", "sec-field");
-handleVacantCheckbox("TreasVacant", "trs-field");
+// // Apply the logic for each checkbox with a specific class
+// handleVacantCheckbox("MVPVacant", "mvp-field");
+// handleVacantCheckbox("AVPVacant", "avp-field");
+// handleVacantCheckbox("SecVacant", "sec-field");
+// handleVacantCheckbox("TreasVacant", "trs-field");
 
-$( document ).ready(function() {
-    var pcid = $("#pcid").val();
-    if (pcid != "") {
-        $.ajax({
-            url: '{{ url("/load-coordinator-list/") }}' + '/' + pcid,
-            type: "GET",
-            success: function (result) {
-                console.log("AJAX result:", result);
-                $("#display_corlist").html(result);
-            },
-            error: function (jqXHR, exception) {
-                console.log("AJAX error:", exception);
-            }
-        });
-    }
+// $( document ).ready(function() {
+//     var pcid = $("#pcid").val();
+//     if (pcid != "") {
+//         $.ajax({
+//             url: '{{ url("/load-coordinator-list/") }}' + '/' + pcid,
+//             type: "GET",
+//             success: function (result) {
+//                 console.log("AJAX result:", result);
+//                 $("#display_corlist").html(result);
+//             },
+//             error: function (jqXHR, exception) {
+//                 console.log("AJAX error:", exception);
+//             }
+//         });
+//     }
 
-    $('.cls-pswd').on('keypress', function(e) {
-    if (e.which == 32)
-        return false;
-    });
+//     $('.cls-pswd').on('keypress', function(e) {
+//     if (e.which == 32)
+//         return false;
+//     });
 
-});
+// });
 
-function validateEmailsBeforeSubmit() {
-    // Get the values from the input fields
-    const emails = [
-        $('#ch_pre_email').val().trim(),
-        $('#ch_avp_email').val().trim(),
-        $('#ch_mvp_email').val().trim(),
-        $('#ch_trs_email').val().trim(),
-        $('#ch_sec_email').val().trim()
-    ];
+// function validateEmailsBeforeSubmit() {
+//     // Get the values from the input fields
+//     const emails = [
+//         $('#ch_pre_email').val().trim(),
+//         $('#ch_avp_email').val().trim(),
+//         $('#ch_mvp_email').val().trim(),
+//         $('#ch_trs_email').val().trim(),
+//         $('#ch_sec_email').val().trim()
+//     ];
 
-    // Filter out empty emails and check for duplicates
-    const emailSet = new Set();
-    const duplicateEmails = [];
+//     // Filter out empty emails and check for duplicates
+//     const emailSet = new Set();
+//     const duplicateEmails = [];
 
-    emails.forEach(email => {
-        if (email != '') {
-            if (emailSet.has(email)) {
-                // Check if the duplicate email is already in the array to avoid listing it multiple times
-                if (!duplicateEmails.includes(email)) {
-                    duplicateEmails.push(email);
-                }
-            } else {
-                emailSet.add(email);
-            }
-        }
-    });
+//     emails.forEach(email => {
+//         if (email != '') {
+//             if (emailSet.has(email)) {
+//                 // Check if the duplicate email is already in the array to avoid listing it multiple times
+//                 if (!duplicateEmails.includes(email)) {
+//                     duplicateEmails.push(email);
+//                 }
+//             } else {
+//                 emailSet.add(email);
+//             }
+//         }
+//     });
 
-    // If duplicates are found, show an alert
-    if (duplicateEmails.length > 0) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Duplicate Emails Found',
-            html: 'The following emails are duplicates: <br>' + duplicateEmails.join('<br>') + '<br>Please correct them before submitting.',
-            confirmButtonText: 'OK',
-            customClass: {
-                confirmButton: 'btn-sm btn-success'
-            }
-        });
-        return false;
-    }
-    return true;
-}
+//     // If duplicates are found, show an alert
+//     if (duplicateEmails.length > 0) {
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Duplicate Emails Found',
+//             html: 'The following emails are duplicates: <br>' + duplicateEmails.join('<br>') + '<br>Please correct them before submitting.',
+//             confirmButtonText: 'OK',
+//             customClass: {
+//                 confirmButton: 'btn-sm btn-success'
+//             }
+//         });
+//         return false;
+//     }
+//     return true;
+// }
 
-function showChangePasswordAlert(user_id) {
-    Swal.fire({
-        title: 'Change Password',
-        html: `
-            <form id="changePasswordForm">
-                <div class="form-group">
-                    <label for="current_password">Current Password</label>
-                    <input type="password" name="current_password" id="current_password" class="swal2-input" required>
-                </div>
-                <div class="form-group">
-                    <label for="new_password">New Password</label>
-                    <input type="password" name="new_password" id="new_password" class="swal2-input" required>
-                </div>
-                <div class="form-group">
-                    <label for="new_password_confirmation">Confirm New Password</label>
-                    <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="swal2-input" required>
-                </div>
-             <input type="hidden" id="user_id" name="user_id" value="${user_id}">
-            </form>
-        `,
-        confirmButtonText: 'Update Password',
-        cancelButtonText: 'Cancel',
-        showCancelButton: true,
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const user_id = Swal.getPopup().querySelector('#user_id').value;
-            const currentPassword = Swal.getPopup().querySelector('#current_password').value;
-            const newPassword = Swal.getPopup().querySelector('#new_password').value;
-            const confirmNewPassword = Swal.getPopup().querySelector('#new_password_confirmation').value;
+// function showChangePasswordAlert(user_id) {
+//     Swal.fire({
+//         title: 'Change Password',
+//         html: `
+//             <form id="changePasswordForm">
+//                 <div class="form-group">
+//                     <label for="current_password">Current Password</label>
+//                     <input type="password" name="current_password" id="current_password" class="swal2-input" required>
+//                 </div>
+//                 <div class="form-group">
+//                     <label for="new_password">New Password</label>
+//                     <input type="password" name="new_password" id="new_password" class="swal2-input" required>
+//                 </div>
+//                 <div class="form-group">
+//                     <label for="new_password_confirmation">Confirm New Password</label>
+//                     <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="swal2-input" required>
+//                 </div>
+//              <input type="hidden" id="user_id" name="user_id" value="${user_id}">
+//             </form>
+//         `,
+//         confirmButtonText: 'Update Password',
+//         cancelButtonText: 'Cancel',
+//         showCancelButton: true,
+//         customClass: {
+//             confirmButton: 'btn-sm btn-success',
+//             cancelButton: 'btn-sm btn-danger'
+//         },
+//         preConfirm: () => {
+//             const user_id = Swal.getPopup().querySelector('#user_id').value;
+//             const currentPassword = Swal.getPopup().querySelector('#current_password').value;
+//             const newPassword = Swal.getPopup().querySelector('#new_password').value;
+//             const confirmNewPassword = Swal.getPopup().querySelector('#new_password_confirmation').value;
 
-            // Validate input fields
-            if (!currentPassword || !newPassword || !confirmNewPassword) {
-                Swal.showValidationMessage('Please fill out all fields');
-                return false;
-            }
+//             // Validate input fields
+//             if (!currentPassword || !newPassword || !confirmNewPassword) {
+//                 Swal.showValidationMessage('Please fill out all fields');
+//                 return false;
+//             }
 
-            if (newPassword != confirmNewPassword) {
-                Swal.showValidationMessage('New passwords do not match');
-                return false;
-            }
+//             if (newPassword != confirmNewPassword) {
+//                 Swal.showValidationMessage('New passwords do not match');
+//                 return false;
+//             }
 
-            // Return the AJAX call as a promise to let Swal wait for it
-            return $.ajax({
-                url: '{{ route("checkpassword") }}',  // Check current password route
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    current_password: currentPassword
-                }
-            }).then(response => {
-                if (!response.isValid) {
-                    Swal.showValidationMessage('Current password is incorrect');
-                    return false;
-                }
-                return {
-                    user_id: user_id,
-                    current_password: currentPassword,
-                    new_password: newPassword,
-                    new_password_confirmation: confirmNewPassword
-                };
-            }).catch(() => {
-                Swal.showValidationMessage('Error verifying current password');
-                return false;
-            });
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we process your request.',
-                allowOutsideClick: false,
-                customClass: {
-                    confirmButton: 'btn-sm btn-success'
-                },
-                didOpen: () => Swal.showLoading()
-            });
+//             // Return the AJAX call as a promise to let Swal wait for it
+//             return $.ajax({
+//                 url: '{{ route("checkpassword") }}',  // Check current password route
+//                 type: 'POST',
+//                 data: {
+//                     _token: '{{ csrf_token() }}',
+//                     current_password: currentPassword
+//                 }
+//             }).then(response => {
+//                 if (!response.isValid) {
+//                     Swal.showValidationMessage('Current password is incorrect');
+//                     return false;
+//                 }
+//                 return {
+//                     user_id: user_id,
+//                     current_password: currentPassword,
+//                     new_password: newPassword,
+//                     new_password_confirmation: confirmNewPassword
+//                 };
+//             }).catch(() => {
+//                 Swal.showValidationMessage('Error verifying current password');
+//                 return false;
+//             });
+//         }
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//             Swal.fire({
+//                 title: 'Processing...',
+//                 text: 'Please wait while we process your request.',
+//                 allowOutsideClick: false,
+//                 customClass: {
+//                     confirmButton: 'btn-sm btn-success'
+//                 },
+//                 didOpen: () => Swal.showLoading()
+//             });
 
-            // Send the form data via AJAX to update the password
-            $.ajax({
-                url: '{{ route("updatepassword") }}',
-                type: 'PUT',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    user_id: result.value.user_id,
-                    current_password: result.value.current_password,
-                    new_password: result.value.new_password,
-                    new_password_confirmation: result.value.new_password_confirmation
-                },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Your password has been updated.',
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                },
-                error: function(jqXHR) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: `Something went wrong: ${jqXHR.responseText}`,
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-danger'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
+//             // Send the form data via AJAX to update the password
+//             $.ajax({
+//                 url: '{{ route("updatepassword") }}',
+//                 type: 'PUT',
+//                 data: {
+//                     _token: '{{ csrf_token() }}',
+//                     user_id: result.value.user_id,
+//                     current_password: result.value.current_password,
+//                     new_password: result.value.new_password,
+//                     new_password_confirmation: result.value.new_password_confirmation
+//                 },
+//                 success: function(response) {
+//                     Swal.fire({
+//                         title: 'Success!',
+//                         text: 'Your password has been updated.',
+//                         icon: 'success',
+//                         confirmButtonText: 'OK',
+//                         customClass: {
+//                             confirmButton: 'btn-sm btn-success'
+//                         }
+//                     });
+//                 },
+//                 error: function(jqXHR) {
+//                     Swal.fire({
+//                         title: 'Error!',
+//                         text: `Something went wrong: ${jqXHR.responseText}`,
+//                         icon: 'error',
+//                         confirmButtonText: 'OK',
+//                         customClass: {
+//                             confirmButton: 'btn-sm btn-danger'
+//                         }
+//                     });
+//                 }
+//             });
+//         }
+//     });
+// }
 
 </script>
 @endsection

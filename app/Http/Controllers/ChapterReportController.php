@@ -49,10 +49,15 @@ class ChapterReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+
         $checkBox4Status = $baseQuery['checkBox4Status'];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox4Status' => $checkBox4Status];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox4Status' => $checkBox4Status,
+    'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,];
 
         return view('chapreports.chaprptchapterstatus')->with($data);
     }
@@ -193,9 +198,12 @@ class ChapterReportController extends Controller implements HasMiddleware
                 });
             })
             ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,];
 
         return view('chapreports.chaprptnewchapters')->with($data);
     }
@@ -218,9 +226,12 @@ class ChapterReportController extends Controller implements HasMiddleware
                 $query->where('rereg_members', '>=', 75);
             })
             ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,];
 
         return view('chapreports.chaprptlargechapters')->with($data);
     }
@@ -241,9 +252,12 @@ class ChapterReportController extends Controller implements HasMiddleware
         $chapterList = $baseQuery['query']
             ->where('status_id', '!=', 1)
             ->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,];
 
         return view('chapreports.chaprptprobation')->with($data);
     }
@@ -262,7 +276,9 @@ class ChapterReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
         $chaptersData = $chapterList->map(function ($chapter) {
             $id = $chapter->primary_coordinator_id;
@@ -291,6 +307,8 @@ class ChapterReportController extends Controller implements HasMiddleware
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'chaptersData' => $chaptersData,
+        'checkBox3Status' => $checkBox3Status,
+            'checkBox5Status' => $checkBox5Status,
             'positionCodes' => ['BS', 'AC', 'SC', 'ARC', 'RC', 'ACC', 'CC'], ];
 
         return view('chapreports.chaprptcoordinators')->with($data);

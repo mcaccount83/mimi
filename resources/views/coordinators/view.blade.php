@@ -416,38 +416,38 @@ function showPositionInformation() {
     });
 }
 
-document.querySelectorAll('.reset-password-btn').forEach(button => {
-    button.addEventListener('click', function (e) {
-        e.preventDefault();
+// document.querySelectorAll('.reset-password-btn').forEach(button => {
+//     button.addEventListener('click', function (e) {
+//         e.preventDefault();
 
-        const userId = this.getAttribute('data-user-id');
-        const newPassword = "TempPass4You";
+//         const userId = this.getAttribute('data-user-id');
+//         const newPassword = "TempPass4You";
 
-        $.ajax({
-            url: '{{ route('updatepassword') }}',
-            type: 'PUT',
-            data: {
-                user_id: userId,
-                new_password: newPassword,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(result) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: result.message.replace('<br>', '\n'),
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success'
-                    }
-                });
-            },
-            error: function(jqXHR, exception) {
-                console.log(jqXHR.responseText); // Log error response
-            }
-        });
-    });
-});
+//         $.ajax({
+//             url: '{{ route('updatepassword') }}',
+//             type: 'PUT',
+//             data: {
+//                 user_id: userId,
+//                 new_password: newPassword,
+//                 _token: '{{ csrf_token() }}'
+//             },
+//             success: function(result) {
+//                 Swal.fire({
+//                     title: 'Success!',
+//                     text: result.message.replace('<br>', '\n'),
+//                     icon: 'success',
+//                     confirmButtonText: 'OK',
+//                     customClass: {
+//                         confirmButton: 'btn-sm btn-success'
+//                     }
+//                 });
+//             },
+//             error: function(jqXHR, exception) {
+//                 console.log(jqXHR.responseText); // Log error response
+//             }
+//         });
+//     });
+// });
 
 function updateCardSent() {
     const coordId = '{{ $cdDetails->id ?? '' }}'; // Use a fallback if `id` is null or undefined

@@ -543,119 +543,119 @@
 @endsection
 @section('customscript')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const websiteUrl = document.getElementById('ch_website');
-    const statusContainer = document.getElementById('ch_webstatus-container');
-    const websiteStatus = document.getElementById('ch_webstatus');
+//     document.addEventListener('DOMContentLoaded', function() {
+//     const websiteUrl = document.getElementById('ch_website');
+//     const statusContainer = document.getElementById('ch_webstatus-container');
+//     const websiteStatus = document.getElementById('ch_webstatus');
 
-    // Only proceed if all elements exist
-    if (websiteUrl && statusContainer && websiteStatus) {
+//     // Only proceed if all elements exist
+//     if (websiteUrl && statusContainer && websiteStatus) {
 
-        // Function to toggle status field visibility
-        function toggleStatusField() {
-            const urlValue = websiteUrl.value.trim();
+//         // Function to toggle status field visibility
+//         function toggleStatusField() {
+//             const urlValue = websiteUrl.value.trim();
 
-            if (urlValue != '' && urlValue != 'http://') {
-                // Show status field if URL has a meaningful value
-                statusContainer.style.display = 'flex';
-                websiteStatus.setAttribute('required', 'required');
-            } else {
-                // Hide status field if URL is empty or just the default "http://"
-                statusContainer.style.display = 'none';
-                websiteStatus.removeAttribute('required');
-                websiteStatus.value = ""; // Clear the selection
-            }
-        }
+//             if (urlValue != '' && urlValue != 'http://') {
+//                 // Show status field if URL has a meaningful value
+//                 statusContainer.style.display = 'flex';
+//                 websiteStatus.setAttribute('required', 'required');
+//             } else {
+//                 // Hide status field if URL is empty or just the default "http://"
+//                 statusContainer.style.display = 'none';
+//                 websiteStatus.removeAttribute('required');
+//                 websiteStatus.value = ""; // Clear the selection
+//             }
+//         }
 
-        // Set initial state on page load
-        toggleStatusField();
+//         // Set initial state on page load
+//         toggleStatusField();
 
-        // Add event listeners for real-time updates
-        websiteUrl.addEventListener('input', toggleStatusField);
-        websiteUrl.addEventListener('change', toggleStatusField);
-    }
-});
+//         // Add event listeners for real-time updates
+//         websiteUrl.addEventListener('input', toggleStatusField);
+//         websiteUrl.addEventListener('change', toggleStatusField);
+//     }
+// });
 
-        document.addEventListener('DOMContentLoaded', function() {
-    // Define the sections we need to handle
-    const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
+//         document.addEventListener('DOMContentLoaded', function() {
+//     // Define the sections we need to handle
+//     const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
 
-    // Special state IDs that should show the country field
-    const specialStates = [52, 53, 54, 55];
+//     // Special state IDs that should show the country field
+//     const specialStates = [52, 53, 54, 55];
 
-    // Process each section
-    sections.forEach(section => {
-        const stateDropdown = document.getElementById(`ch_${section}_state`);
-        const countryContainer = document.getElementById(`ch_${section}_country-container`);
-        const countrySelect = document.getElementById(`ch_${section}_country`);
+//     // Process each section
+//     sections.forEach(section => {
+//         const stateDropdown = document.getElementById(`ch_${section}_state`);
+//         const countryContainer = document.getElementById(`ch_${section}_country-container`);
+//         const countrySelect = document.getElementById(`ch_${section}_country`);
 
-        // Only proceed if all elements exist
-        if (stateDropdown && countryContainer && countrySelect) {
-            // Function to toggle country field visibility
-            function toggleCountryField() {
-                const selectedStateId = parseInt(stateDropdown.value) || 0;
+//         // Only proceed if all elements exist
+//         if (stateDropdown && countryContainer && countrySelect) {
+//             // Function to toggle country field visibility
+//             function toggleCountryField() {
+//                 const selectedStateId = parseInt(stateDropdown.value) || 0;
 
-                if (specialStates.includes(selectedStateId)) {
-                    countryContainer.style.display = 'flex';
-                    countrySelect.setAttribute('required', 'required');
-                } else {
-                    countryContainer.style.display = 'none';
-                    countrySelect.removeAttribute('required');
-                    countrySelect.value = "";
-                }
-            }
+//                 if (specialStates.includes(selectedStateId)) {
+//                     countryContainer.style.display = 'flex';
+//                     countrySelect.setAttribute('required', 'required');
+//                 } else {
+//                     countryContainer.style.display = 'none';
+//                     countrySelect.removeAttribute('required');
+//                     countrySelect.value = "";
+//                 }
+//             }
 
-            // Set initial state
-            toggleCountryField();
+//             // Set initial state
+//             toggleCountryField();
 
-            // Add event listener
-            stateDropdown.addEventListener('change', toggleCountryField);
-        }
-    });
-});
+//             // Add event listener
+//             stateDropdown.addEventListener('change', toggleCountryField);
+//         }
+//     });
+// });
 
 
-document.addEventListener("DOMContentLoaded", function() {
-    const websiteField = document.getElementById("ch_website");
-    const statusField = document.getElementById("ch_webstatus");
+// document.addEventListener("DOMContentLoaded", function() {
+//     const websiteField = document.getElementById("ch_website");
+//     const statusField = document.getElementById("ch_webstatus");
 
-    websiteField.addEventListener("input", function() {
-        // Enable options 2 and 3, disable options 1 and 2
-        Array.from(statusField.options).forEach(option => {
-            if (["0", "1"].includes(option.value)) {
-                option.disabled = true;
-            } else if (["2", "3"].includes(option.value)) {
-                option.disabled = false;
-            }
-        });
-    });
-});
+//     websiteField.addEventListener("input", function() {
+//         // Enable options 2 and 3, disable options 1 and 2
+//         Array.from(statusField.options).forEach(option => {
+//             if (["0", "1"].includes(option.value)) {
+//                 option.disabled = true;
+//             } else if (["2", "3"].includes(option.value)) {
+//                 option.disabled = false;
+//             }
+//         });
+//     });
+// });
 
-// Function to handle show/hide logic for vacant checkboxes
-function handleVacantCheckbox(checkboxId, fieldClass) {
-    var fields = $("." + fieldClass);
+// // Function to handle show/hide logic for vacant checkboxes
+// function handleVacantCheckbox(checkboxId, fieldClass) {
+//     var fields = $("." + fieldClass);
 
-    $("#" + checkboxId).change(function () {
-        if ($(this).prop("checked")) {
-            fields.hide().find('input, select, textarea').prop('required', false).val(null);
-        } else {
-            fields.show().find('input, select, textarea').prop('required', true);
-        }
-    });
+//     $("#" + checkboxId).change(function () {
+//         if ($(this).prop("checked")) {
+//             fields.hide().find('input, select, textarea').prop('required', false).val(null);
+//         } else {
+//             fields.show().find('input, select, textarea').prop('required', true);
+//         }
+//     });
 
-    // Initial show/hide logic on page load
-    if ($("#" + checkboxId).prop("checked")) {
-        fields.hide().find('input, select, textarea').prop('required', false).val(null);
-    } else {
-        fields.show().find('input, select, textarea').prop('required', true);
-    }
-}
+//     // Initial show/hide logic on page load
+//     if ($("#" + checkboxId).prop("checked")) {
+//         fields.hide().find('input, select, textarea').prop('required', false).val(null);
+//     } else {
+//         fields.show().find('input, select, textarea').prop('required', true);
+//     }
+// }
 
-// Apply the logic for each checkbox with a specific class
-handleVacantCheckbox("MVPVacant", "mvp-field");
-handleVacantCheckbox("AVPVacant", "avp-field");
-handleVacantCheckbox("SecVacant", "sec-field");
-handleVacantCheckbox("TreasVacant", "trs-field");
+// // Apply the logic for each checkbox with a specific class
+// handleVacantCheckbox("MVPVacant", "mvp-field");
+// handleVacantCheckbox("AVPVacant", "avp-field");
+// handleVacantCheckbox("SecVacant", "sec-field");
+// handleVacantCheckbox("TreasVacant", "trs-field");
 
 //Boundary Visibility
 ShowBoundaryError();

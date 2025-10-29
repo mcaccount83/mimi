@@ -77,6 +77,22 @@
                         <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
+                @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showAllConf()" />
+                            <label class="custom-control-label" for="showAllConf">Show All Chapters</label>
+                        </div>
+                    </div>
+                @endif
+                @if ($ITCondition || $einCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                        </div>
+                    </div>
+                @endif
                 <div class="card-body text-center">
                     @if ($ITCondition)
                         <button type="button" id="reset-probation" class="btn bg-gradient-primary"><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
@@ -96,70 +112,83 @@
 @endsection
 @section('customscript')
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const dropdownItems = document.querySelectorAll(".dropdown-item");
+        const currentPath = window.location.pathname;
 
-function showPrimary() {
-    var base_url = '{{ url("/chapterreports/probation") }}';
+        dropdownItems.forEach(item => {
+            const itemPath = new URL(item.href).pathname;
 
-    if ($("#showPrimary").prop("checked") == true) {
-        window.location.href = base_url + '?check=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    const dropdownItems = document.querySelectorAll(".dropdown-item");
-    const currentPath = window.location.pathname;
-
-    dropdownItems.forEach(item => {
-        const itemPath = new URL(item.href).pathname;
-
-        if (itemPath == currentPath) {
-            item.classList.add("active");
-        }
-    });
-});
-
-$(document).ready(function() {
-    var resetBaseUrl = '{{ url("/techreports/resetProbationSubmission") }}';
-
-    function handleAjaxRequest(baseUrl) {
-        $.ajax({
-            url: baseUrl,
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-            },
-            success: function(response) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Success!",
-                    text: response.success,
-                    timer: 2000, // Auto-close after 2 seconds
-                    showConfirmButton: false
-                }).then(() => {
-                    location.reload(); // Reload AFTER SweetAlert message
-                });
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error!",
-                    text: xhr.responseJSON?.fail || "An unexpected error occurred.",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
+            if (itemPath == currentPath) {
+                item.classList.add("active");
             }
         });
+    });
+
+    $(document).ready(function() {
+        var resetBaseUrl = '{{ url("/techreports/resetProbationSubmission") }}';
+
+        function handleAjaxRequest(baseUrl) {
+            $.ajax({
+                url: baseUrl,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: response.success,
+                        timer: 2000, // Auto-close after 2 seconds
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload(); // Reload AFTER SweetAlert message
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: xhr.responseJSON?.fail || "An unexpected error occurred.",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        // Attach the function to all buttons
+        $("#reset-probation").click(function() {
+            handleAjaxRequest(resetBaseUrl);
+        });
+    });
+
+      function showPrimary() {
+        var base_url = '{{ url("/chapterreports/probation") }}';
+        if ($("#showPrimary").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::PRIMARY_COORDINATOR }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
     }
 
-    // Attach the function to all buttons
-    $("#reset-probation").click(function() {
-        handleAjaxRequest(resetBaseUrl);
-    });
-});
+    function showAllConf() {
+        var base_url = '{{ url("/chapterreports/probation") }}';
+        if ($("#showAllConf").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::CONFERENCE_REGION }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
 
-
-
+    function showAll() {
+        var base_url = '{{ url("/chapterreports/probation") }}';
+        if ($("#showAll").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
 </script>
 @endsection
