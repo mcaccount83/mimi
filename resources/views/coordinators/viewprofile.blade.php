@@ -2,7 +2,6 @@
 
 @section('page_title', 'Coordinator Profile')
 @section('breadcrumb', 'Coordinator Profile')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */

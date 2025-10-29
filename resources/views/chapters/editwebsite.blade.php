@@ -2,7 +2,6 @@
 
 @section('page_title', 'Chapter Details')
 @section('breadcrumb', 'Website & Social Media')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
@@ -140,13 +139,13 @@
                 <br>
                 @endif
                  @if ($confId == $chConfId)
-                        <button type="button" id="back-web" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapwebsite') }}'"><i class="fas fa-reply mr-2"></i>Back to Website Report</button>
-                        <button type="button" id="back-social" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapsocialmedia') }}'"><i class="fas fa-reply mr-2"></i>Back to Social Media Report</button>
+                        <button type="button" id="back-web" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapwebsite') }}'"><i class="fas fa-reply mr-2"></i>Back to Website Report</button>
+                        <button type="button" id="back-social" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapsocialmedia') }}'"><i class="fas fa-reply mr-2"></i>Back to Social Media Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" id="back-web" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapwebsite', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Website Report</button>
-                    <button type="button" id="back-social" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapsocialmedia', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Social Media Report</button>
+                    <button type="button" id="back-web" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapwebsite', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Website Report</button>
+                    <button type="button" id="back-social" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapsocialmedia', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Social Media Report</button>
                 @endif
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->
@@ -156,104 +155,6 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-<script>
-    var $chActiveId = @json($chActiveId);
-    var $coordinatorCondition = @json($coordinatorCondition);
-    var $ITCondition = @json($ITCondition);
-    var $webReviewCondition = @json($webReviewCondition);
-    var $chConfId = @json($chConfId);
-    var $confId = @json($confId);
+    @include('layouts.scripts.disablefields', ['includeWebReviewCondition' => true])
 
-    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
-    var hasWebReviewCondition = $webReviewCondition && ($confId == $chConfId);
-    var hasITAccess = $ITCondition;
-    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasWebReviewCondition || hasITAccess );
-
-$(document).ready(function () {
-    // Disable fields for chapters that are not active
-    if (!shouldEnable) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-
-        // Re-enable the specific buttons
-        $('#back-web').prop('disabled', false);
-        $('#back-social').prop('disabled', false);
-        $('#back-details').prop('disabled', false);
-    }
-});
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     const websiteUrl = document.getElementById('ch_website');
-//     const statusContainer = document.getElementById('ch_webstatus-container');
-//     const websiteStatus = document.getElementById('ch_webstatus');
-
-//     // Only proceed if all elements exist
-//     if (websiteUrl && statusContainer && websiteStatus) {
-
-//         // Function to toggle status field visibility
-//         function toggleStatusField() {
-//             const urlValue = websiteUrl.value.trim();
-
-//             if (urlValue != '' && urlValue != 'http://') {
-//                 // Show status field if URL has a meaningful value
-//                 statusContainer.style.display = 'flex';
-//                 websiteStatus.setAttribute('required', 'required');
-//             } else {
-//                 // Hide status field if URL is empty or just the default "http://"
-//                 statusContainer.style.display = 'none';
-//                 websiteStatus.removeAttribute('required');
-//                 websiteStatus.value = ""; // Clear the selection
-//             }
-//         }
-
-//         // Set initial state on page load
-//         toggleStatusField();
-
-//         // Add event listeners for real-time updates
-//         websiteUrl.addEventListener('input', toggleStatusField);
-//         websiteUrl.addEventListener('change', toggleStatusField);
-//     }
-// });
-
-//If Website URL Changes for Website Status Change
-function updateWebsiteStatus() {
-    customWarningAlert("If you are changing the chapter website url, please be sure to update the 'Link Status' accordingly.");
-}
-
-// $(document).ready(function() {
-//     // Function to load the coordinator list based on the selected value
-//     function loadCoordinatorList(corId) {
-//         if(corId != "") {
-//             $.ajax({
-//                 url: '{{ url("/load-coordinator-list") }}' + '/' + corId,
-//                 type: "GET",
-//                 success: function(result) {
-//                 $("#display_corlist").html(result);
-//                 },
-//                 error: function (jqXHR, exception) {
-//                 console.log("Error: ", jqXHR, exception);
-//                 }
-//             });
-//         }
-//     }
-
-//     // Get the selected coordinator ID on page load
-//     var selectedCorId = $("#ch_primarycor").val();
-//         loadCoordinatorList(selectedCorId);
-
-//         // Update the coordinator list when the dropdown changes
-//         $("#ch_primarycor").change(function() {
-//             var selectedValue = $(this).val();
-//             loadCoordinatorList(selectedValue);
-//     });
-// });
-
-</script>
 @endsection

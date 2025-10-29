@@ -42,8 +42,6 @@
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
-
-
 <script>
 window.onload = function () {
     if (window.history && window.history.pushState) {
@@ -118,7 +116,6 @@ window.onload = function () {
     .swal2-checkbox {
         margin-right: 5px;
     }
-
 
     .notification-badge {
         position: absolute;
@@ -655,23 +652,26 @@ window.onload = function () {
 <script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 <!-- Sript Functions -->
-@include('layouts.scripts.sendemail')
 @include('layouts.scripts.alert')
+@include('layouts.scripts.boards')
+@include('layouts.scripts.bootstrapswitch')
+@include('layouts.scripts.checkboxes')
+@include('layouts.scripts.coordinatorlist')
 @include('layouts.scripts.datatable')
 @include('layouts.scripts.datetime')
-@include('layouts.scripts.masks')
-@include('layouts.scripts.export')
-@include('layouts.scripts.pdfviewer')
-@include('layouts.scripts.bootstrapswitch')
-@include('layouts.scripts.password')
 @include('layouts.scripts.email')
-@include('layouts.scripts.website')
+@include('layouts.scripts.export')
+@include('layouts.scripts.information')
+@include('layouts.scripts.irs')
+@include('layouts.scripts.masks')
+@include('layouts.scripts.menu')
+@include('layouts.scripts.password')
+@include('layouts.scripts.pdfviewer')
+@include('layouts.scripts.probation')
+@include('layouts.scripts.sendemail')
 @include('layouts.scripts.uploads')
-@include('layouts.scripts.coordinatorlist')
-@include('layouts.scripts.boards')
-@include('layouts.scripts.ein')
-
-
+@include('layouts.scripts.useractions')
+@include('layouts.scripts.website')
 
 @yield('customscript')
 @stack('scripts')

@@ -1054,15 +1054,15 @@ class BoardController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
 
-        $courses = $this->learndashService->getCoursesForUserType($user->user_type);
+        $boardCourses = $this->learndashService->getCoursesForUserType('board');
 
         // Add auto-login URLs to each course
-        foreach ($courses as &$course) {
-            $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
+        foreach ($boardCourses as &$boardCourse) {
+            $boardCourse['auto_login_url'] = $this->learndashService->getAutoLoginUrl($boardCourse, $user);
         }
 
         // Group by category - store both name and slug
-        $coursesByCategory = collect($courses)->groupBy(function ($course) {
+        $boardCoursesByCategory = collect($boardCourses)->groupBy(function ($course) {
             return $course['categories'][0]['slug'] ?? 'uncategorized';
         })->map(function ($courses, $slug) {
             return [
@@ -1075,8 +1075,8 @@ class BoardController extends Controller implements HasMiddleware
             'chDetails' => $chDetails,
             'stateShortName' => $stateShortName,
             'userType' => $userType,
-            'courses' => $courses,
-            'coursesByCategory' => $coursesByCategory,
+            'boardCourses' => $boardCourses,
+            'boardCoursesByCategory' => $boardCoursesByCategory,
         ];
 
         return view('boards.elearning')->with($data);

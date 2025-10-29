@@ -2,7 +2,6 @@
 
 @section('page_title', 'Chapter Details')
 @section('breadcrumb', 'Chapter Details')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
@@ -193,7 +192,7 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->disband_letter_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
+                                        <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
                                         {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="disband-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->disband_letter_path }}'">Disband Letter</button> --}}
                                     @else
                                         <button class="btn bg-gradient-primary btn-sm disabled">No Disband Letter on File</button>
@@ -206,7 +205,7 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->final_financial_pdf_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chDocuments->final_financial_pdf_path }}')">Final Financial Report</button>
+                                        <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chDocuments->final_financial_pdf_path }}')">Final Financial Report</button>
                                     @else
                                         <button class="btn bg-gradient-primary btn-sm disabled">Final Report Not Filed</button>
                                     @endif
@@ -231,7 +230,7 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chDocuments->ein_letter_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
                                     {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->ein_letter_path }}'">EIN Letter from IRS</button> --}}
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
@@ -245,7 +244,7 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chDocuments->roster_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="openPdfViewer('{{ $chDocuments->roster_path }}')">Most Current Roster</button>
+                                    <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="roster-file" onclick="openPdfViewer('{{ $chDocuments->roster_path }}')">Most Current Roster</button>
                                     {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->roster_path }}'">Most Current Roster</button> --}}
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm disabled">No Roster on File</button>
@@ -368,7 +367,7 @@
                                     <label>Probation/Warning Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationLetterModal()">Email Probation/Warning</button>
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationLetterModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation/Warning</button>
                                 </div>
                             </div>
 
@@ -377,7 +376,7 @@
                                     <label>Probation Release Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationReleaseModal()">Email Probation Release</button>
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationReleaseModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation Release</button>
                                 </div>
                             </div>
 
@@ -388,7 +387,7 @@
                         <div class="col-md-6">
                             <h3 class="profile-username">Disband Checklist
                                 @if (isset($chDisbanded))
-                                    <button id="viewdisband" class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Checklist/Report As President</button>
+                                    <button id="viewdisband" class="btn bg-gradient-primary btn-xs ml-2 keep-enabled" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Checklist/Report As President</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-xs ml-2" disabled>View Checklist/Report As President</button>
                                 @endif
@@ -879,44 +878,44 @@
                 @if($coordinatorCondition && $conferenceCoordinatorCondition)
                     <br>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="fas fa-dollar-sign mr-2"></i>Enter Payment/Donation</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN('{{ $chDetails->id }}')"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
                 @endif
                 @if($coordinatorCondition && $regionalCoordinatorCondition)
-                    <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDocuments->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
                     @if($chActiveId == 1)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal()"><i class="fas fa-ban mr-2"></i>Disband Chapter</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal({{ $chDetails->id }})"><i class="fas fa-ban mr-2"></i>Disband Chapter</button>
                     @elseif($chActiveId != 1)
-                        <button type="button" id="unzap" class="btn bg-gradient-primary mb-3" onclick="unZapChapter()"><i class="fas fa-undo mr-2"></i>UnZap Chapter</button>
+                        <button type="button" id="unzap" class="btn bg-gradient-primary mb-3" onclick="unZapChapter({{ $chDetails->id }})"><i class="fas fa-undo mr-2"></i>UnZap Chapter</button>
                     @endif
                 @endif
                 <br>
                 @if($coordinatorCondition)
                     @if ($confId == $chConfId)
                             @if ($chActiveId == '1')
-                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Chapter List</button>
+                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Chapter List</button>
                             @elseif ($chActiveId == '0')
-                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
                             @endif
                             @if ($inquiriesCondition || $assistConferenceCoordinatorCondition)
                                 @if ($chActiveId == '1')
-                                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check3' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to Active Inquiries List</button>
+                                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check3' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to Active Inquiries List</button>
                                 @elseif ($chActiveId == '0')
-                                    <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check3' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Inquiries List</button>
+                                    <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check3' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Inquiries List</button>
                                 @endif
                             @endif
                      @elseif ($confId != $chConfId)
                         @if ($einCondition || $inquiriesInternationalCondition || $ITCondition)
                             @if ($chActiveId == '1')
-                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Chapter List</button>
+                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Chapter List</button>
                             @elseif ($chActiveId == '0')
-                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Chapter List</button>
                             @endif
                         @endif
                          @if ($inquiriesInternationalCondition || $ITCondition)
                             @if ($chActiveId == '1')
-                                <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Inquiries List</button>
+                                <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Inquiries List</button>
                             @elseif ($chActiveId == '0')
-                                <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Inquiries List</button>
+                                <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Inquiries List</button>
                             @endif
                         @endif
                     @endif
@@ -930,785 +929,16 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-<script>
-    var $chActiveId = @json($chActiveId);
-    var $coordinatorCondition = @json($coordinatorCondition);
-    var $ITCondition = @json($ITCondition);
-    var $chPcId = @json($chPcId);
-    var $coorId = @json($coorId);
-    var $chConfId = @json($chConfId);
-    var $confId = @json($confId);
+    <script>
+        console.log('Page variables:');
+        console.log('chActiveId:', @json($chActiveId ?? 'NOT SET'));
+        console.log('coordinatorCondition:', @json($coordinatorCondition ?? 'NOT SET'));
+        console.log('supervisingCoordinatorCondition:', @json($supervisingCoordinatorCondition ?? 'NOT SET'));
+        console.log('ITCondition:', @json($ITCondition ?? 'NOT SET'));
+        console.log('confId:', @json($confId ?? 'NOT SET'));
+        console.log('cdConfId:', @json($cdConfId ?? 'NOT SET'));
+    </script>
+    @include('layouts.scripts.disablefields')
 
-    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
-    var hasITAccess = $ITCondition;
-    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasITAccess);
-
-$(document).ready(function () {
-    // Disable fields for chapters that are not active & Coordinators who should not have edit access
-    if (!shouldEnable) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-
-        // Re-enable the specific buttons
-        $('#disband-letter').prop('disabled', false);
-        $('#final-pdf').prop('disabled', false);
-        $('#ein-letter').prop('disabled', false);
-        $('#roster-file').prop('disabled', false);
-        $('#viewdisband').prop('disabled', false);
-        $('#back-list').prop('disabled', false);
-        $('#back-zapped').prop('disabled', false);
-        $('#back-inquiries').prop('disabled', false);
-        $('#back-inquiries-zapped').prop('disabled', false);
-        $('#unzap').prop('disabled', false);
-    }
-});
-
-// $(document).ready(function() {
-//     function loadCoordinatorList(coorId) {
-//         if (coorId != "") {
-//             $.ajax({
-//                 url: '{{ url("/load-coordinator-list") }}' + '/' + coorId,
-//                 type: "GET",
-//                 success: function(result) {
-//                     $("#display_corlist").html(result);
-//                 },
-//                 error: function (jqXHR, exception) {
-//                     console.log("Error: ", jqXHR, exception);
-//                 }
-//             });
-//         }
-//     }
-
-//     var selectedCorId = $("#ch_primarycor").val();
-//     loadCoordinatorList(selectedCorId);
-
-//     $("#ch_primarycor").change(function() {
-//         var selectedValue = $(this).val();
-//         loadCoordinatorList(selectedValue);
-//     });
-// });
-
-// document.querySelectorAll('.reset-password-btn').forEach(button => {
-//     button.addEventListener('click', function (e) {
-//         e.preventDefault();
-
-//         const userId = this.getAttribute('data-user-id');
-//         const newPassword = "TempPass4You";
-
-//         $.ajax({
-//             url: '{{ route('updatepassword') }}',
-//             type: 'PUT',
-//             data: {
-//                 user_id: userId,
-//                 new_password: newPassword,
-//                 _token: '{{ csrf_token() }}'
-//             },
-//             success: function(result) {
-//                 Swal.fire({
-//                     title: 'Success!',
-//                     text: result.message.replace('<br>', '\n'),
-//                     icon: 'success',
-//                     confirmButtonText: 'OK',
-//                     customClass: {
-//                         confirmButton: 'btn-sm btn-success'
-//                     }
-//                 });
-//             },
-//             error: function(jqXHR, exception) {
-//                 console.log(jqXHR.responseText); // Log error response
-//             }
-//         });
-//     });
-// });
-
-function subscribe(categoryId, userId) {
-    Swal.fire({
-        title: 'Subscribe to List',
-        html: `
-            <p>User will be subscribed to the selected list. Please confirm by pressing OK.</p>
-            <input type="hidden" id="user_id" name="user_id" value="${userId}">
-            <input type="hidden" id="category_id" name="category_id" value="${categoryId}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const userId = Swal.getPopup().querySelector('#user_id').value;
-            const categoryId = Swal.getPopup().querySelector('#category_id').value;
-
-            return {
-                user_id: userId,
-                category_id: categoryId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request
-            $.ajax({
-                url: '{{ route('forum.subscribecategory') }}',
-                type: 'POST',
-                data: {
-                    user_id: data.user_id,
-                        category_id: data.category_id,
-                        _token: '{{ csrf_token() }}'
-                    },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,  // Automatically close without "OK" button
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function unsubscribe(categoryId, userId) {
-    Swal.fire({
-        title: 'Subscribe to List',
-        html: `
-            <p>Coordinator will be subscribed to the selected list. Please confirm by pressing OK.</p>
-
-            <input type="hidden" id="user_id" name="user_id" value="${userId}">
-            <input type="hidden" id="category_id" name="category_id" value="${categoryId}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const userId = Swal.getPopup().querySelector('#user_id').value;
-            const categoryId = Swal.getPopup().querySelector('#category_id').value;
-
-            return {
-                user_id: userId,
-                category_id: categoryId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request
-            $.ajax({
-                url: '{{ route('forum.unsubscribecategory') }}',
-                type: 'POST',
-                data: {
-                        user_id: data.user_id,
-                        category_id: data.category_id,
-                        _token: '{{ csrf_token() }}'
-                    },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,  // Automatically close without "OK" button
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function updateEIN() {
-    const chapterId = '{{ $chDetails->id }}'; // Get the chapter ID from the Blade variable
-
-    // Check if the chapter already has an EIN
-    $.ajax({
-        url: '{{ route('chapters.checkein') }}',
-        type: 'GET',
-        data: {
-            chapter_id: chapterId
-        },
-        success: function(response) {
-            if (response.ein) {
-                // Show a warning if an EIN already exists
-                Swal.fire({
-                    title: 'Warning!',
-                    text: 'This chapter already has an EIN. Do you want to replace it?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, replace it',
-                    cancelButtonText: 'No',
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Proceed to input the new EIN
-                        promptForNewEIN(chapterId);
-                    }
-                });
-            } else {
-                // No existing EIN, proceed directly
-                promptForNewEIN(chapterId);
-            }
-        },
-        error: function() {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Unable to check the existing EIN. Please try again later.',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn-sm btn-success'
-                }
-            });
-        }
-    });
-}
-
-function promptForNewEIN() {
-    Swal.fire({
-        title: 'Enter EIN',
-        html: `
-            <p>Please enter the EIN for the chapter.</p>
-            <div style="display: flex; align-items: center; ">
-                <input type="text" id="ein" name="ein" class="swal2-input" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask placeholder="Enter EIN" required style="width: 100%;">
-            </div>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
-            <br>
-            <div class="custom-control custom-switch">
-                <input type="checkbox" id="chapter_ein" class="custom-control-input">
-                <label class="custom-control-label" for="chapter_ein">Send EIN Notification to Chapter</label>
-            </div>
-            <br>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const ein = Swal.getPopup().querySelector('#ein').value;
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-            const chapterEIN = Swal.getPopup().querySelector('#chapter_ein').checked;
-
-            if (!ein) {
-                Swal.showValidationMessage('Please enter the new EIN.');
-                return false;
-            }
-
-            return {
-                ein: ein,
-                chapter_id: chapterId,
-                chapter_ein: chapterEIN,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we process your request.',
-                allowOutsideClick: false,
-                customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
-                },
-                didOpen: () => {
-                    Swal.showLoading();
-
-                    // Perform the AJAX request
-                    $.ajax({
-                        url: '{{ route('chapters.updateein') }}',
-                        type: 'POST',
-                        data: {
-                            ein: data.ein,
-                            notify: data.chapter_ein ? '1' : '0',
-                            chapterid: data.chapter_id,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: response.message,
-                                icon: 'success',
-                                showConfirmButton: false,  // Automatically close without "OK" button
-                                timer: 1500,
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function(jqXHR, exception) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong, Please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector('.showFileUploadModal').addEventListener('click', function(e) {
-        e.preventDefault();
-
-        const einLetter = this.getAttribute('data-ein-letter');
-
-        Swal.fire({
-            title: 'Upload EIN Letter',
-            html: `
-                <form id="uploadEINForm" enctype="multipart/form-data">
-                    @csrf
-                    <input type="file" name="file" required>
-                </form>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'Upload',
-            cancelButtonText: 'Close',
-            preConfirm: () => {
-                const formData = new FormData(document.getElementById('uploadEINForm'));
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we upload your file.',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        $.ajax({
-                            url: '{{ url('/files/storeEIN/'. $id) }}',
-                            type: 'POST',
-                            data: formData,
-                            contentType: false,
-                            processData: false,
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: 'File uploaded successfully!',
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        });
-                    }
-                });
-
-                return false;
-            },
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            }
-        });
-    });
-});
-
-function showProbationLetterModal() {
-    Swal.fire({
-        title: 'Generate Probation Letter',
-        html: `
-            <p>This will generate a Probation/Warning letter to be emailed to the full board and all coordinators for the chapter.</p>
-            <p>Select the type of letter to generate and send:</p>
-            <select id="letterType" class="form-control">
-                <option value="no_report">Probation Letter - No EOY Reports</option>
-                <option value="no_payment">Probation Letter - No Re-Reg Payment</option>
-                <option value="probation_party">Probation Letter - Excess Party Expenses</option>
-                <option value="warning_party">Warning Letter - Excess Party Expenses</option>
-            </select>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Generate Letter',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-            const letterType = Swal.getPopup().querySelector('#letterType').value;
-            return { chapterId, letterType };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we generate your letter.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-
-                    $.ajax({
-                        url: '{{ route('pdf.generateProbationLetter') }}',
-                        type: 'POST',
-                        data: {
-                            chapterId: data.chapterId,
-                            letterType: data.letterType,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: response.message,
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 1500,
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function() {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong. Please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function showProbationReleaseModal() {
-    Swal.fire({
-        title: 'Generate Probation Letter',
-        html: `
-            <p>This will generate a Probation Release letter to be emailed to the full board and all coordinators for the chapter.</p>
-
-            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Generate Letter',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-            const letterType = "probation_release";
-
-            return { chapterId, letterType };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we generate your letter.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-
-                    $.ajax({
-                        url: '{{ route('pdf.generateProbationLetter') }}',
-                        type: 'POST',
-                        data: {
-                            chapterId: data.chapterId,
-                            letterType: data.letterType,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: response.message,
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 1500,
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function() {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong. Please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function showDisbandChapterModal() {
-    Swal.fire({
-        title: 'Chapter Disband Reason',
-        html: `
-            <p>Marking a chapter as disbanded will remove the logins for all board members and remove the chapter. Please enter the reason for disbanding and press OK.</p>
-            <div style="display: flex; align-items: center; ">
-                <input type="text" id="disband_reason" name="disband_reason" class="swal2-input" placeholder ="Enter Reason" required style="width: 100%;">
-            </div>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
-            <br>
-            <div class="custom-control custom-switch">
-                <input type="checkbox" id="disband_letter" class="custom-control-input">
-                <label class="custom-control-label" for="disband_letter">Send Disband Letter to Chapter</label>
-            </div>
-            <br>
-            <div id="letterTypeContainer" style="display: none;">
-                <p>Select the type of letter to generate and send:</p>
-                <select id="letterType" class="form-control">
-                    <option value="general">Disband Letter - General</option>
-                    <option value="did_not_start">Disband Letter - Did Not Start</option>
-                    <option value="no_report">Disband Letter - No EOY Reports</option>
-                    <option value="no_payment">Disband Letter - No Re-Reg Payment</option>
-                    <option value="no_communication">Disband Letter - No Communication</option>
-                </select>
-            </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        didOpen: () => {
-            // Add event listener to checkbox
-            document.getElementById('disband_letter').addEventListener('change', function() {
-                const letterTypeContainer = document.getElementById('letterTypeContainer');
-                letterTypeContainer.style.display = this.checked ? 'block' : 'none';
-            });
-        },
-        preConfirm: () => {
-            const disbandReason = Swal.getPopup().querySelector('#disband_reason').value;
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-            const disbandLetter = Swal.getPopup().querySelector('#disband_letter').checked;
-            const letterType = Swal.getPopup().querySelector('#letterType').value;
-
-            if (!disbandReason) {
-                Swal.showValidationMessage('Please enter the reason for disbanding.');
-                return false;
-            }
-
-            return {
-                disband_reason: disbandReason,
-                chapter_id: chapterId,
-                disband_letter: disbandLetter,
-                letterType
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we process your request.',
-                allowOutsideClick: false,
-                customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
-                },
-                didOpen: () => {
-                    Swal.showLoading();
-
-                    // Perform the AJAX request
-                    $.ajax({
-                        url: '{{ route('chapters.updatechapdisband') }}',
-                        type: 'POST',
-                        data: {
-                            reason: data.disband_reason,
-                            letter: data.disband_letter ? '1' : '0',
-                            chapterid: data.chapter_id,
-                            letterType: data.letterType,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: response.message,
-                                icon: 'success',
-                                showConfirmButton: false,  // Automatically close without "OK" button
-                                timer: 1500,
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function(jqXHR, exception) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong, Please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-// Function to unzap Chapter via AJAX
-function unZapChapter(chapterid) {
-    Swal.fire({
-        title: 'UnZap Chapter',
-        html: `
-            <p>Unzapping a chapter will reactivate the logins for all board members and readd the chapter.</p>
-
-            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
-
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-
-            return {
-                chapter_id: chapterId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request
-            $.ajax({
-                url: '{{ route('chapters.updatechapterunzap') }}',
-                type: 'POST',
-                data: {
-                    chapterid: data.chapter_id,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,  // Automatically close without "OK" button
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-</script>
 @endsection
+

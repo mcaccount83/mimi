@@ -2,7 +2,6 @@
 
 @section('page_title', 'Coordinator Details')
 @section('breadcrumb', 'Coordinator Details')
-
 <style>
 
 .disabled-link {

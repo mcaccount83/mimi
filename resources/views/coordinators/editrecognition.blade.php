@@ -2,7 +2,6 @@
 
 @section('page_title', 'Coordinator Details')
 @section('breadcrumb', 'Appreciation & Recognition')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */

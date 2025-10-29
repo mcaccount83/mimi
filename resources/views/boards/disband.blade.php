@@ -188,5 +188,4 @@
 <script>
 
 </script>
-
-@stack('scripts')
+@endsection

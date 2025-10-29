@@ -89,20 +89,14 @@
           <!-- /.card-body -->
           <div class="col-sm-12">
             <div class="custom-control custom-switch">
-                <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showChPrimary()" />
                 <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
             </div>
         </div>
-          {{-- <div class="col-sm-12">
-            <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox3Status}} onchange="showAll()" />
-                        <label class="custom-control-label" for="showAll">Show All Chapters</label>
-                    </div>
-                </div> --}}
                 @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showAllConf()" />
+                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showChAllConf()" />
                             <label class="custom-control-label" for="showAllConf">Show All Chapters</label>
                         </div>
                     </div>
@@ -110,7 +104,7 @@
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
                             <label class="custom-control-label" for="showAll">Show All International Chapters</label>
                         </div>
                     </div>
@@ -144,50 +138,4 @@
 <!-- /.container-fluid -->
 </section>
 <!-- /.content -->
-@endsection
-<!-- /.content-wrapper -->
-
-@section('customscript')
-<script>
-
-document.addEventListener("DOMContentLoaded", function() {
-    const dropdownItems = document.querySelectorAll(".dropdown-item");
-    const currentPath = window.location.pathname;
-
-    dropdownItems.forEach(item => {
-        const itemPath = new URL(item.href).pathname;
-
-        if (itemPath == currentPath) {
-            item.classList.add("active");
-        }
-    });
-});
-
-function showPrimary() {
-    var base_url = '{{ url("/payment/reregistration") }}';
-    if ($("#showPrimary").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::PRIMARY_COORDINATOR }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function showAllConf() {
-    var base_url = '{{ url("/payment/reregistration") }}';
-    if ($("#showAllConf").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::CONFERENCE_REGION }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function showAll() {
-    var base_url = '{{ url("/payment/reregistration") }}';
-    if ($("#showAll").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-</script>
 @endsection

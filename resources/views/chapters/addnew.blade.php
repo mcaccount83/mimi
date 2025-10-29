@@ -2,7 +2,6 @@
 
 @section('page_title', 'New Chapter Details')
 @section('breadcrumb', 'New Chapter')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
@@ -11,6 +10,7 @@
 }
 
 </style>
+
 @section('content')
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("chapters.updatenew") }}'>
@@ -240,181 +240,6 @@
         }
     }
 });
-
-//     document.addEventListener('DOMContentLoaded', function() {
-//     // Define the sections we need to handle
-//     const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
-
-//     // Special state IDs that should show the country field
-//     const specialStates = [52, 53, 54, 55];
-
-//     // Process each section
-//     sections.forEach(section => {
-//         const stateDropdown = document.getElementById(`ch_${section}_state`);
-//         const countryContainer = document.getElementById(`ch_${section}_country-container`);
-//         const countrySelect = document.getElementById(`ch_${section}_country`);
-
-//         // Only proceed if all elements exist
-//         if (stateDropdown && countryContainer && countrySelect) {
-//             // Function to toggle country field visibility
-//             function toggleCountryField() {
-//                 const selectedStateId = parseInt(stateDropdown.value) || 0;
-
-//                 if (specialStates.includes(selectedStateId)) {
-//                     countryContainer.style.display = 'flex';
-//                     countrySelect.setAttribute('required', 'required');
-//                 } else {
-//                     countryContainer.style.display = 'none';
-//                     countrySelect.removeAttribute('required');
-//                     countrySelect.value = "";
-//                 }
-//             }
-
-//             // Set initial state
-//             toggleCountryField();
-
-//             // Add event listener
-//             stateDropdown.addEventListener('change', toggleCountryField);
-//         }
-//     });
-// });
-
-// // Function to handle show/hide logic for vacant checkboxes
-// function handleVacantCheckbox(checkboxId, fieldClass) {
-//     var fields = $("." + fieldClass);
-
-//     $("#" + checkboxId).change(function () {
-//         if ($(this).prop("checked")) {
-//             fields.hide().find('input, select, textarea').prop('required', false).val(null);
-//         } else {
-//             fields.show().find('input, select, textarea').prop('required', true);
-//         }
-//     });
-
-//     // Initial show/hide logic on page load
-//     if ($("#" + checkboxId).prop("checked")) {
-//         fields.hide().find('input, select, textarea').prop('required', false).val(null);
-//     } else {
-//         fields.show().find('input, select, textarea').prop('required', true);
-//     }
-// }
-
-// Function to filter the coordinator dropdown
-function filterCoordinators() {
-    const regionDropdown = document.getElementById('ch_region');
-    const selectedRegion = regionDropdown.value; // Get the selected region ID
-    const primaryCorDropdown = document.getElementById('ch_primarycor'); // Coordinator dropdown
-
-    // Filter options based on the selected region
-    Array.from(primaryCorDropdown.options).forEach(option => {
-        if (
-            option.value == "" || // Always show the default empty option
-            option.dataset.regionId == selectedRegion || // Match the selected region
-            option.dataset.regionId == "0" // Always include region_id = 0
-        ) {
-            option.style.display = "block";
-        } else {
-            option.style.display = "none";
-        }
-    });
-
-    // Reset the selected value if it's no longer valid
-    if (primaryCorDropdown.value != "" &&
-        primaryCorDropdown.querySelector(`option[value="${primaryCorDropdown.value}"]`).style.display == "none") {
-        primaryCorDropdown.value = "";
-    }
-}
-
-// Attach the event listener to the region dropdown
-document.getElementById('ch_region').addEventListener('change', filterCoordinators);
-
-// Run the filtering logic on page load
-document.addEventListener('DOMContentLoaded', filterCoordinators);
-
-
-// $(document).ready(function() {
-//     // Function to load the coordinator list based on the selected value
-//     function loadCoordinatorList(id) {
-//         if(id != "") {
-//             $.ajax({
-//                 url: '{{ url("/load-coordinator-list") }}' + '/' + id,
-//                 type: "GET",
-//                 success: function(result) {
-//                 $("#display_corlist").html(result);
-//                 },
-//                 error: function (jqXHR, exception) {
-//                 console.log("Error: ", jqXHR, exception);
-//                 }
-//             });
-//         }
-//     }
-
-//     // Get the selected coordinator ID on page load
-//     var selectedCorId = $("#ch_primarycor").val();
-//         loadCoordinatorList(selectedCorId);
-
-//         // Update the coordinator list when the dropdown changes
-//         $("#ch_primarycor").change(function() {
-//             var selectedValue = $(this).val();
-//             loadCoordinatorList(selectedValue);
-//     });
-// });
-
-// function checkDuplicateEmail(email, id) {
-//         $.ajax({
-//             url: '{{ url("/checkemail/") }}' + '/' + email,
-//             type: "GET",
-//             success: function(result) {
-//                 if (result.exists) {
-//                     alert('This Email already used in the system. Please try with new one.');
-//                     $("#" + id).val('');
-//                     $("#" + id).focus();
-//                 }
-//             },
-//             error: function(jqXHR, exception) {
-//                 console.error("Error checking email: ", exception);
-//             }
-//         });
-//     }
-
-// function validateEmailsBeforeSubmit() {
-//     // Get the values from the input fields
-//     const emails = [
-//         $('#ch_pre_email').val().trim(),
-//     ];
-
-//     // Filter out empty emails and check for duplicates
-//     const emailSet = new Set();
-//     const duplicateEmails = [];
-
-//     emails.forEach(email => {
-//         if (email != '') {
-//             if (emailSet.has(email)) {
-//                 // Check if the duplicate email is already in the array to avoid listing it multiple times
-//                 if (!duplicateEmails.includes(email)) {
-//                     duplicateEmails.push(email);
-//                 }
-//             } else {
-//                 emailSet.add(email);
-//             }
-//         }
-//     });
-
-//     // If duplicates are found, show an alert
-//     if (duplicateEmails.length > 0) {
-//         Swal.fire({
-//             icon: 'error',
-//             title: 'Duplicate Emails Found',
-//             html: 'The following emails are duplicates: <br>' + duplicateEmails.join('<br>') + '<br>Please correct them before submitting.',
-//             confirmButtonText: 'OK',
-//             customClass: {
-//                 confirmButton: 'btn-sm btn-success'
-//             }
-//         });
-//         return false;
-//     }
-//     return true;
-// }
 
 </script>
 @endsection

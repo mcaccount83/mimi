@@ -1,5 +1,37 @@
 <script>
-// Functions for Chapter Email Models
+    function confirmSendEOYRptReminder() {
+        return confirm('This action will send a Late Notice to all chapters who have not submitted their Board Election Report OR their Financial Report, excluding those with an extension or an assigned reviewer. \n\nAre you sure you want to send the EOY Late Notices?');
+    }
+
+    function confirmSendBoardRptReminder() {
+        return confirm('This action will send reminders to all chapters who have not submitted their Board Election Report. \n\nAre you sure you want to send the Board Elecion Report Reminders?');
+    }
+
+    function confirmSendFinancialRptReminder() {
+        return confirm('This action will send reminders to all chapters who have not submitted their Financial Report, excluding those with an extension or wtih an assigned reviewer. \n\nAre you sure you want to send the Financial Report Reminders?');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.email-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const messageId = this.dataset.messageId;
+                const fullMessage = document.getElementById(messageId).value;
+
+                showChapterEmailModal(
+                    this.dataset.chapterName,
+                    this.dataset.chapterId,
+                    this.dataset.userName,
+                    this.dataset.userPosition,
+                    this.dataset.userConfName,
+                    this.dataset.userConfDesc,
+                    this.dataset.predefinedSubject,
+                    fullMessage
+                );
+            });
+        });
+    });
+
     function showChapterEmailModal(chapterName, chapterId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
         Swal.fire({
             title: 'Chapter Email Message',

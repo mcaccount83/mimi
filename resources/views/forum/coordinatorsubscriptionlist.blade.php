@@ -97,14 +97,14 @@
             </div>
             <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showDirect" id="showDirect" class="custom-control-input" {{$checkBoxStatus}} onchange="showDirect()" />
+                        <input type="checkbox" name="showDirect" id="showDirect" class="custom-control-input" {{$checkBoxStatus}} onchange="showCoordDirect()" />
                         <label class="custom-control-label" for="showDirect">Only show my Direct Reports</label>
                     </div>
                 </div>
                 @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showAllConf()" />
+                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showCoordAllConf()" />
                             <label class="custom-control-label" for="showAllConf">Show All Coordinators</label>
                         </div>
                     </div>
@@ -112,7 +112,7 @@
                 @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showCoordAll()" />
                             <label class="custom-control-label" for="showAll">Show All International Coordinators</label>
                         </div>
                     </div>
@@ -124,48 +124,4 @@
       </div>
     </div>
     </section>
-@endsection
-
-@section('customscript')
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const dropdownItems = document.querySelectorAll(".dropdown-item");
-    const currentPath = window.location.pathname;
-
-    dropdownItems.forEach(item => {
-        const itemPath = new URL(item.href).pathname;
-
-        if (itemPath == currentPath) {
-            item.classList.add("active");
-        }
-    });
-});
-
-function showDirect() {
-    var base_url = '{{ url("/forum/coordinatorsubscriptionlist") }}';
-    if ($("#showDirect").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::DIRECT_REPORT }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function showAllConf() {
-    var base_url = '{{ url("/forum/coordinatorsubscriptionlist") }}';
-    if ($("#showAllConf").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::CONFERENCE_REGION }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function showAll() {
-    var base_url = '{{ url("/forum/coordinatorsubscriptionlist") }}';
-    if ($("#showAll").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::INTERNATIONAL }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-</script>
 @endsection

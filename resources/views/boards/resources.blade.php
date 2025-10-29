@@ -1,7 +1,6 @@
 @extends('layouts.board_theme')
 
 @section('content')
-<div class="container" id="test">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -225,12 +224,12 @@
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
                         @endif
-                        {{-- <button type="button" onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-primary"><i class="fas fa-graduation-cap mr-2" ></i>eLearning Library</button> --}}
                         <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('board.viewelearning', ['id' => $chDetails->id]) }}'"><i class="fas fa-graduation-cap mr-2" ></i>eLearning Library</button>
                     </div>
                 </div>
             </div>
-
+</div>
+    <!-- /.container- -->
 @endsection
 
 @section('customscript')
@@ -251,3 +250,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
+@endsection

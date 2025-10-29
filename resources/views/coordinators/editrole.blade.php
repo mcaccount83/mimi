@@ -2,7 +2,6 @@
 
 @section('page_title', 'Coordinator Details')
 @section('breadcrumb', 'Chapters & Coordinators')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
@@ -312,29 +311,7 @@
 @endsection
 @section('customscript')
 <script>
-function showPositionInformation() {
-    Swal.fire({
-        title: '<strong>Position Information</strong>',
-        html: `
-            <h4>Display Position</h4>
-            <p>The Display Position will be used in areas that are publically visible. Examples: MIMI chpater screens, emails, pdf letters, forum signature, etc.</p>
-            <br>
-            <h4>MIMI Position</h4>
-            <p>The MIMI Position is used for chapter hierarchy/level purposes and is required for anyone who oversees chapters. Even if this is not their role title, one of
-                these needs to be selected for MIMI to function properly.</p>
-            <br>
-            <h4>Secondary Positions</h4>
-            <p>Multiple Secondary Positions may be chosen. Secondary Posistions may allow additional access outside of normal chapter/coordinator menus/screens based on the
-                job requirements while others may be for information/visual purposes only and will not affect MIMI interaction.</p>
-            `,
-        focusConfirm: false,
-        confirmButtonText: 'Close',
-        customClass: {
-            popup: 'swal-wide',
-            confirmButton: 'btn btn-danger'
-        }
-    });
-}
+
 
 // Filter the dropdown based on the region
 function filterByRegion(dropdown, selectedRegion) {

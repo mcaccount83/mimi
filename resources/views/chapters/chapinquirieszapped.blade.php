@@ -2,13 +2,11 @@
 
 @section('page_title', 'Chapters')
 @section('breadcrumb', 'Zapped Inquiries Chapter List')
-
 <style>
     .hidden-column {
         display: none !important;
     }
     </style>
-
 @section('content')
     <!-- Main content -->
     <section class="content">
@@ -70,7 +68,7 @@
               @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
                             <label class="custom-control-label" for="showAll">Show All International Chapters</label>
                         </div>
                     </div>
@@ -92,29 +90,4 @@
     <!-- /.content -->
 
 @endsection
-@section('customscript')
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const dropdownItems = document.querySelectorAll(".dropdown-item");
-    const currentPath = window.location.pathname;
 
-    dropdownItems.forEach(item => {
-        const itemPath = new URL(item.href).pathname;
-
-        if (itemPath == currentPath) {
-            item.classList.add("active");
-        }
-    });
-});
-
-function showAll() {
-    var base_url = '{{ url("/chapter/inquirieszapped") }}';
-    if ($("#showAll").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-</script>
-@endsection

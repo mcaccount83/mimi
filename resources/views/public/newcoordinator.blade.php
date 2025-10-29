@@ -1,9 +1,5 @@
 @extends('layouts.public_theme')
 
-<style>
-
-</style>
-
 @section('content')
         <div class="container">
             <div class="row">
@@ -240,64 +236,6 @@
 @section('customscript')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Define all textareas and their corresponding counter IDs
-    // const textareaConfigs = [
-    //     { name: 'jobs_programs', counterId: 'char-count-jobs' },
-    //     { name: 'helped_me', counterId: 'char-count-helped' },
-    //     { name: 'problems', counterId: 'char-count-problems' },
-    //     { name: 'why_volunteer', counterId: 'char-count-volunteer' },
-    //     { name: 'other_volunteer', counterId: 'char-count-other' },
-    //     { name: 'special_skills', counterId: 'char-count-skills' },
-    //     { name: 'enjoy_volunteering', counterId: 'char-count-enjoy' }
-    // ];
-
-    // const maxLength = 520;
-
-    // // Loop through each textarea configuration
-    // textareaConfigs.forEach(config => {
-    //     const textarea = document.querySelector(`textarea[name="${config.name}"]`);
-    //     const charCount = document.getElementById(config.counterId);
-
-    //     if (textarea && charCount) {
-    //         textarea.addEventListener('input', function() {
-    //             const currentLength = this.value.length;
-    //             charCount.textContent = currentLength;
-
-    //             // Change color based on usage
-    //             const parent = charCount.parentElement;
-    //             if (currentLength >= maxLength * 0.9) { // 90% full
-    //                 parent.className = 'form-text text-danger';
-    //             } else if (currentLength >= maxLength * 0.8) { // 80% full
-    //                 parent.className = 'form-text text-warning';
-    //             } else {
-    //                 parent.className = 'form-text text-muted';
-    //             }
-    //         });
-    //     }
-    // });
-
-    // // Handle the start_date input field separately (25 character limit)
-    // const startDateInput = document.querySelector('input[name="start_date"]');
-    // const startDateCounter = document.getElementById('char-count-date');
-    // const startDateMaxLength = 25;
-
-    // if (startDateInput && startDateCounter) {
-    //     startDateInput.addEventListener('input', function() {
-    //         const currentLength = this.value.length;
-    //         startDateCounter.textContent = currentLength;
-
-    //         // Change color based on usage
-    //         const parent = startDateCounter.parentElement;
-    //         if (currentLength >= startDateMaxLength * 0.9) { // 90% full
-    //             parent.className = 'form-text text-danger';
-    //         } else if (currentLength >= startDateMaxLength * 0.8) { // 80% full
-    //             parent.className = 'form-text text-warning';
-    //         } else {
-    //             parent.className = 'form-text text-muted';
-    //         }
-    //     });
-    // }
-
     // Define all textareas and their corresponding counter IDs with their max lengths
     const textareaConfigs = [
         { name: 'start_date', counterId: 'char-count-date', maxLength: 25, isInput: true },
@@ -334,7 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-
 
     // Chapter state and country
     const stateDropdown = document.getElementById('cd_state');

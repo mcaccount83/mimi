@@ -2,7 +2,6 @@
 
 @section('page_title', 'BoardList')
 @section('breadcrumb', 'BoardList Emails')
-
 <style>
     .email-table .email-column {
         max-width: 150px; /* Adjust as needed */
@@ -12,7 +11,6 @@
     }
 
 </style>
-
 
 @section('content')
     <!-- Main content -->
@@ -82,8 +80,4 @@
 
     <!-- /.content -->
 @endsection
-@section('customscript')
-<script>
 
-</script>
-@endsection

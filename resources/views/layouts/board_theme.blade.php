@@ -222,15 +222,14 @@
 
 <!-- Sript Functions -->
 @include('layouts.scripts.alert')
-@include('layouts.scripts.datetime')
-@include('layouts.scripts.masks')
-@include('layouts.scripts.pdfviewer')
-@include('layouts.scripts.password')
-@include('layouts.scripts.email')
-@include('layouts.scripts.website')
 @include('layouts.scripts.bdcoordinatorlist')
 @include('layouts.scripts.boards')
-
+@include('layouts.scripts.datetime')
+@include('layouts.scripts.email')
+@include('layouts.scripts.masks')
+@include('layouts.scripts.password')
+@include('layouts.scripts.pdfviewer')
+@include('layouts.scripts.website')
 
 @yield('customscript')
 @stack('scripts')

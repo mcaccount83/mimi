@@ -2,7 +2,6 @@
 
 @section('page_title', 'Coordinator Details')
 @section('breadcrumb', 'Coordinator Details')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
@@ -86,11 +85,6 @@
                         <b class="me-3 mb-3" style="min-width: 200px;">Application Date:</b>
                         <span class="date-mask">{{ $cdDetails->coordinator_start_date }}</span>
                     </div>
-                    {{-- <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Position:</b>
-                        <span>{{ $displayPosition->long_title }}</span>
-                    </div> --}}
-
                       <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">Display Position:</b>
                                 <select name="cord_disp_pos" id="cord_disp_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
@@ -131,19 +125,11 @@
                                 </select>
                         </div>
 
-                    {{-- <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Home Chapter:</b>
-                        <span>{{ $cdDetails->home_chapter }}</span>
-                    </div> --}}
                     <div class="d-flex mb-2">
                         <b class="me-3" style="min-width: 200px;">Home Chapter:</b>
                                 <input type="text" name="cord_chapter" id="cord_chapter" class="form-control" value="{{ $cdDetails->home_chapter }}" placeholder="Home Chapter" required>
                         </div>
 
-                    {{-- <div class="d-flex">
-                        <b class="me-3" style="min-width: 200px;">Supervising Coordinator:</b>
-                        <span>{{ $ReportTo }}</span>
-                    </div> --}}
                       <div class="d-flex">
                         <b class="me-3" style="min-width: 200px;">Supervising Coordinator:</b>
                            <select name="cord_report_pc" id="cord_report_pc" class="form-control" style="width: 100%;" required>
@@ -187,8 +173,8 @@
                             <br>
                             Save all changes before approval!
                             <br>
-                            <button type="button" class="btn bg-gradient-success" id="app-approve"><i class="fas fa-check mr-2"></i>Approve Application</button>
-                            <button type="button" class="btn bg-gradient-danger" id="app-reject"><i class="fas fa-times mr-2"></i>Reject Application</button>
+                            <button type="button" class="btn bg-gradient-success" onclick="appApprove({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="fas fa-check mr-2"></i>Approve Application</button>
+                            <button type="button" class="btn bg-gradient-danger" onclick="appReject({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="fas fa-times mr-2"></i>Reject Application</button>
                     </li>
                 @endif
 
@@ -267,25 +253,25 @@
             <div class="card-body text-center">
                 @if ($cdConfId == $confId)
                         @if ($cdActiveId == '1')
-                            <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
+                            <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
                         @elseif ($cdActiveId == '2')
-                            <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Coordinator List</button>
+                            <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Coordinator List</button>
                         @elseif ($cdActiveId == '3')
-                            <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Coordinator List</button>
+                            <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Coordinator List</button>
                         @elseif ($cdActiveId == '0')
-                            <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
+                            <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
                         @endif
                     @else
                         @if ($cdConfId != $confId)
                             @if ($ITCondition)
                                 @if ($cdActiveId == '1')
-                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
+                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
                                 @elseif ($cdActiveId == '2')
-                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
+                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
                                 @elseif ($cdActiveId == '3')
-                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
+                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
                                 @elseif ($cdActiveId == '0')
-                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
+                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
                                 @endif
                             @endif
                         @endif
@@ -299,262 +285,6 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-<script>
-  var $cdActiveId = @json($cdActiveId);
-    var $supervisingCoordinatorCondition = @json($supervisingCoordinatorCondition);
-    var $ITCondition = @json($ITCondition);
-    var $cdConfId = @json($cdConfId);
-    var $confId = @json($confId);
+    @include('layouts.scripts.disablefields')
 
-    var hasCoordinatorAccess = $supervisingCoordinatorCondition && ($confId == $cdConfId);
-    var hasITAccess = $ITCondition;
-    var shouldEnable = ($cdActiveId == 2) && (hasCoordinatorAccess || hasITAccess);
-
-$(document).ready(function () {
-    // Disable fields for coordinators that are not active & Coordinators who should not have edit access
-    if (!shouldEnable) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-
-        // Re-enable the specific buttons
-            $('#back-list').prop('disabled', false);
-            $('#back-pending').prop('disabled', false);
-            $('#back-declined').prop('disabled', false);
-            $('#back-zapped').prop('disabled', false);
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('app-approve').addEventListener('click', function() {
-        Swal.fire({
-            title: 'Are you sure?',
-            html: `
-                <p>Approving a coordinator application will create their MIMI login, request their @momsclub.org email address, add them to the BoardList, VolList and PublicList as well as give
-                    them access to Google Drive and Coordinator elearning. Please verify this is what you want to do by pressing OK.</p>
-                <input type="hidden" id="coord_id" name="coord_id" value="{{ $cdDetails->id }}">
-                <input type="hidden" id="coord_userid" name="coord_userid" value="{{ $cdDetails->user_id }}">
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            },
-            preConfirm: () => {
-                const coordId = Swal.getPopup().querySelector('#coord_id').value;
-                const coordUserId = Swal.getPopup().querySelector('#coord_userid').value;
-                return {
-                    coord_id: coordId,
-                    coord_userid: coordUserId,
-                };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                // Perform the AJAX request
-                $.ajax({
-                    url: '{{ route('coordinators.updateapprove') }}',
-                    type: 'POST',
-                    data: {
-                        coord_id: data.coord_id,
-                        coord_userid: data.coord_userid,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        // Check if response is JSON (success) or HTML (redirect with error)
-                        if (response && typeof response == 'object') {
-                            if (response.success) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    if (response.redirect) {
-                                        window.location.href = response.redirect;
-                                    }
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: response.message,
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        } else {
-                            // If response is not JSON, it's likely a redirect (success case)
-                            // Check if the response contains success indicators
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Coordinator approved successfully.',
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 1500,
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            }).then(() => {
-                                window.location.href = '{{ route('coordinators.view', ['id' => 'coorId']) }}';
-                            });
-                        }
-                    },
-                    error: function(jqXHR, exception) {
-                        let errorMessage = 'Something went wrong, Please try again.';
-
-                        // Try to parse error response
-                        if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
-                            errorMessage = jqXHR.responseJSON.message;
-                        }
-
-                        Swal.fire({
-                            title: 'Error!',
-                            text: errorMessage,
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            customClass: {
-                                confirmButton: 'btn-sm btn-success'
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    });
-
-    document.getElementById('app-reject').addEventListener('click', function() {
-        Swal.fire({
-            title: 'Are you sure?',
-            html: `
-                <p>Rejecting a coordinator application will mark them as inactive and remove them from all coordinator lists. Please enter the reason for rejecting and press OK.</p>
-                <div style="display: flex; align-items: center; ">
-                    <input type="text" id="reason_retired" name="reason_retired" class="swal2-input" placeholder ="Enter Reason" required style="width: 100%;">
-                </div>
-                <input type="hidden" id="coord_id" name="coord_id" value="{{ $cdDetails->id }}">
-                <input type="hidden" id="coord_userid" name="coord_userid" value="{{ $cdDetails->user_id }}">
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            },
-            preConfirm: () => {
-                const retiredReason = Swal.getPopup().querySelector('#reason_retired').value;
-                const coordId = Swal.getPopup().querySelector('#coord_id').value;
-                const coordUserId = Swal.getPopup().querySelector('#coord_userid').value;
-
-                if (!retiredReason) {
-                    Swal.showValidationMessage('Please enter the reason for rejecting.');
-                    return false;
-                }
-
-                return {
-                    reason_retired: retiredReason,
-                    coord_id: coordId,
-                    coord_userid: coordUserId,
-                };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                // Perform the AJAX request
-                $.ajax({
-                    url: '{{ route('coordinators.updatereject') }}',
-                    type: 'POST',
-                    data: {
-                        reason_retired: data.reason_retired,
-                        coord_id: data.coord_id,
-                        coord_userid: data.coord_userid,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        // Check if response is JSON (success) or HTML (redirect with error)
-                        if (response && typeof response == 'object') {
-                            if (response.success) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: response.message,
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        } else {
-                            // If response is not JSON, it's likely a redirect (success case)
-                            // Check if the response contains success indicators
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Coordinator application rejected.',
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 1500,
-                                customClass: {
-                                    confirmButton: 'btn-sm btn-success'
-                                }
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        }
-                    },
-                    error: function(jqXHR, exception) {
-                        let errorMessage = 'Something went wrong, Please try again.';
-
-                        // Try to parse error response
-                        if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
-                            errorMessage = jqXHR.responseJSON.message;
-                        }
-
-                        Swal.fire({
-                            title: 'Error!',
-                            text: errorMessage,
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            customClass: {
-                                confirmButton: 'btn-sm btn-success'
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    });
-
-});
-
-
-</script>
 @endsection

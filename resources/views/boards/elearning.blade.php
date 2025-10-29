@@ -1,7 +1,6 @@
 @extends('layouts.board_theme')
 
 @section('content')
-<div class="container" id="test">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -31,11 +30,10 @@
                 <div class="col-md-12">
     <div class="card card-primary card-outline">
 
-
       <div class="col-md-12">
     <div class="card-body">
-        @if(isset($coursesByCategory) && count($coursesByCategory) > 0)
-            @foreach($coursesByCategory as $categorySlug => $categoryData)
+        @if(isset($boardCoursesByCategory) && count($boardCoursesByCategory) > 0)
+            @foreach($boardCoursesByCategory as $categorySlug => $categoryData)
                 <div class="mb-4">
                     <h4 class="text-lg font-bold mb-2">
                         {{ $categoryData['name'] }}
@@ -59,11 +57,6 @@
 </div>
         </div>
     </div>
-
-
-        </div>
-
-
    <br>
                 <div class="card-body text-center">
                          @if ($userType == 'coordinator')
@@ -77,6 +70,5 @@
     </div>
     <!-- /.container- -->
 @endsection
-@section('customscript')
 
-@endsection
+

@@ -2,7 +2,6 @@
 
 @section('page_title', $title)
 @section('breadcrumb', $breadcrumb)
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
@@ -242,13 +241,13 @@
                     <br>
                 @endif
                 @if ($confId == $chConfId)
-                    <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission') }}'"><i class="fas fa-reply mr-2"></i>Back to Filing Report</button>
+                    <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission') }}'"><i class="fas fa-reply mr-2"></i>Back to Filing Report</button>
                 @elseif ($confId != $chConfId)
                     @if ($einCondition || $ITCondition )
-                        <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Filing Report</button>
+                        <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Filing Report</button>
                     @endif
                 @endif
-                <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
+                <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
             </div>
         </div>
         </div>
@@ -258,39 +257,9 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
+    @include('layouts.scripts.disablefields', ['includeEoyConditions' => true])
+
 <script>
-   var $chActiveId = @json($chActiveId);
-    var $coordinatorCondition = @json($coordinatorCondition);
-    var $eoyTestCondition = @json($eoyTestCondition);
-    var $eoyReportCondition = @json($eoyReportCondition);
-    var $ITCondition = @json($ITCondition);
-    var $chConfId = @json($chConfId);
-    var $confId = @json($confId);
-
-    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
-    var hasEoyTestCondition = $eoyTestCondition && ($confId == $chConfId);
-    var hasEoyReportCondition = $eoyReportCondition && ($confId == $chConfId);
-    var hasITAccess = $ITCondition;
-    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasEoyTestCondition || hasEoyReportCondition || hasITAccess);
-
-$(document).ready(function () {
-    if (!shouldEnable) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-
-        // Re-enable the specific "Back" buttons
-        $('#back-irs').prop('disabled', false);
-        $('#back-eoy').prop('disabled', false);
-    }
-});
-
 document.addEventListener('DOMContentLoaded', function() {
     const irsIssuesToggle = document.getElementById('irs_issues');
     const irsDetailsRow = document.getElementById('irs_details_row');

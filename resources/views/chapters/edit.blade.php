@@ -2,7 +2,6 @@
 
 @section('page_title', 'Chapter Details')
 @section('breadcrumb', 'Board Information')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
@@ -279,132 +278,14 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
+    @include('layouts.scripts.disablefields')
+
 <script>
-    var $chActiveId = @json($chActiveId);
-    var $coordinatorCondition = @json($coordinatorCondition);
-    var $ITCondition = @json($ITCondition);
-    var $chConfId = @json($chConfId);
-    var $confId = @json($confId);
-
-    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
-    var hasITAccess = $ITCondition;
-    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasITAccess);
-
-$(document).ready(function () {
-    if (!shouldEnable) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-
-        // Re-enable the specific buttons
-        $('#back-details').prop('disabled', false);
-    }
-});
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     const websiteUrl = document.getElementById('ch_website');
-//     const statusContainer = document.getElementById('ch_webstatus-container');
-//     const websiteStatus = document.getElementById('ch_webstatus');
-
-//     // Only proceed if all elements exist
-//     if (websiteUrl && statusContainer && websiteStatus) {
-
-//         // Function to toggle status field visibility
-//         function toggleStatusField() {
-//             const urlValue = websiteUrl.value.trim();
-
-//             if (urlValue != '' && urlValue != 'http://') {
-//                 // Show status field if URL has a meaningful value
-//                 statusContainer.style.display = 'flex';
-//                 websiteStatus.setAttribute('required', 'required');
-//             } else {
-//                 // Hide status field if URL is empty or just the default "http://"
-//                 statusContainer.style.display = 'none';
-//                 websiteStatus.removeAttribute('required');
-//                 websiteStatus.value = ""; // Clear the selection
-//             }
-//         }
-
-//         // Set initial state on page load
-//         toggleStatusField();
-
-//         // Add event listeners for real-time updates
-//         websiteUrl.addEventListener('input', toggleStatusField);
-//         websiteUrl.addEventListener('change', toggleStatusField);
-//     }
-// });
 
 //If Chapter Name Change Warning
 function PreviousNameReminder(){
     customWarningAlert("If you are changing the chapter name, please be sure to note the old name in the 'Previously Known As' field.");
 }
-
-//If Website URL Changes for Website Status Change
-function updateWebsiteStatus() {
-    customWarningAlert("If you are changing the chapter website url, please be sure to update the 'Link Status' accordingly.");
-}
-
-// $(document).ready(function() {
-//     // Function to load the coordinator list based on the selected value
-//     function loadCoordinatorList(id) {
-//         if(id != "") {
-//             $.ajax({
-//                 url: '{{ url("/load-coordinator-list") }}' + '/' + id,
-//                 type: "GET",
-//                 success: function(result) {
-//                 $("#display_corlist").html(result);
-//                 },
-//                 error: function (jqXHR, exception) {
-//                 console.log("Error: ", jqXHR, exception);
-//                 }
-//             });
-//         }
-//     }
-
-//     // Get the selected coordinator ID on page load
-//     var selectedCorId = $("#ch_primarycor").val();
-//         loadCoordinatorList(selectedCorId);
-
-//         // Update the coordinator list when the dropdown changes
-//         $("#ch_primarycor").change(function() {
-//             var selectedValue = $(this).val();
-//             loadCoordinatorList(selectedValue);
-//     });
-// });
-
-document.addEventListener('DOMContentLoaded', function() {
-    const statusSelect = document.getElementById('ch_status');
-    const probationLabel = document.getElementById('probationLabel');
-    const probationField = document.getElementById('probationField');
-    const probationSelect = document.getElementById('ch_probation');
-
-    // Function to toggle probation section visibility
-    function toggleProbationSection() {
-        const selectedStatusId = parseInt(statusSelect.value);
-        // if (selectedStatusId != 1 && selectedStatusId != '') {
-        if (selectedStatusId >= 5 && selectedStatusId != '') {
-            probationLabel.style.display = '';
-            probationField.style.display = '';
-            probationSelect.setAttribute('required', 'required');
-        } else {
-            probationLabel.style.display = 'none';
-            probationField.style.display = 'none';
-            probationSelect.removeAttribute('required');
-        }
-    }
-
-    // Initial toggle based on current value
-    toggleProbationSection();
-
-    // Add event listener for future changes
-    statusSelect.addEventListener('change', toggleProbationSection);
-});
 
 </script>
 @endsection

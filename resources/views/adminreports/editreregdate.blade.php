@@ -154,36 +154,5 @@
     </form>
     @endsection
 
-  @section('customscript')
-  <script>
-
-// $(document).ready(function() {
-//     function loadCoordinatorList(corId) {
-//         if (corId != "") {
-//             $.ajax({
-//                 url: '{{ url("/load-coordinator-list") }}' + '/' + corId,
-//                 type: "GET",
-//                 success: function(result) {
-//                     $("#display_corlist").html(result);
-//                 },
-//                 error: function (jqXHR, exception) {
-//                     console.log("Error: ", jqXHR, exception);
-//                 }
-//             });
-//         }
-//     }
-
-//     var selectedCorId = $("#ch_primarycor").val();
-//     loadCoordinatorList(selectedCorId);
-
-//     $("#ch_primarycor").change(function() {
-//         var selectedValue = $(this).val();
-//         loadCoordinatorList(selectedValue);
-//     });
-// });
-
-</script>
-@endsection
-
 
 

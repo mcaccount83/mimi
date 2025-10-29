@@ -1,7 +1,6 @@
 @extends('layouts.board_theme')
 
 @section('content')
-{{-- <div class="container" id="test"> --}}
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -79,8 +78,6 @@
         <!-- End Modal Popups -->
     </div>
 </div>
-{{-- </div> --}}
-
 @endsection
 @section('customscript')
 <script>
@@ -96,6 +93,6 @@
         });
 
 </script>
-@stack('scripts')
+@endsection
 
 

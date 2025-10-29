@@ -2,7 +2,6 @@
 
 @section('page_title', 'Chapter Details')
 @section('breadcrumb', 'Board Information')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
@@ -404,7 +403,7 @@
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();"><i class="fas fa-save mr-2"></i>Save Board Information</button>
                 @endif
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->
@@ -414,167 +413,6 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-<script>
-    var $chActiveId = @json($chActiveId);
-    var $coordinatorCondition = @json($coordinatorCondition);
-    var $ITCondition = @json($ITCondition);
-    var $chConfId = @json($chConfId);
-    var $confId = @json($confId);
+    @include('layouts.scripts.disablefields')
 
-    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
-    var hasITAccess = $ITCondition;
-    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasITAccess);
-
-$(document).ready(function () {
-    if (!shouldEnable) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-
-        // Re-enable the specific buttons
-        $('#back-details').prop('disabled', false);
-    }
-});
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     // Define the sections we need to handle
-//     const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
-
-//     // Special state IDs that should show the country field
-//     const specialStates = [52, 53, 54, 55];
-
-//     // Process each section
-//     sections.forEach(section => {
-//         const stateDropdown = document.getElementById(`ch_${section}_state`);
-//         const countryContainer = document.getElementById(`ch_${section}_country-container`);
-//         const countrySelect = document.getElementById(`ch_${section}_country`);
-
-//         // Only proceed if all elements exist
-//         if (stateDropdown && countryContainer && countrySelect) {
-//             // Function to toggle country field visibility
-//             function toggleCountryField() {
-//                 const selectedStateId = parseInt(stateDropdown.value) || 0;
-
-//                 if (specialStates.includes(selectedStateId)) {
-//                     countryContainer.style.display = 'flex';
-//                     countrySelect.setAttribute('required', 'required');
-//                 } else {
-//                     countryContainer.style.display = 'none';
-//                     countrySelect.removeAttribute('required');
-//                     countrySelect.value = "";
-//                 }
-//             }
-
-//             // Set initial state
-//             toggleCountryField();
-
-//             // Add event listener
-//             stateDropdown.addEventListener('change', toggleCountryField);
-//         }
-//     });
-// });
-
-// // Function to handle show/hide logic for vacant checkboxes
-// function handleVacantCheckbox(checkboxId, fieldClass) {
-//     var fields = $("." + fieldClass);
-
-//     $("#" + checkboxId).change(function () {
-//         if ($(this).prop("checked")) {
-//             fields.hide().find('input, select, textarea').prop('required', false).val(null);
-//         } else {
-//             fields.show().find('input, select, textarea').prop('required', true);
-//         }
-//     });
-
-//     // Initial show/hide logic on page load
-//     if ($("#" + checkboxId).prop("checked")) {
-//         fields.hide().find('input, select, textarea').prop('required', false).val(null);
-//     } else {
-//         fields.show().find('input, select, textarea').prop('required', true);
-//     }
-// }
-
-// // Apply the logic for each checkbox with a specific class
-// handleVacantCheckbox("MVPVacant", "mvp-field");
-// handleVacantCheckbox("AVPVacant", "avp-field");
-// handleVacantCheckbox("SecVacant", "sec-field");
-// handleVacantCheckbox("TreasVacant", "trs-field");
-
-// $(document).ready(function() {
-//     // Function to load the coordinator list based on the selected value
-//     function loadCoordinatorList(corId) {
-//         if (corId != "") {
-//             $.ajax({
-//                 url: '{{ url("/load-coordinator-list") }}' + '/' + corId,
-//                 type: "GET",
-//                 success: function(result) {
-//                     $("#display_corlist").html(result);
-//                 },
-//                 error: function (jqXHR, exception) {
-//                     console.log("Error: ", jqXHR, exception);
-//                 }
-//             });
-//         }
-//     }
-
-//     // Get the selected coordinator ID on page load
-//     var selectedCorId = $("#ch_primarycor").val();
-//     loadCoordinatorList(selectedCorId);
-
-//     // Update the coordinator list when the dropdown changes
-//     $("#ch_primarycor").change(function() {
-//         var selectedValue = $(this).val();
-//         loadCoordinatorList(selectedValue);
-//     });
-// });
-
-// function validateEmailsBeforeSubmit() {
-//     // Get the values from the input fields
-//     const emails = [
-//         $('#ch_pre_email').val().trim(),
-//         $('#ch_avp_email').val().trim(),
-//         $('#ch_mvp_email').val().trim(),
-//         $('#ch_trs_email').val().trim(),
-//         $('#ch_sec_email').val().trim()
-//     ];
-
-//     // Filter out empty emails and check for duplicates
-//     const emailSet = new Set();
-//     const duplicateEmails = [];
-
-//     emails.forEach(email => {
-//         if (email != '') {
-//             if (emailSet.has(email)) {
-//                 // Check if the duplicate email is already in the array to avoid listing it multiple times
-//                 if (!duplicateEmails.includes(email)) {
-//                     duplicateEmails.push(email);
-//                 }
-//             } else {
-//                 emailSet.add(email);
-//             }
-//         }
-//     });
-
-//     // If duplicates are found, show an alert
-//     if (duplicateEmails.length > 0) {
-//         Swal.fire({
-//             icon: 'error',
-//             title: 'Duplicate Emails Found',
-//             html: 'The following emails are duplicates: <br>' + duplicateEmails.join('<br>') + '<br>Please correct them before submitting.',
-//             confirmButtonText: 'OK',
-//             customClass: {
-//                 confirmButton: 'btn-sm btn-success'
-//             }
-//         });
-//         return false;
-//     }
-//     return true;
-// }
-</script>
 @endsection

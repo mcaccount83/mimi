@@ -66,21 +66,21 @@
                             @if($list->documents?->irs_path != null) YES @else NO @endif
                         </td>
                       <td @if($list->documents?->irs_verified) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-    @if($list->documents?->irs_verified) YES @else NO @endif
-</td>
-<td @if(!$list->documents?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-    @if($list->documents?->irs_issues) YES @else NO @endif
-</td>
-<td @if(!$list->documents?->irs_wrongdate && !$list->documents?->irs_notfound && !$list->documents?->irs_filedwrong) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-    @if($list->documents?->irs_wrongdate) WRONG DATES @endif
-    @if($list->documents?->irs_notfound) NOT FOUND @endif
-    @if($list->documents?->irs_filedwrong) FILED W/WRONG DATES @endif
-</td>
-<td @if(!$list->documents?->irs_notified && $list->documents?->irs_issues) style="background-color:#dc3545; color: #ffffff;"
-    @elseif($list->documents?->irs_notified && $list->documents?->irs_issues) style="background-color:#28a745; color: #ffffff;"
-    @else style="background-color: #transparent;" @endif>
-    @if($list->documents?->irs_notified) YES @elseif(!$list->documents?->irs_notified && $list->documents?->irs_issues) NO @endif
-</td>
+                        @if($list->documents?->irs_verified) YES @else NO @endif
+                        </td>
+                        <td @if(!$list->documents?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents?->irs_issues) YES @else NO @endif
+                        </td>
+                        <td @if(!$list->documents?->irs_wrongdate && !$list->documents?->irs_notfound && !$list->documents?->irs_filedwrong) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents?->irs_wrongdate) WRONG DATES @endif
+                            @if($list->documents?->irs_notfound) NOT FOUND @endif
+                            @if($list->documents?->irs_filedwrong) FILED W/WRONG DATES @endif
+                        </td>
+                        <td @if(!$list->documents?->irs_notified && $list->documents?->irs_issues) style="background-color:#dc3545; color: #ffffff;"
+                            @elseif($list->documents?->irs_notified && $list->documents?->irs_issues) style="background-color:#28a745; color: #ffffff;"
+                            @else style="background-color: #transparent;" @endif>
+                            @if($list->documents?->irs_notified) YES @elseif(!$list->documents?->irs_notified && $list->documents?->irs_issues) NO @endif
+                        </td>
                         <td>{{ $list->documents?->irs_notes?? null }}</td>
                  </tr>
                   @endforeach
@@ -90,20 +90,20 @@
             <!-- /.card-body -->
             <div class="col-sm-12">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showChPrimary()" />
                     <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
                 </div>
             </div>
             <div class="col-sm-12">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" name="showReviewer" id="showReviewer" class="custom-control-input" {{$checkBox2Status}} onchange="showReviewer()" />
+                    <input type="checkbox" name="showReviewer" id="showReviewer" class="custom-control-input" {{$checkBox2Status}} onchange="showChReviewer()" />
                     <label class="custom-control-label" for="showReviewer">Only show chapters I am Assigned Reviewer for</label>
                 </div>
             </div>
             @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showAllConf()" />
+                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showChAllConf()" />
                             <label class="custom-control-label" for="showAllConf">Show All Chapters</label>
                         </div>
                     </div>
@@ -111,21 +111,16 @@
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showAll()" />
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
                             <label class="custom-control-label" for="showAll">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif
 
                 <div class="card-body text-center">
-@if (($einCondition || $ITCondition) && ($checkBox5Status ?? '') == 'checked')
+                        @if (($einCondition || $ITCondition) && ($checkBox5Status ?? '') == 'checked')
                             <button class="btn bg-gradient-primary mb-3" onclick="showIRSFilingCorrectionsModal()"><i class="fas fa-file-pdf mr-2" ></i>990N Filing corrections to EO Dept</button>
                         @endif
-
-
-
-
-
            </div>
           <!-- /.box -->
         </div>
@@ -134,99 +129,4 @@
 </div>
     </section>
     <!-- /.content -->
-@endsection
-@section('customscript')
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const dropdownItems = document.querySelectorAll(".dropdown-item");
-    const currentPath = window.location.pathname;
-
-    dropdownItems.forEach(item => {
-        const itemPath = new URL(item.href).pathname;
-
-        if (itemPath == currentPath) {
-            item.classList.add("active");
-        }
-    });
-});
-
-function showIRSFilingCorrectionsModal() {
-    Swal.fire({
-        title: 'IRS 990N Filing Corrections to EO Dept',
-        html: `
-            <p>This will generate the Fax Coversheet & Letter for the IRS EO Department listing 990N Filing Corrections. Enter the total number of pages (including the coversheet) to be faxed.</p>
-            <div style="display: flex; align-items: center;">
-                <input type="text" id="total_pages" name="total_pages" class="swal2-input" placeholder="Enter Total Pages" required style="width: 100%;">
-            </div>
-            `,
-        showCancelButton: true,
-        confirmButtonText: 'Generate',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const totalPages = Swal.getPopup().querySelector('#total_pages').value;
-
-            if (!totalPages || isNaN(totalPages) || totalPages < 1) {
-                Swal.showValidationMessage('Please enter a valid number of pages');
-                return false;
-            }
-
-            return {
-                total_pages: totalPages,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Open PDF in new window with pages parameter
-            const url = `{{ route('pdf.combinedirsfilingcorrections') }}?pages=${data.total_pages}`;
-            window.open(url, '_blank');
-        }
-    });
-}
-
-function showPrimary() {
-    var base_url = '{{ url("/eoy/irssubmission") }}';
-    if ($("#showPrimary").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::PRIMARY_COORDINATOR }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function showReviewer() {
-    var base_url = '{{ url("/eoy/irssubmission") }}';
-    if ($("#showReviewer").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::REVIEWER }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function showAllConf() {
-    var base_url = '{{ url("/eoy/irssubmission") }}';
-    if ($("#showAllConf").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::CONFERENCE_REGION }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-
-function showAll() {
-    var base_url = '{{ url("/eoy/irssubmission") }}';
-    if ($("#showAll").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
-function confirmSendReminder() {
-    return confirm('This action will send a Late Notice to all chapters who have not submitted their Board Election Report OR their Financial Report, excluding those with an extension or an assigned reviewer. \n\nAre you sure you want to send the EOY Late Notices?');
-}
-
-</script>
 @endsection

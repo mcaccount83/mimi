@@ -2,7 +2,6 @@
 
 @section('page_title', $title)
 @section('breadcrumb', $breadcrumb)
-
 <style>
 
 .disabled-link {
@@ -218,11 +217,11 @@
                     <br>
                 @endif
                  @if ($confId == $chConfId)
-                        <button type="button" id="back-awards" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyawards') }}'"><i class="fas fa-reply mr-2"></i>Back to Awards Report</button>
+                        <button type="button" id="back-awards" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyawards') }}'"><i class="fas fa-reply mr-2"></i>Back to Awards Report</button>
                     @elseif ($confId != $chConfId && $ITCondition)
-                        <button type="button" id="back-awards" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyawards', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Awards Report</button>
+                        <button type="button" id="back-awards" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyawards', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Awards Report</button>
                     @endif
-                <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
+                <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
             </div>
         </div>
         </div>
@@ -232,66 +231,9 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
+    @include('layouts.scripts.disablefields', ['includeEoyConditions' => true])
+
 <script>
-    var $chActiveId = @json($chActiveId);
-    var $coordinatorCondition = @json($coordinatorCondition);
-    var $eoyTestCondition = @json($eoyTestCondition);
-    var $eoyReportCondition = @json($eoyReportCondition);
-    var $ITCondition = @json($ITCondition);
-    var $chConfId = @json($chConfId);
-    var $confId = @json($confId);
-
-    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
-    var hasEoyTestCondition = $eoyTestCondition && ($confId == $chConfId);
-    var hasEoyReportCondition = $eoyReportCondition && ($confId == $chConfId);
-    var hasITAccess = $ITCondition;
-    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasEoyTestCondition || hasEoyReportCondition || hasITAccess);
-
-$(document).ready(function () {
-    if (!shouldEnable) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-
-        // Re-enable the specific "Back" buttons
-        $('#back-awards').prop('disabled', false);
-        $('#back-eoy').prop('disabled', false);
-    }
-});
-
-// $(document).ready(function() {
-//     // Function to load the coordinator list based on the selected value
-//     function loadCoordinatorList(id) {
-//         if(id != "") {
-//             $.ajax({
-//                 url: '{{ url("/load-coordinator-list") }}' + '/' + id,
-//                 type: "GET",
-//                 success: function(result) {
-//                 $("#display_corlist").html(result);
-//                 },
-//                 error: function (jqXHR, exception) {
-//                 console.log("Error: ", jqXHR, exception);
-//                 }
-//             });
-//         }
-//     }
-
-//     // Get the selected coordinator ID on page load
-//     var selectedCorId = $("#ch_primarycor").val();
-//         loadCoordinatorList(selectedCorId);
-
-//         // Update the coordinator list when the dropdown changes
-//         $("#ch_primarycor").change(function() {
-//             var selectedValue = $(this).val();
-//             loadCoordinatorList(selectedValue);
-//     });
-// });
 
 function AddChapterAwardsRow() {
     var rowCount = document.getElementById("ChapterAwardsRowCount").value;

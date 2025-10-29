@@ -387,11 +387,11 @@
                     <br>
                     @endif
                       @if ($confId == $chConfId)
-                        <button type="button" id="back-eoystatus" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoystatus') }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Status Report</button>
+                        <button type="button" id="back-eoystatus" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoystatus') }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Status Report</button>
                     @elseif ($confId != $chConfId && $ITCondition)
-                        <button type="button" id="back-eoystatus" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoystatus', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International EOY Status Report</button>
+                        <button type="button" id="back-eoystatus" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoystatus', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International EOY Status Report</button>
                     @endif
-                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
 
             </div>
         </div>
@@ -402,82 +402,9 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
+    @include('layouts.scripts.disablefields', ['includeEoyConditions' => true])
+
 <script>
-    var $chActiveId = @json($chActiveId);
-    var $coordinatorCondition = @json($coordinatorCondition);
-    var $eoyTestCondition = @json($eoyTestCondition);
-    var $eoyReportCondition = @json($eoyReportCondition);
-    var $ITCondition = @json($ITCondition);
-    var $chConfId = @json($chConfId);
-    var $confId = @json($confId);
-
-    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
-    var hasEoyTestCondition = $eoyTestCondition && ($confId == $chConfId);
-    var hasEoyReportCondition = $eoyReportCondition && ($confId == $chConfId);
-    var hasITAccess = $ITCondition;
-    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasEoyTestCondition || hasEoyReportCondition || hasITAccess);
-
-$(document).ready(function () {
-    if (!shouldEnable) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-
-        // Re-enable the specific "Back" buttons
-        $('#back-eoystatus').prop('disabled', false);
-        $('#back-eoy').prop('disabled', false);
-    }
-});
-
-//     $(document).ready(function() {
-//     function loadCoordinatorList(coorId) {
-//         if (coorId != "") {
-//             $.ajax({
-//                 url: '{{ url("/load-coordinator-list") }}' + '/' + coorId,
-//                 type: "GET",
-//                 success: function(result) {
-//                     $("#display_corlist").html(result);
-//                 },
-//                 error: function (jqXHR, exception) {
-//                     console.log("Error: ", jqXHR, exception);
-//                 }
-//             });
-//         }
-//     }
-
-//     var selectedCorId = $("#ch_primarycor").val();
-//     loadCoordinatorList(selectedCorId);
-
-//     $("#ch_primarycor").change(function() {
-//         var selectedValue = $(this).val();
-//         loadCoordinatorList(selectedValue);
-//     });
-// });
-
-// document.addEventListener("DOMContentLoaded", function() {
-//     // Initialize the state when the page loads
-//     toggleIRSVerified();
-
-//     document.getElementById('irs_verified').addEventListener('change', toggleIRSVerified);
-// });
-
-// function toggleIRSVerified() {
-//     const irsVerified = document.getElementById('irs_verified');
-//     const irsNotes = document.getElementById('irs_notes');
-
-//     if (irsVerified.checked) {
-//         irsNotes.setAttribute('readonly', true);
-//     } else {
-//         irsNotes.removeAttribute('readonly');
-//     }
-// }
-
 document.addEventListener("DOMContentLoaded", function() {
         // Initialize the state when the page loads
         toggleExtensionNotes();

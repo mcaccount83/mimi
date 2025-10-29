@@ -2,7 +2,6 @@
 
 @section('page_title', 'Chapter Details')
 @section('breadcrumb', 'IRS Information')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
@@ -196,17 +195,17 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
-                    <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDocuments->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN('{{ $chDetails->id }}')"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
                     <br>
                     <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return PreSaveValidate();"><i class="fas fa-save mr-2"></i>Save IRS Information</button>
                 @endif
                 @if ($confId == $chConfId)
-                    <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus') }}'"><i class="fas fa-reply mr-2"></i>Back to IRS Status Report</button>
+                    <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus') }}'"><i class="fas fa-reply mr-2"></i>Back to IRS Status Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International IRS Status Report</button>
+                    <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International IRS Status Report</button>
                 @endif
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->
@@ -216,250 +215,6 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-<script>
-    var $chActiveId = @json($chActiveId);
-    var $coordinatorCondition = @json($coordinatorCondition);
-    var $ITCondition = @json($ITCondition);
-    var $chConfId = @json($chConfId);
-    var $confId = @json($confId);
+    @include('layouts.scripts.disablefields')
 
-    var hasCoordinatorAccess = $coordinatorCondition && ($confId == $chConfId);
-    var hasITAccess = $ITCondition;
-    var shouldEnable = ($chActiveId == 1) && (hasCoordinatorAccess || hasITAccess);
-
-$(document).ready(function () {
-    if (!shouldEnable) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-
-        // Re-enable the specific buttons
-        $('#back-irs').prop('disabled', false);
-        $('#back-details').prop('disabled', false);
-    }
-});
-
-// $(document).ready(function() {
-//     // Function to load the coordinator list based on the selected value
-//     function loadCoordinatorList(corId) {
-//         if(corId != "") {
-//             $.ajax({
-//                 url: '{{ url("/load-coordinator-list") }}' + '/' + corId,
-//                 type: "GET",
-//                 success: function(result) {
-//                 $("#display_corlist").html(result);
-//                 },
-//                 error: function (jqXHR, exception) {
-//                 console.log("Error: ", jqXHR, exception);
-//                 }
-//             });
-//         }
-//     }
-
-//     // Get the selected coordinator ID on page load
-//     var selectedCorId = $("#ch_primarycor").val();
-//         loadCoordinatorList(selectedCorId);
-
-//         // Update the coordinator list when the dropdown changes
-//         $("#ch_primarycor").change(function() {
-//             var selectedValue = $(this).val();
-//             loadCoordinatorList(selectedValue);
-//     });
-// });
-
-function updateEIN() {
-    const chapterId = '{{ $chDetails->id }}'; // Get the chapter ID from the Blade variable
-
-    // Check if the chapter already has an EIN
-    $.ajax({
-        url: '{{ route('chapters.checkein') }}',
-        type: 'GET',
-        data: {
-            chapter_id: chapterId
-        },
-        success: function(response) {
-            if (response.ein) {
-                // Show a warning if an EIN already exists
-                Swal.fire({
-                    title: 'Warning!',
-                    text: 'This chapter already has an EIN. Do you want to replace it?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, replace it',
-                    cancelButtonText: 'No',
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Proceed to input the new EIN
-                        promptForNewEIN(chapterId);
-                    }
-                });
-            } else {
-                // No existing EIN, proceed directly
-                promptForNewEIN(chapterId);
-            }
-        },
-        error: function() {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Unable to check the existing EIN. Please try again later.',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn-sm btn-success'
-                }
-            });
-        }
-    });
-}
-
-// Function to prompt the user for a new EIN
-function promptForNewEIN(chapterId) {
-    Swal.fire({
-        title: 'Enter EIN',
-        html: `
-            <p>Please enter the EIN for the chapter.</p>
-            <div style="display: flex; align-items: center;">
-                <input type="text" id="ein" name="ein" class="swal2-input" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask placeholder="Enter EIN" required style="width: 100%;">
-            </div>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-            <br>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const ein = Swal.getPopup().querySelector('#ein').value;
-
-            return {
-                chapter_id: chapterId,
-                ein: ein,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request to update the EIN
-            $.ajax({
-                url: '{{ route('chapters.updateein') }}',
-                type: 'POST',
-                data: {
-                    chapter_id: data.chapter_id,
-                    ein: data.ein,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector('.showFileUploadModal').addEventListener('click', function(e) {
-        e.preventDefault();
-
-        const einLetter = this.getAttribute('data-ein-letter');
-
-        Swal.fire({
-            title: 'Upload EIN Letter',
-            html: `
-                <form id="uploadEINForm" enctype="multipart/form-data">
-                    @csrf
-                    <input type="file" name="file" required>
-                </form>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'Upload',
-            cancelButtonText: 'Close',
-            preConfirm: () => {
-                const formData = new FormData(document.getElementById('uploadEINForm'));
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we upload your file.',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        $.ajax({
-                            url: '{{ url('/files/storeEIN/'. $id) }}',
-                            type: 'POST',
-                            data: formData,
-                            contentType: false,
-                            processData: false,
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: 'File uploaded successfully!',
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        });
-                    }
-                });
-
-                return false;
-            },
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            }
-        });
-    });
-});
-
-
-</script>
 @endsection

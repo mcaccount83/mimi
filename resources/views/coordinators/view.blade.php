@@ -2,7 +2,6 @@
 
 @section('page_title', 'Coordinator Details')
 @section('breadcrumb', 'Coordinator Details')
-
 <style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
@@ -230,9 +229,9 @@
                             @if ($assistConferenceCoordinatorCondition)
                                 <dd class="col-sm-6">
                                     @if (in_array(1, $Subscriptions))
-                                        <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1)">Unsubscribe</button>
+                                        <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $cdDetails->user_id }})">Unsubscribe</button>
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1)">Subscribe</button>
+                                        <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $cdDetails->user_id }})">Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
@@ -244,9 +243,9 @@
                             @if ($assistConferenceCoordinatorCondition)
                                 <dd class="col-sm-6">
                                     @if (in_array(2, $Subscriptions))
-                                        <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(2)">Unsubscribe</button>
+                                        <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(2, {{ $cdDetails->user_id }})">Unsubscribe</button>
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(2)">Subscribe</button>
+                                        <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(2, {{ $cdDetails->user_id }})">Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
@@ -311,39 +310,39 @@
                     @endif
 
                     @if($cdLeave != 1)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="onLeaveCoordinator()"><i class="fas fa-ban mr-2"></i>Put Coordinator On Leave</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="onLeaveCoordinator({{ $cdDetails->id }})"><i class="fas fa-ban mr-2"></i>Put Coordinator On Leave</button>
                     @elseif($cdLeave == 1)
-                        <button type="button" id="removeleave" class="btn bg-gradient-primary mb-3" onclick="removeLeaveCoordinator()"><i class="fas fa-undo mr-2"></i>Remove Coordinator From Leave</button>
+                        <button type="button" id="removeleave" class="btn bg-gradient-primary mb-3" onclick="removeLeaveCoordinator({{ $cdDetails->id }})"><i class="fas fa-undo mr-2"></i>Remove Coordinator From Leave</button>
                     @endif
 
                     @if($cdActiveId == 1)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="retireCoordinator()"><i class="fas fa-ban mr-2"></i>Retire Coordinator</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="retireCoordinator({{ $cdDetails->id }})"><i class="fas fa-ban mr-2"></i>Retire Coordinator</button>
                     @elseif($cdActiveId != 1)
-                        <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="unRetireCoordinator()"><i class="fas fa-undo mr-2"></i>UnRetire Coordinator</button>
+                        <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="unRetireCoordinator({{ $cdDetails->id }})"><i class="fas fa-undo mr-2"></i>UnRetire Coordinator</button>
                     @endif
                 @endif
                 <br>
                     @if ($cdConfId == $confId)
                         @if ($cdActiveId == '1')
-                            <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
+                            <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
                         @elseif ($cdActiveId == '2')
-                            <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Coordinator List</button>
+                            <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Coordinator List</button>
                         @elseif ($cdActiveId == '3')
-                            <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Coordinator List</button>
+                            <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Coordinator List</button>
                         @elseif ($cdActiveId == '0')
-                            <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
+                            <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
                         @endif
                     @else
                         @if ($cdConfId != $confId)
                             @if ($ITCondition)
                                 @if ($cdActiveId == '1')
-                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
+                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
                                 @elseif ($cdActiveId == '2')
-                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
+                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
                                 @elseif ($cdActiveId == '3')
-                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
+                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
                                 @elseif ($cdActiveId == '0')
-                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
+                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
                                 @endif
                             @endif
                         @endif
@@ -358,96 +357,18 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
+    <script>
+        console.log('Page variables:');
+        console.log('chActiveId:', @json($chActiveId ?? 'NOT SET'));
+        console.log('coordinatorCondition:', @json($coordinatorCondition ?? 'NOT SET'));
+        console.log('supervisingCoordinatorCondition:', @json($supervisingCoordinatorCondition ?? 'NOT SET'));
+        console.log('ITCondition:', @json($ITCondition ?? 'NOT SET'));
+        console.log('confId:', @json($confId ?? 'NOT SET'));
+        console.log('cdConfId:', @json($cdConfId ?? 'NOT SET'));
+    </script>
+    @include('layouts.scripts.disablefields')
+
 <script>
-
-    var $cdActiveId = @json($cdActiveId);
-    var $supervisingCoordinatorCondition = @json($supervisingCoordinatorCondition);
-    var $ITCondition = @json($ITCondition);
-    var $cdConfId = @json($cdConfId);
-    var $confId = @json($confId);
-
-    var hasCoordinatorAccess = $supervisingCoordinatorCondition && ($confId == $cdConfId);
-    var hasITAccess = $ITCondition;
-    var shouldEnable = ($cdActiveId == 1) && (hasCoordinatorAccess || hasITAccess);
-
-$(document).ready(function () {
-    // Disable fields for coordinators that are not active & Coordinators who should not have edit access
-    if (!shouldEnable) {
-        $('input, select, textarea, button').prop('disabled', true);
-
-        $('a[href^="mailto:"]').each(function() {
-            $(this).addClass('disabled-link'); // Add disabled class for styling
-            $(this).attr('href', 'javascript:void(0);'); // Prevent navigation
-            $(this).on('click', function(e) {
-                e.preventDefault(); // Prevent link click
-            });
-        });
-
-        // Re-enable the specific "Back" buttons
-            $('#back-list').prop('disabled', false);
-            $('#back-pending').prop('disabled', false);
-            $('#back-declined').prop('disabled', false);
-            $('#back-zapped').prop('disabled', false);
-        $('#unretire').prop('disabled', false);
-    }
-});
-
-function showPositionInformation() {
-    Swal.fire({
-        title: '<strong>Position Information</strong>',
-        html: `
-            <h4>Display Position</h4>
-            <p>The Display Position will be used in areas that are publically visible. Examples: MIMI chapter screens, emails, pdf letters, forum signature, etc.</p>
-            <br>
-            <h4>MIMI Position</h4>
-            <p>The MIMI Position is used for chapter hierarchy/level purposes and is required for anyone who oversees chapters. Even if this is not their role title, one of
-                these needs to be selected for MIMI to function properly.</p>
-            <br>
-            <h4>Secondary Positions</h4>
-            <p>Multiple Secondary Positions may be chosen. Secondary Posistions may allow additional access outside of normal chapter/coordinator menus/screens based on the
-                job requirements while others may be for information/visual purposes only and will not affect MIMI interaction.</p>
-            `,
-        focusConfirm: false,
-        confirmButtonText: 'Close',
-        customClass: {
-            popup: 'swal-wide',
-            confirmButton: 'btn btn-danger'
-        }
-    });
-}
-
-// document.querySelectorAll('.reset-password-btn').forEach(button => {
-//     button.addEventListener('click', function (e) {
-//         e.preventDefault();
-
-//         const userId = this.getAttribute('data-user-id');
-//         const newPassword = "TempPass4You";
-
-//         $.ajax({
-//             url: '{{ route('updatepassword') }}',
-//             type: 'PUT',
-//             data: {
-//                 user_id: userId,
-//                 new_password: newPassword,
-//                 _token: '{{ csrf_token() }}'
-//             },
-//             success: function(result) {
-//                 Swal.fire({
-//                     title: 'Success!',
-//                     text: result.message.replace('<br>', '\n'),
-//                     icon: 'success',
-//                     confirmButtonText: 'OK',
-//                     customClass: {
-//                         confirmButton: 'btn-sm btn-success'
-//                     }
-//                 });
-//             },
-//             error: function(jqXHR, exception) {
-//                 console.log(jqXHR.responseText); // Log error response
-//             }
-//         });
-//     });
-// });
 
 function updateCardSent() {
     const coordId = '{{ $cdDetails->id ?? '' }}'; // Use a fallback if `id` is null or undefined
@@ -501,423 +422,6 @@ function updateCardSent() {
                         text: response.message,
                         icon: 'success',
                         showConfirmButton: false,
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function subscribe(categoryId) {
-    const userId = '{{ $cdDetails->user_id ?? '' }}';
-
-    Swal.fire({
-        title: 'Subscribe to List',
-        html: `
-            <p>Coordinator will be subscribed to the selected list. Please confirm by pressing OK.</p>
-
-            <input type="hidden" id="user_id" name="user_id" value="${userId}">
-            <input type="hidden" id="category_id" name="category_id" value="${categoryId}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const userId = Swal.getPopup().querySelector('#user_id').value;
-            const categoryId = Swal.getPopup().querySelector('#category_id').value;
-
-            return {
-                user_id: userId,
-                category_id: categoryId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request
-            $.ajax({
-                url: '{{ route('forum.subscribecategory') }}',
-                type: 'POST',
-                data: {
-                    user_id: data.user_id,
-                        category_id: data.category_id,
-                        _token: '{{ csrf_token() }}'
-                    },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,  // Automatically close without "OK" button
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function unsubscribe(categoryId) {
-    const userId = '{{ $cdDetails->user_id ?? '' }}';
-
-    Swal.fire({
-        title: 'Subscribe to List',
-        html: `
-            <p>Coordinator will be subscribed to the selected list. Please confirm by pressing OK.</p>
-
-            <input type="hidden" id="user_id" name="user_id" value="${userId}">
-            <input type="hidden" id="category_id" name="category_id" value="${categoryId}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const userId = Swal.getPopup().querySelector('#user_id').value;
-            const categoryId = Swal.getPopup().querySelector('#category_id').value;
-
-            return {
-                user_id: userId,
-                category_id: categoryId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request
-            $.ajax({
-                url: '{{ route('forum.unsubscribecategory') }}',
-                type: 'POST',
-                data: {
-                        user_id: data.user_id,
-                        category_id: data.category_id,
-                        _token: '{{ csrf_token() }}'
-                    },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,  // Automatically close without "OK" button
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function onLeaveCoordinator(coordId) {
-    Swal.fire({
-        title: 'Coordinator On Leave',
-        html: `
-            <p>This will mark the coordinator On Leave. Please confirm by pressing OK.</p>
-
-            <input type="hidden" id="coord_id" name="coord_id" value="{{ $cdDetails->id }}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const coordId = Swal.getPopup().querySelector('#coord_id').value;
-
-            return {
-                coord_id: coordId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request
-            $.ajax({
-                url: '{{ route('coordinators.updateonleave') }}',
-                type: 'POST',
-                data: {
-                        coord_id: data.coord_id,
-                        _token: '{{ csrf_token() }}'
-                    },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,  // Automatically close without "OK" button
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function removeLeaveCoordinator(coordId) {
-    Swal.fire({
-        title: 'Coordinator Remove from Leave',
-        html: `
-            <p>This will remove the coordinator from Leave. Please confirm by pressing OK.</p>
-
-            <input type="hidden" id="coord_id" name="coord_id" value="{{ $cdDetails->id }}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const coordId = Swal.getPopup().querySelector('#coord_id').value;
-
-            return {
-                coord_id: coordId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request
-            $.ajax({
-                url: '{{ route('coordinators.updateremoveleave') }}',
-                type: 'POST',
-                data: {
-                        coord_id: data.coord_id,
-                        _token: '{{ csrf_token() }}'
-                    },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,  // Automatically close without "OK" button
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function retireCoordinator(coordId) {
-    Swal.fire({
-        title: 'Coordinator Retire Reason',
-        html: `
-            <p>Marking a coordinator as retired will remove their login. Please enter the reason for retiring and press OK.</p>
-            <div style="display: flex; align-items: center; ">
-                <input type="text" id="reason_retired" name="reason_retired" class="swal2-input" placeholder ="Enter Reason" required style="width: 100%;">
-            </div>
-            <input type="hidden" id="coord_id" name="coord_id" value="{{ $cdDetails->id }}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const retireReason = Swal.getPopup().querySelector('#reason_retired').value;
-            const coordId = Swal.getPopup().querySelector('#coord_id').value;
-
-            if (!retireReason) {
-                Swal.showValidationMessage('Please enter the reason for retiring.');
-                return false;
-            }
-
-            return {
-                reason_retired: retireReason,
-                coord_id: coordId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request
-            $.ajax({
-                url: '{{ route('coordinators.updateretire') }}',
-                type: 'POST',
-                data: {
-                        reason_retired: data.reason_retired,
-                        coord_id: data.coord_id,
-                        _token: '{{ csrf_token() }}'
-                    },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,  // Automatically close without "OK" button
-                        timer: 1500,
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong, Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-
-function unRetireCoordinator(coordId) {
-    Swal.fire({
-        title: 'Reactivate Coordinator',
-        html: `
-            <p>Reactivating a coordinator as retired will reset their login. Please verify this is what you want to do by pressing OK.</p>
-            <input type="hidden" id="coord_id" name="coord_id" value="{{ $cdDetails->id }}">
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
-        customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
-        },
-        preConfirm: () => {
-            const coordId = Swal.getPopup().querySelector('#coord_id').value;
-
-            return {
-                coord_id: coordId,
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const data = result.value;
-
-            // Perform the AJAX request
-            $.ajax({
-                url: '{{ route('coordinators.updateunretire') }}',
-                type: 'POST',
-                data: {
-                        coord_id: data.coord_id,
-                        _token: '{{ csrf_token() }}'
-                    },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: false,  // Automatically close without "OK" button
                         timer: 1500,
                         customClass: {
                             confirmButton: 'btn-sm btn-success'

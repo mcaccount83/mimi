@@ -95,10 +95,10 @@
 
 <!-- Sript Functions -->
 @include('layouts.scripts.alert')
+@include('layouts.scripts.bootstrapswitch')
 @include('layouts.scripts.datetime')
 @include('layouts.scripts.masks')
 @include('layouts.scripts.pdfviewer')
-@include('layouts.scripts.bootstrapswitch')
 
 @yield('customscript')
 @stack('scripts')
