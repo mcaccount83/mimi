@@ -1,5 +1,7 @@
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
+    // Only run if the element exists on this page
+    if ($('#ch_primarycor').length) {
         function loadCoordinatorList(coorId) {
             if (coorId != "") {
                 $.ajax({
@@ -22,5 +24,6 @@
             var selectedValue = $(this).val();
             loadCoordinatorList(selectedValue);
         });
-    });
+    }
+});
 </script>
