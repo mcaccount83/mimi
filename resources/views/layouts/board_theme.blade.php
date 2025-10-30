@@ -176,7 +176,6 @@
 
     <!-- Main content -->
     <div class="content">
-
         @include('layouts.scripts.messages')
 
         @yield('content')
