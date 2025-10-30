@@ -929,15 +929,6 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-    <script>
-        console.log('Page variables:');
-        console.log('chActiveId:', @json($chActiveId ?? 'NOT SET'));
-        console.log('coordinatorCondition:', @json($coordinatorCondition ?? 'NOT SET'));
-        console.log('supervisingCoordinatorCondition:', @json($supervisingCoordinatorCondition ?? 'NOT SET'));
-        console.log('ITCondition:', @json($ITCondition ?? 'NOT SET'));
-        console.log('confId:', @json($confId ?? 'NOT SET'));
-        console.log('cdConfId:', @json($cdConfId ?? 'NOT SET'));
-    </script>
     @include('layouts.scripts.disablefields')
 
 @endsection

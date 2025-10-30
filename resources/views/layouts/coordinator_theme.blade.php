@@ -654,6 +654,8 @@ window.onload = function () {
 <!-- Sript Functions -->
 @include('layouts.scripts.alert')
 @include('layouts.scripts.boards')
+@include('layouts.scripts.boardreport')
+@include('layouts.scripts.boardactivate')
 @include('layouts.scripts.bootstrapswitch')
 @include('layouts.scripts.checkboxes')
 @include('layouts.scripts.coordinatorlist')
@@ -668,6 +670,7 @@ window.onload = function () {
 @include('layouts.scripts.password')
 @include('layouts.scripts.pdfviewer')
 @include('layouts.scripts.probation')
+@include('layouts.scripts.resources')
 @include('layouts.scripts.sendemail')
 @include('layouts.scripts.uploads')
 @include('layouts.scripts.useractions')

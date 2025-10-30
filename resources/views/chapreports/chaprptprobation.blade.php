@@ -95,7 +95,11 @@
                 @endif
                 <div class="card-body text-center">
                     @if ($ITCondition)
-                        <button type="button" id="reset-probation" class="btn bg-gradient-primary"><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
+                        @if ($checkBox5Status)
+                            <button type="button" class="btn bg-gradient-primary mb-3" onclick="showResetProbationSubmisionModel()"><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
+                        @else
+                            <button type="button" class="btn bg-gradient-primary mb-3" onclick="showResetProbationSubmisionModel()" disabled><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
+                        @endif
                     @endif
                 </div>
 
@@ -108,49 +112,4 @@
 <!-- Main content -->
 
 <!-- /.content -->
-
-@endsection
-@section('customscript')
-<script>
-
-    $(document).ready(function() {
-        var resetBaseUrl = '{{ url("/techreports/resetProbationSubmission") }}';
-
-        function handleAjaxRequest(baseUrl) {
-            $.ajax({
-                url: baseUrl,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                },
-                success: function(response) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Success!",
-                        text: response.success,
-                        timer: 2000, // Auto-close after 2 seconds
-                        showConfirmButton: false
-                    }).then(() => {
-                        location.reload(); // Reload AFTER SweetAlert message
-                    });
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error!",
-                        text: xhr.responseJSON?.fail || "An unexpected error occurred.",
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                }
-            });
-        }
-
-        // Attach the function to all buttons
-        $("#reset-probation").click(function() {
-            handleAjaxRequest(resetBaseUrl);
-        });
-    });
-
-</script>
 @endsection

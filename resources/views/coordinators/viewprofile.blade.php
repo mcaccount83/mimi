@@ -189,10 +189,3 @@
     </section>
     <!-- /.content -->
 @endsection
-@section('customscript')
-<script>
-
-
-
-</script>
-@endsection

@@ -69,8 +69,3 @@
 </div>
 <!-- /.container- -->
 @endsection
-@section('customscript')
-<script>
-
-</script>
-@endsection

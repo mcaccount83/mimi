@@ -144,27 +144,10 @@
 @endsection
 
 @section('customscript')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
-<script>
-$(document).ready(function() {
-    var elem = document.querySelector('.masonry');
-    var msnry = new Masonry(elem, {
-        itemSelector: '.masonry-item',
-        columnWidth: '.masonry-item',
-        percentPosition: true
-    });
-});
 
-$(document).ready(function() {
-    var elem = document.querySelector('.masonry2');
-    var msnry = new Masonry(elem, {
-        itemSelector: '.masonry-item',
-        columnWidth: '.masonry-item',
-        percentPosition: true
-    });
-});
-</script>
 <script>
 function showChapterInfo(chapter) {
     Swal.fire({

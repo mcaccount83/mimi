@@ -311,7 +311,7 @@
                                                         <div class="col-md-6"><br></div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
-                                                            <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
+                                                            <button type="button" class="btn btn-success" onclick="updateBugTask({{ $adminItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -356,148 +356,14 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
-                    <button type="button" class="btn btn-success" onclick="return addTask()"><i class="fas fa-save" ></i>&nbsp; Add Task</button>
+                    <button type="button" class="btn btn-success" onclick="return addBugTask()"><i class="fas fa-save" ></i>&nbsp; Add Task</button>
                 </div>
             </div>
         </div>
     </div>
 
         </section>
-        <!-- /.content -->
+    <!-- /.content -->
 
-    @endsection
-@section('customscript')
-<script>
-
- function addTask() {
-    var taskNameNew = document.getElementById('taskNameNew').value;
-    var taskDetailsNew = document.getElementById('taskDetailsNew').value;
-    var taskPriorityNew = document.getElementById('taskPriorityNew').value;
-
-     // Initialize an array to collect validation errors
-     let validationErrors = [];
-
-      // Collect validation errors
-        if (taskNameNew == '') {
-            validationErrors.push('Name is Required.');
-        }
-        if (taskNameNew.length > 50) {
-            validationErrors.push('Name cannot exceed 50 characters.');
-        }
-        if (taskDetailsNew == '') {
-            validationErrors.push('Details are Required.');
-        }
-        if (taskDetailsNew.length > 255) {
-            validationErrors.push('Details cannot exceed 255 characters.');
-        }
-
-     // Check if there are any validation errors
-     if (validationErrors.length > 0) {
-            Swal.fire({
-                title: 'Error!',
-                html: validationErrors.join('<br>'),
-                icon: 'error',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
-            return false; // Prevent form submission
-        }
-
-    // Get the CSRF token value from the meta tag
-    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        // Initialize the FormData object
-        var formData = new FormData();
-        formData.append('taskNameNew', taskNameNew);
-        formData.append('taskDetailsNew', taskDetailsNew);
-        formData.append('taskPriorityNew', taskPriorityNew);
-
-    // Send an AJAX request to Laravel backend to create a new task
-    $.ajax({
-        url: '{{ route('resources.addbugs') }}',
-        method: 'POST',
-            data: formData,
-            processData: false, // Required for FormData
-            contentType: false, // Required for FormData
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            },
-            success: function(response) {
-                Swal.fire({
-                                title: 'Success!',
-                                text: 'Bug added successfully.',
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error!', 'Bug add failed. Please try again.', 'error');
-                            console.error(xhr.responseText);
-                        }
-                    });
-
-    // Close the modal
-    $('#modal-task').modal('hide');
-
-    // Prevent form submission
-    return false;
-}
-
-  function updateTask(id) {
-    var taskDetails = document.getElementById('taskDetails' + id).value;
-    var taskNotes = document.getElementById('taskNotes' + id).value;
-    var taskStatus = document.getElementById('taskStatus' + id).value;
-    var taskPriority = document.getElementById('taskPriority' + id).value;
-
-    var formData = new FormData();
-    formData.append('taskDetails', taskDetails);
-    formData.append('taskNotes', taskNotes);
-    formData.append('taskStatus', taskStatus);
-    formData.append('taskPriority', taskPriority);
-
-    // Get the CSRF token value from the meta tag
-    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    // Send an AJAX request to update the task
-    $.ajax({
-        url: '{{ route('resources.updatebugs', ':id') }}'.replace(':id', id),
-        method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'Task updated successfully.',
-                            icon: 'success',
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(() => {
-                            location.reload(); // Reload the page to reflect changes
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire('Error!', 'Task update failed. Please try again.', 'error');
-                        console.error(xhr.responseText);
-                    }
-                });
-
-    // Close the modal
-    $('#editTaskModal' + id).modal('hide');
-
-    // Prevent form submission
-    return false;
-}
-
-
-</script>
 @endsection
 

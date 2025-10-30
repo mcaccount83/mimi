@@ -156,15 +156,23 @@ class BaseBoardController extends Controller
         $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
         // Fetch board details using BoardPosition constants
-        $PresDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::PRES, collect([$defaultDisbandedBoardMember]))->first();
-        $AVPDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::AVP, collect([$defaultDisbandedBoardMember]))->first();
-        $MVPDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::MVP, collect([$defaultDisbandedBoardMember]))->first();
-        $TRSDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::TRS, collect([$defaultDisbandedBoardMember]))->first();
-        $SECDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::SEC, collect([$defaultDisbandedBoardMember]))->first();
+        $PresDetails = $bdDisbandedDetails->get(BoardPosition::PRES, collect([$defaultDisbandedBoardMember]))->first();
+        $AVPDetails = $bdDisbandedDetails->get(BoardPosition::AVP, collect([$defaultDisbandedBoardMember]))->first();
+        $MVPDetails = $bdDisbandedDetails->get(BoardPosition::MVP, collect([$defaultDisbandedBoardMember]))->first();
+        $TRSDetails = $bdDisbandedDetails->get(BoardPosition::TRS, collect([$defaultDisbandedBoardMember]))->first();
+        $SECDetails = $bdDisbandedDetails->get(BoardPosition::SEC, collect([$defaultDisbandedBoardMember]))->first();
 
-        return ['chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
-            'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails,
-            'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
+        return ['PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
+
+        // $PresDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::PRES, collect([$defaultDisbandedBoardMember]))->first();
+        // $AVPDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::AVP, collect([$defaultDisbandedBoardMember]))->first();
+        // $MVPDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::MVP, collect([$defaultDisbandedBoardMember]))->first();
+        // $TRSDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::TRS, collect([$defaultDisbandedBoardMember]))->first();
+        // $SECDisbandedDetails = $bdDisbandedDetails->get(BoardPosition::SEC, collect([$defaultDisbandedBoardMember]))->first();
+
+        // return ['chDisbanded' => $chDisbanded, 'PresDisbandedDetails' => $PresDisbandedDetails,
+        //     'AVPDisbandedDetails' => $AVPDisbandedDetails, 'MVPDisbandedDetails' => $MVPDisbandedDetails,
+        //     'TRSDisbandedDetails' => $TRSDisbandedDetails, 'SECDisbandedDetails' => $SECDisbandedDetails,
         ];
     }
 
@@ -180,15 +188,24 @@ class BaseBoardController extends Controller
         $defaultIncomingBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
         // Fetch board details using BoardPosition constants
-        $PresIncomingDetails = $bdIncomingDetails->get(BoardPosition::PRES, collect([$defaultIncomingBoardMember]))->first();
-        $AVPIncomingDetails = $bdIncomingDetails->get(BoardPosition::AVP, collect([$defaultIncomingBoardMember]))->first();
-        $MVPIncomingDetails = $bdIncomingDetails->get(BoardPosition::MVP, collect([$defaultIncomingBoardMember]))->first();
-        $TRSIncomingDetails = $bdIncomingDetails->get(BoardPosition::TRS, collect([$defaultIncomingBoardMember]))->first();
-        $SECIncomingDetails = $bdIncomingDetails->get(BoardPosition::SEC, collect([$defaultIncomingBoardMember]))->first();
+        $PresDetails = $bdIncomingDetails->get(BoardPosition::PRES, collect([$defaultIncomingBoardMember]))->first();
+        $AVPDetails = $bdIncomingDetails->get(BoardPosition::AVP, collect([$defaultIncomingBoardMember]))->first();
+        $MVPDetails = $bdIncomingDetails->get(BoardPosition::MVP, collect([$defaultIncomingBoardMember]))->first();
+        $TRSDetails = $bdIncomingDetails->get(BoardPosition::TRS, collect([$defaultIncomingBoardMember]))->first();
+        $SECDetails = $bdIncomingDetails->get(BoardPosition::SEC, collect([$defaultIncomingBoardMember]))->first();
 
-        return ['PresIncomingDetails' => $PresIncomingDetails, 'AVPIncomingDetails' => $AVPIncomingDetails, 'MVPIncomingDetails' => $MVPIncomingDetails,
-            'TRSIncomingDetails' => $TRSIncomingDetails, 'SECIncomingDetails' => $SECIncomingDetails,
+                return ['PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
+
         ];
+        // $PresIncomingDetails = $bdIncomingDetails->get(BoardPosition::PRES, collect([$defaultIncomingBoardMember]))->first();
+        // $AVPIncomingDetails = $bdIncomingDetails->get(BoardPosition::AVP, collect([$defaultIncomingBoardMember]))->first();
+        // $MVPIncomingDetails = $bdIncomingDetails->get(BoardPosition::MVP, collect([$defaultIncomingBoardMember]))->first();
+        // $TRSIncomingDetails = $bdIncomingDetails->get(BoardPosition::TRS, collect([$defaultIncomingBoardMember]))->first();
+        // $SECIncomingDetails = $bdIncomingDetails->get(BoardPosition::SEC, collect([$defaultIncomingBoardMember]))->first();
+
+        // return ['PresIncomingDetails' => $PresIncomingDetails, 'AVPIncomingDetails' => $AVPIncomingDetails, 'MVPIncomingDetails' => $MVPIncomingDetails,
+        //     'TRSIncomingDetails' => $TRSIncomingDetails, 'SECIncomingDetails' => $SECIncomingDetails,
+        // ];
     }
 
     /**
@@ -203,14 +220,14 @@ class BaseBoardController extends Controller
         $defaultPendingBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
         // Fetch board details using BoardPosition constants
-        $PresPendingDetails = $bdPendingDetails->get(BoardPosition::PRES, collect([$defaultPendingBoardMember]))->first();
-        $AVPPendingDetails = $bdPendingDetails->get(BoardPosition::AVP, collect([$defaultPendingBoardMember]))->first();
-        $MVPPendingDetails = $bdPendingDetails->get(BoardPosition::MVP, collect([$defaultPendingBoardMember]))->first();
-        $TRSPendingDetails = $bdPendingDetails->get(BoardPosition::TRS, collect([$defaultPendingBoardMember]))->first();
-        $SECPendingDetails = $bdPendingDetails->get(BoardPosition::SEC, collect([$defaultPendingBoardMember]))->first();
+        $PresDetails = $bdPendingDetails->get(BoardPosition::PRES, collect([$defaultPendingBoardMember]))->first();
+        $AVPDetails = $bdPendingDetails->get(BoardPosition::AVP, collect([$defaultPendingBoardMember]))->first();
+        $MVPDetails = $bdPendingDetails->get(BoardPosition::MVP, collect([$defaultPendingBoardMember]))->first();
+        $TRSDetails = $bdPendingDetails->get(BoardPosition::TRS, collect([$defaultPendingBoardMember]))->first();
+        $SECDetails = $bdPendingDetails->get(BoardPosition::SEC, collect([$defaultPendingBoardMember]))->first();
 
-        return ['PresPendingDetails' => $PresPendingDetails, 'AVPPendingDetails' => $AVPPendingDetails, 'MVPPendingDetails' => $MVPPendingDetails,
-            'TRSPendingDetails' => $TRSPendingDetails, 'SECPendingDetails' => $SECPendingDetails,
+                        return ['PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
+
         ];
     }
 }

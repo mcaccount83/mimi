@@ -270,18 +270,9 @@
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
 
+@include('layouts.scripts.masonrygrid')
+
 <script>
-
-$(document).ready(function() {
-    var elem = document.querySelector('.grid');
-    var msnry = new Masonry(elem, {
-        itemSelector: '.grid-item',
-        columnWidth: 400, // Set a fixed column width (adjust as needed)
-        gutter: 20, // Set gutter for spacing between items
-        percentPosition: true
-    });
-});
-
 $(document).ready(function() {
     var eoyBaseUrl = '{{ url("/techreports/updateeoydatabase") }}';  // URL for resetting financial data tables
     var dataBaseUrl = '{{ url("/techreports/updatedatadatabase") }}';   // URL for resetting user data tables

@@ -137,6 +137,142 @@
         });
     }
 
+    function showUserInactiveModel() {
+    Swal.fire({
+        title: 'Make All Disbanded Users Inactive',
+        html: `
+            <p>This will make all disbanded users inactive.  They will no longer have access to edit the Disbanding Checklist and/or Final Fiancial Report</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('techreports.resetdisbandedusers') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showResetProbationSubmisionModel() {
+    Swal.fire({
+        title: 'Reset Quarterly Reports for all Chapters',
+        html: `
+            <p>This will reset the quarterly data inputs for all chapters who have made submissions for the past year.</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('techreports.resetProbationSubmission') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
     function showDisbandChapterModal(chapterid) {
         Swal.fire({
             title: 'Chapter Disband Reason',
