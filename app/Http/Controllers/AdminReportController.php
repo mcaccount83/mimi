@@ -74,7 +74,7 @@ class AdminReportController extends Controller implements HasMiddleware
                             $request->get(ChapterCheckbox::INTERNATIONAL) == 'yes';
 
         // Filter by conference unless international is selected
-        if (!$showInternational) {
+        if (! $showInternational) {
             $query->where('conf', $confId);
         }
 
@@ -103,7 +103,7 @@ class AdminReportController extends Controller implements HasMiddleware
     /**
      * View Payment Log Transaction Details
      */
-     public function paymentDetails($id): View
+    public function paymentDetails($id): View
     {
         $log = PaymentLog::findOrFail($id);
 
@@ -163,7 +163,7 @@ class AdminReportController extends Controller implements HasMiddleware
         $allMonths = $baseQuery['allMonths'];
 
         $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chPayments' => $chPayments, 'allMonths' => $allMonths,
-                 'confId' => $confId, 'chConfId' => $chConfId];
+            'confId' => $confId, 'chConfId' => $chConfId];
 
         return view('adminreports.editreregdate')->with($data);
     }

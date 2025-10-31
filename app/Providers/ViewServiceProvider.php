@@ -7,7 +7,6 @@ use App\Services\PositionConditionsService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Log;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -64,9 +63,9 @@ class ViewServiceProvider extends ServiceProvider
     }
 
     public function register(): void
-{
-    // Register as a singleton - let Laravel auto-resolve dependencies
-    $this->app->singleton(PositionConditionsService::class);
-    $this->app->singleton(ForumConditionsService::class);
-}
+    {
+        // Register as a singleton - let Laravel auto-resolve dependencies
+        $this->app->singleton(PositionConditionsService::class);
+        $this->app->singleton(ForumConditionsService::class);
+    }
 }

@@ -55,7 +55,7 @@ class BaseConditionsController extends Controller
     /**
      * Apply position-based conditions to the coordinatorquery
      */
-     public function applyPositionCoordConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
+    public function applyPositionCoordConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
     {
         if ($conditions['founderCondition']) {
             // View Full International List - no filter
@@ -113,5 +113,4 @@ class BaseConditionsController extends Controller
 
         return $baseQuery;
     }
-
 }

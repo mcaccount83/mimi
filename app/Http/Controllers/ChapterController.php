@@ -121,7 +121,7 @@ class ChapterController extends Controller implements HasMiddleware
             'countList' => $countList,
             'chapterList' => $chapterList,
             'checkBox5Status' => $checkBox5Status,
-             'userName' => $userName,
+            'userName' => $userName,
             'userPosition' => $userPosition,
             'userConfName' => $userConfName,
             'userConfDesc' => $userConfDesc,
@@ -1564,7 +1564,7 @@ class ChapterController extends Controller implements HasMiddleware
             'checkBox5Status' => $checkBox5Status,
         ];
 
-        return view('chapters.chapsocialmedia', )->with($data);
+        return view('chapters.chapsocialmedia')->with($data);
     }
 
     /**
@@ -1808,7 +1808,7 @@ class ChapterController extends Controller implements HasMiddleware
             'pcList' => $pcList, 'allRegions' => $allRegions, 'pcDetails' => $pcDetails, 'allCountries' => $allCountries,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails,
             'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails, 'confId' => $confId,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('chapters.editpending')->with($data);

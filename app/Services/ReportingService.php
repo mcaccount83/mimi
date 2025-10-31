@@ -1,12 +1,12 @@
 <?php
+
 // app/Services/ReportingService.php
 
 namespace App\Services;
 
+use App\Http\Controllers\UserController;
 use App\Models\Chapters;
 use App\Models\Coordinators;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Log;
 
 class ReportingService
 {
@@ -58,7 +58,7 @@ class ReportingService
         return [
             'direct_report' => $direct_report,
             'indirect_report' => $indirect_report,
-            'total_report' => $total_report
+            'total_report' => $total_report,
         ];
     }
 
@@ -102,7 +102,7 @@ class ReportingService
         return [
             'direct_report' => $direct_report,
             'indirect_report' => $indirect_report,
-            'total_report' => $total_report
+            'total_report' => $total_report,
         ];
     }
 }

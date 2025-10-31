@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Enums\CoordinatorCheckbox;
 use App\Models\AdminRole;
 use App\Models\Conference;
-use App\Models\CoordinatorApplication;
 use App\Models\CoordinatorPosition;
 use App\Models\Coordinators;
 use App\Models\Country;
@@ -45,20 +44,20 @@ class BaseCoordinatorController extends Controller
             $baseQuery->where('report_id', '=', $coorId);
         }
 
-        //Checkbox3
+        // Checkbox3
         if (isset($_GET[CoordinatorCheckbox::CONFERENCE_REGION]) && $_GET[CoordinatorCheckbox::CONFERENCE_REGION] == 'yes') {
             $checkboxStatus[CoordinatorCheckbox::CHECK_CONFERENCE_REGION] = 'checked';
             // Position conditions already applied in buildChapterQuery
         }
 
-        //Checkbox5
+        // Checkbox5
         if (isset($_GET[CoordinatorCheckbox::INTERNATIONAL]) && $_GET[CoordinatorCheckbox::INTERNATIONAL] == 'yes') {
             $checkboxStatus[CoordinatorCheckbox::CHECK_INTERNATIONAL] = 'checked';
             // Position conditions were skipped in buildChapterQuery
             if ($conditions && (
-                !$conditions['inquiriesInternationalCondition'] &&
-                !$conditions['ITCondition'] &&
-                !$conditions['einCondition'])) {
+                ! $conditions['inquiriesInternationalCondition'] &&
+                ! $conditions['ITCondition'] &&
+                ! $conditions['einCondition'])) {
                 // User doesn't have international permissions, show nothing
                 $baseQuery->whereRaw('1 = 0');
             }
@@ -145,7 +144,7 @@ class BaseCoordinatorController extends Controller
             );
 
             // Only apply position conditions if check5 is NOT selected
-            if (!isset($_GET[CoordinatorCheckbox::INTERNATIONAL]) || $_GET[CoordinatorCheckbox::INTERNATIONAL] !== 'yes') {
+            if (! isset($_GET[CoordinatorCheckbox::INTERNATIONAL]) || $_GET[CoordinatorCheckbox::INTERNATIONAL] !== 'yes') {
                 $baseQuery = $this->baseConditionsController->applyPositionConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
@@ -155,8 +154,8 @@ class BaseCoordinatorController extends Controller
                 );
             }
 
-    // Apply checkbox filters with conditions
-                $checkboxResults = $this->applyCheckboxFilters(
+            // Apply checkbox filters with conditions
+            $checkboxResults = $this->applyCheckboxFilters(
                 $baseQuery,
                 $params['coorId'],
                 $conditionsData['conditions'],
@@ -199,7 +198,7 @@ class BaseCoordinatorController extends Controller
      */
     private function getQueryType($activeStatus)
     {
-        return match($activeStatus) {
+        return match ($activeStatus) {
             0 => 'zapped',
             1 => 'active',
             2 => 'pending',

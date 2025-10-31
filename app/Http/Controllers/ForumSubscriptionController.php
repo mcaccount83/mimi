@@ -107,7 +107,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         $countList = $chapterList->count();
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
             'checkBox3Status' => $checkBox3Status,
-            'checkBox5Status' => $checkBox5Status,];
+            'checkBox5Status' => $checkBox5Status, ];
 
         return view('forum.chaptersubscriptionlist')->with($data);
     }
@@ -135,7 +135,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         $countList = count($coordinatorList);
         $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
             'checkBox3Status' => $checkBox3Status,
-            'checkBox5Status' => $checkBox5Status,'emailListCord' => $emailListCord];
+            'checkBox5Status' => $checkBox5Status, 'emailListCord' => $emailListCord];
 
         return view('forum.coordinatorsubscriptionlist')->with($data);
     }
