@@ -50,9 +50,9 @@
                                             @if ($resourceItem->link)
                                                 <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                             @elseif ($resourceItem->route)
-<a href="{{ route($resourceItem->route, $chDetails->id) }}" target="_blank">
-    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-</a>
+                                                <a href="{{ route($resourceItem->route, $chDetails->id) }}" target="_blank">
+                                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                                </a>
                                             @elseif ($resourceItem->file_path)
                                                 <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                                     {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
