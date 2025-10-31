@@ -350,25 +350,40 @@ class ChapterController extends Controller implements HasMiddleware
         $probationReason = $baseQuery['probationReason'];
         $websiteLink = $baseQuery['websiteLink'];
 
-        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-        $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
-        $chDisbanded = $baseDisbandedBoardQuery['chDisbanded'];
+        $chDisbanded = null;
 
-        if ($chActiveId == 1) {
-            $PresDetails = $baseActiveBoardQuery['PresDetails'];
-            $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
-            $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
-            $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
-            $SECDetails = $baseActiveBoardQuery['SECDetails'];
+        if ($chActiveId == '1') {
+            $baseBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        } elseif ($chActiveId == '0') {
+            $baseBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
+            $chDisbanded = $baseBoardQuery['chDisbanded'];
         }
 
-        if ($chActiveId == 0) {
-            $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-            $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
-            $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
-            $TRSDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
-            $SECDetails = $baseDisbandedBoardQuery['SECDisbandedDetails'];
-        }
+        $PresDetails = $baseBoardQuery['PresDetails'];
+        $AVPDetails = $baseBoardQuery['AVPDetails'];
+        $MVPDetails = $baseBoardQuery['MVPDetails'];
+        $TRSDetails = $baseBoardQuery['TRSDetails'];
+        $SECDetails = $baseBoardQuery['SECDetails'];
+
+        // $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        // $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
+        // $chDisbanded = $baseDisbandedBoardQuery['chDisbanded'];
+
+        // if ($chActiveId == 1) {
+        //     $PresDetails = $baseActiveBoardQuery['PresDetails'];
+        //     $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+        //     $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+        //     $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+        //     $SECDetails = $baseActiveBoardQuery['SECDetails'];
+        // }
+
+        // if ($chActiveId == 0) {
+        //     $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+        //     $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
+        //     $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
+        //     $TRSDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
+        //     $SECDetails = $baseDisbandedBoardQuery['SECDisbandedDetails'];
+        // }
 
         $resources = Resources::with('resourceCategory')->get();
 
@@ -527,11 +542,16 @@ class ChapterController extends Controller implements HasMiddleware
             $chConfId = $baseQuery['chConfId'];
 
             $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterid);
-            $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-            $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
-            $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
-            $TRSDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
-            $SECDetails = $baseDisbandedBoardQuery['SECDisbandedDetails'];
+            $PresDetails = $baseDisbandedBoardQuery['PresDetails'];
+            $AVPDetails = $baseDisbandedBoardQuery['AVPDetails'];
+            $MVPDetails = $baseDisbandedBoardQuery['MVPDetails'];
+            $TRSDetails = $baseDisbandedBoardQuery['TRSDetails'];
+            $SECDetails = $baseDisbandedBoardQuery['SECDetails'];
+            // $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+            // $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
+            // $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
+            // $TRSDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
+            // $SECDetails = $baseDisbandedBoardQuery['SECDisbandedDetails']
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -1201,7 +1221,6 @@ class ChapterController extends Controller implements HasMiddleware
             if ($isVacant) {
                 if ($user) {
                     $this->updateUserToOutgoing($user, $lastupdatedDate);
-                    // $this->createOutgoingBoardMember($user, $boardMember, $lastUpdatedBy, $lastupdatedDate);
                     $this->removeActiveBoardMember($user);
                 }
 
@@ -1728,11 +1747,16 @@ class ChapterController extends Controller implements HasMiddleware
         $chPcId = $baseQuery['chPcId'];
 
         $basePendingBoardQuery = $this->baseChapterController->getPendingBoardDetails($id);
-        $PresDetails = $basePendingBoardQuery['PresPendingDetails'];
-        $AVPDetails = $basePendingBoardQuery['AVPPendingDetails'];
-        $MVPDetails = $basePendingBoardQuery['MVPPendingDetails'];
-        $TRSDetails = $basePendingBoardQuery['TRSPendingDetails'];
-        $SECDetails = $basePendingBoardQuery['SECPendingDetails'];
+        $PresDetails = $basePendingBoardQuery['PresDetails'];
+        $AVPDetails = $basePendingBoardQuery['AVPDetails'];
+        $MVPDetails = $basePendingBoardQuery['MVPDetails'];
+        $TRSDetails = $basePendingBoardQuery['TRSDetails'];
+        $SECDetails = $basePendingBoardQuery['SECDetails'];
+        // $PresDetails = $basePendingBoardQuery['PresPendingDetails'];
+        // $AVPDetails = $basePendingBoardQuery['AVPPendingDetails'];
+        // $MVPDetails = $basePendingBoardQuery['MVPPendingDetails'];
+        // $TRSDetails = $basePendingBoardQuery['TRSPendingDetails'];
+        // $SECDetails = $basePendingBoardQuery['SECPendingDetails'];
 
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $baseQuery['chapterStatus'];

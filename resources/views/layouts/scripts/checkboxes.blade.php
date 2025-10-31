@@ -26,6 +26,15 @@
         }
     }
 
+    function showChAllReReg() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showAllReReg").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONALREREG }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
     function showChReviewer() {
         var base_url = window.location.origin + window.location.pathname;
         if ($("#showReviewer").prop("checked") == true) {

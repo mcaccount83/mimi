@@ -77,19 +77,12 @@
                     <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
                 </div>
             </div>
-             @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showChAllConf()" />
-                            <label class="custom-control-label" for="showAllConf">Show All Chapters</label>
-                        </div>
-                    </div>
-                @endif
+
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                            <label class="custom-control-label" for="showAll">Show International Chapters</label>
                         </div>
                     </div>
                 @endif

@@ -63,6 +63,7 @@ class PaymentReportController extends Controller implements HasMiddleware
         $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
         $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
         $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox6Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONALREREG];
 
         if ($checkBox3Status || $checkBox5Status) {
             $reChapterList = $baseQuery['query']
@@ -82,7 +83,7 @@ class PaymentReportController extends Controller implements HasMiddleware
         $countList = count($reChapterList);
         $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus,
             'checkBox3Status' => $checkBox3Status,
-            'checkBox5Status' => $checkBox5Status,];
+            'checkBox5Status' => $checkBox5Status, 'checkBox6Status' => $checkBox6Status,];
 
         return view('payment.chapreregistration')->with($data);
     }

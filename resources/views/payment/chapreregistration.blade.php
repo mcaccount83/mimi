@@ -104,6 +104,12 @@
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAllReReg" id="showAllReReg" class="custom-control-input" {{$checkBox6Status}} onchange="showChAllReReg()" />
+                            <label class="custom-control-label" for="showAllReReg">Show International Chapters</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
                             <label class="custom-control-label" for="showAll">Show All International Chapters</label>
                         </div>

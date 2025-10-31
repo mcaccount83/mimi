@@ -518,7 +518,8 @@ class FinancialReportController extends Controller implements HasMiddleware
             $cc_id = $baseQuery['cc_id'];
 
             $baseDsibandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
-            $PresDetails = $baseDsibandedBoardQuery['PresDisbandedDetails'];
+            // $PresDetails = $baseDsibandedBoardQuery['PresDisbandedDetails'];
+            $PresDetails = $baseDsibandedBoardQuery['PresDetails'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),

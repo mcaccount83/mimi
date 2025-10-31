@@ -77,7 +77,8 @@ class PDFController extends Controller
                 $PresDetails = $baseActiveBoardQuery['PresDetails'];
             } elseif ($chActiveId == '0') {
                 $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
-                $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+                $PresDetails = $baseDisbandedBoardQuery['PresDetails'];
+                // $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
             }
         }
 
@@ -138,7 +139,9 @@ class PDFController extends Controller
                 $PresDetails = $baseActiveBoardQuery['PresDetails'];
             } elseif ($chActiveId == '0') {
                 $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
-                $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+                // $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+                $PresDetails = $baseDisbandedBoardQuery['PresDetails'];
+
             }
         }
 
@@ -484,7 +487,8 @@ class PDFController extends Controller
         $startMonthName = $baseQuery['startMonthName'];
 
         $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
-        $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+        // $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+        $PresDetails = $baseDisbandedBoardQuery['PresDetails'];
 
         //  Load User Information for Signing Email & PDFs
         $user = $this->userController->loadUserInformation($request);

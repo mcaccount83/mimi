@@ -173,16 +173,24 @@ class EOYReportController extends Controller implements HasMiddleware
         $reviewComplete = $baseQuery['reviewComplete'];
         $rrList = $baseQuery['rrList'];
 
-        $PresDetails = null;
+        // $PresDetails = null;
+
+        // if ($chActiveId == '1') {
+        //     $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        //     $PresDetails = $baseActiveBoardQuery['PresDetails'];
+        // } elseif ($chActiveId == '0') {
+        //     $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
+        //     $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
+
+        // }
 
         if ($chActiveId == '1') {
-            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $baseBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
         } elseif ($chActiveId == '0') {
-            $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
-            $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-
+            $baseBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
         }
+
+        $PresDetails = $baseBoardQuery['PresDetails'];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'PresDetails' => $PresDetails,
             'coorId' => $coorId, 'confId' => $confId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
@@ -382,11 +390,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $conferenceDescription = $baseQuery['conferenceDescription'];
 
         $baseIncomingBoardQuery = $this->baseChapterController->getIncomingBoardDetails($id);
-        $PresDetails = $baseIncomingBoardQuery['PresIncomingDetails'];
-        $AVPDetails = $baseIncomingBoardQuery['AVPIncomingDetails'];
-        $MVPDetails = $baseIncomingBoardQuery['MVPIncomingDetails'];
-        $TRSDetails = $baseIncomingBoardQuery['TRSIncomingDetails'];
-        $SECDetails = $baseIncomingBoardQuery['SECIncomingDetails'];
+        $PresDetails = $baseIncomingBoardQuery['PresDetails'];
+        $AVPDetails = $baseIncomingBoardQuery['AVPDetails'];
+        $MVPDetails = $baseIncomingBoardQuery['MVPDetails'];
+        $TRSDetails = $baseIncomingBoardQuery['TRSDetails'];
+        $SECDetails = $baseIncomingBoardQuery['SECDetails'];
+        // $PresDetails = $baseIncomingBoardQuery['PresIncomingDetails'];
+        // $AVPDetails = $baseIncomingBoardQuery['AVPIncomingDetails'];
+        // $MVPDetails = $baseIncomingBoardQuery['MVPIncomingDetails'];
+        // $TRSDetails = $baseIncomingBoardQuery['TRSIncomingDetails'];
+        // $SECDetails = $baseIncomingBoardQuery['SECIncomingDetails'];
 
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu

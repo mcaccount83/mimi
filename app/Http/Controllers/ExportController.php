@@ -220,11 +220,16 @@ class ExportController extends Controller implements HasMiddleware
 
     private function formatDisbandedBoardMemberInfo($chapterData)
     {
-        $PresDetails = $chapterData['PresDisbandedDetails'];
-        $AVPDetails = $chapterData['AVPDisbandedDetails'];
-        $MVPDetails = $chapterData['MVPDisbandedDetails'];
-        $TRSDetails = $chapterData['TRSDisbandedDetails'];
-        $SECDetails = $chapterData['SECDisbandedDetails'];
+        $PresDetails = $chapterData['PresDetails'];
+        $AVPDetails = $chapterData['AVPDetails'];
+        $MVPDetails = $chapterData['MVPDetails'];
+        $TRSDetails = $chapterData['TRSDetails'];
+        $SECDetails = $chapterData['SECDetails'];
+        // $PresDetails = $chapterData['PresDisbandedDetails'];
+        // $AVPDetails = $chapterData['AVPDisbandedDetails'];
+        // $MVPDetails = $chapterData['MVPDisbandedDetails'];
+        // $TRSDetails = $chapterData['TRSDisbandedDetails'];
+        // $SECDetails = $chapterData['SECDisbandedDetails'];
 
         return [
             'President Name' => ($PresDetails && $PresDetails->first_name) ? $PresDetails->first_name.' '.$PresDetails->last_name : '',
