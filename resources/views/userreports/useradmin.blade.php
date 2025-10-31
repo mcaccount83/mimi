@@ -37,11 +37,18 @@
                 @foreach($adminList as $list)
                   <tr>
                     <td>
-                        @if($list->is_admin=='1')
+                        @if($list->is_admin == '1')
+                                    ADMIN
+                                @elseif($list->is_admin == '2')
+                                    MODERATOR
+                                @elseif($list->is_admin == '0')
+                                    NO
+                                @endif
+                        {{-- @if($list->is_admin=='1')
                         YES
                         @else
                             NO
-                        @endif
+                        @endif --}}
                     </td>
                     <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                     <td>@if ($list->user_type == 'coordinator'){{{ $list->coordinator->displayPosition->long_title }}}

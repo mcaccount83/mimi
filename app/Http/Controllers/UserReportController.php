@@ -31,7 +31,7 @@ class UserReportController extends Controller implements HasMiddleware
      */
     public function showUserAdmin(): View
     {
-        $adminList = User::where('is_admin', '1')
+        $adminList = User::where('is_admin', '!=', '0')
             ->where('is_active', '1')
             ->get();
 
