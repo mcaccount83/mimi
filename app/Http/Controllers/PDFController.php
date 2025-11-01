@@ -1157,7 +1157,6 @@ class PDFController extends Controller
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
-
         return $baseQuery['query']
             ->select([
                 'chapters.*',
@@ -1396,7 +1395,6 @@ class PDFController extends Controller
     private function generateIRSWrongDateList($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-
 
         return $baseQuery['query']
             ->select([

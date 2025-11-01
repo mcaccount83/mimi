@@ -403,4 +403,3 @@ Route::middleware('auth')->group(function () {
     Route::get('/course/{course_id}/redirect', [ResourcesController::class, 'redirectToCourse'])->name('course.redirect');
     Route::get('/board/course/{course_id}/redirect', [BoardController::class, 'redirectToCourse'])->name('board.course.redirect');
 });
-
