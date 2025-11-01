@@ -61,5 +61,4 @@ class CoordinatorPosition
     const BSM = 28;
 
     const ART = 29;
-
 }

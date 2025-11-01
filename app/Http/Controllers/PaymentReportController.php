@@ -82,7 +82,7 @@ class PaymentReportController extends Controller implements HasMiddleware
 
         $countList = count($reChapterList);
         $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox6Status' => $checkBox6Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox6Status' => $checkBox6Status, ];
 
         return view('payment.chapreregistration')->with($data);
     }
@@ -281,7 +281,7 @@ class PaymentReportController extends Controller implements HasMiddleware
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
         ];
 
         return view('payment.chapdonations')->with($data);
@@ -308,8 +308,8 @@ class PaymentReportController extends Controller implements HasMiddleware
         $chPayments = $baseQuery['chPayments'];
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'chPayments' => $chPayments,
-                    'chDetails' => $chDetails, 'chapterStatus' => $chapterStatus, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-                    'coorId' => $coorId, 'confId' => $confId, 'chConfId' => $chConfId,
+            'chDetails' => $chDetails, 'chapterStatus' => $chapterStatus, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+            'coorId' => $coorId, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
 
         return view('payment.editpayment')->with($data);
