@@ -764,7 +764,7 @@ class EOYReportController extends Controller implements HasMiddleware
         // Handle website URL
         $website = $request->input('ch_website');
         // Only add http:// if the website field is not null or empty
-        if (! is_null($website) && !empty(trim($website))) {
+        if (! is_null($website) && ! empty(trim($website))) {
             if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
                 $website = 'http://'.$website;
             }
@@ -1603,7 +1603,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $countList = count($chapterList);
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,'checkBox2Status' => $checkBox2Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox2Status' => $checkBox2Status, ];
 
         return view('eoyreports.eoyirssubmission')->with($data);
     }

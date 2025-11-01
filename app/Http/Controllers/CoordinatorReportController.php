@@ -64,7 +64,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         }
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
 
         return view('coordreports.coordrptvolutilization')->with($data);
     }
@@ -88,7 +88,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
 
         return view('coordreports.coordrptappreciation')->with($data);
     }
@@ -109,7 +109,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
 
         return view('coordreports.old_coordrptappreciation')->with($data);
     }
@@ -133,7 +133,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
 
         return view('coordreports.coordrptbirthdays')->with($data);
     }
@@ -169,7 +169,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $checkBox6Status = $showFullTree ? 'checked' : '';
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox6Status' => $checkBox6Status, ];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox6Status' => $checkBox6Status];
 
         return view('coordreports.coordrptreportingtree')->with($data);
     }

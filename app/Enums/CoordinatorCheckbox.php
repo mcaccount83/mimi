@@ -29,5 +29,4 @@ class CoordinatorCheckbox
     const CHECK_INTERNATIONAL = 'checkBox5Status';
 
     const CHECK_REPORTING_TREE = 'checkBox6Status';
-
 }

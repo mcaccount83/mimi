@@ -804,7 +804,7 @@ class BoardController extends Controller implements HasMiddleware
         // Handle website URL
         $website = $request->input('ch_website');
         if (! is_null($website) && ! empty(trim($website))) {
-            if (! str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
                 $website = 'http://'.$website;
             }
         }

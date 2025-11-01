@@ -1,4 +1,5 @@
 <?php
+
 // app/Services/ReportingService.php
 
 namespace App\Services;
