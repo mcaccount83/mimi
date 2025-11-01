@@ -282,40 +282,6 @@ class ChapterController extends Controller implements HasMiddleware
     }
 
     /**
-     * Display the International chapter list
-     */
-    // public function showIntChapter(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $chapterList = $baseQuery['query']->get();
-
-    //     $countList = count($chapterList);
-    //     $data = ['countList' => $countList, 'chapterList' => $chapterList];
-
-    //     return view('international.intchapter')->with($data);
-    // }
-
-    /**
-     * Display the International Zapped chapter list
-     */
-    // public function showIntZappedChapter(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $baseQuery = $this->baseChapterController->getZappedInternationalBaseQuery($coorId);
-    //     $chapterList = $baseQuery['query']->get();
-
-    //     $countList = count($chapterList);
-    //     $data = ['countList' => $countList, 'chapterList' => $chapterList];
-
-    //     return view('international.intchapterzapped')->with($data);
-    // }
-
-    /**
      * Display the Chapter Details for ALL lists - Active, Zapped, Inquiries, International
      */
     public function viewChapterDetails(Request $request, $id): View
@@ -1521,27 +1487,6 @@ class ChapterController extends Controller implements HasMiddleware
     }
 
     /**
-     * Display the Website Details
-     */
-    // public function showIntWebsite(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-    //     $userName = $user['user_name'];
-    //     $userPosition = $user['user_position'];
-    //     $userConfName = $user['user_conf_name'];
-    //     $userConfDesc = $user['user_conf_desc'];
-
-    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $websiteList = $baseQuery['query']->get();
-
-    //     $data = ['websiteList' => $websiteList, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
-    //     ];
-
-    //     return view('international.intchapwebsite')->with($data);
-    // }
-
-    /**
      * Display the Social Media Information
      */
     public function showRptSocialMedia(Request $request): View
@@ -1566,22 +1511,6 @@ class ChapterController extends Controller implements HasMiddleware
 
         return view('chapters.chapsocialmedia')->with($data);
     }
-
-    /**
-     * Display the Social Media Information
-     */
-    // public function showIntSocialMedia(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $chapterList = $baseQuery['query']->get();
-
-    //     $data = ['chapterList' => $chapterList];
-
-    //     return view('international.intchapsocialmedia')->with($data);
-    // }
 
     /**
      *Edit Website & Social Information

@@ -88,34 +88,6 @@ class PaymentReportController extends Controller implements HasMiddleware
     }
 
     /**
-     * ReRegistration List
-     */
-    // public function showIntReRegistration(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $currentYear = date('Y');
-    //     $currentMonth = date('m');
-
-    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-
-    //     $reChapterList = $baseQuery['query']
-    //         ->where(function ($query) use ($currentYear, $currentMonth) {
-    //             $query->where('next_renewal_year', '<', $currentYear)
-    //                 ->orWhere(function ($query) use ($currentYear, $currentMonth) {
-    //                     $query->where('next_renewal_year', '=', $currentYear)
-    //                         ->where('start_month_id', '<=', $currentMonth);
-    //                 });
-    //         })
-    //         ->get();
-
-    //     $data = ['reChapterList' => $reChapterList];
-
-    //     return view('international.intregistration')->with($data);
-    // }
-
-    /**
      * ReRegistration Reminders Auto Send
      */
     public function createChapterReRegistrationReminder(Request $request): RedirectResponse
@@ -314,22 +286,6 @@ class PaymentReportController extends Controller implements HasMiddleware
 
         return view('payment.chapdonations')->with($data);
     }
-
-    /**
-     * View the International M2M Doantions
-     */
-    // public function showIntdonation(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $chapterList = $baseQuery['query']->get();
-
-    //     $data = ['chapterList' => $chapterList];
-
-    //     return view('international.intdonation')->with($data);
-    // }
 
     /**
      *Edit Chapter Information

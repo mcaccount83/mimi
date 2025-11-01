@@ -40,28 +40,6 @@ class AdminReportController extends Controller implements HasMiddleware
     /**
      * View Payment Log List
      */
-    // public function intPaymentList(Request $request): View
-    // {
-    //     $query = PaymentLog::with('board');
-
-    //     // Add filters if needed
-    //     if ($request->has('status')) {
-    //         $query->where('status', $request->status);
-    //     }
-
-    //     if ($request->has('date')) {
-    //         $query->whereDate('created_at', $request->date);
-    //     }
-
-    //     // $paymentLogs = $query->orderBy('created_at', 'desc')->paginate(100);
-    //     $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
-
-    //     return view('adminreports.intpaymentlist', compact('paymentLogs'));
-    // }
-
-    /**
-     * View Payment Log List
-     */
     public function paymentList(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
@@ -132,22 +110,6 @@ class AdminReportController extends Controller implements HasMiddleware
 
         return view('adminreports.reregdate')->with($data);
     }
-
-    /**
-     * View List of International ReReg Payments if Dates Need to be Udpated
-     */
-    // public function showIntReRegDate(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $chapterList = $baseQuery['query']->get();
-
-    //     $data = ['chapterList' => $chapterList];
-
-    //     return view('adminreports.intreregdate')->with($data);
-    // }
 
     public function editReRegDate(Request $request, $id): View
     {

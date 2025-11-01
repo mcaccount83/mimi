@@ -155,22 +155,6 @@ class ChapterReportController extends Controller implements HasMiddleware
     }
 
     /**
-     * View the International EIN Status
-     */
-    // public function showIntEINstatus(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $chapterList = $baseQuery['query']->get();
-
-    //     $data = ['chapterList' => $chapterList];
-
-    //     return view('international.inteinstatus')->with($data);
-    // }
-
-    /**
      * New Chapter Report
      */
     public function showRptNewChapters(Request $request): View
