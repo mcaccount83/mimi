@@ -64,7 +64,8 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         }
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        ];
 
         return view('coordreports.coordrptvolutilization')->with($data);
     }
@@ -88,7 +89,8 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        ];
 
         return view('coordreports.coordrptappreciation')->with($data);
     }
@@ -109,7 +111,8 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        ];
 
         return view('coordreports.old_coordrptappreciation')->with($data);
     }
@@ -133,7 +136,8 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        ];
 
         return view('coordreports.coordrptbirthdays')->with($data);
     }
@@ -173,46 +177,4 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         return view('coordreports.coordrptreportingtree')->with($data);
     }
-
-    // public function showRptReportingTree(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-    //     $confId = $user['user_confId'];
-    //     $regId = $user['user_regId'];
-    //     $positionId = $user['user_positionId'];
-    //     $secPositionId = $user['user_secPositionId'];
-
-    //     // $baseQuery = $this->baseCoordinatorController->getReportingTreeBaseQuery($coorId, $confId, $positionId, $secPositionId);
-    //             $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-
-    //     $coordinatorList = $baseQuery['query']->get();
-
-    //     $data = ['coordinatorList' => $coordinatorList];
-
-    //     return view('coordreports.coordrptreportingtree')->with($data);
-    // }
-
-    // /**
-    //  * View the International Reporting Tree
-    //  */
-    // public function showIntRptReportingTree(): View
-    // {
-    //     // Don't load user info - just hardcode Mary's data
-    //     $coorId = 1;  // Mary's ID
-    //     $confId = 0;  // Mary's conference
-    //     $regId = 0;   // Mary's region
-    //     $positionId = 8;  // Founder
-    //     $secPositionId = null;
-
-    //     // $baseQuery = $this->baseCoordinatorController->getReportingTreeBaseQuery($coorId, $confId, $positionId, $secPositionId);
-    //             $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-
-    //     $coordinatorList = $baseQuery['query']->get();
-
-    //     $data = ['coordinatorList' => $coordinatorList];
-
-    //     return view('coordreports.intcoordrptreportingtree')->with($data);
-
-    // }
 }
