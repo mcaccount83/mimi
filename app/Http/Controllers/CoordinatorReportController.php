@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CoordinatorCheckbox;
+use App\Services\ReportingService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\View;
-use App\Services\ReportingService;
 
 class CoordinatorReportController extends Controller implements HasMiddleware
 {
@@ -20,7 +20,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     protected $reportingService;
 
     public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, BaseChapterController $baseChapterController,
-            ReportingService $reportingService)
+        ReportingService $reportingService)
     {
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
@@ -64,9 +64,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         }
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                 'checkBox3Status' => $checkBox3Status,
-                 'checkBox5Status' => $checkBox5Status,
-                ];
+                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
 
         return view('coordreports.coordrptvolutilization')->with($data);
     }
@@ -90,9 +88,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                 'checkBox3Status' => $checkBox3Status,
-                 'checkBox5Status' => $checkBox5Status,
-                ];
+                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
 
         return view('coordreports.coordrptappreciation')->with($data);
     }
@@ -113,9 +109,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                 'checkBox3Status' => $checkBox3Status,
-                 'checkBox5Status' => $checkBox5Status,
-                ];
+                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
 
         return view('coordreports.old_coordrptappreciation')->with($data);
     }
@@ -139,9 +133,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                 'checkBox3Status' => $checkBox3Status,
-                 'checkBox5Status' => $checkBox5Status,
-                ];
+                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
 
         return view('coordreports.coordrptbirthdays')->with($data);
     }
@@ -149,41 +141,38 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     /**
      * View the Reporting Tree
      */
-  public function showRptReportingTree(Request $request): View
-{
-    // Check if International's reporting tree checkbox is selected
-    $showFullTree = $request->has(CoordinatorCheckbox::REPORTING_TREE) &&
-                    $request->get(CoordinatorCheckbox::REPORTING_TREE) == 'yes';
+    public function showRptReportingTree(Request $request): View
+    {
+        // Check if International's reporting tree checkbox is selected
+        $showFullTree = $request->has(CoordinatorCheckbox::REPORTING_TREE) &&
+                        $request->get(CoordinatorCheckbox::REPORTING_TREE) == 'yes';
 
-    if ($showFullTree) {
-        // Show International's full reporting tree based on Founder Data
-        $coorId = 1;
-        $confId = 0;
-        $regId = 0;
-        $positionId = 8;
-        $secPositionId = null;
-    } else {
-        // Normal view - logged in user's tree
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        if ($showFullTree) {
+            // Show International's full reporting tree based on Founder Data
+            $coorId = 1;
+            $confId = 0;
+            $regId = 0;
+            $positionId = 8;
+            $secPositionId = null;
+        } else {
+            // Normal view - logged in user's tree
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['user_coorId'];
+            $confId = $user['user_confId'];
+            $regId = $user['user_regId'];
+            $positionId = $user['user_positionId'];
+            $secPositionId = $user['user_secPositionId'];
+        }
+
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $coordinatorList = $baseQuery['query']->get();
+
+        $checkBox6Status = $showFullTree ? 'checked' : '';
+
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox6Status' => $checkBox6Status, ];
+
+        return view('coordreports.coordrptreportingtree')->with($data);
     }
-
-    $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-    $coordinatorList = $baseQuery['query']->get();
-
-    $checkBox6Status = $showFullTree ? 'checked' : '';
-
-    $data = [
-        'coordinatorList' => $coordinatorList,
-        'checkBox6Status' => $checkBox6Status,
-    ];
-
-    return view('coordreports.coordrptreportingtree')->with($data);
-}
 
     // public function showRptReportingTree(Request $request): View
     // {

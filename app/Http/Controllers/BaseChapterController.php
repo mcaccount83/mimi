@@ -61,40 +61,40 @@ class BaseChapterController extends Controller
             });
         }
 
-        //Checkbox3
+        // Checkbox3
         if (isset($_GET[ChapterCheckbox::CONFERENCE_REGION]) && $_GET[ChapterCheckbox::CONFERENCE_REGION] == 'yes') {
             $checkboxStatus[ChapterCheckbox::CHECK_CONFERENCE_REGION] = 'checked';
             // Position conditions already applied in buildChapterQuery
         }
 
-        //Checkbox4
+        // Checkbox4
         if (isset($_GET[ChapterCheckbox::PROBATION]) && $_GET[ChapterCheckbox::PROBATION] == 'yes') {
             $checkboxStatus[ChapterCheckbox::CHECK_PROBATION] = 'checked';
             // Position conditions already applied in buildChapterQuery
             $baseQuery->where('status_id', '!=', '1');
         }
 
-        //Checkbox5
+        // Checkbox5
         if (isset($_GET[ChapterCheckbox::INTERNATIONAL]) && $_GET[ChapterCheckbox::INTERNATIONAL] == 'yes') {
             $checkboxStatus[ChapterCheckbox::CHECK_INTERNATIONAL] = 'checked';
             // Position conditions were skipped in buildChapterQuery
             if ($conditions && (
-                !$conditions['inquiriesInternationalCondition'] &&
-                !$conditions['ITCondition'] &&
-                !$conditions['einCondition'])) {
+                ! $conditions['inquiriesInternationalCondition'] &&
+                ! $conditions['ITCondition'] &&
+                ! $conditions['einCondition'])) {
                 // User doesn't have international permissions, show nothing
                 $baseQuery->whereRaw('1 = 0');
             }
         }
 
-        //Checkbox6
+        // Checkbox6
         if (isset($_GET[ChapterCheckbox::INTERNATIONALREREG]) && $_GET[ChapterCheckbox::INTERNATIONALREREG] == 'yes') {
             $checkboxStatus[ChapterCheckbox::CHECK_INTERNATIONALREREG] = 'checked';
             // Position conditions were skipped in buildChapterQuery
             if ($conditions && (
-                !$conditions['inquiriesInternationalCondition'] &&
-                !$conditions['ITCondition'] &&
-                !$conditions['einCondition'])) {
+                ! $conditions['inquiriesInternationalCondition'] &&
+                ! $conditions['ITCondition'] &&
+                ! $conditions['einCondition'])) {
                 // User doesn't have international permissions, show nothing
                 $baseQuery->whereRaw('1 = 0');
             }
@@ -149,7 +149,7 @@ class BaseChapterController extends Controller
             return ['query' => $baseQuery];
         }
 
-        if ($isReregPage && !((isset($_GET['check3']) && $_GET['check3'] == 'yes') || (isset($_GET['check5']) && $_GET['check5'] == 'yes'))) {
+        if ($isReregPage && ! ((isset($_GET['check3']) && $_GET['check3'] == 'yes') || (isset($_GET['check5']) && $_GET['check5'] == 'yes'))) {
             $baseQuery->orderByDesc('next_renewal_year')
                 ->orderByDesc('start_month_id');
 
@@ -184,7 +184,7 @@ class BaseChapterController extends Controller
             );
 
             // Only apply position conditions if check5 is NOT selected
-            if (!isset($_GET[ChapterCheckbox::INTERNATIONAL]) || $_GET[ChapterCheckbox::INTERNATIONAL] !== 'yes') {
+            if (! isset($_GET[ChapterCheckbox::INTERNATIONAL]) || $_GET[ChapterCheckbox::INTERNATIONAL] !== 'yes') {
                 $baseQuery = $this->baseConditionsController->applyPositionConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
@@ -241,7 +241,7 @@ class BaseChapterController extends Controller
      */
     private function getQueryType($activeStatus)
     {
-        return match($activeStatus) {
+        return match ($activeStatus) {
             0 => 'zapped',
             1 => 'active',
             2 => 'pending',

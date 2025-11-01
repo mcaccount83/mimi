@@ -39,12 +39,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Error Pages Test Routes...Public, No login required
-Route::get('/test-500', function () {abort(500);});
-Route::get('/test-404', function () {abort(404);});
-Route::get('/test-403', function () {abort(403);});
-Route::get('/test-401', function () {abort(401);});
-Route::get('/test-419', function () {abort(419);});
-Route::get('/test-429', function () {abort(429);});
+Route::get('/test-500', function () {
+    abort(500);
+});
+Route::get('/test-404', function () {
+    abort(404);
+});
+Route::get('/test-403', function () {
+    abort(403);
+});
+Route::get('/test-401', function () {
+    abort(401);
+});
+Route::get('/test-419', function () {
+    abort(419);
+});
+Route::get('/test-429', function () {
+    abort(429);
+});
 
 // Login and Logout Routes...Public, No login required...Used for Board & Coordinator Layouts
 Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -84,7 +96,7 @@ Route::post('/updatenewcoordinator', [PublicController::class, 'updateNewCoordin
 Route::get('/newcoordinatorsuccess', [PublicController::class, 'viewNewCoordinator'])->name('public.newcoordinatorsuccess');
 
 // Allow error log to be viewed without login
-    Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
+Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
 // Tech Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
     Route::get('/techreports/adminemail', [TechReportController::class, 'showAdminEmail'])->name('techreports.adminemail');

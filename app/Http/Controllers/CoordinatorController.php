@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CoordinatorCheckbox;
 use App\Enums\BoardPosition;
+use App\Enums\CoordinatorCheckbox;
 use App\Enums\CoordinatorPosition;
 use App\Mail\NewCoordApproveGSuiteNotice;
 use App\Mail\NewCoordApproveRCNotice;
