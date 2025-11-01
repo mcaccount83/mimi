@@ -106,7 +106,8 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         $countList = $chapterList->count();
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status
+        ];
 
         return view('forum.chaptersubscriptionlist')->with($data);
     }
@@ -133,43 +134,11 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         $countList = count($coordinatorList);
         $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,'emailListCord' => $emailListCord, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,'emailListCord' => $emailListCord
+        ];
 
         return view('forum.coordinatorsubscriptionlist')->with($data);
     }
-
-    /**
-     *  Show list of intrnational chapters subscribitios by email
-     */
-    // public function showInternationalChapterListSubscriptions(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $chapterList = $baseQuery['query']->get();
-
-    //     $countList = count($chapterList);
-    //     $data = ['countList' => $countList, 'chapterList' => $chapterList];
-
-    //     return view('forum.internationalchaptersubscriptionlist')->with($data);
-    // }
-
-    /**
-     *  Show list of intrnational coordinators subscribitios by email
-     */
-    // public function showInternationalCoordinatorListSubscriptions(Request $request): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $baseQuery = $this->baseCoordinatorController->getActiveInternationalBaseQuery($coorId);
-    //     $coordinatorList = $baseQuery['query']->get();
-
-    //     $data = ['coordinatorList' => $coordinatorList];
-
-    //     return view('forum.internationalcoordinatorsubscriptionlist')->with($data);
-    // }
 
     /**
      * Add all active coordinators to CoordinatorList Subscribe by Email

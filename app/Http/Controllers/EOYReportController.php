@@ -1442,51 +1442,6 @@ class EOYReportController extends Controller implements HasMiddleware
         return view('eoyreports.eoyawards', $data);
     }
 
-    // public function showEOYIntAwards(Request $request): View
-    // {
-    //     $titles = $this->getPageTitle($request);
-    //     $title = $titles['eoy_reports'];
-    //     $breadcrumb = 'International Chapter Awards Report';
-
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $now = Carbon::now();
-    //     $currentYear = $now->year;
-
-    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $chapterList = $baseQuery['query']
-    //         ->where(function ($query) use ($currentYear) {
-    //             $query->where(function ($q) use ($currentYear) {
-    //                 $q->where('start_year', '<', $currentYear)
-    //                     ->orWhere(function ($q) use ($currentYear) {
-    //                         $q->where('start_year', '=', $currentYear)
-    //                             ->where('start_month_id', '<', 7); // July is month 7
-    //                     });
-    //             });
-    //         })
-    //         ->get();
-
-    //     $allAwards = FinancialReportAwards::all();
-
-    //     $maxAwards = 0;
-    //     foreach ($chapterList as $list) {
-    //         if (isset($list->financialReport->chapter_awards)) {
-    //             $awards = unserialize(base64_decode($list->financialReport->chapter_awards));
-    //             if ($awards) {
-    //                 $maxAwards = max($maxAwards, count($awards));
-    //             }
-    //         }
-    //     }
-
-    //     $countList = count($chapterList);
-    //     $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList,
-    //         'allAwards' => $allAwards, 'maxAwards' => $maxAwards,
-    //     ];
-
-    //     return view('eoyreports.eoyintawards', $data);
-    // }
-
     /**
      * View the EOY Award Details
      */
@@ -1512,9 +1467,9 @@ class EOYReportController extends Controller implements HasMiddleware
         $allAwards = $baseQuery['allAwards'];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
-            'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
-        ];
+                'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+                'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
+            ];
 
         return view('eoyreports.editawards')->with($data);
     }
@@ -1603,43 +1558,12 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $countList = count($chapterList);
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-                    'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,'checkBox2Status' => $checkBox2Status, ];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,'checkBox2Status' => $checkBox2Status
+        ];
 
         return view('eoyreports.eoyirssubmission')->with($data);
     }
 
-    // public function showIRSIntSubmission(Request $request): View
-    // {
-    //     $titles = $this->getPageTitle($request);
-    //     $title = $titles['eoy_reports'];
-    //     $breadcrumb = 'Financial Report Attacchments';
-
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $coorId = $user['user_coorId'];
-
-    //     $now = Carbon::now();
-    //     $currentYear = $now->year;
-
-    //     $baseQuery = $this->baseChapterController->getActiveInternationalBaseQuery($coorId);
-    //     $chapterList = $baseQuery['query']
-    //         ->where(function ($query) use ($currentYear) {
-    //             $query->where(function ($q) use ($currentYear) {
-    //                 $q->where('start_year', '<', $currentYear)
-    //                     ->orWhere(function ($q) use ($currentYear) {
-    //                         $q->where('start_year', '=', $currentYear)
-    //                             ->where('start_month_id', '<', 7); // July is month 7
-    //                     });
-    //             });
-    //         })
-    //         ->get();
-    //     $checkBoxStatus = $baseQuery['checkBoxStatus'];
-    //     $checkBox2Status = $baseQuery['checkBox2Status'];
-
-    //     $countList = count($chapterList);
-    //     $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
-
-    //     return view('eoyreports.eoyirsintsubmission')->with($data);
-    // }
 
     /**
      * View the 990N Filing Details

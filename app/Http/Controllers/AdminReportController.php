@@ -125,7 +125,8 @@ class AdminReportController extends Controller implements HasMiddleware
         $allMonths = $baseQuery['allMonths'];
 
         $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chPayments' => $chPayments, 'allMonths' => $allMonths,
-                    'confId' => $confId, 'chConfId' => $chConfId];
+            'confId' => $confId, 'chConfId' => $chConfId
+        ];
 
         return view('adminreports.editreregdate')->with($data);
     }
