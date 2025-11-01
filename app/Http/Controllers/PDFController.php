@@ -762,9 +762,9 @@ class PDFController extends Controller
         ], 500);
     }
 
-    // /**
-    //  * Generate Combined Name Change Letter (Cover Sheet & Report)
-    //  */
+    /**
+     * Generate Combined Name Change Letter (Cover Sheet & Report)
+     */
     public function generateCombinedNameChangeLetter($chapterId, $chNamePrev, $streamResponse = false)
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
@@ -821,8 +821,6 @@ class PDFController extends Controller
     /**
      * Generate IRS Name Change Letter
      */
-    // public function generateNameChangeLetter(Request $request, $chapterId, $chNamePrev)
-
     public function generateNameChangeLetter($chapterId, $chNamePrev)
     {
         $baseQueryUpd = $this->baseChapterController->getChapterDetails($chapterId);
@@ -902,9 +900,9 @@ class PDFController extends Controller
         ];
     }
 
-    // /**
-    //  * Generate Combined IRS Subordinate Filing (Cover Sheet & Report)
-    //  */
+    /**
+     * Generate Combined IRS Subordinate Filing (Cover Sheet & Report)
+     */
     public function generateCombinedIRSSubordinateFiling(Request $request)
     {
         $startFormatted = Carbon::parse($request->query('date') ?? now())->format('F Y');
@@ -956,9 +954,9 @@ class PDFController extends Controller
         ]);
     }
 
-    // /**
-    //  * Generate Subordinate Filing
-    //  */
+    /**
+     * Generate Subordinate Filing
+     */
     public function generateSubordinateFiling(Request $request, $streamResponse = true)
     {
         // Simulate the check5=yes parameter to get international chapters
@@ -1029,9 +1027,9 @@ class PDFController extends Controller
         ];
     }
 
-    // /**
-    //  * Generate Combined IRS Updates (Cover Sheet & Report)
-    //  */
+    /**
+     * Generate Combined IRS Updates (Cover Sheet & Report)
+     */
     public function generateCombinedIRSUpdates(Request $request)
     {
         $startFormatted = Carbon::parse($request->query('date') ?? now())->format('F Y');
@@ -1083,9 +1081,9 @@ class PDFController extends Controller
         ]);
     }
 
-    // /**
-    //  * Generate IRS Updates other than Subordinate Filing
-    //  */
+    /**
+     * Generate IRS Updates other than Subordinate Filing
+     */
     public function generateIRSUpdates(Request $request, $streamResponse = true)
     {
         // Simulate the check5=yes parameter to get international chapters
@@ -1150,13 +1148,12 @@ class PDFController extends Controller
         ];
     }
 
-    // /**
-    //  * Generate IRS list of Updated Chapters
-    //  */
+    /**
+     * Generate IRS list of Updated Chapters
+     */
     private function generateIRSUpdateList($coorId, $confId, $regId, $positionId, $secPositionId, $date)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-
 
         return $baseQuery['query']
             ->select([
@@ -1187,9 +1184,9 @@ class PDFController extends Controller
             ->sortBy('ein');
     }
 
-    // /**
-    //  * Generate IRS list of Added Chapters
-    //  */
+    /**
+     * Generate IRS list of Added Chapters
+     */
     private function generateIRSAddList($coorId, $confId, $regId, $positionId, $secPositionId, $date)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -1223,9 +1220,9 @@ class PDFController extends Controller
             ->sortBy('ein');
     }
 
-    // /**
-    //  * Generate IRS list of Added Chapters that have not been reported
-    //  */
+    /**
+     * Generate IRS list of Added Chapters that have not been reported
+     */
     private function generateIRSAddList2($coorId, $confId, $regId, $positionId, $secPositionId, $date)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -1257,9 +1254,9 @@ class PDFController extends Controller
             ->sortBy('ein');
     }
 
-    // /**
-    //  * Generate IRS list of Zapped Chapters
-    //  */
+    /**
+     * Generate IRS list of Zapped Chapters
+     */
     private function generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $date)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -1276,9 +1273,9 @@ class PDFController extends Controller
             ->sortBy('ein');
     }
 
-    // /**
-    //  * Generate Combined 990N Filing Corrections (Cover Sheet & Report)
-    //  */
+    /**
+     * Generate Combined 990N Filing Corrections (Cover Sheet & Report)
+     */
     public function generateCombinedIRSFilingCorrections(Request $request)
     {
         $startFormatted = Carbon::parse($request->query('date') ?? now())->format('F Y');
@@ -1330,9 +1327,9 @@ class PDFController extends Controller
         ]);
     }
 
-    // /**
-    //  * Generate 990N Filing Corrections
-    //  */
+    /**
+     * Generate 990N Filing Corrections
+     */
     public function generateIRSFilingCorrections(Request $request, $streamResponse = true)
     {
         // Simulate the check5=yes parameter to get international chapters
@@ -1390,13 +1387,12 @@ class PDFController extends Controller
         ];
     }
 
-    // /**
-    //  * Generate IRS list of 990N Filing Corrections with the Wrong Dates
-    //  */
+    /**
+     * Generate IRS list of 990N Filing Corrections with the Wrong Dates
+     */
     private function generateIRSWrongDateList($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-
 
         return $baseQuery['query']
             ->select([
@@ -1423,9 +1419,9 @@ class PDFController extends Controller
             ->sortBy('ein');
     }
 
-    // /**
-    //  * Generate IRS list of 990N Filing Corrections where chapter was not found
-    //  */
+    /**
+     * Generate IRS list of 990N Filing Corrections where chapter was not found
+     */
     private function generateIRSNotFoundList($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -1455,9 +1451,9 @@ class PDFController extends Controller
             ->sortBy('ein');
     }
 
-    // /**
-    //  * Generate IRS list of 990N Filing Corrections where chapter FILED with the wrong date
-    //  */
+    /**
+     * Generate IRS list of 990N Filing Corrections where chapter FILED with the wrong date
+     */
     private function generateIRSFiledWrongList($coorId, $confId, $regId, $positionId, $secPositionId)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -1487,9 +1483,9 @@ class PDFController extends Controller
             ->sortBy('ein');
     }
 
-    // /**
-    //  * EO Dept IRS Fax Coversheet
-    //  */
+    /**
+     * EO Dept IRS Fax Coversheet
+     */
     public function generateEODeptFaxCover($streamResponse = true, $title = null, $message = null, $pages = null)
     {
         $pages = $pages ?? request()->query('pages') ?? request()->input('pages') ?? 1;
