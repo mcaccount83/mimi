@@ -134,7 +134,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         $countList = count($coordinatorList);
         $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,'emailListCord' => $emailListCord,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'emailListCord' => $emailListCord,
         ];
 
         return view('forum.coordinatorsubscriptionlist')->with($data);

@@ -173,7 +173,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $checkBox6Status = $showFullTree ? 'checked' : '';
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox6Status' => $checkBox6Status, ];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox6Status' => $checkBox6Status];
 
         return view('coordreports.coordrptreportingtree')->with($data);
     }
