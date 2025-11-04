@@ -105,11 +105,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/techreports/updategoogledrive', [TechReportController::class, 'updateGoogleDrive'])->name('techreports.updategoogledrive');
     Route::get('/techreports/chapterlist', [TechReportController::class, 'listActiveChapters'])->name('techreports.chapterlist');
     Route::get('/techreports/chapterlistzapped', [TechReportController::class, 'listZappedChapters'])->name('techreports.chapterlistzapped');
-    // Route::get('/techreports/confreglist', [TechReportController::class, 'showConfRegList'])->name('techreports.confreglist');
-    // Route::get('/techreports/editconflist', [TechReportController::class, 'editConfList'])->name('techreports.editconflist');
-    // Route::post('/techreports/updateconflist', [TechReportController::class, 'updateConfList'])->name('techreports.updateconflist');
-    // Route::post('/techreports/storeconf', [TechReportController::class, 'storeConf'])->name('techreports.storeconf');
-    // Route::delete('/techreports/deleteconf/{id}', [TechReportController::class, 'deleteConf'])->name('techreports.deleteconf');
     Route::post('/techreports/updatechapterdelete', [TechReportController::class, 'updateChapterDelete'])->name('techreports.updatechapterdelete');
     Route::post('/techreports/updatecoordinatordelete', [TechReportController::class, 'updateCoordinatorDelete'])->name('techreports.updatecoordinatordelete');
     Route::post('/techreports/resetProbationSubmission', [TechReportController::class, 'resetProbationSubmission'])->name('techreports.resetProbationSubmission');
