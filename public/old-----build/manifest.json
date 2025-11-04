@@ -1,0 +1,37 @@
+{
+  "_runtime-dom.esm-bundler-Bm-GVvwc.js": {
+    "file": "assets/runtime-dom.esm-bundler-Bm-GVvwc.js",
+    "name": "runtime-dom.esm-bundler"
+  },
+  "resources/forum/blade-bootstrap/css/forum.css": {
+    "file": "assets/forum-DIuR5zjS.css",
+    "src": "resources/forum/blade-bootstrap/css/forum.css",
+    "isEntry": true
+  },
+  "resources/forum/blade-bootstrap/js/forum.js": {
+    "file": "assets/forum-0-39qVx8.js",
+    "name": "forum",
+    "src": "resources/forum/blade-bootstrap/js/forum.js",
+    "isEntry": true,
+    "imports": [
+      "_runtime-dom.esm-bundler-Bm-GVvwc.js"
+    ],
+    "css": [
+      "assets/forum-BWCxAm8t.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-ChYYZXzy.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_runtime-dom.esm-bundler-Bm-GVvwc.js"
+    ]
+  },
+  "resources/sass/app.scss": {
+    "file": "assets/app-CtcJD_Bp.css",
+    "src": "resources/sass/app.scss",
+    "isEntry": true
+  }
+}

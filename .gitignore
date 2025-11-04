@@ -69,10 +69,4 @@ composer.phar
 docker-compose.yml
 
 # Specific Files/Folders
-old-----package-lock.json
-old-----package.json
-old-----vite.config.mjs
-old-----web.config
-/public/old-----build
-/public/old-----hot
-/public/old-----vendor
+
