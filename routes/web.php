@@ -58,6 +58,10 @@ Route::get('/test-429', function () {
     abort(429);
 });
 
+Route::get('/deployment-version', function() {
+    return "Last deployed: " . date('Y-m-d H:i:s T');
+});
+
 // Login and Logout Routes...Public, No login required...Used for Board & Coordinator Layouts
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('home');

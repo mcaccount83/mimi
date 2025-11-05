@@ -8,8 +8,6 @@
 .env.production
 
 # Build artifacts
-/public/build
-/public/hot
 /public/sitemap.xml
 
 # Storage
