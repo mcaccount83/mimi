@@ -38,10 +38,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/deployment-version', function() {
-    return "Last deployed: " . date('Y-m-d H:i:s T');
-});
-
 // Error Pages Test Routes...Public, No login required
 Route::get('/test-500', function () {
     abort(500);
