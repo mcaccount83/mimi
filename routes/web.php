@@ -38,6 +38,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/deployment-version', function() {
+    return "Last deployed: " . date('Y-m-d H:i:s T');
+});
+
 // Error Pages Test Routes...Public, No login required
 Route::get('/test-500', function () {
     abort(500);
@@ -56,10 +60,6 @@ Route::get('/test-419', function () {
 });
 Route::get('/test-429', function () {
     abort(429);
-});
-
-Route::get('/deployment-version', function() {
-    return "Last deployed: " . date('Y-m-d H:i:s T');
 });
 
 // Login and Logout Routes...Public, No login required...Used for Board & Coordinator Layouts
