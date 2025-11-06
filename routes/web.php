@@ -38,16 +38,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::get('/deployment-check', function() {
-    return [
-        'git_head_file' => file_exists(base_path('.git/HEAD')) ? file_get_contents(base_path('.git/HEAD')) : 'No git',
-        'cpanel_yml_exists' => file_exists(base_path('.cpanel.yml')),
-        'current_commit' => exec('cd ' . base_path() . ' && git rev-parse HEAD 2>&1'),
-        'last_commit_date' => exec('cd ' . base_path() . ' && git log -1 --format=%cd 2>&1'),
-    ];
-});
-
 // Error Pages Test Routes...Public, No login required
 Route::get('/test-500', function () {
     abort(500);

@@ -183,8 +183,9 @@ class BaseChapterController extends Controller
                 $secPositionId
             );
 
-            // Only apply position conditions if check5 is NOT selected
-            if (! isset($_GET[ChapterCheckbox::INTERNATIONAL]) || $_GET[ChapterCheckbox::INTERNATIONAL] !== 'yes') {
+            // Only apply position conditions if NEITHER International nor InternationalReReg is selected
+            if ((! isset($_GET[ChapterCheckbox::INTERNATIONAL]) || $_GET[ChapterCheckbox::INTERNATIONAL] !== 'yes') &&
+                (! isset($_GET[ChapterCheckbox::INTERNATIONALREREG]) || $_GET[ChapterCheckbox::INTERNATIONALREREG] !== 'yes')) {
                 $baseQuery = $this->baseConditionsController->applyPositionConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
