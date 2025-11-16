@@ -423,8 +423,8 @@ class TechReportController extends Controller implements HasMiddleware
             }
 
             // Copy and rename the `financial_report` table
-            DB::statement("CREATE TABLE financial_report_12_$lastyear LIKE financial_report");
-            DB::statement("INSERT INTO financial_report_12_$lastyear SELECT * FROM financial_report");
+            DB::statement("CREATE TABLE zzz_financial_report_12_$lastyear LIKE financial_report");
+            DB::statement("INSERT INTO zzz_financial_report_12_$lastyear SELECT * FROM financial_report");
 
             // Remove Data from the `financial_report` table
             FinancialReport::query()->delete();
@@ -592,23 +592,23 @@ class TechReportController extends Controller implements HasMiddleware
 
             // Get the current month and year for table renaming
             $currentYear = Carbon::now()->year;
-            $currentMonth = Carbon::now()->month;
+            $currentMonth = str_pad(Carbon::now()->month, 2, '0', STR_PAD_LEFT);
 
             // Copy and rename the `chapters` table
-            DB::statement("CREATE TABLE chapters_{$currentMonth}_{$currentYear} LIKE chapters");
-            DB::statement("INSERT INTO chapters_{$currentMonth}_{$currentYear} SELECT * FROM chapters");
+            DB::statement("CREATE TABLE zzz_chapters_{$currentMonth}_{$currentYear} LIKE chapters");
+            DB::statement("INSERT INTO zzz_chapters_{$currentMonth}_{$currentYear} SELECT * FROM chapters");
 
             // Copy and rename the `boards` table
-            DB::statement("CREATE TABLE boards_{$currentMonth}_{$currentYear} LIKE boards");
-            DB::statement("INSERT INTO boards_{$currentMonth}_{$currentYear} SELECT * FROM boards");
+            DB::statement("CREATE TABLE zzz_boards_{$currentMonth}_{$currentYear} LIKE boards");
+            DB::statement("INSERT INTO zzz_boards_{$currentMonth}_{$currentYear} SELECT * FROM boards");
 
             // Copy and rename the `coordinators` table
-            DB::statement("CREATE TABLE coordinators_{$currentMonth}_{$currentYear} LIKE coordinators");
-            DB::statement("INSERT INTO coordinators_{$currentMonth}_{$currentYear} SELECT * FROM coordinators");
+            DB::statement("CREATE TABLE zzz_coordinators_{$currentMonth}_{$currentYear} LIKE coordinators");
+            DB::statement("INSERT INTO zzz_coordinators_{$currentMonth}_{$currentYear} SELECT * FROM coordinators");
 
             // Copy and rename the `users` table
-            DB::statement("CREATE TABLE users_{$currentMonth}_{$currentYear} LIKE users");
-            DB::statement("INSERT INTO users_{$currentMonth}_{$currentYear} SELECT * FROM users");
+            DB::statement("CREATE TABLE zzz_users_{$currentMonth}_{$currentYear} LIKE users");
+            DB::statement("INSERT INTO zzz_users_{$currentMonth}_{$currentYear} SELECT * FROM users");
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
