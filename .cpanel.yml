@@ -3,3 +3,7 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/momsclub/public_html/mimi
     - /usr/bin/rsync -av --exclude='.git' --exclude='node_modules' . $DEPLOYPATH
+    - chmod 755 $DEPLOYPATH
+    - chmod 755 $DEPLOYPATH/public
+    - chmod 644 $DEPLOYPATH/.htaccess
+    - chmod 644 $DEPLOYPATH/public/.htaccess
