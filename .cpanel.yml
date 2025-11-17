@@ -2,4 +2,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/momsclub/public_html/mimi
-    - /bin/cp -R . $DEPLOYPATH
+    - /usr/bin/rsync -av --exclude='.git' --exclude='node_modules' . $DEPLOYPATH
