@@ -20,7 +20,7 @@
         "laravel/tinker": "^2.10",
         "laravel/ui": "^4.6",
         "league/flysystem-aws-s3-v3": "^3.30",
-        "livewire/livewire": "^3.6",
+        "livewire/livewire": "^3.7",
         "rap2hpoutre/laravel-log-viewer": "^2.5",
         "riari/laravel-forum": "^7.0",
         "romanzipp/laravel-queue-monitor": "^5.4",
@@ -35,7 +35,7 @@
         "laravel/sail": "^1.48",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.8",
-        "phpstan/phpstan": "^1.12",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^12.4",
         "spatie/laravel-ignition": "^2.9",
         "laravel/pail": "^1.2"

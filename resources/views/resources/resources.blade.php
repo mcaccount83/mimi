@@ -239,7 +239,8 @@
 
                         <!-- File path - only for file type 1 -->
                         <div class="form-group filePathField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
-                            File Path: <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
+                        <label for="fileDescription">File Path: </label>
+                           <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                 {{ $resourceItem->file_path }}</a>
                         </div>
 
@@ -267,7 +268,8 @@
                 <div class="col-md-12"><br></div>
                 <div class="col-md-12">
                     <div class="form-group">
-                        Updated by <strong>{{ $resourceItem->updated_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($resourceItem->updated_date)->format('m-d-Y') }}</strong>
+                        {{-- Updated by <strong>{{ $resourceItem->updated_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($resourceItem->updated_date)->format('m-d-Y') }}</strong> --}}
+                        Updated by <strong>{{ $resourceItem->updatedBy->first_name }} {{ $resourceItem->updatedBy->last_name }}</strong> on <strong>{{ \Illuminate\Support\Carbon::parse($resourceItem->updated_date)->format('m-d-Y') }}</strong>
                     </div>
                 </div>
             </div>

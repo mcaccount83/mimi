@@ -197,7 +197,7 @@ class ResourcesController extends Controller implements HasMiddleware
         $canEditFiles = ($positionId == CoordinatorPosition::CC || in_array(CoordinatorPosition::CC, $secPositionId));
         // $canEditFiles = ($positionId == 7 || in_array(7, $secPositionId));  // CC Coordinator
 
-        $resources = Resources::with('resourceCategory')->get();
+        $resources = Resources::with('resourceCategory', 'updatedBy')->get();
         $resourceCategories = ResourceCategory::all();
 
         foreach ($resources as $resource) {
@@ -421,10 +421,14 @@ class ResourcesController extends Controller implements HasMiddleware
         $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
         // $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 
-        $resources = Resources::with('toolkitCategory')->get();
+        $resources = Resources::with('toolkitCategory', 'updatedBy')->get();
         $toolkitCategories = ToolkitCategory::all();
 
-        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'toolkitCategories' => $toolkitCategories];
+        foreach ($resources as $resource) {
+            $id = $resource->id;
+        }
+
+        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'toolkitCategories' => $toolkitCategories, 'id' => $id];
 
         return view('resources.toolkit')->with($data);
     }
@@ -443,10 +447,11 @@ class ResourcesController extends Controller implements HasMiddleware
             $validatedData = $request->validate([
                 'fileCategoryNew' => 'required',
                 'fileNameNew' => 'required|string|max:50',
-                'fileDescriptionNew' => 'required|string|max:255',
-                'fileTypeNew' => 'required',
+                'fileDescriptionNew' => 'required|string|max:500',
+                'fileTypeNew' => 'required|in:1,2,3',
                 'fileVersionNew' => 'nullable|string|max:25',
-                'linkNew' => 'nullable|string|max:255',
+                'LinkNew' => 'nullable|string|max:255',
+                'routeNew' => 'nullable|string|max:255',
                 'filePathNew' => 'nullable|string|max:255',
             ]);
 
@@ -456,13 +461,22 @@ class ResourcesController extends Controller implements HasMiddleware
             $file->description = $validatedData['fileDescriptionNew'];
             $file->file_type = $validatedData['fileTypeNew'];
 
+            // Handle based on file type
             if ($validatedData['fileTypeNew'] == 1) {
-                $file->link = null;
+                // File - uses version and file_path
                 $file->version = $validatedData['fileVersionNew'] ?? null;
+                $file->file_path = $validatedData['filePathNew'] ?? null;
+                $file->link = null;
             } elseif ($validatedData['fileTypeNew'] == 2) {
+                // External Link - uses link field
+                $file->link = $validatedData['LinkNew'] ?? null;
                 $file->version = null;
                 $file->file_path = null;
-                $file->link = $validatedData['linkNew'] ?? null;
+            } elseif ($validatedData['fileTypeNew'] == 3) {
+                // Route - uses link field for route name
+                $file->link = $validatedData['routeNew'] ?? null;
+                $file->version = null;
+                $file->file_path = null;
             }
 
             $file->updated_id = $coorId;
@@ -490,32 +504,40 @@ class ResourcesController extends Controller implements HasMiddleware
             $lastupdatedDate = date('Y-m-d H:i:s');
 
             $validatedData = $request->validate([
-                'fileDescription' => 'required|string|max:255',
-                'fileType' => 'required',
+                'fileDescription' => 'required|string|max:500',
+                'fileType' => 'required|in:1,2,3',
                 'fileVersion' => 'nullable|string|max:25',
                 'link' => 'nullable|string|max:255',
-                'filePath' => 'nullable|string|max:255',
+                'route' => 'nullable|string|max:255',
             ]);
 
             // Fetch admin details (note: this query fetches but doesn't use the result - you may want to review this)
-            $fileInfo = DB::table('resources')
-                ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-                ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-                ->where('resources.id', $id)
-                ->first();
+            // $fileInfo = DB::table('resources')
+            //     ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+            //     ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+            //     ->where('resources.id', $id)
+            //     ->first();
 
             $file = Resources::findOrFail($id);
             $file->description = $validatedData['fileDescription'];
             $file->file_type = $validatedData['fileType'];
 
-            // Check file_type value and set version and link accordingly
+            // Handle based on file type
             if ($validatedData['fileType'] == 1) {
-                $file->link = null;
+                // File - uses version and file_path
                 $file->version = $validatedData['fileVersion'] ?? null;
+                // Note: file_path stays the same unless new file uploaded
+                $file->link = null;
             } elseif ($validatedData['fileType'] == 2) {
+                // External Link - uses link field
+                $file->link = $validatedData['link'] ?? null;
                 $file->version = null;
                 $file->file_path = null;
-                $file->link = $validatedData['link'] ?? null;
+            } elseif ($validatedData['fileType'] == 3) {
+                // Route - uses link field for route name
+                $file->link = $validatedData['route'] ?? null;
+                $file->version = null;
+                $file->file_path = null;
             }
 
             $file->updated_id = $coorId;

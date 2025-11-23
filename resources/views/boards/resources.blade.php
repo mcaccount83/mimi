@@ -14,7 +14,8 @@
                         </div>
                         <div class="card-body">
                     @php
-                        $thisDate = \Carbon\Carbon::now();
+                        // $thisDate = \Carbon\Carbon::now();
+                        $thisDate = \Illuminate\Support\Carbon::now();
                     @endphp
                     <div class="col-md-12"><br><br></div>
                         <h2 class="text-center"> MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
