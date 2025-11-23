@@ -276,7 +276,7 @@
                                     <select class="form-control fileType" id="fileType{{ $resourceItem->id }}" name="fileType">
                                         <option value="1" {{ $resourceItem->file_type == 1 ? 'selected' : '' }}>Document to Download</option>
                                         <option value="2" {{ $resourceItem->file_type == 2 ? 'selected' : '' }}>Link to Webpage</option>
-                                        <option value="3" {{ $resourceItem->file_type == 3 ? 'selected' : '' }}>Laravel Route</option>
+                                        <option value="3" {{ $resourceItem->file_type == 3 ? 'selected' : '' }}>Chapter Specific Route</option>
                                     </select>
                                 </div>
 
@@ -384,7 +384,7 @@
                                             <option value="" selected>Select file type</option>
                                             <option value="1">Document to Download</option>
                                             <option value="2">Link to Webpage</option>
-                                            <option value="3">Laravel Route</option>
+                                            <option value="3">Chapter Specific Route</option>
                                         </select>
                                     </div>
 
