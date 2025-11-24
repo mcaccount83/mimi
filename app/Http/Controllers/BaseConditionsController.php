@@ -21,7 +21,7 @@ class BaseConditionsController extends Controller
      */
     public function getConditions($cdId, $cdPositionid, $cdSecPositionid)
     {
-        $conditions = $this->positionConditionsService->getConditionsForUser($cdPositionid, $cdSecPositionid);
+        $conditions = $this->positionConditionsService->getConditionsForUser($cdPositionid, $cdSecPositionid, $cdId);
         $inQryArr = [];
 
         if ($conditions['coordinatorCondition']) {
