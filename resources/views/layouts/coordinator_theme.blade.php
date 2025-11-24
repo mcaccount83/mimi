@@ -218,7 +218,7 @@ window.onload = function () {
 
                         <!-- Coordinaros Menu Item -->
                         @php
-                            if ($supervisingCoordinatorCondition) {
+                            if ($supervisingCoordinatorCondition && !$coordinatorCondition) {
                                 $coordinatorsRoute = route('coordinators.coordlist');
                             } elseif ($ITCondition) {
                                 $coordinatorsRoute = route('coordinators.coordlist', ['check5' => 'yes']);
@@ -358,7 +358,9 @@ window.onload = function () {
 
                         <!-- Coordinator Reports Menu Item -->
                         @php
-                            if ($supervisingCoordinatorCondition || $ITCondition) {
+                            if ($ITCondition) {
+                                $coordReportsRoute = route('coordreports.coordrptvolutilization');
+                            } elseif ($supervisingCoordinatorCondition && !$coordinatorCondition) {
                                 $coordReportsRoute = route('coordreports.coordrptvolutilization');
                             } elseif ($coordinatorCondition) {
                                 $coordReportsRoute = route('coordreports.coordrptreportingtree');

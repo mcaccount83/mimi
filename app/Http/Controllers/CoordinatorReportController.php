@@ -164,8 +164,10 @@ class CoordinatorReportController extends Controller implements HasMiddleware
             $coorId = $user['user_coorId'];
             $confId = $user['user_confId'];
             $regId = $user['user_regId'];
-            $positionId = $user['user_positionId'];
-            $secPositionId = $user['user_secPositionId'];
+            $positionId = 6;
+            $secPositionId = null;
+            // $positionId = $user['user_positionId'];
+            // $secPositionId = $user['user_secPositionId'];
         }
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);

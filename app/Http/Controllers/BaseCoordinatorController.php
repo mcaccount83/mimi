@@ -145,7 +145,7 @@ class BaseCoordinatorController extends Controller
 
             // Only apply position conditions if check5 is NOT selected
             if (! isset($_GET[CoordinatorCheckbox::INTERNATIONAL]) || $_GET[CoordinatorCheckbox::INTERNATIONAL] !== 'yes') {
-                $baseQuery = $this->baseConditionsController->applyPositionConditions(
+                $baseQuery = $this->baseConditionsController->applyCordPositionConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
                     $params['confId'] ?? null,

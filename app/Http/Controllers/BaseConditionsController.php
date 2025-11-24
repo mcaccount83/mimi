@@ -52,6 +52,23 @@ class BaseConditionsController extends Controller
         return $baseQuery;
     }
 
+    public function applyCordPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
+    {
+        if ($conditions['founderCondition']) {
+            // View Full International List - no filter
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('conference_id', '=', $cdConfId);
+        } elseif ($conditions['regionalCoordinatorCondition'] || $conditions['inquiriesConferenceCondition']) {
+            $baseQuery->where('region_id', '=', $cdRegId);
+        } elseif ($conditions['inquiriesInternationalCondition'] || $conditions['ITCondition'] || $conditions['einCondition']) {
+            // View Full International List - no filter
+        } else {
+            $baseQuery->whereIn('report_id', $inQryArr);
+        }
+
+        return $baseQuery;
+    }
+
     /**
      * Apply position-based conditions to the coordinatorquery
      */
