@@ -218,7 +218,8 @@ window.onload = function () {
 
                         <!-- Coordinaros Menu Item -->
                         @php
-                            if ($supervisingCoordinatorCondition && !$coordinatorCondition) {
+                            // if ($supervisingCoordinatorCondition && !$coordinatorCondition) {
+                            if ($coordinatorCondition && $supervisingCoordinatorCondition) {
                                 $coordinatorsRoute = route('coordinators.coordlist');
                             } elseif ($ITCondition) {
                                 $coordinatorsRoute = route('coordinators.coordlist', ['check5' => 'yes']);

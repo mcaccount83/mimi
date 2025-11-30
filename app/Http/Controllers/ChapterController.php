@@ -331,26 +331,6 @@ class ChapterController extends Controller implements HasMiddleware
         $TRSDetails = $baseBoardQuery['TRSDetails'];
         $SECDetails = $baseBoardQuery['SECDetails'];
 
-        // $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-        // $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
-        // $chDisbanded = $baseDisbandedBoardQuery['chDisbanded'];
-
-        // if ($chActiveId == 1) {
-        //     $PresDetails = $baseActiveBoardQuery['PresDetails'];
-        //     $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
-        //     $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
-        //     $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
-        //     $SECDetails = $baseActiveBoardQuery['SECDetails'];
-        // }
-
-        // if ($chActiveId == 0) {
-        //     $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-        //     $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
-        //     $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
-        //     $TRSDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
-        //     $SECDetails = $baseDisbandedBoardQuery['SECDisbandedDetails'];
-        // }
-
         $resources = Resources::with('resourceCategory')->get();
 
         $now = Carbon::now();
@@ -513,11 +493,6 @@ class ChapterController extends Controller implements HasMiddleware
             $MVPDetails = $baseDisbandedBoardQuery['MVPDetails'];
             $TRSDetails = $baseDisbandedBoardQuery['TRSDetails'];
             $SECDetails = $baseDisbandedBoardQuery['SECDetails'];
-            // $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-            // $AVPDetails = $baseDisbandedBoardQuery['AVPDisbandedDetails'];
-            // $MVPDetails = $baseDisbandedBoardQuery['MVPDisbandedDetails'];
-            // $TRSDetails = $baseDisbandedBoardQuery['TRSDisbandedDetails'];
-            // $SECDetails = $baseDisbandedBoardQuery['SECDisbandedDetails']
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -955,8 +930,6 @@ class ChapterController extends Controller implements HasMiddleware
             $chapterName = $request->filled('ch_name') ? $request->input('ch_name') : $request->input('ch_hid_name');
             $chapter->name = $chapterName;
             $chapter->sanitized_name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $chapterName);
-            // $chapter->name = $request->filled('ch_name') ? $request->input('ch_name') : $request->input('ch_hid_name');
-            // $chapter->notes = $request->input('ch_einnotes');
             $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
             $chapter->sistered_by = $request->filled('ch_sistered') ? $request->input('ch_sistered') : $request->input('ch_hid_sistered');
             $chapter->territory = $request->filled('ch_boundariesterry') ? $request->input('ch_boundariesterry') : $request->input('ch_hid_boundariesterry');

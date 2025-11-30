@@ -65,6 +65,13 @@ class BaseChapterController extends Controller
         if (isset($_GET[ChapterCheckbox::CONFERENCE_REGION]) && $_GET[ChapterCheckbox::CONFERENCE_REGION] == 'yes') {
             $checkboxStatus[ChapterCheckbox::CHECK_CONFERENCE_REGION] = 'checked';
             // Position conditions already applied in buildChapterQuery
+            if ($conditions && $conditions['inquiriesConferenceCondition']) {
+                if ($regId && $regId > 0) {
+                    $baseQuery->where('region_id', '=', $regId);
+                } else {
+                    $baseQuery->where('conference_id', '=', $confId);
+                }
+            }
         }
 
         // Checkbox4
@@ -185,7 +192,9 @@ class BaseChapterController extends Controller
 
             // Only apply position conditions if NEITHER International nor InternationalReReg is selected
             if ((! isset($_GET[ChapterCheckbox::INTERNATIONAL]) || $_GET[ChapterCheckbox::INTERNATIONAL] !== 'yes') &&
-                (! isset($_GET[ChapterCheckbox::INTERNATIONALREREG]) || $_GET[ChapterCheckbox::INTERNATIONALREREG] !== 'yes')) {
+                (! isset($_GET[ChapterCheckbox::INTERNATIONALREREG]) || $_GET[ChapterCheckbox::INTERNATIONALREREG] !== 'yes') &&
+                (! isset($_GET[ChapterCheckbox::CONFERENCE_REGION]) || $_GET[ChapterCheckbox::CONFERENCE_REGION] !== 'yes')) {
+
                 $baseQuery = $this->baseConditionsController->applyPositionConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
