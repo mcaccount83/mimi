@@ -674,61 +674,61 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             <br>
                             Children's Room Miscellaneous:
                             <table width="75%" style="border-collapse: collapse;">
-                                <thead>
-                                    <tr style="border-bottom: 1px solid #333;">
-                                        <td>Description</td>
-                                        <td>Supplies</td>
-                                        <td>Other Expenses</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                        $childrens_room = null;
-                                        $totalChildrenSupplies = 0;
-                                        $totalChildrenOther = 0;
+    <thead>
+        <tr style="border-bottom: 1px solid #333;">
+            <td>Description</td>
+            <td>Supplies</td>
+            <td>Other Expenses</td>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+            $childrens_room = null;
+            $totalChildrenSupplies = 0;
+            $totalChildrenOther = 0;
+            if (isset($chFinancialReport['childrens_room_expenses']) && $chFinancialReport['childrens_room_expenses'] != null) {
+                $blobData = base64_decode($chFinancialReport['childrens_room_expenses']);
+                $childrens_room = unserialize($blobData);
+                if ($childrens_room == false) {
+                    echo "Error: Failed to unserialize data.";
+                } else {
+                    if (is_array($childrens_room) && count($childrens_room) > 0) {
+                        foreach ($childrens_room as $row) {
+                            // Sanitize inputs
+                            $supplies = is_numeric(str_replace(',', '', $row['childrens_room_supplies'])) ? floatval(str_replace(',', '', $row['childrens_room_supplies'])) : 0;
+                            $other = is_numeric(str_replace(',', '', $row['childrens_room_other'])) ? floatval(str_replace(',', '', $row['childrens_room_other'])) : 0;
 
-                                        if (isset($chFinancialReport['childrens_room_expenses']) && $chFinancialReport['childrens_room_expenses'] != null) {
-                                            $blobData = base64_decode($chFinancialReport['childrens_room_expenses']);
-                                            $childrens_room = unserialize($blobData);
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($row['childrens_room_desc']) . "</td>";
+                            echo "<td>$" . number_format($supplies, 2) . "</td>";
+                            echo "<td>$" . number_format($other, 2) . "</td>";
+                            echo "</tr>";
 
-                                            if ($childrens_room == false) {
-                                                echo "Error: Failed to unserialize data.";
-                                            } else {
-                                                if (is_array($childrens_room) && count($childrens_room) > 0) {
-                                                    foreach ($childrens_room as $row) {
-                                                        echo "<tr>";
-                                                        echo "<td>" . $row['childrens_room_desc'] . "</td>";
-                                                        echo "<td>" . ($row['childrens_room_supplies'] ? "$" . number_format($row['childrens_room_supplies'], 2) : "$0.00") . "</td>";
-                                                        echo "<td>" . ($row['childrens_room_other'] ? "$" . number_format($row['childrens_room_other'], 2) : "$0.00") . "</td>";
-                                                        echo "</tr>";
-
-                                                        $totalChildrenSupplies += floatval($row['childrens_room_supplies']);
-                                                        $totalChildrenOther += floatval($row['childrens_room_other']);
-                                                    }
-
-                                                    // Total row
-                                                    echo "<tr style='border-top: 1px solid #333;'>";
-                                                    echo "<td><strong>Total</strong></td>";
-                                                    echo "<td><strong>$" . number_format($totalChildrenSupplies, 2) . "</strong></td>";
-                                                    echo "<td><strong>$" . number_format($totalChildrenOther, 2) . "</strong></td>";
-                                                    echo "</tr>";
-                                                } else {
-                                                    echo "<tr style='border-top: 1px solid #333;'>";
-                                                    echo "<td colspan='3'>No Children's Room Expenses Entered.</td>";
-                                                    echo "</tr>";
-                                                }
-                                            }
-                                        } else {
-                                            echo "<tr style='border-top: 1px solid #333;'>";
-                                            echo "<td colspan='3'>No Children's Room Expenses Entered.</td>";
-                                            echo "</tr>";
-                                        }
-
-                                        $totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther;
-                                        ?>
-
-                                </tbody>
-                                </table>
+                            // Totals
+                            $totalChildrenSupplies += $supplies;
+                            $totalChildrenOther += $other;
+                        }
+                        // Total row
+                        echo "<tr style='border-top: 1px solid #333;'>";
+                        echo "<td><strong>Total</strong></td>";
+                        echo "<td><strong>$" . number_format($totalChildrenSupplies, 2) . "</strong></td>";
+                        echo "<td><strong>$" . number_format($totalChildrenOther, 2) . "</strong></td>";
+                        echo "</tr>";
+                    } else {
+                        echo "<tr style='border-top: 1px solid #333;'>";
+                        echo "<td colspan='3'>No Children's Room Expenses Entered.</td>";
+                        echo "</tr>";
+                    }
+                }
+            } else {
+                echo "<tr style='border-top: 1px solid #333;'>";
+                echo "<td colspan='3'>No Children's Room Expenses Entered.</td>";
+                echo "</tr>";
+            }
+            $totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther;
+        ?>
+    </tbody>
+</table>
                             <br>
                             <strong>Total Children's Room Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport['paid_baby_sitters'] + $totalChildrensRoomExpenses, 2) }}</strong><br>
                             <hr style="border-bottom: 2px solid #007bff">
