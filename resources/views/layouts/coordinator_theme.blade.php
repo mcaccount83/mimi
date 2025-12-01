@@ -361,7 +361,7 @@ window.onload = function () {
                         @php
                             if ($ITCondition) {
                                 $coordReportsRoute = route('coordreports.coordrptvolutilization');
-                            } elseif ($supervisingCoordinatorCondition && !$coordinatorCondition) {
+                            } elseif ($supervisingCoordinatorCondition && $assistConferenceCoordinatorCondition) {
                                 $coordReportsRoute = route('coordreports.coordrptvolutilization');
                             } elseif ($coordinatorCondition) {
                                 $coordReportsRoute = route('coordreports.coordrptreportingtree');

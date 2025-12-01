@@ -58,26 +58,6 @@ class BaseConditionsController extends Controller
             // View Full International List - no filter
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('conference_id', '=', $cdConfId);
-        } elseif ($conditions['regionalCoordinatorCondition'] || $conditions['inquiriesConferenceCondition']) {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        } elseif ($conditions['inquiriesInternationalCondition'] || $conditions['ITCondition'] || $conditions['einCondition']) {
-            // View Full International List - no filter
-        } else {
-            $baseQuery->whereIn('report_id', $inQryArr);
-        }
-
-        return $baseQuery;
-    }
-
-    /**
-     * Apply position-based conditions to the coordinatorquery
-     */
-    public function applyPositionCoordConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
-    {
-        if ($conditions['founderCondition']) {
-            // View Full International List - no filter
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('region_id', '=', $cdRegId);
         } elseif ($conditions['ITCondition']) {
@@ -89,45 +69,4 @@ class BaseConditionsController extends Controller
         return $baseQuery;
     }
 
-    /**
-     * Apply position-based conditions to the query for pending chapters
-     * This method handles chapters with active_status = 2 (pending) or 3 (not approved)
-     */
-    public function applyPendingPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
-    {
-        // For pending chapters, the conditions are the same as regular active chapters
-        // We just need to ensure we're using the correct board data sources
-        if ($conditions['founderCondition']) {
-            // No restrictions for founder
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        } else {
-            $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
-        }
-
-        return $baseQuery;
-    }
-
-    /**
-     * Apply position coordinator conditions to the query for pending chapters
-     * This method handles chapters with active_status = 2 (pending) or 3 (not approved)
-     */
-    public function applyPendingPositionCoordConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
-    {
-        // For pending chapters, the conditions are the same as regular active chapters
-        // The difference is in how the relations are loaded in the query builder
-        if ($conditions['founderCondition']) {
-            // No restrictions for founder
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $cdRegId);
-        } else {
-            $baseQuery->whereIn('report_id', $inQryArr);
-        }
-
-        return $baseQuery;
-    }
 }
