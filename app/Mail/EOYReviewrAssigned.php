@@ -2,27 +2,34 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+
 class EOYReviewrAssigned extends BaseMailable
 {
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject("Financial Reviewer Assigned | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.endofyear.reviewerassigned');
+        return new Envelope(
+            subject: "Financial Reviewer Assigned | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.endofyear.reviewerassigned',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }

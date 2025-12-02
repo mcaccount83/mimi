@@ -35,5 +35,3 @@ class PaymentsDonationOnline extends BaseMailable
         return [];
     }
 }
-
-// ->markdown('emails.chapter.donationchapadminnotice');

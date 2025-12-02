@@ -2,8 +2,10 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+
 class PaymentsManualOrderReceipt extends BaseMailable
-    // class ManualOrderChapterReceipt extends BaseMailable
 {
     public $mailData;
 
@@ -17,15 +19,22 @@ class PaymentsManualOrderReceipt extends BaseMailable
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+      public function envelope(): Envelope
     {
-        return $this
-            ->from('support@momsclub.org', 'MOMS Club')
-            ->subject('Chapter Manual Replacement Order')
-            ->markdown('emails.payments.manualorderreceipt');
-        // ->markdown('emails.chapter.manualorderchapterreceipt');
+        return new Envelope(
+            subject: "Chapter Manual Replacement Order",
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.payments.manualorderreceipt',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }

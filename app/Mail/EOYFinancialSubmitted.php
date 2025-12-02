@@ -2,6 +2,10 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Attachment;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+
 class EOYFinancialSubmitted extends BaseMailable
 {
     public $mailData;
@@ -20,18 +24,26 @@ class EOYFinancialSubmitted extends BaseMailable
 
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject("Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.endofyear.financialsubmitted')
-            ->attach($this->pdfPath, [
-                'as' => date('Y') - 1 .'-'.date('Y').'_'.$this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_FinancialReport.pdf',
-                'mime' => 'application/pdf',
-            ]);
+        return new Envelope(
+            subject: "Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
+    }
 
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.endofyear.financialsubmitted',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [
+            Attachment::fromPath($this->pdfPath)
+                ->as(date('Y') - 1 .'-'.date('Y').'_'.$this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_FinancialReport.pdf')
+                ->withMime('application/pdf'),
+        ];
     }
 }

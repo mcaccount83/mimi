@@ -3,21 +3,16 @@
 namespace App\Mail;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 
 class PaymentsReRegChapterThankYou extends BaseMailable
-    // class ReRegChapterThankYou extends BaseMailable
 {
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
-        // $this->mailData['chapterDate'] = date('m-d-Y', strtotime($this->mailData['chapterDate']));
 
         // Check if 'chapterDate' is set and valid
         if (! isset($this->mailData['chapterDate']) || ! strtotime($this->mailData['chapterDate'])) {
@@ -29,16 +24,22 @@ class PaymentsReRegChapterThankYou extends BaseMailable
         }
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+      public function envelope(): Envelope
     {
-        return $this
-            ->from('support@momsclub.org', 'MOMS Club')
-            ->subject('Thank You for Your Re-Registration Payment')
-            ->markdown('emails.payments.reregchapterthankyou');
-        // ->markdown('emails.chapter.reregchapterthankyou');
-        // ->with('mailData', $this->mailData);
+        return new Envelope(
+            subject: "Thank You for Your Re-Registration Payment",
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.payments.reregchapterthankyou',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }

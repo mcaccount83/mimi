@@ -29,7 +29,7 @@ class NewChapterWelcome extends BaseMailable
             replyTo: [
                 new Address($this->mailData['userEmail'], $this->mailData['userName']),
             ],
-            subject: 'Congratulations on your New Chapter!',
+            subject: "MOMS Club of {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
     }
 

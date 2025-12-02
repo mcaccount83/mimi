@@ -2,27 +2,34 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+
 class EOYElectionReportSubmitted extends BaseMailable
 {
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject("Election Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.endofyear.electionreportsubmitted');
+        return new Envelope(
+            subject: "Election Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.endofyear.electionreportsubmitted',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }

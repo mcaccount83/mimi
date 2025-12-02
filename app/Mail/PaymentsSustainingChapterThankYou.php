@@ -2,30 +2,34 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+
 class PaymentsSustainingChapterThankYou extends BaseMailable
-    // class DonationSustainingChapterThankYou extends BaseMailable
 {
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+      public function envelope(): Envelope
     {
-        return $this
-            ->from('support@momsclub.org', 'MOMS Club')
-            ->subject('Thank You for Your Sustaining Chapter Donation')
-            ->markdown('emails.payments.sustainingchapterthankyou');
-        // ->markdown('emails.chapter.donationsustainingchapterthankyou');
+        return new Envelope(
+            subject: "Thank You for Your Sustaining Chapter Donation",
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.payments.sustainingchapterthankyou',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }

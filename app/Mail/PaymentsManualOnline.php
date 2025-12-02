@@ -2,29 +2,34 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+
 class PaymentsManualOnline extends BaseMailable
-    // class ManualOrderAdminNotice extends BaseMailable
 {
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+      public function envelope(): Envelope
     {
-        return $this
-            ->subject("Donation Received | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.payments.manualonline');
-        // ->markdown('emails.chapter.manualorderadminnotice');
+        return new Envelope(
+            subject: "Manual Replacement Order | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.payments.manualonline',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }

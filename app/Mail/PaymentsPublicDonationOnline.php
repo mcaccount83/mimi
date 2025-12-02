@@ -35,5 +35,3 @@ class PaymentsPublicDonationOnline extends BaseMailable
         return [];
     }
 }
-
-// ->markdown('emails.public.donationpublicadminnotice');

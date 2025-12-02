@@ -2,27 +2,34 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+
 class EOYLateReportReminder extends BaseMailable
 {
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->subject("End of Year Reports Late Notice | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
-            ->markdown('emails.endofyear.latereportreminder');
+        return new Envelope(
+            subject: "End of Year Reports Late Notice | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.endofyear.latereportreminder',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }
