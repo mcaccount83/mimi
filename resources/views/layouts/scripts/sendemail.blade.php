@@ -303,9 +303,11 @@
         html: `
             <p>This will send the initial chapter startup email to potential founder to facilitate the discussion on boundaries and name. Please enter additional boundary and name details to include in the email and press OK to send.</p>
             <div style="width: 100%; margin-bottom: 10px;">
+                <p><br><b>Boundary Details/Options</b></p>
                 <textarea id="boundary_details" name="boundary_details" class="rich-editor" ${predefinedBoundaries ? '' : 'placeholder="Boundary Details/Options"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedBoundaries}</textarea>
             </div>
             <div style="width: 100%; margin-bottom: 10px;">
+                <p><br><b>Name Details/Options</b></p>
                 <textarea id="name_details" name="name_details" class="rich-editor" ${predefinedName ? '' : 'placeholder="Name Details/Options"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedName}</textarea>
             </div>
             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
