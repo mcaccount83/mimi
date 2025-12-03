@@ -10,9 +10,9 @@ After receiving your completed reports, your Coordiantor Team will review the re
 <br>
 The Financial Report (as well as the Board Election Report) can be accessed by logging into your MIMI account https://momsclub.org/mimi and selecting the buttons on the right hand side of your screen.</p>
 @if (empty($minimal) || $minimal == false)
-    <br>
-    <strong>MCL,</strong><br>
-    MIMI Database Administrator
+<br>
+<strong>MCL,</strong><br>
+International MOMS Club
 
-    @endcomponent
+@endcomponent
 @endif

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -22,6 +23,10 @@ class EOYFinancialReportThankYou extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
+            from: new Address('support@momsclub.org', 'MOMS Club'),
+            replyTo: [
+                new Address('support@momsclub.org', 'MOMS Club'),
+            ],
             subject: "Financial Report Submitted",
         );
     }

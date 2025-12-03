@@ -18,9 +18,9 @@ Please submit your report as soon as possible to ensure that your incoming board
 </ul>
 The Board Election Report (as well as the Financial Report) can be accessed by logging into your MIMI account https://momsclub.org/mimi and selecting the buttons at the right hand side of your screen.</p>
 @if (empty($minimal) || $minimal == false)
-    <br>
-    <strong>MCL,</strong><br>
-    MIMI Database Administrator
+<br>
+<strong>MCL,</strong><br>
+International MOMS Club
 @endif
 @if (empty($minimal) || $minimal == false)
     @endcomponent

@@ -10,6 +10,6 @@ A copy of your report is attached.  Please save/keep a copy for your records.<br
 
 <br>
 <strong>MCL,</strong><br>
-MIMI Database Administrator
+International MOMS Club
 @endcomponent
 

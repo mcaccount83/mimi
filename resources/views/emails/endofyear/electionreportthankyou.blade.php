@@ -9,5 +9,5 @@ Outgoing board members will still be able to log in and access the Financial Rep
 
 <br>
 <strong>MCL,</strong><br>
-MIMI Database Administrator
+International MOMS Club
 @endcomponent

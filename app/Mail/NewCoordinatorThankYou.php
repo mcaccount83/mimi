@@ -2,31 +2,40 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+
 class NewCoordinatorThankYou extends BaseMailable
 {
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
-        // $this->mailData['chapterDate'] = date('m-d-Y', strtotime($this->mailData['chapterDate']));
 
     }
 
-    /**
-     * Build the message.
-     */
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this
-            ->from('support@momsclub.org', 'MOMS Club')
-            ->subject('Thank You for Your Coordinator Application')
-            ->markdown('emails.coordinator.newcoordthankyou');
-        // ->with('mailData', $this->mailData);
+        return new Envelope(
+            from: new Address('support@momsclub.org', 'MOMS Club'),
+            replyTo: [
+                new Address('support@momsclub.org', 'MOMS Club'),
+            ],
+            subject: 'Thank You for Your Coordinator Application',
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.payments.newcoordthankyou',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }
