@@ -102,9 +102,9 @@
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="custom-control-input"
                                        onchange="toggleIRSVerified()"
                                        @if($regionalCoordinatorCondition)
-                                            {{$chFinancialReport->check_current_990N_verified_IRS == 1 ? 'checked' : ''}}>
+                                            {{$chDetails->documents->irs_verified == 1 ? 'checked' : ''}}>
                                             @else
-                                            {{$chFinancialReport->check_current_990N_verified_IRS == 1 ? 'checked' : ''}} disabled>
+                                            {{$chDetails->documents->irs_verified == 1 ? 'checked' : ''}} disabled>
                                              @endif
                                 <label class="custom-control-label" for="irs_verified"></label>
                             </div>

@@ -130,11 +130,16 @@ class PositionConditionsService
         $display_testing = ($admin->display_testing == 1);
         $display_live = ($admin->display_live == 1);
 
+        $currentMonth = now()->month;
+
         return [
-            'display_testing' => $display_testing,
-            'display_live' => $display_live,
+            // 'display_testing' => $display_testing,
+            // 'display_live' => $display_live,
             'displayTESTING' => ($display_testing == true && $display_live != true),
-            'displayLIVE' => ($display_live == true),
+            'displayLIVE' => ($display_live == true && $currentMonth >= 5 && $currentMonth <= 12),
+            'displayBoardRptLIVE' => ($display_live == true && $currentMonth >= 5 && $currentMonth <= 12),
+            'displayFinancialRptLIVE' => ($display_live == true && $currentMonth >= 6 && $currentMonth <= 12),
+            'displayEINInstructionsLIVE' => ($display_live == true && $currentMonth >= 7 && $currentMonth <= 12),
         ];
     }
 }

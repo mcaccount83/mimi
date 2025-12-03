@@ -70,7 +70,7 @@ class BaseBoardController extends Controller
         $reviewerEmail = $chDetails->reportReviewer?->email;
         $chFinancialReport = $chDetails->financialReport;
         $chFinancialReportFinal = $chDetails->financialReportFinal;
-        $displayEOY = $this->positionConditionsService->getEOYDisplay();
+        // $displayEOY = $this->positionConditionsService->getEOYDisplay();
         $chDisbanded = $chDetails->disbandCheck;
 
         // Load Board and Coordinators for Sending Email
@@ -94,7 +94,7 @@ class BaseBoardController extends Controller
             'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments, 'allActive' => $allActive,
             'chActiveId' => $chActiveId, 'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord,
             'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus, 'reviewerEmail' => $reviewerEmail, 'awards' => $chFinancialReport, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail,
-            'displayEOY' => $displayEOY, 'allCountries' => $allCountries, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'allProbation' => $allProbation,
+            'allCountries' => $allCountries, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'allProbation' => $allProbation,
             'probationReason' => $probationReason,
         ], $boardDetails); // Add board member details from appropriate table
     }

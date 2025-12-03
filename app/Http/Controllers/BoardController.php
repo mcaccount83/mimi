@@ -139,7 +139,7 @@ class BoardController extends Controller implements HasMiddleware
     }
 
     /**
-     * View Board Details President Login
+     * View Board Details Board Member Login
      */
     public function editProfile(Request $request, $chId): View
     {
@@ -182,22 +182,18 @@ class BoardController extends Controller implements HasMiddleware
         $start_month = $chDetails->start_month_id;
         $next_renewal_year = $chDetails->next_renewal_year;
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
-        // $due_date = Carbon::create($next_renewal_year, $start_month, 1)->endOfMonth();
 
-        $displayEOY = $baseQuery['displayEOY'];
-        $displayTESTING = $displayEOY['displayTESTING'];
-        $displayLIVE = $displayEOY['displayLIVE'];
-
-        $admin = Admin::orderByDesc('id')
-            ->limit(1)
-            ->first();
-        $display_testing = ($admin->display_testing == 1);
-        $display_live = ($admin->display_live == 1);
+        // $displayEOY = $baseQuery['displayEOY'];
+        // $displayTESTING = $displayEOY['displayTESTING'];
+        // // $displayLIVE = $displayEOY['displayLIVE'];
+        // $displayBoardRptLIVE = $displayEOY['displayBoardRptLIVE'];
+        // $displayFinancialRptLIVE = $displayEOY['displayFinancialRptLIVE'];
+        // $displayEINInstructionsLIVE = $displayEOY['displayEINInstructionsLIVE'];
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
-            'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments,
+            'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments,
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive,
         ];
 

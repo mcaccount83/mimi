@@ -383,7 +383,7 @@ window.onload = function () {
                             @php
                                 if (($coordinatorCondition && $displayLIVE) || ($eoyTestCondition && $displayTESTING) || ($eoyReportCondition && $displayLIVE || $ITCondition)) {
                                     $eoyReportsRoute = route('eoyreports.eoystatus');
-                                } elseif ($einCondition) {
+                                } elseif ($einCondition && $displayLIVE) {
                                     $eoyReportsRoute = route('eoyreports.eoyirssubmission', ['check5' => 'yes']);
                                 }
                                 $activeEOYReportsRoutes = [

@@ -307,9 +307,9 @@ class ChapterController extends Controller implements HasMiddleware
         $chDocuments = $baseQuery['chDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $reviewComplete = $baseQuery['reviewComplete'];
-        $displayEOY = $baseQuery['displayEOY'];
-        $displayTESTING = $displayEOY['displayTESTING'];
-        $displayLIVE = $displayEOY['displayLIVE'];
+        // $displayEOY = $baseQuery['displayEOY'];
+        // $displayTESTING = $displayEOY['displayTESTING'];
+        // $displayLIVE = $displayEOY['displayLIVE'];
 
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $baseQuery['chapterStatus'];
@@ -343,7 +343,7 @@ class ChapterController extends Controller implements HasMiddleware
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate, 'probationReason' => $probationReason,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
-            'conferenceDescription' => $conferenceDescription, 'displayTESTING' => $displayTESTING, 'displayLIVE' => $displayLIVE, 'chDisbanded' => $chDisbanded,
+            'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded,
             'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
 
         ];
