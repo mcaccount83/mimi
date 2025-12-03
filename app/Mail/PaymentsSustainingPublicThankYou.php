@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -17,6 +18,10 @@ class PaymentsSustainingPublicThankYou extends BaseMailable
       public function envelope(): Envelope
     {
         return new Envelope(
+            from: new Address('support@momsclub.org', 'MOMS Club'),
+            replyTo: [
+                new Address('support@momsclub.org', 'MOMS Club'),
+            ],
             subject: "Thank You for Your Sustaining Chapter Donation",
         );
     }

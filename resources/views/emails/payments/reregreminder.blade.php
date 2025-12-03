@@ -42,6 +42,6 @@ Sustaining chapter donations are <u>voluntary</u> and in addition to your chapte
 <p>Thank you for your prompt renewal payment and/or sustaining chapter donation! If you have any questions, please do not hesitate to contact your chapter's Primary Coordinator.</p>
 <br>
 <strong>MCL,</strong><br>
-MIMI Database Administrator
+International MOMS Club
 <br>
 @endcomponent

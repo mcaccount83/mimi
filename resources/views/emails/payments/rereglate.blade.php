@@ -52,6 +52,6 @@ Sustaining chapter donations are voluntary and in addition to your chapter's re-
 <p>If you have any questions at all, do not hesitate to ask.</p>
 <br>
 <strong>MCL,</strong><br>
-MIMI Database Administrator
+International MOMS Club
 <br>
 @endcomponent

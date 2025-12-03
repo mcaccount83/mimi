@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -9,11 +10,6 @@ class PaymentsManualOrderReceipt extends BaseMailable
 {
     public $mailData;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
@@ -22,6 +18,10 @@ class PaymentsManualOrderReceipt extends BaseMailable
       public function envelope(): Envelope
     {
         return new Envelope(
+            from: new Address('support@momsclub.org', 'MOMS Club'),
+            replyTo: [
+                new Address('support@momsclub.org', 'MOMS Club'),
+            ],
             subject: "Chapter Manual Replacement Order",
         );
     }
