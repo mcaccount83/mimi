@@ -35,12 +35,17 @@ class ViewServiceProvider extends ServiceProvider
 
                 $userAdmin = $user->is_admin == '1';
                 $userModerator = $user->is_admin == '2';
+                $coordinator = ($user->user_type == 'coordinator' && $user->coordinator);
+                $board = ($user->user_type == 'board' && $user->board);
+                $outgoing = ($user->user_type == 'outgoing' && $user->outgoing);
+                $disbanded = ($user->user_type == 'disbanded' && $user->disbanded);
+                $pending = ($user->user_type == 'pending' && $user->pending);
             }
 
             $positionConditionsService = app(PositionConditionsService::class);
             $forumConditionsService = app(ForumConditionsService::class);
 
-            $positionConditions = $positionConditionsService->getConditionsForUser($positionid, $secpositionid, $corId); // ADD $corId HERE!
+            $positionConditions = $positionConditionsService->getConditionsForUser($positionid, $secpositionid, $corId);
             $eoyDisplay = $positionConditionsService->getEOYDisplay();
             $forumCount = $forumConditionsService->getUnreadForumCount();
 
@@ -54,6 +59,11 @@ class ViewServiceProvider extends ServiceProvider
                 'userModerator' => $userModerator,
                 'unreadForumCount' => $forumCount,
                 'positionService' => $positionConditionsService,
+                'coordinator' => $coordinator,
+                'board' => $board,
+                'outgoing' => $outgoing,
+                'disbanded' => $disbanded,
+                'pending' => $pending,
             ],
                 $positionConditions,
                 $eoyDisplay,

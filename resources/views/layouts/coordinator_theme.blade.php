@@ -218,8 +218,7 @@ window.onload = function () {
 
                         <!-- Coordinaros Menu Item -->
                         @php
-                            // if ($supervisingCoordinatorCondition && !$coordinatorCondition) {
-                            if ($coordinatorCondition && $supervisingCoordinatorCondition) {
+                            if ($supervisingCoordinatorCondition) {
                                 $coordinatorsRoute = route('coordinators.coordlist');
                             } elseif ($ITCondition) {
                                 $coordinatorsRoute = route('coordinators.coordlist', ['check5' => 'yes']);
@@ -301,6 +300,7 @@ window.onload = function () {
 
                         <!-- List Subscription Menu Item -->
                         @php
+                            // if ($coordinatorCondition && $conferenceCoordinatorCondition) {
                             if ($listAdminCondition || $ITCondition) {
                                 $listSubscriptionRoute = route('forum.chaptersubscriptionlist');
                             } elseif ($listAdminCondition || $ITCondition) {
@@ -339,8 +339,10 @@ window.onload = function () {
 
                         <!-- Chapter Reports Menu Item -->
                         @php
-                            if ($coordinatorCondition && $conferenceCoordinatorCondition || $ITCondition) {
+                            if ($coordinatorCondition && $conferenceCoordinatorCondition) {
                                 $chapterReportsRoute = route('chapreports.chaprptchapterstatus');
+                            } elseif ($ITCondition) {
+                                $coordReportsRoute = route('chapreports.chaprptchapterstatus', ['check5' => 'yes']);
                             } elseif ($einCondition) {
                                 $coordReportsRoute = route('chapreports.chaprpteinstatus', ['check5' => 'yes']);
                             }
@@ -359,10 +361,10 @@ window.onload = function () {
 
                         <!-- Coordinator Reports Menu Item -->
                         @php
-                            if ($ITCondition) {
+                            if ($supervisingCoordinatorCondition && $assistConferenceCoordinatorCondition) {
                                 $coordReportsRoute = route('coordreports.coordrptvolutilization');
-                            } elseif ($supervisingCoordinatorCondition && $assistConferenceCoordinatorCondition) {
-                                $coordReportsRoute = route('coordreports.coordrptvolutilization');
+                            } elseif ($ITCondition) {
+                                $coordReportsRoute = route('coordreports.coordrptvolutilization', ['check5' => 'yes']);
                             } elseif ($coordinatorCondition) {
                                 $coordReportsRoute = route('coordreports.coordrptreportingtree');
                             }
@@ -381,8 +383,10 @@ window.onload = function () {
 
                         <!-- End of Year Reports Menu Item-->
                             @php
-                                if (($coordinatorCondition && $displayLIVE) || ($eoyTestCondition && $displayTESTING) || ($eoyReportCondition && $displayLIVE || $ITCondition)) {
+                                if (($coordinatorCondition && $displayLIVE) || ($eoyReportCondition && $displayLIVE) || ($eoyTestCondition && $displayTESTING)) {
                                     $eoyReportsRoute = route('eoyreports.eoystatus');
+                                } elseif ($ITCondition) {
+                                    $eoyReportsRoute = route('eoyreports.eoystatus', ['check5' => 'yes']);
                                 } elseif ($einCondition && $displayLIVE) {
                                     $eoyReportsRoute = route('eoyreports.eoyirssubmission', ['check5' => 'yes']);
                                 }
@@ -404,8 +408,10 @@ window.onload = function () {
 
                         <!-- Admin Reports Menu Item -->
                         @php
-                            if ($coordinatorCondition && $conferenceCoordinatorCondition || $ITCondition) {
+                            if ($coordinatorCondition && $conferenceCoordinatorCondition) {
                                 $adminReportsRoute = route('adminreports.paymentlist');
+                            } elseif ($ITCondition) {
+                                $adminReportsRoute = route('adminreports.paymentlist', ['check5' => 'yes']);
                             }
                             $activeAdminReportsRoutes = [
                                 'adminreports/*'
@@ -458,7 +464,9 @@ window.onload = function () {
 
                         <!-- Resources Reports Menu Item -->
                         @php
-                            $resourcesRoute = route('resources.toolkit');
+                            if ($coordinator) {
+                                $resourcesRoute = route('resources.toolkit');
+                            }
                             $activeResourcesRoutes = [
                                 'resources/*'
                             ];

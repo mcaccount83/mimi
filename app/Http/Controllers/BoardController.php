@@ -183,13 +183,6 @@ class BoardController extends Controller implements HasMiddleware
         $next_renewal_year = $chDetails->next_renewal_year;
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
 
-        // $displayEOY = $baseQuery['displayEOY'];
-        // $displayTESTING = $displayEOY['displayTESTING'];
-        // // $displayLIVE = $displayEOY['displayLIVE'];
-        // $displayBoardRptLIVE = $displayEOY['displayBoardRptLIVE'];
-        // $displayFinancialRptLIVE = $displayEOY['displayFinancialRptLIVE'];
-        // $displayEINInstructionsLIVE = $displayEOY['displayEINInstructionsLIVE'];
-
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,

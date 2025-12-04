@@ -17,93 +17,38 @@ class ForumConditions
         $this->positionService = $positionService;
     }
 
-    public function canAccessCoordinatorList(User $user, Category $category): bool
+    /**
+     * Who can view Lists
+     */
+    public function canAccessList(User $user, Category $category): bool
     {
-        if ($user->user_type == 'outgoing') {
-            return false; // Hide ALL from outgoing
-        }
-
-        if ($user->user_type == 'disbanded') {
-            return false; // Hide ALL from outgoing
+        if ($user->user_type == 'outgoing' || $user->user_type == 'disbanded' || $user->user_type == 'pending') {
+            return false; // Hide ALL from outgoing/disbanded/pending
         }
 
         if ($category->title == 'CoordinatorList' && $user->user_type != 'coordinator') {
-            return false; // Hide from everyone except coordinators
+            return false; // Hide CoordinatorList from everyone except coordinators
         }
 
         return true; // Default: allow access
     }
 
-    public function canManageLists($user): bool
+    /**
+     * Who can Manage Lists & Threads //  Admins and Moderators only
+     */
+    public function canManageLists(User $user): bool
     {
-        $userType = $this->checkUserType($user);
-        $userAdmin = $this->checkUserAdmin($user);
-        $position = $this->checkPosition($user, $userType);
+        $isCoordinator = $user->user_type == 'coordinator';
+        $userAdmin = $user->is_admin == '1';
+        $userModerator = $user->is_admin == '2';
 
-        return $userType['isCoordinator'] && ($userAdmin['userAdmin'] || $userAdmin['userModerator']);
-        // return $userType['isCoordinator'] && $position['isFounderCondition']; //use this line for TESTING a false return
+        return $isCoordinator && ($userAdmin || $userModerator);
     }
 
-    public function getCategoryFromThread(Thread $thread): ?Category
-    {
-        return $thread->category;
-    }
+    // public function canManageThreads($user, Thread $thread): bool
+    // {
+    //     // $category = $thread->category;
 
-    public function checkPublicAnnouncements($user, Thread $thread): bool
-    {
-        $category = $this->getCategoryFromThread($thread);
-
-        if ($category->title == 'Public Announcements') {
-            return $this->canManageLists($user);
-        }
-
-        // For non-Public Announcement threads, check coordinator list access
-        return $this->canAccessCoordinatorList($user, $category);
-    }
-
-    public function checkUserType($user): array
-    {
-        $userTypes = $this->positionService->getUserType($user->user_type);
-
-        return [
-            'isCoordinator' => $userTypes['coordinator'],
-            'isBoard' => $userTypes['board'],
-            'isOutgoing' => $userTypes['outgoing'],
-            'isDisbanded' => $userTypes['disbanded'],
-        ];
-    }
-
-    public function checkUserAdmin($user): array
-    {
-        $userTypes = $this->positionService->getUserAdmin($user->is_admin);
-
-        return [
-            'userAdmin' => $userTypes['userAdmin'],
-            'userModerator' => $userTypes['userModerator'],
-        ];
-    }
-
-    public function checkPosition($user, $userType): array
-    {
-        $cdPositionid = null;
-        $cdSecPositionid = null;
-
-        if ($userType['isCoordinator']) {
-            $userId = $user->id;
-            $cdDetails = Coordinators::where('user_id', '=', $userId)->first();
-
-            if ($cdDetails) {
-                $cdPositionid = $cdDetails->position_id;
-                $cdSecPositionid = $cdDetails->sec_position_id;
-            }
-        }
-
-        $positions = $this->positionService->getConditionsForUser($cdPositionid, $cdSecPositionid);
-
-        return [
-            'isITCondition' => $positions['ITCondition'],
-            'isListAdminCondition' => $positions['listAdminCondition'],
-            'isFounderCondition' => $positions['founderCondition'],
-        ];
-    }
+    //     return $this->canManageLists($user);
+    // }
 }

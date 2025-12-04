@@ -23,16 +23,6 @@
 </head>
 <body>
         <div class="wrapper">
-            @php
-                $user = Auth::user();
-                $userTypes = $user ? $positionService->getUserType($user->user_type) : [
-                    'coordinator' => false,
-                    'board' => false,
-                    'outgoing' => false,
-                    'disbanded' => false,
-                ];
-            @endphp
-
               <!-- Navbar -->
       <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
         <div class="container">
@@ -40,7 +30,7 @@
             <!-- Left navbar links -->
             <div class="collapse navbar-collapse order-3" id="navbarCollapse">
                 <ul class="navbar-nav">
-                    @if($userTypes['board'])
+                    @if($board)
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('home')}}" >
                                 <span class="no-icon">MIMI Profile</span>
@@ -61,7 +51,7 @@
                                 <span class="no-icon">eLearning Library</span>
                             </a>
                         </li>
-                    @elseif($userTypes['coordinator'])
+                    @elseif($coordinator)
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('home')}}" >
                                 <span class="no-icon">Coordinator Dashboard</span>
@@ -135,7 +125,7 @@
                         <h2>{{ $thread->category->title }}</h2>
                     </a>
                 @elseif (isset($threads))
-                    @if($userTypes['coordinator'])
+                    @if($coordinator)
                         <a class="navbar-brand" href="{{ url(config('forum.frontend.router.prefix') . config('forum.frontend.router.coordinatorlistLink')) }}">
                             <h2>CoordinatorList</h2>
                         </a>

@@ -307,9 +307,6 @@ class ChapterController extends Controller implements HasMiddleware
         $chDocuments = $baseQuery['chDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $reviewComplete = $baseQuery['reviewComplete'];
-        // $displayEOY = $baseQuery['displayEOY'];
-        // $displayTESTING = $displayEOY['displayTESTING'];
-        // $displayLIVE = $displayEOY['displayLIVE'];
 
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $baseQuery['chapterStatus'];

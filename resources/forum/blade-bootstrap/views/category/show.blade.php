@@ -23,7 +23,7 @@
                     @endcan
                 @endcan
 
-                @if(auth()->check())
+                {{-- @if(auth()->check())
                 @if(auth()->user()->categorySubscriptions()->where('category_id', $category->id)->exists())
                     <form action="{{ Forum::route('category.unsubscribe', $category) }}" method="POST">
                         @csrf
@@ -36,7 +36,7 @@
                         <button type="submit" class="btn btn-primary">Subscribe to Category</button>
                     </form>
                 @endif
-            @endif
+            @endif --}}
 
         </div>
     </div>

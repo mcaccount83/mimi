@@ -28,7 +28,7 @@ class PositionConditionsService
     }
 
     /**
-     * Get all position-based conditions for a user
+     * Get all position-based conditions for a user  // Loaded automatically for blades in ViewServiceProvider
      */
     public function getConditionsForUser($positionId, $secPositionId = [], $coorId = null)
     {
@@ -47,10 +47,8 @@ class PositionConditionsService
             'assistConferenceCoordinatorCondition' => ($positionId >= CoordinatorPosition::ACC && $positionId <= CoordinatorPosition::FOUNDER),
             'regionalCoordinatorCondition' => ($positionId >= CoordinatorPosition::RC && $positionId <= CoordinatorPosition::FOUNDER),
             'assistRegionalCoordinatorCondition' => ($positionId >= CoordinatorPosition::ARC && $positionId <= CoordinatorPosition::FOUNDER),
-            // 'supervisingCoordinatorCondition' => ($positionId >= CoordinatorPosition::SC && $positionId <= CoordinatorPosition::FOUNDER),
             'areaCoordinatorCondition' => ($positionId >= CoordinatorPosition::AC && $positionId <= CoordinatorPosition::FOUNDER),
             'bigSisterCondition' => ($positionId >= CoordinatorPosition::BS && $positionId <= CoordinatorPosition::FOUNDER),
-            // 'coordinatorCondition' => ($positionId >= CoordinatorPosition::BS && $positionId <= CoordinatorPosition::FOUNDER),
             'eoyTestCondition' => ($positionId >= CoordinatorPosition::ACC && $positionId <= CoordinatorPosition::FOUNDER) || $this->hasPosition(CoordinatorPosition::ART, $positionId, $secPositionId),
             'eoyReportCondition' => ($positionId >= CoordinatorPosition::BS && $positionId <= CoordinatorPosition::FOUNDER) || $this->hasPosition(CoordinatorPosition::ART, $positionId, $secPositionId) || $this->hasPosition(CoordinatorPosition::ARR, $positionId, $secPositionId),
             'eoyReportConditionDISABLED' => $this->hasPosition(CoordinatorPosition::IT, $positionId, $secPositionId),
@@ -65,8 +63,8 @@ class PositionConditionsService
         ];
     }
 
-    /**
-     * Check if user has a position (primary or secondary)
+     /**
+     * Check if user has a position (primary or secondary) // Helper function for getConditionsForUser
      */
     private function hasPosition(int $position, int $primaryPositionId, array $secondaryPositionIds): bool
     {
@@ -74,18 +72,29 @@ class PositionConditionsService
     }
 
     /**
-     * Get user admin status
+     * Get EOY Display options/menus/buttons // Loaded automatically for blades in ViewServiceProvider
      */
-    public function getUserAdmin(string $userAdmin): array
+    public function getEOYDisplay(): array
     {
+        $admin = Admin::orderByDesc('id')
+            ->limit(1)
+            ->first();
+        $display_testing = ($admin->display_testing == 1);
+        $display_live = ($admin->display_live == 1);
+
+        $currentMonth = now()->month;
+
         return [
-            'userAdmin' => ($userAdmin == '1'),
-            'userModerator' => ($userAdmin == '2'),
+            'displayTESTING' => ($display_testing == true && $display_live != true),
+            'displayLIVE' => ($display_live == true && $currentMonth >= 5 && $currentMonth <= 12),
+            'displayBoardRptLIVE' => ($display_live == true && $currentMonth >= 5 && $currentMonth <= 12),
+            'displayFinancialRptLIVE' => ($display_live == true && $currentMonth >= 6 && $currentMonth <= 12),
+            'displayEINInstructionsLIVE' => ($display_live == true && $currentMonth >= 7 && $currentMonth <= 12),
         ];
     }
 
     /**
-     * Get Admin Email Addresses
+     * Get Admin Email Addresses  // Called manually when needed
      */
     public function getAdminEmail(): array
     {
@@ -106,40 +115,28 @@ class PositionConditionsService
         ];
     }
 
-    /**
-     * Get user type flags
+      /**
+     * Get user admin status
      */
-    public function getUserType(string $userType): array
-    {
-        return [
-            'coordinator' => ($userType == 'coordinator'),  // Coordinator
-            'board' => ($userType == 'board'),  // Current Board Member
-            'outgoing' => $userType == 'outgoing',  // Outgoing Board Member
-            'disbanded' => $userType == 'disbanded',  // Disbanded Chapter Board Member
-        ];
-    }
+    // public function getUserAdmin(string $userAdmin): array
+    // {
+    //     return [
+    //         'userAdmin' => ($userAdmin == '1'),
+    //         'userModerator' => ($userAdmin == '2'),
+    //     ];
+    // }
+
 
     /**
-     * Get EOY display flags
+     * Get user type flags // Used with ForumConditions and in forum main blade
      */
-    public function getEOYDisplay(): array
-    {
-        $admin = Admin::orderByDesc('id')
-            ->limit(1)
-            ->first();
-        $display_testing = ($admin->display_testing == 1);
-        $display_live = ($admin->display_live == 1);
-
-        $currentMonth = now()->month;
-
-        return [
-            // 'display_testing' => $display_testing,
-            // 'display_live' => $display_live,
-            'displayTESTING' => ($display_testing == true && $display_live != true),
-            'displayLIVE' => ($display_live == true && $currentMonth >= 5 && $currentMonth <= 12),
-            'displayBoardRptLIVE' => ($display_live == true && $currentMonth >= 5 && $currentMonth <= 12),
-            'displayFinancialRptLIVE' => ($display_live == true && $currentMonth >= 6 && $currentMonth <= 12),
-            'displayEINInstructionsLIVE' => ($display_live == true && $currentMonth >= 7 && $currentMonth <= 12),
-        ];
-    }
+    // public function getUserType(string $userType): array
+    // {
+    //     return [
+    //         'coordinator' => ($userType == 'coordinator'),  // Coordinator
+    //         'board' => ($userType == 'board'),  // Current Board Member
+    //         'outgoing' => $userType == 'outgoing',  // Outgoing Board Member
+    //         'disbanded' => $userType == 'disbanded',  // Disbanded Chapter Board Member
+    //     ];
+    // }
 }

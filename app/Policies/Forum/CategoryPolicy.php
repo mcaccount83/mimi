@@ -17,7 +17,7 @@ class CategoryPolicy extends ForumCategoryPolicy
 
     public function view(User $user, Category $category): bool
     {
-        return $this->forumConditions->canAccessCoordinatorList($user, $category);
+        return $this->forumConditions->canAccessList($user, $category);
     }
 
     public function edit(User $user, Category $category): bool
@@ -36,7 +36,7 @@ class CategoryPolicy extends ForumCategoryPolicy
             return $this->forumConditions->canManageLists($user);
         }
 
-        return $this->forumConditions->canAccessCoordinatorList($user, $category);
+        return $this->forumConditions->canAccessList($user, $category);
     }
 
     public function manageThreads(User $user, Category $category): bool

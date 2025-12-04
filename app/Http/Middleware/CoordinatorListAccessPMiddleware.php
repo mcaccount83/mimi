@@ -40,7 +40,7 @@ class CoordinatorListAccessPMiddleware
         }
 
         // Check access using the ThreadPolicy
-        if (! $this->forumConditions->canAccessCoordinatorList($user, $category)) {
+        if (! $this->forumConditions->canAccessList($user, $category)) {
             Auth::logout();
             $request->session()->flush();
 
