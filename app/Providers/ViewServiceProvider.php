@@ -21,6 +21,10 @@ class ViewServiceProvider extends ServiceProvider
             $loggedIn = null;
             $userAdmin = false;
             $userModerator = false;
+            $coordinator = false;
+            $board = false;
+            $outgoing = false;
+            $disbanded = false;
 
             if (Auth::check()) {
                 $user = Auth::user();
