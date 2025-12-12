@@ -11,6 +11,10 @@ class Coordinators extends Model
 {
     protected $guarded = [ ]; // ALL columns are mass-assignable
 
+    protected $casts = [
+        'active_status' => 'integer',
+    ];
+
     public function coordTree(): HasOne
     {
         return $this->hasOne(CoordinatorTree::class, 'coordinator_id', 'id');  // 'coordinator_id' in coordinator_tree HasOne 'id' in coordinators

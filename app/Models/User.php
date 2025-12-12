@@ -17,6 +17,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $casts = [
+        'type_id' => 'integer',
+        'is_active' => 'integer',
+        'is_admin' => 'integer',
+    ];
+
     public function coordinator(): HasOne
     {
         return $this->hasOne(Coordinators::class, 'user_id', 'id');  // 'user_id' in coordinators HasOne 'id' in users

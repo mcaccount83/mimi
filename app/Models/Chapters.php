@@ -12,6 +12,10 @@ class Chapters extends Model
 {
     protected $guarded = [ ]; // ALL columns are mass-assignable
 
+    protected $casts = [
+        'active_status' => 'integer',
+    ];
+
     public function boards(): HasMany
     {
         return $this->hasMany(Boards::class, 'chapter_id', 'id');
