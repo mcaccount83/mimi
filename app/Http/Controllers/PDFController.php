@@ -10,7 +10,9 @@ use App\Mail\ProbationChapPartyLetter;
 use App\Mail\ProbationChapReleaseLetter;
 use App\Mail\ProbationChapWarningPartyLetter;
 use App\Models\Documents;
+use App\Models\DocumentsEOY;
 use App\Models\GoogleDrive;
+use App\Services\PositionConditionsService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -32,13 +34,16 @@ class PDFController extends Controller
 
     protected $baseMailDataController;
 
+    protected PositionConditionsService $positionConditionsService;
+
     public function __construct(UserController $userController, BaseChapterController $baseChapterController,
-        BaseMailDataController $baseMailDataController, GoogleController $googleController)
+        BaseMailDataController $baseMailDataController, GoogleController $googleController, PositionConditionsService $positionConditionsService)
     {
         $this->userController = $userController;
         $this->googleController = $googleController;
         $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
+        $this->positionConditionsService = $positionConditionsService;
     }
 
     public $pdfData = [];
@@ -90,6 +95,9 @@ class PDFController extends Controller
         $year = $googleDrive->eoy_uploads_year;
         $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
+        // Build dynamic column name for the year
+        $yearColumnName = $year . '_financial_pdf_path';
+
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
         $chDetails = $baseQuery['chDetails'];
         $chDocuments = $baseQuery['chDocuments'];
@@ -108,15 +116,15 @@ class PDFController extends Controller
         $filecontent = file_get_contents($pdfPath);
 
         if ($file_id = $this->googleController->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-            $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
+            $existingDocRecord = DocumentsEOY::where('chapter_id', $chapterId)->first();
             if ($existingDocRecord) {
-                $existingDocRecord->financial_pdf_path = $file_id;
+                $existingDocRecord->$yearColumnName = $file_id;
                 $existingDocRecord->save();
             } else {
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
                 $newDocData = ['chapter_id' => $chapterId];
-                $newDocData['financial_pdf_path'] = $file_id;
-                Documents::create($newDocData);
+                $newDocData[$yearColumnName] = $file_id;
+                DocumentsEOY::create($newDocData);
             }
 
             return $pdfPath;  // Return the full local stored path
@@ -160,7 +168,7 @@ class PDFController extends Controller
         $filecontent = file_get_contents($pdfPath);
 
         if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
-            $existingDocRecord = Documents::where('chapter_id', $chapterId)->first();
+            $existingDocRecord = DocumentsEOY::where('chapter_id', $chapterId)->first();
             if ($existingDocRecord) {
                 $existingDocRecord->final_financial_pdf_path = $file_id;
                 $existingDocRecord->save();
@@ -168,7 +176,7 @@ class PDFController extends Controller
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
                 $newDocData = ['chapter_id' => $chapterId];
                 $newDocData['final_financial_pdf_path'] = $file_id;
-                Documents::create($newDocData);
+                DocumentsEOY::create($newDocData);
             }
 
             return $pdfPath;  // Return the full local stored path
@@ -184,6 +192,7 @@ class PDFController extends Controller
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chActiveId = $baseQuery['chActiveId'];
 
         if ($chActiveId == 1) {
@@ -196,7 +205,7 @@ class PDFController extends Controller
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
-            $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null),
+            $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null),
             [
                 'changed_dues' => $chFinancialReport->changed_dues,
                 'different_dues' => $chFinancialReport->different_dues,
@@ -282,7 +291,10 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
 
-        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_FinancialReport.pdf';
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
+
+        $filename = $fiscalYear.'_'.$pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_FinancialReport.pdf';
 
         // if ($streamResponse) {
         //     return $pdf->stream($filename, ['Attachment' => 0]);
@@ -345,10 +357,16 @@ class PDFController extends Controller
         $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
         $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateWords = $dateOptions['currentDateWords'];
+
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
             $this->baseMailDataController->getCCData($emailCCData),
+            [
+                'currentDateWords' => $currentDateWords,
+            ]
         );
 
         $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
@@ -493,19 +511,17 @@ class PDFController extends Controller
         //  Load User Information for Signing Email & PDFs
         $user = $this->userController->loadUserInformation($request);
 
-        $date = Carbon::now();
-        $dateFormatted = $date->format('m-d-Y');
-        $nextMonth = $date->copy()->addMonth()->endOfMonth();
-        $nextMonthFormatted = $nextMonth->format('m-d-Y');
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateWords = $dateOptions['currentDateWords'];
+        $nextMonthDateWords = $dateOptions['nextMonthDateWords'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
             [
-                'today' => $dateFormatted,
-                'nextMonth' => $nextMonthFormatted,
-                'startMonth' => $startMonthName,
+                'currentDateWords' => $currentDateWords,
+                'nextMonthDateWords' => $nextMonthDateWords,
             ]
         );
 
@@ -666,19 +682,17 @@ class PDFController extends Controller
         //  Load User Information for Signing Email & PDFs
         $user = $this->userController->loadUserInformation($request);
 
-        $date = Carbon::now();
-        $dateFormatted = $date->format('m-d-Y');
-        $nextMonth = $date->copy()->addMonth()->endOfMonth();
-        $nextMonthFormatted = $nextMonth->format('m-d-Y');
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateWords = $dateOptions['currentDateWords'];
+        $nextMonthDateWords = $dateOptions['nextMonthDateWords'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
             [
-                'today' => $dateFormatted,
-                'nextMonth' => $nextMonthFormatted,
-                'startMonth' => $startMonthName,
+                'currentDateWords' => $currentDateWords,
+                'nextMonthDateWords' => $nextMonthDateWords,
             ]
         );
 
@@ -834,8 +848,9 @@ class PDFController extends Controller
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
-        $todayDate = date('F j, Y');
-        $twoMonthsDate = date('F j, Y', strtotime('+2 months'));
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateWords = $dateOptions['currentDateWords'];
+        $twoMonthsDateWords = $dateOptions['twoMonthsDateWords'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
@@ -843,8 +858,8 @@ class PDFController extends Controller
             $this->baseMailDataController->getPresData($PresDetails),
             $this->baseMailDataController->getEINCoorData($emailEINCoorData),
             [
-                'todayDate' => $todayDate,
-                'twoMonthsDate' => $twoMonthsDate,
+                'currentDateWords' => $currentDateWords,
+                'twoMonthsDateWords' => $twoMonthsDateWords,
                 'chNamePrev' => $chNamePrev,
             ]
         );
@@ -874,15 +889,15 @@ class PDFController extends Controller
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
-        $date = Carbon::now();
-        $dateFormatted = $date->format('F j, Y');
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateWords = $dateOptions['currentDateWords'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getCCData($emailCCData),
             $this->baseMailDataController->getPresData($PresDetails),
             [
-                'todayDate' => $dateFormatted,
+                'currentDateWords' => $currentDateWords,
             ]
         );
 
@@ -971,16 +986,19 @@ class PDFController extends Controller
 
         // $dateInput = request()->query('date') ?? request()->input('date');
         $dateInput = $request->query('date') ?? $request->input('date');
-        $date = $dateInput ? Carbon::parse($dateInput) : Carbon::now();
-        $startFormatted = $date->format('F Y');
-        $todayDate = Carbon::now();
-        $todayFormatted = $todayDate->format('F Y');
-        $year = $todayDate->format('Y');
+        $inputDate = $dateInput ? Carbon::parse($dateInput) : Carbon::now();
+
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDate = $dateOptions['currentDate'];
+        $currentYear = $dateOptions['currentYear'];
+        $startFormatted = $inputDate->format('F Y');
+        $todayFormatted = $currentDate->format('F Y');
+        $currentDateWords = $dateOptions['currentDateWords'];
 
         // Get the update, add and zap lists
-        $chapterUpdateList = $this->generateIRSUpdateList($coorId, $confId, $regId, $positionId, $secPositionId, $date);
-        $chapterAddList = $this->generateIRSAddList($coorId, $confId, $regId, $positionId, $secPositionId, $date);
-        $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $date);
+        $chapterUpdateList = $this->generateIRSUpdateList($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
+        $chapterAddList = $this->generateIRSAddList($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
+        $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
 
         // Clean up the simulated parameter
         unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
@@ -1015,7 +1033,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView('pdf.irssubordinatefiling', $pdfData);
 
-        $filename = $year.'_IRSSubordinateFiling.pdf';
+        $filename = $currentYear.'_IRSSubordinateFiling.pdf';
 
         if ($streamResponse) {
             return $pdf->stream($filename, ['Attachment' => 0]);
@@ -1100,20 +1118,19 @@ class PDFController extends Controller
         $pages = $pages ?? $request->query('pages') ?? $request->input('pages') ?? 1;
         $totalPages = (int) $pages;
         $followPages = $totalPages - 1;
-        // $dateInput = request()->query('date') ?? request()->input('date');
         $dateInput = $request->query('date') ?? $request->input('date');
         $inputDate = $dateInput ? Carbon::parse($dateInput) : Carbon::now();
-        $startFormatted = $inputDate->format('m-d-Y');
+        $startDateWwords = $inputDate->format('m-d-Y');
 
-        $todayDate = Carbon::now();
-        $date = $todayDate ? Carbon::parse($todayDate) : Carbon::now();
-        $sartFormatted2 = $date->format('F Y');
-        $todayFormatted = $todayDate->format('F Y');
-        $dateFormatted = $todayDate->format('F j, Y');
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDate = $dateOptions['currentDate'];
+        $startFormatted = $inputDate->format('F Y');
+        $todayFormatted = $currentDate->format('F Y');
+        $currentDateWords = $dateOptions['currentDateWords'];
 
         // Get the add and zap lists
-        $chapterAddList = $this->generateIRSAddList2($coorId, $confId, $regId, $positionId, $secPositionId, $date);
-        $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $date);
+        $chapterAddList = $this->generateIRSAddList2($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
+        $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
 
         // Clean up the simulated parameter
         unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
@@ -1123,9 +1140,9 @@ class PDFController extends Controller
         $pdfData = array_merge(
             $this->baseMailDataController->getEINCoorData($emailEINCoorData),
             [
-                'todayDate' => $dateFormatted,
-                'startDate' => $startFormatted,
-                'startFormatted' => $sartFormatted2,
+                'currentDateWords' => $currentDateWords,
+                'startDate' => $startDateWwords,
+                'startFormatted' => $startFormatted,
                 'todayFormatted' => $todayFormatted,
                 'totalPages' => $totalPages,
                 'followPages' => $followPages,
@@ -1136,7 +1153,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView('pdf.irsupdates', ['pdfData' => $pdfData]);
 
-        $filename = $date.'_IRSUpdates.pdf';
+        $filename = $currentDate.'_IRSUpdates.pdf';
 
         if ($streamResponse) {
             return $pdf->stream($filename, ['Attachment' => 0]);
@@ -1347,9 +1364,9 @@ class PDFController extends Controller
         $totalPages = (int) $pages;
         $followPages = $totalPages - 1;
 
-        $todayDate = Carbon::now();
-        $date = $todayDate ? Carbon::parse($todayDate) : Carbon::now();
-        $dateFormatted = $todayDate->format('F j, Y');
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDate = $dateOptions['currentDate'];
+        $currentDateWords = $dateOptions['currentDateWords'];
 
         // Get the add and zap lists
         $wrongDateList = $this->generateIRSWrongDateList($coorId, $confId, $regId, $positionId, $secPositionId);
@@ -1364,7 +1381,7 @@ class PDFController extends Controller
         $pdfData = array_merge(
             $this->baseMailDataController->getEINCoorData($emailEINCoorData),
             [
-                'todayDate' => $dateFormatted,
+                'currentDateWords' => $currentDateWords,
                 'totalPages' => $totalPages,
                 'followPages' => $followPages,
                 'wrongDateList' => $wrongDateList,
@@ -1375,7 +1392,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView('pdf.irsfilingcorrections', ['pdfData' => $pdfData]);
 
-        $filename = $date.'_IRSFilingCorrections.pdf';
+        $filename = $currentDate.'_IRSFilingCorrections.pdf';
 
         if ($streamResponse) {
             return $pdf->stream($filename, ['Attachment' => 0]);
@@ -1495,16 +1512,16 @@ class PDFController extends Controller
         $totalPages = (int) $pages;
         $followPages = $totalPages - 1;
 
-        $date = Carbon::now();
-        $dateToday = $date->format('m-d-Y');
-        $dateFormatted = $date->format('F j, Y');
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDate = $dateOptions['currentDate'];
+        $currentDateWords = $dateOptions['currentDateWords'];
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
         $pdfData = array_merge(
             $this->baseMailDataController->getEINCoorData($emailEINCoorData),
             [
-                'todayDate' => $dateFormatted,
+                'currentDateWords' => $currentDateWords,
                 'totalPages' => $totalPages,
                 'followPages' => $followPages,
                 'title' => $title,
@@ -1514,7 +1531,7 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView('pdf.irseodeptfaxcover', compact('pdfData'));
 
-        $filename = $dateToday.'_IRSEODeptFaxCover.pdf';
+        $filename = $currentDate.'_IRSEODeptFaxCover.pdf';
 
         if ($streamResponse) {
             return $pdf->stream($filename, ['Attachment' => 0]);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ChapterCheckbox;
 use App\Models\Chapters;
 use App\Models\Documents;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -20,11 +21,14 @@ class ChapterReportController extends Controller implements HasMiddleware
 
     protected $baseChapterController;
 
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController)
+    protected PositionConditionsService $positionConditionsService;
+
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, PositionConditionsService $positionConditionsService)
     {
 
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
+        $this->positionConditionsService = $positionConditionsService;
     }
 
     public static function middleware(): array
@@ -107,8 +111,9 @@ class ChapterReportController extends Controller implements HasMiddleware
         $chActiveId = $baseQuery['chActiveId'];
         $chPcId = $baseQuery['chPcId'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
 
-        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'conferenceDescription' => $conferenceDescription,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'conferenceDescription' => $conferenceDescription, 'chEOYDocuments' => $chEOYDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'startMonthName' => $startMonthName,
             'chPcId' => $chPcId, 'chDocuments' => $chDocuments, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
@@ -122,16 +127,14 @@ class ChapterReportController extends Controller implements HasMiddleware
     public function updateChapterIRS(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
 
         DB::beginTransaction();
         try {
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             $documents->ein_letter = $request->has('ch_ein_letter') ? 1 : 0;
@@ -167,8 +170,8 @@ class ChapterReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $now = Carbon::now();
-        $oneYearAgo = $now->copy()->subYear();
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $oneYearAgo = $dateOptions['oneYearAgo'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']

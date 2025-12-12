@@ -106,7 +106,7 @@
                     @if ($checkBox3Status)
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('chaptercoordinator', 'Chapter/Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Chapter/Coordinator List</button>
                     @else
-                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('chaptercoordinator', 'Chapter/Coordinator List')" disabled><i class="fas fa-download mr-2" ></i>Export Chapter/Coordinator List</button>
+                        <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('chaptercoordinator', 'Chapter/Coordinator List')" disabled><i class="fas fa-download mr-2" ></i>Export Chapter/Coordinator List</button>
                     @endif
              </div>
 

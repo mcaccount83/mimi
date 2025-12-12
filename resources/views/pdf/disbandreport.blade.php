@@ -4,20 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Disband Letter</title>
-        @php
-        $todayDate = date('F j, Y'); // e.g., July 9, 2024
-        $date = new DateTime();
-        $date->modify('+1 month');
-        $nextMonthDate = $date->format('F j, Y'); // e.g., August 9, 2024
-        @endphp
 </head>
 <body>
     <center>
         <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc.png' }}" alt="MC" style="width: 125px;">
     </center>
 <br>
-{{-- <div class="keep-together" style="page-break-inside: avoid;"> --}}
-    <p>{{ $todayDate }}</p>
+    <p>{{ $currentDateWords }}</p>
     <br>
     <p>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
         {{ $pdfData['presName'] }}<br>
@@ -31,7 +24,7 @@
         We have made multiple attempts to contact the chapter in reference to the filing, and have been unsuccessful in getting a response. As a result, your chapter is disbanded,
         and its affiliation with the International MOMS Club is terminated and all benefits of its association with the International MOMS Club are revoked.  </p>
     <p>As its last president, there are certain things that must be handled to fulfill the responsibilities you took on as an officer.
-        If you have not already taken care of the items below, these items must be taken care of by {{ $nextMonthDate }}.</p>
+        If you have not already taken care of the items below, these items must be taken care of by {{ $nextMonthDateWords }}.</p>
         <ol>
             <li>Because your chapter has been disbanded, it is no longer covered under our IRS group exemption. Any money or assets not properly donated may be considered
                 by the IRS as having been used personally by the former officers or members, and taxed accordingly. Any chapter funds left in the treasury at the time of your disbanding

@@ -575,11 +575,11 @@ class EmailController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->whereHas('documents', function ($query) {
+            ->whereHas('documentsEOY', function ($query) {
                 $query->where('report_extension', '0')
                     ->orWhereNull('report_extension');
             })
-            ->whereHas('documents', function ($query) {
+            ->whereHas('documentsEOY', function ($query) {
                 $query->where('new_board_submitted', '0')
                     ->orWhereNull('new_board_submitted');
             })
@@ -602,6 +602,7 @@ class EmailController extends Controller implements HasMiddleware
                 $chDetails = $emailDetails['chDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
                 $chDocuments = $emailDetails['chDocuments'];
+                $chEOYDocuments = $emailDetails['chEOYDocuments'];
                 $chFinancialReport = $emailDetails['chFinancialReport'];
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
@@ -612,7 +613,7 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null)
+                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null)
             );
 
         }
@@ -654,11 +655,11 @@ class EmailController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->whereHas('documents', function ($query) {
+            ->whereHas('documentsEOY', function ($query) {
                 $query->where('report_extension', '0')
                     ->orWhereNull('report_extension');
             })
-            ->whereHas('documents', function ($query) {
+            ->whereHas('documentsEOY', function ($query) {
                 $query->where('financial_report_received', '0')
                     ->orWhereNull('financial_report_received');
             })
@@ -681,6 +682,7 @@ class EmailController extends Controller implements HasMiddleware
                 $chDetails = $emailDetails['chDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
                 $chDocuments = $emailDetails['chDocuments'];
+                $chEOYDocuments = $emailDetails['chEOYDocuments'];
                 $chFinancialReport = $emailDetails['chFinancialReport'];
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
@@ -691,7 +693,7 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null)
+                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null)
             );
 
         }
@@ -732,11 +734,11 @@ class EmailController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->whereHas('documents', function ($query) {
+            ->whereHas('documentsEOY', function ($query) {
                 $query->where('report_extension', '0')
                     ->orWhereNull('report_extension');
             })
-            ->whereHas('documents', function ($query) {
+            ->whereHas('documentsEOY', function ($query) {
                 $query->where('new_board_submitted', '0')
                     ->orWhereNull('new_board_submitted')
                     ->orWhere('financial_report_received', '0')
@@ -761,6 +763,7 @@ class EmailController extends Controller implements HasMiddleware
                 $chDetails = $emailDetails['chDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
                 $chDocuments = $emailDetails['chDocuments'];
+                $chEOYDocuments = $emailDetails['chEOYDocuments'];
                 $chFinancialReport = $emailDetails['chFinancialReport'];
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
@@ -771,7 +774,7 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null)
+                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null)
             );
 
         }

@@ -266,7 +266,7 @@ class BaseChapterController extends Controller
     public function getChapterDetails($chId)
     {
         $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'primaryCoordinator',
-            'payments', 'probation', 'financialReportFinal'])->find($chId);
+            'payments', 'probation', 'financialReportFinal', 'documentsEOY'])->find($chId);
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
 
@@ -289,10 +289,10 @@ class BaseChapterController extends Controller
 
         $chPayments = $chDetails->payments;
         $chDocuments = $chDetails->documents;
-        $reviewComplete = $chDetails->documents?->review_complete ?? null;
+        $chEOYDocuments = $chDetails->documentsEOY;
+        $reviewComplete = $chDetails->documentsEOY?->review_complete ?? null;
         $chFinancialReport = $chDetails->financialReport;
         $chFinancialReportFinal = $chDetails->financialReportFinal;
-        // $displayEOY = $this->positionConditionsService->getEOYDisplay();  // Conditions to Show EOY Items
 
         $allActive = ActiveStatus::all();  // Full List for Dropdown Menu
         $allStatuses = Status::all();  // Full List for Dropdown Menu
@@ -329,7 +329,7 @@ class BaseChapterController extends Controller
         return ['chDetails' => $chDetails, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'allActive' => $allActive,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId, 'chFinancialReportFinal' => $chFinancialReportFinal,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards, 'chPayments' => $chPayments,
-            'allRegions' => $allRegions, 'allCountries' => $allCountries,
+            'allRegions' => $allRegions, 'allCountries' => $allCountries, 'chEOYDocuments' => $chEOYDocuments,
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList, 'emailCCData' => $emailCCData, 'chActiveStatus' => $chActiveStatus,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'probationReason' => $probationReason,

@@ -4,19 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Probation Letter</title>
-        @php
-        $todayDate = date('F j, Y'); // e.g., July 9, 2024
-        $date = new DateTime();
-        $date->modify('+1 month');
-        $nextMonthDate = $date->format('F j, Y'); // e.g., August 9, 2024
-        @endphp
 </head>
 <body>
     <center>
         <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc.png' }}" alt="MC" style="width: 125px;">
     </center>
 <br>
-    <p>{{ $todayDate }}</p>
+    <p>{{ $currentDateWords }}</p>
     <br>
     <p>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
         {{ $pdfData['presName'] }}<br>
@@ -29,7 +23,7 @@
         instructed that the total paid for parties and other activities benefiting members only are not to exceed an amount equal to 15% of the dues received by the chapter
         during the year.</p>
     <p>Although your chapter will not be placed on probation at this time, at International’s discretion, a probationary status may be added at a later date.</p>
-    <p>Because of the seriousness of this situation, you must reply to me in writing (email is fine) so that I receive your reply by {{ $nextMonthDate }}, indicating that you and your
+    <p>Because of the seriousness of this situation, you must reply to me in writing (email is fine) so that I receive your reply by {{ $nextMonthDateWords }}, indicating that you and your
         chapter understand and will take appropriate steps to ensure this doesn’t happen again.  </p>
     <p>This warning is not intended to punish your chapter, but rather to give your chapter the opportunity to be sure you thoroughly understand the guidelines, and to work
         closely with your Primary Coordinator to ensure your chapter’s operation is in compliance with the MOMS Club Bylaws and guidelines, along with all applicable IRS rules.</p>

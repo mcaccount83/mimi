@@ -2,27 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Belongsto;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Illuminate\Notifications\Notifiable;
 
 class Chapters extends Model
 {
-    use HasFactory;
-    use Notifiable;
-
-    public $timestamps = false;
-
-    protected $fillable = [
-        'name', 'sanitized_name', 'state_id', 'country_id', 'conference_id', 'region_id', 'ein', 'status_id', 'territory', 'inquiries_contact',
-        'start_month_id', 'start_year', 'next_renewal_year', 'primary_coordinator_id', 'founders_name', 'last_updated_by', 'last_updated_date',
-        'created_at', 'active_status',
-
-    ];
+    protected $guarded = [ ]; // ALL columns are mass-assignable
 
     public function boards(): HasMany
     {
@@ -132,6 +120,11 @@ class Chapters extends Model
     public function documents(): HasOne
     {
         return $this->hasOne(Documents::class, 'chapter_id', 'id');  // 'chapter_id' in documents HasOne 'id' in chapters
+    }
+
+    public function documentsEOY(): HasOne
+    {
+        return $this->hasOne(DocumentsEOY::class, 'chapter_id', 'id');  // 'chapter_id' in documentsEOY HasOne 'id' in chapters
     }
 
     public function payments(): HasOne

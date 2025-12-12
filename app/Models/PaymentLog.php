@@ -7,20 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PaymentLog extends Model
 {
-    protected $fillable = [
-        'transaction_id',
-        'customer_id',
-        'amount',
-        'transaction',
-        'description',
-        'chapter',
-        'conf',
-        'status',
-        'response_code',
-        'response_message',
-        'request_data',
-        'response_data',
-    ];
+    protected $guarded = [ ]; // ALL columns are mass-assignable
 
     protected $casts = [
         'request_data' => 'array',

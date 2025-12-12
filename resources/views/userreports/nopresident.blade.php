@@ -23,6 +23,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
+                    <th>Add President</th>
                   <th>Chapter ID</th>
                   <th>Chapter Name</th>
                 <th>Conference</th>
@@ -32,6 +33,7 @@
                 <tbody>
                 @foreach($ChapterPres as $list)
                   <tr>
+                        <td class="text-center align-middle"><a href="{{ url("/userreports/addnewboard/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>{{ $list->id }}</td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->conference_id }}</td>

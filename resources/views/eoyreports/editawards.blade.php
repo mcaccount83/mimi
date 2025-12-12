@@ -42,31 +42,31 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>New Board Submitted:</label>
-                                <span class="float-right">{{ $chDetails->documents->new_board_submitted == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->new_board_submitted == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>New Board Activated:</label>
-                                <span class="float-right">{{ $chDetails->documents->new_board_active == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->new_board_active == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Financial Report Received</label>
-                                <span class="float-right">{{ $chDetails->documents->financial_report_received == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->financial_report_received == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Financial Review Complete:</label>
-                                <span class="float-right">{{ $chDetails->documents->financial_review_complete == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->financial_review_complete == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Report Extension Given:</label>
-                                <span class="float-right">{{ $chDetails->documents->report_extension == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->report_extension == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
@@ -118,7 +118,7 @@
           <div class="col-md-8">
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} Chapter Awards</h3>
+                <h3 class="profile-username">{{ $fiscalYear }} Chapter Awards</h3>
                     <!-- /.card-header -->
 
                     <!-- Awards Table -->

@@ -8,14 +8,14 @@
         page-break-inside: avoid;
     }
     </style>
-    <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</title>
+    <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | {{ $financialReportName }}</title>
 </head>
 <body>
     <center><h2>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
     @if ($pdfData['final_report_received'] == 1)
         Final Financial Report</h2></center>
     @else
-        <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</h2></center>
+        {{ $financialReportName }}</h2></center>
     @endif
     EIN: {{ $pdfData['chapterEIN'] }}<br>
     Boundaries: {{ $pdfData['chapterBoundaries'] }}<br>

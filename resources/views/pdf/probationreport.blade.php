@@ -4,19 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Probation Letter</title>
-        @php
-        $todayDate = date('F j, Y'); // e.g., July 9, 2024
-        $date = new DateTime();
-        $date->modify('+1 month');
-        $nextMonthDate = $date->format('F j, Y'); // e.g., August 9, 2024
-        @endphp
 </head>
 <body>
     <center>
         <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc.png' }}" alt="MC" style="width: 125px;">
     </center>
 <br>
-    <p>{{ $todayDate }}</p>
+    <p>{{ $currentDateWords }}</p>
     <br>
     <p>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
         {{ $pdfData['presName'] }}<br>
@@ -31,10 +25,10 @@
         chapter has a site linked to MOMSClub.org it may be removed.  It is up to the chapter to request to be reconnected to the PrezList and/or to have their site re-linked
         once your probationary status is lifted.</p>
     <p>To date, your chapter’s complete reports have not been received so your chapter has been placed on probation. Please complete both the Board Report and the Financial Report
-        by {{ $nextMonthDate }} or your chapter’s MOMS Club affiliation will be revoked and your chapter will be forced to disband.</p>
+        by {{ $nextMonthDateWords }} or your chapter’s MOMS Club affiliation will be revoked and your chapter will be forced to disband.</p>
     <p>While we would hate for your chapter to lose its MOMS Club affiliation, our nonprofit status is very important, and all chapters must meet the same reporting deadlines for
         us to ensure that it is preserved.  If you are unable to complete the reports yourself, they may be filled out by another member of your chapter.  However, as I have
-        previously stated, they must be completed by {{ $nextMonthDate }}.  </p>
+        previously stated, they must be completed by {{ $nextMonthDateWords }}.  </p>
     <p>If you have further questions, or need assistance, please contact me or your primary coordinator immediately.</p>
     <p>Sincerely,</p>
     <br>

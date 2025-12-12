@@ -117,7 +117,7 @@
                         @elseif ($checkBox5Status)
                             <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download"></i>&nbsp; Export International EIN Status List</button>
                         @else
-                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('einstatus', 'EIN Status List')" disabled><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
+                            <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('einstatus', 'EIN Status List')" disabled><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
                         @endif
                     @endif
                 <br>
@@ -127,9 +127,9 @@
                             <button class="btn bg-gradient-primary mb-3" onclick="showIRSUpdatesModal()"><i class="fas fa-file-pdf mr-2" ></i>IRS Updates to EO Dept</button>
                             <button class="btn bg-gradient-primary  mb-3" onclick="showSubordinateFilingModal()"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button>
                         @else
-                            <button class="btn bg-gradient-primary mb-3" onclick="showEODeptCoverSheetModal()" disabled><i class="fas fa-file-pdf mr-2" ></i>EO Dept Fax Coversheet</button>
-                            <button class="btn bg-gradient-primary mb-3" onclick="showIRSUpdatesModal()" disabled><i class="fas fa-file-pdf mr-2" ></i>IRS Updates to EO Dept</button>
-                            <button class="btn bg-gradient-primary  mb-3" onclick="showSubordinateFilingModal()" disabled><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button>>
+                            <button class="btn bg-gradient-primary mb-3 disabled" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf mr-2" disabled></i>EO Dept Fax Coversheet</button>
+                            <button class="btn bg-gradient-primary mb-3 disabled" onclick="showIRSUpdatesModal()"><i class="fas fa-file-pdf mr-2" disabled></i>IRS Updates to EO Dept</button>
+                            <button class="btn bg-gradient-primary  mb-3 disabled" onclick="showSubordinateFilingModal()"><i class="fas fa-file-pdf mr-2" disabled></i>Subordinate Filing PDF</button>>
                         @endif
                     @endif
                      </div>

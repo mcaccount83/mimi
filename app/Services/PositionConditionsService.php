@@ -72,24 +72,83 @@ class PositionConditionsService
     }
 
     /**
-     * Get EOY Display options/menus/buttons // Loaded automatically for blades in ViewServiceProvider
+     * Get Date options // Loaded automatically for blades in ViewServiceProvider & Called manually when needed
      */
-    public function getEOYDisplay(): array
+    public function getDateOptions(): array
+    {
+        $currentDate = \Carbon\Carbon::now(); // Full Current Date
+        $currentDateYmd = $currentDate->format('Y-m-d');
+        $currentDateWords = $currentDate->format('F j, Y'); // e.g., July 9, 2024
+        $nextMonthDateWords = $currentDate->copy()->addMonth()->format('F j, Y'); // e.g., July 9, 2024
+        $twoMonthsDateWords = $currentDate->copy()->addMonths(2)->format('F j, Y'); // e.g., July 9, 2024
+        $threeMonthsAgo = $currentDate->copy()->subMonths(3); // Date three months ago
+        $oneYearAgo = $currentDate->copy()->subYear();  // Date one year ago
+        $currentYear = $currentDate->year;
+        $nextYear = $currentDate->copy()->addYear()->year;
+        $lastYear = $currentDate->copy()->subYear()->year;
+        $currentMonth = $currentDate->format('m'); // Current Month with leading zero
+        $currentMonthWords = $currentDate->format('F');  // Current Month as Full Name
+        $nextMonth = $currentDate->copy()->addMonth()->format('m');  // Next Month with leading zero
+        $lastMonth = $currentDate->copy()->subMonth()->format('m');  // Last Month with leading zero
+        $lastMonthWords = $currentDate->copy()->subMonth()->format('F');  // Last Month as Full Name
+
+        return [
+            'currentDate' => $currentDate,
+            'currentDateYmd' => $currentDateYmd,
+            'currentDateWords' => $currentDateWords,
+            'nextMonthDateWords' => $nextMonthDateWords,
+            'twoMonthsDateWords' => $twoMonthsDateWords,
+            'threeMonthsAgo' => $threeMonthsAgo,
+            'oneYearAgo' => $oneYearAgo,
+            'currentYear' => $currentYear,
+            'nextYear' => $nextYear,
+            'lastYear' => $lastYear,
+            'currentMonth' => $currentMonth,
+            'currentMonthWords' => $currentMonthWords,
+            'nextMonth' => $nextMonth,
+            'lastMonth' => $lastMonth,
+            'lastMonthWords' => $lastMonthWords,
+        ];
+    }
+
+     /**
+     * Get EOY Date options based on fiscal year // Loaded automatically for blades in ViewServiceProvider & Called manually when needed
+     */
+    public function getEOYOptions(): array
     {
         $admin = Admin::orderByDesc('id')
             ->limit(1)
             ->first();
+        $fiscalYear = $admin->fiscal_year;  // "2024-2025"
+        $years = explode('-', $fiscalYear);  // Extract years from fiscal_year string
+        $lastYear = $years[0];  // "2024"
+        $thisYear = $years[1];  // "2025"
+        $nextYear = $thisYear + 1;  // 2026
+
         $display_testing = ($admin->display_testing == 1);
         $display_live = ($admin->display_live == 1);
 
-        $currentMonth = now()->month;
+        $yearColumnName = $thisYear . '_financial_pdf_path'; // name for Database Column for Financial Report
+        $boardReportName = $thisYear .'-'. $nextYear .' Board Report';  // Board Report Name
+        $financialReportName = $lastYear .'-'. $thisYear .' Financial Report';  // Financial Report Name
+        $irsFilingName = $lastYear .' 990N IRS Filing';  // IRS Filing Name
+
+        $currentMonth = $this->getDateOptions()['currentMonth'];  // Current Month with leading zero
 
         return [
-            'displayTESTING' => ($display_testing == true && $display_live != true),
-            'displayLIVE' => ($display_live == true && $currentMonth >= 5 && $currentMonth <= 12),
-            'displayBoardRptLIVE' => ($display_live == true && $currentMonth >= 5 && $currentMonth <= 12),
-            'displayFinancialRptLIVE' => ($display_live == true && $currentMonth >= 6 && $currentMonth <= 12),
-            'displayEINInstructionsLIVE' => ($display_live == true && $currentMonth >= 7 && $currentMonth <= 12),
+            'fiscalYear' => $fiscalYear,
+            'thisYear' => $thisYear,
+            'nextYear' => $nextYear,
+            'lastYear' => $lastYear,
+            'displayTESTING' => ($display_testing && !$display_live),
+            'displayLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
+            'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
+            'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),
+            'displayEINInstructionsLIVE' => ($display_live && $currentMonth >= 7 && $currentMonth <= 12),
+            'yearColumnName' => $yearColumnName,
+            'boardReportName' => $boardReportName,
+            'financialReportName' => $financialReportName,
+            'irsFilingName' => $irsFilingName,
         ];
     }
 
@@ -114,29 +173,4 @@ class PositionConditionsService
             'mimi_admin' => $mimi_admin,
         ];
     }
-
-      /**
-     * Get user admin status
-     */
-    // public function getUserAdmin(string $userAdmin): array
-    // {
-    //     return [
-    //         'userAdmin' => ($userAdmin == '1'),
-    //         'userModerator' => ($userAdmin == '2'),
-    //     ];
-    // }
-
-
-    /**
-     * Get user type flags // Used with ForumConditions and in forum main blade
-     */
-    // public function getUserType(string $userType): array
-    // {
-    //     return [
-    //         'coordinator' => ($userType == 'coordinator'),  // Coordinator
-    //         'board' => ($userType == 'board'),  // Current Board Member
-    //         'outgoing' => $userType == 'outgoing',  // Outgoing Board Member
-    //         'disbanded' => $userType == 'disbanded',  // Disbanded Chapter Board Member
-    //     ];
-    // }
 }

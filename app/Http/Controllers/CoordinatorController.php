@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Enums\BoardPosition;
 use App\Enums\CoordinatorCheckbox;
 use App\Enums\CoordinatorPosition;
+use App\Enums\UserTypeEnum;
+use App\Enums\UserStatusEnum;
 use App\Mail\NewCoordApproveGSuiteNotice;
 use App\Mail\NewCoordApproveRCNotice;
 use App\Mail\NewCoordinatordWelcome;
@@ -213,8 +215,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $confId = $user['user_confId'];
         $reportsTo = $user['user_coorId'];
         $userLayerId = $user['user_layerId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $new_layer_id = $userLayerId + 1;
         $input = $request->all();
@@ -229,9 +230,10 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'last_name' => $input['cord_lname'],
                     'email' => $input['cord_email'],
                     'password' => Hash::make('TempPass4You'),
-                    'user_type' => 'coordinator',
+                    'type_id'=> UserTypeEnum::COORD,
                     'is_admin' => 0,
-                    'is_active' => 1]
+                    'is_active' => UserStatusEnum::ACTIVE,
+                    ]
             );
 
             $cordId = DB::table('coordinators')->insertGetId(
@@ -256,9 +258,8 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'birthday_month_id' => $input['cord_month'],
                     'birthday_day' => $input['cord_day'],
                     'home_chapter' => $input['cord_chapter'],
-                    'coordinator_start_date' => $lastupdatedDate,
-                    'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => $lastupdatedDate,
+                    'coordinator_start_date' => Carbon::now(),
+                    'updated_by' => $updatedBy,
                     'active_status' => 1]
             );
 
@@ -334,10 +335,10 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdUserAdmin = $baseQuery['cdUserAdmin'];
         $cdAdminRole = $baseQuery['cdAdminRole'];
 
-        $now = Carbon::now();
-        $threeMonthsAgo = $now->copy()->subMonths(3);
-        $startDate = $cdDetails->coordinator_start_date;
-        $startDate = Carbon::parse($startDate);
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $threeMonthsAgo = $dateOptions['threeMonthsAgo'];
+
+        $startDate = Carbon::parse($cdDetails->coordinator_start_date);
 
         $drList = Coordinators::with('displayPosition')
             ->where('report_id', $cdId)  // DirectReport Harcoaded List
@@ -459,7 +460,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $coordId = $request->input('id');
         $cardSent = $request->input('card_sent');
@@ -469,9 +470,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $coordinators->card_sent = $cardSent;
-            $coordinators->last_updated_by = $lastUpdatedBy;
-            $coordinators->last_updated_date = date('Y-m-d');
-
+            $coordinators->updated_by = $updatedBy;
             $coordinators->save();
 
             DB::commit();
@@ -503,7 +502,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $input = $request->all();
         $coordId = $input['coord_id'];
@@ -514,8 +513,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $coordinators->on_leave = 1;
-            $coordinators->last_updated_by = $lastUpdatedBy;
-            $coordinators->last_updated_date = date('Y-m-d');
+            $coordinators->updated_by = $updatedBy;
             $coordinators->save();
 
             ForumCategorySubscription::where('user_id', $coordUserId)->delete();
@@ -549,7 +547,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $input = $request->all();
         $coordId = $input['coord_id'];
@@ -564,8 +562,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         try {
             $coordinators->on_leave = 0;
             $coordinators->leave_date = null;
-            $coordinators->last_updated_by = $lastUpdatedBy;
-            $coordinators->last_updated_date = date('Y-m-d');
+            $coordinators->updated_by = $updatedBy;
             $coordinators->save();
 
             foreach ($defaultCoordinatorCategories as $categoryId) {
@@ -600,14 +597,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateRetire(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-
-        // $user = User::find($request->user()->id);
-        // $userId = $user->id;
-
-        // $cdDetailsUser = $user->coordinator;
-        // $cdIdUser = $cdDetailsUser->id;
-        // $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $coordId = $input['coord_id'];
@@ -621,15 +611,11 @@ class CoordinatorController extends Controller implements HasMiddleware
         try {
             $coordinator->active_status = 0;
             $coordinator->reason_retired = $retireReason;
-            $coordinator->zapped_date = date('Y-m-d');
-            $coordinator->last_updated_by = $lastUpdatedBy;
-            $coordinator->last_updated_date = date('Y-m-d');
-
+            $coordinator->zapped_date = Carbon::now();
+            $coordinator->updated_by = $updatedBy;
             $coordinator->save();
 
-            $cdUser->is_active = 0;
-            $cdUser->updated_at = date('Y-m-d');
-
+            $cdUser->is_active = UserStatusEnum::INACTIVE;
             $cdUser->save();
 
             ForumCategorySubscription::where('user_id', $cdUserId)->delete();
@@ -685,14 +671,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateUnRetire(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-
-        // $user = User::find($request->user()->id);
-        // $userId = $user->id;
-
-        // $cdDetailsUser = $user->coordinator;
-        // $cdIdUser = $cdDetailsUser->id;
-        // $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $coordId = $input['coord_id'];
@@ -709,14 +688,10 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->active_status = 1;
             $coordinator->reason_retired = null;
             $coordinator->zapped_date = null;
-            $coordinator->last_updated_by = $lastUpdatedBy;
-            $coordinator->last_updated_date = date('Y-m-d');
-
+            $coordinator->updated_by = $updatedBy;
             $coordinator->save();
 
-            $cdUser->is_active = 1;
-            $cdUser->updated_at = date('Y-m-d');
-
+            $cdUser->is_active = UserStatusEnum::ACTIVE;
             $cdUser->save();
 
             foreach ($defaultCoordinatorCategories as $categoryId) {
@@ -861,7 +836,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         if ($check_changed) {
             $checkPrimaryIdArr = Chapters::find($chapter_id);
@@ -879,8 +854,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $chapter->primary_coordinator_id = $coordinator_id;
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->updated_by = $updatedBy;
 
             $chapter->save();
 
@@ -947,7 +921,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         if ($check_changed) {
             $checkReportIdArr = Coordinators::find($coordinator_id);
@@ -967,8 +941,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             // Update their main report ID & layer
             $coordinator->report_id = $new_coordinator_id;
             $coordinator->layer_id = $new_layer_id;
-            $coordinator->last_updated_by = $lastUpdatedBy;
-            $coordinator->last_updated_date = date('Y-m-d H:i:s');
+            $coordinator->updated_by = $updatedBy;
 
             $coordinator->save();
 
@@ -1054,7 +1027,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         // /Reassign Direct Report Coordinators that Changed
         $rowcountCord = $_POST['CoordinatorCount'];
@@ -1099,8 +1072,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->position_id = $request->input('cord_pos');
             $coordinator->display_position_id = $request->input('cord_disp_pos');
             $coordinator->last_promoted = $request->input('CoordinatorPromoteDate');
-            $coordinator->last_updated_by = $lastUpdatedBy;
-            $coordinator->last_updated_date = date('Y-m-d H:i:s');
+            $coordinator->updated_by = $updatedBy;
 
             $coordinator->save();
 
@@ -1195,7 +1167,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $coordinator = Coordinators::find($id);
         $cdUserId = $coordinator->user_id;
@@ -1206,7 +1178,6 @@ class CoordinatorController extends Controller implements HasMiddleware
             $user->first_name = $request->input('cord_fname');
             $user->last_name = $request->input('cord_lname');
             $user->email = $request->input('cord_email');
-            $user->updated_at = now();
 
             $user->save();
 
@@ -1223,8 +1194,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->birthday_month_id = $request->input('cord_month');
             $coordinator->birthday_day = $request->input('cord_day');
             $coordinator->home_chapter = $request->input('cord_chapter');
-            $coordinator->last_updated_by = $lastUpdatedBy;
-            $coordinator->last_updated_date = now();
+            $coordinator->updated_by = $updatedBy;
 
             $coordinator->save();
 
@@ -1294,7 +1264,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $coordinator = Coordinators::find($id);
         $coordinatorRecognition = CoordinatorRecognition::find($id);
@@ -1302,8 +1272,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
 
-            $coordinator->last_updated_by = $lastUpdatedBy;
-            $coordinator->last_updated_date = now();
+            $coordinator->updated_by = $updatedBy;
 
             $coordinator->save();
 
@@ -1441,7 +1410,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
-        $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $updatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
 
         $coordinator = Coordinators::find($cdId);
         $cdUserId = $coordinator->user_id;
@@ -1451,7 +1420,6 @@ class CoordinatorController extends Controller implements HasMiddleware
             $user->first_name = $request->input('cord_fname');
             $user->last_name = $request->input('cord_lname');
             $user->email = $request->input('cord_email');
-            $user->updated_at = now();
 
             $user->save();
 
@@ -1468,8 +1436,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->birthday_month_id = $request->input('cord_month');
             $coordinator->birthday_day = $request->input('cord_day');
             $coordinator->home_chapter = $request->input('cord_chapter');
-            $coordinator->last_updated_by = $lastUpdatedBy;
-            $coordinator->last_updated_date = now();
+            $coordinator->updated_by = $updatedBy;
 
             $coordinator->save();
 
@@ -1541,7 +1508,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $user = User::find($request->user()->id);
         $cdDetailsUser = $user->coordinator;
-        $lastUpdatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
+        $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         // Reassign Report To / Direct Supervisor that Changed
         $coordinator_id = $request->input('coordinator_id');
@@ -1557,7 +1524,6 @@ class CoordinatorController extends Controller implements HasMiddleware
             $corduser->first_name = $request->input('cord_fname');
             $corduser->last_name = $request->input('cord_lname');
             $corduser->email = $request->input('cord_email');
-            $corduser->updated_at = now();
 
             $corduser->save();
 
@@ -1568,15 +1534,10 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->region_id = $request->input('cord_region');
             $coordinator->email = $request->input('cord_email');
             $coordinator->sec_email = $request->input('cord_sec_email');
-            // $coordinator->address = $request->input('cord_addr');
-            // $coordinator->city = $request->input('cord_city');
-            // $coordinator->state_id = $request->input('cord_state');
-            // $coordinator->zip = $request->input('cord_zip');
             $coordinator->phone = $request->input('cord_phone');
             $coordinator->alt_phone = $request->input('cord_altphone');
             $coordinator->home_chapter = $request->input('cord_chapter');
-            $coordinator->last_updated_by = $lastUpdatedBy;
-            $coordinator->last_updated_date = date('Y-m-d H:i:s');
+            $coordinator->updated_by = $updatedBy;
 
             $coordinator->save();
 
@@ -1615,8 +1576,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateApproveApplication(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $defaultCategories = $this->forumSubscriptionController->defaultCategories();
         $defaultCoordinatorCategories = $defaultCategories['coordinatorCategories'];
@@ -1635,9 +1595,8 @@ class CoordinatorController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $coordinators->active_status = 1;
-            $coordinators->coordinator_start_date = $lastupdatedDate;
-            $coordinators->last_updated_by = $lastUpdatedBy;
-            $coordinators->last_updated_date = $lastupdatedDate;
+            $coordinators->coordinator_start_date = Carbon::now();
+            $coordinators->updated_by = $updatedBy;
             $coordinators->save();
 
             CoordinatorRecognition::create([
@@ -1729,8 +1688,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateRejectApplication(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $cdId = $input['coord_id'];
@@ -1743,13 +1701,12 @@ class CoordinatorController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $coordinators->active_status = 3;
-            $coordinators->zapped_date = now();
+            $coordinators->zapped_date = Carbon::now();
             $coordinators->reason_retired = $retiredReason;
-            $coordinators->last_updated_by = $lastUpdatedBy;
-            $coordinators->last_updated_date = $lastupdatedDate;
+            $coordinators->updated_by = $updatedBy;
             $coordinators->save();
 
-            $user->is_active = 0;
+            $user->is_active = UserStatusEnum::INACTIVE;
             $user->save();
 
             DB::commit();

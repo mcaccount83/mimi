@@ -2,6 +2,8 @@
 
 namespace App\Policies\Forum;
 
+use App\Enums\UserTypeEnum;
+use App\Enums\AdminStatusEnum;
 use App\Models\Coordinators;
 use App\Services\PositionConditionsService;
 use Illuminate\Foundation\Auth\User;
@@ -22,11 +24,11 @@ class ForumConditions
      */
     public function canAccessList(User $user, Category $category): bool
     {
-        if ($user->user_type == 'outgoing' || $user->user_type == 'disbanded' || $user->user_type == 'pending') {
+        if ($user->type_id == UserTypeEnum::OUTGOING || $user->type_id == UserTypeEnum::DISBANDED || $user->type_id == UserTypeEnum::PENDING) {
             return false; // Hide ALL from outgoing/disbanded/pending
         }
 
-        if ($category->title == 'CoordinatorList' && $user->user_type != 'coordinator') {
+        if ($category->title == 'CoordinatorList' && $user->type_id != UserTypeEnum::COORD) {
             return false; // Hide CoordinatorList from everyone except coordinators
         }
 
@@ -38,9 +40,9 @@ class ForumConditions
      */
     public function canManageLists(User $user): bool
     {
-        $isCoordinator = $user->user_type == 'coordinator';
-        $userAdmin = $user->is_admin == '1';
-        $userModerator = $user->is_admin == '2';
+        $isCoordinator = $user->type_id == UserTypeEnum::COORD;
+        $userAdmin = $user->is_admin == AdminStatusEnum::ADMIN;
+        $userModerator = $user->is_admin == AdminStatusEnum::MODERATOR;
 
         return $isCoordinator && ($userAdmin || $userModerator);
     }

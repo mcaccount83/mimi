@@ -2,20 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 
 class FolderRecord extends Model
 {
-    use HasFactory;
-    use Notifiable;
+    protected $guarded = [ ]; // ALL columns are mass-assignable
 
-    protected $fillable = [
-        'year',
-        'conf',
-        'state',
-        'chapter_name',
-        'folder_id',
-    ];
 }

@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Enums\UserStatusEnum;
 use App\Mail\NewForumPost;
 use App\Mail\NewForumThread;
 use App\Models\User;
@@ -69,7 +70,7 @@ class ForumEventSubscriber
         return User::whereHas('categorySubscriptions', function ($query) use ($categoryId) {
             $query->where('category_id', $categoryId);
         })
-            ->where('is_active', '1')
+            ->where('is_active', UserStatusEnum::ACTIVE)
             ->get();
     }
 

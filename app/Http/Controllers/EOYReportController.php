@@ -8,7 +8,9 @@ use App\Mail\EOYReviewrAssigned;
 use App\Models\BoardsIncoming;
 use App\Models\Chapters;
 use App\Models\Coordinators;
-use App\Models\Documents;
+use App\Models\DisbandedChecklist;
+use App\Models\DocumentsEOY;
+use App\Models\FinancialReportFinal;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\State;
@@ -68,9 +70,9 @@ class EOYReportController extends Controller implements HasMiddleware
         $conditions = $this->positionConditionsService->getConditionsForUser($positionId, $secPositionId);
         $eoyTestCondition = $conditions['eoyTestCondition'];
 
-        $displayEOY = $this->positionConditionsService->getEOYDisplay();
-        $displayTESTING = $displayEOY['displayTESTING'];
-        $displayLIVE = $displayEOY['displayLIVE'];
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $displayTESTING = $EOYOptions['displayTESTING'];
+        $displayLIVE = $EOYOptions['displayLIVE'];
 
         $titles = [
             'eoy_reports' => 'End of Year Reports',
@@ -110,16 +112,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $userConfName = $user['user_conf_name'];
         $userConfDesc = $user['user_conf_desc'];
 
-        $now = Carbon::now();
-        $currentYear = $now->year;
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $thisYear = $EOYOptions['thisYear'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($currentYear) {
-                $query->where(function ($q) use ($currentYear) {
-                    $q->where('start_year', '<', $currentYear)
-                        ->orWhere(function ($q) use ($currentYear) {
-                            $q->where('start_year', '=', $currentYear)
+            ->where(function ($query) use ($thisYear) {
+                $query->where(function ($q) use ($thisYear) {
+                    $q->where('start_year', '<', $thisYear)
+                        ->orWhere(function ($q) use ($thisYear) {
+                            $q->where('start_year', '=', $thisYear)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -166,21 +168,11 @@ class EOYReportController extends Controller implements HasMiddleware
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $allAwards = $baseQuery['allAwards'];
         $reviewComplete = $baseQuery['reviewComplete'];
         $rrList = $baseQuery['rrList'];
-
-        // $PresDetails = null;
-
-        // if ($chActiveId == '1') {
-        //     $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-        //     $PresDetails = $baseActiveBoardQuery['PresDetails'];
-        // } elseif ($chActiveId == '0') {
-        //     $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
-        //     $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
-
-        // }
 
         if ($chActiveId == '1') {
             $baseBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
@@ -194,7 +186,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'coorId' => $coorId, 'confId' => $confId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
-            'reviewComplete' => $reviewComplete,  'rrList' => $rrList,
+            'reviewComplete' => $reviewComplete,  'rrList' => $rrList, 'chEOYDocuments' => $chEOYDocuments,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
@@ -208,8 +200,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $new_board_submitted = ! isset($input['new_board_submitted']) ? null : ($input['new_board_submitted'] == 'on' ? 1 : 0);
@@ -225,33 +216,38 @@ class EOYReportController extends Controller implements HasMiddleware
         $reviewer_id = isset($input['ch_reportrev']) && ! empty($input['ch_reportrev']) ? $input['ch_reportrev'] : $coorId;
 
         $chapter = Chapters::find($id);
-        $documents = Documents::find($id);
+        $documentsEOY = DocumentsEOY::find($id);
         $financialReport = FinancialReport::find($id);
 
         DB::beginTransaction();
         try {
-            $documents->new_board_submitted = $new_board_submitted;
-            $documents->new_board_active = $new_board_active;
-            $documents->financial_report_received = $financial_report_received;
-            $documents->financial_review_complete = $financial_review_complete;
-            $documents->report_extension = $report_extension;
-            $documents->extension_notes = $extension_notes;
-            $documents->irs_verified = $irs_verified;
-            $documents->irs_notes = $irs_notes;
-            $documents->report_received = $financial_report_received != null ? date('Y-m-d H:i:s') : null;
-            $documents->review_complete = $financial_review_complete != null ? date('Y-m-d H:i:s') : null;
-            $documents->save();
+            $documentsEOY->new_board_submitted = $new_board_submitted;
+            $documentsEOY->new_board_active = $new_board_active;
+            $documentsEOY->financial_report_received = $financial_report_received;
+            $documentsEOY->financial_review_complete = $financial_review_complete;
+            $documentsEOY->report_extension = $report_extension;
+            $documentsEOY->extension_notes = $extension_notes;
+            $documentsEOY->irs_verified = $irs_verified;
+            $documentsEOY->irs_notes = $irs_notes;
+
+            // Only set timestamp if it doesn't already exist AND the status is not null
+            $documentsEOY->report_received = $financial_report_received != null && $documentsEOY->report_received === null ? Carbon::now() : $documentsEOY->report_received;
+            $documentsEOY->review_complete = $financial_review_complete != null && $documentsEOY->review_complete === null ? Carbon::now() : $documentsEOY->review_complete;
+            $documentsEOY->save();
 
             $financialReport->reviewer_id = $reviewer_id;
-            $financialReport->submitted = $financial_report_received != null ? date('Y-m-d H:i:s') : null;
+
+            // Only set timestamp if it doesn't already exist AND the status is not null
+            $financialReport->submitted = $financial_report_received != null && $financialReport->submitted === null ? Carbon::now() : $financialReport->submitted;
+
             if ($financial_report_received != null) {
                 $financialReport->reviewer_id = $financialReport->reviewer_id ?? $coorId;
             }
-            $financialReport->review_complete = $financial_review_complete != null ? date('Y-m-d H:i:s') : null;
+
+            $financialReport->review_complete = $financial_review_complete != null && $financialReport->review_complete === null ? Carbon::now() : $financialReport->review_complete;
             $financialReport->save();
 
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             DB::commit();
@@ -283,22 +279,22 @@ class EOYReportController extends Controller implements HasMiddleware
         $regId = $user['user_regId'];
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $lastUpdatedBy = $user['user_name'];
+        $updatedBy = $user['user_name'];
         $userName = $user['user_name'];
         $userPosition = $user['user_position'];
         $userConfName = $user['user_conf_name'];
         $userConfDesc = $user['user_conf_desc'];
 
-        $now = Carbon::now();
-        $currentYear = $now->year;
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $thisYear = $EOYOptions['thisYear'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($currentYear) {
-                $query->where(function ($q) use ($currentYear) {
-                    $q->where('start_year', '<', $currentYear)
-                        ->orWhere(function ($q) use ($currentYear) {
-                            $q->where('start_year', '=', $currentYear)
+            ->where(function ($query) use ($thisYear) {
+                $query->where(function ($q) use ($thisYear) {
+                    $q->where('start_year', '<', $thisYear)
+                        ->orWhere(function ($q) use ($thisYear) {
+                            $q->where('start_year', '=', $thisYear)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -378,7 +374,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
-        $lastUpdatedBy = $user['user_name'];
+        $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -393,11 +389,6 @@ class EOYReportController extends Controller implements HasMiddleware
         $MVPDetails = $baseIncomingBoardQuery['MVPDetails'];
         $TRSDetails = $baseIncomingBoardQuery['TRSDetails'];
         $SECDetails = $baseIncomingBoardQuery['SECDetails'];
-        // $PresDetails = $baseIncomingBoardQuery['PresIncomingDetails'];
-        // $AVPDetails = $baseIncomingBoardQuery['AVPIncomingDetails'];
-        // $MVPDetails = $baseIncomingBoardQuery['MVPIncomingDetails'];
-        // $TRSDetails = $baseIncomingBoardQuery['TRSIncomingDetails'];
-        // $SECDetails = $baseIncomingBoardQuery['SECIncomingDetails'];
 
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
@@ -441,8 +432,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYBoardReport(Request $request, $chapter_id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($chapter_id);
         $chId = $chapter_id;
@@ -470,7 +460,7 @@ class EOYReportController extends Controller implements HasMiddleware
             }
         }
 
-        $documents = Documents::find($chapter_id);
+        $documentsEOY = DocumentsEOY::find($chapter_id);
 
         DB::beginTransaction();
         try {
@@ -484,12 +474,11 @@ class EOYReportController extends Controller implements HasMiddleware
             $chapter->social1 = $request->input('ch_social1');
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
-            $documents->new_board_submitted = 1;
-            $documents->save();
+            $documentsEOY->new_board_submitted = 1;
+            $documentsEOY->save();
 
             // President Info - Handle separately since it's required
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
@@ -500,20 +489,20 @@ class EOYReportController extends Controller implements HasMiddleware
 
                 if (count($PREDetails) != 0) {
                     BoardsIncoming::where('id', $presId)
-                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $lastUpdatedBy, $lastupdatedDate));
+                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy));
                 } else {
                     BoardsIncoming::create(array_merge(
                         ['chapter_id' => $chId, 'board_position_id' => BoardPosition::PRES],
-                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $lastUpdatedBy, $lastupdatedDate)
+                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy)
                     ));
                 }
             }
 
             // Handle other board positions
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $lastUpdatedBy, $lastupdatedDate);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $lastUpdatedBy, $lastupdatedDate);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $lastUpdatedBy, $lastupdatedDate);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $lastUpdatedBy, $lastupdatedDate);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $updatedBy);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $updatedBy);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $updatedBy);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $updatedBy);
 
             DB::commit();
 
@@ -548,16 +537,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $userConfName = $user['user_conf_name'];
         $userConfDesc = $user['user_conf_desc'];
 
-        $now = Carbon::now();
-        $currentYear = $now->year;
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $thisYear = $EOYOptions['thisYear'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($currentYear) {
-                $query->where(function ($q) use ($currentYear) {
-                    $q->where('start_year', '<', $currentYear)
-                        ->orWhere(function ($q) use ($currentYear) {
-                            $q->where('start_year', '=', $currentYear)
+            ->where(function ($query) use ($thisYear) {
+                $query->where(function ($q) use ($thisYear) {
+                    $q->where('start_year', '<', $thisYear)
+                        ->orWhere(function ($q) use ($thisYear) {
+                            $q->where('start_year', '=', $thisYear)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -585,7 +574,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $coorId = $user['user_coorId'];
         $confId = $user['user_confId'];
         $loggedInName = $user['user_name'];
-        $lastUpdatedBy = $user['user_name'];
+        $updatedBy = $user['user_name'];
         $userName = $user['user_name'];
         $userPosition = $user['user_position'];
         $userConfName = $user['user_conf_name'];
@@ -599,12 +588,13 @@ class EOYReportController extends Controller implements HasMiddleware
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $allAwards = $baseQuery['allAwards'];
         // $submitted = $baseQuery['submitted'];
         $rrList = $baseQuery['rrList'];
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
+            'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments, 'chEOYDocuments' => $chEOYDocuments,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
 
@@ -619,8 +609,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $userName = $user['user_name'];
-        $lastUpdatedBy = $userName;
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $userName;
 
         $input = $request->all();
         $farthest_step_visited_coord = $input['FurthestStep'];
@@ -687,18 +676,19 @@ class EOYReportController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $roster_path = $chDocuments->roster_path;
-        $file_irs_path = $chDocuments->irs_path;
-        $statement_1_path = $chDocuments->statement_1_path;
-        $statement_2_path = $chDocuments->statement_2_path;
+        $roster_path = $chEOYDocuments->roster_path;
+        $file_irs_path = $chEOYDocuments->irs_path;
+        $statement_1_path = $chEOYDocuments->statement_1_path;
+        $statement_2_path = $chEOYDocuments->statement_2_path;
         $completed_name = $chFinancialReport->completed_name;
         $completed_email = $chFinancialReport->completed_email;
         $reviewerEmail = $chDetails->reportReviewer->email;
 
         $chapter = Chapters::find($id);
-        $documents = Documents::find($id);
+        $documentsEOY = DocumentsEOY::find($id);
         $financialReport = FinancialReport::find($id);
 
         DB::beginTransaction();
@@ -736,13 +726,13 @@ class EOYReportController extends Controller implements HasMiddleware
             $financialReport->check_sistered_another_chapter = $check_sistered_another_chapter;
             $financialReport->farthest_step_visited_coord = $farthest_step_visited_coord;
             if ($submitType == 'review_complete') {
-                $financialReport->review_complete = $lastupdatedDate;
+                $financialReport->review_complete = Carbon::now();
             }
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message),
+                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message),
             );
 
             if ($financialReport->isDirty('reviewer_id')) {
@@ -757,14 +747,13 @@ class EOYReportController extends Controller implements HasMiddleware
             $financialReport->save();
 
             if ($submitType == 'review_complete') {
-                $documents->financial_review_complete = 1;
-                $documents->review_complete = $lastupdatedDate;
+                $documentsEOY->financial_review_complete = 1;
+                $documentsEOY->review_complete = Carbon::now();
             }
 
-            $documents->save();
+            $documentsEOY->save();
 
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             DB::commit();
@@ -790,25 +779,23 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateUnsubmit(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
-        $documents = Documents::find($id);
+        $documentsEOY = DocumentsEOY::find($id);
         $financialReport = FinancialReport::find($id);
 
         DB::beginTransaction();
         try {
-            $documents->financial_report_received = null;
-            $documents->report_received = null;
-            $documents->report_extension = '1';
-            $documents->save();
+            $documentsEOY->financial_report_received = null;
+            $documentsEOY->report_received = null;
+            $documentsEOY->report_extension = '1';
+            $documentsEOY->save();
 
             $financialReport->submitted = null;
             $financialReport->save();
 
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             DB::commit();
@@ -826,30 +813,71 @@ class EOYReportController extends Controller implements HasMiddleware
     }
 
     /**
+     * Unsubmit Final Report
+     */
+    public function updateUnsubmitFinal(Request $request, $id): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedBy = $user['user_name'];
+
+        $chapter = Chapters::find($id);
+        $documentsEOY = DocumentsEOY::find($id);
+        $financialReport = FinancialReportFinal::find($id);
+        $disbandChecklist = DisbandedChecklist::find($id);
+
+        DB::beginTransaction();
+        try {
+            $documentsEOY->final_report_received = null;
+            $documentsEOY->report_received = null;
+            $documentsEOY->report_extension = '1';
+            $documentsEOY->save();
+
+            $financialReport->submitted = null;
+            $financialReport->save();
+
+            $disbandChecklist->file_financial = null;
+            $disbandChecklist->save();
+
+            $chapter->updated_by = $updatedBy;
+            $chapter->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Final Report has been successfully Unsubmitted.');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+    /**
      * Clear Report Review
      */
     public function updateClearReview(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
-        $documents = Documents::find($id);
+        $documentsEOY = DocumentsEOY::find($id);
         $financialReport = FinancialReport::find($id);
 
         DB::beginTransaction();
         try {
-            $documents->financial_report_received = '1';
-            $documents->financial_review_complete = null;
-            $documents->review_complete = null;
-            $documents->save();
+            $documentsEOY->financial_report_received = '1';
+            $documentsEOY->financial_review_complete = null;
+            $documentsEOY->review_complete = null;
+            $documentsEOY->save();
 
             $financialReport->review_complete = null;
             $financialReport->save();
 
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             DB::commit();
@@ -882,16 +910,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $now = Carbon::now();
-        $currentYear = $now->year;
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $thisYear = $EOYOptions['thisYear'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($currentYear) {
-                $query->where(function ($q) use ($currentYear) {
-                    $q->where('start_year', '<', $currentYear)
-                        ->orWhere(function ($q) use ($currentYear) {
-                            $q->where('start_year', '=', $currentYear)
+            ->where(function ($query) use ($thisYear) {
+                $query->where(function ($q) use ($thisYear) {
+                    $q->where('start_year', '<', $thisYear)
+                        ->orWhere(function ($q) use ($thisYear) {
+                            $q->where('start_year', '=', $thisYear)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -905,7 +933,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $countList = count($chapterList);
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox2Status' => $checkBox2Status];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox2Status' => $checkBox2Status,];
 
         return view('eoyreports.eoyattachments')->with($data);
     }
@@ -947,21 +975,19 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYAttachments(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
-        $documents = Documents::find($id);
+        $documentsEOY = DocumentsEOY::find($id);
 
         DB::beginTransaction();
         try {
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
-            $documents->irs_verified = (int) $request->has('irs_verified');
-            $documents->irs_notes = $request->input('irs_notes');
-            $documents->save();
+            $documentsEOY->irs_verified = (int) $request->has('irs_verified');
+            $documentsEOY->irs_notes = $request->input('irs_notes');
+            $documentsEOY->save();
 
             DB::commit();
 
@@ -993,16 +1019,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $now = Carbon::now();
-        $currentYear = $now->year;
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $thisYear = $EOYOptions['thisYear'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($currentYear) {
-                $query->where(function ($q) use ($currentYear) {
-                    $q->where('start_year', '<', $currentYear)
-                        ->orWhere(function ($q) use ($currentYear) {
-                            $q->where('start_year', '=', $currentYear)
+            ->where(function ($query) use ($thisYear) {
+                $query->where(function ($q) use ($thisYear) {
+                    $q->where('start_year', '<', $thisYear)
+                        ->orWhere(function ($q) use ($thisYear) {
+                            $q->where('start_year', '=', $thisYear)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -1057,8 +1083,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYBoundaries(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
 
@@ -1066,8 +1091,7 @@ class EOYReportController extends Controller implements HasMiddleware
         try {
             $chapter->territory = $request->filled('ch_territory') ? $request->input('ch_territory') : $request->input('ch_old_territory');
             $chapter->boundary_issue_resolved = (int) $request->has('ch_resolved');
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             DB::commit();
@@ -1099,18 +1123,18 @@ class EOYReportController extends Controller implements HasMiddleware
         $regId = $user['user_regId'];
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
-        $lastUpdatedBy = $user['user_name'];
+        $updatedBy = $user['user_name'];
 
-        $now = Carbon::now();
-        $currentYear = $now->year;
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $thisYear = $EOYOptions['thisYear'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($currentYear) {
-                $query->where(function ($q) use ($currentYear) {
-                    $q->where('start_year', '<', $currentYear)
-                        ->orWhere(function ($q) use ($currentYear) {
-                            $q->where('start_year', '=', $currentYear)
+            ->where(function ($query) use ($thisYear) {
+                $query->where(function ($q) use ($thisYear) {
+                    $q->where('start_year', '<', $thisYear)
+                        ->orWhere(function ($q) use ($thisYear) {
+                            $q->where('start_year', '=', $thisYear)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -1180,8 +1204,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYAwards(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $ChapterAwards = null;
@@ -1198,8 +1221,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             $financialReport->chapter_awards = $chapter_awards;
@@ -1235,16 +1257,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $now = Carbon::now();
-        $currentYear = $now->year;
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $thisYear = $EOYOptions['thisYear'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($currentYear) {
-                $query->where(function ($q) use ($currentYear) {
-                    $q->where('start_year', '<', $currentYear)
-                        ->orWhere(function ($q) use ($currentYear) {
-                            $q->where('start_year', '=', $currentYear)
+            ->where(function ($query) use ($thisYear) {
+                $query->where(function ($q) use ($thisYear) {
+                    $q->where('start_year', '<', $thisYear)
+                        ->orWhere(function ($q) use ($thisYear) {
+                            $q->where('start_year', '=', $thisYear)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -1301,27 +1323,25 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateIRSSubmission(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
-        $documents = Documents::find($id);
+        $documentsEOY = DocumentsEOY::find($id);
 
         DB::beginTransaction();
         try {
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             // Correct way to handle checkboxes
-            $documents->irs_verified = $request->filled('irs_verified') ? 1 : 0;
-            $documents->irs_issues = $request->filled('irs_issues') ? 1 : 0;
-            $documents->irs_wrongdate = $request->filled('irs_wrongdate') ? 1 : 0;
-            $documents->irs_notfound = $request->filled('irs_notfound') ? 1 : 0;
-            $documents->irs_filedwrong = $request->filled('irs_filedwrong') ? 1 : 0;
-            $documents->irs_notified = $request->filled('irs_notified') ? 1 : 0;
-            $documents->irs_notes = $request->input('irs_notes');
-            $documents->save();
+            $documentsEOY->irs_verified = $request->filled('irs_verified') ? 1 : 0;
+            $documentsEOY->irs_issues = $request->filled('irs_issues') ? 1 : 0;
+            $documentsEOY->irs_wrongdate = $request->filled('irs_wrongdate') ? 1 : 0;
+            $documentsEOY->irs_notfound = $request->filled('irs_notfound') ? 1 : 0;
+            $documentsEOY->irs_filedwrong = $request->filled('irs_filedwrong') ? 1 : 0;
+            $documentsEOY->irs_notified = $request->filled('irs_notified') ? 1 : 0;
+            $documentsEOY->irs_notes = $request->input('irs_notes');
+            $documentsEOY->save();
 
             DB::commit();
 

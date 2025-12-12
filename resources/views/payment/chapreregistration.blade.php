@@ -38,7 +38,7 @@
                         @foreach($reChapterList as $list)
                         @php
                             $due = $list->startMonth->month_short_name . ' ' . $list->next_renewal_year;
-                            $overdue = (date('Y') * 12 + date('m')) - ($list->next_renewal_year * 12 + $list->start_month_id);
+                            $overdue = $currentYear * 12 + $currentMonth - ($list->next_renewal_year * 12 + $list->start_month_id);
                         @endphp
                         <tr>
                             <td class="text-center align-middle">
@@ -118,8 +118,8 @@
                 <div class="card-body text-center">
                     @if($conferenceCoordinatorCondition)
                         @if($checkBoxStatus || $checkBox3Status || $checkBox5Status)
-                            <button class="btn bg-gradient-primary mb-3" disabled><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button>
-                            <button class="btn bg-gradient-primary mb-3" disabled><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</button>
+                            <button class="btn bg-gradient-primary mb-3 disabled" disabled><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button>
+                            <button class="btn bg-gradient-primary mb-3 disabled" disabled><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</button>
                         @else
                             <a class="btn bg-gradient-primary mb-3" href="{{ route('payment.chapreregreminder') }}"><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</a>
                             <a class="btn bg-gradient-primary mb-3" href="{{ route('payment.chaprereglatereminder') }}"><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</a>
@@ -129,7 +129,7 @@
                         @elseif ($checkBox5Status)
                             <button class="btn bg-gradient-primary mb-3" onclick="startExport('intreregoverdue', 'International Overdue Re-Reg List')"><i class="fas fa-download"></i>&nbsp; Export International Overdue Re-Reg List</button>
                         @else
-                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')" disabled><i class="fas fa-download mr-2" ></i>Export Overdue Re-Reg List</button>
+                            <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')" disabled><i class="fas fa-download mr-2" ></i>Export Overdue Re-Reg List</button>
                         @endif
                     @endif
             </div>

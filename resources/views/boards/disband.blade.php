@@ -12,9 +12,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            @php
-                                $thisDate = \Illuminate\Support\Carbon::now();
-                            @endphp
+
                             <div class="col-md-12"><br><br></div>
                             <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
                             <h4 class="text-center">Disbanding Checklist</h4>
@@ -38,7 +36,7 @@
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left">
                                         @if ($chDocuments->disband_letter_path == null)
-                                            <button type="button" id="btn-download-pdf" class="btn bg-primary" disabled><i class="fas fa-file-pdf mr-2"></i>No Disband Letter on File</button>
+                                            <button type="button" id="btn-download-pdf disabled" class="btn bg-primary"><i class="fas fa-file-pdf mr-2" disabled></i>No Disband Letter on File</button>
                                         @else
                                             <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">
                                                 <i class="fas fa-file-pdf mr-2"></i>View/Download Disband Letter</button>
@@ -106,21 +104,26 @@
                                             <label class="custom-control-label" for="FileIRS">YES</label>
                                         </div>
                                         @if ($chDisbanded?->file_financial != '1')
-                                            @if($thisDate->month >= 7 && $thisDate->month <= 12)
+                                            @if($displayEINInstructionsLIVE == true)
                                                 <a href="https://sa.www4.irs.gov/sso/ial1?resumePath=%2Fas%2F5Ad0mGlkzW%2Fresume%2Fas%2Fauthorization.ping&allowInteraction=true&reauth=false&connectionId=SADIPACLIENT&REF=3C53421849B7D5B806E50960DF0AC7530889D9ADE9238D5D3B8B00000069&vnd_pi_requested_resource=https%3A%2F%2Fsa.www4.irs.gov%2Fepostcard%2F&vnd_pi_application_name=EPOSTCARD"
                                                     class="btn btn-primary btn-xs ml-3 mb-1" target="_blank" >FILE HERE</a>
                                             @else
-                                                <button id="990NLink" class="btn btn-primary btn-xs ml-3 mb-1 disabled">Not Available Until July 1st</button>
+                                                <button id="990NLink" class="btn btn-primary btn-xs ml-3 mb-1 disabled" disabled>Not Available Until July 1st</button>
                                             @endif
                                         @endif
                                     </div>
                                 </div>
 
-                                <div class="col-12 form-row form-group">
+                               <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left d-flex">
                                         <label style="margin-right: 20px;">Our final Financial Report has been submitted (below).</label>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" id="FileFinancial" name="FileFinancial" class="custom-control-input" {{$chDisbanded?->file_financial == '1' ? 'checked' : ''}}>
+                                            <input type="checkbox"
+                                                id="FileFinancial"
+                                                name="FileFinancial"
+                                                class="custom-control-input"
+                                                {{ $chDisbanded?->file_financial == '1' ? 'checked' : '' }}
+                                                {{ $chDisbanded?->file_financial == '1' ? 'disabled' : '' }}>
                                             <label class="custom-control-label" for="FileFinancial">YES</label>
                                         </div>
                                     </div>
@@ -150,18 +153,24 @@
 
                                 <div class="col-12 form-row form-group">
                                     <div class="col-md-12 float-left">
-                                        @if ($chDocuments->final_financial_pdf_path == null)
+                                        @if ($chDisbanded?->file_financial == null)
                                             <h4>Financial Report</h4>
                                         @else
                                             <h4>Financial Report has been submitted.</h4>
-                                            <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chDocuments->final_financial_pdf_path }}')">
+                                             @if ($chEOYDocuments->final_financial_pdf_path == null)
+                                             <button type="button" class="btn bg-primary" disabled>
+                                                <i class="fas fa-file-pdf mr-2"></i>Financial PDF Not Available
+                                            </button>
+                                            @else
+                                            <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">
                                                 <i class="fas fa-file-pdf mr-2"></i>View/Download Financial Report
                                             </button>
+                                        @endif
                                         @endif
                                     </div>
                                 </div>
 
-                                @if ($chDocuments->final_financial_pdf_path == null)
+                                @if ($chDisbanded?->file_financial == null)
                                     @if ($chFinancialReport)
                                         @include('boards.financial_accordion', [
                                             'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType, 'userName' => $userName,

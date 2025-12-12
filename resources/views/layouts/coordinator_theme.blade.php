@@ -687,7 +687,7 @@ window.onload = function () {
 
     </div>
     <footer class="main-footer">
-        <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights reserved.
+        <strong>Copyright &copy;{{$currentYear}} <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights reserved.
     </footer>
 </div>
 

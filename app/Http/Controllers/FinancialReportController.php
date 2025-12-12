@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserTypeEnum;
+use App\Enums\UserStatusEnum;
 use App\Mail\DisbandChecklistCompleteCCNotice;
 use App\Mail\DisbandChecklistCompleteThankYou;
 use App\Mail\DisbandReportCCNotice;
@@ -14,12 +16,13 @@ use App\Models\BoardsIncoming;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\DisbandedChecklist;
-use App\Models\Documents;
+use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\User;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -45,14 +48,17 @@ class FinancialReportController extends Controller implements HasMiddleware
 
     protected $baseMailDataController;
 
+    protected $positionConditionsService;
+
     public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController,
-        BaseMailDataController $baseMailDataController, BaseChapterController $baseChapterController)
+        BaseMailDataController $baseMailDataController, BaseChapterController $baseChapterController, PositionConditionsService $positionConditionsService)
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseBoardController = $baseBoardController;
         $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
+        $this->positionConditionsService = $positionConditionsService;
     }
 
     public static function middleware(): array
@@ -78,6 +84,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
@@ -85,7 +92,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType, 'chEOYDocuments' => $chEOYDocuments,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
         ];
@@ -322,14 +329,13 @@ class FinancialReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $reportReceived = $input['submitted'] ?? null;
 
         $financialReport = FinancialReport::find($chapterId);
-        $documents = Documents::find($chapterId);
+        $documentsEOY = DocumentsEOY::find($chapterId);
         $chapter = Chapters::find($chapterId);
 
         DB::beginTransaction();
@@ -341,17 +347,16 @@ class FinancialReportController extends Controller implements HasMiddleware
             if ($reportReceived == 1) {
                 $financialReport->completed_name = $userName;
                 $financialReport->completed_email = $userEmail;
-                $financialReport->submitted = $lastupdatedDate;
+                $financialReport->submitted = Carbon::now();
                 $financialReport->save();
 
-                $documents->financial_report_received = 1;
-                $documents->report_received = $lastupdatedDate;
-                $documents->report_extension = null;
-                $documents->save();
+                $documentsEOY->financial_report_received = 1;
+                $documentsEOY->report_received = Carbon::now();
+                $documentsEOY->report_extension = null;
+                $documentsEOY->save();
             }
 
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
 
             $chapter->save();
 
@@ -359,6 +364,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
+            $chEOYDocuments = $baseQuery['chEOYDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
@@ -374,24 +380,27 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getPresData($PresDetails),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null),
+                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null),
             );
+
+            $EOYOptions = $this->positionConditionsService->getEOYOptions();
+            $fiscalYear = $EOYOptions['fiscalYear'];
 
             if ($reportReceived == 1) {
                 $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId, $PresDetails);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
-                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
+                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath, $fiscalYear));
 
                 if ($chFinancialReport->reviewer_id == null) {
                     DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
                     Mail::to($emailCC)
-                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $fiscalYear));
                 }
 
                 if ($chFinancialReport->reviewer_id != null) {
                     Mail::to($reviewerEmail)
-                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
+                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $fiscalYear));
                 }
 
             }
@@ -440,7 +449,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
-        // $submitted = $baseQuery['submitted'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReportFinal'];
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
@@ -452,7 +461,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
+            'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin, 'chEOYDocuments' => $chEOYDocuments,
         ];
 
         return view('boards.disband')->with($data);
@@ -467,20 +476,15 @@ class FinancialReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $reportReceived = $input['submitted'] ?? null;
 
         $financialReport = FinancialReportFinal::find($chapterId);
-        $documents = Documents::find($chapterId);
+        $documentsEOY = DocumentsEOY::find($chapterId);
         $chapter = Chapters::find($chapterId);
-
         $disbandChecklist = DisbandedChecklist::find($chapterId);
-        $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
-            $disbandChecklist->destroy_manual == '1' && $disbandChecklist->remove_online == '1' &&
-            $disbandChecklist->file_irs == '1' && $disbandChecklist->file_financial == '1');
 
         DB::beginTransaction();
         try {
@@ -491,25 +495,32 @@ class FinancialReportController extends Controller implements HasMiddleware
             if ($reportReceived == 1) {
                 $financialReport->completed_name = $userName;
                 $financialReport->completed_email = $userEmail;
-                $financialReport->submitted = $lastupdatedDate;
+                $financialReport->submitted = Carbon::now();
 
                 $financialReport->save();
 
-                $documents->final_report_received = 1;
-                $documents->report_received = $lastupdatedDate;
-                $documents->report_extension = null;
-                $documents->save();
+                $documentsEOY->final_report_received = 1;
+                $documentsEOY->report_received = Carbon::now();
+                $documentsEOY->report_extension = null;
+                $documentsEOY->save();
+
+                $disbandChecklist->file_financial = 1;
+                $disbandChecklist->save();
             }
 
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
-
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
+
+            $disbandChecklistUpd = DisbandedChecklist::find($chapterId);
+            $checklistComplete = ($disbandChecklistUpd->final_payment == '1' && $disbandChecklistUpd->donate_funds == '1' &&
+            $disbandChecklistUpd->destroy_manual == '1' && $disbandChecklistUpd->remove_online == '1' &&
+            $disbandChecklistUpd->file_irs == '1' && $disbandChecklistUpd->file_financial == '1');
 
             $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
+            $chEOYDocuments = $baseQuery['chEOYDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReportFinal'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
@@ -524,11 +535,11 @@ class FinancialReportController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null),
+                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null),
                 $this->baseMailDataController->getPresData($PresDetails),
             );
 
-            if ($documents->final_report_received == '1') {
+            if ($documentsEOY->final_report_received == '1') {
                 $pdfPath = $this->pdfController->saveFinalFinancialReport($request, $chapterId, $PresDetails);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
@@ -542,7 +553,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                     ->queue(new DisbandReportCCNotice($mailData, $pdfPath));
             }
 
-            if ($documents->final_report_received == '1' && $checklistComplete) {
+            if ($documentsEOY->final_report_received == '1' && $checklistComplete) {
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new DisbandChecklistCompleteThankYou($mailData));
@@ -576,11 +587,10 @@ class FinancialReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
-        $documents = Documents::find($chapterId);
         $chapter = Chapters::find($chapterId);
+        $documentsEOY = DocumentsEOY::find($chapterId);
         $disbandChecklist = DisbandedChecklist::find($chapterId);
 
         DB::beginTransaction();
@@ -594,19 +604,19 @@ class FinancialReportController extends Controller implements HasMiddleware
 
             $disbandChecklist->save();
 
-            $checklistComplete = ($disbandChecklist->final_payment == '1' && $disbandChecklist->donate_funds == '1' &&
-                $disbandChecklist->destroy_manual == '1' && $disbandChecklist->remove_online == '1' &&
-                $disbandChecklist->file_irs == '1' && $disbandChecklist->file_financial == '1');
-
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
-
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
+
+            $disbandChecklistUpd = DisbandedChecklist::find($chapterId);
+            $checklistComplete = ($disbandChecklistUpd->final_payment == '1' && $disbandChecklistUpd->donate_funds == '1' &&
+                $disbandChecklistUpd->destroy_manual == '1' && $disbandChecklistUpd->remove_online == '1' &&
+                $disbandChecklistUpd->file_irs == '1' && $disbandChecklistUpd->file_financial == '1');
 
             $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
+            $chEOYDocuments = $baseQuery['chEOYDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
@@ -616,10 +626,10 @@ class FinancialReportController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
-                $this->baseMailDataController->getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message = null),
+                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null),
             );
 
-            if ($documents->final_financial_report_received == '1' && $checklistComplete) {
+            if ($documentsEOY->final_financial_report_received == '1' && $checklistComplete) {
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new DisbandChecklistCompleteThankYou($mailData));
@@ -645,7 +655,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Update or create incoming board member
      */
-    public function updateIncomingBoardMember($chapterId, $positionId, $positionPrefix, $vacantField, $idField, $request, $lastUpdatedBy, $lastupdatedDate)
+    public function updateIncomingBoardMember($chapterId, $positionId, $positionPrefix, $vacantField, $idField, $request, $updatedBy)
     {
         $boardDetails = BoardsIncoming::where('chapter_id', $chapterId)
             ->where('board_position_id', $positionId)
@@ -664,14 +674,14 @@ class FinancialReportController extends Controller implements HasMiddleware
                 // Update existing board member
                 $memberId = $request->input($idField);
                 BoardsIncoming::where('id', $memberId)
-                    ->update($this->getBoardMemberData($request, $positionPrefix, $lastUpdatedBy, $lastupdatedDate));
+                    ->update($this->getBoardMemberData($request, $positionPrefix, $updatedBy));
             }
         } else {
             if (! $isVacant) {
                 // Create new board member
                 BoardsIncoming::create(array_merge(
                     ['chapter_id' => $chapterId, 'board_position_id' => $positionId],
-                    $this->getBoardMemberData($request, $positionPrefix, $lastUpdatedBy, $lastupdatedDate)
+                    $this->getBoardMemberData($request, $positionPrefix, $updatedBy)
                 ));
             }
         }
@@ -680,7 +690,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Get board member data from request
      */
-    public function getBoardMemberData($request, $prefix, $lastUpdatedBy, $lastupdatedDate)
+    public function getBoardMemberData($request, $prefix, $updatedBy)
     {
         return [
             'first_name' => $request->input($prefix.'fname'),
@@ -692,8 +702,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             'zip' => $request->input($prefix.'zip'),
             'country_id' => $request->input($prefix.'country') ?? '198',
             'phone' => $request->input($prefix.'phone'),
-            'last_updated_by' => $lastUpdatedBy,
-            'last_updated_date' => $lastupdatedDate,
+            'updated_by' => $updatedBy,
         ];
     }
 
@@ -702,13 +711,11 @@ class FinancialReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         // Calculate the fiscal year (current year - next year)
-        $currentYear = Carbon::now()->year;
-        $nextYear = $currentYear + 1;
-        $fiscalYear = $currentYear.'-'.$nextYear;
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
 
         $resources = Resources::with('resourceCategory')->get();
         $instructionsName = 'Officer Packet';
@@ -729,8 +736,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                         $user_id = $record->user_id;
                         $userDetails = User::find($user_id);
 
-                        $userDetails->user_type = 'outgoing';
-                        $userDetails->updated_at = now();
+                        $userDetails->type_id = UserTypeEnum::OUTGOING;
                         $userDetails->save();
 
                         BoardsOutgoing::create([  // Create outgoing board details
@@ -747,8 +753,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                             'zip' => $record->zip,
                             'country_id' => $record->country_id,
                             'phone' => $record->phone,
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => $lastupdatedDate,
+                            'updated_by' => $updatedBy,
                         ]);
 
                     }
@@ -762,9 +767,8 @@ class FinancialReportController extends Controller implements HasMiddleware
                         $existingUser->first_name = $incomingRecord->first_name;
                         $existingUser->last_name = $incomingRecord->last_name;
                         $existingUser->email = $incomingRecord->email;
-                        $existingUser->user_type = 'board';
+                        $existingUser->type_id = UserTypeEnum::BOARD;
                         $existingUser->is_active = 1;
-                        $existingUser->updated_at = now();
                         $existingUser->save();
                         $userId = $existingUser->id;
 
@@ -774,8 +778,8 @@ class FinancialReportController extends Controller implements HasMiddleware
                             'last_name' => $incomingRecord->last_name,
                             'email' => $incomingRecord->email,
                             'password' => Hash::make('TempPass4You'),
-                            'user_type' => 'board',
-                            'is_active' => 1,
+                            'type_id'=> UserTypeEnum::BOARD,
+                            'is_active' => UserStatusEnum::ACTIVE,
                         ]);
                         $userId = $newUser->id;
                     }
@@ -793,14 +797,13 @@ class FinancialReportController extends Controller implements HasMiddleware
                         'zip' => $incomingRecord->zip,
                         'country_id' => $incomingRecord->country_id,
                         'phone' => $incomingRecord->phone,
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => $lastupdatedDate,
+                        'updated_by' => $updatedBy,
                     ]);
                 }
 
-                $documents = Documents::find($id);
-                $documents->new_board_active = 1;
-                $documents->save();
+                $documentsEOY = DocumentsEOY::find($id);
+                $documentsEOY->new_board_active = 1;
+                $documentsEOY->save();
 
                 BoardsIncoming::where('chapter_id', $id)->delete();
 

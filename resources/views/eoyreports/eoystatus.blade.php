@@ -15,7 +15,6 @@
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         EOY Status Report
                     </h3>
-                    <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
                     @include('layouts.dropdown_menus.menu_eoy')
                 </div>
             </div>
@@ -42,10 +41,10 @@
                         $mailData = [
                             'chapterName' => $list->name,
                             'chapterState' => $list->state,
-                            'boardElectionReportReceived' => $list->documents->new_board_submitted,
-                            'financialReportReceived' => $list->documents->financial_report_received,
-                            '990NSubmissionReceived' => $list->documents->irs_path,
-                            'einLetterCopyReceived' => $list->documents->ein_letter,
+                            'boardElectionReportReceived' => $list->documentsEOY->new_board_submitted,
+                            'financialReportReceived' => $list->documentsEOY->financial_report_received,
+                            '990NSubmissionReceived' => $list->documentsEOY->irs_path,
+                            'einLetterCopyReceived' => $list->documentsEOY->ein_letter,
                         ];
 
                         $renderedHtml = View::make('emails.endofyear.latereportreminder', ['mailData' => $mailData])->render();
@@ -59,7 +58,7 @@
                                 @endif
                             </td>
                             <td class="text-center align-middle">
-                                @if ($list->documents->new_board_submitted == null || $list->documents->financial_report_received == null || $list->documents->new_board_submitted == 0 || $list->documents->financial_report_received == 0)
+                                @if ($list->documentsEOY->new_board_submitted == null || $list->documentsEOY->financial_report_received == null || $list->documentsEOY->new_board_submitted == 0 || $list->documentsEOY->financial_report_received == 0)
                                    <a href="#" class="email-link" data-chapter-name="{{ $list->name }}" data-chapter-id="{{ $list->id }}" data-user-name="{{ $userName }}"
                                     data-user-position="{{ $userPosition }}" data-user-conf-name="{{ $userConfName }}" data-user-conf-desc="{{ $userConfDesc }}"
                                     data-predefined-subject="End of Year Reports Late Notice" data-message-id="msg-{{ $list->id }}"> <i class="far fa-envelope text-primary"></i></a>
@@ -82,20 +81,20 @@
                                 @endif
                             </td>
                             <td>{{ $list->name }}</td>
-                            <td @if($list->documents->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
-                                @if($list->documents->report_extension == '1') YES @else @endif
+                            <td @if($list->documentsEOY->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
+                                @if($list->documentsEOY->report_extension == '1') YES @else @endif
                             </td>
-                            <td @if($list->documents->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documents->new_board_submitted == '1') YES @else NO @endif
+                            <td @if($list->documentsEOY->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documentsEOY->new_board_submitted == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documents->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documents->new_board_active == '1') YES @else NO @endif
+                            <td @if($list->documentsEOY->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documentsEOY->new_board_active == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documents->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documents->financial_report_received == '1') YES @else NO @endif
+                            <td @if($list->documentsEOY->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documentsEOY->financial_report_received == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documents->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documents->financial_review_complete == '1') YES @else NO @endif
+                            <td @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documentsEOY->financial_review_complete == '1') YES @else NO @endif
                             </td>
                         </tr>
                     @endforeach
@@ -142,7 +141,7 @@
                     @elseif ($checkBox5Status)
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteoystatus', 'International EOY Status List')"><i class="fas fa-download"></i>&nbsp; Export International EOY Status List</button>
                     @else
-                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('eoystatus', 'EOY Status Lis')" disabled><i class="fas fa-download mr-2" ></i>Export EOY Status List</button>
+                        <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('eoystatus', 'EOY Status Lis')" disabled><i class="fas fa-download mr-2" ></i>Export EOY Status List</button>
                     @endif
                 @endif
                 </div>

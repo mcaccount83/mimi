@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ForumCategorySubscription extends Model
 {
-    protected $fillable = ['user_id', 'category_id'];
+    protected $guarded = [ ]; // ALL columns are mass-assignable
 
     public function user(): BelongsTo
     {

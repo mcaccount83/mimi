@@ -50,7 +50,7 @@
         <table>
             <tr>
                 <td class="label">DATE:</td>
-                <td>{{ $pdfData['todayDate'] }}</td>
+                <td>{{ $pdfData['currentDateWords'] }}</td>
             </tr>
             <tr>
                 <td class="label">PAGES:</td>

@@ -24,9 +24,6 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    @php
-                                        $thisDate = \Illuminate\Support\Carbon::now();
-                                    @endphp
                                     <div class="col-md-12"><br><br></div>
                                     <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
 
@@ -42,14 +39,12 @@
                                         <h2 class="text-center">{{$SECDetails->first_name}} {{$SECDetails->last_name}}, {{$SECDetails->position?->position}}</h2>
                                     @endif
 
-                                    {{-- <h2 class="text-center">{{$PresDetails->first_name}} {{$PresDetails->last_name}}, {{$PresDetails->position?->position}}</h2> --}}
                                     <p class="description text-center">
                                         Welcome to the MOMS information Management Interface, affectionately called MIMI!
                                         <br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                                     </p>
                                     <div id="readOnlyText" class="description text-center">
-                                        @if(($thisDate->month == 5 || $thisDate->month == 6) ||
-                                            (($thisDate->month == 7 || $thisDate->month == 8)  && $chDetails->documents->new_board_active != '1'))
+                                        @if($displayBoardRptLIVE  && $chDetails->documentsEOY->new_board_active != '1')
                                             <p><span style="color: red;">All Board Member Information is currently <strong>READ ONLY</strong>.<br>
                                                 In order to add new board members to MIMI, please complete the Board Election Report.<br>
                                         @endif
@@ -510,8 +505,8 @@
                             </div>
                         </div>
 
-                        @if ($thisDate->gte($due_date))
-                            @if ($due_date->month == $thisDate->month)
+                        @if ($currentDate->gte($due_date))
+                            @if ($due_date->month == $currentDate->month)
                                 <span style="color: green;">Your Re-registration payment is due now.</span><br>
                             @else
                                 <span style="color: red;">Your Re-registration payment is now considered overdue.</span><br>
@@ -531,7 +526,7 @@
                             @if($chDocuments->ein_letter_path != null)
                                 <button type="button" class="btn bg-primary btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter</button><br>
                             @else
-                                <button type="button" class="btn bg-primary btn-sm mb-1 disabled">No EIN Letter on File</button><br>
+                                <button type="button" class="btn bg-primary btn-sm mb-1 disabled" disabled>No EIN Letter on File</button><br>
                             @endif
                             <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Chapter in Good Standing</button><br>
                             @if($chDocuments->probation_path != null)
@@ -556,61 +551,61 @@
                       <li class="list-group-item">
                             <h5>End of Year Filing</h5>
 
-                            @if($userType == 'coordinator' && $chDocuments->new_board_active!='1')
+                            @if($userType == 'coordinator' && $chEOYDocuments->new_board_active!='1')
                                 @if($displayTESTING)
                                     <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
-                                        {{ date('Y') . '-' . (date('Y') + 1) }} Board Report *TESTING*
+                                        {{ $boardReportName }} *TESTING*
                                     </button><br>
                                 @elseif ($displayBoardRptLIVE)
                                     <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
-                                        {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
+                                        {{ $boardReportName }}
                                     </button><br>
                                 @else
-                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
+                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
                                 @endif
-                            @elseif($userType == 'coordinator' && $chDocuments->new_board_active =='1')
+                            @elseif($userType == 'coordinator' && $chEOYDocuments->new_board_active =='1')
                                 @if($displayTESTING)
-                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated *TESTING*</button><br>
+                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled" disabled>Board Report Activated *TESTING*</button><br>
                                 @else
-                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated</button><br>
+                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled" disabled>Board Report Activated</button><br>
                                 @endif
                                 @elseif ($displayBoardRptLIVE)
-                                @if($chDocuments->new_board_active!='1')
+                                @if($chEOYDocuments->new_board_active!='1')
                                     <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
-                                        {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
+                                        {{ $boardReportName }}
                                     </button><br>
                                 @else
-                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Activated</button><br>
+                                    <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled" disabled>Board Report Activated</button><br>
                                 @endif
                             @else
-                                <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled">Board Report Not Available</button><br>
+                                <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
                             @endif
 
                             @if($userType == 'coordinator')
                                 @if($displayTESTING)
                                     <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
-                                        {{ date('Y')-1 .'-'.date('Y') }} Financial Report *TESTING*
+                                        {{ $financialReportName }} *TESTING*
                                     </button><br>
                                 @elseif (($displayFinancialRptLIVE))
                                     <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
-                                        {{ date('Y')-1 .'-'.date('Y') }} Financial Report
+                                        {{ $financialReportName }}
                                     </button><br>
                                 @else
-                                    <button id="990NLink" class="btn btn-primary btn-sm mb-1 disabled">Financial Report Not Available</button>
+                                    <button id="990NLink" class="btn btn-primary btn-sm mb-1 disabled" disabled>Financial Report Not Available</button>
                                 @endif
                             @elseif($displayFinancialRptLIVE)
                                 <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
-                                    {{ date('Y')-1 .'-'.date('Y') }} Financial Report
+                                    {{ $financialReportName }}
                                 </button><br>
                             @else
-                                <button id="FinancialReport" class="btn btn-primary btn-sm mb-1 disabled">Financial Report Not Available</button><br>
+                                <button id="FinancialReport" class="btn btn-primary btn-sm mb-1 disabled" disabled>Financial Report Not Available</button><br>
                             @endif
 
                              @if($displayEINInstructionsLIVE)
                                 <a href="https://sa.www4.irs.gov/sso/ial1?resumePath=%2Fas%2F5Ad0mGlkzW%2Fresume%2Fas%2Fauthorization.ping&allowInteraction=true&reauth=false&connectionId=SADIPACLIENT&REF=3C53421849B7D5B806E50960DF0AC7530889D9ADE9238D5D3B8B00000069&vnd_pi_requested_resource=https%3A%2F%2Fsa.www4.irs.gov%2Fepostcard%2F&vnd_pi_application_name=EPOSTCARD"
-                                    class="btn btn-primary btn-sm mb-1" target="_blank" >{{ date('Y')-1 }} 990N IRS Online Filing</a>
+                                    class="btn btn-primary btn-sm mb-1" target="_blank" >{{ $irsFilingName }}</a>
                             @else
-                                <button id="990NLink" class="btn btn-primary btn-sm mb-1 disabled">990N Not Available Until July 1st</button>
+                                <button id="990NLink" class="btn btn-primary btn-sm mb-1 disabled" disabled>990N Not Available Until July 1st</button>
                             @endif
                     </li>
                   </ul>
@@ -645,7 +640,7 @@
 <script>
     /* Disable fields and buttons  */
     $(document).ready(function () {
-        var currentMonth = {{ $thisDate->month }};
+        var displayBoardRptLIVE = @json($displayBoardRptLIVE);
         var userType = @json($userType);
         var userAdmin = @json($userAdmin);
         var boardActive = @json($boardActive);
@@ -658,16 +653,12 @@
             $('input, select, textarea').prop('disabled', true);
             $('#Save, #Password, #logout-btn').prop('disabled', true);
             $('#display_corlist').addClass('disabled-link').attr('href', '#');
-        } else if (currentMonth == 5 || currentMonth == 6 ) {
-            // Board members in month 5-6 - always disable
+         } else if (displayBoardRptLIVE == true && boardActive != 1) {
+            // Board members in month 5-9 (only editable IF board report is activated)
             $('input, select, textarea').prop('disabled', true);
             $('#Save, #Password').prop('disabled', true);
-        } else if ((currentMonth == 7 || currentMonth == 8) && boardActive != 1) {
-            // Board members in months 7-8 - only disable if boardActive != 1
-            $('input:not(#logout-form input), select:not(#logout-form select), textarea:not(#logout-form textarea)').prop('disabled', true);
-            $('#Save').prop('disabled', true);
-        }
-        // Board members in months 9-12 & 1-4 will be editable for everyone
+         }
+        // Board members in months 1-4 & 10-12 will be editable for everyone
     });
 
 </script>

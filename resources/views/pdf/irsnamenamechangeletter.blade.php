@@ -85,7 +85,7 @@
             </center>
             <br>
             <br>
-            <p>{{ $pdfData['todayDate'] }}</p>
+            <p>{{ $pdfData['currentDateWords'] }}</p>
             <br>
             <p>Internal Revenue Service<br>
                 Ogden, UT  84201</p>
@@ -100,7 +100,7 @@
                 {{$pdfData['presAddress']}}<br>
                 {{$pdfData['presCity']}}, {{$pdfData['presState']}} {{$pdfData['presZip']}}</p>
             <p>Thank you for your assistance in this matter.  If you have any questions, please contact me by phone or email.  Unless I receive information from your office
-                to the contrary, I will instruct our subordinate to contact the IRS for a new EIN verification letter after {{ $pdfData['twoMonthsDate'] }}.</p>
+                to the contrary, I will instruct our subordinate to contact the IRS for a new EIN verification letter after {{ $pdfData['twoMonthsDateWords'] }}.</p>
             <br>
             <p>Sincerely,</p>
             <br>

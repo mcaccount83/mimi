@@ -101,8 +101,7 @@
                                                                 <div class="col-md-6"><br></div>
                                                                 <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    {{-- Reported by <strong>{{ $adminItem->reported_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($adminItem->reported_date)->format('m-d-Y') }}</strong> --}}
-                                                                    Reported by <strong>{{ $adminItem->updatedBy->first_name }} {{ $adminItem->updatedBy->last_name }}</strong> on <strong>{{ \Illuminate\Support\Carbon::parse($adminItem->reported_date)->format('m-d-Y') }}</strong>
+                                                                    Reported by <strong>{{ $adminItem->updatedBy->first_name }} {{ $adminItem->updatedBy->last_name }}</strong> on <strong>{{ $adminItem->reported_date }}</strong>
                                                                 </div>
                                                                 </div>
                                                             </form>
@@ -197,8 +196,7 @@
                                                                 <div class="col-md-6"><br></div>
                                                                 <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    {{-- Reported by <strong>{{ $adminItem->reported_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($adminItem->reported_date)->format('m-d-Y') }}</strong> --}}
-                                                                    Reported by <strong>{{ $adminItem->updatedBy->first_name }} {{ $adminItem->updatedBy->last_name }}</strong> on <strong>{{ \Illuminate\Support\Carbon::parse($adminItem->reported_date)->format('m-d-Y') }}</strong>
+                                                                    Reported by <strong>{{ $adminItem->updatedBy->first_name }} {{ $adminItem->updatedBy->last_name }}</strong> on <strong>{{ $adminItem->reported_date }}</strong>
                                                                 </div>
                                                                 </div>
                                                             </form>
@@ -300,14 +298,12 @@
                                                                 <div class="col-md-6"><br></div>
                                                                 <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    {{-- Reported by <strong>{{ $adminItem->reported_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($adminItem->reported_date)->format('m-d-Y') }}</strong> --}}
-                                                                    Reported by <strong>{{ $adminItem->updatedBy->first_name }} {{ $adminItem->updatedBy->last_name }}</strong> on <strong>{{ \Illuminate\Support\Carbon::parse($adminItem->reported_date)->format('m-d-Y') }}</strong>
+                                                                    Reported by <strong>{{ $adminItem->updatedBy->first_name }} {{ $adminItem->updatedBy->last_name }}</strong> on <strong>{{ $adminItem->reported_date }}</strong>
                                                                 </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    {{-- Completed on <strong>{{ \Carbon\Carbon::parse($adminItem->completed_date)->format('m-d-Y') }}</strong> --}}
-                                                                    Completed on <strong>{{ \Illuminate\Support\Carbon::parse($adminItem->completed_date)->format('m-d-Y') }}</strong>
+                                                                    Completed on <strong>{{ $adminItem->completed_date }}</strong>
                                                                 </div>
                                                                 </div>
                                                             </form>

@@ -1,7 +1,7 @@
 @extends('layouts.coordinator_theme')
 
 @section('page_title', 'User Reports')
-@section('breadcrumb', 'Board Members with No Active User')
+@section('breadcrumb', 'Active Board Members with Inactive User')
 
 @section('content')
     <!-- Main content -->
@@ -13,7 +13,7 @@
                         <div class="card-header">
                             <div class="dropdown">
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Board Members with No Active User
+                                    Active Board Members with Inactive User
                                 </h3>
                                 @include('layouts.dropdown_menus.menu_reports_user')
                             </div>
@@ -23,20 +23,35 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-                  <th>User ID</th>
+                    <th>Edit User</th>
+                    <th>User ID</th>
                     <th>Chapter ID</th>
-                  <th>Name</th>
-                <th>Email</th>
-
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>User Status</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($noActiveList as $list)
                   <tr>
+                    <td>
+                        @if($list->type_id == \App\Enums\UserTypeEnum::COORD)
+                            <a href="{{ url("/userreports/editusercoord/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                        @else
+                            <a href="{{ url("/userreports/edituserboard/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                        @endif
+                    </td>
                         <td>{{ $list->id }}</td>
                         <td>{{ $list->board->chapter_id }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td>{{ $list->email }}</td>
+                        <td>
+                            {{ match($list->is_active) {
+                                \App\Enums\UserStatusEnum::ACTIVE => 'YES',
+                                \App\Enums\UserStatusEnum::INACTIVE => 'NO',
+                                default => ''
+                            } }}
+                        </td>
 			        </tr>
                   @endforeach
                   </tbody>

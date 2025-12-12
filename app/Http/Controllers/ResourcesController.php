@@ -101,8 +101,7 @@ class ResourcesController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];
-            $lastupdatedDate = date('Y-m-d H:i:s');
+            $updatedBy = $user['user_name'];
 
             $validatedData = $request->validate([
                 'taskNameNew' => 'required|string|max:255',
@@ -115,7 +114,7 @@ class ResourcesController extends Controller implements HasMiddleware
             $task->details = $validatedData['taskDetailsNew'];
             $task->priority = $validatedData['taskPriorityNew'];
             $task->reported_id = $coorId;
-            $task->reported_date = $lastupdatedDate;
+            $task->reported_date = Carbon::now();
 
             $mailData = [
                 'taskNameNew' => $task->task,
@@ -144,6 +143,9 @@ class ResourcesController extends Controller implements HasMiddleware
      */
     public function updateBugs(Request $request, $id): JsonResponse
     {
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDate = $dateOptions['currentDate'];
+
         try {
             $validatedData = $request->validate([
                 'taskDetails' => 'required|string',
@@ -159,7 +161,7 @@ class ResourcesController extends Controller implements HasMiddleware
             $task->priority = $validatedData['taskPriority'];
 
             if ($validatedData['taskStatus'] == 3) {
-                $task->completed_date = Carbon::today();
+                $task->completed_date = $currentDate;
             }
 
             $task->save();
@@ -195,7 +197,6 @@ class ResourcesController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
         $canEditFiles = ($positionId == CoordinatorPosition::CC || in_array(CoordinatorPosition::CC, $secPositionId));
-        // $canEditFiles = ($positionId == 7 || in_array(7, $secPositionId));  // CC Coordinator
 
         $resources = Resources::with('resourceCategory', 'updatedBy')->get();
         $resourceCategories = ResourceCategory::all();
@@ -209,57 +210,11 @@ class ResourcesController extends Controller implements HasMiddleware
         return view('resources.resources')->with($data);
     }
 
-    /**
-     * Add New Files or Links to the Resources List
-     */
-    // public function addResources(Request $request): JsonResponse
-    // {
-    //     try {
-    //         $user = $this->userController->loadUserInformation($request);
-    //         $coorId = $user['user_coorId'];
-    //         $lastUpdatedBy = $user['user_name'];
-    //         $lastupdatedDate = date('Y-m-d H:i:s');
-
-    //         $validatedData = $request->validate([
-    //             'fileCategoryNew' => 'required',
-    //             'fileNameNew' => 'required|string|max:50',
-    //             'fileDescriptionNew' => 'required|string|max:500',
-    //             'fileTypeNew' => 'required',
-    //             'fileVersionNew' => 'nullable|string|max:25',
-    //             'LinkNew' => 'nullable|string|max:255',
-    //             'filePathNew' => 'nullable|string|max:255',
-    //         ]);
-
-    //         $file = new Resources;
-    //         $file->category = $validatedData['fileCategoryNew'];
-    //         $file->name = $validatedData['fileNameNew'];
-    //         $file->description = $validatedData['fileDescriptionNew'];
-    //         $file->file_type = $validatedData['fileTypeNew'];
-    //         $file->version = $validatedData['fileVersionNew'] ?? null;
-    //         $file->link = $validatedData['LinkNew'] ?? null;
-    //         $file->file_path = $validatedData['filePathNew'] ?? null;
-    //         $file->updated_id = $coorId;
-    //         $file->updated_date = $lastupdatedDate;
-
-    //         $file->save();
-
-    //         $id = $file->id;
-    //         $fileType = $file->file_type;
-
-    //         return response()->json(['success' => true, 'id' => $id, 'file_type' => $fileType]);
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['success' => false, 'error' => 'An error occurred while adding the resource.'], 500);
-    //     }
-    // }
-
     public function addResources(Request $request): JsonResponse
 {
     try {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $validatedData = $request->validate([
             'fileCategoryNew' => 'required',
@@ -297,8 +252,6 @@ class ResourcesController extends Controller implements HasMiddleware
         }
 
         $file->updated_id = $coorId;
-        $file->updated_date = $lastupdatedDate;
-
         $file->save();
 
         return response()->json(['success' => true, 'id' => $file->id, 'file_type' => $file->file_type]);
@@ -309,63 +262,11 @@ class ResourcesController extends Controller implements HasMiddleware
     }
 }
 
-    /**
-     * Update Files or Links on the Resources List
-     */
-    // public function updateResources(Request $request, $id): JsonResponse
-    // {
-    //     try {
-    //         $user = $this->userController->loadUserInformation($request);
-    //         $coorId = $user['user_coorId'];
-    //         $lastUpdatedBy = $user['user_name'];
-    //         $lastupdatedDate = date('Y-m-d H:i:s');
-
-    //         $validatedData = $request->validate([
-    //             'fileDescription' => 'required|string|max:500',
-    //             'fileType' => 'required',
-    //             'fileVersion' => 'nullable|string|max:25',
-    //             'link' => 'nullable|string|max:255',
-    //         ]);
-
-    //         // Fetch admin details (note: this query fetches but doesn't use the result - you may want to review this)
-    //         $fileInfo = DB::table('resources')
-    //             ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-    //             ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-    //             ->where('resources.id', $id)
-    //             ->first();
-
-    //         $file = Resources::findOrFail($id);
-    //         $file->description = $validatedData['fileDescription'];
-    //         $file->file_type = $validatedData['fileType'];
-
-    //         // Check file_type value and set version and link accordingly
-    //         if ($validatedData['fileType'] == 1) {
-    //             $file->link = null;
-    //             $file->version = $validatedData['fileVersion'] ?? null;
-    //         } elseif ($validatedData['fileType'] == 2) {
-    //             $file->version = null;
-    //             $file->file_path = null;
-    //             $file->link = $validatedData['link'] ?? null;
-    //         }
-
-    //         $file->updated_id = $coorId;
-    //         $file->updated_date = $lastupdatedDate;
-
-    //         $file->save();
-
-    //         return response()->json(['success' => true]);
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['success' => false, 'error' => 'An error occurred while updating the resource.'], 500);
-    //     }
-    // }
     public function updateResources(Request $request, $id): JsonResponse
 {
     try {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $validatedData = $request->validate([
             'fileDescription' => 'required|string|max:500',
@@ -398,8 +299,6 @@ class ResourcesController extends Controller implements HasMiddleware
         }
 
         $file->updated_id = $coorId;
-        $file->updated_date = $lastupdatedDate;
-
         $file->save();
 
         return response()->json(['success' => true]);
@@ -441,8 +340,7 @@ class ResourcesController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];
-            $lastupdatedDate = date('Y-m-d H:i:s');
+            $updatedBy = $user['user_name'];
 
             $validatedData = $request->validate([
                 'fileCategoryNew' => 'required',
@@ -480,8 +378,6 @@ class ResourcesController extends Controller implements HasMiddleware
             }
 
             $file->updated_id = $coorId;
-            $file->updated_date = $lastupdatedDate;
-
             $file->save();
 
             return response()->json(['success' => true, 'id' => $file->id, 'file_type' => $file->file_type]);
@@ -500,8 +396,7 @@ class ResourcesController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];
-            $lastupdatedDate = date('Y-m-d H:i:s');
+            $updatedBy = $user['user_name'];
 
             $validatedData = $request->validate([
                 'fileDescription' => 'required|string|max:500',
@@ -510,13 +405,6 @@ class ResourcesController extends Controller implements HasMiddleware
                 'link' => 'nullable|string|max:255',
                 'route' => 'nullable|string|max:255',
             ]);
-
-            // Fetch admin details (note: this query fetches but doesn't use the result - you may want to review this)
-            // $fileInfo = DB::table('resources')
-            //     ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            //     ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-            //     ->where('resources.id', $id)
-            //     ->first();
 
             $file = Resources::findOrFail($id);
             $file->description = $validatedData['fileDescription'];
@@ -541,8 +429,6 @@ class ResourcesController extends Controller implements HasMiddleware
             }
 
             $file->updated_id = $coorId;
-            $file->updated_date = $lastupdatedDate;
-
             $file->save();
 
             return response()->json(['success' => true]);

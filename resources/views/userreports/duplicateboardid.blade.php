@@ -29,56 +29,48 @@
                   <th>Position ID</th>
 			        <th>First Name</th>
 				  <th>Last Name</th>
-                  <th>Status</th>
+                  <th>User Type</th>
 				  <th>Active User</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($userList as $list)
-                  <tr>
-                        <td>{{ $list->email }}</td>
-                          <td>{{ $list->id }}</td>
-                        <td>{{ $list->chapter_id }}</td>
-                        <td>{{ $list->board_position_id }}</td>
-					<td>{{ $list->first_name }}</td>
-						<td>{{ $list->last_name }}</td>
-                        <td>
-                            @if($list->user_type == 'coordinator')
-                                @if($list->coordinator->active_status == '1')
-                                    ACTIVE
-                                @elseif($list->coordinator->active_status == '2')
-                                    PENDING
-                                @elseif($list->coordinator->active_status == '3')
-                                    NOT APPROVED
-                                @elseif($list->coordinator->active_status == '0')
-                                    NOT ACTIVE
+                @foreach($boardList as $list)
+                        <tr>
+                            <td>{{ $list->email }}</td>
+                            <td>{{ $list->id }}</td>
+                            <td>{{ $list->chapter_id }}</td>
+                            <td>{{ $list->board_position_id }}</td>
+                            <td>{{ $list->first_name }}</td>
+                            <td>{{ $list->last_name }}</td>
+                            <td>
+                                @if($list->user->type_id == \App\Enums\UserTypeEnum::COORD)
+                                    {{ match($list->user->coordinator->active_status) {
+                                        \App\Enums\ActiveStatusEnum::ACTIVE => 'Coordinator Active',
+                                        \App\Enums\ActiveStatusEnum::ZAPPED => 'Coordinator Retired',
+                                        \App\Enums\ActiveStatusEnum::PENDING => 'Coordinator Pending',
+                                        \App\Enums\ActiveStatusEnum::NOTAPPROVED => 'Coordinator Not Approved',
+                                        default => ''
+                                    } }}
+                                @else
+                                    {{ match($list->user->type_id) {
+                                        \App\Enums\UserTypeEnum::BOARD => 'Board Active',
+                                        \App\Enums\UserTypeEnum::DISBANDED => 'Board Disbanded',
+                                        \App\Enums\UserTypeEnum::OUTGOING => 'Board Outgoing',
+                                        \App\Enums\UserTypeEnum::INCOMING => 'Board Incoming',
+                                        \App\Enums\UserTypeEnum::PENDING => 'Board Pending',
+                                        default => ''
+                                    } }}
                                 @endif
-                            @endif
-                            @if($list->user_type == 'board')
-                                ACTIVE
-                            @endif
-                            @if($list->user_type == 'disbanded')
-                                DISBANDED
-                            @endif
-                            @if($list->user_type == 'outgoing')
-                                OUTGOING
-                            @endif
-                            @if($list->user_type == 'incoming')
-                                INCOMING
-                            @endif
-                            @if($list->user_type == 'pending')
-                                PENDING
-                            @endif
-                        </td>
-						<td>
-							@if($list->is_active=='1')
-							    YES
-							@else
-								NO
-							@endif
-						</td>
-			        </tr>
-                  @endforeach
+                            </td>
+                            <td>
+                                {{ match($list->user->is_active) {
+                                    \App\Enums\UserStatusEnum::ACTIVE => 'YES',
+                                    \App\Enums\UserStatusEnum::INACTIVE => 'NO',
+                                    default => ''
+                                } }}
+                            </td>
+                        </tr>
+                    @endforeach
                   </tbody>
                 </table>
 		        </div>

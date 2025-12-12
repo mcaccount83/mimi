@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\ChapterCheckbox;
 use App\Enums\CoordinatorCheckbox;
+use App\Enums\UserTypeEnum;
+use App\Enums\UserStatusEnum;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\ForumCategorySubscription;
@@ -547,7 +549,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
             // Delete subscriptions only for users who are coordinators
             $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
                 ->whereHas('user', function ($query) {
-                    $query->where('user_type', 'coordinator');
+                    $query->where('type_id', UserTypeEnum::COORD);
                 })
                 ->delete();
 
@@ -577,7 +579,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
             // Delete subscriptions only for users who are board members
             $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
                 ->whereHas('user', function ($query) {
-                    $query->where('user_type', 'board');
+                    $query->where('type_id', UserTypeEnum::BOARD);
                 })
                 ->delete();
 
@@ -607,7 +609,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
             // Delete subscriptions only for users who are board members
             $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
                 ->whereHas('user', function ($query) {
-                    $query->where('user_type', 'board');
+                    $query->where('type_id', UserTypeEnum::BOARD);
                 })
                 ->delete();
 

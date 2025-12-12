@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Enums\BoardPosition;
 use App\Enums\ChapterCheckbox;
 use App\Enums\CoordinatorPosition;
+use App\Enums\UserTypeEnum;
+use App\Enums\UserStatusEnum;
 use App\Mail\BorUpdateListNoitce;
 use App\Mail\BorUpdatePCNotice;
 use App\Mail\ChapDetailsUpdatePCNotice;
@@ -29,6 +31,7 @@ use App\Models\Coordinators;
 use App\Models\Country;
 use App\Models\DisbandedChecklist;
 use App\Models\Documents;
+use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
 use App\Models\ForumCategorySubscription;
@@ -305,6 +308,7 @@ class ChapterController extends Controller implements HasMiddleware
         $chPcId = $baseQuery['chPcId'];
         $chPayments = $baseQuery['chPayments'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $reviewComplete = $baseQuery['reviewComplete'];
 
@@ -330,8 +334,8 @@ class ChapterController extends Controller implements HasMiddleware
 
         $resources = Resources::with('resourceCategory')->get();
 
-        $now = Carbon::now();
-        $threeMonthsAgo = $now->copy()->subMonths(3);
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $threeMonthsAgo = $dateOptions['threeMonthsAgo'];
         $startMonthId = $chDetails->start_month_id;
         $startYear = $chDetails->start_year;
         $startDate = Carbon::createFromDate($startYear, $startMonthId, 1);
@@ -340,7 +344,7 @@ class ChapterController extends Controller implements HasMiddleware
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate, 'probationReason' => $probationReason,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
-            'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded,
+            'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded, 'chEOYDocuments' => $chEOYDocuments,
             'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
 
         ];
@@ -367,8 +371,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateEIN(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
@@ -381,8 +384,7 @@ class ChapterController extends Controller implements HasMiddleware
             DB::beginTransaction();
 
             $chapter->ein = $ein;
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             if ($chapterEIN == 1) {
@@ -413,8 +415,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateChapterDisband(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
@@ -424,16 +425,15 @@ class ChapterController extends Controller implements HasMiddleware
 
         $chapter = Chapters::find($chapterid);
         $documents = Documents::find($chapterid);
-        $preBalance = $documents->balance ?? null;
+        $preBalance = $documentsEOY->pre_balance ?? null;
 
         try {
             DB::beginTransaction();
 
             $chapter->active_status = '0';
             $chapter->disband_reason = $disbandReason;
-            $chapter->zap_date = date('Y-m-d');
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->zap_date = Carbon::now();
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             $documents->disband_letter = $disbandLetter;
@@ -452,8 +452,7 @@ class ChapterController extends Controller implements HasMiddleware
             $userIds = $boardDetails->pluck('user_id')->toArray();
 
             User::whereIn('id', $userIds)->update([
-                'user_type' => 'disbanded',
-                'updated_at' => $lastupdatedDate,
+                'type_id'=> UserTypeEnum::DISBANDED,
             ]);
 
             foreach ($boardDetails as $boardDetail) {
@@ -470,8 +469,7 @@ class ChapterController extends Controller implements HasMiddleware
                     'state_id' => $boardDetail->state_id,
                     'zip' => $boardDetail->zip,
                     'country_id' => $boardDetail->country_id,
-                    'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => $lastupdatedDate,
+                    'updated_by' => $updatedBy,
                 ]);
             }
 
@@ -541,14 +539,14 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateChapterUnZap(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
 
         $chapter = Chapters::find($chapterid);
         $documents = Documents::find($chapterid);
+        $documentsEOY = DocumentsEOY::find($chapterid);
 
         $defaultCategories = $this->forumSubscriptionController->defaultCategories();
         $defaultBoardCategories = $defaultCategories['boardCategories'];
@@ -559,13 +557,14 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->active_status = '1';
             $chapter->disband_reason = null;
             $chapter->zap_date = null;
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             $documents->disband_letter = null;
-            $documents->final_report_received = null;
             $documents->save();
+
+            $documentsEOY->final_report_received = null;
+            $documentsEOY->save();
 
             DisbandedChecklist::where('chapter_id', $chapterid)->delete();
             FinancialReportFinal::where('chapter_id', $chapterid)->delete();
@@ -574,8 +573,7 @@ class ChapterController extends Controller implements HasMiddleware
             $userIds = $boardDetails->pluck('user_id')->toArray();
 
             User::whereIn('id', $userIds)->update([
-                'user_type' => 'board',
-                'updated_at' => $lastupdatedDate,
+                'type_id'=> UserTypeEnum::BOARD,
             ]);
 
             foreach ($boardDetails as $boardDetail) {
@@ -592,8 +590,7 @@ class ChapterController extends Controller implements HasMiddleware
                     'state_id' => $boardDetail->state_id,
                     'zip' => $boardDetail->zip,
                     'country_id' => $boardDetail->country_id,
-                    'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => $lastupdatedDate,
+                    'updated_by' => $updatedBy,
                 ]);
             }
 
@@ -731,11 +728,12 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateChapterNew(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
         $conference = $user['user_confId'];
-        $currentMonth = date('m');
-        $currentYear = date('Y');
+
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentMonth = $dateOptions['currentMonth'];
+        $currentYear = $dateOptions['currentYear'];
 
         $input = $request->all();
 
@@ -762,9 +760,7 @@ class ChapterController extends Controller implements HasMiddleware
                 'next_renewal_year' => $currentYear + 1,
                 'primary_coordinator_id' => $input['ch_primarycor'],
                 'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
-                'last_updated_by' => $lastUpdatedBy,
-                'last_updated_date' => $lastupdatedDate,
-                'created_at' => $lastupdatedDate,
+                'updated_by' => $updatedBy,
                 'active_status' => 1,
             ])->id;
 
@@ -776,13 +772,17 @@ class ChapterController extends Controller implements HasMiddleware
                 'chapter_id' => $chapterId,
             ]);
 
+            DocumentsEOY::create([
+                'chapter_id' => $chapterId,
+            ]);
+
             Payments::create([
                 'chapter_id' => $chapterId,
             ]);
 
             $chapter = Chapters::find($chapterId);
             // Update founder/president position
-            $this->updateBoardMember($chapter, 'president', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
+            $this->updateBoardMember($chapter, 'president', $request, $updatedBy, $defaultBoardCategories);
 
             // Load Chapter MailData//
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
@@ -854,6 +854,7 @@ class ChapterController extends Controller implements HasMiddleware
         $chConfId = $baseQuery['chConfId'];
         $chActiveId = $baseQuery['chActiveId'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chPayments = $baseQuery['chPayments'];
 
         $stateShortName = $baseQuery['stateShortName'];
@@ -873,7 +874,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $pcList = $baseQuery['pcList'];
 
-        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'reviewComplete' => $reviewComplete,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'reviewComplete' => $reviewComplete, 'coorId' => $coorId, 'chEOYDocuments' => $chEOYDocuments,
             'chDetails' => $chDetails, 'websiteLink' => $websiteLink, 'chDocuments' => $chDocuments, 'allProbation' => $allProbation,
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'probationReason' => $probationReason,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
@@ -890,8 +891,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateChapterDetails(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -946,8 +946,7 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
             $chapter->primary_coordinator_id = $request->filled('ch_primarycor') ? $request->input('ch_primarycor') : $request->input('ch_hid_primarycor');
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
 
             $chapter->save();
 
@@ -1093,37 +1092,42 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Update Chapter Board Information
      */
-    private function updateBoardMember($chapter, $position, $requestData, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories)
+    private function updateBoardMember($chapter, $position, $requestData, $updatedBy, $defaultBoardCategories)
     {
         $positionConfig = [
             'president' => [
                 'relation' => 'president',
                 'position_id' => BoardPosition::PRES,
                 'prefix' => 'ch_pre_',
+                'status' => '1',
                 'vacant_field' => null, // President is never vacant
             ],
             'avp' => [
                 'relation' => 'avp',
                 'position_id' => BoardPosition::AVP,
                 'prefix' => 'ch_avp_',
+                'status' => '1',
                 'vacant_field' => 'AVPVacant',
             ],
             'mvp' => [
                 'relation' => 'mvp',
                 'position_id' => BoardPosition::MVP,
                 'prefix' => 'ch_mvp_',
+                'status' => '1',
                 'vacant_field' => 'MVPVacant',
             ],
             'treasurer' => [
                 'relation' => 'treasurer',
                 'position_id' => BoardPosition::TRS,
                 'prefix' => 'ch_trs_',
+                'status' => '1',
                 'vacant_field' => 'TreasVacant',
             ],
             'secretary' => [
                 'relation' => 'secretary',
                 'position_id' => BoardPosition::SEC,
                 'prefix' => 'ch_sec_',
+                'status' => '1',
                 'vacant_field' => 'SecVacant',
             ],
         ];
@@ -1135,6 +1139,7 @@ class ChapterController extends Controller implements HasMiddleware
         $config = $positionConfig[$position];
         $relation = $config['relation'];
         $prefix = $config['prefix'];
+        $status = $config['1'];
         $positionId = $config['position_id'];
         $vacantField = $config['vacant_field'];
 
@@ -1156,7 +1161,7 @@ class ChapterController extends Controller implements HasMiddleware
 
             if ($isVacant) {
                 if ($user) {
-                    $this->updateUserToOutgoing($user, $lastupdatedDate);
+                    $this->updateUserToOutgoing($user);
                     $this->removeActiveBoardMember($user);
                 }
 
@@ -1166,34 +1171,33 @@ class ChapterController extends Controller implements HasMiddleware
                 $emailChanged = ($user->email != $email);
 
                 if ($nameChanged && $emailChanged) {
-                    $this->updateUserToOutgoing($user, $lastupdatedDate);
+                    $this->updateUserToOutgoing($user);
                     $this->removeActiveBoardMember($user);
                     // Create new board member in same position
-                    $this->createNewBoardMember($chapterWithRelation, $relation, $positionId, $requestData, $prefix, $lastUpdatedBy, $defaultBoardCategories);
+                    $this->createNewBoardMember($chapterWithRelation, $relation, $positionId, $requestData, $prefix, $status, $updatedBy, $defaultBoardCategories);
 
                 } else {
                     // Same user – update fields
-                    $this->updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $lastUpdatedBy, $defaultBoardCategories);
+                    $this->updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $status, $updatedBy, $defaultBoardCategories);
                 }
             }
         } else {
             // No current board member
             if (! $isVacant) {
-                $this->createNewBoardMember($chapterWithRelation, $relation, $positionId, $requestData, $prefix, $lastUpdatedBy, $defaultBoardCategories);
+                $this->createNewBoardMember($chapterWithRelation, $relation, $positionId, $requestData, $prefix, $status, $updatedBy, $defaultBoardCategories);
             }
         }
     }
 
-    private function updateUserToOutgoing($user, $lastupdatedDate)
+    private function updateUserToOutgoing($user)
     {
         User::where('id', $user->id)->update([
-            'user_type' => 'outgoing',
-            'is_active' => '0',
-            'updated_at' => $lastupdatedDate,
+            'type_id'=> UserTypeEnum::OUTGOING,
+            'is_active' => UserStatusEnum::INACTIVE,
         ]);
     }
 
-    private function createOutgoingBoardMember($user, $bdDetails, $lastUpdatedBy, $lastupdatedDate)
+    private function createOutgoingBoardMember($user, $bdDetails, $updatedBy)
     {
         BoardsOutgoing::updateOrCreate(
             [
@@ -1211,8 +1215,7 @@ class ChapterController extends Controller implements HasMiddleware
                 'state_id' => $bdDetails->state_id,
                 'zip' => $bdDetails->zip,
                 'country_id' => $bdDetails->country_id,
-                'last_updated_by' => $lastUpdatedBy,
-                'last_updated_date' => $lastupdatedDate,
+                'updated_by' => $updatedBy,
             ]
         );
     }
@@ -1223,7 +1226,7 @@ class ChapterController extends Controller implements HasMiddleware
         ForumCategorySubscription::where('user_id', $user->id)->delete();
     }
 
-    private function updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $lastUpdatedBy, $defaultBoardCategories)
+    private function updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $status, $updatedBy, $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
@@ -1231,11 +1234,18 @@ class ChapterController extends Controller implements HasMiddleware
         $stateId = $requestData->input($prefix.'state');
         $countryId = $requestData->input($prefix.'country') ?? '198';
 
+        if ($status == '0'){
+            $isActive = '0';
+        }elseif($status == '1'){
+            $isActive = '1';
+        }elseif($status == '2'){
+            $isActive = '2';
+        }
+
         $user->update([
             'first_name' => $firstName,
             'last_name' => $lastName,
             'email' => $email,
-            'updated_at' => now(),
         ]);
 
         $boardMember->update([
@@ -1248,8 +1258,7 @@ class ChapterController extends Controller implements HasMiddleware
             'zip' => $requestData->input($prefix.'zip'),
             'country_id' => $countryId,
             'phone' => $requestData->input($prefix.'phone'),
-            'last_updated_by' => $lastUpdatedBy,
-            'last_updated_date' => now(),
+            'updated_by' => $updatedBy,
         ]);
 
         // Ensure forum subscriptions exist
@@ -1266,17 +1275,26 @@ class ChapterController extends Controller implements HasMiddleware
         }
     }
 
-    private function createNewBoardMember($chapter, $relation, $positionId, $requestData, $prefix, $lastUpdatedBy, $defaultBoardCategories)
+    public function createNewBoardMember($chapter, $relation, $positionId, $requestData, $prefix, $status, $updatedBy, $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
         $email = $requestData->input($prefix.'email');
         $stateId = $requestData->input($prefix.'state');
         $countryId = $requestData->input($prefix.'country') ?? '198';
+        $chapterId = $chapter->id;
+
+        if ($status == '0'){
+            $isActive = '0';
+        }elseif($status == '1'){
+            $isActive = '1';
+        }elseif($status == '2'){
+            $isActive = '2';
+        }
 
         // Check if user with this email already exists and is not on another active board
         $existingUser = User::where('email', $email)
-            ->where('user_type', '!=', 'board')
+            ->where('type_id', '!=',  UserTypeEnum::BOARD)
             ->first();
 
         if ($existingUser) {
@@ -1284,8 +1302,8 @@ class ChapterController extends Controller implements HasMiddleware
             $existingUser->update([
                 'first_name' => $firstName,
                 'last_name' => $lastName,
-                'user_type' => 'board',
-                'is_active' => 1,
+                'type_id'=> UserTypeEnum::BOARD,
+                'is_active' => $isActive,
             ]);
             $user = $existingUser;
         } else {
@@ -1295,33 +1313,68 @@ class ChapterController extends Controller implements HasMiddleware
                 'last_name' => $lastName,
                 'email' => $email,
                 'password' => Hash::make('TempPass4You'),
-                'user_type' => 'board',
-                'is_active' => 1,
+                'type_id'=> UserTypeEnum::BOARD,
+                'is_active' => $isActive,
             ]);
         }
 
-        // Create new board member record
-        $chapter->$relation()->create([
-            'user_id' => $user->id,
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'email' => $email,
-            'board_position_id' => $positionId,
-            'street_address' => $requestData->input($prefix.'street'),
-            'city' => $requestData->input($prefix.'city'),
-            'state_id' => $stateId,
-            'zip' => $requestData->input($prefix.'zip'),
-            'country_id' => $countryId,
-            'phone' => $requestData->input($prefix.'phone'),
-            'last_updated_by' => $lastUpdatedBy,
-            'last_updated_date' => now(),
-        ]);
-
-        // Add forum subscriptions
-        foreach ($defaultBoardCategories as $categoryId) {
-            ForumCategorySubscription::updateOrCreate([
+        if ($status == '0'){
+            // Create new board member record
+             BoardsDisbanded::create([
+                'chapter_id' => $chapterId,
                 'user_id' => $user->id,
-                'category_id' => $categoryId,
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $email,
+                'board_position_id' => $positionId,
+                'street_address' => $requestData->input($prefix.'street'),
+                'city' => $requestData->input($prefix.'city'),
+                'state_id' => $stateId,
+                'zip' => $requestData->input($prefix.'zip'),
+                'country_id' => $countryId,
+                'phone' => $requestData->input($prefix.'phone'),
+                'updated_by' => $updatedBy,
+            ]);
+        } elseif ($status == '1'){
+            // Create new board member record
+            $chapter->$relation()->create([
+                'user_id' => $user->id,
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $email,
+                'board_position_id' => $positionId,
+                'street_address' => $requestData->input($prefix.'street'),
+                'city' => $requestData->input($prefix.'city'),
+                'state_id' => $stateId,
+                'zip' => $requestData->input($prefix.'zip'),
+                'country_id' => $countryId,
+                'phone' => $requestData->input($prefix.'phone'),
+                'updated_by' => $updatedBy,
+            ]);
+
+             // Add forum subscriptions
+            foreach ($defaultBoardCategories as $categoryId) {
+                ForumCategorySubscription::updateOrCreate([
+                    'user_id' => $user->id,
+                    'category_id' => $categoryId,
+                ]);
+            }
+        } elseif ($status == '2'){
+            // Create new board member record
+             BoardsPending::create([
+                'chapter_id' => $chapterId,
+                'user_id' => $user->id,
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $email,
+                'board_position_id' => $positionId,
+                'street_address' => $requestData->input($prefix.'street'),
+                'city' => $requestData->input($prefix.'city'),
+                'state_id' => $stateId,
+                'zip' => $requestData->input($prefix.'zip'),
+                'country_id' => $countryId,
+                'phone' => $requestData->input($prefix.'phone'),
+                'updated_by' => $updatedBy,
             ]);
         }
     }
@@ -1330,8 +1383,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateChapterBoard(Request $request, $id)
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1351,17 +1403,15 @@ class ChapterController extends Controller implements HasMiddleware
         DB::beginTransaction();
 
         try {
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             // Update all board positions
-            $this->updateBoardMember($chapter, 'president', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'avp', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'mvp', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'treasurer', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'secretary', $request, $lastUpdatedBy, $lastupdatedDate, $defaultBoardCategories);
-
+            $this->updateBoardMember($chapter, 'president', $request, $updatedBy, $defaultBoardCategories);
+            $this->updateBoardMember($chapter, 'avp', $request, $updatedBy, $defaultBoardCategories);
+            $this->updateBoardMember($chapter, 'mvp', $request, $updatedBy, $defaultBoardCategories);
+            $this->updateBoardMember($chapter, 'treasurer', $request, $updatedBy, $defaultBoardCategories);
+            $this->updateBoardMember($chapter, 'secretary', $request, $updatedBy, $defaultBoardCategories);
             // Update Chapter MailData//
             $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
@@ -1520,8 +1570,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateChapterWebsite(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1549,8 +1598,7 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->social1 = $request->input('ch_social1');
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
 
             $chapter->save();
 
@@ -1631,8 +1679,7 @@ class ChapterController extends Controller implements HasMiddleware
         $userPosition = $user['user_position'];
         $userConfName = $user['user_conf_name'];
         $userConfDesc = $user['user_conf_desc'];
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1651,11 +1698,6 @@ class ChapterController extends Controller implements HasMiddleware
         $MVPDetails = $basePendingBoardQuery['MVPDetails'];
         $TRSDetails = $basePendingBoardQuery['TRSDetails'];
         $SECDetails = $basePendingBoardQuery['SECDetails'];
-        // $PresDetails = $basePendingBoardQuery['PresPendingDetails'];
-        // $AVPDetails = $basePendingBoardQuery['AVPPendingDetails'];
-        // $MVPDetails = $basePendingBoardQuery['MVPPendingDetails'];
-        // $TRSDetails = $basePendingBoardQuery['TRSPendingDetails'];
-        // $SECDetails = $basePendingBoardQuery['SECPendingDetails'];
 
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $baseQuery['chapterStatus'];
@@ -1719,8 +1761,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updatePendingChapterDetails(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $input = $request->all();
         $chapterName = $request->input('ch_name');
@@ -1741,8 +1782,7 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->email = $request->input('ch_email');
             $chapter->po_box = $request->input('ch_pobox');
             $chapter->primary_coordinator_id = $request->filled('ch_primarycor') ? $request->input('ch_primarycor') : $request->input('ch_hid_primarycor');
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
 
             $chapter->save();
 
@@ -1750,7 +1790,6 @@ class ChapterController extends Controller implements HasMiddleware
                 'first_name' => $request->input('ch_pre_fname'),
                 'last_name' => $request->input('ch_pre_lname'),
                 'email' => $request->input('ch_pre_email'),
-                'updated_at' => now(),
             ]);
 
             $president->update([   // Update board details
@@ -1763,8 +1802,7 @@ class ChapterController extends Controller implements HasMiddleware
                 'zip' => $request->input('ch_pre_zip'),
                 'country_id' => $request->input('ch_pre_country') ?? '198',
                 'phone' => $request->input('ch_pre_phone'),
-                'last_updated_by' => $lastUpdatedBy,
-                'last_updated_date' => now(),
+                'updated_by' => $updatedBy,
             ]);
 
             DB::commit();
@@ -1787,11 +1825,12 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateApproveChapter(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
         $activeStatus = '1';
-        $currentMonth = date('m');
-        $currentYear = date('Y');
+
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentMonth = $dateOptions['currentMonth'];
+        $currentYear = $dateOptions['currentYear'];
 
         $input = $request->all();
         $id = $input['chapter_id'];
@@ -1809,8 +1848,7 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->active_status = $activeStatus;
             $chapter->start_month_id = $currentMonth;
             $chapter->start_year = $currentYear;
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             FinancialReport::create([
@@ -1818,6 +1856,10 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
             Documents::create([
+                'chapter_id' => $chapterId,
+            ]);
+
+            DocumentsEOY::create([
                 'chapter_id' => $chapterId,
             ]);
 
@@ -1833,7 +1875,7 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             User::where('id', $president->user_id)->update([
-                'user_type' => 'board',
+                'type_id'=> UserTypeEnum::BOARD,
             ]);
             Boards::create([
                 'user_id' => $president->user_id,
@@ -1848,8 +1890,7 @@ class ChapterController extends Controller implements HasMiddleware
                 'state_id' => $president->state_id,
                 'zip' => $president->zip,
                 'country_id' => $president->country_id,
-                'last_updated_by' => $lastUpdatedBy,
-                'last_updated_date' => $lastupdatedDate,
+                'updated_by' => $updatedBy,
             ]);
             BoardsPending::where('user_id', $president->user_id)->delete();
 
@@ -1928,8 +1969,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateDeclineChapter(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
         $activeStatus = '3';
 
         $input = $request->all();
@@ -1944,13 +1984,12 @@ class ChapterController extends Controller implements HasMiddleware
         try {
             $chapter->active_status = $activeStatus;
             $chapter->disband_reason = $disbandReason;
-            $chapter->zap_date = $lastupdatedDate;
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = $lastupdatedDate;
+            $chapter->zap_date = Carbon::now();
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             User::where('id', $president->user_id)->update([
-                'is_active' => '0',
+                'is_active' => UserStatusEnum::INACTIVE,
             ]);
 
             DB::commit();

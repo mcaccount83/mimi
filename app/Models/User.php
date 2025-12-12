@@ -2,31 +2,20 @@
 
 namespace App\Models;
 
-use App\Events\UserUpdated;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory;
-    use Notifiable;
-
     protected $primaryKey = 'id';
 
-    protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'user_type', 'is_admin', 'is_active', 'created_at', 'updated_at',
-    ];
+    protected $guarded = [ ]; // ALL columns are mass-assignable
 
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    //  protected $dispatchesEvents = [
-    //     'updated' => UserUpdated::class,
-    // ];
 
     public function coordinator(): HasOne
     {
@@ -58,9 +47,19 @@ class User extends Authenticatable
         return $this->hasOne(BoardsOutgoing::class, 'user_id', 'id');  // 'user_id' in boards HasOne 'id' in users
     }
 
-    public function adminRole(): HasOne
+    public function adminRole(): BelongsTo
     {
-        return $this->hasOne(AdminRole::class, 'id', 'is_admin');  // 'is_admin' in users HasOne 'id' in admin_roles
+        return $this->belongsTo(AdminRole::class, 'is_admin', 'id');  // 'is_admin' in users HasOne 'id' in admin_roles
+    }
+
+    public function userStatus(): BelongsTo
+    {
+        return $this->belongsTo(UserStatus::class, 'is_active', 'id');  // 'is_active' in users BelongsTo 'id' in user_status
+    }
+
+    public function userType(): BelongsTo
+    {
+        return $this->belongsTo(UserType::class, 'type_id', 'id');  // 'type_id' in users BelongsTo 'id' in user_status
     }
 
     public function authorFullName()

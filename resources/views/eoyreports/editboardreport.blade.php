@@ -50,13 +50,13 @@
               <div class="card-body box-profile">
                 <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
                 <br>
-                @if ($chDetails->documents->new_board_submitted != '1' )
+                @if ($chDetails->documentsEOY->new_board_submitted != '1' )
                     <p><span style="color:#dc3545;">Board Election Report has NOT been submitted.</span><br>
                         <br>Chapter needs to complete and Submit the Board Election Report before new board members can be activated in MIMI.<br>
                         <br>Submission can be made by a Coordinator <strong>HERE</strong>.<br>
                     </p>
                 @endif
-                @if ($chDetails->documents->new_board_submitted == '1' && $chDetails->documents->new_board_active !='1')
+                @if ($chDetails->documentsEOY->new_board_submitted == '1' && $chDetails->documentsEOY->new_board_active !='1')
                     <p><span style="color:#28a745;">Board Election Report HAS been submitted Submitted.</span><br>
                         <br>Changes can be made by a Coordinator <strong>HERE</strong> Prior to Activation.<br>
                         <br><span style="color:#dc3545;">Board Election Report has NOT been activated.</span><br>
@@ -64,7 +64,7 @@
                         <br>Outgoing board members will have access to Financial Reports Only.<br>
                     </p>
                 @endif
-                @if ($chDetails->documents->new_board_active =='1')
+                @if ($chDetails->documentsEOY->new_board_active =='1')
                     <p><span style="color:#28a745;">Board Election Report HAS been Submitted and Activated!</span><br>
                         <br>New board members now have full MIMI Access.<br>
                         <br>Outgoing board members have access to Financial Reports Only.<br>
@@ -79,7 +79,7 @@
         </div>
         <!-- /.col -->
 
-                @if ($chDetails->documents->new_board_active != '1')
+                @if ($chDetails->documentsEOY->new_board_active != '1')
 
                 <div class="col-md-6">
                     <!-- Profile Image -->
@@ -504,21 +504,18 @@
         </div>
 
             <div class="card-body text-center">
-                    {{-- <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboardreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Board Election Report</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button> --}}
-                {{-- <br> --}}
-                  @if ($chDetails->documents->new_board_active != '1')
+                  @if ($chDetails->documentsEOY->new_board_active != '1')
                     <div class="d-flex justify-content-center align-items-start flex-wrap">
                             <form method="POST" action="#" onsubmit="return validateBeforeSubmit(true)">
                                 @csrf
-                                @if ($chDetails->documents->new_board_submitted != 1)
+                                @if ($chDetails->documentsEOY->new_board_submitted != 1)
                                     <button type="submit" class="btn bg-gradient-primary mr-1"><i class="fas fa-mail-forward mr-2"></i>Submit</button>
                                 @else
                                     <button type="submit" class="btn bg-gradient-primary mr-1"><i class="fas fa-save mr-2"></i>Save</button>
                                 @endif
                             </form>
 
-                            @if ($chDetails->documents->new_board_submitted == '1' && $PresDetails->first_name != null)
+                            @if ($chDetails->documentsEOY->new_board_submitted == '1' && $PresDetails->first_name != null)
                            <form id="activateSingleBoardForm" action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST">
     @csrf
     <input type="hidden" name="board" value="active">

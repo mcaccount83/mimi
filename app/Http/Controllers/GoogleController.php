@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chapters;
-use App\Models\Documents;
+use App\Models\DocumentsEOY;
 use App\Models\FolderRecord;
 use App\Models\GoogleDrive;
 use App\Models\Resources;
@@ -138,7 +138,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'file' => 'required|file',
             ]);
 
-            $chapter = Chapters::with('documents', 'state')->find($id);
+            $chapter = Chapters::with('documentsEOY', 'state')->find($id);
             $ein = $chapter->ein;
             $chapterName = $chapter->name;
             $state = $chapter->state->state_short_name;
@@ -154,7 +154,7 @@ class GoogleController extends Controller implements HasMiddleware
             $filecontent = file_get_contents($file->getPathname());
 
             if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
-                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                $existingDocRecord = DocumentsEOY::where('chapter_id', $id)->first();
                 if ($existingDocRecord) {
                     $existingDocRecord->ein_letter_path = $file_id;
                     $existingDocRecord->save();
@@ -163,7 +163,7 @@ class GoogleController extends Controller implements HasMiddleware
                     $newDocData = ['chapter_id' => $id];
                     $newDocData['ein_letter_path'] = $file_id;
                     $newDocData['ein_letter'] = '1';
-                    Documents::create($newDocData);
+                    DocumentsEOY::create($newDocData);
                 }
 
                 return response()->json([
@@ -300,7 +300,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'file' => 'required|file',
             ]);
 
-            $chapter = Chapters::with('documents', 'state')->find($id);
+            $chapter = Chapters::with('documentsEOY', 'state')->find($id);
             $conf = $chapter->conference_id;
             $state = $chapter->state->state_short_name;
             $chapterName = $chapter->name;
@@ -317,7 +317,7 @@ class GoogleController extends Controller implements HasMiddleware
             $filecontent = file_get_contents($file->getPathname());
 
             if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                $existingDocRecord = DocumentsEOY::where('chapter_id', $id)->first();
                 if ($existingDocRecord) {
                     $existingDocRecord->roster_path = $file_id;
                     $existingDocRecord->save();
@@ -325,7 +325,7 @@ class GoogleController extends Controller implements HasMiddleware
                     Log::error("Expected document record for chapter_id {$id} not found");
                     $newDocData = ['chapter_id' => $id];
                     $newDocData['roster_path'] = $file_id;
-                    Documents::create($newDocData);
+                    DocumentsEOY::create($newDocData);
                 }
 
                 return response()->json([
@@ -358,7 +358,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'file' => 'required|file',
             ]);
 
-            $chapter = Chapters::with('documents', 'state')->find($id);
+            $chapter = Chapters::with('documentsEOY', 'state')->find($id);
             $conf = $chapter->conference_id;
             $state = $chapter->state->state_short_name;
             $chapterName = $chapter->name;
@@ -375,7 +375,7 @@ class GoogleController extends Controller implements HasMiddleware
             $filecontent = file_get_contents($file->getPathname());
 
             if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                $existingDocRecord = DocumentsEOY::where('chapter_id', $id)->first();
                 if ($existingDocRecord) {
                     $existingDocRecord->irs_path = $file_id;
                     $existingDocRecord->save();
@@ -383,7 +383,7 @@ class GoogleController extends Controller implements HasMiddleware
                     Log::error("Expected document record for chapter_id {$id} not found");
                     $newDocData = ['chapter_id' => $id];
                     $newDocData['irs_path'] = $file_id;
-                    Documents::create($newDocData);
+                    DocumentsEOY::create($newDocData);
                 }
 
                 return response()->json([
@@ -416,7 +416,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'file' => 'required|file',
             ]);
 
-            $chapter = Chapters::with('documents', 'state')->find($id);
+            $chapter = Chapters::with('documentsEOY', 'state')->find($id);
             $conf = $chapter->conference_id;
             $state = $chapter->state->state_short_name;
             $chapterName = $chapter->name;
@@ -433,7 +433,7 @@ class GoogleController extends Controller implements HasMiddleware
             $filecontent = file_get_contents($file->getPathname());
 
             if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                $existingDocRecord = DocumentsEOY::where('chapter_id', $id)->first();
                 if ($existingDocRecord) {
                     $existingDocRecord->statement_1_path = $file_id;
                     $existingDocRecord->save();
@@ -441,7 +441,7 @@ class GoogleController extends Controller implements HasMiddleware
                     Log::error("Expected document record for chapter_id {$id} not found");
                     $newDocData = ['chapter_id' => $id];
                     $newDocData['statement_1_path'] = $file_id;
-                    Documents::create($newDocData);
+                    DocumentsEOY::create($newDocData);
                 }
 
                 return response()->json([
@@ -474,7 +474,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'file' => 'required|file',
             ]);
 
-            $chapter = Chapters::with('documents', 'state')->find($id);
+            $chapter = Chapters::with('documentsEOY', 'state')->find($id);
             $conf = $chapter->conference_id;
             $state = $chapter->state->state_short_name;
             $chapterName = $chapter->name;
@@ -491,7 +491,7 @@ class GoogleController extends Controller implements HasMiddleware
             $filecontent = file_get_contents($file->getPathname());
 
             if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                $existingDocRecord = DocumentsEOY::where('chapter_id', $id)->first();
                 if ($existingDocRecord) {
                     $existingDocRecord->statement_2_path = $file_id;
                     $existingDocRecord->save();
@@ -499,7 +499,7 @@ class GoogleController extends Controller implements HasMiddleware
                     Log::error("Expected document record for chapter_id {$id} not found");
                     $newDocData = ['chapter_id' => $id];
                     $newDocData['statement_2_path'] = $file_id;
-                    Documents::create($newDocData);
+                    DocumentsEOY::create($newDocData);
                 }
 
                 return response()->json([
@@ -529,7 +529,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'file' => 'required|file',
             ]);
 
-            $chapter = Chapters::with('documents', 'state')->find($id);
+            $chapter = Chapters::with('documentsEOY', 'state')->find($id);
             $conf = $chapter->conference_id;
             $state = $chapter->state->state_short_name;
             $chapterName = $chapter->name;
@@ -546,7 +546,7 @@ class GoogleController extends Controller implements HasMiddleware
             $filecontent = file_get_contents($file->getPathname());
 
             if ($file_id = $this->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+                $existingDocRecord = DocumentsEOY::where('chapter_id', $id)->first();
                 if ($existingDocRecord) {
                     $existingDocRecord->award_path = $file_id;
                     $existingDocRecord->save();
@@ -554,7 +554,7 @@ class GoogleController extends Controller implements HasMiddleware
                     Log::error("Expected document record for chapter_id {$id} not found");
                     $newDocData = ['chapter_id' => $id];
                     $newDocData['award_path'] = $file_id;
-                    Documents::create($newDocData);
+                    DocumentsEOY::create($newDocData);
                 }
 
                 return response()->json([

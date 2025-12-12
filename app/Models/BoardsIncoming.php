@@ -2,25 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Notifications\Notifiable;
 
 class BoardsIncoming extends Model
 {
-    use HasFactory;
-    use Notifiable;
-
     protected $table = 'boards_incoming';
 
-    public $timestamps = false;
-
-    protected $fillable = [
-        'user_id', 'chapter_id', 'board_position_id', 'first_name', 'last_name', 'email', 'phone', 'street_address', 'city', 'state_id', 'zip', 'country_id',
-        'last_updated_by', 'last_updated_date',
-    ];
+    protected $guarded = [ ]; // ALL columns are mass-assignable
 
     public function user(): BelongsTo
     {

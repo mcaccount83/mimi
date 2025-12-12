@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
 use App\Enums\CoordinatorPosition;
+use App\Enums\UserTypeEnum;
+use App\Enums\UserStatusEnum;
 use App\Mail\NewChapterThankYou;
 use App\Mail\NewCoordApplication;
 use App\Mail\NewCoordinatorThankYou;
@@ -120,7 +122,6 @@ class PublicController extends Controller
      */
     public function chapterResources(): View
     {
-
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
@@ -245,12 +246,12 @@ class PublicController extends Controller
         $state = State::find($stateId);
         $stateShortName = $state->state_short_name;
 
-        $lastupdatedDate = date('Y-m-d H:i:s');
         $regId = '0';
         $statusId = '1';
         $activeStatus = '2';
-        $currentMonth = date('m');
-        $currentYear = date('Y');
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentMonth = $dateOptions['currentMonth'];
+        $currentYear = $dateOptions['currentYear'];
 
         $confId = null;
         if (in_array($stateShortName, ['AK', 'HI', 'ID', 'MN', 'MT', 'ND', 'OR', 'SD', 'WA', 'WI', 'WY', '**', 'AA', 'AE', 'AP'])) {
@@ -338,9 +339,7 @@ class PublicController extends Controller
                 'next_renewal_year' => $currentYear + 1,
                 'primary_coordinator_id' => $pcId,
                 'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
-                'last_updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
-                'last_updated_date' => $lastupdatedDate,
-                'created_at' => $lastupdatedDate,
+                'updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
                 'active_status' => $activeStatus,
             ])->id;
 
@@ -358,8 +357,8 @@ class PublicController extends Controller
                     'last_name' => $input['ch_pre_lname'],
                     'email' => $input['ch_pre_email'],
                     'password' => Hash::make($input['password']),
-                    'user_type' => 'pending',
-                    'is_active' => 1,
+                    'type_id'=> UserTypeEnum::PENDING,
+                    'is_active' => UserStatusEnum::ACTIVE,
                 ])->id;
 
                 BoardsPending::create([
@@ -375,8 +374,7 @@ class PublicController extends Controller
                     'zip' => $input['ch_pre_zip'],
                     'country_id' => $input['ch_pre_country'] ?? '198',
                     'phone' => $input['ch_pre_phone'],
-                    'last_updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
-                    'last_updated_date' => $lastupdatedDate,
+                    'updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
                 ])->id;
             }
 
@@ -836,7 +834,6 @@ class PublicController extends Controller
         $state = State::find($stateId);
         $stateShortName = $state->state_short_name;
 
-        $lastupdatedDate = date('Y-m-d H:i:s');
         $regId = '0';
         $activeStatus = '2';
 
@@ -875,9 +872,9 @@ class PublicController extends Controller
                 'last_name' => $input['cd_lname'],
                 'email' => $new_cd_email,
                 'password' => Hash::make('TempPass4You'),
-                'user_type' => 'coordinator',
+                'type_id'=> UserTypeEnum::COORD,
                 'is_admin' => 0,
-                'is_active' => 1,
+                'is_active' => UserStatusEnum::ACTIVE,
             ])->id;
             $coordId = Coordinators::create([
                 'user_id' => $userId,
@@ -901,9 +898,8 @@ class PublicController extends Controller
                 'birthday_month_id' => $input['cd_bmonth'],
                 'birthday_day' => $input['cd_bday'],
                 'home_chapter' => $input['home_chapter'].', '.$input['home_state'],
-                'coordinator_start_date' => $lastupdatedDate,
-                'last_updated_by' => $input['cd_fname'].' '.$input['cd_lname'],
-                'last_updated_date' => $lastupdatedDate,
+                'coordinator_start_date' => Carbon::now(),
+                'updated_by' => $input['cd_fname'].' '.$input['cd_lname'],
                 'active_status' => $activeStatus,
             ])->id;
             CoordinatorApplication::create([

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// use Carbon\Carbon;
+use App\Services\PositionConditionsService;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -18,12 +18,15 @@ class ExportController extends Controller implements HasMiddleware
 
     protected $baseCoordinatorController;
 
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
+    protected $positionConditionsService;
+
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController, PositionConditionsService $positionConditionsService)
     {
 
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
+        $this->positionConditionsService = $positionConditionsService;
     }
 
     public static function middleware(): array
@@ -154,16 +157,16 @@ class ExportController extends Controller implements HasMiddleware
 
     private function formatEOYInfo($chapterData)
     {
-        $chDocuments = $chapterData['chDocuments'];
+        $chEOYDocuments = $chapterData['chEOYDocuments'];
 
         return [
-            'Board Report Received' => ($chDocuments->new_board_submitted == 1) ? 'YES' : 'NO',
-            'Board Report Activated' => ($chDocuments->new_board_active == 1) ? 'YES' : 'NO',
-            'Financial Report Received' => ($chDocuments->financial_report_received == 1) ? 'YES' : 'NO',
-            'Financial Review Complete' => ($chDocuments->financial_review_complete == 1) ? 'YES' : 'NO',
-            'Report Notes' => $chDocuments->report_notes,
-            'Extension Given' => ($chDocuments->report_extension == 1) ? 'YES' : 'NO',
-            'Extension Notes' => $chDocuments->extension_notes,
+            'Board Report Received' => ($chEOYDocuments->new_board_submitted == 1) ? 'YES' : 'NO',
+            'Board Report Activated' => ($chEOYDocuments->new_board_active == 1) ? 'YES' : 'NO',
+            'Financial Report Received' => ($chEOYDocuments->financial_report_received == 1) ? 'YES' : 'NO',
+            'Financial Review Complete' => ($chEOYDocuments->financial_review_complete == 1) ? 'YES' : 'NO',
+            'Report Notes' => $chEOYDocuments->report_notes,
+            'Extension Given' => ($chEOYDocuments->report_extension == 1) ? 'YES' : 'NO',
+            'Extension Notes' => $chEOYDocuments->extension_notes,
         ];
     }
 
@@ -328,7 +331,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300); // 5 minutes
 
-        $fileName = 'chapter_export_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'chapter_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -420,7 +426,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300); // 5 minutes
 
-        $fileName = 'chapter_zap_export_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'chapter_zap_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -513,7 +522,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300); // 5 minutes
 
-        $fileName = 'int_chapter_export_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'int_chapter_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -609,7 +621,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512');
         set_time_limit(600); // 10 minutes
 
-        $fileName = 'int_chapter_zap_export_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'int_chapter_zap_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -706,7 +721,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300);
 
-        $fileName = 'rereg_export_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'rereg_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -722,10 +740,9 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $now = Carbon::now();
-        $currentMonth = $now->month;
-        $lastMonth = $now->copy()->subMonth()->format('m');
-        $currentYear = $now->year;
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentYear = $dateOptions['currentYear'];
+        $lastMonth = $dateOptions['lastMonth'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -790,7 +807,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300);
 
-        $fileName = 'rereg_export_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'rereg_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -809,10 +829,9 @@ class ExportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $now = Carbon::now();
-        $currentMonth = $now->month;
-        $lastMonth = $now->copy()->subMonth()->format('m');
-        $currentYear = $now->year;
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentYear = $dateOptions['currentYear'];
+        $lastMonth = $dateOptions['lastMonth'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -880,7 +899,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300);
 
-        $fileName = 'ein_status_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'ein_status_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -950,7 +972,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300);
 
-        $fileName = 'ein_status_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'ein_status_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1022,7 +1047,14 @@ class ExportController extends Controller implements HasMiddleware
      */
     public function indexEOYStatus(Request $request)
     {
-        $fileName = 'eoy_status_'.date('Y-m-d').'.csv';
+        // Increase memory limit and execution time for large exports
+        ini_set('memory_limit', '512M');
+        set_time_limit(300); // 5 minutes
+
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'eoy_status_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1053,7 +1085,7 @@ class ExportController extends Controller implements HasMiddleware
                 $regionLongName = $baseQuery['regionLongName'];
                 $chConfId = $baseQuery['chConfId'];
                 $pcName = $baseQuery['pcName'];
-                $chDocuments = $baseQuery['chDocuments'];
+                $chEOYDocuments = $baseQuery['chEOYDocuments'];
 
                 $rowData = [
                     'Conference' => $chConfId,
@@ -1061,13 +1093,13 @@ class ExportController extends Controller implements HasMiddleware
                     'State' => $stateShortName,
                     'Name' => $chDetails->name,
                     'Primary Coordinator' => $pcName,
-                    'Board Report Received' => ($chDocuments->new_board_submitted == 1) ? 'YES' : 'NO',
-                    'Board Report Activated' => ($chDocuments->new_board_active == 1) ? 'YES' : 'NO',
-                    'Financial Report Received' => ($chDocuments->financial_report_received == 1) ? 'YES' : 'NO',
-                    'Financial Review Complete' => ($chDocuments->financial_review_complete == 1) ? 'YES' : 'NO',
-                    'Report Notes' => $chDocuments->report_notes,
-                    'Extension Given' => ($chDocuments->report_extension == 1) ? 'YES' : 'NO',
-                    'Extension Notes' => $chDocuments->extension_notes,
+                    'Board Report Received' => ($chEOYDocuments->new_board_submitted == 1) ? 'YES' : 'NO',
+                    'Board Report Activated' => ($chEOYDocuments->new_board_active == 1) ? 'YES' : 'NO',
+                    'Financial Report Received' => ($chEOYDocuments->financial_report_received == 1) ? 'YES' : 'NO',
+                    'Financial Review Complete' => ($chEOYDocuments->financial_review_complete == 1) ? 'YES' : 'NO',
+                    'Report Notes' => $chEOYDocuments->report_notes,
+                    'Extension Given' => ($chEOYDocuments->report_extension == 1) ? 'YES' : 'NO',
+                    'Extension Notes' => $chEOYDocuments->extension_notes,
                 ];
 
                 $exportChapterList[] = $rowData;
@@ -1098,7 +1130,14 @@ class ExportController extends Controller implements HasMiddleware
      */
     public function indexIntEOYStatus(Request $request)
     {
-        $fileName = 'int_eoy_status_'.date('Y-m-d').'.csv';
+        // Increase memory limit and execution time for large exports
+        ini_set('memory_limit', '512M');
+        set_time_limit(300); // 5 minutes
+
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'int_eoy_status_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1135,7 +1174,7 @@ class ExportController extends Controller implements HasMiddleware
                 $regionLongName = $baseQuery['regionLongName'];
                 $chConfId = $baseQuery['chConfId'];
                 $pcName = $baseQuery['pcName'];
-                $chDocuments = $baseQuery['chDocuments'];
+                $chEOYDocuments = $baseQuery['chEOYDocuments'];
 
                 $rowData = [
                     'Conference' => $chConfId,
@@ -1143,13 +1182,13 @@ class ExportController extends Controller implements HasMiddleware
                     'State' => $stateShortName,
                     'Name' => $chDetails->name,
                     'Primary Coordinator' => $pcName,
-                    'Board Report Received' => ($chDocuments->new_board_submitted == 1) ? 'YES' : 'NO',
-                    'Board Report Activated' => ($chDocuments->new_board_active == 1) ? 'YES' : 'NO',
-                    'Financial Report Received' => ($chDocuments->financial_report_received == 1) ? 'YES' : 'NO',
-                    'Financial Review Complete' => ($chDocuments->financial_review_complete == 1) ? 'YES' : 'NO',
-                    'Report Notes' => $chDocuments->report_notes,
-                    'Extension Given' => ($chDocuments->report_extension == 1) ? 'YES' : 'NO',
-                    'Extension Notes' => $chDocuments->extension_notes,
+                    'Board Report Received' => ($chEOYDocuments->new_board_submitted == 1) ? 'YES' : 'NO',
+                    'Board Report Activated' => ($chEOYDocuments->new_board_active == 1) ? 'YES' : 'NO',
+                    'Financial Report Received' => ($chEOYDocuments->financial_report_received == 1) ? 'YES' : 'NO',
+                    'Financial Review Complete' => ($chEOYDocuments->financial_review_complete == 1) ? 'YES' : 'NO',
+                    'Report Notes' => $chEOYDocuments->report_notes,
+                    'Extension Given' => ($chEOYDocuments->report_extension == 1) ? 'YES' : 'NO',
+                    'Extension Notes' => $chEOYDocuments->extension_notes,
                 ];
 
                 $exportChapterList[] = $rowData;
@@ -1415,7 +1454,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300); // 5 minutes
 
-        $fileName = 'coordinator_export_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'coordinator_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1498,7 +1540,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300); // 5 minutes
 
-        $fileName = 'coordinator_export_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'coordinator_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1585,7 +1630,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300); // 5 minutes
 
-        $fileName = 'coordinator_export_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'coordinator_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1669,7 +1717,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300); // 5 minutes
 
-        $fileName = 'coordinator_export_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'coordinator_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1759,7 +1810,10 @@ class ExportController extends Controller implements HasMiddleware
         ini_set('memory_limit', '512M');
         set_time_limit(300); // 5 minutes
 
-        $fileName = 'coordinator_appreciation_'.date('Y-m-d').'.csv';
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'coordinator_appreciation_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1838,7 +1892,14 @@ class ExportController extends Controller implements HasMiddleware
      */
     public function indexChapterCoordinator(Request $request)
     {
-        $fileName = 'chapter_coordinator_export_'.date('Y-m-d').'.csv';
+        // Increase memory limit and execution time for large exports
+        ini_set('memory_limit', '512M');
+        set_time_limit(300); // 5 minutes
+
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
+
+        $fileName = 'chapter_coordinator_export_'.$currentDateYmd.'.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",

@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Chapter In Good Standing</title>
-        @php
-        $todayDate = date('F j, Y');
-        @endphp
 </head>
 <body>
     <center>
@@ -15,7 +12,7 @@
 <br>
 <div class="keep-together" style="page-break-inside: avoid;">
     <br>
-    <p>{{ $todayDate }}</p>
+    <p>{{ $currentDateWords }}</p>
     <br>
     <p>To Whom It May Concern:</p>
     <p>This is to certify that the MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} is a local support chapter registered with the

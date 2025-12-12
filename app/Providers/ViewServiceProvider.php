@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Enums\UserTypeEnum;
+use App\Enums\AdminStatusEnum;
 use App\Services\ForumConditionsService;
 use App\Services\PositionConditionsService;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +32,7 @@ class ViewServiceProvider extends ServiceProvider
             if (Auth::check()) {
                 $user = Auth::user();
 
-                if ($user->user_type == 'coordinator' && $user->coordinator) {
+                if ($user->type_id ==  UserTypeEnum::COORD && $user->coordinator) {
                     $corDetails = $user->coordinator;
                     $corId = $corDetails['id'];
                     $positionid = $corDetails['position_id'];
@@ -38,21 +40,22 @@ class ViewServiceProvider extends ServiceProvider
                     $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
                 }
 
-                $userAdmin = $user->is_admin == '1';
-                $userModerator = $user->is_admin == '2';
-                $coordinator = ($user->user_type == 'coordinator' && $user->coordinator);
-                $board = ($user->user_type == 'board' && $user->board);
-                $outgoing = ($user->user_type == 'outgoing' && $user->outgoing);
-                $disbanded = ($user->user_type == 'disbanded' && $user->disbanded);
-                $pending = ($user->user_type == 'pending' && $user->pending);
+                $userAdmin = $user->is_admin == AdminStatusEnum::ADMIN;
+                $userModerator = $user->is_admin == AdminStatusEnum::MODERATOR;
+                $coordinator = ($user->type_id ==  UserTypeEnum::COORD && $user->coordinator);
+                $board = ($user->type_id ==  UserTypeEnum::BOARD && $user->board);
+                $outgoing = ($user->type_id ==  UserTypeEnum::OUTGOING && $user->outgoing);
+                $disbanded = ($user->type_id ==  UserTypeEnum::DISBANDED && $user->disbanded);
+                $pending = ($user->type_id ==  UserTypeEnum::PENDING && $user->pending);
             }
 
             $positionConditionsService = app(PositionConditionsService::class);
             $forumConditionsService = app(ForumConditionsService::class);
 
             $positionConditions = $positionConditionsService->getConditionsForUser($positionid, $secpositionid, $corId);
-            $eoyDisplay = $positionConditionsService->getEOYDisplay();
+            $EOYOptions = $positionConditionsService->getEOYOptions();
             $forumCount = $forumConditionsService->getUnreadForumCount();
+            $dateOptions = $positionConditionsService->getDateOptions();
 
             // Merge all variables
             $viewVariables = array_merge([
@@ -71,7 +74,8 @@ class ViewServiceProvider extends ServiceProvider
                 'pending' => $pending,
             ],
                 $positionConditions,
-                $eoyDisplay,
+                $EOYOptions,
+                $dateOptions,
             );
 
             // Pass all variables to views

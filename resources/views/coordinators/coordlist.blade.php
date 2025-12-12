@@ -111,7 +111,7 @@
                     @elseif ($checkBox5Status)
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('intcoordinator', 'International Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export International Coordinator List</button>
                     @else
-                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('coordinator', 'Coordinator List')" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
+                        <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('coordinator', 'Coordinator List')" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
                     @endif
                 @endif
                 <a class="btn bg-gradient-primary mb-3" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope mr-2"></i>E-mail Coordinators</a>

@@ -56,7 +56,7 @@
 						<td style="
                                     @php
                                         $due = $list->startMonth->month_long_name . ' ' . $list->next_renewal_year;
-                                        $overdue = (date('Y') * 12 + date('m')) - ($list->next_renewal_year * 12 + $list->start_month_id);
+                                        $overdue = ($currentYear * 12 + $currentMonth) - ($list->next_renewal_year * 12 + $list->start_month_id);
                                         if ($overdue > 1) {
                                             echo 'background-color: #dc3545; color: #ffffff;';
                                         } elseif ($overdue == 1) {

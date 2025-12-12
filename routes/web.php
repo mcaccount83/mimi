@@ -81,7 +81,7 @@ Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinat
 
 // Public Page Routes...Public, No login required
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
-Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])->name('board.resources');
+Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])->name('public.resources');
 Route::get('/pdf-viewer', [PublicController::class, 'showPdf'])->name('pdf-viewer');
 Route::get('/pdf-proxy', [PublicController::class, 'proxyGoogleDriveFile'])->name('pdf-proxy');
 Route::get('/newchapter', [PublicController::class, 'editNewChapter'])->name('public.newchapter');
@@ -138,11 +138,20 @@ Route::middleware('auth')->group(function () {
 
 // User Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
+    Route::post('/userreports/updateuserdelete', [UserController::class, 'updateUserDelete'])->name('userreports.updateuserdelete');
+
     Route::get('/userreports/useradmin', [UserReportController::class, 'showUserAdmin'])->name('userreports.useradmin');
     Route::get('/userreports/duplicateuser', [UserReportController::class, 'showDuplicate'])->name('userreports.duplicateuser');
     Route::get('/userreports/duplicateboardid', [UserReportController::class, 'showDuplicateId'])->name('userreports.duplicateboardid');
     Route::get('/userreports/nopresident', [UserReportController::class, 'showNoPresident'])->name('userreports.nopresident');
+    Route::get('/userreports/nopresidentinactive', [UserReportController::class, 'showNoPresidentInactive'])->name('userreports.nopresidentinactive');
+    Route::get('/userreports/addnewboard/{id}', [UserReportController::class, 'addBoardNew'])->name('userreports.addnewboard');
+    Route::post('/userreports/updatenewboard/{id}', [UserReportController::class, 'updateBoardNew'])->name('userreports.updatenewboard');
     Route::get('/userreports/noactiveboard', [UserReportController::class, 'showNoActiveBoard'])->name('userreports.noactiveboard');
+    Route::get('/userreports/edituserboard/{id}', [UserReportController::class, 'editUserBoardInformation'])->name('userreports.edituserboard');
+    Route::post('/userreports/updateuserboard/{id}', [UserReportController::class, 'updateUserBoardInformation'])->name('userreports.updateuserboard');
+    Route::get('/userreports/editusercoord/{id}', [UserReportController::class, 'editUserCoordInformation'])->name('userreports.editusercoord');
+    Route::post('/userreports/updateusercoord/{id}', [UserReportController::class, 'updateUserCoordInformation'])->name('userreports.updateusercoord');
     Route::get('/userreports/outgoingboard', [UserReportController::class, 'showOutgoingBoard'])->name('userreports.outgoingboard');
     Route::get('/userreports/disbandedboard', [UserReportController::class, 'showDisbandedBoard'])->name('userreports.disbandedboard');
 });
@@ -293,6 +302,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/eoy/reviewfinancialreport/{id}', [EOYReportController::class, 'reviewFinancialReport'])->name('eoyreports.reviewfinancialreport');
     Route::post('/eoy/updatefinancialreport/{id}', [EOYReportController::class, 'updateEOYFinancialReport'])->name('eoyreports.updatefinancialreport');
     Route::get('/eoy/unsubmit/{id}', [EOYReportController::class, 'updateUnsubmit']);
+    Route::get('/eoy/unsubmitfinal/{id}', [EOYReportController::class, 'updateUnsubmitFinal']);
     Route::get('/eoy/clearreview/{id}', [EOYReportController::class, 'updateClearReview']);
     Route::get('/eoy/attachments', [EOYReportController::class, 'showEOYAttachments'])->name('eoyreports.eoyattachments');
     Route::get('/eoy/editattachments/{id}', [EOYReportController::class, 'editEOYAttachments'])->name('eoyreports.editattachments');

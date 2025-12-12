@@ -19,8 +19,8 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-4">
-            <input type="hidden" name="hid_extension_notes" value="{{$chDocuments->extension_notes}}">
-            <input type="hidden" name="hid_irs_notes" value="{{ $chDocuments->irs_notes }}">
+            <input type="hidden" name="hid_extension_notes" value="{{$chEOYDocuments->extension_notes}}">
+            <input type="hidden" name="hid_irs_notes" value="{{ $chEOYDocuments->irs_notes }}">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
@@ -35,9 +35,9 @@
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="new_board_submitted" id="new_board_submitted" class="custom-control-input"
                                 @if($regionalCoordinatorCondition)
-                                        {{$chDetails->documents->new_board_submitted == 1 ? 'checked' : ''}}>
+                                        {{$chDetails->documentsEOY->new_board_submitted == 1 ? 'checked' : ''}}>
                                 @else
-                                    {{$chDetails->documents->new_board_submitted == 1 ? 'checked' : ''}} disabled>
+                                    {{$chDetails->documentsEOY->new_board_submitted == 1 ? 'checked' : ''}} disabled>
                                 @endif
                                 <label class="custom-control-label" for="new_board_submitted"></label>
                             </div>
@@ -48,9 +48,9 @@
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="new_board_active" id="new_board_active" class="custom-control-input"
                                 @if($regionalCoordinatorCondition)
-                                        {{$chDetails->documents->new_board_active == 1 ? 'checked' : ''}}>
+                                        {{$chDetails->documentsEOY->new_board_active == 1 ? 'checked' : ''}}>
                                         @else
-                                        {{$chDetails->documents->new_board_active == 1 ? 'checked' : ''}} disabled>
+                                        {{$chDetails->documentsEOY->new_board_active == 1 ? 'checked' : ''}} disabled>
                                         @endif
                                 <label class="custom-control-label" for="new_board_active"></label>
                             </div>
@@ -61,9 +61,9 @@
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="financial_report_received" id="financial_report_received" class="custom-control-input"
                                 @if($regionalCoordinatorCondition)
-                                    {{$chDetails->documents->financial_report_received == 1 ? 'checked' : ''}}>
+                                    {{$chDetails->documentsEOY->financial_report_received == 1 ? 'checked' : ''}}>
                                     @else
-                                    {{$chDetails->documents->financial_report_received == 1 ? 'checked' : ''}} disabled>
+                                    {{$chDetails->documentsEOY->financial_report_received == 1 ? 'checked' : ''}} disabled>
                                      @endif
                                 <label class="custom-control-label" for="financial_report_received"></label>
                             </div>
@@ -74,9 +74,9 @@
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="financial_review_complete" id="financial_review_complete" class="custom-control-input"
                                 @if($regionalCoordinatorCondition)
-                                    {{$chDetails->documents->financial_review_complete == 1 ? 'checked' : ''}}>
+                                    {{$chDetails->documentsEOY->financial_review_complete == 1 ? 'checked' : ''}}>
                                     @else
-                                    {{$chDetails->documents->financial_review_complete == 1 ? 'checked' : ''}} disabled>
+                                    {{$chDetails->documentsEOY->financial_review_complete == 1 ? 'checked' : ''}} disabled>
                                      @endif
                                 <label class="custom-control-label" for="financial_review_complete"></label>
                             </div>
@@ -88,9 +88,9 @@
                                 <input type="checkbox" name="report_extension" id="report_extension" class="custom-control-input"
                                        onchange="toggleExtensionNotes()"
                                        @if($regionalCoordinatorCondition)
-                                            {{$chDetails->documents->report_extension == 1 ? 'checked' : ''}}>
+                                            {{$chDetails->documentsEOY->report_extension == 1 ? 'checked' : ''}}>
                                             @else
-                                            {{$chDetails->documents->report_extension == 1 ? 'checked' : ''}} disabled>
+                                            {{$chDetails->documentsEOY->report_extension == 1 ? 'checked' : ''}} disabled>
                                              @endif
                                 <label class="custom-control-label" for="report_extension"></label>
                             </div>
@@ -102,9 +102,9 @@
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="custom-control-input"
                                        onchange="toggleIRSVerified()"
                                        @if($regionalCoordinatorCondition)
-                                            {{$chDetails->documents->irs_verified == 1 ? 'checked' : ''}}>
+                                            {{$chEOYDocuments->check_current_990N_verified_IRS == 1 ? 'checked' : ''}}>
                                             @else
-                                            {{$chDetails->documents->irs_verified == 1 ? 'checked' : ''}} disabled>
+                                            {{$chEOYDocuments->check_current_990N_verified_IRS == 1 ? 'checked' : ''}} disabled>
                                              @endif
                                 <label class="custom-control-label" for="irs_verified"></label>
                             </div>
@@ -154,7 +154,7 @@
           <div class="col-md-8">
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information</h3>
+                <h3 class="profile-username">{{ $fiscalYear }} End of Year Information</h3>
                     <!-- /.card-header -->
                     @if ($displayTESTING == '1')
                     *TESTING*
@@ -183,9 +183,9 @@
                                 <label>Board Report:</label>
                             </div>
                             <div class="col-sm-9">
-                                @if($chDocuments->new_board_active != '1')
+                                @if($chEOYDocuments->new_board_active != '1')
                                     <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
-                                    @if($chDocuments->new_board_submitted == '1')
+                                    @if($chEOYDocuments->new_board_submitted == '1')
                                         <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="return PreSaveValidate(false)" >Activate Board</button>
                                     @else
                                         <button type="button" class="btn bg-gradient-primary btn-sm mr-2" disabled >Report Not Submitted</button>
@@ -205,6 +205,7 @@
                         </div>
                         <div class="col-sm-9">
                             <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.reviewfinancialreport', ['id' => $chDetails->id]) }}'">View Financial Report</button>
+                            <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')">View/Download Financial PDF</button>
                             <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="generateFinancialReport()">Regenerate Financial PDF</button>
                         </div>
                                     </div>
@@ -213,7 +214,7 @@
                     <div class="form-group row align-middle mt-2">
                         <label class="col-sm-3 col-form-label">Extension Notes:</label>
                         <div class="col-sm-9">
-                        <input type="text" name="extension_notes" id="extension_notes" class="form-control" value="{{ $chDocuments->extension_notes }}" >
+                        <input type="text" name="extension_notes" id="extension_notes" class="form-control" value="{{ $chEOYDocuments->extension_notes }}" >
                         </div>
                     </div>
 
@@ -222,11 +223,11 @@
                             <label>Chapter Roster File:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chDocuments->roster_path))
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chDocuments->roster_path }}')">View Chapter Roster</button>
+                                @if (!empty($chEOYDocuments->roster_path))
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">View Chapter Roster</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Replace Roster File</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
+                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled" disabled>No file attached</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Upload Roster File</button>
                                 @endif
                         </div>
@@ -237,11 +238,11 @@
                             <label>Primary Bank Statement:</label>
                         </div>
                         <div class="col-sm-9">
-                            @if (!empty($chDocuments->statement_1_path))
-                                <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chDocuments->statement_1_path }}')">View Bank Statement</button>
+                            @if (!empty($chEOYDocuments->statement_1_path))
+                                <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chEOYDocuments->statement_1_path }}')">View Bank Statement</button>
                                 <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Replace Bank Statement</button>
                             @else
-                                <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
+                                <button class="btn bg-gradient-primary btn-sm mr-2 disabled" disabled>No file attached</button>
                                 <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Upload Bank Statement</button>
                             @endif
                         </div>
@@ -252,11 +253,11 @@
                             <label>Primary Bank Statement:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chDocuments->statement_2_path))
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chDocuments->statement_2_path }}')">View Additional Bank Statement</button>
+                                @if (!empty($chEOYDocuments->statement_2_path))
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chEOYDocuments->statement_2_path }}')">View Additional Bank Statement</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Replace Additional Bank Statement</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
+                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled" disabled>No file attached</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Upload Additional Bank Statement</button>
                                 @endif
                         </div>
@@ -264,7 +265,7 @@
                     <div class="form-group row align-middle mt-2">
                         <label class="col-sm-3 col-form-label">IRS Notes:</label>
                         <div class="col-sm-9">
-                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDocuments->irs_notes }}" >
+                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chEOYDocuments->irs_notes }}" >
                         </div>
                     </div>
 
@@ -273,11 +274,11 @@
                             <label></label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chDocuments->irs_path))
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chDocuments->irs_path }}')">View 990N Confirmation</button>
+                                @if (!empty($chEOYDocuments->irs_path))
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
+                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled" disabled>No file attached</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
                                 @endif
                         </div>
@@ -351,7 +352,7 @@
                     @if ($chDetails->boundary_issues != null)
                         <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editboundaries', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Boundary Issues</button>
                     @else
-                        <button class="btn bg-gradient-primary mb-3 disabled"><i class="fas fa-edit mr-2"></i>Update Boundary Issues</button>
+                        <button class="btn bg-gradient-primary mb-3 disabled" disabled><i class="fas fa-edit mr-2"></i>Update Boundary Issues</button>
                     @endif
                         <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Award Information</button>
                     <br>

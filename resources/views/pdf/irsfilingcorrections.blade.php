@@ -116,7 +116,7 @@
                 <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc.png' }}" alt="MC" style="width: 125px;">
             </center>
             <br>
-            <p>{{ $pdfData['todayDate'] }}</p>
+            <p>{{ $pdfData['currentDateWords'] }}</p>
             <p>Internal Revenue Service<br>
                 Ogden, UT  84201</p>
             <p><b>Subordinate Corrections</b><br>

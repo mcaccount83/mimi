@@ -4,20 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Disband Letter</title>
-        @php
-        $todayDate = date('F j, Y'); // e.g., July 9, 2024
-        $date = new DateTime();
-        $date->modify('+1 month');
-        $nextMonthDate = $date->format('F j, Y'); // e.g., August 9, 2024
-        @endphp
 </head>
 <body>
     <center>
         <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc.png' }}" alt="MC" style="width: 125px;">
     </center>
 <br>
-{{-- <div class="keep-together" style="page-break-inside: avoid;"> --}}
-    <p>{{ $todayDate }}</p>
+    <p>{{ $currentDateWords }}</p>
     <br>
     <p>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
         {{ $pdfData['presName'] }}<br>

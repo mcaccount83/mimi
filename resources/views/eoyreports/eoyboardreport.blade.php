@@ -16,7 +16,6 @@
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Board Election Reports
                     </h3>
-                    <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
                     @include('layouts.dropdown_menus.menu_eoy')
                 </div>
             </div>
@@ -53,7 +52,7 @@
                            @endif
                         </td>
                             <td class="text-center align-middle">
-                                @if ($list->documents->new_board_submitted == null || $list->documents->new_board_submitted == 0)
+                                @if ($list->documentsEOY->new_board_submitted == null || $list->documentsEOY->new_board_submitted == 0)
                                     <a href="#" class="email-link" data-chapter-name="{{ $list->name }}" data-chapter-id="{{ $list->id }}" data-user-name="{{ $userName }}"
                                     data-user-position="{{ $userPosition }}" data-user-conf-name="{{ $userConfName }}" data-user-conf-desc="{{ $userConfDesc }}"
                                     data-predefined-subject="Board Election Report Reminder" data-message-id="msg-{{ $list->id }}"> <i class="far fa-envelope text-primary"></i></a>
@@ -77,11 +76,11 @@
                             </td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
-                            <td @if($list->documents->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documents->new_board_submitted == '1') YES @else NO @endif
+                            <td @if($list->documentsEOY->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documentsEOY->new_board_submitted == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documents->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documents->new_board_active == '1') YES @else NO @endif
+                            <td @if($list->documentsEOY->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documentsEOY->new_board_active == '1') YES @else NO @endif
                             </td>
                         </tr>
                     @endforeach

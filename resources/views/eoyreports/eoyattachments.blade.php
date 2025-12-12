@@ -15,7 +15,6 @@
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Financial Report Attachments
                     </h3>
-                    <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
                     @include('layouts.dropdown_menus.menu_eoy')
                 </div>
             </div>
@@ -60,23 +59,22 @@
                             </td>
 						<td>{{ $list->name }}</td>
                         </td>
-                        <td @if($list->documents?->roster_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents?->roster_path != null) YES @else NO @endif
+                        <td @if($list->documentsEOY?->roster_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY?->roster_path != null) YES @else NO @endif
                         </td>
-                        <td @if($list->documents?->statement_1_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents?->statement_1_path != null) YES @else NO @endif
+                        <td @if($list->documentsEOY?->statement_1_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY?->statement_1_path != null) YES @else NO @endif
                         </td>
                         <td>
-                            {{-- @if($list->documents?->statement_2_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif> --}}
-                            @if($list->documents?->statement_2_path != null) YES @else NO @endif
+                            @if($list->documentsEOY?->statement_2_path != null) YES @else NO @endif
                         </td>
-                        <td @if($list->documents?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents?->irs_path != null) YES @else NO @endif
+                        <td @if($list->documentsEOY?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY?->irs_path != null) YES @else NO @endif
                         </td>
-                        <td @if($list->documents?->irs_verified == 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents?->irs_verified == 1) YES @else NO @endif
+                        <td @if($list->documentsEOY?->irs_verified == 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY?->irs_verified == 1) YES @else NO @endif
                         </td>
-                        <td>{{ $list->documents?->irs_notes?? null }}</td>
+                        <td>{{ $list->documentsEOY?->irs_notes?? null }}</td>
                  </tr>
                   @endforeach
                   </tbody>

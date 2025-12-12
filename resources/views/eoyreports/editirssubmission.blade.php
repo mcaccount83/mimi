@@ -41,43 +41,43 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>New Board Submitted:</label>
-                                <span class="float-right">{{ $chDetails->documents->new_board_submitted == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->new_board_submitted == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>New Board Activated:</label>
-                                <span class="float-right">{{ $chDetails->documents->new_board_active == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->new_board_active == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Financial Report Received</label>
-                                <span class="float-right">{{ $chDetails->documents->financial_report_received == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->financial_report_received == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Financial Review Complete:</label>
-                                <span class="float-right">{{ $chDetails->documents->financial_review_complete == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->financial_review_complete == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Report Extension Given:</label>
-                                <span class="float-right">{{ $chDetails->documents->report_extension == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->report_extension == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>990N Verifed on irs.gov:</label>
-                                <span class="float-right">{{ $chDetails->documents->irs_verified == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->irs_verified == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>990N Filing issues:</label>
-                                <span class="float-right">{{ $chDetails->documents->irs_issues == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-right">{{ $chDetails->documentsEOY->irs_issues == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                     </li>
@@ -123,7 +123,7 @@
           <div class="col-md-8">
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} 990N Filing Details</h3>
+                <h3 class="profile-username">{{ $fiscalYear }} 990N Filing Details</h3>
                     <!-- /.card-header -->
 
                     <div class="row mt-2">
@@ -131,12 +131,11 @@
                             <label>990N Filing:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chDetails->documents->irs_path))
-                                    {{-- <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDetails->documents->irs_path }}'">View 990N Confirmation</button> --}}
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chDetails->documents->irs_path }}')">View 990N Confirmation</button>
+                                @if (!empty($chDetails->documentsEOY->irs_path))
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chDetails->documentsEOY->irs_path }}')">View 990N Confirmation</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
+                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled" disabled>No file attached</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
                                 @endif
                         </div>
@@ -149,7 +148,7 @@
                         <div class="col-sm-3">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="custom-control-input"
-                                {{ $chDetails->documents->irs_verified == 1 ? 'checked' : ''}}>
+                                {{ $chDetails->documentsEOY->irs_verified == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="irs_verified"></label>
                             </div>
                         </div>
@@ -161,19 +160,19 @@
                         <div class="col-sm-3">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="irs_issues" id="irs_issues" class="custom-control-input"
-                                {{ $chDetails->documents->irs_issues == 1 ? 'checked' : ''}}>
+                                {{ $chDetails->documentsEOY->irs_issues == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="irs_issues"></label>
                             </div>
                         </div>
                     </div>
 
                     <!-- This row is hidden by default and shows when irs_issues is checked -->
-                    <div class="form-group row align-middle" id="irs_details_row" style="display: {{ $chDetails->documents->irs_issues == 1 ? 'flex' : 'none' }};">
+                    <div class="form-group row align-middle" id="irs_details_row" style="display: {{ $chDetails->documentsEOY->irs_issues == 1 ? 'flex' : 'none' }};">
                         <label class="col-sm-2 col-form-label">Wrong Dates Listed:</label>
                         <div class="col-sm-1">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="irs_wrongdate" id="irs_wrongdate" class="custom-control-input exclusive-toggle"
-                                {{ $chDetails->documents->irs_wrongdate == 1 ? 'checked' : ''}}>
+                                {{ $chDetails->documentsEOY->irs_wrongdate == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="irs_wrongdate"></label>
                             </div>
                         </div>
@@ -181,7 +180,7 @@
                         <div class="col-sm-1">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="irs_notfound" id="irs_notfound" class="custom-control-input exclusive-toggle"
-                                {{ $chDetails->documents->irs_notfound == 1 ? 'checked' : ''}}>
+                                {{ $chDetails->documentsEOY->irs_notfound == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="irs_notfound"></label>
                             </div>
                         </div>
@@ -189,7 +188,7 @@
                         <div class="col-sm-1">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="irs_filedwrong" id="irs_filedwrong" class="custom-control-input exclusive-toggle"
-                                {{ $chDetails->documents->irs_filedwrong == 1 ? 'checked' : ''}}>
+                                {{ $chDetails->documentsEOY->irs_filedwrong == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="irs_filedwrong"></label>
                             </div>
                         </div>
@@ -199,7 +198,7 @@
                             <div class="col-sm-1">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="irs_notified" id="irs_notified" class="custom-control-input"
-                                    {{ $chDetails->documents->irs_notified == 1 ? 'checked' : ''}} >
+                                    {{ $chDetails->documentsEOY->irs_notified == 1 ? 'checked' : ''}} >
                                     <label class="custom-control-label" for="irs_notified"></label>
                                 </div>
                             </div>
@@ -208,9 +207,9 @@
                             <div class="col-sm-1">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="irs_notified" id="irs_notified" class="custom-control-input"
-                                    {{ $chDetails->documents->irs_notified == 1 ? 'checked' : ''}} disabled>
+                                    {{ $chDetails->documentsEOY->irs_notified == 1 ? 'checked' : ''}} disabled>
                                     <label class="custom-control-label" for="irs_notified"></label>
-                                    <input type="hidden" name="irs_notified" value="{{ $chDetails->documents->irs_notified }}">
+                                    <input type="hidden" name="irs_notified" value="{{ $chDetails->documentsEOY->irs_notified }}">
                                 </div>
                             </div>
                         @endif
@@ -220,7 +219,7 @@
                      <div class="form-group row align-middle mt-2">
                         <label class="col-sm-3 col-form-label">990 Submission Notes:</label>
                         <div class="col-sm-9">
-                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDetails->documents->irs_notes }}" >
+                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDetails->documentsEOY->irs_notes }}" >
                         </div>
                     </div>
 

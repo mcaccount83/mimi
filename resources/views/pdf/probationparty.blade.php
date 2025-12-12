@@ -4,19 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }} | Probation Letter</title>
-        @php
-        $todayDate = date('F j, Y'); // e.g., July 9, 2024
-        $date = new DateTime();
-        $date->modify('+1 month');
-        $nextMonthDate = $date->format('F j, Y'); // e.g., August 9, 2024
-        @endphp
 </head>
 <body>
     <center>
         <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc.png' }}" alt="MC" style="width: 125px;">
     </center>
 <br>
-    <p>{{ $todayDate }}</p>
+    <p>{{ $currentDateWords }}</p>
     <br>
     <p>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
         {{ $pdfData['presName'] }}<br>
@@ -43,7 +37,7 @@
         guidelines, we will consider shortening the length.  If the terms of probation are not fulfilled, we will have no choice but to revoke your chapter’s registration, and
         your chapter will have to disband, losing its nonprofit status (for both the current and past fiscal years) and MOMS Club support.</p>
     <p>
-        Because of the seriousness of this situation, you must reply to me in writing (email is fine) so that I receive your reply by {{ $nextMonthDate }}, indicating that you and
+        Because of the seriousness of this situation, you must reply to me in writing (email is fine) so that I receive your reply by {{ $nextMonthDateWords }}, indicating that you and
         your chapter understand and agree to comply with the terms of this probation.</p>
     <p>
         This probation is not intended to punish your chapter, but rather to give your chapter the opportunity to be sure you thoroughly understand the guidelines, and to work

@@ -41,38 +41,40 @@
                <h5>Review Summary</h5>
             Answers from questios in previous sections will show up here after they have been saved.<br>
             <br>
-            @if ($chDocuments['financial_report_received'])
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Financial Report PDF:</b> <span class="float-right"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['financial_pdf_path']; ?>">Download PDF</a></span>
-            </div>
+            @if ($chEOYDocuments['financial_report_received'])
+            @if ($chEOYDocuments->$yearColumnName != null)
+                <div class="d-flex align-items-center justify-content-between w-100 mb-1">
+                    <b>Financial Report PDF:</b> <span class="float-right"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments->$yearColumnName; ?>">Download PDF</a></span>
+                </div>
+            @endif
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Chapter Roster File:</b> <span class="float-right">
-                @if ($chDocuments['roster_path'] != null)
-                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['roster_path']; ?>">Chapter Roster</a></span>
+                @if ($chEOYDocuments['roster_path'] != null)
+                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['roster_path']; ?>">Chapter Roster</a></span>
                 @else
                 No file attached</span>
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Primary Bank Statement:</b> <span class="float-right">
-                @if ($chDocuments['statement_1_path'] != null)
-                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['statement_1_path']; ?>">Primary Statement</a></span>
+                @if ($chEOYDocuments['statement_1_path'] != null)
+                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_1_path']; ?>">Primary Statement</a></span>
                 @else
                 No file attached</span>
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Additional Bank Statement:</b> <span class="float-right">
-                    @if ($chDocuments['statement_2_path'] != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['statement_2_path']; ?>">Additional Statement</a></span>
+                    @if ($chEOYDocuments['statement_2_path'] != null)
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_2_path']; ?>">Additional Statement</a></span>
                     @else
                     No file attached</span>
                     @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>990N Filing:</b> <span class="float-right">
-                    @if ($chDocuments['irs_path'] != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['irs_path']; ?>">990N Confirmation</a></span>
+                    @if ($chEOYDocuments['irs_path'] != null)
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['irs_path']; ?>">990N Confirmation</a></span>
                     @else
                     No file attached</span>
                     @endif
@@ -210,7 +212,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                 </span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Proof of 990N Filing for 7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?> :</b> <span class="float-right" style="
+                <b>Proof of 990N Filing for 7/1/{{ $lastYear}} - 6/30/{{ $currentYear }}:</b> <span class="float-right" style="
                     @if(is_null($chFinancialReport['check_current_990N_included']))
                         background-color: #FFFFFF; color: #000000;
                     @elseif($chFinancialReport['check_current_990N_included'] == 1)
@@ -295,7 +297,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
         </div>
 
         <div class="d-flex align-items-center justify-content-between w-100">
-            <?php if ($chDocuments->financial_report_received == 1 && $chFinancialReport['reviewer_id'] == null): ?>
+            <?php if ($chEOYDocuments->financial_report_received == 1 && $chFinancialReport['reviewer_id'] == null): ?>
                     <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.<br></span>
                 <?php endif; ?>
                 <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
@@ -325,25 +327,32 @@ if (isset($chFinancialReport['party_expense_array'])) {
             <button class="btn bg-gradient-primary mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Financial Report Review')">
                 <i class="fa fa-envelope mr-2"></i>Email Board</button>
             <br>
-            @if ($chDocuments['financial_review_complete'] != "" && $chDocuments['financial_report_received'])
+            @if ($chEOYDocuments['financial_review_complete'] != "" && $chEOYDocuments['financial_report_received'])
                 @if ($regionalCoordinatorCondition)
                     <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
                 @else
-                    <button type="button" class="btn bg-gradient-success disabled"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
+                    <button type="button" class="btn bg-gradient-success disabled" disabled><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
                 @endif
             @else
                 <button type="button" class="btn bg-gradient-success" id="review-complete"><i class="fas fa-check mr-2"></i>Mark as Review Complete</button>
             @endif
                 <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-undo mr-2"></i>UnSubmit Report</button>
-            <br>
-            <span style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
+            @if ($chEOYDocuments['financial_review_complete'] != 1)
+                <br>
+                <span style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
+            @endif
             <br><br>
-            @if ($chDocuments->financial_report_received == 1)
-                {{-- <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a> --}}
-                <button class="btn bg-gradient-primary mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chDocuments->financial_pdf_path }}')"><i class="fas fa-file-pdf mr-2"></i>View/Download Financial Report</button>
+            @if ($chEOYDocuments->$yearColumnName != null)
+                <button class="btn bg-gradient-primary mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')"><i class="fas fa-file-pdf mr-2"></i>View/Download Financial Report PDF</button>
             @else
-                {{-- <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary mb-2 disabled">Download PDF Report</a> --}}
-                <button class="btn bg-gradient-primary mb-2" type="button" id="financial-pdf" disabled><i class="fas fa-file-pdf mr-2"></i>View/Download Financial Report</button>
+                <button class="btn bg-gradient-primary mb-2 disabled" type="button" id="financial-pdf" disabled><i class="fas fa-file-pdf mr-2"></i>No PDF Report Available</button>
+            @endif
+            @if ($chEOYDocuments->$yearColumnName != null && $chEOYDocuments['financial_report_received'])
+                <br>
+                <button type="button" id="generate-pdf" class="btn bg-gradient-primary btn-sm" onclick="generateFinancialReport()"><i class="fas fa-rotate mr-2"></i>Regenerate Financial PDF</button>
+            @elseif ($chEOYDocuments->$yearColumnName == null && $chEOYDocuments['financial_report_received'])
+                <br>
+                <button type="button" id="generate-pdf" class="btn bg-gradient-primary btn-sm" onclick="generateFinancialReport()"><i class="fas fa-rotate mr-2">Generate Financial PDF</button>
             @endif
         </div>
         </li>
@@ -359,11 +368,11 @@ if (isset($chFinancialReport['party_expense_array'])) {
   <div class="col-md-8">
     <div class="card card-primary card-outline">
         <div class="card-body box-profile">
-        <h3 class="profile-username">Finanical Report Review</h3>
+        <h3 class="profile-username">{{ $financialReportName}} Review</h3>
             <!-- /.card-header -->
             <div class="row">
                 <div class="col-md-12">
-                    @if($chDocuments->financial_report_received)
+                    @if($chEOYDocuments->financial_report_received)
                         @if ($chFinancialReport->reviewer_id != null)
                             <label>Assigned Reviewer:</label>&nbsp;&nbsp;{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}
                         @else
@@ -547,9 +556,9 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             </div>
 							<div class="card-body form-row">
                                 <div class="col-12">
-                                @if (!is_null($chDocuments['roster_path']))
+                                @if (!is_null($chEOYDocuments['roster_path']))
                                         <div class="col-12">
-                                            <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
+                                            <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
                                         </div>
                                         <div class="col-12" id="RosterBlock">
                                             <strong style="color:red">Please Note</strong><br>
@@ -563,7 +572,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
                                     </div>
                                 @endif
-                                <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $chDocuments['roster_path']; ?>">
+                                <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $chEOYDocuments['roster_path']; ?>">
                                 <div class="clearfix"></div>
                                 <div class="col-12"><br></div>
                                 <div class="col-12">
@@ -595,14 +604,14 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             </div>
                                         </div>
                                         <div class="form-group row">
-										<label for="Step1_Note">Add New Note:</label>
-										<textarea class="form-control" style="width:100%" rows="3" name="Step1_Note" id="Step1_Note" oninput="EnableNoteLogButton(1)" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
-                                    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-										<button type="button" id="AddNote1" class="btn btn-sm bg-gradient-success" onclick="AddNote(1)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                            <label for="Step1_Note">Add New Note:</label>
+                                            <textarea class="form-control" style="width:100%" rows="3" name="Step1_Note" id="Step1_Note" oninput="EnableNoteLogButton(1)" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
+                                            <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
+                                                <button type="button" id="AddNote1" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(1)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
                                     <div class="col-12">
 										<label for="Step1_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 									</div>
@@ -746,7 +755,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                                     <label for="Step2_Note">Add New Note:</label>
                                                     <textarea class="form-control" style="width:100%" rows="3" name="Step2_Note" id="Step2_Note" oninput="EnableNoteLogButton(2)" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                                        <button type="button" id="AddNote2" class="btn btn-sm bg-gradient-success" onclick="AddNote(2)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                                        <button type="button" id="AddNote2" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(2)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                                 </div>
                                                 </div>
                                             </div>
@@ -899,7 +908,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 										<label for="Step3_Note">Add New Note:</label>
 									    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                         <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                            <button type="button" id="AddNote3" class="btn btn-sm btn-success" onclick="AddNote(3)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                            <button type="button" id="AddNote3" class="btn btn-sm btn-success disabled" onclick="AddNote(3)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								        </div>
                                         </div>
                                     </div>
@@ -1032,7 +1041,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         <label for="Step4_Note">Add New Note:</label>
 									<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote4" class="btn btn-sm bg-gradient-success" onclick="AddNote(4)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <button type="button" id="AddNote4" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(4)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
                                 </div>
                             </div>
@@ -1135,7 +1144,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 								<label for="Step5_Note">Add New Note:</label>
 								<textarea class="form-control" rows="3" style="width:100%" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                 <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-								<button type="button" id="AddNote5" class="btn btn-sm bg-gradient-success" onclick="AddNote(5)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+								<button type="button" id="AddNote5" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(5)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 						    </div>
                         </div>
                     </div>
@@ -1264,7 +1273,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     <label for="Step6_Note">Add New Note:</label>
                                     <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote6" class="btn btn-sm bg-gradient-success" onclick="AddNote(6)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <button type="button" id="AddNote6" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(6)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
                             </div>
                         </div>
@@ -1421,7 +1430,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 										<label for="Step7_Note">Add New Note:</label>
 										<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                         <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-										<button type="button" id="AddNote7" class="btn btn-sm bg-gradient-success" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+										<button type="button" id="AddNote7" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								</div>
                             </div>
                         </div>
@@ -1531,7 +1540,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 									<label for="Step8_Note">Add New Note:</label>
 									<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(8)"  name="Step8_Note" id="Step8_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-									<button type="button" id="AddNote8" class="btn btn-sm bg-gradient-success" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+									<button type="button" id="AddNote8" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
                         </div>
                     </div>
@@ -1681,7 +1690,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             <label for="Step9_Note">Add New Note:</label>
                             <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                            <button type="button" id="AddNote9" class="btn btn-sm bg-gradient-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                            <button type="button" id="AddNote9" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                     </div>
                 </div>
             </div>
@@ -1826,36 +1835,36 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             <div class="card-body form-row">
                                 <div class="col-12">
 
-                                    @if (!is_null($chDocuments['statement_1_path']))
+                                    @if (!is_null($chEOYDocuments['statement_1_path']))
                                         <div class="col-12">
-                                            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['statement_1_path']; ?>" >&nbsp; View Bank Statement</a><br>
+                                            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_1_path']; ?>" >&nbsp; View Bank Statement</a><br>
                                         </div>
                                     @endif
-                                    @if (!is_null($chDocuments['statement_2_path']))
+                                    @if (!is_null($chEOYDocuments['statement_2_path']))
                                         <div class="col-12">
-                                            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['statement_2_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
+                                            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_2_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
                                         </div>
                                     @endif
                                     <div class="col-12" id="StatementBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
-                                        @if (!is_null($chDocuments['statement_1_path']))
+                                        @if (!is_null($chEOYDocuments['statement_1_path']))
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
                                         @else
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
                                         @endif
                                     </div>
-                                        <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $chDocuments['statement_1_path']; ?>">
+                                        <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $chEOYDocuments['statement_1_path']; ?>">
                                     <div class="clearfix"></div>
                                     <div class="col-12"><br></div>
                                     <div class="col-12" id="Statement2Block">
-                                        @if (!is_null($chDocuments['statement_2_path']))
+                                        @if (!is_null($chEOYDocuments['statement_2_path']))
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
                                         @else
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
                                         @endif
                                     </div>
-                                    <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $chDocuments['statement_2_path']; ?>">
+                                    <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $chEOYDocuments['statement_2_path']; ?>">
                                     <div class="clearfix"></div>
                                     <div class="col-12"><br></div>
 
@@ -1929,7 +1938,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         <label for="Step10_Note">Add New Note:</label>
                                         <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                         <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote10" class="btn btn-sm bg-gradient-success" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <button type="button" id="AddNote10" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
                                 </div>
                             </div>
@@ -1981,9 +1990,9 @@ if (isset($chFinancialReport['party_expense_array'])) {
                 </div>
                         <div class="card-body form-row">
                               <div class="col-12">
-                            @if (!is_null($chDocuments['irs_path']))
+                            @if (!is_null($chEOYDocuments['irs_path']))
                                     <div class="col-12">
-                                        <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['irs_path'] }}">&nbsp; View 990N Confirmation</a><br>
+                                        <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['irs_path'] }}">&nbsp; View 990N Confirmation</a><br>
                                     </div>
                                     <div class="col-12" id="990NBlock">
                                         <strong style="color:red">Please Note</strong><br>
@@ -1997,13 +2006,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
                                 </div>
                             @endif
-                            <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $chDocuments['irs_path']; ?>">
+                            <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $chEOYDocuments['irs_path']; ?>">
                             <div class="clearfix"></div>
                             <div class="col-12"><br></div>
                             <div class="col-12">
 
                                 <div class="form-group row">
-                                    <label>Did the chapter file their 990N with the date range of <strong>7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?></strong>?<span class="field-required">*&nbsp;</span></label>
+                                    <label>Did the chapter file their {{ $irsFilingName }} with the date range of <strong>7/1/{{ $lastYear }} - 6/30/{{ $currentYear }}</strong>?<span class="field-required">*&nbsp;</span></label>
                                     <div class="col-12 row">
                                         <div class="form-check" style="margin-right: 20px;">
                                             <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $chFinancialReport['check_current_990N_included'] == 1 ? 'checked' : '' }}>
@@ -2021,7 +2030,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     <label for="Step11_Note">Add New Note:</label>
                                     <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                    <button type="button" id="AddNote11" class="btn btn-sm bg-gradient-success" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                    <button type="button" id="AddNote11" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
                             </div>
                         </div>
@@ -2236,7 +2245,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <label for="Step12_Note">Add New Note:</label>
                                             <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                            <button type="button" id="AddNote12" class="btn btn-sm bg-gradient-success" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                            <button type="button" id="AddNote12" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                         </div>
                                     </div>
                                 </div>
@@ -2452,14 +2461,14 @@ if (isset($chFinancialReport['party_expense_array'])) {
 
     /* Disable fields and buttons  */
     $(document).ready(function () {
-        var submitted = @json($chDocuments->financial_review_complete);
-        var received =  @json($chDocuments->financial_report_received);
+        var submitted = @json($chEOYDocuments->financial_review_complete);
+        var received =  @json($chEOYDocuments->financial_report_received);
 
         if (received != '1') {
             $('button').not('#btn-back').prop('disabled', true);
             $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
         } else if (submitted == '1') {
-            $('button').not('#btn-back, #btn-download-pdf, #review-clear').prop('disabled', true);
+            $('button').not('#btn-back, #review-clear, #financial-pdf, #generate-pdf').prop('disabled', true);
             $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
         } else {
             $('button, input, select, textarea').prop('disabled', false);
@@ -2480,13 +2489,25 @@ if (isset($chFinancialReport['party_expense_array'])) {
     });
 
     function EnableNoteLogButton(NoteNumber){
-        if(document.getElementById("Step" + NoteNumber + "_Note").value!="")
-            document.getElementById("AddNote" + NoteNumber).disabled = false;
-        else
-            document.getElementById("AddNote" + NoteNumber).disabled = true;
+        var noteValue = document.getElementById("Step" + NoteNumber + "_Note").value.trim();
+        var button = document.getElementById("AddNote" + NoteNumber);
+
+        if(noteValue !== ""){
+            button.disabled = false;
+            button.classList.remove('disabled');
+        } else {
+            button.disabled = true;
+            button.classList.add('disabled');
+        }
     }
 
     function AddNote(NoteNumber){
+        // Validate note is not empty FIRST
+        var noteValue = document.getElementById("Step" + NoteNumber + "_Note").value.trim();
+        if(noteValue === ""){
+            return false; // Exit if empty, don't add the note
+        }
+
         var Note = "";
         var Log = "";
         var d = new Date();
@@ -2521,6 +2542,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
         document.getElementById("Step" + NoteNumber + "_Log").value += Log;
         document.getElementById("Step" + NoteNumber + "_Note").value = "";
         document.getElementById("AddNote" + NoteNumber).disabled = true;
+        document.getElementById("AddNote" + NoteNumber).classList.add('disabled'); // Also add the class
 
         for(i=1;i<12;i++){
             Note=document.getElementById("Step" + i + "_Log").value;

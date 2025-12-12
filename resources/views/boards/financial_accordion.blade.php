@@ -1,9 +1,9 @@
 <div class="col-12"  id="accordion">
     <input type="hidden" id="chapter_id" name="id" value="{{ Session::get('chapterid') }}">
     @if ($userType != 'disbanded'  || $chActiveId != '1')
-        <input type="hidden" name="submitted" id="submitted" value="{{ $chDocuments['financial_report_received'] ?? '' }}" />
+        <input type="hidden" name="submitted" id="submitted" value="{{ $chEOYDocuments['financial_report_received'] ?? '' }}" />
     @else
-        <input type="hidden" name="submitted" id="submitted" value="{{ $chDocuments['final_report_received'] ?? '' }}" />
+        <input type="hidden" name="submitted" id="submitted" value="{{ $chEOYDocuments['final_report_received'] ?? '' }}" />
     @endif
         <input type="hidden" name="FurthestStep" id="FurthestStep" value="{{ $chFinancialReport['farthest_step_visited'] > 0 ? $chFinancialReport['farthest_step_visited'] : '0' }}" />
     <!------Start Step 1 ------>
@@ -16,9 +16,9 @@
         <div id="collapseOne" class="collapse {{ $chFinancialReport->farthest_step_visited == '1' ? 'show' : '' }}" data-parent="#accordion">
             <div class="card-body">
                 <section>
-        @if ($chDocuments->roster_path != null)
+        @if ($chEOYDocuments->roster_path != null)
             <div class="col-md-12" id="RosterBlock">
-                    <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
+                    <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
                     <strong style="color:red">Please Note</strong><br>
                         This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
                     <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Roster File</button>
@@ -30,7 +30,7 @@
                     <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
             </div>
         @endif
-            <input type="hidden" name="RosterPath" id="RosterPath" value="{{ $chDocuments->roster_path }}">
+            <input type="hidden" name="RosterPath" id="RosterPath" value="{{ $chEOYDocuments->roster_path }}">
             <div class="clearfix"></div>
         <div class="col-md-12"><br></div>
     <div class="col-md-12 ">
@@ -1633,7 +1633,7 @@
 <div class="col-12 form-row form-group">
 <div class="col-sm-12">
     @if($userType != 'disbanded')
-<h3>July 1, <?php echo date('Y')-1 .' - June 30, '.date('Y');?></h3>
+<h3>July 1, {{ $lastYear }} - June 30, {{ $currentYear }}</h3>
 @endif
 </div>
 <div class="col-sm-12">
@@ -2015,36 +2015,36 @@
 <div id="collapseTen" class="collapse {{ $chFinancialReport->farthest_step_visited == '10' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
 <section>
-    @if (!is_null($chDocuments['statement_1_path']))
+    @if (!is_null($chEOYDocuments['statement_1_path']))
         <div class="col-md-12">
-            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['statement_1_path']; ?>" >&nbsp; View Bank Statement</a><br>
+            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_1_path']; ?>" >&nbsp; View Bank Statement</a><br>
         </div>
     @endif
-    @if (!is_null($chDocuments['statement_2_path']))
+    @if (!is_null($chEOYDocuments['statement_2_path']))
         <div class="col-md-12">
-            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['statement_2_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
+            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_2_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
         </div>
     @endif
     <div class="col-md-12" id="StatementBlock">
         <strong style="color:red">Please Note</strong><br>
             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
-        @if (!is_null($chDocuments['statement_1_path']))
+        @if (!is_null($chEOYDocuments['statement_1_path']))
             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
         @else
         <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
         @endif
     </div>
-        <input type="hidden" name="StatementFile" id="StatementPath" value="{{ $chDocuments->statement_1_path }}">
+        <input type="hidden" name="StatementFile" id="StatementPath" value="{{ $chEOYDocuments->statement_1_path }}">
     <div class="clearfix"></div>
     <div class="col-md-12"><br></div>
     <div class="col-md-12" id="Statement2Block">
-        @if (!is_null($chDocuments['statement_2_path']))
+        @if (!is_null($chEOYDocuments['statement_2_path']))
             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
         @else
             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
         @endif
     </div>
-    <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chDocuments->statement_2_path }}">
+    <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chEOYDocuments->statement_2_path }}">
     <div class="clearfix"></div>
     <div class="col-md-12"><br></div>
 
@@ -2085,7 +2085,7 @@
                 @if($userType == 'disbanded')
                 Beginning Balance:
                 @else
-                This Year's Beginning Balance (July 1, <?php echo date('Y')-1;?>):
+                This Year's Beginning Balance (July 1, {{ $lastYear }}):
                 @endif
             </label>
             <div class="form-group">
@@ -2104,7 +2104,7 @@
                 @if($userType == 'disbanded')
                 Last Report's Ending Balance:
                 @else
-                Last Year's Report Ending Balance (June 30, <?php echo date('Y')-1;?>):
+                Last Year's Report Ending Balance (June 30, {{ $lastYear }}):
                 @endif
             </label>
             <div class="form-group">
@@ -2154,7 +2154,7 @@
                 @if($userType == 'disbanded')
                 Ending Bank Statement Balance:
                 @else
-                Ending Bank Statement Balance (June 30, <?php echo date('Y');?>):
+                Ending Bank Statement Balance (June 30, {{ $currentYear }}):
                 @endif
             </label>
             <div class="form-group">
@@ -2310,22 +2310,22 @@
 <div id="collapseEleven" class="collapse {{ $chFinancialReport->farthest_step_visited == '11' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
 <section>
-    @if (!is_null($chDocuments['irs_path']))
+    @if (!is_null($chEOYDocuments['irs_path']))
         <div class="col-md-12">
-            <label>990N Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chDocuments['irs_path']; ?>" >&nbsp; View 990N Confirmation</a><br>
+            <label>990N Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['irs_path']; ?>" >&nbsp; View 990N Confirmation</a><br>
         </div>
     @endif
 
     <div class="col-12" id="FileIRSBlock">
         <strong style="color:red">Please Note</strong><br>
             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
-        @if (!is_null($chDocuments['irs_path']))
+        @if (!is_null($chEOYDocuments['irs_path']))
             <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
         @else
             <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
         @endif
     </div>
-    <input type="hidden" name="IRSFiling" id="IRSFiling" value="{{ $chDocuments->irs_path }}">
+    <input type="hidden" name="IRSFiling" id="IRSFiling" value="{{ $chEOYDocuments->irs_path }}">
     <div class="clearfix"></div>
     <div class="col-md-12"><br></div>
 
@@ -2339,8 +2339,11 @@
     <div class="col-12 form-row form-group">
         <div class="col-md-12 ">
             <div class="form-group ">
-            {{-- <label>Is a copy of your chpater's <?php echo date('Y')-1;?> 990N Filing included?<span class="field-required">*</span></label> --}}
-            <label>Is a copy of your chpater's most recent 990N Filing included?<span class="field-required">*</span></label>
+             @if($userType == 'disbanded')
+                <label>Is a copy of your chpater's most recent 990N IRS Filing included?<span class="field-required">*</span></label>
+            @else
+                <label>Is a copy of your chpater's {{ $irsFilingName }} included?<span class="field-required">*</span></label>
+            @endif
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-left: 20px;">
                     <input class="form-check-input" type="radio" id="FileIRSYes" name="FileIRS" value="1" {{ $chFinancialReport->file_irs == 1 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
@@ -2366,7 +2369,7 @@
 {{-- <strong><u>990N (e-Postcard) Information</u></strong><br> --}}
 The 990N filing is an IRS requirement that all chapters must complete, but it cannot be filed before July 1st.  After filing, upload a copy of your chapter's filing confirmation here.  You can upload a copy of your confirmation email or screenshot after filing.  All chapters should file their 990N directly with the IRS and not through a third party. <span style="color:red"><i>The IRS does not charge a fee for 990N filings.</i></span><br>
 <br>
-@if($thisDate->month >= 1 && $thisDate->month <= 6)
+@if($displayEINInstructionsLIVE == false)
 <table>
     <tr>
         <td>&nbsp;&nbsp;&nbsp;</td>
@@ -2374,7 +2377,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     </tr>
 </table>
 @endif
-@if($thisDate->month >= 7 && $thisDate->month <= 12)
+@if($displayEINInstructionsLIVE == true)
 <table>
     <tr>
         <td>&nbsp;&nbsp;&nbsp;</td>
@@ -2787,11 +2790,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         <em>Given to existing chapters who Sister new Chapters</em>
                         </li>
                         <li>
-                        <strong>Outstanding Chapter</strong> (for chapters started before July 1, <?php echo date('Y')-1;?>)<br>
+                        <strong>Outstanding Chapter</strong> (for chapters started before July 1, {{ $lastYear }})<br>
                         <em>Given for outstanding overall representation of MOMS Club goals, principles, and program (including program to members, community involvement, and support of International MOMS Club)</em>
                         </li>
                         <li>
-                        <strong>Outstanding New Chapter</strong> (for chapters started after July 1, <?php echo date('Y')-1;?>)<br>
+                        <strong>Outstanding New Chapter</strong> (for chapters started after July 1, {{ $lastYear }})<br>
                         <em>Given for outstanding overall representation of MOMS Club goals, principles, and program (including program to members, community involvement, and support of International MOMS Club)</em>
                         </li>
                         <li>
@@ -2950,9 +2953,9 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
             collect($chapter_awards)->contains('awards_type', '!=', null)) ? 'block' : 'none' }}">
             <div class="box_brd_title_box">
 
-                @if ($chDocuments->award_path != null)
+                @if ($chEOYDocuments->award_path != null)
                 <div class="col-md-12" id="AwardBlock">
-                        <label>Award Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['award_path'] }}">&nbsp; View Award Files</a><br>
+                        <label>Award Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['award_path'] }}">&nbsp; View Award Files</a><br>
                         <strong style="color:red">Please Note</strong><br>
                             Save award entry information before replacing file(s). This will refresh the screen - be sure to save all work before clicking button to Replace Award Files.<br>
                         <button type="button" class="btn btn-sm btn-primary" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Award Files</button>
@@ -2964,7 +2967,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         <button type="button" class="btn btn-sm btn-primary" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Award Files</button>
                 </div>
             @endif
-                <input type="hidden" name="AwardPath" id="AwardPath" value="{{ $chDocuments->award_path }}">
+                <input type="hidden" name="AwardPath" id="AwardPath" value="{{ $chEOYDocuments->award_path }}">
 
                 <div class="col-sm-12"><br></div>
 
@@ -3029,7 +3032,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         </div>
         <div class="card-body text-center">
             <button type="button" class="btn btn-primary" id="btn-step-14" ><i class="fas fa-save" ></i>&nbsp; Save</button>
-            @if($thisDate->month >= 6 && $thisDate->month <= 12)
+            @if($displayEINInstructionsLIVE)
             <button type="button" class="btn btn-success" id="final-submit" ><i class="fas fa-share-square" ></i>&nbsp; Submit Report</button>
         </div>
     </section>
@@ -3044,13 +3047,15 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 
 @push('scripts')
 <script>
+
+
 /* Disable fields and buttons  */
 $(document).ready(function () {
     setTimeout(function () {
         console.log('Running after delay');
 
-        var submitted = @json($chDocuments->financial_report_received);
-        var submittedfinal = @json($chDocuments->final_report_received);
+        var submitted = @json($chEOYDocuments->financial_report_received);
+        var submittedfinal = @json($chEOYDocuments->final_report_received);
         var userType = @json($userType);
         var userAdmin = @json($userAdmin);
 

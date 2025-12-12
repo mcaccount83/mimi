@@ -2,25 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Notifications\Notifiable;
 
 class Coordinators extends Model
 {
-    use HasFactory;
-    use Notifiable;
-
-    public $timestamps = false;
-
-    protected $fillable = [
-        'user_id', 'conference_id', 'region_id', 'layer_id', 'first_name', 'last_name', 'position_id', 'display_position_id', 'email', 'sec_email', 'report_id',
-        'address', 'city', 'state_id', 'zip', 'country_id', 'phone', 'alt_phone', 'birthday_month_id', 'birthday_day', 'home_chapter', 'coordinator_start_date',
-        'last_updated_by', 'last_updated_date', 'active_status',
-    ];
+    protected $guarded = [ ]; // ALL columns are mass-assignable
 
     public function coordTree(): HasOne
     {

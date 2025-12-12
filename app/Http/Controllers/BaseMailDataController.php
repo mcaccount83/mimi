@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PositionConditionsService;
 use Illuminate\Support\Carbon;
 
 class BaseMailDataController extends Controller
@@ -12,11 +13,15 @@ class BaseMailDataController extends Controller
 
     protected $baseCoordinatorController;
 
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
+    protected $positionConditionsService;
+
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController,
+        PositionConditionsService $positionConditionsService)
     {
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
+        $this->positionConditionsService = $positionConditionsService;
     }
 
     public function getUserData($user)
@@ -271,23 +276,23 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getFinancialReportData($chDocuments, $chFinancialReport, $reviewer_email_message)
+    public function getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message)
     {
         return [
             'completedName' => $chFinancialReport->completed_name ?? null,
             'completedEmail' => $chFinancialReport->completed_email ?? null,
-            'boardElectionReportReceived' => $chDocuments->new_board_submitted,
-            'financialReportReceived' => $chDocuments->financial_report_received,
-            '990NSubmissionReceived' => $chDocuments->irs_verified,
-            'einLetterCopyReceived' => $chDocuments->ein_letter_path,
-            'rosterPath' => $chDocuments->roster_path,
-            'irsPath' => $chDocuments->irs_path,
-            'statement1Path' => $chDocuments->statement_1_path,
-            'statement2Path' => $chDocuments->statement_2_path,
-            'financialPdfPath' => $chDocuments->financial_pdf_path,
+            'boardElectionReportReceived' => $chEOYDocuments->new_board_submitted,
+            'financialReportReceived' => $chEOYDocuments->financial_report_received,
+            '990NSubmissionReceived' => $chEOYDocuments->irs_verified,
+            'einLetterCopyReceived' => $chEOYDocuments->ein_letter_path,
+            'rosterPath' => $chEOYDocuments->roster_path,
+            'irsPath' => $chEOYDocuments->irs_path,
+            'statement1Path' => $chEOYDocuments->statement_1_path,
+            'statement2Path' => $chEOYDocuments->statement_2_path,
+            'financialPdfPath' => $chEOYDocuments->financial_pdf_path,
             'reviewerEmailMessage' => $reviewer_email_message,
-            'final_report_received' => $chDocuments->final_report_received,
-            'financialFinalPdfPath' => $chDocuments->final_financial_pdf_path,
+            'final_report_received' => $chEOYDocuments->final_report_received,
+            'financialFinalPdfPath' => $chEOYDocuments->final_financial_pdf_path,
         ];
     }
 
@@ -297,8 +302,7 @@ class BaseMailDataController extends Controller
             'chapterId' => $chPayments->chapter_id,
             'reregMembers' => $input['members'] ?? null,
             'reregPayment' => $input['rereg'] ?? null,
-            // 'reregPaid' => \Carbon\Carbon::parse($chPayments->rereg_date)->format('m/d/Y') ?? null,
-            'reregPaid' => \Illuminate\Support\Carbon::parse($chPayments->rereg_date)->format('m/d/Y') ?? null,
+            'reregPaid' => Carbon::parse($chPayments->rereg_date)->format('m/d/Y') ?? null,
             'reregInvoice' => $chPayments->rereg_invoice,
             'sustainingDonation' => $input['sustaining'] ?? null,
             'donationInvoice' => $chPayments->donation_invoice,
@@ -357,17 +361,17 @@ class BaseMailDataController extends Controller
         $rangeEndDate = $startDate->copy()->subMonth()->endOfMonth();
         $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
 
-        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
-        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
+        $rangeStartDateFormatted = $rangeStartDate->format('m/d/Y');
+        $rangeEndDateFormatted = $rangeEndDate->format('m/d/Y');
 
-        $now = Carbon::now();
-        $currentMonthInWords = $now->format('F');
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentMonthWords = $dateOptions['currentMonthWords'];
 
         return [
             'startRange' => $rangeStartDateFormatted,
             'endRange' => $rangeEndDateFormatted,
             'startMonth' => $monthInWords,
-            'dueMonth' => $currentMonthInWords,
+            'dueMonth' => $currentMonthWords,
         ];
     }
 

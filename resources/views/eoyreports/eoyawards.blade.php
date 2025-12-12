@@ -15,7 +15,6 @@
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Chapter Awards Report
                         </h3>
-                        <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
                         @include('layouts.dropdown_menus.menu_eoy')
                     </div>
                 </div>

@@ -1209,4 +1209,82 @@ function showDeleteCoordModal(coordId, firstName, lastName, activeStatus) {
     });
 }
 
+function showDeleteUserModal(userId, firstName, lastName) {
+    Swal.fire({
+        title: 'User Deletion', // Changed from "Chapter Deletion"
+        html: `
+            <p>This will remove the user "<strong>${firstName} ${lastName}</strong>" from the database.</p>
+            <p>PLEASE USE CAUTION, this cannot be undone!!</p>
+            <input type="hidden" id="user_id" name="user_id" value="${userId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const userId = Swal.getPopup().querySelector('#user_id').value;
+
+            return {
+                user_id: userId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('userreports.updateuserdelete') }}',
+                        type: 'POST',
+                        data: {
+                            userid: data.user_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'User successfully deleted.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+
 </script>

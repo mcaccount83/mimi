@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CoordinatorPosition;
+use App\Enums\UserTypeEnum;
+use App\Enums\UserStatusEnum;
 use App\Models\Boards;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\User;
+use App\Models\ForumCategorySubscription;
+use App\Models\UserStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -105,7 +110,7 @@ class UserController extends Controller implements HasMiddleware
         ];
 
         // Only load detailed information if the user is active
-        if ($user->is_active == 1) {
+        if ($user->is_active == UserStatusEnum::ACTIVE) {
             // Now load relations only if needed
             $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference',
                 'coordinator.displayPosition', 'coordinator.secondaryPosition',
@@ -197,7 +202,7 @@ class UserController extends Controller implements HasMiddleware
      */
     public function loadEmailDetails($chId)
     {
-        $chDetails = Chapters::with(['state', 'documents', 'boards', 'coordinatorTree', 'boardsDisbanded'])->find($chId);
+        $chDetails = Chapters::with(['state', 'documents', 'boards', 'coordinatorTree', 'boardsDisbanded', 'documentsEOY'])->find($chId);
         $chActiveId = $chDetails->active_status;
         $chEmail = trim($chDetails->email);
         $stateShortName = $chDetails->state->state_short_name ?? '';
@@ -368,8 +373,12 @@ class UserController extends Controller implements HasMiddleware
         $coordiantors = CoordinatorTree::with('coordinator')
             ->where('coordinator_id', $chPcId)
             ->first();
-        $attributes = $coordiantors->getAttributes();
 
+        if (!$coordiantors) {
+            return response()->json('<b>Primary Coordinator:</b><span class="float-right">Data Not Available</span><br>');
+        }
+
+        $attributes = $coordiantors->getAttributes();
         $coordinatorList = [];
         for ($i = 1; $i <= 8; $i++) {   // Get the list of coordinator IDs from layers 1-8, ignoring layer0
             $layerKey = 'layer'.$i;
@@ -383,7 +392,7 @@ class UserController extends Controller implements HasMiddleware
         $i = 0;
         if (! empty($coordinatorList)) {
             $coordinators = Coordinators::with(['displayPosition', 'secondaryPosition'])->whereIn('id', $coordinatorList)
-                ->where('active_status', 1)
+                // ->where('active_status', 1)
                 ->orderByRaw('FIELD(id, '.implode(',', $coordinatorList).')') // Ensure order is based on reversed IDs
                 ->get();
 
@@ -419,8 +428,13 @@ class UserController extends Controller implements HasMiddleware
                     default => ''
                 };
 
+                // Build name with or without mailto link based on active status
+                $nameDisplay = $cor->active_status == 1
+                    ? "<a href='mailto:{$email}' target='_top'>{$name}</a>"
+                    : $name."/Retired";
+
                 // Build the final string
-                $str .= "<b>{$title}</b><span class='float-right'><a href='mailto:{$email}' target='_top'>{$name}</a> {$position}</span><br>";
+                $str .= "<b>{$title}</b><span class='float-right'>{$nameDisplay} {$position}</span><br>";
                 $i++;
             }
         }
@@ -689,13 +703,12 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Update User to Outgoing when replaced on board
      */
-    public function updateUserToOutgoing($userId, $lastUpdatedBy, $lastupdatedDate)
+    public function updateUserToOutgoing($userId, $updatedBy)
     {
         $boardDetails = Boards::where('user_id', $userId)->get();
 
         User::where('id', $userId)->update([
-            'user_type' => 'outgoing',
-            'updated_at' => $lastupdatedDate,
+            'type_id'=> UserTypeEnum::OUTGOING,
         ]);
 
         BoardsOutgoing::updateOrCreate(
@@ -714,9 +727,37 @@ class UserController extends Controller implements HasMiddleware
                 'state_id' => $boardDetails->state_id,
                 'zip' => $boardDetails->zip,
                 'country_id' => $boardDetails->country_id,
-                'last_updated_by' => $lastUpdatedBy,
-                'last_updated_date' => $lastupdatedDate,
+                'updated_by' => $updatedBy,
             ]
         );
+    }
+
+    /**
+     * Delete User from Database -- cannot be undone!
+     */
+    public function updateUserDelete(Request $request): JsonResponse
+    {
+        $input = $request->all();
+        $userId = $input['userid'];
+
+        try {
+            DB::beginTransaction();
+
+            // Delete the user record
+            User::where('id', $userId)->delete();
+            ForumCategorySubscription::where('user_id', $userId)->delete();
+
+            DB::commit();
+
+            return response()->json(['success' => 'User successfully deleted.']); // Fixed message
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
     }
 }

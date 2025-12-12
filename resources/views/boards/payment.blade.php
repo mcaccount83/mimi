@@ -13,10 +13,7 @@
                   </div>
                         </div>
                         <div class="card-body">
-                    @php
-                        // $thisDate = \Carbon\Carbon::now();
-                        $thisDate = \Illuminate\Support\Carbon::now();
-                    @endphp
+
                     <div class="col-md-12"><br><br></div>
                         <h2 class="text-center"> MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
                         <h4 class="text-center"> Re-Registration Payment</h4>
@@ -26,11 +23,9 @@
                         <div class="col-md-12"><center>Your chapter's anniversary month is <strong>{{ $startMonthName }}</strong>.</center></div>
                         <div class="col-md-12"><center>Re-registration payments are due each year by the last day of your anniversary month.</center></div>
                         <div class="col-md-12"><center>Your next due date: <strong>{{ $startMonthName }} {{ $chDetails->next_renewal_year }}</strong></center></div>
-                        @php
-                           $thisDate = \Illuminate\Support\Carbon::now();
-                        @endphp
-                        @if ($thisDate->gte($due_date))
-                            @if ($due_date->month == $thisDate->month)
+
+                        @if ($currentDate->gte($due_date))
+                            @if ($due_date->month == $currentDate->month)
                                 <div class="col-md-12" style="color: green;"><center>Your chapter's re-registration payment is due this month!</center></div>
                             @else
                                 <div class="col-md-12" style="color: red;"><center>Your chapter's re-registration payment is now considered overdue.</center></div>
@@ -110,12 +105,9 @@
                                                 <label>Number of Members</label> <span class="field-required">*</span>
                                                 <input type="text" name="members" id="members" class="form-control"  required >
                                             </div>
-                                            @php
-                                                $thisDate = \Illuminate\Support\Carbon::now();
-                                            @endphp
                                             <div class="col-md-4" disabled >
                                                 <label>Late Fee</label>
-                                                <input type="text" name="late" id="late" class="form-control" value="{{ (($thisDate->gte($due_date) && $due_date->month != $thisDate->month) && $chDetails->payments->rereg_waivelate != '1') ? '$10.00' : '$0.00' }}" readonly>
+                                                <input type="text" name="late" id="late" class="form-control" value="{{ (($currentDate->gte($due_date) && $due_date->month != $currentDate->month) && $chDetails->payments->rereg_waivelate != '1') ? '$10.00' : '$0.00' }}" readonly>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Total Re-Registration Fees</label>

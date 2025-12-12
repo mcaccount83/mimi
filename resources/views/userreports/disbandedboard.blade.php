@@ -53,7 +53,26 @@
                         <td class="email-column">
                             <a href="mailto:{{ $list->email }}">{{ $list->email }}</a>
                         </td>
-                        <td>{{ $list->user_type }}</td>
+                        <td>
+                            @if($list->type_id == \App\Enums\UserTypeEnum::COORD)
+                                {{ match($list->coordinator->active_status) {
+                                    \App\Enums\ActiveStatusEnum::ACTIVE => 'Coordinator Active',
+                                    \App\Enums\ActiveStatusEnum::ZAPPED => 'Coordinator Retired',
+                                    \App\Enums\ActiveStatusEnum::PENDING => 'Coordinator Pending',
+                                    \App\Enums\ActiveStatusEnum::NOTAPPROVED => 'Coordinator Not Approved',
+                                    default => ''
+                                } }}
+                            @else
+                            {{ match($list->type_id) {
+                                \App\Enums\UserTypeEnum::BOARD => 'Board Active',
+                                \App\Enums\UserTypeEnum::DISBANDED => 'Board Disbanded',
+                                \App\Enums\UserTypeEnum::OUTGOING => 'Board Outgoing',
+                                \App\Enums\UserTypeEnum::INCOMING => 'Board Incoming',
+                                \App\Enums\UserTypeEnum::PENDING => 'Board Pending',
+                                default => ''
+                            } }}
+                            @endif
+                            </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -64,7 +83,7 @@
                     @if ($countList > '0')
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="showUserInactiveModel()"><i class="fas fa-users-slash mr-2"></i>Make all Users Inactive</button>
                     @else
-                        <button type="button" class="btn bg-gradient-primary mb-3" disabled><i class="fas fa-users-slash mr-2"></i>Make all Users Inactive</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3 disabled" disabled><i class="fas fa-users-slash mr-2"></i>Make all Users Inactive</button>
                     @endif
 				@endif
              </div>

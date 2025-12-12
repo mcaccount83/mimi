@@ -15,7 +15,6 @@
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Financial Reports
                     </h3>
-                    <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
                     @include('layouts.dropdown_menus.menu_eoy')
                 </div>
             </div>
@@ -57,13 +56,13 @@
                             <a href="{{ url("/eoy/reviewfinancialreport/{$list->id}") }}"><i class="fas fa-edit"></i></a>
                         </td>
                         <td class="text-center align-middle">
-                            @if($list->documents->financial_report_received == '1' && $list->documents->financial_pdf_path != null)
-                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $list->documents->financial_pdf_path }}"><i class="far fa-file-pdf"></i></a>
+                            @if($list->documentsEOY->financial_report_received == '1' && $list->documentsEOY->$yearColumnName != null)
+                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $list->documentsEOY->$yearColumnName }}"><i class="far fa-file-pdf"></i></a>
                             @endif
                         </td>
                         <!-- Email link to be dynamically populated via AJAX -->
                         <td class="text-center align-middle">
-                            @if($list->documents->financial_report_received == null || $list->documents->financial_report_received == 0)
+                            @if($list->documentsEOY->financial_report_received == null || $list->documentsEOY->financial_report_received == 0)
                                 <a href="#" class="email-link" data-chapter-name="{{ $list->name }}" data-chapter-id="{{ $list->id }}" data-user-name="{{ $userName }}"
                                     data-user-position="{{ $userPosition }}" data-user-conf-name="{{ $userConfName }}" data-user-conf-desc="{{ $userConfDesc }}"
                                     data-predefined-subject="Financial Report Reminder" data-message-id="msg-{{ $list->id }}"> <i class="far fa-envelope text-primary"></i></a>
@@ -88,20 +87,20 @@
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
                         <td>{{ $list->reportReviewer->first_name?? null }} {{ $list->reportReviewer->last_name?? null }}</td>
-                        <td @if($list->documents->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
-                            @if($list->documents->report_extension == '1') YES @else @endif
+                        <td @if($list->documentsEOY->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
+                            @if($list->documentsEOY->report_extension == '1') YES @else @endif
                         </td>
-                        <td @if($list->documents->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents->financial_report_received == '1') YES @else NO @endif
+                        <td @if($list->documentsEOY->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY->financial_report_received == '1') YES @else NO @endif
                         </td>
-                        <td @if($list->documents->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents->financial_report_received != null)<span class="date-mask">{{ $list->documents->report_received }}</span>@endif
+                        <td @if($list->documentsEOY->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY->financial_report_received != null)<span class="date-mask">{{ $list->documentsEOY->report_received }}</span>@endif
                         </td>
-                        <td @if($list->documents->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents->financial_review_complete == '1') YES @else NO @endif
+                        <td @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY->financial_review_complete == '1') YES @else NO @endif
                         </td>
-                        <td @if($list->documents->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents->review_complete != null)<span class="date-mask">{{ $list->documents->review_complete }}</span>@endif
+                        <td @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY->review_complete != null)<span class="date-mask">{{ $list->documentsEOY->review_complete }}</span>@endif
                         </td>
                     </tr>
                     @endforeach

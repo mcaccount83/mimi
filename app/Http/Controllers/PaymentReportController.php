@@ -10,6 +10,7 @@ use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
 use App\Models\Payments;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -28,12 +29,16 @@ class PaymentReportController extends Controller implements HasMiddleware
 
     protected $baseMailDataController;
 
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseMailDataController $baseMailDataController)
+    protected PositionConditionsService $positionConditionsService;
+
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseMailDataController $baseMailDataController,
+        PositionConditionsService $positionConditionsService  )
     {
 
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
+        $this->positionConditionsService = $positionConditionsService;
     }
 
     public static function middleware(): array
@@ -56,8 +61,9 @@ class PaymentReportController extends Controller implements HasMiddleware
         $positionId = $user['user_positionId'];
         $secPositionId = $user['user_secPositionId'];
 
-        $currentYear = date('Y');
-        $currentMonth = date('m');
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentMonth = $dateOptions['currentMonth'];
+        $currentYear = $dateOptions['currentYear'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
@@ -96,11 +102,12 @@ class PaymentReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['user_confId'];
 
-        $now = Carbon::now();
-        $month = $now->month;
-        $year = $now->year;
-        $monthInWords = $now->format('F');
-        $rangeEndDate = $now->copy()->subMonth()->endOfMonth();
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDate = $dateOptions['currentDate'];
+        $currentYear = $dateOptions['currentYear'];
+        $currentMonth = $dateOptions['currentMonth'];
+        $currentMonthWords = $dateOptions['currentMonthWords'];
+        $rangeEndDate = $currentDate->copy()->subMonth()->endOfMonth();
         $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
 
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
@@ -109,8 +116,8 @@ class PaymentReportController extends Controller implements HasMiddleware
         try {
             $chapters = Chapters::with(['state', 'conference', 'region'])
                 ->where('conference_id', $confId)
-                ->where('start_month_id', $month)
-                ->where('next_renewal_year', $year)
+                ->where('start_month_id', $currentMonth)
+                ->where('next_renewal_year', $currentYear)
                 ->where('active_status', 1)
                 ->get();
 
@@ -143,7 +150,7 @@ class PaymentReportController extends Controller implements HasMiddleware
                     'chapterState' => $stateShortName,
                     'startRange' => $rangeStartDateFormatted,
                     'endRange' => $rangeEndDateFormatted,
-                    'startMonth' => $monthInWords,
+                    'startMonth' => $currentMonthWords,
                 ];
             }
 
@@ -180,16 +187,17 @@ class PaymentReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['user_confId'];
 
-        $now = Carbon::now();
-        $month = $now->month;
-        $lastMonth = $now->copy()->subMonth()->format('m');
-        $year = $now->year;
-        if ($now->format('m') == '01' && $lastMonth == '12') {
-            $year = $now->year - 1;
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDate = $dateOptions['currentDate'];
+        $currentYear = $dateOptions['currentYear'];
+        $currentMonth = $dateOptions['currentMonth'];
+        $lastMonth = $dateOptions['lastMonth'];
+        if ($currentMonth == '01' && $lastMonth == '12') {
+            $currentYear = $currentYear - 1;
         }
-        $monthInWords = $now->format('F');
-        $lastMonthInWords = $now->copy()->subMonth()->format('F');
-        $rangeEndDate = $now->copy()->subMonths(2)->endOfMonth();
+        $currentMonthWords = $dateOptions['currentMonthWords'];
+        $lastMonthWords = $dateOptions['lastMonthWords'];
+        $rangeEndDate = $currentDate->copy()->subMonths(2)->endOfMonth();
         $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
 
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
@@ -199,7 +207,7 @@ class PaymentReportController extends Controller implements HasMiddleware
             $chapters = Chapters::with(['state', 'conference', 'region'])
                 ->where('chapters.conference_id', $confId)
                 ->where('chapters.start_month_id', $lastMonth)
-                ->where('chapters.next_renewal_year', $year)
+                ->where('chapters.next_renewal_year', $currentYear)
                 ->where('chapters.active_status', 1)
                 ->get();
 
@@ -232,8 +240,8 @@ class PaymentReportController extends Controller implements HasMiddleware
                     'chapterState' => $stateShortName,
                     'startRange' => $rangeStartDateFormatted,
                     'endRange' => $rangeEndDateFormatted,
-                    'startMonth' => $lastMonthInWords,
-                    'dueMonth' => $monthInWords,
+                    'startMonth' => $lastMonthWords,
+                    'dueMonth' => $currentMonthWords,
                 ];
             }
 
@@ -322,8 +330,7 @@ class PaymentReportController extends Controller implements HasMiddleware
     public function updateChapterPayment(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $lastUpdatedBy = $user['user_name'];
-        $lastupdatedDate = date('Y-m-d H:i:s');
+        $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -349,7 +356,7 @@ class PaymentReportController extends Controller implements HasMiddleware
             $payments->rereg_waivelate = ! isset($input['ch_waive_late']) ? null : ($input['ch_waive_late'] == 'on' ? 1 : 0);
             $payments->save();
 
-            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->updated_by = $updatedBy;
             $chapter->save();
 
             if ($rereg_date != null) {

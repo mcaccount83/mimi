@@ -78,10 +78,10 @@
 <div class="form-group row align-items-center mb-3">
     <label class="col-sm-2 col-form-label">EIN Letter Received:</label>
     <div class="col-sm-10 custom-control custom-switch">
-        <input type="checkbox" name="ch_ein_letter_display" id="ch_ein_letter" class="custom-control-input" {{$chDocuments->ein_letter == 1 ? 'checked' : ''}} disabled>
+        <input type="checkbox" name="ch_ein_letter_display" id="ch_ein_letter" class="custom-control-input" {{$chEOYDocuments->ein_letter == 1 ? 'checked' : ''}} disabled>
         <label class="custom-control-label" for="ch_ein_letter"></label>
         <!-- Hidden input to submit the value -->
-        <input type="hidden" name="ch_ein_letter" value="{{ $chDocuments->ein_letter }}">
+        <input type="hidden" name="ch_ein_letter" value="{{ $chEOYDocuments->ein_letter }}">
     </div>
 </div>
 
@@ -98,11 +98,10 @@
                        <div class="form-group row">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Letter:</label>
                             <div class="col-sm-10">
-                                @if($chDocuments->ein_letter_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
-                                    {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->ein_letter_path }}'">EIN Letter from IRS</button> --}}
+                                @if($chEOYDocuments->ein_letter_path != null)
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
+                                    <button class="btn bg-gradient-primary btn-sm disabled" disabled>No EIN Letter on File</button>
                                 @endif
                             </div>
                         </div>
@@ -110,7 +109,7 @@
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Notes:</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" name="ein_notes" id="ein_notes" class="form-control" value="{{ $chDocuments->ein_notes }}" placeholder="EIN Notes">
+                                                        <input type="text" name="ein_notes" id="ein_notes" class="form-control" value="{{ $chEOYDocuments->ein_notes }}" placeholder="EIN Notes">
                                                     </div>
                                                 </div>
 
@@ -119,7 +118,7 @@
     <div class="form-group row align-items-center  mb-3">
         <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
         <div class="col-sm-10 custom-control custom-switch">
-            <input type="checkbox" name="ein_sent" id="ein_sent" class="custom-control-input" {{$chDocuments->ein_sent == 1 ? 'checked' : ''}}>
+            <input type="checkbox" name="ein_sent" id="ein_sent" class="custom-control-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}}>
             <label class="custom-control-label" for="ein_sent"></label>
         </div>
     </div>
@@ -127,10 +126,10 @@
     <div class="form-group row align-items-center  mb-3">
         <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
         <div class="col-sm-10 custom-control custom-switch">
-            <input type="checkbox" name="ein_sent" id="ein_sent" class="custom-control-input" {{$chDocuments->ein_sent == 1 ? 'checked' : ''}} disabled>
+            <input type="checkbox" name="ein_sent" id="ein_sent" class="custom-control-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}} disabled>
             <label class="custom-control-label" for="ein_sent"></label>
             <!-- Hidden input to submit the value -->
-            <input type="hidden" name="ein_sent" value="{{ $chDocuments->ein_sent }}">
+            <input type="hidden" name="ein_sent" value="{{ $chEOYDocuments->ein_sent }}">
         </div>
     </div>
 @endif
@@ -141,7 +140,7 @@
  <div class="form-group row align-items-center  mb-3">
     <label class="col-sm-2 col-form-label">990N Verifed with IRS:</label>
     <div class="col-sm-10 custom-control custom-switch">
-        <input type="checkbox" name="irs_verified" id="irs_verified" class="custom-control-input" {{$chDocuments->irs_verified == 1 ? 'checked' : ''}}>
+        <input type="checkbox" name="irs_verified" id="irs_verified" class="custom-control-input" {{$chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
         <label class="custom-control-label" for="irs_verified"></label>
     </div>
 </div>
@@ -152,34 +151,21 @@
                                 <label>990N Submission:</label>
                             </div>
                             <div class="col-sm-10">
-                                @if($chDocuments->irs_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->irs_path }}')">View/Download 990N Submission</button>
+                                @if($chEOYDocuments->irs_path != null)
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View/Download 990N Submission</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm disabled">No 990N Submission on File</button>
+                                    <button class="btn bg-gradient-primary btn-sm disabled" disabled>No 990N Submission on File</button>
                                 @endif
                             </div>
                         </div>
 
-                        {{-- <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">990N Submission:</label>
-                            <div class="col-sm-10">
-                                @if($chDocuments->irs_path != null)
-                                <button class="btn bg-gradient-primary btn-sm" onclick="window.open('{{ $chDocuments->irs_path }}', '_blank')">View/Download 990N Submission</button>
-                            @else
-                                <button class="btn bg-gradient-primary btn-sm disabled">No 990N Submission on File</button>
-                            @endif
+                            <!-- /.form group -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label mb-1">990N Submission Notes:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chEOYDocuments->irs_notes }}" placeholder="990N Submission Notes">
                         </div>
-                        </div> --}}
-
-
-
-                                                <!-- /.form group -->
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label mb-1">990N Submission Notes:</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDocuments->irs_notes }}" placeholder="990N Submission Notes">
-                                                    </div>
-                                                </div>
+                    </div>
 
 
 

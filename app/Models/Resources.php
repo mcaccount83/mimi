@@ -2,19 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-class Resources extends Authenticatable
+class Resources extends Model
 {
-    use HasFactory;
-    use Notifiable;
-
-    protected $fillable = [
-        'name', 'description', 'version', 'link', 'file_path',
-    ];
+    protected $guarded = [ ]; // ALL columns are mass-assignable
 
     public function resourceCategory(): BelongsTo
     {

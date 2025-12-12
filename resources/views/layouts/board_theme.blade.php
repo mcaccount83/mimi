@@ -297,6 +297,8 @@
 @include('layouts.scripts.masks')
 @include('layouts.scripts.password')
 @include('layouts.scripts.pdfviewer')
+@include('layouts.scripts.uploads')
+
 @include('layouts.scripts.website')
 
 @yield('customscript')

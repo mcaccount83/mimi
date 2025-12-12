@@ -28,9 +28,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    @php
-                                        $thisDate = \Illuminate\Support\Carbon::now();
-                                    @endphp
+
                                     <div class="col-md-12"><br><br></div>
                                     <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
 
@@ -40,19 +38,19 @@
                                         <br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                                     </p>
                                     <div id="readOnlyText" class="description text-center">
-                                        @if ($chDetails->documents->new_board_submitted != '1' )
+                                        @if ($chDetails->documentsEOY->new_board_submitted != '1' )
                                         <p>
                                             Please complete the report below with information about your newly elected board.<br>
                                             This will ensure they have access to all the tools they need to be successful in the upcoming year.</p>
                                         <p>Your submitted report will be activated after July 1st.<br>
                                             Once activated, new board members will have full MIMI Access. Outgoing board members will have access to Financial Reports Only.</p>
                                         @endif
-                                        @if ($chDetails->documents->new_board_submitted == '1' && $chDetails->documents->new_board_active !='1')
+                                        @if ($chDetails->documentsEOY->new_board_submitted == '1' && $chDetails->documentsEOY->new_board_active !='1')
                                         <p><span style="color:#28a745;">Your chapter's Board Eleciton Report has been Submitted and will be activated after July 1st!</span><br>
                                             Once activated, new board members will have full MIMI Access. Outgoing board members will have access to Financial Reports Only.<br>
                                             Submitted entries are <span style="color:#dc3545;">Read Only</span>. If you need to make changes, please contact your Primary Coordinator.</p>
                                         @endif
-                                        @if ($chDetails->documents->new_board_active =='1')
+                                        @if ($chDetails->documentsEOY->new_board_active =='1')
                                         <p><span style="color:#28a745;">Your chapter's Board Eleciton Report has been Activated!</span><br>
                                             New board members now have full MIMI Access. Outgoing board members have access to Financial Reports Only.</p>
                                             Futrue board member changes can be made on your chapter's main profile page.</p>
@@ -65,7 +63,7 @@
                     </div>
                 </div>
 
-                @if ($chDetails->documents->new_board_active != '1')
+                @if ($chDetails->documentsEOY->new_board_active != '1')
 
                 <div class="row">
                     <div class="col-md-8">
@@ -473,7 +471,7 @@
                     @else
                         <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply mr-2"></i>Back to Profile</a>
                     @endif
-                    @if ($chDetails->documents->new_board_submitted != '1')
+                    @if ($chDetails->documentsEOY->new_board_submitted != '1')
                         <button type="submit" class="btn btn-primary" onclick="return validateBeforeSubmit()" ><i class="fas fa-mail-forward mr-2" ></i>Submit</button>
                     @endif
 				</form>
@@ -494,7 +492,7 @@
 if (userType == 'coordinator' && userAdmin != 1) {
     $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
 
-    } else if ("{{$chDetails->documents->new_board_submitted}}" == '1') {
+    } else if ("{{$chDetails->documentsEOY->new_board_submitted}}" == '1') {
         $('input, select, textarea').prop('disabled', true);
         $('#submit').prop('disabled', true);
     } else {
@@ -503,98 +501,6 @@ if (userType == 'coordinator' && userAdmin != 1) {
         $('#submit').prop('disabled', false);
     }
 });
-
-// //Boundary Visibility
-// ShowBoundaryError();
-
-// function ShowBoundaryError() {
-//     var selectedValue = document.querySelector('input[name="BoundaryStatus"]:checked').value;
-
-//     if (selectedValue == "1") {
-//         $('#BoundaryIssue').addClass('tx-cls');
-//         document.getElementById("divBoundaryIssue").style.display = 'block';
-//     } else {
-//         $('#BoundaryIssue').removeClass('tx-cls');
-//         document.getElementById("divBoundaryIssue").style.display = 'none';
-//     }
-// }
-
-// function validateBeforeSubmit() {
-//     // Check if a boundary status is selected
-//     const selectedBoundary = document.querySelector('input[name="BoundaryStatus"]:checked');
-
-//     if (!selectedBoundary) {
-//         Swal.fire({
-//             icon: 'error',
-//             title: 'Boundary Issue Required',
-//             text: 'Please indicate whether your listed boundaries are correct.',
-//             confirmButtonText: 'OK',
-//             customClass: {
-//                 confirmButton: 'btn-sm btn-danger'
-//             }
-//         });
-//         return false;
-//     }
-
-//     // If "No" (value 1) is selected, check if the issue field is filled out
-//     if (selectedBoundary.value == "1") {
-//         const boundaryIssue = document.getElementById("BoundaryIssue");
-//         if (!boundaryIssue.value.trim()) {
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Boundary Issue Required',
-//                 text: 'Please indicate which part of the Boundaries do NOT match your records.',
-//                 confirmButtonText: 'OK',
-//                 customClass: {
-//                     confirmButton: 'btn-sm btn-danger'
-//                 }
-//             });
-//             boundaryIssue.focus();
-//             return false;
-//         }
-//     }
-
-//     // Get the values from the input fields
-//     const emails = [
-//         $('#ch_pre_email').val().trim(),
-//         $('#ch_avp_email').val().trim(),
-//         $('#ch_mvp_email').val().trim(),
-//         $('#ch_trs_email').val().trim(),
-//         $('#ch_sec_email').val().trim()
-//     ];
-
-//     // Filter out empty emails and check for duplicates
-//     const emailSet = new Set();
-//     const duplicateEmails = [];
-
-//     emails.forEach(email => {
-//         if (email != '') {
-//             if (emailSet.has(email)) {
-//                 if (!duplicateEmails.includes(email)) {
-//                     duplicateEmails.push(email);
-//                 }
-//             } else {
-//                 emailSet.add(email);
-//             }
-//         }
-//     });
-
-//     // If duplicates are found, show an alert
-//     if (duplicateEmails.length > 0) {
-//         Swal.fire({
-//             icon: 'error',
-//             title: 'Duplicate Emails Found',
-//             html: 'The following emails are duplicates: <br>' + duplicateEmails.join('<br>') + '<br>Please correct them before submitting.',
-//             confirmButtonText: 'OK',
-//             customClass: {
-//                 confirmButton: 'btn-sm btn-danger'
-//             }
-//         });
-//         return false;
-//     }
-
-//     return true;
-// }
 
 </script>
 @endsection

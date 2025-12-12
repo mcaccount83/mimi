@@ -99,14 +99,19 @@
             <div class="card card-primary card-outline">
                 <div class="card-header p-2">
                 <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">General</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#com" data-toggle="tab">Documents</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#eoy" data-toggle="tab">End of Year</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#pre" data-toggle="tab">President</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#avp" data-toggle="tab">Administrative VP</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#mvp" data-toggle="tab">Membership VP</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#trs" data-toggle="tab">Treasurer</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#sec" data-toggle="tab">Secretary</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">General</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#com" data-toggle="tab">Documents</a></li>
+                    @if (!isset($chDisbanded))
+                        <li class="nav-item"><a class="nav-link" href="#eoy" data-toggle="tab">End of Year</a></li>
+                    @endif
+                    @if (isset($chDisbanded))
+                        <li class="nav-item"><a class="nav-link" href="#disband" data-toggle="tab">Disband Checklist</a></li>
+                    @endif
+                    <li class="nav-item"><a class="nav-link" href="#pre" data-toggle="tab">President</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#avp" data-toggle="tab">Administrative VP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#mvp" data-toggle="tab">Membership VP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#trs" data-toggle="tab">Treasurer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sec" data-toggle="tab">Secretary</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
@@ -114,8 +119,13 @@
                   <div class="active tab-pane" id="general">
                     <div class="general-field">
                         <h3 class="profile-username">General Information
+                            @if (!isset($chDisbanded))
                             <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
-                    </h3>
+                            @endif
+                            @if (isset($chDisbanded))
+                            <button id="viewdisband" class="btn bg-gradient-primary btn-xs ml-2 keep-enabled" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Disband Checklist As President</button>
+                            @endif
+                        </h3>
                     <div class="row">
                             <div class="col-md-12">
                                 <label>Boundaries:</label> {{ $chDetails->territory}}
@@ -193,9 +203,8 @@
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->disband_letter_path != null)
                                         <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
-                                        {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="disband-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->disband_letter_path }}'">Disband Letter</button> --}}
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm disabled">No Disband Letter on File</button>
+                                        <button class="btn bg-gradient-primary btn-sm disabled" disabled>No Disband Letter on File</button>
                                     @endif
                                 </div>
                             </div>
@@ -204,10 +213,10 @@
                                     <label>Final Financial Report:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    @if($chDocuments->final_financial_pdf_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chDocuments->final_financial_pdf_path }}')">Final Financial Report</button>
+                                    @if($chDisbanded?->file_financial == 1 && $chEOYDocuments->final_financial_pdf_path != null)
+                                        <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm disabled">Final Report Not Filed</button>
+                                        <button class="btn bg-gradient-primary btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
                                     @endif
                                 </div>
                             </div>
@@ -231,9 +240,8 @@
                             <div class="col-sm-6 mb-2">
                                 @if($chDocuments->ein_letter_path != null)
                                     <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
-                                    {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->ein_letter_path }}'">EIN Letter from IRS</button> --}}
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
+                                    <button class="btn bg-gradient-primary btn-sm disabled" disabled>No EIN Letter on File</button>
                                 @endif
                             </div>
                         </div>
@@ -243,11 +251,10 @@
                                 <label>Chapter Roster:</label>
                             </div>
                             <div class="col-sm-6 mb-2">
-                                @if($chDocuments->roster_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="roster-file" onclick="openPdfViewer('{{ $chDocuments->roster_path }}')">Most Current Roster</button>
-                                    {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->roster_path }}'">Most Current Roster</button> --}}
+                                @if($chEOYDocuments->roster_path != null)
+                                    <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="roster-file" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">Most Current Roster</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm disabled">No Roster on File</button>
+                                    <button class="btn bg-gradient-primary btn-sm disabled" disabled>No Roster on File</button>
                                 @endif
                             </div>
                         </div>
@@ -269,9 +276,8 @@
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->probation_path != null)
                                         <button class="btn bg-gradient-primary btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
-                                        {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="probation-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->probation_path }}'">Probation Letter</button> --}}
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm disabled">No Probation Letter on File</button>
+                                        <button class="btn bg-gradient-primary btn-sm disabled" disabled>No Probation Letter on File</button>
                                     @endif
                                 </div>
                             </div>
@@ -283,9 +289,8 @@
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->probation_release_path != null)
                                         <button class="btn bg-gradient-primary btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
-                                        {{-- <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->probation_release_path }}'">Probation Release Letter</button> --}}
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm disabled">No Probation Release Letter on File</button>
+                                        <button class="btn bg-gradient-primary btn-sm disabled" disabled>No Probation Release Letter on File</button>
                                     @endif
                                 </div>
                             </div>
@@ -338,7 +343,7 @@
                                         @if ($chDetails->ein != null)
                                             <button id="NewChapter" type="button" class="btn bg-primary mb-1 btn-sm" onclick="showNewChapterEmailModal({{ $chDetails->id }})">Send New Chapter Email</button>
                                         @else
-                                            <button type="button" class="btn bg-primary mb-1 btn-sm" disabled>Must have EIN Number</button>
+                                            <button type="button" class="btn bg-primary mb-1 btn-sm disabled" disabled>Must have EIN Number</button>
                                         @endif
                                     </div>
                                 </div>
@@ -383,72 +388,6 @@
                         </div>
                         @endif
 
-                        @if($chDetails->active_status == '0')
-                        <div class="col-md-6">
-                            <h3 class="profile-username">Disband Checklist
-                                @if (isset($chDisbanded))
-                                    <button id="viewdisband" class="btn bg-gradient-primary btn-xs ml-2 keep-enabled" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Checklist/Report As President</button>
-                                @else
-                                    <button class="btn bg-gradient-primary btn-xs ml-2" disabled>View Checklist/Report As President</button>
-                                @endif
-                        </h3>
-                            <div class="row">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Final Re-Reg Payment:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->final_payment == 1 ? 'YES' : 'NO' }}
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Funds Donated:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->donate_funds == 1 ? 'YES' : 'NO' }}
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Manual Returned/Destroyed:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->destroy_manual == 1 ? 'YES' : 'NO' }}
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Online Accounts Removed:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->remove_online == 1 ? 'YES' : 'NO' }}
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Final 990N Filed:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->file_irs == 1 ? 'YES' : 'NO' }}
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Final Financial Report Submitted:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->file_financial == 1 ? 'YES' : 'NO' }}
-                                </div>
-                            </div>
-
-                        </div>
-                        @endif
-
                     </div>
 
                     </div>
@@ -457,7 +396,7 @@
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
-                        <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information
+                        <h3 class="profile-username">{{ $fiscalYear }} End of Year Information
                             @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                             @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
                         </h3>
@@ -484,12 +423,12 @@
                                 <div class="col-sm-3">
                                     <label>Board Report:</label>
                                 </div>
-                                @if ($chDocuments->new_board_submitted == 1)
+                                @if ($chEOYDocuments->new_board_submitted == 1)
                                     <div class="col-sm-5">
                                         Board Election Report has been received.
                                     </div>
                                     <div class="col-sm-4">
-                                        <label class="mr-2">Activated:</label>{{ $chDocuments->new_board_active == 1 ? 'YES' : 'NO' }}
+                                        <label class="mr-2">Activated:</label>{{ $chEOYDocuments->new_board_active == 1 ? 'YES' : 'NO' }}
                                     </div>
                                 @else
                                     <div class="col-sm-9">
@@ -502,12 +441,12 @@
                                 <div class="col-sm-3">
                                     <label>Financial Report:</label>
                                 </div>
-                                @if ($chDocuments->financial_report_received == 1)
+                                @if ($chEOYDocuments->financial_report_received == 1)
                                     <div class="col-sm-5">
                                         Financial Report has been received.
                                     </div>
                                     <div class="col-sm-4">
-                                        <label class="mr-2">Review Complete:</label>{{ $chDocuments->financial_review_complete == 1 ? 'YES' : 'NO' }}
+                                        <label class="mr-2">Review Complete:</label>{{ $chEOYDocuments->financial_review_complete == 1 ? 'YES' : 'NO' }}
                                     </div>
                                 @else
                                     <div class="col-sm-9">
@@ -523,11 +462,11 @@
                                 <div class="col-sm-9">
                                     @php
                                     // Check if $chFinancialReport is null before proceeding
-                                    $attachments = $chDocuments ? [
-                                        'Roster' => $chDocuments->roster_path ?? null,
-                                        'Statement' => $chDocuments->statement_1_path ?? null,
-                                        'Additional Statement' => $chDocuments->statement_2_path ?? null,
-                                        '990N Confirmation' => $chDocuments->irs_path ?? null,
+                                    $attachments = $chEOYDocuments ? [
+                                        'Roster' => $chEOYDocuments->roster_path ?? null,
+                                        'Statement' => $chEOYDocuments->statement_1_path ?? null,
+                                        'Additional Statement' => $chEOYDocuments->statement_2_path ?? null,
+                                        '990N Confirmation' => $chEOYDocuments->irs_path ?? null,
                                     ] : [];
 
                                     $included = array_keys(array_filter($attachments, fn($path) => $path != null));
@@ -612,6 +551,73 @@
                         <br><br>
                     </div>
                 </div>
+                  <!-- /.tab-pane -->
+
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="disband">
+                    <div class="disband-field">
+                        <h3 class="profile-username">Disband Checklist</h3>
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Final Re-Reg Payment:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded?->final_payment == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Funds Donated:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded?->donate_funds == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Manual Returned/Destroyed:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded?->destroy_manual == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Online Accounts Removed:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded?->remove_online == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Final 990N Filed:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded?->file_irs == 1 ? 'YES' : 'NO' }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Final Financial Report Submitted:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    {{ $chDisbanded?->file_financial == 1 ? 'YES' : 'NO' }}
+                                    @if ( $chDisbanded?->file_financial == 1)
+                                    <button type="button" class="btn bg-gradient-danger btn-xs ml-2 keep-enabled" id="unsubmit">UnSubmit Report</button>
+                                    @else
+                                    <button class="btn bg-gradient-danger btn-xs ml-2" disabled>UnSubmit Report</button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <br><br>
+                    </div>
                   <!-- /.tab-pane -->
 
                   <div class="tab-pane" id="pre">
@@ -885,7 +891,7 @@
                     @if($chActiveId == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal({{ $chDetails->id }})"><i class="fas fa-ban mr-2"></i>Disband Chapter</button>
                     @elseif($chActiveId != 1)
-                        <button type="button" id="unzap" class="btn bg-gradient-primary mb-3" onclick="unZapChapter({{ $chDetails->id }})"><i class="fas fa-undo mr-2"></i>UnZap Chapter</button>
+                        <button type="button" id="unzap" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="unZapChapter({{ $chDetails->id }})"><i class="fas fa-undo mr-2"></i>UnZap Chapter</button>
                     @endif
                 @endif
                 <br>
@@ -930,6 +936,30 @@
 @endsection
 @section('customscript')
     @include('layouts.scripts.disablefields')
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('unsubmit').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Unsubmitting this report will make it editable by the chapter again.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, Unsubmit',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ url('/eoy/unsubmitfinal/' . $chDetails->id) }}";
+            }
+        });
+    });
+});
+</script>
 @endsection
 

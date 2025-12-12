@@ -16,9 +16,6 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    @php
-                                        $thisDate = \Illuminate\Support\Carbon::now();
-                                    @endphp
                                     <div class="col-md-12"><br><br></div>
                                     <h2 class="text-center">Sustaining Chapter & Mother-to-Mother Fund Donations</h2>
                                     </h2>

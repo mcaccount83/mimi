@@ -88,9 +88,9 @@
                 <div class="card-body text-center">
                     @if ($ITCondition)
                         @if ($checkBox5Status)
-                            <button type="button" class="btn bg-gradient-primary mb-3" onclick="showResetProbationSubmisionModel()"><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
-                        @else
                             <button type="button" class="btn bg-gradient-primary mb-3" onclick="showResetProbationSubmisionModel()" disabled><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
+                        @else
+                            <button type="button" class="btn bg-gradient-primary mb-3 disabled" onclick="showResetProbationSubmisionModel()" disabled><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
                         @endif
                     @endif
                 </div>

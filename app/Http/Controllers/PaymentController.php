@@ -68,9 +68,8 @@ class PaymentController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
 
-        $now = Carbon::now();
-        $month = $now->month;
-        $year = $now->year;
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentMonth = $dateOptions['currentMonth'];
         $start_month = $chDetails->start_month_id;
         $next_renewal_year = $chDetails->next_renewal_year;
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
@@ -82,7 +81,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $month, 'due_date' => $due_date, 'userType' => $userType, 'chActiveId' => $chActiveId,
+            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userType' => $userType, 'chActiveId' => $chActiveId,
         ];
 
         return view('boards.payment')->with($data);
@@ -104,10 +103,6 @@ class PaymentController extends Controller implements HasMiddleware
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
         $PresDetails = $baseQuery['PresDetails'];
-
-        $now = Carbon::now();
-        $month = $now->month;
-        $year = $now->year;
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
             'PresDetails' => $PresDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,

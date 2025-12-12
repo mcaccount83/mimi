@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\UserStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -34,7 +35,7 @@ class LoginController extends Controller implements HasMiddleware
     protected function credentials(Request $request)
     {
         $credentials = $request->only($this->username(), 'password');
-        $credentials = Arr::add($credentials, 'is_active', '1');
+        $credentials = Arr::add($credentials, 'is_active', UserStatusEnum::ACTIVE);
 
         return $credentials;
     }

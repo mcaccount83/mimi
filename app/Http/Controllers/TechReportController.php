@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserTypeEnum;
+use App\Enums\UserStatusEnum;
 use App\Enums\CoordinatorPosition;
 use App\Models\Admin;
 use App\Models\AdminEmail;
@@ -17,11 +19,13 @@ use App\Models\CoordinatorRecognition;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\Documents;
+use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
 use App\Models\ProbationSubmission;
 use App\Models\User;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -30,6 +34,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
 class TechReportController extends Controller implements HasMiddleware
@@ -40,11 +46,15 @@ class TechReportController extends Controller implements HasMiddleware
 
     protected $baseCoordinatorController;
 
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
+    protected $positionConditionsService;
+
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController,
+            PositionConditionsService $positionConditionsService,)
     {
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
+        $this->positionConditionsService = $positionConditionsService;
     }
 
     public static function middleware(): array
@@ -271,10 +281,10 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             // Make disbanded users inactive
             DB::table('users')
-                ->where('user_type', 'disbanded')
-                ->where('active_status', '1')
+                ->where('type_id', UserTypeEnum::DISBANDED)
+                ->where('active_status', UserStatusEnum::ACTIVE)
                 ->update([
-                    'active_status' => '0',
+                    'active_status' => UserStatusEnum::INACTIVE,
                 ]);
 
             DB::commit();
@@ -315,10 +325,10 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             // Make outgoing users inactive
             DB::table('users')
-                ->where('user_type', 'outgoing')
-                ->where('active_status', '1')
+                ->where('type_id', UserTypeEnum::OUTGOING)
+                ->where('active_status', UserStatusEnum::ACTIVE)
                 ->update([
-                    'active_status' => '0',
+                    'active_status' => UserStatusEnum::INACTIVE,
                 ]);
 
             DB::commit();
@@ -360,8 +370,9 @@ class TechReportController extends Controller implements HasMiddleware
             $admin = new Admin;
 
             // Calculate the fiscal year (current year - next year)
-            $currentYear = Carbon::now()->year;
-            $nextYear = $currentYear + 1;
+            $dateOptions = $this->positionConditionsService->getDateOptions();
+            $currentYear = $dateOptions['currentYear'];
+            $nextYear = $dateOptions['nextYear'];
             $fiscalYear = $currentYear.'-'.$nextYear;
 
             // Set the fiscal year field
@@ -392,20 +403,20 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];
-            $lastupdatedDate = date('Y-m-d H:i:s');
+            $updatedBy = $user['user_name'];
 
             // Get the current year +/- 1 for table renaming
-            $currentYear = Carbon::now()->year;
-            $nextYear = $currentYear + 1;
-            $lastyear = $currentYear - 1;
+            $EOYOptions = $this->positionConditionsService->getEOYOptions();
+            $thisYear = $EOYOptions['thisYear'];
+            $nextYear = $EOYOptions['nextYear'];
+            $lastYear = $EOYOptions['lastYear'];
 
             // Make outgoing users inactive
             DB::table('users')
-                ->where('user_type', 'outgoing')
-                ->where('active_status', '1')
+                ->where('type_id', UserTypeEnum::OUTGOING)
+                ->where('active_status', UserStatusEnum::ACTIVE)
                 ->update([
-                    'active_status' => '0',
+                    'active_status' => UserStatusEnum::INACTIVE,
                 ]);
 
             // Remove Data from the `outgoing_board_member` and `incoming_board_member` tables
@@ -413,29 +424,29 @@ class TechReportController extends Controller implements HasMiddleware
             BoardsIncoming::query()->delete();
 
             // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
-            $chapters = Chapters::with('financialReport', 'documents')->get();
+            $chapters = Chapters::with('financialReport', 'documentsEOY')->get();
             foreach ($chapters as $chapter) {
-                if ($chapter->financialReport && $chapter->documents) {
-                    $document = $chapter->documents;
-                    $document->balance = $chapter->financialReport->post_balance;
-                    $document->save();
+                if ($chapter->financialReport && $chapter->documentsEOY) {
+                    $documentsEOY = $chapter->documents;
+                    $documentsEOY->pre_balance = $chapter->financialReport->post_balance;
+                    $documentsEOY->save();
                 }
             }
 
             // Copy and rename the `financial_report` table
-            DB::statement("CREATE TABLE zzz_financial_report_12_$lastyear LIKE financial_report");
-            DB::statement("INSERT INTO zzz_financial_report_12_$lastyear SELECT * FROM financial_report");
+            DB::statement("CREATE TABLE zzz_financial_report_12_$lastYear LIKE financial_report");
+            DB::statement("INSERT INTO zzz_financial_report_12_$lastYear SELECT * FROM financial_report");
 
             // Remove Data from the `financial_report` table
             FinancialReport::query()->delete();
 
             // Fetch all active chapters and insert each chapter's balance into financial_report
-            $activeChapters = Chapters::with('documents')->where('active_status', 1)->get();
+            $activeChapters = Chapters::with('documentsEOY')->where('active_status', 1)->get();
             foreach ($activeChapters as $chapter) {
                 FinancialReport::create([
                     'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
-                    'pre_balance' => $chapter->documents->balance,
-                    'amount_reserved_from_previous_year' => $chapter->documents->balance,
+                    'pre_balance' => $chapter->documentsEOY->pre_balance,
+                    'amount_reserved_from_previous_year' => $chapter->documentsEOY->pre_balance,
                 ]);
             }
 
@@ -446,8 +457,15 @@ class TechReportController extends Controller implements HasMiddleware
                 'boundary_issue_resolved' => null,
             ]);
 
+            // Add new column for the next year's financial PDF path
+            $newColumnName = $thisYear . '_financial_pdf_path';
+            $afterColumnName = $lastYear . '_financial_pdf_path';
+            Schema::table('documents_eoy', function (Blueprint $table) use ($newColumnName, $afterColumnName) {
+                $table->string($newColumnName, 255)->nullable()->after($afterColumnName);
+            });
+
             // Update documents table: Set specified columns to NULL
-            DB::table('documents')->update([
+             DB::table('documents_eoy')->update([
                 'new_board_submitted' => null,
                 'new_board_active' => null,
                 'financial_report_received' => null,
@@ -457,7 +475,7 @@ class TechReportController extends Controller implements HasMiddleware
                 'report_notes' => null,
                 'report_extension' => null,
                 'extension_notes' => null,
-                'financial_pdf_path' => null,
+                // 'financial_pdf_path' => null,
                 'roster_path' => null,
                 'irs_path' => null,
                 'statement_1_path' => null,
@@ -477,7 +495,6 @@ class TechReportController extends Controller implements HasMiddleware
                 ->update([
                     'reset_eoy_tables' => '1',
                     'updated_id' => $coorId,
-                    'updated_at' => $lastupdatedDate,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -502,16 +519,19 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];
-            $lastupdatedDate = date('Y-m-d H:i:s');
+            $updatedBy = $user['user_name'];
+
+            // Get the current year
+            $EOYOptions = $this->positionConditionsService->getEOYOptions();
+            $yearColumnName = $EOYOptions['yearColumnName'];
 
             // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
-            $chapters = Chapters::with('financialReportLastYear', 'documents')->get();
+            $chapters = Chapters::with('financialReportLastYear', 'documentsEOY')->get();
             foreach ($chapters as $chapter) {
-                if ($chapter->financialReportLastYear && $chapter->documents) {
-                    $document = $chapter->documents;
-                    $document->balance = $chapter->financialReportLastYear->post_balance;
-                    $document->save();
+                if ($chapter->financialReportLastYear && $chapter->documentsEOY) {
+                    $documentsEOY = $chapter->documentsEOY;
+                    $documentsEOY->pre_balance = $chapter->financialReportLastYear->post_balance;
+                    $documentsEOY->save();
                 }
             }
 
@@ -520,12 +540,12 @@ class TechReportController extends Controller implements HasMiddleware
             FinancialReport::query()->delete();
 
             // Fetch all active chapters and add balance into financial_report
-            $activeChapters = Chapters::with('documents')->where('active_status', 1)->get();
+            $activeChapters = Chapters::with('documentsEOY')->where('active_status', 1)->get();
             foreach ($activeChapters as $chapter) {
                 FinancialReport::create([
                     'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
-                    'pre_balance' => $chapter->documents->balance,
-                    'amount_reserved_from_previous_year' => $chapter->documents->balance,
+                    'pre_balance' => $chapter->documentsEOY->pre_balance,
+                    'amount_reserved_from_previous_year' => $chapter->documentsEOY->pre_balance,
                 ]);
             }
 
@@ -537,7 +557,7 @@ class TechReportController extends Controller implements HasMiddleware
             ]);
 
             // Update documents table: Set specified columns to NULL
-            DB::table('documents')->update([
+            DB::table('documents_eoy')->update([
                 'new_board_submitted' => null,
                 'new_board_active' => null,
                 'financial_report_received' => null,
@@ -547,7 +567,7 @@ class TechReportController extends Controller implements HasMiddleware
                 'report_notes' => null,
                 'report_extension' => null,
                 'extension_notes' => null,
-                'financial_pdf_path' => null,
+                $yearColumnName => null,
                 'roster_path' => null,
                 'irs_path' => null,
                 'statement_1_path' => null,
@@ -562,7 +582,6 @@ class TechReportController extends Controller implements HasMiddleware
                 ->update([
                     'reset_AFTER_testing' => '1',
                     'updated_id' => $coorId,
-                    'updated_at' => $lastupdatedDate,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -587,12 +606,12 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];
-            $lastupdatedDate = date('Y-m-d H:i:s');
+            $updatedBy = $user['user_name'];
 
             // Get the current month and year for table renaming
-            $currentYear = Carbon::now()->year;
-            $currentMonth = str_pad(Carbon::now()->month, 2, '0', STR_PAD_LEFT);
+            $dateOptions = $this->positionConditionsService->getDateOptions();
+            $currentYear = $dateOptions['currentYear'];
+            $currentMonth = str_pad($dateOptions['currentMonth'], 2, '0', STR_PAD_LEFT);
 
             // Copy and rename the `chapters` table
             DB::statement("CREATE TABLE zzz_chapters_{$currentMonth}_{$currentYear} LIKE chapters");
@@ -617,7 +636,6 @@ class TechReportController extends Controller implements HasMiddleware
                 ->update([
                     'update_user_tables' => '1',
                     'updated_id' => $coorId,
-                    'updated_at' => $lastupdatedDate,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -642,8 +660,7 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];
-            $lastupdatedDate = date('Y-m-d H:i:s');
+            $updatedBy = $user['user_name'];
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
@@ -652,7 +669,6 @@ class TechReportController extends Controller implements HasMiddleware
                 ->update([
                     'display_testing' => '1',
                     'updated_id' => $coorId,
-                    'updated_at' => $lastupdatedDate,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -677,8 +693,7 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];
-            $lastupdatedDate = date('Y-m-d H:i:s');
+            $updatedBy = $user['user_name'];
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
@@ -687,7 +702,6 @@ class TechReportController extends Controller implements HasMiddleware
                 ->update([
                     'display_live' => '1',
                     'updated_id' => $coorId,
-                    'updated_at' => $lastupdatedDate,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -709,8 +723,7 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];
-            $lastupdatedDate = date('Y-m-d H:i:s');
+            $updatedBy = $user['user_name'];
 
             // Get BoardList category
             // $categoryBoardList = ForumCategory::where('title', 'BoardList')
@@ -781,7 +794,6 @@ class TechReportController extends Controller implements HasMiddleware
                 ->update([
                     'subscribe_list' => '1',
                     'updated_id' => $coorId,
-                    'updated_at' => $lastupdatedDate,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -803,8 +815,7 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $coorId = $user['user_coorId'];
-            $lastUpdatedBy = $user['user_name'];
-            $lastupdatedDate = date('Y-m-d H:i:s');
+            $updatedBy = $user['user_name'];
 
             // $categoryBoardList = ForumCategory::where('title', 'BoardList')
             //     ->first();
@@ -819,7 +830,7 @@ class TechReportController extends Controller implements HasMiddleware
             // Delete board members for this category
             $unsubscribePublic = ForumCategorySubscription::where('category_id', $categoryPublic->id)
                 ->whereHas('user', function ($query) {
-                    $query->where('user_type', 'board');
+                    $query->where('type_id', UserTypeEnum::BOARD);
                 })
                 ->delete();
 
@@ -830,7 +841,6 @@ class TechReportController extends Controller implements HasMiddleware
                 ->update([
                     'unsubscribe_list' => '1',
                     'updated_id' => $coorId,
-                    'updated_at' => $lastupdatedDate,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -958,6 +968,7 @@ class TechReportController extends Controller implements HasMiddleware
             // Delete chapter and related data
             Chapters::where('id', $chapterid)->delete();
             Documents::where('chapter_id', $chapterid)->delete();
+            DocumentsEOY::where('chapter_id', $chapterid)->delete();
             FinancialReport::where('chapter_id', $chapterid)->delete();
 
             // Get board details based on status

@@ -182,7 +182,7 @@
                 @if ($checkBox3Status)
                     <button class="btn bg-gradient-primary mb-3" onclick="startExport('appreciation', 'Coordinator Appreciation List')"><i class="fas fa-download mr-2" ></i>Export Coordinator Appreciation List</button>
                 @else
-                    <button class="btn bg-gradient-primary mb-3" onclick="startExport('appreciation', 'Coordinator Appreciation List')" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator Appreciation List</button>
+                    <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('appreciation', 'Coordinator Appreciation List')" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator Appreciation List</button>
                 @endif
         </div>
           <!-- /.box -->

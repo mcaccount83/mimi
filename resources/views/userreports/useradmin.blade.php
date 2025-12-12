@@ -23,75 +23,70 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
+                    <th>Edit User</th>
                     <th>Admin</th>
                     <th>Name</th>
                     <th>Position</th>
-
-                  <th>Email Address</th>
-                  <th>User Type</th>
-                  <TH>Status</th>
-				  <th>Active User</th>
+                    <th>Email Address</th>
+                    <th>User Type</th>
+                    <th>Active User</th>
+                    <th>Delete<th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($adminList as $list)
                   <tr>
                     <td>
-                        @if($list->is_admin == '1')
-                                    ADMIN
-                                @elseif($list->is_admin == '2')
-                                    MODERATOR
-                                @elseif($list->is_admin == '0')
-                                    NO
-                                @endif
-                        {{-- @if($list->is_admin=='1')
-                        YES
+                        @if($list->type_id == \App\Enums\UserTypeEnum::COORD)
+                            <a href="{{ url("/userreports/editusercoord/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                         @else
-                            NO
-                        @endif --}}
+                            <a href="{{ url("/userreports/edituserboard/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                        @endif
+                    </td>
+                    <td>
+                        {{ match($list->type_id) {
+                            \App\Enums\AdminStatusEnum::NONE => 'NO',
+                            \App\Enums\AdminStatusEnum::ADMIN => 'ADMIN',
+                            \App\Enums\AdminStatusEnum::MODERATOR => 'MODERATOR',
+                            default => ''
+                        } }}
                     </td>
                     <td>{{ $list->first_name }} {{ $list->last_name }}</td>
-                    <td>@if ($list->user_type == 'coordinator'){{{ $list->coordinator->displayPosition->long_title }}}
+                    <td>@if ($list->type_id == \App\Enums\UserTypeEnum::COORD){{{ $list->coordinator->displayPosition->long_title }}}
                         @else {{{ $list->board->position->position }}}
                         @endif</td>
                         <td>{{ $list->email }}</td>
-                        <td>{{ $list->user_type }}</td>
                         <td>
-                            @if($list->user_type == 'coordinator')
-                                @if($list->coordinator->active_status == '1')
-                                    ACTIVE
-                                @elseif($list->coordinator->active_status == '2')
-                                    PENDING
-                                @elseif($list->coordinator->active_status == '3')
-                                    NOT APPROVED
-                                @elseif($list->coordinator->active_status == '0')
-                                    NOT ACTIVE
-                                @endif
-                            @endif
-                            @if($list->user_type == 'board')
-                                ACTIVE
-                            @endif
-                            @if($list->user_type == 'disbanded')
-                                DISBANDED
-                            @endif
-                            @if($list->user_type == 'outgoing')
-                                OUTGOING
-                            @endif
-                            @if($list->user_type == 'incoming')
-                                INCOMING
-                            @endif
-                            @if($list->user_type == 'pending')
-                                PENDING
+                           @if($list->type_id == \App\Enums\UserTypeEnum::COORD)
+                                {{ match($list->coordinator->active_status) {
+                                    \App\Enums\ActiveStatusEnum::ACTIVE => 'Coordinator Active',
+                                    \App\Enums\ActiveStatusEnum::ZAPPED => 'Coordinator Retired',
+                                    \App\Enums\ActiveStatusEnum::PENDING => 'Coordinator Pending',
+                                    \App\Enums\ActiveStatusEnum::NOTAPPROVED => 'Coordinator Not Approved',
+                                    default => ''
+                                } }}
+                            @else
+                            {{ match($list->type_id) {
+                                \App\Enums\UserTypeEnum::BOARD => 'Board Active',
+                                \App\Enums\UserTypeEnum::DISBANDED => 'Board Disbanded',
+                                \App\Enums\UserTypeEnum::OUTGOING => 'Board Outgoing',
+                                \App\Enums\UserTypeEnum::INCOMING => 'Board Incoming',
+                                \App\Enums\UserTypeEnum::PENDING => 'Board Pending',
+                                default => ''
+                            } }}
                             @endif
                         </td>
-
 						<td>
-							@if($list->is_active=='1')
-							    YES
-							@else
-								NO
-							@endif
-						</td>
+                           {{ match($list->is_active) {
+                                \App\Enums\UserStatusEnum::ACTIVE => 'YES',
+                                \App\Enums\UserStatusEnum::INACTIVE => 'NO',
+                                default => ''
+                            } }}
+                        </td>
+                        <td class="text-center align-middle"><i class="fa fa-ban"
+                            onclick="showDeleteUserModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}')"
+                            style="cursor: pointer; color: #dc3545;"></i>
+                        </td>
 			        </tr>
                   @endforeach
                   </tbody>

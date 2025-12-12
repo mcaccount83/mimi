@@ -15,7 +15,6 @@
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         990N Filing Report
                     </h3>
-                    <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
                     @include('layouts.dropdown_menus.menu_eoy')
                 </div>
             </div>
@@ -62,26 +61,26 @@
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->ein }}</td>
                         </td>
-                        <td @if($list->documents?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents?->irs_path != null) YES @else NO @endif
+                        <td @if($list->documentsEOY?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY?->irs_path != null) YES @else NO @endif
                         </td>
-                      <td @if($list->documents?->irs_verified) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                        @if($list->documents?->irs_verified) YES @else NO @endif
+                      <td @if($list->documentsEOY?->irs_verified) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        @if($list->documentsEOY?->irs_verified) YES @else NO @endif
                         </td>
-                        <td @if(!$list->documents?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents?->irs_issues) YES @else NO @endif
+                        <td @if(!$list->documentsEOY?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY?->irs_issues) YES @else NO @endif
                         </td>
-                        <td @if(!$list->documents?->irs_wrongdate && !$list->documents?->irs_notfound && !$list->documents?->irs_filedwrong) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents?->irs_wrongdate) WRONG DATES @endif
-                            @if($list->documents?->irs_notfound) NOT FOUND @endif
-                            @if($list->documents?->irs_filedwrong) FILED W/WRONG DATES @endif
+                        <td @if(!$list->documentsEOY?->irs_wrongdate && !$list->documentsEOY?->irs_notfound && !$list->documentsEOY?->irs_filedwrong) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsEOY?->irs_wrongdate) WRONG DATES @endif
+                            @if($list->documentsEOY?->irs_notfound) NOT FOUND @endif
+                            @if($list->documentsEOY?->irs_filedwrong) FILED W/WRONG DATES @endif
                         </td>
-                        <td @if(!$list->documents?->irs_notified && $list->documents?->irs_issues) style="background-color:#dc3545; color: #ffffff;"
-                            @elseif($list->documents?->irs_notified && $list->documents?->irs_issues) style="background-color:#28a745; color: #ffffff;"
+                        <td @if(!$list->documentsEOY?->irs_notified && $list->documentsEOY?->irs_issues) style="background-color:#dc3545; color: #ffffff;"
+                            @elseif($list->documentsEOY?->irs_notified && $list->documentsEOY?->irs_issues) style="background-color:#28a745; color: #ffffff;"
                             @else style="background-color: #transparent;" @endif>
-                            @if($list->documents?->irs_notified) YES @elseif(!$list->documents?->irs_notified && $list->documents?->irs_issues) NO @endif
+                            @if($list->documentsEOY?->irs_notified) YES @elseif(!$list->documentsEOY?->irs_notified && $list->documentsEOY?->irs_issues) NO @endif
                         </td>
-                        <td>{{ $list->documents?->irs_notes?? null }}</td>
+                        <td>{{ $list->documentsEOY?->irs_notes?? null }}</td>
                  </tr>
                   @endforeach
                   </tbody>
