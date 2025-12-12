@@ -609,7 +609,7 @@
                                 <div class="col-sm-6 mb-2">
                                     {{ $chDisbanded?->file_financial == 1 ? 'YES' : 'NO' }}
                                     @if ( $chDisbanded?->file_financial == 1)
-                                    <button type="button" class="btn bg-gradient-danger btn-xs ml-2 keep-enabled" id="unsubmit">UnSubmit Report</button>
+                                    <button type="button" class="btn bg-gradient-danger btn-xs ml-2 keep-enabled keep-enabled" id="unsubmit">UnSubmit Report</button>
                                     @else
                                     <button class="btn bg-gradient-danger btn-xs ml-2" disabled>UnSubmit Report</button>
                                     @endif
@@ -654,7 +654,7 @@
                                         <div class="col-md-12">
                                     <p>This will reset password to default "TempPass4You" for this user only.
                                     <br>
-                                    <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
+                                    <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn keep-enabled" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
                                     </p>
                                 </div>
                             </div>
@@ -702,7 +702,7 @@
                                 <div class="col-md-12">
                                     <p>This will reset password to default "TempPass4You" for this user only.
                                     <br>
-                                    <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $AVPDetails->user_id }}">Reset AVP Password</button>
+                                    <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn keep-enabled" data-user-id="{{ $AVPDetails->user_id }}">Reset AVP Password</button>
                                     </p>
                                 </div>
                                 </div>
@@ -750,7 +750,7 @@
                                     <div class="col-md-12">
                                         <p>This will reset password to default "TempPass4You" for this user only.
                                         <br>
-                                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $MVPDetails->user_id }}">Reset MVP Password</button>
+                                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn keep-enabled" data-user-id="{{ $MVPDetails->user_id }}">Reset MVP Password</button>
                                         </p>
                                     </div>
                                 </div>
@@ -798,7 +798,7 @@
                                     <div class="col-md-12">
                                <p>This will reset password to default "TempPass4You" for this user only.
                               <br>
-                              <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $TRSDetails->user_id }}">Reset Treasurer Password</button>
+                              <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn keep-enabled" data-user-id="{{ $TRSDetails->user_id }}">Reset Treasurer Password</button>
                             </p>
                         </div>
                     </div>
@@ -846,7 +846,7 @@
                                 <div class="col-md-12">
                         <p>This will reset password to default "TempPass4You" for this user only.
                         <br>
-                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $SECDetails->user_id }}">Reset Secretary Password</button>
+                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn keep-enabled" data-user-id="{{ $SECDetails->user_id }}">Reset Secretary Password</button>
                         </p>
                     </div>
                 </div>
