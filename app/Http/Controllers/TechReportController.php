@@ -182,6 +182,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         $admin = DB::table('admin')
             ->select('admin.*',
+                // DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_id'), )
                 DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
             ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
             ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
@@ -402,8 +403,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $updatedBy = $user['user_name'];
+            $updatedId = $user['updatedId'];
 
             // Get the current year +/- 1 for table renaming
             $EOYOptions = $this->positionConditionsService->getEOYOptions();
@@ -494,7 +494,7 @@ class TechReportController extends Controller implements HasMiddleware
                 ->limit(1)
                 ->update([
                     'reset_eoy_tables' => '1',
-                    'updated_id' => $coorId,
+                    'updated_id' => $updatedId,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -518,8 +518,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $updatedBy = $user['user_name'];
+            $updatedId = $user['updatedId'];
 
             // Get the current year
             $EOYOptions = $this->positionConditionsService->getEOYOptions();
@@ -581,7 +580,7 @@ class TechReportController extends Controller implements HasMiddleware
                 ->limit(1)
                 ->update([
                     'reset_AFTER_testing' => '1',
-                    'updated_id' => $coorId,
+                    'updated_id' => $updatedId,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -605,8 +604,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $updatedBy = $user['user_name'];
+            $updatedId = $user['updatedId'];
 
             // Get the current month and year for table renaming
             $dateOptions = $this->positionConditionsService->getDateOptions();
@@ -635,7 +633,7 @@ class TechReportController extends Controller implements HasMiddleware
                 ->limit(1)
                 ->update([
                     'update_user_tables' => '1',
-                    'updated_id' => $coorId,
+                    'updated_id' => $updatedId,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -659,8 +657,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $updatedBy = $user['user_name'];
+            $updatedId = $user['updatedId'];
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
@@ -668,7 +665,7 @@ class TechReportController extends Controller implements HasMiddleware
                 ->limit(1)
                 ->update([
                     'display_testing' => '1',
-                    'updated_id' => $coorId,
+                    'updated_id' => $updatedId,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -692,8 +689,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $updatedBy = $user['user_name'];
+            $updatedId = $user['updatedId'];
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
@@ -701,7 +697,7 @@ class TechReportController extends Controller implements HasMiddleware
                 ->limit(1)
                 ->update([
                     'display_live' => '1',
-                    'updated_id' => $coorId,
+                    'updated_id' => $updatedId,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -722,8 +718,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $updatedBy = $user['user_name'];
+            $updatedId = $user['updatedId'];
 
             // Get BoardList category
             // $categoryBoardList = ForumCategory::where('title', 'BoardList')
@@ -793,7 +788,7 @@ class TechReportController extends Controller implements HasMiddleware
                 ->limit(1)
                 ->update([
                     'subscribe_list' => '1',
-                    'updated_id' => $coorId,
+                    'updated_id' => $updatedId,
                 ]);
 
             DB::commit(); // Commit transaction
@@ -814,8 +809,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $updatedBy = $user['user_name'];
+            $updatedId = $user['updatedId'];
 
             // $categoryBoardList = ForumCategory::where('title', 'BoardList')
             //     ->first();
@@ -840,7 +834,7 @@ class TechReportController extends Controller implements HasMiddleware
                 ->limit(1)
                 ->update([
                     'unsubscribe_list' => '1',
-                    'updated_id' => $coorId,
+                    'updated_id' => $updatedId,
                 ]);
 
             DB::commit(); // Commit transaction

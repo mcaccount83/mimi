@@ -87,6 +87,6 @@ class Coordinators extends Model
 
     public function activeStatus(): BelongsTo
     {
-        return $this->belongsTo(ActiveStatus::class, 'active_status', 'id');  // 'active_status' in coordinators BelongsTo 'id' in probation
+        return $this->belongsTo(CoordinatorStatus::class, 'active_status', 'id');  // 'coordinator_status' in coordinators BelongsTo 'id' in probation
     }
 }

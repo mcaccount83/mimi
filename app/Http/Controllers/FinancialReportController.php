@@ -329,6 +329,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -357,7 +358,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             }
 
             $chapter->updated_by = $updatedBy;
-
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
@@ -476,6 +477,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -509,6 +511,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             }
 
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             $disbandChecklistUpd = DisbandedChecklist::find($chapterId);
@@ -585,8 +588,8 @@ class FinancialReportController extends Controller implements HasMiddleware
     public function updateDisbandChecklist(Request $request, $chapterId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userName = $user['user_name'];
         $userEmail = $user['user_email'];
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($chapterId);
@@ -605,6 +608,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $disbandChecklist->save();
 
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             $disbandChecklistUpd = DisbandedChecklist::find($chapterId);
@@ -655,7 +659,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Update or create incoming board member
      */
-    public function updateIncomingBoardMember($chapterId, $positionId, $positionPrefix, $vacantField, $idField, $request, $updatedBy)
+    public function updateIncomingBoardMember($chapterId, $positionId, $positionPrefix, $vacantField, $idField, $request, $updatedBy, $userId)
     {
         $boardDetails = BoardsIncoming::where('chapter_id', $chapterId)
             ->where('board_position_id', $positionId)
@@ -674,14 +678,14 @@ class FinancialReportController extends Controller implements HasMiddleware
                 // Update existing board member
                 $memberId = $request->input($idField);
                 BoardsIncoming::where('id', $memberId)
-                    ->update($this->getBoardMemberData($request, $positionPrefix, $updatedBy));
+                    ->update($this->getBoardMemberData($request, $positionPrefix, $updatedBy, $userId));
             }
         } else {
             if (! $isVacant) {
                 // Create new board member
                 BoardsIncoming::create(array_merge(
                     ['chapter_id' => $chapterId, 'board_position_id' => $positionId],
-                    $this->getBoardMemberData($request, $positionPrefix, $updatedBy)
+                    $this->getBoardMemberData($request, $positionPrefix, $updatedBy, $userId)
                 ));
             }
         }
@@ -690,7 +694,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Get board member data from request
      */
-    public function getBoardMemberData($request, $prefix, $updatedBy)
+    public function getBoardMemberData($request, $prefix, $updatedBy, $updatedId)
     {
         return [
             'first_name' => $request->input($prefix.'fname'),
@@ -703,6 +707,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             'country_id' => $request->input($prefix.'country') ?? '198',
             'phone' => $request->input($prefix.'phone'),
             'updated_by' => $updatedBy,
+            'updated_id' => $updatedId,
         ];
     }
 
@@ -711,6 +716,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         // Calculate the fiscal year (current year - next year)
@@ -754,6 +760,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                             'country_id' => $record->country_id,
                             'phone' => $record->phone,
                             'updated_by' => $updatedBy,
+                            'updated_id' => $updatedId,
                         ]);
 
                     }
@@ -798,6 +805,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                         'country_id' => $incomingRecord->country_id,
                         'phone' => $incomingRecord->phone,
                         'updated_by' => $updatedBy,
+                        'updated_id' => $updatedId,
                     ]);
                 }
 

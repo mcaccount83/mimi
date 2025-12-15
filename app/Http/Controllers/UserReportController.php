@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
 use App\Enums\BoardPosition;
+use App\Enums\ChapterStatusEnum;
 use App\Models\Boards;
 use App\Models\BoardsOutgoing;
 use App\Models\BoardsPending;
@@ -177,6 +178,7 @@ class UserReportController extends Controller implements HasMiddleware
     public function updateBoardNew(Request $request, $id): RedirectResponse
     {
         $user = $this->baseUserController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($id);
@@ -184,23 +186,24 @@ class UserReportController extends Controller implements HasMiddleware
         $positionId = BoardPosition::PRES;
         $prefix = 'ch_pre_';
         $vacant_field = null; // President is never vacant
+        $chStatus = $chapter->active_status;
 
-        if($chapter->active_status == '1'){
+        if($chapter->active_status == ChapterStatusEnum::ACTIVE){
             $defaultCategories = $this->forumSubscriptionController->defaultCategories();
             $defaultBoardCategories = $defaultCategories['boardCategories'];
-            $status = '1';
+            // $status = '1';
         }
         else{
             $defaultBoardCategories = null;
-            $status = '0';
+            // $status = '0';
         }
 
         DB::beginTransaction();
         try {
-            $this->chapterController->createNewBoardMember($chapter, $relation, $positionId, $request, $prefix, $status, $updatedBy, $defaultBoardCategories);
+            $this->chapterController->createNewBoardMember($chapter, $relation, $positionId, $request, $prefix, $chStatus, $updatedBy, $updatedId, $defaultBoardCategories);
 
         DB::commit();
-                if($chapter->active_status == '1'){
+                if($chapter->active_status == ChapterStatusEnum::ACTIVE){
                     return redirect()->to('/userreports/nopresident')->with('success', 'Chapter created successfully');
                 }else{
                     return redirect()->to('/userreports/nopresidentinactive')->with('success', 'Chapter created successfully');
@@ -285,6 +288,7 @@ public function editUserBoardInformation(Request $request, $id): View
     public function updateUserBoardInformation(Request $request, $id): RedirectResponse
     {
         $user = $this->baseUserController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['userName'];
 
         $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
@@ -330,6 +334,7 @@ public function editUserBoardInformation(Request $request, $id): View
             $bdDetails->zip = $request->input('zip');
             $bdDetails->country_id = $request->input('country') ?? '198';
             $bdDetails->updated_by = $updatedBy;
+            $bdDetails->updated_id = $updatedId;
 
             $bdDetails->save();
 
@@ -401,6 +406,7 @@ public function editUserCoordInformation(Request $request, $id): View
     public function updateUserCoordInformation(Request $request, $id): RedirectResponse
     {
         $user = $this->baseUserController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['userName'];
 
         $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
@@ -436,6 +442,7 @@ public function editUserCoordInformation(Request $request, $id): View
             $cdDetails->birthday_month_id = $request->input('cord_month');
             $cdDetails->birthday_day = $request->input('cord_day');
             $cdDetails->updated_by = $updatedBy;
+            $cdDetails->updated_id = $updatedId;
 
             $cdDetails->save();
 

@@ -13,6 +13,7 @@ class Chapters extends Model
     protected $guarded = [ ]; // ALL columns are mass-assignable
 
     protected $casts = [
+        'status_id' => 'integer',
         'active_status' => 'integer',
     ];
 
@@ -173,7 +174,7 @@ class Chapters extends Model
 
     public function activeStatus(): BelongsTo
     {
-        return $this->belongsTo(ActiveStatus::class, 'active_status', 'id');  // 'active_status' in chapters BelongsTo 'id' in probation
+        return $this->belongsTo(ChapterStatus::class, 'active_status', 'id');  // 'chapter_status' in chapters BelongsTo 'id' in probation
     }
 
     public function probation(): BelongsTo

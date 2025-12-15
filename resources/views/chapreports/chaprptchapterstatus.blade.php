@@ -50,8 +50,8 @@
                                 @endif
                             </td>
                             <td>{{ $list->name }}</td>
-                            <td @if ( $list->status_id == 4 || $list->status_id == 6) style="background-color: #dc3545; color: #ffffff;"
-                                @elseif ( $list->status_id == 5) style="background-color: #ffc107;"
+                            <td @if ( $list->status_id == \App\Enums\OperatingStatusEnum::ONHOLDDNR || $list->status_id == \App\Enums\OperatingStatusEnum::PROBATIONDNR) style="background-color: #dc3545; color: #ffffff;"
+                                @elseif ( $list->status_id == \App\Enums\OperatingStatusEnum::PROBATION) style="background-color: #ffc107;"
                                 @endif>
                             {{ $list->status->chapter_status }}</td>
                             <td>{{ $list->notes }}</td>

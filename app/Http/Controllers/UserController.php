@@ -103,6 +103,7 @@ class UserController extends Controller implements HasMiddleware
         $userInfo = [
             'userId' => $user->id,
             'userType' => $user->user_type,
+            'userTypeId' => $user->type_id,
             'userAdmin' => $user->is_admin,
             'userStatus' => $user->is_active,
             'user_name' => $user->first_name.' '.$user->last_name,
@@ -728,6 +729,7 @@ class UserController extends Controller implements HasMiddleware
                 'zip' => $boardDetails->zip,
                 'country_id' => $boardDetails->country_id,
                 'updated_by' => $updatedBy,
+                'updated_id' => $userId,
             ]
         );
     }

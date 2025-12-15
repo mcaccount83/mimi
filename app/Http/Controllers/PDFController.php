@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ChapterStatusEnum;
 use App\Mail\DisbandChapterLetter;
 use App\Mail\NameChangeEINNotice;
 use App\Mail\ProbationChapNoPmtLetter;
@@ -77,10 +78,10 @@ class PDFController extends Controller
 
         // Only calculate PresDetails if not passed in
         if ($PresDetails == null) {
-            if ($chActiveId == '1') {
+            if ($chActiveId == ChapterStatusEnum::ACTIVE) {
                 $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
                 $PresDetails = $baseActiveBoardQuery['PresDetails'];
-            } elseif ($chActiveId == '0') {
+            } elseif ($chActiveId == ChapterStatusEnum::ZAPPED) {
                 $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
                 $PresDetails = $baseDisbandedBoardQuery['PresDetails'];
                 // $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
@@ -142,10 +143,10 @@ class PDFController extends Controller
 
         // Only calculate PresDetails if not passed in
         if ($PresDetails == null) {
-            if ($chActiveId == '1') {
+            if ($chActiveId == ChapterStatusEnum::ACTIVE) {
                 $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chapterId);
                 $PresDetails = $baseActiveBoardQuery['PresDetails'];
-            } elseif ($chActiveId == '0') {
+            } elseif ($chActiveId == ChapterStatusEnum::ZAPPED) {
                 $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
                 // $PresDetails = $baseDisbandedBoardQuery['PresDisbandedDetails'];
                 $PresDetails = $baseDisbandedBoardQuery['PresDetails'];

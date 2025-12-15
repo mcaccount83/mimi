@@ -50,20 +50,7 @@
 
                             <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp(<?php echo $row?>);" style="background-color: transparent; border: none;">
                             <i class="far fa-copy fa-lg text-primary" ></i></button></td>
-                            @switch($list->status_id)
-                                @case(1)
-                                    <td>OK</td>
-                                    @break
-                                @case(4)
-                                    <td style="background-color: #dc3545; color: #ffffff;">Do Not Refer</td>
-                                    @break
-                                @case(5)
-                                    <td style="background-color: #ffc107;">Probation</td>
-                                    @break
-                                @case(6)
-                                    <td style="background-color: #dc3545; color: #ffffff;">Do Not Refer</td>
-                                    @break
-                            @endswitch
+                            <td>{{$list->status->inquiries_status}}</td>
                             <td>
                                 @if($list->state_id < 52)
                                     {{$list->state->state_short_name}}

@@ -214,7 +214,7 @@ class ResourcesController extends Controller implements HasMiddleware
 {
     try {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+        $updatedId = $user['updatedId'];
 
         $validatedData = $request->validate([
             'fileCategoryNew' => 'required',
@@ -251,7 +251,7 @@ class ResourcesController extends Controller implements HasMiddleware
             $file->file_path = null;
         }
 
-        $file->updated_id = $coorId;
+        $file->updated_id = $updatedId;
         $file->save();
 
         return response()->json(['success' => true, 'id' => $file->id, 'file_type' => $file->file_type]);
@@ -266,7 +266,7 @@ class ResourcesController extends Controller implements HasMiddleware
 {
     try {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+        $updatedId = $user['updatedId'];
 
         $validatedData = $request->validate([
             'fileDescription' => 'required|string|max:500',
@@ -298,7 +298,7 @@ class ResourcesController extends Controller implements HasMiddleware
             $file->file_path = null;
         }
 
-        $file->updated_id = $coorId;
+        $file->updated_id = $updatedId;
         $file->save();
 
         return response()->json(['success' => true]);
@@ -339,8 +339,7 @@ class ResourcesController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $updatedBy = $user['user_name'];
+            $updatedId = $user['updatedId'];
 
             $validatedData = $request->validate([
                 'fileCategoryNew' => 'required',
@@ -377,7 +376,7 @@ class ResourcesController extends Controller implements HasMiddleware
                 $file->file_path = null;
             }
 
-            $file->updated_id = $coorId;
+            $file->updated_id = $updatedId;
             $file->save();
 
             return response()->json(['success' => true, 'id' => $file->id, 'file_type' => $file->file_type]);
@@ -395,8 +394,7 @@ class ResourcesController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $updatedBy = $user['user_name'];
+            $updatedId = $user['updatedId'];
 
             $validatedData = $request->validate([
                 'fileDescription' => 'required|string|max:500',
@@ -428,7 +426,7 @@ class ResourcesController extends Controller implements HasMiddleware
                 $file->file_path = null;
             }
 
-            $file->updated_id = $coorId;
+            $file->updated_id = $updatedId;
             $file->save();
 
             return response()->json(['success' => true]);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ChapterCheckbox;
+use App\Enums\OperatingStatusEnum;
 use App\Models\Chapters;
 use App\Models\Documents;
 use App\Services\PositionConditionsService;
@@ -127,6 +128,7 @@ class ChapterReportController extends Controller implements HasMiddleware
     public function updateChapterIRS(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -135,6 +137,7 @@ class ChapterReportController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_by = $updatedId;
             $chapter->save();
 
             $documents->ein_letter = $request->has('ch_ein_letter') ? 1 : 0;
@@ -239,7 +242,7 @@ class ChapterReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where('status_id', '!=', 1)
+            ->where('status_id', '!=', OperatingStatusEnum::OK)
             ->get();
         $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
         $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];

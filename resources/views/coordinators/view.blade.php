@@ -322,32 +322,31 @@
                     @endif
                 @endif
                 <br>
-                    @if ($cdConfId == $confId)
-                        @if ($cdActiveId == '1')
+                   @if ($cdConfId == $confId)
+                        @if ($cdActiveId == \App\Enums\CoordiantorStatusEnum::ACTIVE)
                             <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
-                        @elseif ($cdActiveId == '2')
+                        @elseif ($cdActiveId == \App\Enums\CoordiantorStatusEnum::PENDING)
                             <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Coordinator List</button>
-                        @elseif ($cdActiveId == '3')
+                        @elseif ($cdActiveId == \App\Enums\CoordiantorStatusEnum::NOTAPPROVED)
                             <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Coordinator List</button>
-                        @elseif ($cdActiveId == '0')
+                        @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::RETIRED)
                             <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
                         @endif
                     @else
                         @if ($cdConfId != $confId)
                             @if ($ITCondition)
-                                @if ($cdActiveId == '1')
+                                @if ($cdActiveId == \App\Enums\CoordiantorStatusEnum::ACTIVE)
                                     <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
-                                @elseif ($cdActiveId == '2')
+                                @elseif ($cdActiveId == \App\Enums\CoordiantorStatusEnum::PENDING)
                                     <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
-                                @elseif ($cdActiveId == '3')
+                                @elseif ($cdActiveId == \App\Enums\CoordiantorStatusEnum::NOTAPPROVED)
                                     <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
-                                @elseif ($cdActiveId == '0')
+                                @elseif ($cdActiveId == \App\Enums\CoordiantorStatusEnum::RETIRED)
                                     <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
                                 @endif
                             @endif
                         @endif
                     @endif
-
             </div>
         </div>
         </div>

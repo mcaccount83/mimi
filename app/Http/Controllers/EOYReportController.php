@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
 use App\Enums\ChapterCheckbox;
+use App\Enums\ChapterStatusEnum;
 use App\Mail\EOYReviewrAssigned;
 use App\Models\BoardsIncoming;
 use App\Models\Chapters;
@@ -174,9 +175,9 @@ class EOYReportController extends Controller implements HasMiddleware
         $reviewComplete = $baseQuery['reviewComplete'];
         $rrList = $baseQuery['rrList'];
 
-        if ($chActiveId == '1') {
+        if ($chActiveId == ChapterStatusEnum::ACTIVE) {
             $baseBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
-        } elseif ($chActiveId == '0') {
+        } elseif ($chActiveId == ChapterStatusEnum::ZAPPED) {
             $baseBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
         }
 
@@ -200,6 +201,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -248,6 +250,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $financialReport->save();
 
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             DB::commit();
@@ -432,6 +435,8 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYBoardReport(Request $request, $chapter_id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($chapter_id);
@@ -475,6 +480,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             $documentsEOY->new_board_submitted = 1;
@@ -489,20 +495,20 @@ class EOYReportController extends Controller implements HasMiddleware
 
                 if (count($PREDetails) != 0) {
                     BoardsIncoming::where('id', $presId)
-                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy));
+                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $userId));
                 } else {
                     BoardsIncoming::create(array_merge(
                         ['chapter_id' => $chId, 'board_position_id' => BoardPosition::PRES],
-                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy)
+                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $userId)
                     ));
                 }
             }
 
             // Handle other board positions
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $updatedBy);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $updatedBy);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $updatedBy);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $updatedBy);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $updatedBy, $userId);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $updatedBy, $userId);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $updatedBy, $userId);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $updatedBy, $userId);
 
             DB::commit();
 
@@ -609,6 +615,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $userName = $user['user_name'];
+        $updatedId = $user['updatedId'];
         $updatedBy = $userName;
 
         $input = $request->all();
@@ -754,6 +761,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $documentsEOY->save();
 
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             DB::commit();
@@ -779,6 +787,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateUnsubmit(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -796,6 +805,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $financialReport->save();
 
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             DB::commit();
@@ -818,6 +828,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateUnsubmitFinal(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -839,6 +850,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $disbandChecklist->save();
 
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             DB::commit();
@@ -861,6 +873,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateClearReview(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -878,6 +891,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $financialReport->save();
 
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             DB::commit();
@@ -975,6 +989,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYAttachments(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -983,6 +998,7 @@ class EOYReportController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             $documentsEOY->irs_verified = (int) $request->has('irs_verified');
@@ -1083,6 +1099,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYBoundaries(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -1092,6 +1109,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $chapter->territory = $request->filled('ch_territory') ? $request->input('ch_territory') : $request->input('ch_old_territory');
             $chapter->boundary_issue_resolved = (int) $request->has('ch_resolved');
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             DB::commit();
@@ -1204,6 +1222,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYAwards(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -1222,6 +1241,7 @@ class EOYReportController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             $financialReport->chapter_awards = $chapter_awards;
@@ -1323,6 +1343,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateIRSSubmission(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -1331,6 +1352,7 @@ class EOYReportController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             // Correct way to handle checkboxes

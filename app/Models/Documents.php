@@ -8,5 +8,5 @@ class Documents extends Model
 {
     protected $primaryKey = 'chapter_id';
 
-    protected $fillable = [ ]; // No fillable fields
+    protected $guarded = [ ]; // ALL columns are mass-assignable
 }

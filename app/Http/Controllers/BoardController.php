@@ -197,7 +197,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      *Update Chapter Board Information
      */
-    private function updateBoardMember($chapter, $position, $requestData, $updatedBy, $defaultBoardCategories)
+    private function updateBoardMember($chapter, $position, $requestData, $updatedBy, $updatedId, $defaultBoardCategories)
     {
         $positionConfig = [
             'president' => [
@@ -273,17 +273,17 @@ class BoardController extends Controller implements HasMiddleware
                     $this->updateUserToOutgoing($user);
                     $this->removeActiveBoardMember($user);
                     // Create new board member in same position
-                    $this->createNewBoardMember($chapterWithRelation, $relation, $positionId, $requestData, $prefix, $updatedBy, $defaultBoardCategories);
+                    $this->createNewBoardMember($chapterWithRelation, $relation, $positionId, $requestData, $prefix, $updatedBy, $updatedId, $defaultBoardCategories);
 
                 } else {
                     // Same user – update fields
-                    $this->updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $updatedBy, $defaultBoardCategories);
+                    $this->updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $updatedBy, $updatedId, $defaultBoardCategories);
                 }
             }
         } else {
             // No current board member
             if (! $isVacant) {
-                $this->createNewBoardMember($chapterWithRelation, $relation, $positionId, $requestData, $prefix, $updatedBy, $defaultBoardCategories);
+                $this->createNewBoardMember($chapterWithRelation, $relation, $positionId, $requestData, $prefix, $updatedBy, $updatedId, $defaultBoardCategories);
             }
         }
     }
@@ -296,7 +296,7 @@ class BoardController extends Controller implements HasMiddleware
         ]);
     }
 
-    private function createOutgoingBoardMember($user, $bdDetails, $updatedBy)
+    private function createOutgoingBoardMember($user, $bdDetails, $updatedBy, $updatedId)
     {
         BoardsOutgoing::updateOrCreate(
             [
@@ -325,7 +325,7 @@ class BoardController extends Controller implements HasMiddleware
         ForumCategorySubscription::where('user_id', $user->id)->delete();
     }
 
-    private function updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $updatedBy, $defaultBoardCategories)
+    private function updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $updatedBy, $updatedId, $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
@@ -350,6 +350,7 @@ class BoardController extends Controller implements HasMiddleware
             'country_id' => $countryId,
             'phone' => $requestData->input($prefix.'phone'),
             'updated_by' => $updatedBy,
+            'updated_id' => $updatedId,
         ]);
 
         // Ensure forum subscriptions exist
@@ -366,7 +367,7 @@ class BoardController extends Controller implements HasMiddleware
         }
     }
 
-    private function createNewBoardMember($chapter, $relation, $positionId, $requestData, $prefix, $updatedBy, $defaultBoardCategories)
+    private function createNewBoardMember($chapter, $relation, $positionId, $requestData, $prefix, $updatedBy, $updatedId, $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
@@ -414,6 +415,7 @@ class BoardController extends Controller implements HasMiddleware
             'country_id' => $countryId,
             'phone' => $requestData->input($prefix.'phone'),
             'updated_by' => $updatedBy,
+            'updated_id' => $updatedId,
         ]);
 
         // Add forum subscriptions
@@ -428,6 +430,7 @@ class BoardController extends Controller implements HasMiddleware
     public function updateProfile(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
@@ -477,14 +480,15 @@ class BoardController extends Controller implements HasMiddleware
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id =  $updatedId;
             $chapter->save();
 
             // Update all board positions
-            $this->updateBoardMember($chapter, 'president', $request, $updatedBy, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'avp', $request, $updatedBy, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'mvp', $request, $updatedBy, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'treasurer', $request, $updatedBy, $defaultBoardCategories);
-            $this->updateBoardMember($chapter, 'secretary', $request, $updatedBy, $defaultBoardCategories);
+            $this->updateBoardMember($chapter, 'president', $request, $updatedBy, $updatedId, $defaultBoardCategories);
+            $this->updateBoardMember($chapter, 'avp', $request, $updatedBy, $updatedId, $defaultBoardCategories);
+            $this->updateBoardMember($chapter, 'mvp', $request, $updatedBy, $updatedId, $defaultBoardCategories);
+            $this->updateBoardMember($chapter, 'treasurer', $request, $updatedBy, $updatedId, $defaultBoardCategories);
+            $this->updateBoardMember($chapter, 'secretary', $request, $updatedBy, $updatedId, $defaultBoardCategories);
 
             // Update Chapter MailData//
             $baseQueryUpd = $this->baseBoardController->getChapterDetails($id);
@@ -635,6 +639,7 @@ class BoardController extends Controller implements HasMiddleware
     public function updateProbationSubmission(Request $request, $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -652,6 +657,7 @@ class BoardController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             if ($probation) {
@@ -758,6 +764,8 @@ class BoardController extends Controller implements HasMiddleware
     public function updateBoardReport(Request $request, $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -805,6 +813,7 @@ class BoardController extends Controller implements HasMiddleware
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             $documentsEOY->new_board_submitted = 1;
@@ -819,20 +828,20 @@ class BoardController extends Controller implements HasMiddleware
 
                 if (count($PREDetails) != 0) {
                     BoardsIncoming::where('id', $presId)
-                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy ));
+                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $updatedId, $userId ));
                 } else {
                     BoardsIncoming::create(array_merge(
                         ['chapter_id' => $chId, 'board_position_id' => BoardPosition::PRES],
-                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy )
+                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $updatedId, $userId )
                     ));
                 }
             }
 
             // Handle other board positions
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $updatedBy);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $updatedBy);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $updatedBy);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $updatedBy);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $updatedBy, $updatedId, $userId);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $updatedBy, $updatedId, $userId);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $updatedBy, $updatedId, $userId);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $updatedBy, $updatedId, $userId);
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -914,6 +923,7 @@ class BoardController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -943,6 +953,7 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             $baseQuery = $this->baseBoardController->getChapterDetails($chId);

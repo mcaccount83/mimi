@@ -49,6 +49,7 @@ class BaseUserController extends Controller implements HasMiddleware
         $userId = $userDetails->id;
         $userTypeId = $userDetails->type_id;
         $userName = $userDetails->first_name.' '.$userDetails->last_name;
+        $updatedId = $userId;
 
         // Initialize variables
         $bdDetails = null;
@@ -76,13 +77,14 @@ class BaseUserController extends Controller implements HasMiddleware
             $bdPosition = $userDetails->boardOutgoing->position->position;
         }
 
+
         $AllUserStatus = UserStatus::all();
         $AllUserType = UserType::all();
         $AllAdminRole = AdminRole::all();
 
         return ['userDetails' => $userDetails, 'userId' => $userId, 'userTypeId' => $userTypeId, 'userName' => $userName,
             'bdDetails' => $bdDetails, 'bdChapterId' => $bdChapterId, 'AllUserStatus' => $AllUserStatus, 'AllAdminRole' => $AllAdminRole,
-            'AllUserType' => $AllUserType, 'bdPosition' => $bdPosition];
+            'AllUserType' => $AllUserType, 'bdPosition' => $bdPosition, 'updatedId' => $updatedId];
     }
 
 

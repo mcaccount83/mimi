@@ -19,8 +19,13 @@ class Resources extends Model
         return $this->belongsTo(ToolkitCategory::class, 'category', 'id');  // 'category' in resrouces belongsTo 'id' in toolkit_category
     }
 
+    // public function updatedBy(): BelongsTo
+    // {
+    //     return $this->belongsTo(Coordinators::class, 'updated_id', 'id');  // 'updated_id' in resources BelongsTo 'id' in coordinators
+    // }
+
     public function updatedBy(): BelongsTo
     {
-        return $this->belongsTo(Coordinators::class, 'updated_id', 'id');  // 'updated_id' in resources BelongsTo 'id' in coordinators
+        return $this->belongsTo(User::class, 'updated_id', 'id');  // 'updated_id' in resources BelongsTo 'id' in users
     }
 }

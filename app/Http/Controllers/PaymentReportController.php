@@ -330,6 +330,7 @@ class PaymentReportController extends Controller implements HasMiddleware
     public function updateChapterPayment(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
@@ -357,6 +358,7 @@ class PaymentReportController extends Controller implements HasMiddleware
             $payments->save();
 
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             if ($rereg_date != null) {

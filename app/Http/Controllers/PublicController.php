@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
+use App\Enums\ChapterStatusEnum;
 use App\Enums\CoordinatorPosition;
+use App\Enums\OperatingStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
 use App\Mail\NewChapterThankYou;
@@ -247,8 +249,8 @@ class PublicController extends Controller
         $stateShortName = $state->state_short_name;
 
         $regId = '0';
-        $statusId = '1';
-        $activeStatus = '2';
+        $statusId = OperatingStatusEnum::OK;
+        $activeStatus = ChapterStatusEnum::PENDING;
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentMonth = $dateOptions['currentMonth'];
         $currentYear = $dateOptions['currentYear'];
@@ -269,7 +271,7 @@ class PublicController extends Controller
         $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $confId)
             ->where('position_id', CoordinatorPosition::CC)
-            ->where('active_status', 1)
+            ->where('active_status', ChapterStatusEnum::ACTIVE)
             ->where('on_leave', '!=', '1')
             ->first();
         $pcId = $ccDetails ? $ccDetails->id : null;
@@ -375,7 +377,12 @@ class PublicController extends Controller
                     'country_id' => $input['ch_pre_country'] ?? '198',
                     'phone' => $input['ch_pre_phone'],
                     'updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
+                    'updated_id' => $userId,
                 ])->id;
+
+                Chapters::where('id', $chapterId)->update([
+                    'updated_id' => $userId,
+                ]);
             }
 
             $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
@@ -894,12 +901,12 @@ class PublicController extends Controller
                 'zip' => $input['cd_zip'],
                 'country_id' => $input['cd_country'] ?? '198',
                 'phone' => $input['cd_phone'],
-                // 'alt_phone' => $input['cd_altphone'],
                 'birthday_month_id' => $input['cd_bmonth'],
                 'birthday_day' => $input['cd_bday'],
                 'home_chapter' => $input['home_chapter'].', '.$input['home_state'],
                 'coordinator_start_date' => Carbon::now(),
                 'updated_by' => $input['cd_fname'].' '.$input['cd_lname'],
+                'updated_id' => $userId,
                 'active_status' => $activeStatus,
             ])->id;
             CoordinatorApplication::create([

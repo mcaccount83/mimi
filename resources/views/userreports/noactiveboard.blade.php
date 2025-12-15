@@ -45,13 +45,7 @@
                         <td>{{ $list->board->chapter_id }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td>{{ $list->email }}</td>
-                        <td>
-                            {{ match($list->is_active) {
-                                \App\Enums\UserStatusEnum::ACTIVE => 'YES',
-                                \App\Enums\UserStatusEnum::INACTIVE => 'NO',
-                                default => ''
-                            } }}
-                        </td>
+                        <td>{{$list->userStatus->user_status}}</td>
 			        </tr>
                   @endforeach
                   </tbody>

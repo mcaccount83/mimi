@@ -131,7 +131,8 @@
                                 <label>Boundaries:</label> {{ $chDetails->territory}}
                         <br>
                         <label>Status:</label> {{$chapterStatus}}
-                        @if ($chDetails->status_id != 1)
+                        @if ($chDetails->status_id != \App\Enums\OperatingStatusEnum::OK
+                        )
                             <br>
                             <label>Probation Reason:</label> {{$probationReason}}
                         @endif
@@ -195,7 +196,7 @@
                             <div class="col-md-6">
 
                         <h3 class="profile-username">PDF Letters</h3>
-                        @if($chDetails->active_status == '0')
+                        @if($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Disband Letter:</label>
@@ -259,7 +260,7 @@
                             </div>
                         </div>
 
-                        @if($chDetails->active_status == '1')
+                        @if($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Chapter in Good Standing Letter:</label>
@@ -310,7 +311,7 @@
 
                         </div>
 
-                        @if($chDetails->active_status == '1')
+                        @if($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
                         <div class="col-md-6">
                             <h3 class="profile-username">Preset Emails</h3>
                             <div class="row">
@@ -897,30 +898,30 @@
                 <br>
                 @if($coordinatorCondition)
                     @if ($confId == $chConfId)
-                            @if ($chActiveId == '1')
+                            @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
                                 <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Chapter List</button>
-                            @elseif ($chActiveId == '0')
+                            @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
                                 <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
                             @endif
                             @if ($inquiriesCondition || $assistConferenceCoordinatorCondition)
-                                @if ($chActiveId == '1')
+                                @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
                                     <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check3' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to Active Inquiries List</button>
-                                @elseif ($chActiveId == '0')
+                                @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
                                     <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check3' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Inquiries List</button>
                                 @endif
                             @endif
                      @elseif ($confId != $chConfId)
                         @if ($einCondition || $inquiriesInternationalCondition || $ITCondition)
-                            @if ($chActiveId == '1')
+                            @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
                                 <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Chapter List</button>
-                            @elseif ($chActiveId == '0')
+                            @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
                                 <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Chapter List</button>
                             @endif
                         @endif
                          @if ($inquiriesInternationalCondition || $ITCondition)
-                            @if ($chActiveId == '1')
+                            @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
                                 <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Inquiries List</button>
-                            @elseif ($chActiveId == '0')
+                            @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
                                 <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Inquiries List</button>
                             @endif
                         @endif

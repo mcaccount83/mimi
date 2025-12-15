@@ -156,9 +156,9 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <label class="col-sm-2 col-form-label ml-5" id="probationLabel" style="{{ $chDetails->status_id != 1 ? '' : 'display: none;' }}">Probation Reason:</label>
-                                <div class="col-sm-3" id="probationField" style="{{ $chDetails->status_id != 1 ? '' : 'display: none;' }}">
-                                    <select name="ch_probation" id="ch_probation" class="form-control" style="width: 100%;" {{ $chDetails->status_id != 1 ? 'required' : '' }}>
+                                <label class="col-sm-2 col-form-label ml-5" id="probationLabel" style="{{ $chDetails->status_id != \App\Enums\OperatingStatusEnum::OK ? '' : 'display: none;' }}">Probation Reason:</label>
+                                <div class="col-sm-3" id="probationField" style="{{ $chDetails->status_id != \App\Enums\OperatingStatusEnum::OK ? '' : 'display: none;' }}">
+                                    <select name="ch_probation" id="ch_probation" class="form-control" style="width: 100%;" {{ $chDetails->status_id != \App\Enums\OperatingStatusEnum::OK ? 'required' : '' }}>
                                         <option value="">Select Reason</option>
                                         @foreach($allProbation as $probation)
                                             <option value="{{$probation->id}}"

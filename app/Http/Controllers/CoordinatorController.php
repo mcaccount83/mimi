@@ -215,6 +215,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $confId = $user['user_confId'];
         $reportsTo = $user['user_coorId'];
         $userLayerId = $user['user_layerId'];
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $new_layer_id = $userLayerId + 1;
@@ -260,6 +261,7 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'home_chapter' => $input['cord_chapter'],
                     'coordinator_start_date' => Carbon::now(),
                     'updated_by' => $updatedBy,
+                    'updated_id' => $updatedId,
                     'active_status' => 1]
             );
 
@@ -456,10 +458,9 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateCardSent(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $updatedId = $user->id;
 
         $cdDetailsUser = $user->coordinator;
-        $cdIdUser = $cdDetailsUser->id;
         $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $coordId = $request->input('id');
@@ -471,6 +472,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         try {
             $coordinators->card_sent = $cardSent;
             $coordinators->updated_by = $updatedBy;
+            $coordinators->updated_by = $updatedId;
             $coordinators->save();
 
             DB::commit();
@@ -498,10 +500,9 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateOnLeave(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $updatedId = $user->id;
 
         $cdDetailsUser = $user->coordinator;
-        $cdIdUser = $cdDetailsUser->id;
         $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $input = $request->all();
@@ -514,6 +515,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         try {
             $coordinators->on_leave = 1;
             $coordinators->updated_by = $updatedBy;
+            $coordinators->updated_by = $updatedId;
             $coordinators->save();
 
             ForumCategorySubscription::where('user_id', $coordUserId)->delete();
@@ -543,10 +545,9 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateRemoveLeave(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $updatedId = $user->id;
 
         $cdDetailsUser = $user->coordinator;
-        $cdIdUser = $cdDetailsUser->id;
         $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         $input = $request->all();
@@ -563,6 +564,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinators->on_leave = 0;
             $coordinators->leave_date = null;
             $coordinators->updated_by = $updatedBy;
+            $coordinators->updated_by = $updatedId;
             $coordinators->save();
 
             foreach ($defaultCoordinatorCategories as $categoryId) {
@@ -597,6 +599,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateRetire(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -613,6 +616,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->reason_retired = $retireReason;
             $coordinator->zapped_date = Carbon::now();
             $coordinator->updated_by = $updatedBy;
+            $coordinator->updated_by = $updatedId;
             $coordinator->save();
 
             $cdUser->is_active = UserStatusEnum::INACTIVE;
@@ -671,6 +675,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateUnRetire(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -689,6 +694,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->reason_retired = null;
             $coordinator->zapped_date = null;
             $coordinator->updated_by = $updatedBy;
+            $coordinator->updated_by = $updatedId;
             $coordinator->save();
 
             $cdUser->is_active = UserStatusEnum::ACTIVE;
@@ -832,7 +838,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $check_changed = false)
     {
         $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $updatedId = $user->id;
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
@@ -855,6 +861,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         try {
             $chapter->primary_coordinator_id = $coordinator_id;
             $chapter->updated_by = $updatedBy;
+            $chapter->updated_by = $updatedId;
 
             $chapter->save();
 
@@ -917,7 +924,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function ReassignCoordinator(Request $request, $coordinator_id, $new_coordinator_id, $check_changed = false)
     {
         $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $updatedId = $user->id;
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
@@ -942,6 +949,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->report_id = $new_coordinator_id;
             $coordinator->layer_id = $new_layer_id;
             $coordinator->updated_by = $updatedBy;
+            $coordinator->updated_by = $updatedId;
 
             $coordinator->save();
 
@@ -1023,7 +1031,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $userAdmin = $admin['userAdmin'];
 
         $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $updatedId = $user->id;
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
@@ -1073,6 +1081,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->display_position_id = $request->input('cord_disp_pos');
             $coordinator->last_promoted = $request->input('CoordinatorPromoteDate');
             $coordinator->updated_by = $updatedBy;
+            $coordinator->updated_by = $updatedId;
 
             $coordinator->save();
 
@@ -1163,7 +1172,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateCoordDetails(Request $request, $id): RedirectResponse
     {
         $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $updatedId = $user->id;
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
@@ -1195,6 +1204,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->birthday_day = $request->input('cord_day');
             $coordinator->home_chapter = $request->input('cord_chapter');
             $coordinator->updated_by = $updatedBy;
+            $coordinator->updated_by = $updatedId;
 
             $coordinator->save();
 
@@ -1260,7 +1270,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateCoordRecognition(Request $request, $id): RedirectResponse
     {
         $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $updatedId = $user->id;
 
         $cdDetailsUser = $user->coordinator;
         $cdIdUser = $cdDetailsUser->id;
@@ -1273,6 +1283,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         try {
 
             $coordinator->updated_by = $updatedBy;
+            $coordinator->updated_by = $updatedId;
 
             $coordinator->save();
 
@@ -1406,7 +1417,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateCoordProfile(Request $request): RedirectResponse
     {
         $user = User::find($request->user()->id);
-        $userId = $user->id;
+        $updatedId = $user['updatedId'];
 
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
@@ -1437,6 +1448,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->birthday_day = $request->input('cord_day');
             $coordinator->home_chapter = $request->input('cord_chapter');
             $coordinator->updated_by = $updatedBy;
+            $coordinator->updated_id = $updatedId;
 
             $coordinator->save();
 
@@ -1508,6 +1520,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $user = User::find($request->user()->id);
         $cdDetailsUser = $user->coordinator;
+        $updatedId = $cdDetailsUser['updatedId'];
         $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         // Reassign Report To / Direct Supervisor that Changed
@@ -1538,6 +1551,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinator->alt_phone = $request->input('cord_altphone');
             $coordinator->home_chapter = $request->input('cord_chapter');
             $coordinator->updated_by = $updatedBy;
+            $coordinator->updated_id = $updatedId;
 
             $coordinator->save();
 
@@ -1576,6 +1590,8 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateApproveApplication(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
+        $userId = $user->id;
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $defaultCategories = $this->forumSubscriptionController->defaultCategories();
@@ -1597,6 +1613,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinators->active_status = 1;
             $coordinators->coordinator_start_date = Carbon::now();
             $coordinators->updated_by = $updatedBy;
+            $coordinators->updated_id = $updatedId;
             $coordinators->save();
 
             CoordinatorRecognition::create([
@@ -1688,6 +1705,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateRejectApplication(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
+        $updatedId = $user['updatedId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -1704,6 +1722,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             $coordinators->zapped_date = Carbon::now();
             $coordinators->reason_retired = $retiredReason;
             $coordinators->updated_by = $updatedBy;
+            $coordinators->updated_id = $updatedId;
             $coordinators->save();
 
             $user->is_active = UserStatusEnum::INACTIVE;

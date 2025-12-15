@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
 use App\Enums\ChapterCheckbox;
+use App\Enums\OperatingStatusEnum;
 use App\Models\ActiveStatus;
 use App\Models\Chapters;
 use App\Models\Conference;
@@ -78,7 +79,7 @@ class BaseChapterController extends Controller
         if (isset($_GET[ChapterCheckbox::PROBATION]) && $_GET[ChapterCheckbox::PROBATION] == 'yes') {
             $checkboxStatus[ChapterCheckbox::CHECK_PROBATION] = 'checked';
             // Position conditions already applied in buildChapterQuery
-            $baseQuery->where('status_id', '!=', '1');
+            $baseQuery->where('status_id', '!=', OperatingStatusEnum::OK);
         }
 
         // Checkbox5

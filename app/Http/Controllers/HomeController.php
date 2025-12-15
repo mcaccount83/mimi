@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserTypeEnum;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -33,7 +34,7 @@ class HomeController extends Controller implements HasMiddleware
     public function index(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
+        $userType = $user['userTypeId'];
         $userStatus = $user['userStatus'];
 
         // Keep specific flash data for one more request (if needed)
@@ -47,23 +48,23 @@ class HomeController extends Controller implements HasMiddleware
             return redirect()->to('/login');
         }
 
-        if ($userType == 'coordinator') {
+        if ($userType == UserTypeEnum::COORD) {
             return redirect()->to('viewprofile');
         }
 
-        if ($userType == 'pending') {
+        if ($userType == UserTypeEnum::PENDING) {
             return redirect()->to('board/newchapterstatus/'.$user['user_pendChapterId']);
         }
 
-        if ($userType == 'board') {
+        if ($userType == UserTypeEnum::BOARD) {
             return redirect()->to('board/profile/'.$user['user_chapterId']);
         }
 
-        if ($userType == 'outgoing') {
+        if ($userType == UserTypeEnum::OUTGOING) {
             return redirect()->to('board/financialreport/'.$user['user_outChapterId']);
         }
 
-        if ($userType == 'disbanded') {
+        if ($userType == UserTypeEnum::DISBANDED) {
             return redirect()->to('board/disbandchecklist/'.$user['user_disChapterId']);
         }
 
