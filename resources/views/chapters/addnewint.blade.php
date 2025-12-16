@@ -145,9 +145,9 @@
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center">
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="showChapterSetupModalBlank()"><i class="fas fa-envelope mr-2"></i>Send Chapter Startup Email</button>
+                {{-- <button type="button" class="btn bg-gradient-primary mb-3" onclick="showChapterSetupModalBlank()"><i class="fas fa-envelope mr-2"></i>Send Chapter Startup Email</button> --}}
                 <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();"><i class="fas fa-save mr-2"></i>Save New Chapter</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter List</button>
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Chapter List</button>
         </div>
         </div>
         <!-- /.row -->
