@@ -109,11 +109,11 @@ class UserReportController extends Controller implements HasMiddleware
     public function showNoPresident(): View
     {
         $PresId = DB::table('boards')
-            ->where('board_position_id', '=', '1')
+            ->where('board_position_id', '1')
             ->pluck('chapter_id');
 
         $ChapterPres = DB::table('chapters')
-            ->where('active_status', '=', '1')
+            ->where('active_status', '1')
             ->whereNotIn('id', $PresId)
             ->get();
 
@@ -128,11 +128,11 @@ class UserReportController extends Controller implements HasMiddleware
     public function showNoPresidentInactive(): View
     {
         $PresId = DB::table('boards_disbanded')
-            ->where('board_position_id', '=', '1')
+            ->where('board_position_id', '1')
             ->pluck('chapter_id');
 
         $ChapterPres = DB::table('chapters')
-            ->where('active_status', '!=', '1')
+            ->where('active_status', '0')
             ->whereNotIn('id', $PresId)
             ->get();
 
