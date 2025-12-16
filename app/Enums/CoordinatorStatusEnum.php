@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-class CoordiantorStatusEnum
+class CoordinatorStatusEnum
 {
     // Active Status for Chapter or Coordinator
     const RETIRED = 0;
