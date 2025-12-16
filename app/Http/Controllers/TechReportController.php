@@ -403,7 +403,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['updatedId'];
+            $updatedId = $user['userId'];
 
             // Get the current year +/- 1 for table renaming
             $EOYOptions = $this->positionConditionsService->getEOYOptions();
@@ -518,7 +518,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['updatedId'];
+            $updatedId = $user['userId'];
 
             // Get the current year
             $EOYOptions = $this->positionConditionsService->getEOYOptions();
@@ -604,7 +604,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['updatedId'];
+            $updatedId = $user['userId'];
 
             // Get the current month and year for table renaming
             $dateOptions = $this->positionConditionsService->getDateOptions();
@@ -657,7 +657,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['updatedId'];
+            $updatedId = $user['userId'];
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
@@ -689,7 +689,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['updatedId'];
+            $updatedId = $user['userId'];
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
@@ -718,7 +718,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['updatedId'];
+            $updatedId = $user['userId'];
 
             // Get BoardList category
             // $categoryBoardList = ForumCategory::where('title', 'BoardList')
@@ -809,7 +809,7 @@ class TechReportController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['updatedId'];
+            $updatedId = $user['userId'];
 
             // $categoryBoardList = ForumCategory::where('title', 'BoardList')
             //     ->first();

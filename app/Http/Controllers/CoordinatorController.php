@@ -215,7 +215,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $confId = $user['user_confId'];
         $reportsTo = $user['user_coorId'];
         $userLayerId = $user['user_layerId'];
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $new_layer_id = $userLayerId + 1;
@@ -599,7 +599,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateRetire(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -675,7 +675,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateUnRetire(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -1417,7 +1417,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateCoordProfile(Request $request): RedirectResponse
     {
         $user = User::find($request->user()->id);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
 
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
@@ -1520,7 +1520,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $user = User::find($request->user()->id);
         $cdDetailsUser = $user->coordinator;
-        $updatedId = $cdDetailsUser['updatedId'];
+        $updatedId = $cdDetailsUser['userId'];
         $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
         // Reassign Report To / Direct Supervisor that Changed
@@ -1591,7 +1591,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $defaultCategories = $this->forumSubscriptionController->defaultCategories();
@@ -1705,7 +1705,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateRejectApplication(Request $request): JsonResponse
     {
         $user = User::find($request->user()->id);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();

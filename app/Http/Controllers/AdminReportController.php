@@ -134,7 +134,7 @@ class AdminReportController extends Controller implements HasMiddleware
     public function updateReRegDate(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);

@@ -430,7 +430,7 @@ class BoardController extends Controller implements HasMiddleware
     public function updateProfile(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
@@ -639,7 +639,7 @@ class BoardController extends Controller implements HasMiddleware
     public function updateProbationSubmission(Request $request, $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -765,7 +765,7 @@ class BoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -923,7 +923,7 @@ class BoardController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();

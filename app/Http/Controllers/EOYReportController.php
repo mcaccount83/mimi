@@ -201,7 +201,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -436,7 +436,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($chapter_id);
@@ -615,7 +615,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['user_coorId'];
         $userName = $user['user_name'];
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $userName;
 
         $input = $request->all();
@@ -787,7 +787,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateUnsubmit(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -828,7 +828,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateUnsubmitFinal(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -873,7 +873,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateClearReview(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -989,7 +989,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYAttachments(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -1099,7 +1099,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYBoundaries(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);
@@ -1222,7 +1222,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYAwards(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -1343,7 +1343,7 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateIRSSubmission(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($id);

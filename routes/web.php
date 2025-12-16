@@ -183,6 +183,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/chapter/unzap', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
     Route::get('/chapter/new', [ChapterController::class, 'addChapterNew'])->name('chapters.addnew');
     Route::post('/chapter/newupdate', [ChapterController::class, 'updateChapterNew'])->name('chapters.updatenew');
+    Route::get('/chapter/newint', [ChapterController::class, 'addChapterNewInt'])->name('chapters.addnewint');
+    Route::post('/chapter/newupdateint', [ChapterController::class, 'updateChapterNewInt'])->name('chapters.updatenewint');
     Route::get('/chapter/detailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
     Route::post('/chapter/detailsupdate/{id}', [ChapterController::class, 'updateChapterDetails'])->name('chapters.update');
     Route::get('/chapter/boardedit/{id}', [ChapterController::class, 'editChapterBoard'])->name('chapters.editboard');

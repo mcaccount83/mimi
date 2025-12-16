@@ -178,7 +178,7 @@ class UserReportController extends Controller implements HasMiddleware
     public function updateBoardNew(Request $request, $id): RedirectResponse
     {
         $user = $this->baseUserController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($id);
@@ -288,7 +288,7 @@ public function editUserBoardInformation(Request $request, $id): View
     public function updateUserBoardInformation(Request $request, $id): RedirectResponse
     {
         $user = $this->baseUserController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['userName'];
 
         $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
@@ -406,7 +406,7 @@ public function editUserCoordInformation(Request $request, $id): View
     public function updateUserCoordInformation(Request $request, $id): RedirectResponse
     {
         $user = $this->baseUserController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['userName'];
 
         $baseUserQuery = $this->baseUserController->getUserDetailsById($id);

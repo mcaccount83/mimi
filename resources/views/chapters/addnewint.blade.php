@@ -10,10 +10,9 @@
 }
 
 </style>
-
 @section('content')
     <!-- Main content -->
-    <form class="form-horizontal" method="POST" action='{{ route("chapters.updatenew") }}'>
+    <form class="form-horizontal" method="POST" action='{{ route("chapters.updatenewint") }}'>
     @csrf
     <section class="content">
       <div class="container-fluid">
@@ -24,14 +23,14 @@
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
                   <h3 class="profile-username ">Chapter Information</h3>
-                  <div class="form-group row">
-                    <label class="col-sm-4 col-form-label">MOMS Club of:</label>
+                  <div class="form-group row mb-1">
+                    <label class="col-sm-4 col-form-label">Name:</label>
                     <div class="col-sm-8">
                         <input type="text" name="ch_name" id="ch_name" class="form-control" placeholder="Chapter Name" required>
                     </div>
                 </div>
 
-                <div class="form-group row mt-1">
+                <div class="form-group row mb-1">
                     <label class="col-sm-4 col-form-label">State:</label>
                     <div class="col-sm-8">
                         <select id="ch_state" name="ch_state" class="form-control" required>
@@ -45,7 +44,7 @@
                     </div>
                 </div>
 
-                 <div class="form-group row mb-1" id="country-container" style="display: none;">
+                <div class="form-group row mb-1" id="country-container" style="display: none;">
                     <label class="col-sm-4 col-form-label">Country:</label>
                     <div class="col-sm-8">
                         <select id="ch_country" name="ch_country" class="form-control" required>
@@ -59,69 +58,19 @@
                     </div>
                 </div>
 
-                <div class="form-group row mt-1">
-                    <label class="col-sm-4 col-form-label">Region:</label>
-                    <div class="col-sm-8">
-                        <select id="ch_region" name="ch_region" class="form-control" required>
-                            <option value="">Select Region</option>
-                            @foreach($allRegions as $region)
-                                <option value="{{$region->id}}">
-                                    {{$region->long_name}}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label">EIN:</label>
-                    <div class="col-sm-8">
-                        <input type="text" name="ch_ein" id="ch_ein" class="form-control" placeholder="EIN Number">
-                    </div>
-                </div>
-
-                <div class="form-group row">
+                <div class="form-group row mb-1">
                     <label class="col-sm-4 col-form-label">Boundaries:</label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-8 ">
                         <input type="text" name="ch_boundariesterry" id="ch_boundariesterry" class="form-control" placeholder="Boundaries" required>
                     </div>
                 </div>
 
                 <div class="form-group row mt-1">
-                    <label class="col-sm-4 col-form-label">Status:</label>
-                    <div class="col-sm-8">
-                        <select id="ch_status" name="ch_status" class="form-control" required>
-                            <option value="">Select Status</option>
-                            @foreach($allStatuses as $status)
-                                <option value="{{$status->id}}">
-                                    {{$status->chapter_status}}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group row">
                     <label class="col-sm-4 col-form-label">Inquiries Email:</label>
                     <div class="col-sm-8">
                         <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" placeholder="Inquiries Email" required>
                     </div>
                 </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label">Primary Coordinator</label>
-                    <div class="col-sm-8">
-                        <select name="ch_primarycor" id="ch_primarycor" class="form-control select2-bs4" style="width: 100%;" required>
-                            <option value="">Select Primary Coordinator</option>
-                            @foreach($pcDetails as $coordinator)
-                            <option value="{{ $coordinator['cid'] }}" data-region-id="{{ $coordinator['regid'] }}">
-                                {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                  </div>
-                  <div id="display_corlist"> </div>
 
                 </div>
               <!-- /.card-body -->
@@ -133,27 +82,27 @@
           <div class="col-md-8">
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                <h3 class="profile-username">Board Member Information</h3>
+                <h3 class="profile-username">Founder Information</h3>
                     <!-- /.card-header -->
                     <div class="row">
                         <div class="col-md-12">
                          <!-- /.form group -->
                         <div class="form-group row">
-                            <label class="col-sm-2 mb-1 col-form-label">Founder:</label>
+                            <label class="col-sm-2 mb-1 col-form-label">Name:</label>
                             <div class="col-sm-5 mb-1">
                             <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" required placeholder="First Name" >
                             </div>
                             <div class="col-sm-5 mb-1">
                             <input type="text" name="ch_pre_lname" id="ch_pre_lname" class="form-control" required placeholder="Last Name">
                             </div>
-                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <label class="col-sm-2 mb-1 col-form-label">Contact:</label>
                             <div class="col-sm-5 mb-1">
                             <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required placeholder="Email Address" >
                             </div>
                             <div class="col-sm-5 mb-1">
                             <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
                             </div>
-                            <label class="col-sm-2 mb-1 col-form-label"></label>
+                            <label class="col-sm-2 mb-1 col-form-label">Address:</label>
                             <div class="col-sm-10 mb-1">
                             <input type="text" name="ch_pre_street" id="ch_pre_street" class="form-control" placeholder="Address"  required >
                             </div>
@@ -207,7 +156,9 @@
     </section>
     <!-- /.content -->
 @endsection
+
 @section('customscript')
+
 <script>
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -283,5 +234,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('emailHelp').innerHTML = '';
         }
     });
+
 </script>
 @endsection

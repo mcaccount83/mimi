@@ -214,7 +214,7 @@ class ResourcesController extends Controller implements HasMiddleware
 {
     try {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
 
         $validatedData = $request->validate([
             'fileCategoryNew' => 'required',
@@ -266,7 +266,7 @@ class ResourcesController extends Controller implements HasMiddleware
 {
     try {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
 
         $validatedData = $request->validate([
             'fileDescription' => 'required|string|max:500',
@@ -339,7 +339,7 @@ class ResourcesController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['updatedId'];
+            $updatedId = $user['userId'];
 
             $validatedData = $request->validate([
                 'fileCategoryNew' => 'required',
@@ -394,7 +394,7 @@ class ResourcesController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['updatedId'];
+            $updatedId = $user['userId'];
 
             $validatedData = $request->validate([
                 'fileDescription' => 'required|string|max:500',

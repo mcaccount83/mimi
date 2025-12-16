@@ -329,7 +329,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -477,7 +477,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['user_name'];
         $userEmail = $user['user_email'];
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $input = $request->all();
@@ -589,7 +589,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userEmail = $user['user_email'];
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         $chapter = Chapters::find($chapterId);
@@ -716,7 +716,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
-        $updatedId = $user['updatedId'];
+        $updatedId = $user['userId'];
         $updatedBy = $user['user_name'];
 
         // Calculate the fiscal year (current year - next year)
