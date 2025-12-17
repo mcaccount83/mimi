@@ -3056,12 +3056,12 @@ $(document).ready(function () {
 
         var submitted = @json($chEOYDocuments->financial_report_received);
         var submittedfinal = @json($chEOYDocuments->final_report_received);
-        var userType = @json($userType);
+        var userTypeId = @json($userTypeId);
         var userAdmin = @json($userAdmin);
 
-        var effectiveSubmitted = (userType == 'disbanded') ? submittedfinal : submitted;
+        var effectiveSubmitted = (userTypeId == 'disbanded') ? submittedfinal : submitted;
 
-       if (userType == 'coordinator' && userAdmin != 1) {
+       if (userTypeId == 1 && userAdmin != 1) {
         $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
 
         } else if (effectiveSubmitted == '1') {
