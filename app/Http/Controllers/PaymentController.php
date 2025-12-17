@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserTypeEnum;
 use App\Mail\PaymentsDonationOnline;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsManualOnline;
