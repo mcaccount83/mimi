@@ -61,11 +61,11 @@ class HomeController extends Controller implements HasMiddleware
         }
 
         if ($userTypeId == UserTypeEnum::OUTGOING) {
-            return redirect()->to('board/financialreport/'.$user['user_chapterId']);
+            return redirect()->to('board/financialreport/'.$user['chapterId']);
         }
 
         if ($userTypeId == UserTypeEnum::DISBANDED) {
-            return redirect()->to('board/disbandchecklist/'.$user['user_chapterId']);
+            return redirect()->to('board/disbandchecklist/'.$user['chapterId']);
         }
 
         // Default case - logout invalid users
