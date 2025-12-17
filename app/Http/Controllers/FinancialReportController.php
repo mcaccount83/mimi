@@ -74,9 +74,9 @@ class FinancialReportController extends Controller implements HasMiddleware
     public function editFinancialReport(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
-        $userName = $loggedInName = $user['user_name'];
-        $userEmail = $user['user_email'];
+        $userTypeId = $user['userTypeId'];
+        $userName = $loggedInName = $user['userName'];
+        $userEmail = $user['userEmail'];
         $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -92,7 +92,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType, 'chEOYDocuments' => $chEOYDocuments,
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'chEOYDocuments' => $chEOYDocuments,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
         ];
@@ -327,10 +327,10 @@ class FinancialReportController extends Controller implements HasMiddleware
     public function updateFinancialReport(Request $request, $chapterId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userName = $user['user_name'];
-        $userEmail = $user['user_email'];
+        $userName = $user['userName'];
+        $userEmail = $user['userEmail'];
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $reportReceived = $input['submitted'] ?? null;
@@ -440,9 +440,9 @@ class FinancialReportController extends Controller implements HasMiddleware
     public function editDisbandChecklist(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
-        $userName = $loggedInName = $user['user_name'];
-        $userEmail = $user['user_email'];
+        $userTypeId = $user['userTypeId'];
+        $userName = $loggedInName = $user['userName'];
+        $userEmail = $user['userEmail'];
         $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -460,7 +460,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $chDisbanded = $baseQuery['chDisbanded'];
 
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType,
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin, 'chEOYDocuments' => $chEOYDocuments,
         ];
@@ -475,10 +475,10 @@ class FinancialReportController extends Controller implements HasMiddleware
     public function updateDisbandReport(Request $request, $chapterId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userName = $user['user_name'];
-        $userEmail = $user['user_email'];
+        $userName = $user['userName'];
+        $userEmail = $user['userEmail'];
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $reportReceived = $input['submitted'] ?? null;
@@ -588,9 +588,9 @@ class FinancialReportController extends Controller implements HasMiddleware
     public function updateDisbandChecklist(Request $request, $chapterId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userEmail = $user['user_email'];
+        $userEmail = $user['userEmail'];
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($chapterId);
         $documentsEOY = DocumentsEOY::find($chapterId);
@@ -717,7 +717,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         // Calculate the fiscal year (current year - next year)
         $EOYOptions = $this->positionConditionsService->getEOYOptions();

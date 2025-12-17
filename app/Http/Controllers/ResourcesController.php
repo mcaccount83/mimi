@@ -70,8 +70,8 @@ class ResourcesController extends Controller implements HasMiddleware
         $breadcrumb = 'MIMI Bugs & Wishes';
 
         $user = $this->userController->loadUserInformation($request);
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
         $canEditDetails = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
         // $canEditDetails = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 
@@ -100,8 +100,8 @@ class ResourcesController extends Controller implements HasMiddleware
     {
         try {
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $updatedBy = $user['user_name'];
+            $coorId = $user['cdId'];
+            $updatedBy = $user['userName'];
 
             $validatedData = $request->validate([
                 'taskNameNew' => 'required|string|max:255',
@@ -194,8 +194,8 @@ class ResourcesController extends Controller implements HasMiddleware
     public function showResources(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
         $canEditFiles = ($positionId == CoordinatorPosition::CC || in_array(CoordinatorPosition::CC, $secPositionId));
 
         $resources = Resources::with('resourceCategory', 'updatedBy')->get();
@@ -315,8 +315,8 @@ class ResourcesController extends Controller implements HasMiddleware
     public function showToolkit(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
         $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
         // $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 

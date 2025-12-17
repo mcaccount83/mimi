@@ -46,11 +46,11 @@ class ChapterReportController extends Controller implements HasMiddleware
     public function showRptChapterStatus(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
@@ -73,11 +73,11 @@ class ChapterReportController extends Controller implements HasMiddleware
     public function showRptEINstatus(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
@@ -99,8 +99,8 @@ class ChapterReportController extends Controller implements HasMiddleware
     public function editChapterIRS(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -129,7 +129,7 @@ class ChapterReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
@@ -167,11 +167,11 @@ class ChapterReportController extends Controller implements HasMiddleware
     public function showRptNewChapters(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $oneYearAgo = $dateOptions['oneYearAgo'];
@@ -205,11 +205,11 @@ class ChapterReportController extends Controller implements HasMiddleware
     public function showRptLargeChapters(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
@@ -234,11 +234,11 @@ class ChapterReportController extends Controller implements HasMiddleware
     public function showRptProbation(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
@@ -261,11 +261,11 @@ class ChapterReportController extends Controller implements HasMiddleware
     public function showRptChapterCoordinators(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();

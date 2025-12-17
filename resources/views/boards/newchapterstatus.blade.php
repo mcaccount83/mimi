@@ -88,7 +88,7 @@
                     </div>
                     </div>
 
-                    @if ($chDetails->activeStatus->chapter_status == 'Pending')
+                    @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::PENDING)
                     <p>
                         <br>
                         Here are a few things to keep in mind as you start your MOMS Club journey.
@@ -130,13 +130,13 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Status</label>
                             <div class="col-sm-8">
-                                <span class="float-right">{{ $chDetails->activeStatus->chapter_status }}</span>
+                                <span class="float-right">{{ $chDetails->activeStatus->active_status }}</span>
                             </div>
                         </div>
 
-                        @if ($chDetails->activeStatus->chapter_status == 'Pending')
+                        @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::PENDING)
                             <span style="color: #dc3545;"><b>Your chapter will NOT be moved to Active Status until you have made contact with your Coordinator.</b></span><br>
-                        @elseif ($chDetails->activeStatus->active_status == 'Not Approved')
+                        @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::NOTAPPROVED)
                             <span style="color: #dc3545;"><b>Your application has been declined. Contact your Coordinator for more information.</b></span><br>
                         @endif
 
@@ -169,12 +169,12 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-    var userType = @json($userType);
+    var userTypeId = @json($userTypeId);
     var userAdmin = @json($userAdmin);
 
     if (userAdmin == 1) {
         $('#Password, #logout-btn').prop('disabled', true);
-    }else if (userType == 'coordinator' && userAdmin != 1) {
+    }else if (userTypeId == 1 && userAdmin != 1) {
         // Disable all input fields, select elements, textareas, and buttons
         $('input, select, textarea').prop('disabled', true);
         $('#Save, #Password, #logout-btn').prop('disabled', true);

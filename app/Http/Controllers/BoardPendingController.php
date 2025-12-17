@@ -32,16 +32,16 @@ class BoardPendingController extends Controller implements HasMiddleware
     public function showNewChapterStatus(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
+        $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
-        if ($userAdmin == 1 && isset($chapter_id)) {
-            $chId = $chapter_id;
-        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-            $chId = $chapter_id;
-        } else {
-            $chId = $user['user_pendChapterId'];
-        }
+        // if ($userAdmin == 1 && isset($chapter_id)) {
+        //     $chId = $chapter_id;
+        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+        //     $chId = $chapter_id;
+        // } else {
+        //     $chId = $user['chapterId'];
+        // }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -50,7 +50,7 @@ class BoardPendingController extends Controller implements HasMiddleware
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'userType' => $userType, 'userAdmin' => $userAdmin, 'allCountries' => $allCountries,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'allCountries' => $allCountries,
         ];
 
         return view('boards.newchapterstatus')->with($data);

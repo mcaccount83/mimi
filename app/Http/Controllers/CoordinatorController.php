@@ -85,16 +85,16 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function showCoordinators(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userCoordId = $user['user_coorId'];
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $userCoordId = $user['cdId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
@@ -119,11 +119,11 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function showPendingCoordinator(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(2, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
@@ -140,11 +140,11 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function showRejectedCoordinator(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(3, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
@@ -161,11 +161,11 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function showRetiredCoordinator(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
@@ -182,14 +182,14 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function addCoordNew(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userName = $user['user_name'];
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $conference = $user['user_conference'];
-        $confLongName = $conference->conference_name;
-        $confDescription = $conference->conference_description;
-        $regId = $user['user_regId'];
-        $region = $user['user_region'];
+        $userName = $user['userName'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $conference = $user['conference'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
+        $regId = $user['regId'];
+        $region = $user['region'];
         $regLongName = $region->long_name;
 
         $allStates = State::all();  // Full List for Dropdown Menu
@@ -200,7 +200,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $allMonths = Month::all();  // Full List for Dropdown Menu
 
         $data = ['allStates' => $allStates, 'allMonths' => $allMonths, 'allRegions' => $allRegions, 'userName' => $userName, 'coorId' => $coorId, 'allCountries' => $allCountries,
-            'confId' => $confId, 'regId' => $regId, 'confLongName' => $confLongName, 'regLongName' => $regLongName, 'confDescription' => $confDescription,
+            'confId' => $confId, 'regId' => $regId, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'regLongName' => $regLongName,
         ];
 
         return view('coordinators.editnew')->with($data);
@@ -212,11 +212,11 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function updateCoordNew(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $confId = $user['user_confId'];
-        $reportsTo = $user['user_coorId'];
-        $userLayerId = $user['user_layerId'];
+        $confId = $user['confId'];
+        $reportsTo = $user['cdId'];
+        $userLayerId = $user['layerId'];
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $new_layer_id = $userLayerId + 1;
         $input = $request->all();
@@ -317,7 +317,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function viewCoordDetails(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $confId = $user['user_confId'];
+        $confId = $user['confId'];
 
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
         $cdDetails = $baseQuery['cdDetails'];
@@ -600,7 +600,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $coordId = $input['coord_id'];
@@ -676,7 +676,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $coordId = $input['coord_id'];
@@ -1472,7 +1472,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     public function viewCoordApplication(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $confId = $user['user_confId'];
+        $confId = $user['confId'];
 
         $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
         $cdDetails = $baseQuery['cdDetails'];
@@ -1592,7 +1592,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $user = User::find($request->user()->id);
         $userId = $user->id;
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $defaultCategories = $this->forumSubscriptionController->defaultCategories();
         $defaultCoordinatorCategories = $defaultCategories['coordinatorCategories'];
@@ -1706,7 +1706,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     {
         $user = User::find($request->user()->id);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $cdId = $input['coord_id'];

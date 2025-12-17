@@ -106,15 +106,15 @@ class ChapterController extends Controller implements HasMiddleware
     public function showPendingChapters(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         // Pending chapters
         $baseQuery = $this->baseChapterController->getBaseQuery(2, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -142,11 +142,11 @@ class ChapterController extends Controller implements HasMiddleware
     public function showNotApprovedChapters(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         // Not Approved chapters
         $baseQuery = $this->baseChapterController->getBaseQuery(3, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -170,15 +170,15 @@ class ChapterController extends Controller implements HasMiddleware
     public function showChapters(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         // Active chapters
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -209,11 +209,11 @@ class ChapterController extends Controller implements HasMiddleware
     public function showZappedChapter(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         // Zapped chapters
         $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -237,11 +237,11 @@ class ChapterController extends Controller implements HasMiddleware
     public function showChapterInquiries(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         // Active chapters
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -265,11 +265,11 @@ class ChapterController extends Controller implements HasMiddleware
     public function showZappedChapterInquiries(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         // Zapped chapters
         $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
@@ -293,13 +293,13 @@ class ChapterController extends Controller implements HasMiddleware
     public function viewChapterDetails(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $positionId = $user['user_positionId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $positionId = $user['cdPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -375,7 +375,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
@@ -421,7 +421,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
@@ -547,7 +547,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
@@ -680,7 +680,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function addChapterNew(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $confId = $user['user_confId'];
+        $confId = $user['confId'];
 
         $allStates = State::all();  // Full List for Dropdown Menu
         $allCountries = Country::all();  // Full List for Dropdown Menu
@@ -738,8 +738,8 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
-        $conference = $user['user_confId'];
+        $updatedBy = $user['userName'];
+        $conference = $user['confId'];
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentMonth = $dateOptions['currentMonth'];
@@ -838,7 +838,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentMonth = $dateOptions['currentMonth'];
@@ -954,8 +954,8 @@ class ChapterController extends Controller implements HasMiddleware
     // public function updateChapterNew(Request $request): RedirectResponse
     // {
     //     $user = $this->userController->loadUserInformation($request);
-    //     $updatedBy = $user['user_name'];
-    //     $conference = $user['user_confId'];
+    //     $updatedBy = $user['userName'];
+    //     $conference = $user['confId'];
 
     //     $dateOptions = $this->positionConditionsService->getDateOptions();
     //     $currentMonth = $dateOptions['currentMonth'];
@@ -1074,8 +1074,8 @@ class ChapterController extends Controller implements HasMiddleware
     public function editChapterDetails(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1120,7 +1120,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1287,8 +1287,8 @@ class ChapterController extends Controller implements HasMiddleware
     public function editChapterBoard(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1613,7 +1613,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1713,15 +1713,15 @@ class ChapterController extends Controller implements HasMiddleware
     public function showChapterWebsite(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $websiteList = $baseQuery['query']->get();
@@ -1743,11 +1743,11 @@ class ChapterController extends Controller implements HasMiddleware
     public function showRptSocialMedia(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
@@ -1769,12 +1769,12 @@ class ChapterController extends Controller implements HasMiddleware
     public function editChapterWebsite(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1801,7 +1801,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateChapterWebsite(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1903,14 +1903,14 @@ class ChapterController extends Controller implements HasMiddleware
     public function editPendingChapterDetails(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $positionId = $user['user_positionId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
-        $updatedBy = $user['user_name'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $positionId = $user['cdPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
+        $updatedBy = $user['userName'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1992,7 +1992,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updatePendingChapterDetails(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $chapterName = $request->input('ch_name');
@@ -2056,7 +2056,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateApproveChapter(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
         $activeStatus = '1';
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
@@ -2200,7 +2200,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function updateDeclineChapter(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
         $activeStatus = '3';
 
         $input = $request->all();

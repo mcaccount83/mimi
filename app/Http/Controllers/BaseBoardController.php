@@ -39,7 +39,7 @@ class BaseBoardController extends Controller
 
         $chId = $chDetails->id;
         $chActiveId = $chDetails->active_status;
-        $chActiveStatus = $chDetails->activeStatus->chapter_status;
+        $chActiveStatus = $chDetails->activeStatus->active_status;
 
         // Get board details from the appropriate table based on active status
         $boardDetails = $this->getBoardDetailsByStatus($chId, $chActiveId);

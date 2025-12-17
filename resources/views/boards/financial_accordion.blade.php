@@ -1,6 +1,6 @@
 <div class="col-12"  id="accordion">
     <input type="hidden" id="chapter_id" name="id" value="{{ Session::get('chapterid') }}">
-    @if ($userType != 'disbanded'  || $chActiveId != \App\Enums\ChapterStatusEnum::ACTIVE)
+    @if ($userTypeId != \App\Enums\UserTypeEnum::DISBANDED  || $chActiveId != \App\Enums\ChapterStatusEnum::ACTIVE)
         <input type="hidden" name="submitted" id="submitted" value="{{ $chEOYDocuments['financial_report_received'] ?? '' }}" />
     @else
         <input type="hidden" name="submitted" id="submitted" value="{{ $chEOYDocuments['final_report_received'] ?? '' }}" />
@@ -1632,7 +1632,7 @@
 <section>
 <div class="col-12 form-row form-group">
 <div class="col-sm-12">
-    @if($userType != 'disbanded')
+    @if($userTypeId != \App\Enums\UserTypeEnum::DISBANDED)
 <h3>July 1, {{ $lastYear }} - June 30, {{ $currentYear }}</h3>
 @endif
 </div>
@@ -2082,7 +2082,7 @@
     <div class="col-md-6 ">
         <div class="form-group">
             <label for="AmountReservedFromLastYear">
-                @if($userType == 'disbanded')
+                @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Beginning Balance:
                 @else
                 This Year's Beginning Balance (July 1, {{ $lastYear }}):
@@ -2101,7 +2101,7 @@
     <div class="col-md-6 ">
         <div class="form-group">
             <label for="LastYearReportEnding">
-                @if($userType == 'disbanded')
+                @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Last Report's Ending Balance:
                 @else
                 Last Year's Report Ending Balance (June 30, {{ $lastYear }}):
@@ -2151,7 +2151,7 @@
     <div class="col-md-6 ">
         <div class="form-group">
             <label for="BankBalanceNow">
-                @if($userType == 'disbanded')
+                @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Ending Bank Statement Balance:
                 @else
                 Ending Bank Statement Balance (June 30, {{ $currentYear }}):
@@ -2329,7 +2329,7 @@
     <div class="clearfix"></div>
     <div class="col-md-12"><br></div>
 
-    @if($userType == 'disbanded')
+    @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
     <div class="col-12 text-danger">
     Make sure you check the box that the "Company Has Terminated" when filing your final 990N.
     <br>&nbsp;
@@ -2339,7 +2339,7 @@
     <div class="col-12 form-row form-group">
         <div class="col-md-12 ">
             <div class="form-group ">
-             @if($userType == 'disbanded')
+             @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 <label>Is a copy of your chpater's most recent 990N IRS Filing included?<span class="field-required">*</span></label>
             @else
                 <label>Is a copy of your chpater's {{ $irsFilingName }} included?<span class="field-required">*</span></label>
@@ -3016,7 +3016,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
             <div class="col-sm-12">
                 <strong>Contact information for the person who completed the report.</strong></div>
                 <div class="col-md-12 float-left">
-                    @if ($userType != 'coordinator')
+                    @if ($userTypeId != \App\Enums\UserTypeEnum::COORD)
                         <strong>Name: </strong>{{ $userName }}
                         </div>
                         <div class="col-md-12 float-left">

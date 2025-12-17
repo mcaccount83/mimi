@@ -89,11 +89,11 @@ class TechReportController extends Controller implements HasMiddleware
         $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -106,7 +106,6 @@ class TechReportController extends Controller implements HasMiddleware
         $data = ['countList' => $countList, 'chapters' => $chapters];
 
         return view('techreports.chapterlist')->with($data);
-
     }
 
     /**
@@ -118,11 +117,11 @@ class TechReportController extends Controller implements HasMiddleware
         $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapters = $baseQuery['query']->orderByDesc('chapters.zap_date')->get();
@@ -134,7 +133,33 @@ class TechReportController extends Controller implements HasMiddleware
         $data = ['countList' => $countList, 'chapters' => $chapters];
 
         return view('techreports.chapterlistzapped')->with($data);
+    }
 
+     /**
+     * Admin Choose Pending Chapter for Viewing
+     */
+    public function listPendingChapters(Request $request): View
+    {
+        // Simulate the check5=yes parameter to get international chapters
+        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+
+        $baseQuery = $this->baseChapterController->getBaseQuery(2, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapters = $baseQuery['query']->get();
+
+        // Clean up the simulated parameter
+        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+
+        $countList = count($chapters);
+        $data = ['countList' => $countList, 'chapters' => $chapters];
+
+        return view('techreports.chapterlistpending')->with($data);
     }
 
     /**
@@ -175,8 +200,8 @@ class TechReportController extends Controller implements HasMiddleware
     public function showEOY(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
         $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
         // $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 

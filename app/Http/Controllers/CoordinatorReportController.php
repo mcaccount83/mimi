@@ -42,11 +42,11 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     public function showRptVolUtilization(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
@@ -76,11 +76,11 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     public function showRptAppreciation(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
@@ -98,11 +98,11 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     public function showRptAppreciationOLD(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
@@ -123,11 +123,11 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     public function showRptBirthdays(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
@@ -161,13 +161,13 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         } else {
             // Normal view - logged in user's tree
             $user = $this->userController->loadUserInformation($request);
-            $coorId = $user['user_coorId'];
-            $confId = $user['user_confId'];
-            $regId = $user['user_regId'];
+            $coorId = $user['cdId'];
+            $confId = $user['confId'];
+            $regId = $user['regId'];
             $positionId = 6;
             $secPositionId = null;
-            // $positionId = $user['user_positionId'];
-            // $secPositionId = $user['user_secPositionId'];
+            // $positionId = $user['cdPositionId'];
+            // $secPositionId = $user['cdSecPositionId'];
         }
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);

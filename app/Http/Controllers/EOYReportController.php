@@ -63,8 +63,8 @@ class EOYReportController extends Controller implements HasMiddleware
     public function getPageTitle(Request $request)
     {
         $user = $this->userController->loadUserInformation($request);
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
         $userAdmin = $user['userAdmin'];
         $admin = ($userAdmin == '1' || $userAdmin == '2');
 
@@ -103,15 +103,15 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'EOY Status Report';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $EOYOptions = $this->positionConditionsService->getEOYOptions();
         $thisYear = $EOYOptions['thisYear'];
@@ -153,12 +153,12 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'EOY Details';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -200,9 +200,9 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYDetails(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
+        $coorId = $user['cdId'];
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $new_board_submitted = ! isset($input['new_board_submitted']) ? null : ($input['new_board_submitted'] == 'on' ? 1 : 0);
@@ -277,16 +277,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'Board Election Report';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $updatedBy = $user['user_name'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $updatedBy = $user['userName'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $EOYOptions = $this->positionConditionsService->getEOYOptions();
         $thisYear = $EOYOptions['thisYear'];
@@ -375,9 +375,9 @@ class EOYReportController extends Controller implements HasMiddleware
     public function editBoardReport(Request $request, $id)
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $updatedBy = $user['user_name'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $updatedBy = $user['userName'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -437,7 +437,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($chapter_id);
         $chId = $chapter_id;
@@ -533,15 +533,15 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'Financial Reports';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $EOYOptions = $this->positionConditionsService->getEOYOptions();
         $thisYear = $EOYOptions['thisYear'];
@@ -577,14 +577,14 @@ class EOYReportController extends Controller implements HasMiddleware
     public function reviewFinancialReport(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $loggedInName = $user['user_name'];
-        $updatedBy = $user['user_name'];
-        $userName = $user['user_name'];
-        $userPosition = $user['user_position'];
-        $userConfName = $user['user_conf_name'];
-        $userConfDesc = $user['user_conf_desc'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $loggedInName = $user['userName'];
+        $updatedBy = $user['userName'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -613,8 +613,8 @@ class EOYReportController extends Controller implements HasMiddleware
     public function updateEOYFinancialReport(Request $request, $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $userName = $user['user_name'];
+        $coorId = $user['cdId'];
+        $userName = $user['userName'];
         $updatedId = $user['userId'];
         $updatedBy = $userName;
 
@@ -788,7 +788,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($id);
         $documentsEOY = DocumentsEOY::find($id);
@@ -829,7 +829,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($id);
         $documentsEOY = DocumentsEOY::find($id);
@@ -874,7 +874,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($id);
         $documentsEOY = DocumentsEOY::find($id);
@@ -918,11 +918,11 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'Financial Report Attacchments';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $EOYOptions = $this->positionConditionsService->getEOYOptions();
         $thisYear = $EOYOptions['thisYear'];
@@ -962,8 +962,8 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'EOY Attachments';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -990,7 +990,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($id);
         $documentsEOY = DocumentsEOY::find($id);
@@ -1029,11 +1029,11 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'Boundray Issues Report';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $EOYOptions = $this->positionConditionsService->getEOYOptions();
         $thisYear = $EOYOptions['thisYear'];
@@ -1072,8 +1072,8 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'EOY Boundaries';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1100,7 +1100,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($id);
 
@@ -1136,12 +1136,12 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'Chapter Awards Report';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
-        $updatedBy = $user['user_name'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $updatedBy = $user['userName'];
 
         $EOYOptions = $this->positionConditionsService->getEOYOptions();
         $thisYear = $EOYOptions['thisYear'];
@@ -1194,8 +1194,8 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'EOY Awards';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1223,7 +1223,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $ChapterAwards = null;
@@ -1271,11 +1271,11 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'Financial Report Attacchments';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $EOYOptions = $this->positionConditionsService->getEOYOptions();
         $thisYear = $EOYOptions['thisYear'];
@@ -1316,8 +1316,8 @@ class EOYReportController extends Controller implements HasMiddleware
         $breadcrumb = 'EOY Attachments';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1344,7 +1344,7 @@ class EOYReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $chapter = Chapters::find($id);
         $documentsEOY = DocumentsEOY::find($id);

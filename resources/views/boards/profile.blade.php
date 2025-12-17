@@ -551,7 +551,7 @@
                       <li class="list-group-item">
                             <h5>End of Year Filing</h5>
 
-                            @if($userType == 'coordinator' && $chEOYDocuments->new_board_active!='1')
+                            @if($userTypeId == \App\Enums\UserTypeEnum::COORD && $chEOYDocuments->new_board_active!='1')
                                 @if($displayTESTING)
                                     <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ $boardReportName }} *TESTING*
@@ -563,7 +563,7 @@
                                 @else
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
                                 @endif
-                            @elseif($userType == 'coordinator' && $chEOYDocuments->new_board_active =='1')
+                            @elseif($userTypeId == \App\Enums\UserTypeEnum::COORD && $chEOYDocuments->new_board_active =='1')
                                 @if($displayTESTING)
                                     <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled" disabled>Board Report Activated *TESTING*</button><br>
                                 @else
@@ -581,7 +581,7 @@
                                 <button id="BoardReport" class="btn btn-primary btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
                             @endif
 
-                            @if($userType == 'coordinator')
+                            @if($userTypeId == \App\Enums\UserTypeEnum::COORD)
                                 @if($displayTESTING)
                                     <button id="FinancialReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                         {{ $financialReportName }} *TESTING*
@@ -641,14 +641,14 @@
     /* Disable fields and buttons  */
     $(document).ready(function () {
         var displayBoardRptLIVE = @json($displayBoardRptLIVE);
-        var userType = @json($userType);
+        var userTypeId = @json($userTypeId);
         var userAdmin = @json($userAdmin);
         var boardActive = @json($boardActive);
 
         if (userAdmin == 1) {
             // Admin - ALWAYS allow edits for testing purposes
             $('#logout-btn').prop('disabled', true);
-        } else if (userType == 'coordinator' && userAdmin != 1) {
+        } else if (userTypeId == 1 && userAdmin != 1) {
             // Coordinators - ALWAYS disable (never enabled)
             $('input, select, textarea').prop('disabled', true);
             $('#Save, #Password, #logout-btn').prop('disabled', true);

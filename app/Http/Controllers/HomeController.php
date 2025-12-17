@@ -34,7 +34,7 @@ class HomeController extends Controller implements HasMiddleware
     public function index(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userTypeId'];
+        $userTypeId = $user['userTypeId'];
         $userStatus = $user['userStatus'];
 
         // Keep specific flash data for one more request (if needed)
@@ -48,24 +48,24 @@ class HomeController extends Controller implements HasMiddleware
             return redirect()->to('/login');
         }
 
-        if ($userType == UserTypeEnum::COORD) {
+        if ($userTypeId == UserTypeEnum::COORD) {
             return redirect()->to('viewprofile');
         }
 
-        if ($userType == UserTypeEnum::PENDING) {
-            return redirect()->to('board/newchapterstatus/'.$user['user_pendChapterId']);
+        if ($userTypeId == UserTypeEnum::PENDING) {
+            return redirect()->to('board/newchapterstatus/'.$user['chapterId']);
         }
 
-        if ($userType == UserTypeEnum::BOARD) {
-            return redirect()->to('board/profile/'.$user['user_chapterId']);
+        if ($userTypeId == UserTypeEnum::BOARD) {
+            return redirect()->to('board/profile/'.$user['chapterId']);
         }
 
-        if ($userType == UserTypeEnum::OUTGOING) {
-            return redirect()->to('board/financialreport/'.$user['user_outChapterId']);
+        if ($userTypeId == UserTypeEnum::OUTGOING) {
+            return redirect()->to('board/financialreport/'.$user['user_chapterId']);
         }
 
-        if ($userType == UserTypeEnum::DISBANDED) {
-            return redirect()->to('board/disbandchecklist/'.$user['user_disChapterId']);
+        if ($userTypeId == UserTypeEnum::DISBANDED) {
+            return redirect()->to('board/disbandchecklist/'.$user['user_chapterId']);
         }
 
         // Default case - logout invalid users

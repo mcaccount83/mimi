@@ -91,14 +91,14 @@
             $user = Auth::user();
             $userName = $user->first_name.' '.$user->last_name;
             $userEmail = $user->email;
-            $userType = $user->user_type;
+            $userTypeId = $user->type_id;
         @endphp
 
     <!-- Navbar -->
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
     <div class="container">
 
-    @if($userType == 'board')
+    @if($userTypeId == \App\Enums\UserTypeEnum::BOARD)
 
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
         <!-- Left navbar links -->
@@ -122,7 +122,7 @@
       </div>
       @endif
 
-    @if($userType != 'coordinator')
+    @if($userTypeId != \App\Enums\UserTypeEnum::COORD)
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
 
@@ -139,7 +139,7 @@
       </ul>
       @endif
 
-      @if($userType == 'coordinator')
+      @if($userTypeId == \App\Enums\UserTypeEnum::COORD)
       @php
           // Assuming you're already on a chapter edit page and the 'id' is available in the route.
           $id = request()->route('id'); // Get the current chapter ID from the route
@@ -148,9 +148,15 @@
       @if ($id) <!-- Check if $id is not null -->
           <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
               <li class="nav-item">
-                  <a class="nav-link" href="{{ route('chapters.view', ['id' => $id]) }}">
+                @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::PENDING)
+                <a class="nav-link" href="{{ route('chapters.editpending', ['id' => $id]) }}">
                       <span class="no-icon">Back to Coordinator View / Chapter Details</span>
                   </a>
+                @else
+                <a class="nav-link" href="{{ route('chapters.view', ['id' => $id]) }}">
+                      <span class="no-icon">Back to Coordinator View / Chapter Details</span>
+                  </a>
+                @endif
               </li>
           </ul>
       @endif
@@ -167,7 +173,7 @@
       <div class="container">
         @if($ITCondition == 1 )
             <p class="description text-center"><span style="color: red;">You are Viewing Chapter Pages as an Admin Coordinator -- All Information is Editable just as it is for Chapter Members.</p>
-        @elseif($userType == 'coordinator' && $ITCondition != 1)
+        @elseif($userTypeId == \App\Enums\UserTypeEnum::COORD && $ITCondition != 1)
             <p class="description text-center"><span style="color: red;">You are Viewing Chapter Pages as a Coordinator -- All Information is READ ONLY.</p>
         @endif
       </div><!-- /.container-fluid -->

@@ -979,11 +979,11 @@ class PDFController extends Controller
         $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         // $dateInput = request()->query('date') ?? request()->input('date');
         $dateInput = $request->query('date') ?? $request->input('date');
@@ -1109,11 +1109,11 @@ class PDFController extends Controller
         $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         // $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
         $pages = $pages ?? $request->query('pages') ?? $request->input('pages') ?? 1;
@@ -1354,11 +1354,11 @@ class PDFController extends Controller
         $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         // $pages = request()->query('pages') ?? request()->input('pages') ?? 1;
         $pages = $pages ?? $request->query('pages') ?? $request->input('pages') ?? 1;

@@ -38,12 +38,12 @@ class LearnDashService
     }
 
     // Get courses for a specific user type - user_type=group -- board=board, coordinator=coordinator
-    public function getCoursesForUserType($userType)
+    public function getCoursesForUserType($userTypeId)
     {
         $response = Http::withHeaders([
             'Cache-Control' => 'no-cache, no-store, must-revalidate',
             'Pragma' => 'no-cache',
-        ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/group/{$userType}?nocache=".time());
+        ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/group/{$userTypeId}?nocache=".time());
         // ])->get("https://momsclub.org/elearning/wp-json/public/v1/courses/group/{$userType}?nocache=" . time());
 
         if ($response->successful()) {

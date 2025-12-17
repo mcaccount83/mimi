@@ -27,11 +27,11 @@ class BaseMailDataController extends Controller
     public function getUserData($user)
     {
         return [
-            'userName' => $user['user_name'],
-            'userPosition' => $user['user_position'],
-            'userConfName' => $user['user_conf_name'],
-            'userConfDesc' => $user['user_conf_desc'],
-            'userEmail' => $user['user_email'],
+            'userName' => $user['userName'],
+            'userPosition' => $user['cdPosition'],
+            'userConfName' => $user['confName'],
+            'userConfDesc' => $user['confDesc'],
+            'userEmail' => $user['userEmail'],
         ];
     }
 

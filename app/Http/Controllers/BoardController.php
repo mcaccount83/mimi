@@ -145,7 +145,7 @@ class BoardController extends Controller implements HasMiddleware
     public function editProfile(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
+        $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -170,12 +170,12 @@ class BoardController extends Controller implements HasMiddleware
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
 
-        if ($userType == 'coordinator') {
+        if ($userTypeId == UserTypeEnum::COORD) {
             $bdPositionId = '1';
             $borDetails = $PresDetails;
         } else {
-            $bdPositionId = $user['user_bdPositionId'];
-            $borDetails = $user['user_bdDetails'];
+            $bdPositionId = $user['bdPositionId'];
+            $borDetails = $user['bdDetails'];
         }
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
@@ -186,7 +186,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
-            'startMonthName' => $startMonthName, 'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userType' => $userType, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
+            'startMonthName' => $startMonthName, 'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
             'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments,
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive,
         ];
@@ -431,7 +431,7 @@ class BoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -583,7 +583,7 @@ class BoardController extends Controller implements HasMiddleware
     public function editManualOrderForm(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
+        $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -593,7 +593,7 @@ class BoardController extends Controller implements HasMiddleware
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
             'allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
@@ -606,7 +606,7 @@ class BoardController extends Controller implements HasMiddleware
     public function editProbationSubmission(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
+        $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -627,7 +627,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userType' => $userType,
+            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId,
         ];
 
         return view('boards.probation')->with($data);
@@ -640,7 +640,7 @@ class BoardController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -709,7 +709,7 @@ class BoardController extends Controller implements HasMiddleware
     public function viewResources(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
+        $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -720,7 +720,7 @@ class BoardController extends Controller implements HasMiddleware
         $resourceCategories = ResourceCategory::all();
 
         $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails, 'resources' => $resources, 'resourceCategories' => $resourceCategories,
-            'userType' => $userType, 'userAdmin' => $userAdmin,
+            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
         ];
 
         return view('boards.resources')->with($data);
@@ -732,7 +732,7 @@ class BoardController extends Controller implements HasMiddleware
     public function editBoardReport(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
+        $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -751,7 +751,7 @@ class BoardController extends Controller implements HasMiddleware
         $SECDetails = $baseQuery['SECDetails'];
 
         $data = ['stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'allStates' => $allStates, 'SECDetails' => $SECDetails, 'userAdmin' => $userAdmin,
-            'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'userType' => $userType,
+            'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
             'allWebLinks' => $allWebLinks, 'allCountries' => $allCountries,
         ];
 
@@ -766,7 +766,7 @@ class BoardController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -888,9 +888,9 @@ class BoardController extends Controller implements HasMiddleware
     public function editFinancialReport(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
-        $userName = $loggedInName = $user['user_name'];
-        $userEmail = $user['user_email'];
+        $userTypeId = $user['userTypeId'];
+        $userName = $loggedInName = $user['userName'];
+        $userEmail = $user['userEmail'];
         $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -906,7 +906,7 @@ class BoardController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType, 'userAdmin' => $userAdmin,
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'stateShortName' => $stateShortName,
             'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
         ];
@@ -921,10 +921,10 @@ class BoardController extends Controller implements HasMiddleware
     public function updateFinancialReport(Request $request, $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userName = $user['user_name'];
-        $userEmail = $user['user_email'];
+        $userName = $user['userName'];
+        $userEmail = $user['userEmail'];
         $updatedId = $user['userId'];
-        $updatedBy = $user['user_name'];
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
         $reportReceived = $input['submitted'] ?? null;
@@ -1035,7 +1035,7 @@ class BoardController extends Controller implements HasMiddleware
     {
         // $user = $this->userController->loadUserInformation($request);
         $user = User::find($request->user()->id);
-        $userType = $user['userType'];
+        $userTypeId = $user['userTypeId'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
@@ -1061,7 +1061,7 @@ class BoardController extends Controller implements HasMiddleware
         $data = [
             'chDetails' => $chDetails,
             'stateShortName' => $stateShortName,
-            'userType' => $userType,
+            'userTypeId' => $userTypeId,
             'boardCourses' => $boardCourses,
             'boardCoursesByCategory' => $boardCoursesByCategory,
         ];

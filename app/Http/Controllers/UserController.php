@@ -95,91 +95,151 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Load User Information
      */
-    public function loadUserInformation(Request $request)
-    {
-        $user = User::find($request->user()->id);
+   public function loadUserInformation(Request $request)
+{
+    $user = User::find($request->user()->id);
 
-        // Basic user info that's always needed
-        $userInfo = [
-            'userId' => $user->id,
-            'userType' => $user->user_type,
-            'userTypeId' => $user->type_id,
-            'userAdmin' => $user->is_admin,
-            'userStatus' => $user->is_active,
-            'user_name' => $user->first_name.' '.$user->last_name,
-            'user_email' => $user->email,
-        ];
+    // Basic user info that's always needed
+    $userInfo = [
+        'userId' => $user->id,
+        'userType' => $user->user_type,
+        'userTypeId' => $user->type_id,
+        'userAdmin' => $user->is_admin,
+        'userStatus' => $user->is_active,
+        'userName' => $user->first_name.' '.$user->last_name,
+        'userEmail' => $user->email,
+    ];
 
-        // Only load detailed information if the user is active
-        if ($user->is_active == UserStatusEnum::ACTIVE) {
-            // Now load relations only if needed
-            $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference',
-                'coordinator.displayPosition', 'coordinator.secondaryPosition',
-                'board', 'board.position', 'boardOutgoing', 'boardDisbanded', 'boardPending'])
-                ->find($user->id);
+    // Only load detailed information if the user is active
+    if ($user->is_active == UserStatusEnum::ACTIVE) {
+        $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference',
+            'coordinator.displayPosition', 'coordinator.secondaryPosition',
+            'board', 'board.position', 'boardOutgoing', 'boardDisbanded', 'boardPending'])
+            ->find($user->id);
 
-            switch ($user->user_type) {
-                case 'coordinator':
-                    $secondaryPosition = [];
-                    $secondaryPositionShort = [];
-                    $secondaryPositionId = [];
-                    if ($user->coordinator->secondaryPosition && $user->coordinator->secondaryPosition->count() > 0) {
-                        $secondaryPosition = $user->coordinator->secondaryPosition->pluck('long_title')->toArray();
-                        $secondaryPositionShort = $user->coordinator->secondaryPosition->pluck('short_title')->toArray();
-                        $secondaryPositionId = $user->coordinator->secondaryPosition->pluck('id')->toArray();
-                    }
-
-                    $userInfo += [
-                        'user_coorId' => $user->coordinator->id,
-                        'user_confId' => $user->coordinator->conference_id,
-                        'user_regId' => $user->coordinator->region_id,
-                        'user_conference' => $user->coordinator->conference,
-                        'user_conf_name' => $user->coordinator->conference?->conference_name,
-                        'user_conf_desc' => $user->coordinator->conference?->conference_description,
-                        'user_region' => $user->coordinator->region,
-                        'user_positionId' => $user->coordinator->position_id, // Returns MIMI position_id
-                        'user_position' => $user->coordinator->displayPosition->long_title,  // Returns DISPLAY position title
-                        'user_secPositionId' => $secondaryPositionId, // Returns array of secondary ids
-                        'user_secPosition' => $secondaryPosition, // Returns array of secondary titles
-                        'user_layerId' => $user->coordinator->layer_id,
-                    ];
-                    break;
-
-                case 'pending':
-                    $userInfo += [
-                        'user_bdPendId' => $user->boardPending->id,
-                        'user_pendChapterId' => $user->boardPending->chapter_id,
-                    ];
-                    break;
-
-                case 'board':
-                    $userInfo += [
-                        'user_bdDetails' => $user->board,
-                        'user_bdId' => $user->board->id,
-                        'user_bdPositionId' => $user->board->board_position_id,
-                        'user_bdPosition' => $user->board->position?->postion,
-                        'user_chapterId' => $user->board->chapter_id,
-                    ];
-                    break;
-
-                case 'outgoing':
-                    $userInfo += [
-                        'user_bdOutId' => $user->boardOutgoing->id,
-                        'user_outChapterId' => $user->boardOutgoing->chapter_id,
-                    ];
-                    break;
-
-                case 'disbanded':
-                    $userInfo += [
-                        'user_bdDisId' => $user->boardDisbanded->id,
-                        'user_disChapterId' => $user->boardDisbanded->chapter_id,
-                    ];
-                    break;
+        if ($user->type_id == UserTypeEnum::COORD) {
+            $secondaryPosition = [];
+            $secondaryPositionShort = [];
+            $secondaryPositionId = [];
+            if ($user->coordinator->secondaryPosition && $user->coordinator->secondaryPosition->count() > 0) {
+                $secondaryPosition = $user->coordinator->secondaryPosition->pluck('long_title')->toArray();
+                $secondaryPositionShort = $user->coordinator->secondaryPosition->pluck('short_title')->toArray();
+                $secondaryPositionId = $user->coordinator->secondaryPosition->pluck('id')->toArray();
             }
+
+            $userInfo = array_merge($userInfo, [
+                'cdId' => $user->coordinator->id,
+                'confId' => $user->coordinator->conference_id,
+                'regId' => $user->coordinator->region_id,
+                'conference' => $user->coordinator->conference,
+                'confName' => $user->coordinator->conference?->conference_name,
+                'confDesc' => $user->coordinator->conference?->conference_description,
+                'region' => $user->coordinator->region,
+                'cdPositionId' => $user->coordinator->position_id,
+                'cdPosition' => $user->coordinator->displayPosition->long_title,
+                'cdSecPositionId' => $secondaryPositionId,
+                'cdSecPosition' => $secondaryPosition,
+                'layerId' => $user->coordinator->layer_id,
+            ]);
         }
 
-        return $userInfo;
+        if ($user->type_id == UserTypeEnum::BOARD) {
+            $userInfo = array_merge($userInfo, [
+                'bdDetails' => $user->board,
+                'bdId' => $user->board->id,
+                'bdPositionId' => $user->board->board_position_id,
+                'bdPosition' => $user->board->position?->postion,
+                'chapterId' => $user->board->chapter_id,
+            ]);
+        }
+
+        if ($user->type_id == UserTypeEnum::PENDING) {
+            $userInfo = array_merge($userInfo, [
+                'bdId' => $user->boardPending->id,
+                'chapterId' => $user->boardPending->chapter_id,
+            ]);
+        }
+
+        if ($user->type_id == UserTypeEnum::OUTGOING) {
+            $userInfo = array_merge($userInfo, [
+                'bdId' => $user->boardOutgoing->id,
+                'chapterId' => $user->boardOutgoing->chapter_id,
+            ]);
+        }
+
+        if ($user->type_id == UserTypeEnum::DISBANDED) {
+            $userInfo = array_merge($userInfo, [
+                'bdId' => $user->boardDisbanded->id,
+                'chapterId' => $user->boardDisbanded->chapter_id,
+            ]);
+        }
     }
+
+    return $userInfo;
+}
+
+    //         switch ($user->user_type) {
+    //             case 'coordinator':
+    //                 $secondaryPosition = [];
+    //                 $secondaryPositionShort = [];
+    //                 $secondaryPositionId = [];
+    //                 if ($user->coordinator->secondaryPosition && $user->coordinator->secondaryPosition->count() > 0) {
+    //                     $secondaryPosition = $user->coordinator->secondaryPosition->pluck('long_title')->toArray();
+    //                     $secondaryPositionShort = $user->coordinator->secondaryPosition->pluck('short_title')->toArray();
+    //                     $secondaryPositionId = $user->coordinator->secondaryPosition->pluck('id')->toArray();
+    //                 }
+
+    //                 $userInfo += [
+    //                     'user_coorId' => $user->coordinator->id,
+    //                     'user_confId' => $user->coordinator->conference_id,
+    //                     'user_regId' => $user->coordinator->region_id,
+    //                     'user_conference' => $user->coordinator->conference,
+    //                     'user_conf_name' => $user->coordinator->conference?->conference_name,
+    //                     'user_conf_desc' => $user->coordinator->conference?->conference_description,
+    //                     'user_region' => $user->coordinator->region,
+    //                     'user_positionId' => $user->coordinator->position_id, // Returns MIMI position_id
+    //                     'user_position' => $user->coordinator->displayPosition->long_title,  // Returns DISPLAY position title
+    //                     'user_secPositionId' => $secondaryPositionId, // Returns array of secondary ids
+    //                     'user_secPosition' => $secondaryPosition, // Returns array of secondary titles
+    //                     'user_layerId' => $user->coordinator->layer_id,
+    //                 ];
+    //                 break;
+
+    //             case 'pending':
+    //                 $userInfo += [
+    //                     'user_bdPendId' => $user->boardPending->id,
+    //                     'user_pendChapterId' => $user->boardPending->chapter_id,
+    //                 ];
+    //                 break;
+
+    //             case 'board':
+    //                 $userInfo += [
+    //                     'user_bdDetails' => $user->board,
+    //                     'user_bdId' => $user->board->id,
+    //                     'user_bdPositionId' => $user->board->board_position_id,
+    //                     'user_bdPosition' => $user->board->position?->postion,
+    //                     'user_chapterId' => $user->board->chapter_id,
+    //                 ];
+    //                 break;
+
+    //             case 'outgoing':
+    //                 $userInfo += [
+    //                     'user_bdOutId' => $user->boardOutgoing->id,
+    //                     'user_outChapterId' => $user->boardOutgoing->chapter_id,
+    //                 ];
+    //                 break;
+
+    //             case 'disbanded':
+    //                 $userInfo += [
+    //                     'user_bdDisId' => $user->boardDisbanded->id,
+    //                     'user_disChapterId' => $user->boardDisbanded->chapter_id,
+    //                 ];
+    //                 break;
+    //         }
+    //     }
+
+    //     return $userInfo;
+    // }
 
     /**
      * Get Reporting Tree -- for chapter display based on chapters reporting to logged in PC and coordinators under them

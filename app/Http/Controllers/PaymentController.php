@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserTypeEnum;
 use App\Mail\PaymentsDonationOnline;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsManualOnline;
@@ -59,7 +60,7 @@ class PaymentController extends Controller implements HasMiddleware
     public function editReregistrationPaymentForm(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
+        $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -81,7 +82,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userType' => $userType, 'chActiveId' => $chActiveId,
+            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId, 'chActiveId' => $chActiveId,
         ];
 
         return view('boards.payment')->with($data);
@@ -93,7 +94,7 @@ class PaymentController extends Controller implements HasMiddleware
     public function editDonationForm(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
+        $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -104,7 +105,7 @@ class PaymentController extends Controller implements HasMiddleware
         $allCountries = $baseQuery['allCountries'];
         $PresDetails = $baseQuery['PresDetails'];
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userType' => $userType, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
             'PresDetails' => $PresDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
@@ -117,18 +118,20 @@ class PaymentController extends Controller implements HasMiddleware
     public function reRegistrationPayment(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
-        $userAdmin = $user['userAdmin'];
+        $userTypeId = $user['userTypeId'];
+        $chapterId = $user['chapterId'];
 
-        if ($userType == 'board') {
-            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-        }
-        if ($userType == 'disbanded') {
-            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
-        }
-        if ($userType == 'outgoing') {
-            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
-        }
+        // if ($userTypeId == UserTypeEnum::BOARD) {
+        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+        // }
+        // if ($userTypeId == UserTypeEnum::DISBANDED) {
+        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
+        // }
+        // if ($userTypeId == UserTypeEnum::OUTGOING) {
+        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
+        // }
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
         $confId = $chDetails->conference_id;
@@ -199,16 +202,18 @@ class PaymentController extends Controller implements HasMiddleware
                 $payments->save();
             }
 
-            if ($userType == 'board') {
-                $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-            }
-            if ($userType == 'disbanded') {
-                $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
-            }
-            if ($userType == 'outgoing') {
-                $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
-            }
+            // if ($userTypeId == UserTypeEnum::BOARD) {
+            //     $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+            // }
+            // if ($userTypeId == UserTypeEnum::DISBANDED) {
+            //     $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
+            // }
+            // if ($userTypeId == UserTypeEnum::OUTGOING) {
+            //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
+            // }
             // $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+
+            $baseQueryUpd = $this->baseBoardController->getChapterDetails($chapterId);
             $chPayments = $baseQueryUpd['chPayments'];
 
             $mailData = array_merge(
@@ -250,18 +255,20 @@ class PaymentController extends Controller implements HasMiddleware
     public function m2mPayment(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userType = $user['userType'];
-        $userAdmin = $user['userAdmin'];
+        $userTypeId = $user['userTypeId'];
+        $chapterId = $user['chapterId'];
 
-        if ($userType == 'board') {
-            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-        }
-        if ($userType == 'disbanded') {
-            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
-        }
-        if ($userType == 'outgoing') {
-            $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
-        }
+        // if ($userTypeId == UserTypeEnum::BOARD) {
+        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+        // }
+        // if ($userTypeId == UserTypeEnum::DISBANDED) {
+        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
+        // }
+        // if ($userTypeId == UserTypeEnum::OUTGOING) {
+        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
+        // }
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
         $confId = $chDetails->conference_id;
@@ -349,15 +356,17 @@ class PaymentController extends Controller implements HasMiddleware
                 $payments->save();
             }
 
-            if ($userType == 'board') {
-                $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-            }
-            if ($userType == 'disbanded') {
-                $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
-            }
-            if ($userType == 'outgoing') {
-                $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
-            }
+            // if ($userTypeId == UserTypeEnum::BOARD) {
+            //     $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+            // }
+            // if ($userTypeId == UserTypeEnum::DISBANDED) {
+            //     $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
+            // }
+            // if ($userTypeId == UserTypeEnum::OUTGOING) {
+            //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
+            // }
+
+            $baseQueryUpd = $this->baseBoardController->getChapterDetails($chapterId);
             $chPayments = $baseQueryUpd['chPayments'];
 
             $mailData = array_merge(

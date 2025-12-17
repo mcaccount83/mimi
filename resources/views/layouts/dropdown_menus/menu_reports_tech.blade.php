@@ -6,5 +6,6 @@
         <a class="dropdown-item" href="{{ route('techreports.googledrive') }}">Google Drive Settings</a>
         <a class="dropdown-item" href="{{ route('techreports.chapterlist') }}">Active Board Pages (View As)</a>
         <a class="dropdown-item" href="{{ route('techreports.chapterlistzapped') }}">Zapped Board Pages (View As)</a>
+        <a class="dropdown-item" href="{{ route('techreports.chapterlistpending') }}">Pending Board Pages (View As)</a>
         <a class="dropdown-item" href="{{ route('techreports.eoy') }}">End of Year Procedures</a>
   </div>

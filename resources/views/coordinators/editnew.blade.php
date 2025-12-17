@@ -27,7 +27,7 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Conference:</label>
                             <div class="col-sm-8">
-                                <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $confLongName }} - {{ $confDescription }}" readonly>
+                                <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $userConfName }} - {{ $userConfDesc }}" readonly>
                             </div>
                         </div>
 

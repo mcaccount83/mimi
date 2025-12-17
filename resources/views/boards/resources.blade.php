@@ -26,7 +26,7 @@
              @include('boards.resources_columns', ['resources' => $resources, 'resourceCategories' => $resourceCategories])
             <br>
             <div class="card-body text-center">
-                        @if ($userType == 'coordinator')
+                        @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
                         <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
                     @else
                         <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>

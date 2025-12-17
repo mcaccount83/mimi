@@ -466,7 +466,7 @@
             @endif
 
                 <div class="card-body text-center">
-                    @if ($userType == 'coordinator')
+                    @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
                         <button type="button" id="btn-back"  class="btn btn-primary" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
                     @else
                         <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply mr-2"></i>Back to Profile</a>
@@ -483,13 +483,13 @@
 @section('customscript')
 <script>
     $(document).ready(function() {
-    var userType = @json($userType);
+    var userTypeId = @json($userTypeId);
     var userAdmin = @json($userAdmin);
 
   $('#add_link_req').parent().hide();
   $('#not_link').parent().hide();
 
-if (userType == 'coordinator' && userAdmin != 1) {
+if (userTypeId == '1' && userAdmin != 1) {
     $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
 
     } else if ("{{$chDetails->documentsEOY->new_board_submitted}}" == '1') {

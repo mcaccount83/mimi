@@ -60,8 +60,8 @@ class EmailController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
-        $userEmail = $user['user_email'];
-        $userConfId = $user['user_confId'];
+        $userEmail = $user['userEmail'];
+        $userConfId = $user['confId'];
 
         $emailCCData = $this->userController->loadConferenceCoordConf($userConfId);
 
@@ -383,7 +383,7 @@ class EmailController extends Controller implements HasMiddleware
     public function sendCoordUplineEmail(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $userCoordId = $user['user_coorId'];
+        $userCoordId = $user['cdId'];
 
         $input = $request->all();
         $emailSubject = $input['subject'];
@@ -567,11 +567,11 @@ class EmailController extends Controller implements HasMiddleware
     public function sendEOYBoardReportReminder(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
@@ -647,11 +647,11 @@ class EmailController extends Controller implements HasMiddleware
     public function sendEOYFinancialReportReminder(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
@@ -726,11 +726,11 @@ class EmailController extends Controller implements HasMiddleware
     public function sendEOYStatusReminder(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['user_coorId'];
-        $confId = $user['user_confId'];
-        $regId = $user['user_regId'];
-        $positionId = $user['user_positionId'];
-        $secPositionId = $user['user_secPositionId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']

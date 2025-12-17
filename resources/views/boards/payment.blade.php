@@ -206,7 +206,7 @@
                                             @if($chActiveId != \App\Enums\ChapterStatusEnum::ACTIVE)
                                                 <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Checklist</a>
                                             @else
-                                                @if ($userType == 'coordinator')
+                                                @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
                                                         <button type="button" id="btn-back" class="btn btn-primary" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
                                                 @else
                                                     <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
@@ -245,10 +245,10 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-        var userType = @json($userType);
+        var userTypeId = @json($userTypeId);
         var userAdmin = @json($userAdmin);
 
-   if (userType == 'coordinator' && userAdmin != 1) {
+   if (userType == 1 && userAdmin != 1) {
             $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
     }
 

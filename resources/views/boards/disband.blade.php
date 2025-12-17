@@ -173,7 +173,7 @@
                                 @if ($chDisbanded?->file_financial == null)
                                     @if ($chFinancialReport)
                                         @include('boards.financial_accordion', [
-                                            'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userType' => $userType, 'userName' => $userName,
+                                            'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userName' => $userName,
                                             'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'chActiveId' => $chActiveId
                                         ])
                                     @else
