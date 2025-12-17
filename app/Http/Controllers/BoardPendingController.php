@@ -35,13 +35,13 @@ class BoardPendingController extends Controller implements HasMiddleware
         $userType = $user['userType'];
         $userAdmin = $user['userAdmin'];
 
-        // if ($userAdmin == 1 && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } elseif ($userType == 'coordinator' && isset($chapter_id)) {
-        //     $chId = $chapter_id;
-        // } else {
-        //     $chId = $user['user_pendChapterId'];
-        // }
+        if ($userAdmin == 1 && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } elseif ($userType == 'coordinator' && isset($chapter_id)) {
+            $chId = $chapter_id;
+        } else {
+            $chId = $user['user_pendChapterId'];
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
