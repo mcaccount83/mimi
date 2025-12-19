@@ -79,6 +79,7 @@ class BaseMailDataController extends Controller
     public function getPresData($PresDetails)
     {
         return [
+            'presFirstName' => $PresDetails->first_name,
             'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
             'presAddress' => $PresDetails->street_address,
             'presCity' => $PresDetails->city,

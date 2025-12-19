@@ -1,7 +1,6 @@
 @component('mail::message')
 <h1><center>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</center></h1>
-<p><b><strong>{{ $mailData['presName'] }},</b></p>
-<br>
+<p><b><strong>{{ $mailData['presFirstName'] }},</b></p>
 <p>CONGRATULATIONS on getting your chapter officially started!  I've really enjoyed getting to know you and going through the startup process with you.  I'm excited to see what your new chapter will be able to accomplish!</p>
 <hr>
 <p><b>Your Primary Coordinator and Her Role</b></p>
