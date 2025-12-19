@@ -81,7 +81,7 @@
             var userTypeId = @json($userTypeId);
             var userAdmin = @json($userAdmin);
 
-       if (if (userTypeId == 1 && userAdmin != 1) {
+       if (userTypeId == 1 && userAdmin != 1) {
             $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
         }
 

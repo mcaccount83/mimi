@@ -226,7 +226,7 @@
 
         $('select[name="pres_state"]').prop('disabled', true);
 
-         if (if (userTypeId == '1' && userAdmin != 1) {
+         if (userTypeId == '1' && userAdmin != 1) {
             $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
         }
 
