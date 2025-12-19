@@ -10,8 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-
-    use Notifiable;
+    use Notifiable; // Used for sending automated emails like resetting password.
 
     protected $primaryKey = 'id';
 
