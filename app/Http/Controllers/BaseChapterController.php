@@ -66,7 +66,7 @@ class BaseChapterController extends Controller
         if (isset($_GET[ChapterCheckbox::CONFERENCE_REGION]) && $_GET[ChapterCheckbox::CONFERENCE_REGION] == 'yes') {
             $checkboxStatus[ChapterCheckbox::CHECK_CONFERENCE_REGION] = 'checked';
             // Position conditions already applied in buildChapterQuery
-            if ($conditions && $conditions['inquiriesConferenceCondition']) {
+            if ($conditions && ($conditions['inquiriesConferenceCondition'] || $conditions['coordinatorCondition'])) {
                 if ($regId && $regId > 0) {
                     $baseQuery->where('region_id', '=', $regId);
                 } else {
