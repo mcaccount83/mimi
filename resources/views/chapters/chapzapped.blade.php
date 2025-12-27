@@ -74,7 +74,7 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                            <label class="custom-control-label" for="showAll">Show All International Chapters (Export Available)</label>
                         </div>
                     </div>
                 @endif
@@ -83,8 +83,8 @@
                 @if ($assistConferenceCoordinatorCondition)
                     @if ($checkBox5Status)
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('intzapchapter', 'International Zapped Chapter List')"><i class="fas fa-download"></i>&nbsp; Export International Zapped Chapter List</button>
-                    @else
-                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="fas fa-download mr-2" ></i>Export Zapped Chapter List</button>
+                    {{-- @else
+                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="fas fa-download mr-2" ></i>Export Zapped Chapter List</button> --}}
                     @endif
                 @endif
              </div>

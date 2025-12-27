@@ -88,7 +88,7 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showCoordAllConf()" />
-                            <label class="custom-control-label" for="showAllConf">Show All Coordinators</label>
+                            <label class="custom-control-label" for="showAllConf">Show All Coordinators (Export Available)</label>
                         </div>
                     </div>
                 @endif
@@ -96,25 +96,31 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showCoordAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Coordinators</label>
+                            <label class="custom-control-label" for="showAll">Show All International Coordinators (Export Available)</label>
                         </div>
                     </div>
                 @endif
 
                 <div class="card-body text-center">
                 @if($conferenceCoordinatorCondition)
-                    <a class="btn bg-gradient-primary mb-3" href="{{ route('coordinators.coordpending') }}"><i class="fas fa-share mr-2" ></i>New Coordinators Pending</a>
+                    @if ($checkBox5Status)
+                        <a class="btn bg-gradient-primary mb-3" href="{{ route('coordinators.coordpending', ['check5' => 'yes']) }}"><i class="fas fa-share mr-2" ></i>New International Coordinators Pending</a>
+                    @else
+                        <a class="btn bg-gradient-primary mb-3" href="{{ route('coordinators.coordpending') }}"><i class="fas fa-share mr-2" ></i>New Coordinators Pending</a>
+                    @endif
                 @endif
                 @if ($regionalCoordinatorCondition)
                     @if ($checkBox3Status)
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('coordinator', 'Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
                     @elseif ($checkBox5Status)
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('intcoordinator', 'International Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export International Coordinator List</button>
-                    @else
-                        <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('coordinator', 'Coordinator List')" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button>
+                    {{-- @else
+                        <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('coordinator', 'Coordinator List')" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button> --}}
                     @endif
                 @endif
-                <a class="btn bg-gradient-primary mb-3" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope mr-2"></i>E-mail Coordinators</a>
+                @if (!$checkBox5Status && !$checkBox3Status)
+                    <a class="btn bg-gradient-primary mb-3" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope mr-2"></i>E-mail Coordinators</a>
+                @endif
             </div>
          </div>
           <!-- /.box -->

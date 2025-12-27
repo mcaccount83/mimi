@@ -172,7 +172,7 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showCoordAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Coordinators</label>
+                            <label class="custom-control-label" for="showAll">Show All International Coordinators (Export Available)</label>
                         </div>
                     </div>
                 @endif
@@ -181,8 +181,8 @@
            <div class="card-body text-center">
                 @if ($checkBox3Status)
                     <button class="btn bg-gradient-primary mb-3" onclick="startExport('appreciation', 'Coordinator Appreciation List')"><i class="fas fa-download mr-2" ></i>Export Coordinator Appreciation List</button>
-                @else
-                    <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('appreciation', 'Coordinator Appreciation List')" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator Appreciation List</button>
+                {{-- @else
+                    <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('appreciation', 'Coordinator Appreciation List')" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator Appreciation List</button> --}}
                 @endif
         </div>
           <!-- /.box -->

@@ -105,13 +105,13 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAllReReg" id="showAllReReg" class="custom-control-input" {{$checkBox6Status}} onchange="showChAllReReg()" />
-                            <label class="custom-control-label" for="showAllReReg">Show International Chapters</label>
+                            <label class="custom-control-label" for="showAllReReg">Show International Chapters (Export Available)</label>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                            <label class="custom-control-label" for="showAll">Show All International Chapters (Export Available)</label>
                         </div>
                     </div>
                 @endif
@@ -128,8 +128,8 @@
                             <button class="btn bg-gradient-primary mb-3" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')"><i class="fas fa-download mr-2" ></i>Export Overdue Re-Reg List</button>
                         @elseif ($checkBox5Status)
                             <button class="btn bg-gradient-primary mb-3" onclick="startExport('intreregoverdue', 'International Overdue Re-Reg List')"><i class="fas fa-download"></i>&nbsp; Export International Overdue Re-Reg List</button>
-                        @else
-                            <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')" disabled><i class="fas fa-download mr-2" ></i>Export Overdue Re-Reg List</button>
+                        {{-- @else
+                            <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')" disabled><i class="fas fa-download mr-2" ></i>Export Overdue Re-Reg List</button> --}}
                         @endif
                     @endif
             </div>

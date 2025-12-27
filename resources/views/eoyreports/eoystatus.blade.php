@@ -118,7 +118,7 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showChAllConf()" />
-                            <label class="custom-control-label" for="showAllConf">Show All Chapters</label>
+                            <label class="custom-control-label" for="showAllConf">Show All Chapters (Export Available)</label>
                         </div>
                     </div>
                 @endif
@@ -126,7 +126,7 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                            <label class="custom-control-label" for="showAll">Show All International Chapters (Export Available)</label>
                         </div>
                     </div>
                 @endif
@@ -140,8 +140,8 @@
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('eoystatus', 'EOY Status Lis')"><i class="fas fa-download mr-2" ></i>Export EOY Status List</button>
                     @elseif ($checkBox5Status)
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteoystatus', 'International EOY Status List')"><i class="fas fa-download"></i>&nbsp; Export International EOY Status List</button>
-                    @else
-                        <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('eoystatus', 'EOY Status Lis')" disabled><i class="fas fa-download mr-2" ></i>Export EOY Status List</button>
+                    {{-- @else
+                        <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('eoystatus', 'EOY Status Lis')" disabled><i class="fas fa-download mr-2" ></i>Export EOY Status List</button> --}}
                     @endif
                 @endif
                 </div>

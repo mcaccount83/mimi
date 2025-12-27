@@ -331,7 +331,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/board/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
     Route::get('/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
     Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
-    Route::get('/board/m2mdonation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
+    // Route::get('/board/m2mdonation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
     Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
     Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
 });

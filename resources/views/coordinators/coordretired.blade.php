@@ -72,7 +72,7 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showCoordAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Coordinators</label>
+                            <label class="custom-control-label" for="showAll">Show All International Coordinators (Export Available)</label>
                         </div>
                     </div>
                 @endif
@@ -81,8 +81,8 @@
                 @if ($assistConferenceCoordinatorCondition)
                     @if ($checkBox5Status)
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('intretiredcoordinator', 'International Retired Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export International Retired Coordinator List</button>
-                    @else
-                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Retired Coordinator List</button>
+                    {{-- @else
+                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Retired Coordinator List</button> --}}
                     @endif
                 @endif
             </div>
