@@ -339,7 +339,7 @@ window.onload = function () {
 
                         <!-- Chapter Reports Menu Item -->
                         @php
-                            if ($coordinatorCondition && $conferenceCoordinatorCondition) {
+                            if ($coordinatorCondition && $regionalCoordinatorCondition) {
                                 $chapterReportsRoute = route('chapreports.chaprptchapterstatus');
                             } elseif ($ITCondition) {
                                 $coordReportsRoute = route('chapreports.chaprptchapterstatus', ['check5' => 'yes']);

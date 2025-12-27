@@ -1,5 +1,5 @@
 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-     @if ($coordinatorCondition && $conferenceCoordinatorCondition || $ITCondition)
+     @if ($coordinatorCondition && $regionalCoordinatorCondition || $ITCondition)
         <a class="dropdown-item" href="{{ route('chapreports.chaprptchapterstatus') }}">Chapter Status Report</a>
         <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus') }}">IRS Status Report</a>
         <a class="dropdown-item" href="{{ route('chapreports.chaprptnewchapters') }}">New Chapter Report</a>

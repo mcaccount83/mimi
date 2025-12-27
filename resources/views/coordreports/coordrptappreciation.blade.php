@@ -164,7 +164,11 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showCoordAllConf()" />
-                            <label class="custom-control-label" for="showAllConf">Show All Coordinators</label>
+                            @if ($assistConferenceCoordinatorCondition)
+                                    <label class="custom-control-label" for="showAllConf">Show All Coordinators in Conference (Export Available)</label>
+                                @else
+                            <label class="custom-control-label" for="showAllConf">Show All Coordinators in Region</label>
+                            @endif
                         </div>
                     </div>
                 @endif

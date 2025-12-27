@@ -89,7 +89,11 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showChAllConf()" />
-                            <label class="custom-control-label" for="showAllConf">Show All Chapters (Export Available)</label>
+                            @if ($assistConferenceCoordinatorCondition)
+                                    <label class="custom-control-label" for="showAllConf">Show All Chapters in Conference (Export Available)</label>
+                                @else
+                            <label class="custom-control-label" for="showAllConf">Show All Chapters in Region (Export Available)</label>
+                            @endif
                         </div>
                     </div>
                 @endif

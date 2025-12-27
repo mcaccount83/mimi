@@ -97,7 +97,11 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showChAllConf()" />
-                            <label class="custom-control-label" for="showAllConf">Show All Chapters</label>
+                            @if ($assistConferenceCoordinatorCondition)
+                                    <label class="custom-control-label" for="showAllConf">Show All Chapters in Conference (Export Available)</label>
+                                @else
+                            <label class="custom-control-label" for="showAllConf">Show All Chapters in Region (Export Available)</label>
+                            @endif
                         </div>
                     </div>
                 @endif
@@ -105,7 +109,7 @@
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAllReReg" id="showAllReReg" class="custom-control-input" {{$checkBox6Status}} onchange="showChAllReReg()" />
-                            <label class="custom-control-label" for="showAllReReg">Show International Chapters (Export Available)</label>
+                            <label class="custom-control-label" for="showAllReReg">Show International Chapters Due</label>
                         </div>
                     </div>
                     <div class="col-sm-12">
@@ -117,10 +121,10 @@
                 @endif
                 <div class="card-body text-center">
                     @if($conferenceCoordinatorCondition)
-                        @if($checkBoxStatus || $checkBox3Status || $checkBox5Status)
-                            <button class="btn bg-gradient-primary mb-3 disabled" disabled><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button>
+                        @if(!$checkBoxStatus && !$checkBox3Status && !$checkBox5Status && !$checkBox6Status)
+                            {{-- <button class="btn bg-gradient-primary mb-3 disabled" disabled><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button>
                             <button class="btn bg-gradient-primary mb-3 disabled" disabled><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</button>
-                        @else
+                        @else --}}
                             <a class="btn bg-gradient-primary mb-3" href="{{ route('payment.chapreregreminder') }}"><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</a>
                             <a class="btn bg-gradient-primary mb-3" href="{{ route('payment.chaprereglatereminder') }}"><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</a>
                         @endif
