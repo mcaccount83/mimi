@@ -158,8 +158,18 @@ class BaseChapterController extends Controller
         }
 
         if ($isReregPage && ! ((isset($_GET['check3']) && $_GET['check3'] == 'yes') || (isset($_GET['check5']) && $_GET['check5'] == 'yes'))) {
+            // $baseQuery->orderByDesc('next_renewal_year')
+            //     ->orderByDesc('start_month_id');
             $baseQuery->orderByDesc('next_renewal_year')
-                ->orderByDesc('start_month_id');
+                ->orderByDesc('start_month_id')
+                // Add the normal sorting AFTER the rereg grouping
+                ->orderBy(Conference::select('short_name')
+                    ->whereColumn('conference.id', 'chapters.conference_id'))
+                ->orderBy(Region::select('short_name')
+                    ->whereColumn('region.id', 'chapters.region_id'))
+                ->orderBy(State::select('state_short_name')
+                    ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+                ->orderBy('chapters.name');
 
             return ['query' => $baseQuery];
         }
