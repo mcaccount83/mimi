@@ -20,6 +20,8 @@ function startExport(exportType, exportName) {
             'inteinstatus': '{{ route("export.inteinstatus") }}',
             'intirsfiling': '{{ route("export.intirsfiling") }}',
             'inteoystatus': '{{ route("export.inteoystatus") }}',
+
+            'constantcontact': '{{ route("export.constantcontact") }}',
         };
 
         // Get the route for this export type

@@ -290,6 +290,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/export/inteinstatus', [ExportController::class, 'indexIntEINStatus'])->name('export.inteinstatus');
     Route::get('/export/intirsfiling', [ExportController::class, 'indexInternationalIRSFiling'])->name('export.intirsfiling');
     Route::get('/export/inteoystatus', [ExportController::class, 'indexIntEOYStatus'])->name('export.inteoystatus');
+    Route::get('/export/constantcontact', [ExportController::class, 'indexConstantContact'])->name('export.constantcontact');
 });
 
 // EOYReports Controller Routes...Coordinator Login Required
