@@ -167,6 +167,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function resetProbationSubmission(): JsonResponse
     {
+        DB::beginTransaction();
         try {
             ProbationSubmission::query()->delete();
 
@@ -391,6 +392,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function resetYear(): JsonResponse
     {
+        DB::beginTransaction();
         try {
             // Create a new Admin instance
             $admin = new Admin;
@@ -426,6 +428,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateEOYDatabase(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $user = $this->userController->loadUserInformation($request);
             $updatedId = $user['userId'];
@@ -541,6 +544,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateEOYDatabaseAFTERTesting(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $user = $this->userController->loadUserInformation($request);
             $updatedId = $user['userId'];
@@ -627,6 +631,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateDataDatabase(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $user = $this->userController->loadUserInformation($request);
             $updatedId = $user['userId'];
@@ -680,6 +685,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateEOYTesting(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $user = $this->userController->loadUserInformation($request);
             $updatedId = $user['userId'];
@@ -712,6 +718,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateEOYLive(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $user = $this->userController->loadUserInformation($request);
             $updatedId = $user['userId'];
@@ -741,6 +748,7 @@ class TechReportController extends Controller implements HasMiddleware
 
     public function updateSubscribeLists(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $user = $this->userController->loadUserInformation($request);
             $updatedId = $user['userId'];
@@ -832,6 +840,7 @@ class TechReportController extends Controller implements HasMiddleware
 
     public function updateUnsubscribeLists(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $user = $this->userController->loadUserInformation($request);
             $updatedId = $user['userId'];
@@ -893,6 +902,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateGoogleDrive(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $drive = GoogleDrive::firstOrFail();
             $drive->ein_letter_uploads = $request->input('einLetterDrive');
@@ -943,6 +953,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateAdminEmail(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $email = AdminEmail::firstOrFail();
             $email->list_admin = $request->input('listAdminEmail');
@@ -1099,6 +1110,7 @@ class TechReportController extends Controller implements HasMiddleware
 
     public function updateConfList(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $validated = $request->validate([
                 'id' => 'required|exists:conference,id',
@@ -1143,6 +1155,7 @@ class TechReportController extends Controller implements HasMiddleware
 
     public function deleteConf($id): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $conference = Conference::findOrFail($id);
             $conference->delete();

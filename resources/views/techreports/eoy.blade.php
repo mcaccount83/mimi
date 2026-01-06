@@ -274,14 +274,14 @@
 
 <script>
 $(document).ready(function() {
-    var eoyBaseUrl = '{{ url("/techreports/updateeoydatabase") }}';  // URL for resetting financial data tables
-    var dataBaseUrl = '{{ url("/techreports/updatedatadatabase") }}';   // URL for resetting user data tables
-    var afterTestingBaseUrl = '{{ url("/techreports/updateeoydatabaseafter") }}';  // URL for  resting database AFTER testing to go LIVE
-    var resetBaseUrl = '{{ url("/techreports/resetyear") }}';  // URL for reseting New Year
-    var testingBaseUrl = '{{ url("/techreports/updateeoytesting") }}';  // URL for displaying menues/buttons for testers
-    var liveBaseUrl = '{{ url("/techreports/updateeoylive") }}';  // URL for displaying menues/buttons for allusers
-    var subscribeBaseUrl = '{{ url("/techreports/updatesubscribelists") }}';  // URL for subscribing users to BoardList
-    var unsubscribeBaseUrl = '{{ url("/techreports/updateunsubscribelists") }}';  // URL for unsubscribing users to BoardList
+    var eoyBaseUrl = '{{ route("techreports.updateeoydatabase") }}';  // Route for resetting financial data tables
+    var dataBaseUrl = '{{ route("techreports.updatedatadatabase") }}';   // Route for resetting user data tables
+    var afterTestingBaseUrl = '{{ route("techreports.updateeoydatabaseafter") }}';  // Route for  resting database AFTER testing to go LIVE
+    var resetBaseUrl = '{{ route("techreports.resetyear") }}';  // Route for reseting New Year
+    var testingBaseUrl = '{{ route("techreports.updateeoytesting") }}';  // Route for displaying menues/buttons for testers
+    var liveBaseUrl = '{{ route("techreports.updateeoylive") }}';  // Route for displaying menues/buttons for allusers
+    var subscribeBaseUrl = '{{ route("techreports.updatesubscribelists") }}';  // Route for subscribing users to BoardList
+    var unsubscribeBaseUrl = '{{ route("techreports.updateunsubscribelists") }}';  // Route for unsubscribing users to BoardList
 
     function handleAjaxRequest(baseUrl) {
         $.ajax({

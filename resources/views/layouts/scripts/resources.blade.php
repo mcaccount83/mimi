@@ -1,7 +1,5 @@
 <script>
-    // $(document).ready(function() {
-
-        $(document).ready(function() {
+$(document).ready(function() {
     // Only run if the element exists on this page
     if ($('.fileType').length) {
         $('.fileType').change(function() {
