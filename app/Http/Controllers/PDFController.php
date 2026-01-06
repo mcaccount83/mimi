@@ -694,6 +694,7 @@ class PDFController extends Controller
             [
                 'currentDateWords' => $currentDateWords,
                 'nextMonthDateWords' => $nextMonthDateWords,
+                'startMonth' => $startMonthName,
             ]
         );
 
