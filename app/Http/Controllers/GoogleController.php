@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chapters;
+use App\Models\Documents;
 use App\Models\DocumentsEOY;
 use App\Models\FolderRecord;
 use App\Models\GoogleDrive;
@@ -154,7 +155,7 @@ class GoogleController extends Controller implements HasMiddleware
             $filecontent = file_get_contents($file->getPathname());
 
             if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
-                $existingDocRecord = DocumentsEOY::where('chapter_id', $id)->first();
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
                 if ($existingDocRecord) {
                     $existingDocRecord->ein_letter_path = $file_id;
                     $existingDocRecord->save();
@@ -163,7 +164,7 @@ class GoogleController extends Controller implements HasMiddleware
                     $newDocData = ['chapter_id' => $id];
                     $newDocData['ein_letter_path'] = $file_id;
                     $newDocData['ein_letter'] = '1';
-                    DocumentsEOY::create($newDocData);
+                    Documents::create($newDocData);
                 }
 
                 return response()->json([
@@ -179,6 +180,11 @@ class GoogleController extends Controller implements HasMiddleware
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
+            // LOG THE ACTUAL ERROR
+            Log::error('EIN upload error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'An error occurred while uploading the file.',

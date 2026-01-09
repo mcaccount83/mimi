@@ -205,6 +205,8 @@
                             </div>
                         </div>
 
+                        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+
                     <div class="card-body text-center">
                             <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after application submission with success or error message.<br>
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>

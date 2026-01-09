@@ -41,6 +41,7 @@ use Illuminate\Support\Str;
 use Illuminate\View\View;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
+use ReCaptcha\ReCaptcha;
 
 class PublicController extends Controller
 {
@@ -457,6 +458,14 @@ class PublicController extends Controller
      */
     public function updateDonation(Request $request): RedirectResponse
     {
+        // Validate reCAPTCHA
+        $recaptcha = new ReCaptcha(config('services.recaptcha.secret_key'));
+        $resp = $recaptcha->verify($request->input('g-recaptcha-response'), $request->ip());
+
+        if (!$resp->isSuccess()) {
+            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
+        }
+
         $input = $request->all();
         $description = 'Sustaining Chapter & M2M Fund Donations';
         $shortDescription = 'Donation';

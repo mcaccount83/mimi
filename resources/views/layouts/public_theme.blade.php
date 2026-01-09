@@ -167,6 +167,7 @@
 @include('layouts.scripts.datetime')
 @include('layouts.scripts.masks')
 @include('layouts.scripts.pdfviewer')
+@include('layouts.scripts.recaptcha')
 
 @yield('customscript')
 @stack('scripts')

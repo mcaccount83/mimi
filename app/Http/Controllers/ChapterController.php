@@ -1226,11 +1226,11 @@ class ChapterController extends Controller implements HasMiddleware
                 'mailTablePC' => $mailTablePC,
             ]);
 
-            // Primary Coordinator Notification//
-            if ($chDetailsUpd->name != $chDetails->name || $chDetailsUpd->inquiries_contact != $chDetails->inquiries_contact || $chDetailsUpd->inquiries_note != $chDetails->inquiries_note ||
-                    $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->po_box != $chDetails->po_box || $chDetailsUpd->website_url != $chDetails->website_url ||
-                    $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup || $chDetailsUpd->territory != $chDetails->territory ||
-                    $chDetailsUpd->additional_info != $chDetails->additional_info || $chDetailsUpd->status_id != $chDetails->status_id || $chDetailsUpd->notes != $chDetails->notes) {
+            // Primary Coordinator Update Notification//
+            if ($chDetailsUpd->name != $chDetails->name || $chDetailsUpd->email != $chDetails->email ||  $chDetailsUpd->territory != $chDetails->territory ||
+                    $chDetailsUpd->inquiries_contact != $chDetails->inquiries_contact || $chDetailsUpd->status_id != $chDetails->status_id ||
+                    $chDetailsUpd->notes != $chDetails->notes || $chDetailsUpd->website_url != $chDetails->website_url ||
+                    $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup) {
                 Mail::to($pcEmail)
                     ->queue(new ChapDetailsUpdatePCNotice($mailData));
             }

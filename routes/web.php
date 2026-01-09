@@ -87,7 +87,7 @@ Route::get('/pdf-proxy', [PublicController::class, 'proxyGoogleDriveFile'])->nam
 Route::get('/newchapter', [PublicController::class, 'editNewChapter'])->name('public.newchapter');
 Route::post('/updatenewchapter', [PublicController::class, 'updateNewChapter'])->name('public.updatenewchapter');
 Route::get('/newchaptersuccess', [PublicController::class, 'viewNewChapter'])->name('public.newchaptersuccess');
-Route::get('/donation', [PublicController::class, 'editDonation'])->name('public.donation');
+// Route::get('/donation', [PublicController::class, 'editDonation'])->name('public.donation');
 Route::post('/updatedonation', [PublicController::class, 'updateDonation'])->name('public.updatedonation');
 Route::get('/donationsuccess', [PublicController::class, 'viewDonation'])->name('public.donationsuccess');
 Route::post('/public-payment', [PublicController::class, 'processPublicPayment'])->name('public.payment');
@@ -140,7 +140,6 @@ Route::middleware('auth')->group(function () {
 // User Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
     Route::post('/userreports/updateuserdelete', [UserController::class, 'updateUserDelete'])->name('userreports.updateuserdelete');
-
     Route::get('/userreports/useradmin', [UserReportController::class, 'showUserAdmin'])->name('userreports.useradmin');
     Route::get('/userreports/duplicateuser', [UserReportController::class, 'showDuplicate'])->name('userreports.duplicateuser');
     Route::get('/userreports/duplicateboardid', [UserReportController::class, 'showDuplicateId'])->name('userreports.duplicateboardid');
@@ -148,6 +147,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/userreports/nopresidentinactive', [UserReportController::class, 'showNoPresidentInactive'])->name('userreports.nopresidentinactive');
     Route::get('/userreports/addnewboard/{id}', [UserReportController::class, 'addBoardNew'])->name('userreports.addnewboard');
     Route::post('/userreports/updatenewboard/{id}', [UserReportController::class, 'updateBoardNew'])->name('userreports.updatenewboard');
+    // Route::get('/userreports/noactivechapter', [UserReportController::class, 'showNoActiveChapter'])->name('userreports.noactivechapter');
+    Route::get('/userreports/usernoactiveboard', [UserReportController::class, 'showUserNoActiveBoard'])->name('userreports.usernoactiveboard');
+    Route::get('/userreports/usernoactivecoord', [UserReportController::class, 'showUserNoActiveCoord'])->name('userreports.usernoactivecoord');
+    Route::get('/userreports/edituser/{id}', [UserReportController::class, 'editUserInformation'])->name('userreports.edituser');
+    Route::post('/userreports/updateuser/{id}', [UserReportController::class, 'updateUserInformation'])->name('userreports.updateuser');
     Route::get('/userreports/noactiveboard', [UserReportController::class, 'showNoActiveBoard'])->name('userreports.noactiveboard');
     Route::get('/userreports/edituserboard/{id}', [UserReportController::class, 'editUserBoardInformation'])->name('userreports.edituserboard');
     Route::post('/userreports/updateuserboard/{id}', [UserReportController::class, 'updateUserBoardInformation'])->name('userreports.updateuserboard');

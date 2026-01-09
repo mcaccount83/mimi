@@ -6,6 +6,7 @@ use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
 use App\Enums\BoardPosition;
 use App\Enums\ChapterStatusEnum;
+use App\Models\AdminRole;
 use App\Models\Boards;
 use App\Models\BoardsOutgoing;
 use App\Models\BoardsPending;
@@ -13,6 +14,8 @@ use App\Models\BoardsDisbanded;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\User;
+use App\Models\UserStatus;
+use App\Models\UserType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -222,6 +225,109 @@ class UserReportController extends Controller implements HasMiddleware
             }
     }
 
+    /**
+     * board member with inactive chapter user
+     */
+    // public function showNoActiveBoardChapter(): View
+    // {
+    //     $userId = User::with(['board'])
+    //         ->whereHas('board') // This ensures only users WITH a board relationship are included
+    //         ->where('type_id', UserTypeEnum::BOARD)
+    //         ->where('is_active', UserStatusEnum::ACTIVE)
+    //         ->pluck('id');
+
+    //     $bdNoChapterList = DB::table('board')
+    //         ->where('active_status', '0')
+    //         ->whereNotIn('id', $userId)
+    //         ->get();
+
+    //     $countList = count($bdNoChapterList);
+    //     $data = ['countList' => $countList, 'bdNoChapterList' => $bdNoChapterList];
+
+    //     return view('userreports.noactivechapter')->with($data);
+    // }
+
+        public function showUserNoActiveBoard(): View
+        {
+            $bdNoChapterList = User::whereDoesntHave('board')
+                ->where('type_id', UserTypeEnum::BOARD)
+                ->where('is_active', UserStatusEnum::ACTIVE)
+                ->get();
+
+            $data = [
+                'countList' => $bdNoChapterList->count(), // Collection method
+                'bdNoChapterList' => $bdNoChapterList
+            ];
+
+            return view('userreports.usernoactiveboard')->with($data);
+        }
+
+        public function showUserNoActiveCoord(): View
+        {
+            $cdNoChapterList = User::whereDoesntHave('coordinator')
+                ->where('type_id', UserTypeEnum::COORD)
+                ->where('is_active', UserStatusEnum::ACTIVE)
+                ->get();
+
+            $data = [
+                'countList' => $cdNoChapterList->count(), // Collection method
+                'cdNoChapterList' => $cdNoChapterList
+            ];
+
+            return view('userreports.usernoactivecoord')->with($data);
+        }
+
+         /**
+         *Edit User Information
+        */
+        public function editUserInformation(Request $request, $id): View
+        {
+            $userDetails = User::find($id);
+
+            $AllUserStatus = UserStatus::all();
+                $AllUserType = UserType::all();
+                $AllAdminRole = AdminRole::all();
+
+            $data = [
+                'id' => $id, 'userDetails' => $userDetails, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
+            ];
+
+            return view('userreports.edituser')->with($data);
+        }
+
+        /**
+         *Save User Information
+        */
+        public function updateUserInformation(Request $request, $id): RedirectResponse
+        {
+            $input = $request->all();
+
+            $user = User::find($id);
+
+            DB::beginTransaction();
+            try {
+                $user->first_name = $request->input('fname');
+                $user->last_name = $request->input('lname');
+                $user->email = $request->input('email');
+                $user->type_id = $request->input('type');
+                $user->is_admin = $request->input('role');
+                $user->is_active = $request->input('status');
+
+                $user->save();
+
+            DB::commit();
+
+                return to_route('userreports.edituser', ['id' => $id])->with('success', 'User Details have been updated');
+            } catch (\Exception $e) {
+                DB::rollback();  // Rollback Transaction
+                Log::error($e);  // Log the error
+
+                return to_route('userreports.edituser', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+            } finally {
+                // This ensures DB connections are released even if exceptions occur
+                DB::disconnect();
+            }
+        }
 
     /**
      * board member with inactive user
