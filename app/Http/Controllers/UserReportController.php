@@ -248,19 +248,38 @@ class UserReportController extends Controller implements HasMiddleware
     // }
 
         public function showUserNoActiveBoard(): View
-        {
-            $bdNoChapterList = User::whereDoesntHave('board')
-                ->where('type_id', UserTypeEnum::BOARD)
-                ->where('is_active', UserStatusEnum::ACTIVE)
-                ->get();
+    {
+        $bdNoChapterList = User::whereDoesntHave('board')
+            ->where('type_id', UserTypeEnum::BOARD)
+            ->where('is_active', UserStatusEnum::ACTIVE)
+            ->with(['boardDisbanded', 'boardOutgoing', 'boardPending']) // Eager load all possible relationships
+            ->get()
+            ->map(function ($user) {
+                // Determine which table they're in and what their type_id should be
+                if ($user->boardDisbanded) {
+                    $user->incorrect_table = 'disbanded';
+                    $user->should_be_type = UserTypeEnum::DISBANDED; // or whatever the correct type is
+                } elseif ($user->boardOutgoing) {
+                    $user->incorrect_table = 'outgoing';
+                    $user->should_be_type = UserTypeEnum::OUTGOING;
+                } elseif ($user->boardPending) {
+                    $user->incorrect_table = 'pending';
+                    $user->should_be_type = UserTypeEnum::PENDING;
+                } else {
+                    $user->incorrect_table = 'none'; // Truly orphaned
+                    $user->should_be_type = null;
+                }
 
-            $data = [
-                'countList' => $bdNoChapterList->count(), // Collection method
-                'bdNoChapterList' => $bdNoChapterList
-            ];
+                return $user;
+            });
 
-            return view('userreports.usernoactiveboard')->with($data);
-        }
+        $data = [
+            'countList' => $bdNoChapterList->count(),
+            'bdNoChapterList' => $bdNoChapterList
+        ];
+
+        return view('userreports.usernoactiveboard')->with($data);
+    }
 
         public function showUserNoActiveCoord(): View
         {

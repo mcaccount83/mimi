@@ -15,7 +15,7 @@
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Active User with No Active Board Member
                                 </h3>
-                                <span class="ml-2">Update User to be Inactive</span>
+                                <span class="ml-2">Update User Active Status and/or Type</span>
                                 @include('layouts.dropdown_menus.menu_reports_user')
                             </div>
                         </div>
@@ -29,6 +29,7 @@
                     {{-- <th>Chapter ID</th> --}}
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Table</th>
                     <th>User Status</th>
                 </tr>
                 </thead>
@@ -42,6 +43,7 @@
                         {{-- <td>{{ $list->board->chapter_id }}</td> --}}
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td>{{ $list->email }}</td>
+                        <td>{{ ucfirst($list->incorrect_table) }}</td>
                         <td>{{$list->userStatus->user_status}}</td>
 			        </tr>
                   @endforeach

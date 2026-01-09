@@ -87,7 +87,7 @@ Route::get('/pdf-proxy', [PublicController::class, 'proxyGoogleDriveFile'])->nam
 Route::get('/newchapter', [PublicController::class, 'editNewChapter'])->name('public.newchapter');
 Route::post('/updatenewchapter', [PublicController::class, 'updateNewChapter'])->name('public.updatenewchapter');
 Route::get('/newchaptersuccess', [PublicController::class, 'viewNewChapter'])->name('public.newchaptersuccess');
-// Route::get('/donation', [PublicController::class, 'editDonation'])->name('public.donation');
+Route::get('/donation', [PublicController::class, 'editDonation'])->name('public.donation');
 Route::post('/updatedonation', [PublicController::class, 'updateDonation'])->name('public.updatedonation');
 Route::get('/donationsuccess', [PublicController::class, 'viewDonation'])->name('public.donationsuccess');
 Route::post('/public-payment', [PublicController::class, 'processPublicPayment'])->name('public.payment');
