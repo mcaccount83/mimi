@@ -16,7 +16,7 @@
     {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css"> --}}
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/brands.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/css/v5-font-face.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/v5-font-face.css" rel="stylesheet" />
     <!-- Theme style -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <!-- SweetAlert2 -->
@@ -297,7 +297,6 @@
 @include('layouts.scripts.alert')
 @include('layouts.scripts.bdcoordinatorlist')
 @include('layouts.scripts.boards')
-@include('layouts.scripts.boardreport')
 @include('layouts.scripts.datetime')
 @include('layouts.scripts.email')
 @include('layouts.scripts.masks')

@@ -6,6 +6,12 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const websiteUrl = document.getElementById('ch_website');
+
+        // Only run if the ch_website field exists on this page
+        if (!websiteUrl) {
+            return;
+        }
+
         const statusContainer = document.getElementById('ch_webstatus-container');
         const websiteStatus = document.getElementById('ch_webstatus');
 
@@ -35,21 +41,21 @@
             websiteUrl.addEventListener('input', toggleStatusField);
             websiteUrl.addEventListener('change', toggleStatusField);
         }
-    });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        const websiteField = document.getElementById("ch_website");
+        // Second event listener for status field options
         const statusField = document.getElementById("ch_webstatus");
 
-        websiteField.addEventListener("input", function() {
-            // Enable options 2 and 3, disable options 1 and 2
-            Array.from(statusField.options).forEach(option => {
-                if (["0", "1"].includes(option.value)) {
-                    option.disabled = true;
-                } else if (["2", "3"].includes(option.value)) {
-                    option.disabled = false;
-                }
+        if (websiteUrl && statusField) {
+            websiteUrl.addEventListener("input", function() {
+                // Enable options 2 and 3, disable options 1 and 2
+                Array.from(statusField.options).forEach(option => {
+                    if (["0", "1"].includes(option.value)) {
+                        option.disabled = true;
+                    } else if (["2", "3"].includes(option.value)) {
+                        option.disabled = false;
+                    }
+                });
             });
-        });
+        }
     });
 </script>

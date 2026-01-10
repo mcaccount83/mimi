@@ -309,7 +309,7 @@ function DeleteChapterAwardsRow() {
         document.getElementById('ChapterAwardsRowCount').value = rowCount;
 
         // Update displays
-        toggleAwardBlocks();
+        // toggleAwardBlocks();
     }
 }
 

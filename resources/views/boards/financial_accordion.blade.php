@@ -2999,6 +2999,115 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     </div><!-- end of accordion body -->
     </div><!-- end of accordion item -->
     </div>
+    {{-- Step 13 - Awards Section Scripts --}}
+    @push('scripts')
+    <script>
+        // Awards-specific functions
+        function AddChapterAwardsRow() {
+            var rowCount = document.getElementById("ChapterAwardsRowCount").value;
+            var table = document.getElementById("awards");
+            var row = table.insertRow(-1);
+
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+
+            var existingSelect = document.getElementById("ChapterAwardsType0");
+            var options = Array.from(existingSelect.options).map(opt => {
+                return `<option value="${opt.value}">${opt.text}</option>`;
+            }).join('');
+
+            cell1.innerHTML = `
+                <div class="form-group">
+                    <select class="form-control"
+                            name="ChapterAwardsType${rowCount}"
+                            id="ChapterAwardsType${rowCount}"
+                            onchange="toggleOutstandingCriteria(${rowCount})">
+                        ${options}
+                    </select>
+                </div>`;
+
+            cell2.innerHTML = `
+                <div class="form-group">
+                    <textarea class="form-control"
+                              rows="2"
+                              name="ChapterAwardsDesc${rowCount}"
+                              id="ChapterAwardsDesc${rowCount}"></textarea>
+                </div>`;
+
+            var criteriaContainer = document.createElement('div');
+            criteriaContainer.id = `OutstandingCriteria${rowCount}`;
+            criteriaContainer.className = 'mt-3';
+            criteriaContainer.style.display = 'none';
+
+            var originalCriteria = document.getElementById('OutstandingCriteria0');
+            criteriaContainer.innerHTML = originalCriteria.innerHTML.replace(/0/g, rowCount);
+
+            var lastCriteria = document.getElementById(`OutstandingCriteria${rowCount-1}`);
+            if (lastCriteria) {
+                lastCriteria.parentNode.insertBefore(criteriaContainer, lastCriteria.nextSibling);
+            }
+
+            rowCount++;
+            document.getElementById('ChapterAwardsRowCount').value = rowCount;
+        }
+
+        function DeleteChapterAwardsRow() {
+            var table = document.getElementById("awards");
+            var rowCount = document.getElementById("ChapterAwardsRowCount").value;
+
+            if (rowCount > 1) {
+                table.deleteRow(-1);
+
+                var criteriaToRemove = document.getElementById(`OutstandingCriteria${rowCount-1}`);
+                if (criteriaToRemove) {
+                    criteriaToRemove.remove();
+                }
+
+                rowCount--;
+                document.getElementById('ChapterAwardsRowCount').value = rowCount;
+                toggleAwardBlocks();
+            }
+        }
+
+        function toggleOutstandingCriteria(row) {
+            const selectElement = document.getElementById(`ChapterAwardsType${row}`);
+            const criteriaDiv = document.getElementById(`OutstandingCriteria${row}`);
+
+            if (selectElement && criteriaDiv) {
+                if (selectElement.value == '5' || selectElement.value == '6') {
+                    criteriaDiv.style.display = 'block';
+                } else {
+                    criteriaDiv.style.display = 'none';
+                }
+            }
+
+            toggleAwardBlocks();
+        }
+
+        function toggleAwardBlocks() {
+            const awardSignatureBlock = document.getElementById('AwardSignatureBlock');
+            const rowCount = parseInt(document.getElementById('ChapterAwardsRowCount').value);
+            let hasSelectedAward = false;
+
+            for(let i = 0; i < rowCount; i++) {
+                const select = document.getElementById(`ChapterAwardsType${i}`);
+                if(select && select.value) {
+                    hasSelectedAward = true;
+                    break;
+                }
+            }
+
+            if (awardSignatureBlock) {
+                awardSignatureBlock.style.display = hasSelectedAward ? 'block' : 'none';
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            toggleAwardBlocks();
+        });
+    </script>
+    @endpush
 @endif
 <!------End Step 13 ------>
 
@@ -3790,80 +3899,80 @@ function AddPartyExpenseRow() {
         }
     }
 
-    function AddChapterAwardsRow() {
-    // Get row count and add new table row
-    var rowCount = document.getElementById("ChapterAwardsRowCount").value;
-    var table = document.getElementById("awards");
-    var row = table.insertRow(-1);
+//     function AddChapterAwardsRow() {
+//     // Get row count and add new table row
+//     var rowCount = document.getElementById("ChapterAwardsRowCount").value;
+//     var table = document.getElementById("awards");
+//     var row = table.insertRow(-1);
 
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
+//     var cell1 = row.insertCell(0);
+//     var cell2 = row.insertCell(1);
 
-    // Get the options from an existing select element
-    var existingSelect = document.getElementById("ChapterAwardsType0");
-    var options = Array.from(existingSelect.options).map(opt => {
-        return `<option value="${opt.value}">${opt.text}</option>`;
-    }).join('');
+//     // Get the options from an existing select element
+//     var existingSelect = document.getElementById("ChapterAwardsType0");
+//     var options = Array.from(existingSelect.options).map(opt => {
+//         return `<option value="${opt.value}">${opt.text}</option>`;
+//     }).join('');
 
-    // Create the table cells
-    cell1.innerHTML = `
-        <div class="form-group">
-            <select class="form-control"
-                    name="ChapterAwardsType${rowCount}"
-                    id="ChapterAwardsType${rowCount}"
-                    onchange="toggleOutstandingCriteria(${rowCount})">
-                ${options}
-            </select>
-        </div>`;
+//     // Create the table cells
+//     cell1.innerHTML = `
+//         <div class="form-group">
+//             <select class="form-control"
+//                     name="ChapterAwardsType${rowCount}"
+//                     id="ChapterAwardsType${rowCount}"
+//                     onchange="toggleOutstandingCriteria(${rowCount})">
+//                 ${options}
+//             </select>
+//         </div>`;
 
-    cell2.innerHTML = `
-        <div class="form-group">
-            <textarea class="form-control"
-                      rows="2"
-                      name="ChapterAwardsDesc${rowCount}"
-                      id="ChapterAwardsDesc${rowCount}"></textarea>
-        </div>`;
+//     cell2.innerHTML = `
+//         <div class="form-group">
+//             <textarea class="form-control"
+//                       rows="2"
+//                       name="ChapterAwardsDesc${rowCount}"
+//                       id="ChapterAwardsDesc${rowCount}"></textarea>
+//         </div>`;
 
-    // Create new Outstanding Criteria section
-    var criteriaContainer = document.createElement('div');
-    criteriaContainer.id = `OutstandingCriteria${rowCount}`;
-    criteriaContainer.className = 'mt-3';
-    criteriaContainer.style.display = 'none';
+//     // Create new Outstanding Criteria section
+//     var criteriaContainer = document.createElement('div');
+//     criteriaContainer.id = `OutstandingCriteria${rowCount}`;
+//     criteriaContainer.className = 'mt-3';
+//     criteriaContainer.style.display = 'none';
 
-    // Copy the content from the first criteria section
-    var originalCriteria = document.getElementById('OutstandingCriteria0');
-    criteriaContainer.innerHTML = originalCriteria.innerHTML.replace(/2/g, rowCount); // Replace all "2" with new row number
+//     // Copy the content from the first criteria section
+//     var originalCriteria = document.getElementById('OutstandingCriteria0');
+//     criteriaContainer.innerHTML = originalCriteria.innerHTML.replace(/2/g, rowCount); // Replace all "2" with new row number
 
-    // Find where to insert the new criteria section
-    var lastCriteria = document.getElementById(`OutstandingCriteria${rowCount-1}`);
-    if (lastCriteria) {
-        lastCriteria.parentNode.insertBefore(criteriaContainer, lastCriteria.nextSibling);
-    }
+//     // Find where to insert the new criteria section
+//     var lastCriteria = document.getElementById(`OutstandingCriteria${rowCount-1}`);
+//     if (lastCriteria) {
+//         lastCriteria.parentNode.insertBefore(criteriaContainer, lastCriteria.nextSibling);
+//     }
 
-    rowCount++;
-    document.getElementById('ChapterAwardsRowCount').value = rowCount;
-}
+//     rowCount++;
+//     document.getElementById('ChapterAwardsRowCount').value = rowCount;
+// }
 
-function DeleteChapterAwardsRow() {
-    var table = document.getElementById("awards");
-    var rowCount = document.getElementById("ChapterAwardsRowCount").value;
+// function DeleteChapterAwardsRow() {
+//     var table = document.getElementById("awards");
+//     var rowCount = document.getElementById("ChapterAwardsRowCount").value;
 
-    if (rowCount > 1) {  // Keep at least one row
-        table.deleteRow(-1);
+//     if (rowCount > 1) {  // Keep at least one row
+//         table.deleteRow(-1);
 
-        // Remove the corresponding criteria section
-        var criteriaToRemove = document.getElementById(`OutstandingCriteria${rowCount-1}`);
-        if (criteriaToRemove) {
-            criteriaToRemove.remove();
-        }
+//         // Remove the corresponding criteria section
+//         var criteriaToRemove = document.getElementById(`OutstandingCriteria${rowCount-1}`);
+//         if (criteriaToRemove) {
+//             criteriaToRemove.remove();
+//         }
 
-        rowCount--;
-        document.getElementById('ChapterAwardsRowCount').value = rowCount;
+//         rowCount--;
+//         document.getElementById('ChapterAwardsRowCount').value = rowCount;
 
-        // Update displays
-        toggleAwardBlocks();
-    }
-}
+//         // Update displays
+//         toggleAwardBlocks();
+//     }
+// }
 
     function TreasuryBalanceChange() {
         var TreasuryBalance = parseFloat(document.getElementById("AmountReservedFromLastYear").value.replace(/,/g, '')) || 0;
@@ -4040,7 +4149,7 @@ window.addEventListener('load', function() {
     TogglePlaygroupsExplanation();
     ToggleParkDaysExplanation();
     ToggleSisterChapterExplanation();
-    toggleAwardBlocks();
+    // toggleAwardBlocks();
 
 });
 
@@ -4295,40 +4404,40 @@ window.addEventListener('load', function() {
         }
     }
 
-    function toggleOutstandingCriteria(row) {
-    const selectElement = document.getElementById(`ChapterAwardsType${row}`);
-    const criteriaDiv = document.getElementById(`OutstandingCriteria${row}`);
+//     function toggleOutstandingCriteria(row) {
+//     const selectElement = document.getElementById(`ChapterAwardsType${row}`);
+//     const criteriaDiv = document.getElementById(`OutstandingCriteria${row}`);
 
-    if (selectElement && criteriaDiv) {
-        if (selectElement.value == '5' || selectElement.value == '6') {
-            criteriaDiv.style.display = 'block';
-        } else {
-            criteriaDiv.style.display = 'none';
-        }
-    }
+//     if (selectElement && criteriaDiv) {
+//         if (selectElement.value == '5' || selectElement.value == '6') {
+//             criteriaDiv.style.display = 'block';
+//         } else {
+//             criteriaDiv.style.display = 'none';
+//         }
+//     }
 
-    toggleAwardBlocks();
-}
+//     toggleAwardBlocks();
+// }
 
-function toggleAwardBlocks() {
-    const awardSignatureBlock = document.getElementById('AwardSignatureBlock');
-    const rowCount = parseInt(document.getElementById('ChapterAwardsRowCount').value);
-    let hasSelectedAward = false;
+// function toggleAwardBlocks() {
+//     const awardSignatureBlock = document.getElementById('AwardSignatureBlock');
+//     const rowCount = parseInt(document.getElementById('ChapterAwardsRowCount').value);
+//     let hasSelectedAward = false;
 
-    // Check if any award type is selected
-    for(let i = 0; i < rowCount; i++) {
-        const select = document.getElementById(`ChapterAwardsType${i}`);
-        if(select && select.value) {
-            hasSelectedAward = true;
-            break;
-        }
-    }
+//     // Check if any award type is selected
+//     for(let i = 0; i < rowCount; i++) {
+//         const select = document.getElementById(`ChapterAwardsType${i}`);
+//         if(select && select.value) {
+//             hasSelectedAward = true;
+//             break;
+//         }
+//     }
 
-    // Show/hide the signature block
-    if (awardSignatureBlock) {
-        awardSignatureBlock.style.display = hasSelectedAward ? 'block' : 'none';
-    }
-}
+//     // Show/hide the signature block
+//     if (awardSignatureBlock) {
+//         awardSignatureBlock.style.display = hasSelectedAward ? 'block' : 'none';
+//     }
+// }
 
 </script>
 
