@@ -3168,14 +3168,14 @@ $(document).ready(function () {
         var userTypeId = @json($userTypeId);
         var userAdmin = @json($userAdmin);
 
-        var effectiveSubmitted = (userTypeId == 'disbanded') ? submittedfinal : submitted;
+        // var effectiveSubmitted = (userTypeId == 'disbanded') ? submittedfinal : submitted;
 
        if (userTypeId == 1 && userAdmin != 1) {
         $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
 
-        } else if (effectiveSubmitted == '1') {
-            $('button').not('#btn-back, #btn-download-pdf').prop('disabled', true);
-            $('input, select, textarea').prop('disabled', true);
+        // } else if (effectiveSubmitted == '1') {
+        //     $('button').not('#btn-back, #btn-download-pdf').prop('disabled', true);
+        //     $('input, select, textarea').prop('disabled', true);
 
         } else {
             $('button, input, select, textarea').prop('disabled', false);
