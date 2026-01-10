@@ -3164,7 +3164,7 @@ $(document).ready(function () {
         console.log('Running after delay');
 
         var submitted = @json($chEOYDocuments->financial_report_received);
-        var submittedfinal = @json($chEOYDocuments->final_report_received);
+        // var submittedfinal = @json($chEOYDocuments->final_report_received);
         var userTypeId = @json($userTypeId);
         var userAdmin = @json($userAdmin);
 
