@@ -2297,6 +2297,12 @@ if (isset($chFinancialReport['party_expense_array'])) {
 @section('customscript')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const unsubmitButton = document.getElementById('unsubmit');
+
+    if (!unsubmitButton) {
+        return;
+    }
+
     document.getElementById('unsubmit').addEventListener('click', function() {
         Swal.fire({
             title: 'Are you sure?',

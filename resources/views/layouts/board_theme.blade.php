@@ -297,6 +297,7 @@
 @include('layouts.scripts.alert')
 @include('layouts.scripts.bdcoordinatorlist')
 @include('layouts.scripts.boards')
+@include('layouts.scripts.boardreport')
 @include('layouts.scripts.datetime')
 @include('layouts.scripts.email')
 @include('layouts.scripts.masks')

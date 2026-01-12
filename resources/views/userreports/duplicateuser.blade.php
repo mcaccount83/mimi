@@ -29,7 +29,7 @@
 				  <th>Last Name</th>
                   <th>User Type</th>
 				  <th>Active User</th>
-                <th>Delete<th>
+                <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>

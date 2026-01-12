@@ -206,7 +206,7 @@ class Chapters extends Model
 
     public function disbandCheck(): HasOne
     {
-        return $this->hasOne(DisbandedChecklist::class, 'chapter_id', 'id');  // 'chapter_id' in documents HasOne 'id' in chapters
+        return $this->hasOne(DisbandedChecklist::class, 'chapter_id', 'id');  // 'chapter_id' in disbandchecklist HasOne 'id' in chapters
     }
 
     public function probationSubmit(): HasOne

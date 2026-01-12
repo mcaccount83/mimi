@@ -29,8 +29,14 @@ $(document).ready(function() {
 
 function filterCoordinators() {
     const regionDropdown = document.getElementById('ch_region');
+    const primaryCorDropdown = document.getElementById('ch_primarycor');
+
+    // Exit if elements don't exist
+    if (!regionDropdown || !primaryCorDropdown) {
+        return;
+    }
+
     const selectedRegion = regionDropdown.value; // Get the selected region ID
-    const primaryCorDropdown = document.getElementById('ch_primarycor'); // Coordinator dropdown
 
     // Filter options based on the selected region
     Array.from(primaryCorDropdown.options).forEach(option => {
@@ -52,11 +58,16 @@ function filterCoordinators() {
     }
 }
 
-// Attach the event listener to the region dropdown
-document.getElementById('ch_region').addEventListener('change', filterCoordinators);
+// Attach the event listener to the region dropdown only if it exists
+const regionElement = document.getElementById('ch_region');
+if (regionElement) {
+    regionElement.addEventListener('change', filterCoordinators);
+}
 
-// Run the filtering logic on page load
-document.addEventListener('DOMContentLoaded', filterCoordinators);
-
-
+// Run the filtering logic on page load only if elements exist
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('ch_region') && document.getElementById('ch_primarycor')) {
+        filterCoordinators();
+    }
+});
 </script>

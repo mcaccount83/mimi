@@ -481,7 +481,6 @@
     <!-- /.container- -->
 @endsection
 @section('customscript')
-@include('layouts.scripts.boardreport')
 
 <script>
     $(document).ready(function() {

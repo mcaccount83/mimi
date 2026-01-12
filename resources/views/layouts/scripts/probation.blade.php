@@ -5,6 +5,11 @@
         const probationField = document.getElementById('probationField');
         const probationSelect = document.getElementById('ch_probation');
 
+        // Only run if the elements exist on this page
+        if (!statusSelect || !probationLabel || !probationField || !probationSelect) {
+            return;
+        }
+
         // Function to toggle probation section visibility
         function toggleProbationSection() {
             const selectedStatusId = parseInt(statusSelect.value);
@@ -82,7 +87,7 @@
                                         confirmButton: 'btn-sm btn-success'
                                     }
                                 }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
+                                    location.reload();
                                 });
                             },
                             error: function() {
@@ -153,7 +158,7 @@
                                         confirmButton: 'btn-sm btn-success'
                                     }
                                 }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
+                                    location.reload();
                                 });
                             },
                             error: function() {

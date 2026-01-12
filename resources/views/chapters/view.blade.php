@@ -939,6 +939,12 @@
     @include('layouts.scripts.disablefields')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const unsubmitButton = document.getElementById('unsubmit');
+
+    if (!unsubmitButton) {
+        return;
+    }
+
     document.getElementById('unsubmit').addEventListener('click', function() {
         Swal.fire({
             title: 'Are you sure?',
