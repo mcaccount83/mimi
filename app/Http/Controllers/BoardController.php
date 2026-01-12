@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
-use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Mail\BorUpdateListNoitce;
 use App\Mail\ChapProfileUpdatePCNotice;
 use App\Mail\EOYElectionReportSubmitted;

@@ -2024,11 +2024,11 @@ class ExportController extends Controller implements HasMiddleware
 
         // Get user IDs that match the criteria
         $userIds = User::where('is_active', UserStatusEnum::ACTIVE)
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->where('type_id', UserTypeEnum::BOARD)
                     ->orWhere('type_id', UserTypeEnum::COORD);
             })
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->where('first_name', 'NOT LIKE', '%test%')
                     ->where('last_name', 'NOT LIKE', '%test%')
                     ->where('email', 'NOT LIKE', '%test%')
@@ -2054,7 +2054,7 @@ class ExportController extends Controller implements HasMiddleware
 
             foreach ($chunks as $chunkIndex => $chunk) {
                 // Batch load users for this chunk
-                $users = User::select('first_name', 'last_name', 'email', )
+                $users = User::select('first_name', 'last_name', 'email')
                     ->whereIn('id', $chunk)
                     ->get();
 

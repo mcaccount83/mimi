@@ -94,7 +94,7 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Load User Information
      */
-   public function loadUserInformation(Request $request)
+    public function loadUserInformation(Request $request)
     {
         $user = User::find($request->user()->id);
 
