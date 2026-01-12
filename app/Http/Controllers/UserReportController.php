@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserStatusEnum;
-use App\Enums\UserTypeEnum;
 use App\Enums\BoardPosition;
 use App\Enums\ChapterStatusEnum;
+use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Models\AdminRole;
 use App\Models\Boards;
 use App\Models\BoardsDisbanded;
@@ -191,11 +191,11 @@ class UserReportController extends Controller implements HasMiddleware
         $vacant_field = null; // President is never vacant
         $chStatus = $chapter->active_status;
 
-        if ($chapter->active_status == ChapterStatusEnum::ACTIVE){
+        if ($chapter->active_status == ChapterStatusEnum::ACTIVE) {
             $defaultCategories = $this->forumSubscriptionController->defaultCategories();
             $defaultBoardCategories = $defaultCategories['boardCategories'];
             // $status = '1';
-        } else{
+        } else {
             $defaultBoardCategories = null;
             // $status = '0';
         }
@@ -204,18 +204,18 @@ class UserReportController extends Controller implements HasMiddleware
         try {
             $this->chapterController->createNewBoardMember($chapter, $relation, $positionId, $request, $prefix, $chStatus, $updatedBy, $updatedId, $defaultBoardCategories);
 
-        DB::commit();
-            if($chapter->active_status == ChapterStatusEnum::ACTIVE){
+            DB::commit();
+            if ($chapter->active_status == ChapterStatusEnum::ACTIVE){
                 return redirect()->to('/userreports/nopresident')->with('success', 'Chapter created successfully');
-            }else{
+            } else {
                 return redirect()->to('/userreports/nopresidentinactive')->with('success', 'Chapter created successfully');
             }
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-            if($chapter->active_status == '1'){
+            if ($chapter->active_status == '1'){
                 return redirect()->to('/userreports/nopresident')->with('fail', 'Something went wrong, Please try again...');
-            }else{
+            } else {
                 return redirect()->to('/userreports/nopresidentinactive')->with('fail', 'Something went wrong, Please try again...');
             }
         } finally {
@@ -274,7 +274,7 @@ class UserReportController extends Controller implements HasMiddleware
 
         $data = [
             'countList' => $bdNoChapterList->count(),
-            'bdNoChapterList' => $bdNoChapterList
+            'bdNoChapterList' => $bdNoChapterList,
         ];
 
         return view('userreports.usernoactiveboard')->with($data);
@@ -289,7 +289,7 @@ class UserReportController extends Controller implements HasMiddleware
 
         $data = [
             'countList' => $cdNoChapterList->count(), // Collection method
-            'cdNoChapterList' => $cdNoChapterList
+            'cdNoChapterList' => $cdNoChapterList,
         ];
 
         return view('userreports.usernoactivecoord')->with($data);
@@ -303,8 +303,8 @@ class UserReportController extends Controller implements HasMiddleware
         $userDetails = User::find($id);
 
         $AllUserStatus = UserStatus::all();
-            $AllUserType = UserType::all();
-            $AllAdminRole = AdminRole::all();
+        $AllUserType = UserType::all();
+        $AllAdminRole = AdminRole::all();
 
         $data = [
             'id' => $id, 'userDetails' => $userDetails, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
@@ -333,7 +333,7 @@ class UserReportController extends Controller implements HasMiddleware
 
             $user->save();
 
-        DB::commit();
+            DB::commit();
 
             return to_route('userreports.edituser', ['id' => $id])->with('success', 'User Details have been updated');
         } catch (\Exception $e) {
@@ -364,12 +364,11 @@ class UserReportController extends Controller implements HasMiddleware
         return view('userreports.noactiveboard')->with($data);
     }
 
-     /**
+    /**
      *Edit User Information
      */
     public function editUserBoardInformation(Request $request, $id): View
     {
-
         $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
         $userDetails = $baseUserQuery['userDetails'];
         $bdDetails = $baseUserQuery['bdDetails'];
@@ -383,17 +382,16 @@ class UserReportController extends Controller implements HasMiddleware
         $baseChapterQuery = $this->baseChapterController->getChapterDetails($bdChapterId);
         $chDetails = $baseChapterQuery['chDetails'];
         $chConfId = $baseChapterQuery['chConfId'];
-            $chActiveId = $baseChapterQuery['chActiveId'];
-            $stateShortName = $baseChapterQuery['stateShortName'];
-            $regionLongName = $baseChapterQuery['regionLongName'];
-            $conferenceDescription = $baseChapterQuery['conferenceDescription'];
-            $chPcId = $baseChapterQuery['chPcId'];
-            $chPayments = $baseChapterQuery['chPayments'];
-            $startMonthName = $baseChapterQuery['startMonthName'];
+        $chActiveId = $baseChapterQuery['chActiveId'];
+        $stateShortName = $baseChapterQuery['stateShortName'];
+        $regionLongName = $baseChapterQuery['regionLongName'];
+        $conferenceDescription = $baseChapterQuery['conferenceDescription'];
+        $chPcId = $baseChapterQuery['chPcId'];
+        $chPayments = $baseChapterQuery['chPayments'];
+        $startMonthName = $baseChapterQuery['startMonthName'];
 
-            $allStates = $baseChapterQuery['allStates'];
-            $allCountries = $baseChapterQuery['allCountries'];
-
+        $allStates = $baseChapterQuery['allStates'];
+        $allCountries = $baseChapterQuery['allCountries'];
 
         $data = [
             'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'chDetails' => $chDetails,
@@ -476,12 +474,11 @@ class UserReportController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      *Edit User Information
      */
     public function editUserCoordInformation(Request $request, $id): View
     {
-
         $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
         $userDetails = $baseUserQuery['userDetails'];
         $bdDetails = $baseUserQuery['bdDetails'];
@@ -494,23 +491,23 @@ class UserReportController extends Controller implements HasMiddleware
 
         $baseCoordQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
         $cdDetails = $baseCoordQuery['cdDetails'];
-            $cdId = $baseCoordQuery['cdId'];
-            $cdActiveId = $baseCoordQuery['cdActiveId'];
-            $regionLongName = $baseCoordQuery['regionLongName'];
-            $conferenceDescription = $baseCoordQuery['conferenceDescription'];
-            $cdConfId = $baseCoordQuery['cdConfId'];
-            $cdRptId = $baseCoordQuery['cdRptId'];
-            $RptFName = $baseCoordQuery['RptFName'];
-            $RptLName = $baseCoordQuery['RptLName'];
-            $ReportTo = $RptFName.' '.$RptLName;
-            $displayPosition = $baseCoordQuery['displayPosition'];
-            $mimiPosition = $baseCoordQuery['mimiPosition'];
-            $secondaryPosition = $baseCoordQuery['secondaryPosition'];
-            $cdLeave = $baseCoordQuery['cdDetails']->on_leave;
+        $cdId = $baseCoordQuery['cdId'];
+        $cdActiveId = $baseCoordQuery['cdActiveId'];
+        $regionLongName = $baseCoordQuery['regionLongName'];
+        $conferenceDescription = $baseCoordQuery['conferenceDescription'];
+        $cdConfId = $baseCoordQuery['cdConfId'];
+        $cdRptId = $baseCoordQuery['cdRptId'];
+        $RptFName = $baseCoordQuery['RptFName'];
+        $RptLName = $baseCoordQuery['RptLName'];
+        $ReportTo = $RptFName.' '.$RptLName;
+        $displayPosition = $baseCoordQuery['displayPosition'];
+        $mimiPosition = $baseCoordQuery['mimiPosition'];
+        $secondaryPosition = $baseCoordQuery['secondaryPosition'];
+        $cdLeave = $baseCoordQuery['cdDetails']->on_leave;
 
-            $allStates = $baseCoordQuery['allStates'];
-            $allMonths = $baseCoordQuery['allMonths'];
-            $allCountries = $baseCoordQuery['allCountries'];
+        $allStates = $baseCoordQuery['allStates'];
+        $allMonths = $baseCoordQuery['allMonths'];
+        $allCountries = $baseCoordQuery['allCountries'];
 
         $data = [
             'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'cdDetails' => $cdDetails,
@@ -569,7 +566,6 @@ class UserReportController extends Controller implements HasMiddleware
             $cdDetails->updated_id = $updatedId;
 
             $cdDetails->save();
-
 
          DB::commit();
 

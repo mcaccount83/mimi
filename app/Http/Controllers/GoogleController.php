@@ -182,7 +182,7 @@ class GoogleController extends Controller implements HasMiddleware
         } catch (\Exception $e) {
             // LOG THE ACTUAL ERROR
             Log::error('EIN upload error: '.$e->getMessage(), [
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([

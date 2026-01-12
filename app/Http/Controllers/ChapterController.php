@@ -909,7 +909,7 @@ class ChapterController extends Controller implements HasMiddleware
                     'last_name' => $input['ch_pre_lname'],
                     'email' => $input['ch_pre_email'],
                     'password' => Hash::make('TempPass4You'),
-                    'type_id'=> UserTypeEnum::PENDING,
+                    'type_id' => UserTypeEnum::PENDING,
                     'is_active' => UserStatusEnum::ACTIVE,
                 ])->id;
 
@@ -930,7 +930,6 @@ class ChapterController extends Controller implements HasMiddleware
                     'updated_id' => $userId,
                 ])->id;
             }
-
 
             DB::commit();
 
@@ -1463,7 +1462,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         if ($chStatus == ChapterStatusEnum::ACTIVE || ChapterStatusEnum::PENDING) {
             $isActive = UserStatusEnum::ACTIVE;
-        }elseif($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED ) {
+        }elseif($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED) {
             $isActive = UserStatusEnum::INACTIVE;
         }
 
@@ -1512,7 +1511,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         if ($chStatus == ChapterStatusEnum::ACTIVE || ChapterStatusEnum::PENDING) {
             $isActive = UserStatusEnum::ACTIVE;
-        }elseif($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED) {
+        } elseif ($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED) {
             $isActive = UserStatusEnum::INACTIVE;
         }
 
