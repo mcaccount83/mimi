@@ -10,5 +10,5 @@ class DisbandedChecklist extends Model
 
     protected $primaryKey = 'chapter_id';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 }

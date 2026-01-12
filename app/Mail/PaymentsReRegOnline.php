@@ -14,7 +14,7 @@ class PaymentsReRegOnline extends BaseMailable
         $this->mailData = $mailData;
     }
 
-      public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             subject: "Re-Registration Payment Received | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",

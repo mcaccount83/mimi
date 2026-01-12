@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Mail\DisbandChecklistCompleteCCNotice;
 use App\Mail\DisbandChecklistCompleteThankYou;
 use App\Mail\DisbandReportCCNotice;
@@ -785,7 +785,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                             'last_name' => $incomingRecord->last_name,
                             'email' => $incomingRecord->email,
                             'password' => Hash::make('TempPass4You'),
-                            'type_id'=> UserTypeEnum::BOARD,
+                            'type_id' => UserTypeEnum::BOARD,
                             'is_active' => UserStatusEnum::ACTIVE,
                         ]);
                         $userId = $newUser->id;

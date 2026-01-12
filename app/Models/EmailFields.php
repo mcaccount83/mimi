@@ -8,5 +8,5 @@ class EmailFields extends Model
 {
     protected $primaryKey = 'id';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 }

@@ -3,23 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\UserTypeEnum;
-use App\Enums\UserStatusEnum;
-use App\Enums\CoordinatorPosition;
-use App\Models\Boards;
-use App\Models\BoardsOutgoing;
-use App\Models\Chapters;
-use App\Models\Coordinators;
-use App\Models\CoordinatorTree;
 use App\Models\AdminRole;
 use App\Models\User;
 use App\Models\UserStatus;
 use App\Models\UserType;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 class BaseUserController extends Controller implements HasMiddleware
 {
@@ -30,7 +20,7 @@ class BaseUserController extends Controller implements HasMiddleware
         ];
     }
 
-  /**
+    /**
      * Load Logged in User Information
      */
     public function loadUserInformation(Request $request)
@@ -56,27 +46,26 @@ class BaseUserController extends Controller implements HasMiddleware
         $bdChapterId = null;
         $bdPosition = null;
 
-        if ($userTypeId  == UserTypeEnum::BOARD) {
+        if ($userTypeId == UserTypeEnum::BOARD) {
             $bdDetails = $userDetails->board;
             $bdChapterId = $userDetails->board->chapter_id;
             $bdPosition = $userDetails->board->position->position;
         }
-        if ($userTypeId  == UserTypeEnum::DISBANDED) {
+        if ($userTypeId == UserTypeEnum::DISBANDED) {
             $bdDetails = $userDetails->boardDisbanded;
             $bdChapterId = $userDetails->boardDisbanded->chapter_id;
             $bdPosition = $userDetails->boardDisbanded->position->position;
         }
-        if ($userTypeId  == UserTypeEnum::PENDING) {
+        if ($userTypeId == UserTypeEnum::PENDING) {
             $bdDetails = $userDetails->boardPending;
             $bdChapterId = $userDetails->boardPending->chapter_id;
             $bdPosition = $userDetails->boardPending->position->position;
         }
-        if ($userTypeId  == UserTypeEnum::OUTGOING) {
+        if ($userTypeId == UserTypeEnum::OUTGOING) {
             $bdDetails = $userDetails->boardOutgoing;
             $bdChapterId = $userDetails->boardOutgoing->chapter_id;
             $bdPosition = $userDetails->boardOutgoing->position->position;
         }
-
 
         $AllUserStatus = UserStatus::all();
         $AllUserType = UserType::all();
@@ -86,6 +75,4 @@ class BaseUserController extends Controller implements HasMiddleware
             'bdDetails' => $bdDetails, 'bdChapterId' => $bdChapterId, 'AllUserStatus' => $AllUserStatus, 'AllAdminRole' => $AllAdminRole,
             'AllUserType' => $AllUserType, 'bdPosition' => $bdPosition, 'updatedId' => $updatedId];
     }
-
-
 }

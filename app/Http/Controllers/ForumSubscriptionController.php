@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Enums\ChapterCheckbox;
 use App\Enums\CoordinatorCheckbox;
 use App\Enums\UserTypeEnum;
-use App\Enums\UserStatusEnum;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\ForumCategorySubscription;

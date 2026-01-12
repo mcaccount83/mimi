@@ -14,7 +14,7 @@ class PaymentsNewChapOnline extends BaseMailable
         $this->mailData = $mailData;
     }
 
-      public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             subject: "New Chapter Application Received | Conference {$this->mailData['chapterConf']}",

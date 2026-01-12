@@ -16,7 +16,7 @@ class ThreadPolicy extends ForumThreadPolicy
 
     public function view($user, Thread $thread): bool
     {
-         return true; // View access is controlled at the Category level
+        return true; // View access is controlled at the Category level
     }
 
     public function rename($user, Thread $thread): bool

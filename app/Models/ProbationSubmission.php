@@ -10,6 +10,5 @@ class ProbationSubmission extends Model
 
     protected $table = 'probation_submission';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
-
+    protected $guarded = []; // ALL columns are mass-assignable
 }

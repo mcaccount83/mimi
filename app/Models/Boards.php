@@ -10,7 +10,7 @@ class Boards extends Model
 {
     protected $table = 'boards';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 
     public function user(): BelongsTo
     {

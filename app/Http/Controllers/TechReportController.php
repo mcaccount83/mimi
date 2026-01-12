@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserTypeEnum;
-use App\Enums\UserStatusEnum;
 use App\Enums\CoordinatorPosition;
+use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Models\Admin;
 use App\Models\AdminEmail;
 use App\Models\Boards;
@@ -26,16 +26,15 @@ use App\Models\GoogleDrive;
 use App\Models\ProbationSubmission;
 use App\Models\User;
 use App\Services\PositionConditionsService;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\View\View;
 use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
 class TechReportController extends Controller implements HasMiddleware
@@ -49,7 +48,7 @@ class TechReportController extends Controller implements HasMiddleware
     protected $positionConditionsService;
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController,
-            PositionConditionsService $positionConditionsService,)
+        PositionConditionsService $positionConditionsService)
     {
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
@@ -135,7 +134,7 @@ class TechReportController extends Controller implements HasMiddleware
         return view('techreports.chapterlistzapped')->with($data);
     }
 
-     /**
+    /**
      * Admin Choose Pending Chapter for Viewing
      */
     public function listPendingChapters(Request $request): View
@@ -486,14 +485,14 @@ class TechReportController extends Controller implements HasMiddleware
             ]);
 
             // Add new column for the next year's financial PDF path
-            $newColumnName = $thisYear . '_financial_pdf_path';
-            $afterColumnName = $lastYear . '_financial_pdf_path';
+            $newColumnName = $thisYear.'_financial_pdf_path';
+            $afterColumnName = $lastYear.'_financial_pdf_path';
             Schema::table('documents_eoy', function (Blueprint $table) use ($newColumnName, $afterColumnName) {
                 $table->string($newColumnName, 255)->nullable()->after($afterColumnName);
             });
 
             // Update documents table: Set specified columns to NULL
-             DB::table('documents_eoy')->update([
+            DB::table('documents_eoy')->update([
                 'new_board_submitted' => null,
                 'new_board_active' => null,
                 'financial_report_received' => null,

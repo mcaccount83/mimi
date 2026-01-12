@@ -14,7 +14,7 @@ class User extends Authenticatable
 
     protected $primaryKey = 'id';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 
     protected $hidden = [
         'password', 'remember_token',

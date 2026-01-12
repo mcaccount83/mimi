@@ -7,5 +7,5 @@ class ToolkitCategory extends Model
 {
     protected $table = 'toolkit_category';
 
-    protected $fillable = [ ]; // No fillable fields
+    protected $fillable = []; // No fillable fields
 }

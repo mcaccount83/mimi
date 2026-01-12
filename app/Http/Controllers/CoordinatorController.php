@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Enums\BoardPosition;
 use App\Enums\CoordinatorCheckbox;
 use App\Enums\CoordinatorPosition;
-use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Mail\NewCoordApproveGSuiteNotice;
 use App\Mail\NewCoordApproveRCNotice;
 use App\Mail\NewCoordinatordWelcome;
@@ -231,10 +231,10 @@ class CoordinatorController extends Controller implements HasMiddleware
                     'last_name' => $input['cord_lname'],
                     'email' => $input['cord_email'],
                     'password' => Hash::make('TempPass4You'),
-                    'type_id'=> UserTypeEnum::COORD,
+                    'type_id' => UserTypeEnum::COORD,
                     'is_admin' => 0,
                     'is_active' => UserStatusEnum::ACTIVE,
-                    ]
+                ]
             );
 
             $cordId = DB::table('coordinators')->insertGetId(

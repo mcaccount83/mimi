@@ -3,16 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CoordinatorPosition;
-use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Models\Boards;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
-use App\Models\User;
 use App\Models\ForumCategorySubscription;
-use App\Models\UserStatus;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -96,87 +95,87 @@ class UserController extends Controller implements HasMiddleware
      * Load User Information
      */
    public function loadUserInformation(Request $request)
-{
-    $user = User::find($request->user()->id);
+    {
+        $user = User::find($request->user()->id);
 
-    // Basic user info that's always needed
-    $userInfo = [
-        'userId' => $user->id,
-        'userType' => $user->user_type,
-        'userTypeId' => $user->type_id,
-        'userAdmin' => $user->is_admin,
-        'userStatus' => $user->is_active,
-        'userName' => $user->first_name.' '.$user->last_name,
-        'userEmail' => $user->email,
-    ];
+        // Basic user info that's always needed
+        $userInfo = [
+            'userId' => $user->id,
+            'userType' => $user->user_type,
+            'userTypeId' => $user->type_id,
+            'userAdmin' => $user->is_admin,
+            'userStatus' => $user->is_active,
+            'userName' => $user->first_name.' '.$user->last_name,
+            'userEmail' => $user->email,
+        ];
 
-    // Only load detailed information if the user is active
-    if ($user->is_active == UserStatusEnum::ACTIVE) {
-        $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference',
-            'coordinator.displayPosition', 'coordinator.secondaryPosition',
-            'board', 'board.position', 'boardOutgoing', 'boardDisbanded', 'boardPending'])
-            ->find($user->id);
+        // Only load detailed information if the user is active
+        if ($user->is_active == UserStatusEnum::ACTIVE) {
+            $user = User::with(['coordinator', 'coordinator.region', 'coordinator.conference',
+                'coordinator.displayPosition', 'coordinator.secondaryPosition',
+                'board', 'board.position', 'boardOutgoing', 'boardDisbanded', 'boardPending'])
+                ->find($user->id);
 
-        if ($user->type_id == UserTypeEnum::COORD) {
-            $secondaryPosition = [];
-            $secondaryPositionShort = [];
-            $secondaryPositionId = [];
-            if ($user->coordinator->secondaryPosition && $user->coordinator->secondaryPosition->count() > 0) {
-                $secondaryPosition = $user->coordinator->secondaryPosition->pluck('long_title')->toArray();
-                $secondaryPositionShort = $user->coordinator->secondaryPosition->pluck('short_title')->toArray();
-                $secondaryPositionId = $user->coordinator->secondaryPosition->pluck('id')->toArray();
+            if ($user->type_id == UserTypeEnum::COORD) {
+                $secondaryPosition = [];
+                $secondaryPositionShort = [];
+                $secondaryPositionId = [];
+                if ($user->coordinator->secondaryPosition && $user->coordinator->secondaryPosition->count() > 0) {
+                    $secondaryPosition = $user->coordinator->secondaryPosition->pluck('long_title')->toArray();
+                    $secondaryPositionShort = $user->coordinator->secondaryPosition->pluck('short_title')->toArray();
+                    $secondaryPositionId = $user->coordinator->secondaryPosition->pluck('id')->toArray();
+                }
+
+                $userInfo = array_merge($userInfo, [
+                    'cdId' => $user->coordinator->id,
+                    'confId' => $user->coordinator->conference_id,
+                    'regId' => $user->coordinator->region_id,
+                    'conference' => $user->coordinator->conference,
+                    'confName' => $user->coordinator->conference?->conference_name,
+                    'confDesc' => $user->coordinator->conference?->conference_description,
+                    'region' => $user->coordinator->region,
+                    'cdPositionId' => $user->coordinator->position_id,
+                    'cdPosition' => $user->coordinator->displayPosition->long_title,
+                    'cdSecPositionId' => $secondaryPositionId,
+                    'cdSecPosition' => $secondaryPosition,
+                    'layerId' => $user->coordinator->layer_id,
+                ]);
             }
 
-            $userInfo = array_merge($userInfo, [
-                'cdId' => $user->coordinator->id,
-                'confId' => $user->coordinator->conference_id,
-                'regId' => $user->coordinator->region_id,
-                'conference' => $user->coordinator->conference,
-                'confName' => $user->coordinator->conference?->conference_name,
-                'confDesc' => $user->coordinator->conference?->conference_description,
-                'region' => $user->coordinator->region,
-                'cdPositionId' => $user->coordinator->position_id,
-                'cdPosition' => $user->coordinator->displayPosition->long_title,
-                'cdSecPositionId' => $secondaryPositionId,
-                'cdSecPosition' => $secondaryPosition,
-                'layerId' => $user->coordinator->layer_id,
-            ]);
+            if ($user->type_id == UserTypeEnum::BOARD) {
+                $userInfo = array_merge($userInfo, [
+                    'bdDetails' => $user->board,
+                    'bdId' => $user->board->id,
+                    'bdPositionId' => $user->board->board_position_id,
+                    'bdPosition' => $user->board->position?->postion,
+                    'chapterId' => $user->board->chapter_id,
+                ]);
+            }
+
+            if ($user->type_id == UserTypeEnum::PENDING) {
+                $userInfo = array_merge($userInfo, [
+                    'bdId' => $user->boardPending->id,
+                    'chapterId' => $user->boardPending->chapter_id,
+                ]);
+            }
+
+            if ($user->type_id == UserTypeEnum::OUTGOING) {
+                $userInfo = array_merge($userInfo, [
+                    'bdId' => $user->boardOutgoing->id,
+                    'chapterId' => $user->boardOutgoing->chapter_id,
+                ]);
+            }
+
+            if ($user->type_id == UserTypeEnum::DISBANDED) {
+                $userInfo = array_merge($userInfo, [
+                    'bdId' => $user->boardDisbanded->id,
+                    'chapterId' => $user->boardDisbanded->chapter_id,
+                ]);
+            }
         }
 
-        if ($user->type_id == UserTypeEnum::BOARD) {
-            $userInfo = array_merge($userInfo, [
-                'bdDetails' => $user->board,
-                'bdId' => $user->board->id,
-                'bdPositionId' => $user->board->board_position_id,
-                'bdPosition' => $user->board->position?->postion,
-                'chapterId' => $user->board->chapter_id,
-            ]);
-        }
-
-        if ($user->type_id == UserTypeEnum::PENDING) {
-            $userInfo = array_merge($userInfo, [
-                'bdId' => $user->boardPending->id,
-                'chapterId' => $user->boardPending->chapter_id,
-            ]);
-        }
-
-        if ($user->type_id == UserTypeEnum::OUTGOING) {
-            $userInfo = array_merge($userInfo, [
-                'bdId' => $user->boardOutgoing->id,
-                'chapterId' => $user->boardOutgoing->chapter_id,
-            ]);
-        }
-
-        if ($user->type_id == UserTypeEnum::DISBANDED) {
-            $userInfo = array_merge($userInfo, [
-                'bdId' => $user->boardDisbanded->id,
-                'chapterId' => $user->boardDisbanded->chapter_id,
-            ]);
-        }
+        return $userInfo;
     }
-
-    return $userInfo;
-}
 
     //         switch ($user->user_type) {
     //             case 'coordinator':
@@ -435,7 +434,7 @@ class UserController extends Controller implements HasMiddleware
             ->where('coordinator_id', $chPcId)
             ->first();
 
-        if (!$coordiantors) {
+        if (! $coordiantors) {
             return response()->json('<b>Primary Coordinator:</b><span class="float-right">Data Not Available</span><br>');
         }
 
@@ -492,7 +491,7 @@ class UserController extends Controller implements HasMiddleware
                 // Build name with or without mailto link based on active status
                 $nameDisplay = $cor->active_status == 1
                     ? "<a href='mailto:{$email}' target='_top'>{$name}</a>"
-                    : $name."/Retired";
+                    : $name.'/Retired';
 
                 // Build the final string
                 $str .= "<b>{$title}</b><span class='float-right'>{$nameDisplay} {$position}</span><br>";
@@ -769,7 +768,7 @@ class UserController extends Controller implements HasMiddleware
         $boardDetails = Boards::where('user_id', $userId)->get();
 
         User::where('id', $userId)->update([
-            'type_id'=> UserTypeEnum::OUTGOING,
+            'type_id' => UserTypeEnum::OUTGOING,
         ]);
 
         BoardsOutgoing::updateOrCreate(

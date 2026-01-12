@@ -29,7 +29,7 @@ class NewChapterSetup extends BaseMailable
             replyTo: [
                 new Address($this->mailData['userEmail'], $this->mailData['userName']),
             ],
-            subject: "New Chapter Setup",
+            subject: 'New Chapter Setup',
         );
     }
 
@@ -42,14 +42,14 @@ class NewChapterSetup extends BaseMailable
 
     public function attachments(): array
     {
-         // Download the Google Drive file first
+        // Download the Google Drive file first
         $content = file_get_contents($this->pdfPath);
         $content2 = file_get_contents($this->pdfPath2);
 
         return [
-            Attachment::fromData(fn() => $content, 'EINApplication.pdf')
+            Attachment::fromData(fn () => $content, 'EINApplication.pdf')
                 ->withMime('application/pdf'),
-            Attachment::fromData(fn() => $content2, 'EINInstructions.pdf')
+            Attachment::fromData(fn () => $content2, 'EINInstructions.pdf')
                 ->withMime('application/pdf'),
         ];
     }

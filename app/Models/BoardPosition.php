@@ -8,5 +8,5 @@ class BoardPosition extends Model
 {
     protected $table = 'board_position';
 
-    protected $fillable = [ ]; // No fillable fields
+    protected $fillable = []; // No fillable fields
 }

@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Enums\UserTypeEnum;
 use App\Enums\AdminStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Services\ForumConditionsService;
 use App\Services\PositionConditionsService;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +32,7 @@ class ViewServiceProvider extends ServiceProvider
             if (Auth::check()) {
                 $user = Auth::user();
 
-                if ($user->type_id ==  UserTypeEnum::COORD && $user->coordinator) {
+                if ($user->type_id == UserTypeEnum::COORD && $user->coordinator) {
                     $corDetails = $user->coordinator;
                     $corId = $corDetails['id'];
                     $positionid = $corDetails['position_id'];
@@ -42,11 +42,11 @@ class ViewServiceProvider extends ServiceProvider
 
                 $userAdmin = $user->is_admin == AdminStatusEnum::ADMIN;
                 $userModerator = $user->is_admin == AdminStatusEnum::MODERATOR;
-                $coordinator = ($user->type_id ==  UserTypeEnum::COORD && $user->coordinator);
-                $board = ($user->type_id ==  UserTypeEnum::BOARD && $user->board);
-                $outgoing = ($user->type_id ==  UserTypeEnum::OUTGOING && $user->outgoing);
-                $disbanded = ($user->type_id ==  UserTypeEnum::DISBANDED && $user->disbanded);
-                $pending = ($user->type_id ==  UserTypeEnum::PENDING && $user->pending);
+                $coordinator = ($user->type_id == UserTypeEnum::COORD && $user->coordinator);
+                $board = ($user->type_id == UserTypeEnum::BOARD && $user->board);
+                $outgoing = ($user->type_id == UserTypeEnum::OUTGOING && $user->outgoing);
+                $disbanded = ($user->type_id == UserTypeEnum::DISBANDED && $user->disbanded);
+                $pending = ($user->type_id == UserTypeEnum::PENDING && $user->pending);
             }
 
             $positionConditionsService = app(PositionConditionsService::class);

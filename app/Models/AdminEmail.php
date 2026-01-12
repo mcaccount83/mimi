@@ -8,5 +8,5 @@ class AdminEmail extends Model
 {
     protected $table = 'admin_email';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 }

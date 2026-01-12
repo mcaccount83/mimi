@@ -8,6 +8,5 @@ class GoogleDrive extends Model
 {
     protected $table = 'google_drive';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
-
+    protected $guarded = []; // ALL columns are mass-assignable
 }

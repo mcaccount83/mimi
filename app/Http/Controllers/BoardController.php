@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BoardPosition;
 use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
-use App\Enums\BoardPosition;
 use App\Mail\BorUpdateListNoitce;
 use App\Mail\ChapProfileUpdatePCNotice;
 use App\Mail\EOYElectionReportSubmitted;
@@ -291,7 +291,7 @@ class BoardController extends Controller implements HasMiddleware
     private function updateUserToOutgoing($user)
     {
         User::where('id', $user->id)->update([
-            'type_id'=> UserTypeEnum::OUTGOING,
+            'type_id' => UserTypeEnum::OUTGOING,
             'is_active' => UserStatusEnum::INACTIVE,
         ]);
     }
@@ -377,7 +377,7 @@ class BoardController extends Controller implements HasMiddleware
 
         // Check if user with this email already exists and is not on another active board
         $existingUser = User::where('email', $email)
-            ->where('type_id', '!=',  UserTypeEnum::BOARD)
+            ->where('type_id', '!=', UserTypeEnum::BOARD)
             ->first();
 
         if ($existingUser) {
@@ -385,7 +385,7 @@ class BoardController extends Controller implements HasMiddleware
             $existingUser->update([
                 'first_name' => $firstName,
                 'last_name' => $lastName,
-                'type_id'=> UserTypeEnum::BOARD,
+                'type_id' => UserTypeEnum::BOARD,
                 'is_active' => UserStatusEnum::ACTIVE,
             ]);
             $user = $existingUser;
@@ -396,7 +396,7 @@ class BoardController extends Controller implements HasMiddleware
                 'last_name' => $lastName,
                 'email' => $email,
                 'password' => Hash::make('TempPass4You'),
-                'type_id'=> UserTypeEnum::BOARD,
+                'type_id' => UserTypeEnum::BOARD,
                 'is_active' => UserStatusEnum::ACTIVE,
             ]);
         }
@@ -480,7 +480,7 @@ class BoardController extends Controller implements HasMiddleware
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
             $chapter->updated_by = $updatedBy;
-            $chapter->updated_id =  $updatedId;
+            $chapter->updated_id = $updatedId;
             $chapter->save();
 
             // Update all board positions
@@ -828,11 +828,11 @@ class BoardController extends Controller implements HasMiddleware
 
                 if (count($PREDetails) != 0) {
                     BoardsIncoming::where('id', $presId)
-                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $updatedId, $userId ));
+                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $updatedId, $userId));
                 } else {
                     BoardsIncoming::create(array_merge(
                         ['chapter_id' => $chId, 'board_position_id' => BoardPosition::PRES],
-                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $updatedId, $userId )
+                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $updatedId, $userId)
                     ));
                 }
             }

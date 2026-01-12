@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Chapters extends Model
 {
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 
     protected $casts = [
         'status_id' => 'integer',

@@ -8,5 +8,5 @@ class ResourceCategory extends Model
 {
     protected $table = 'resource_category';
 
-    protected $fillable = [ ]; // No fillable fields
+    protected $fillable = []; // No fillable fields
 }

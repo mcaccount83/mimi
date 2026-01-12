@@ -10,7 +10,7 @@ class FinancialReportLastYear extends Model
 
     public $timestamps = false;
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 
     public function __construct(array $attributes = [])
     {

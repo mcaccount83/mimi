@@ -14,7 +14,7 @@ class PaymentsManualOnline extends BaseMailable
         $this->mailData = $mailData;
     }
 
-      public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             subject: "Manual Replacement Order | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",

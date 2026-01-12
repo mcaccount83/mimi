@@ -11,9 +11,9 @@ use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\DisbandedChecklist;
 use App\Models\DocumentsEOY;
-use App\Models\FinancialReportFinal;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
+use App\Models\FinancialReportFinal;
 use App\Models\State;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
@@ -947,7 +947,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $countList = count($chapterList);
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox2Status' => $checkBox2Status,];
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyattachments')->with($data);
     }

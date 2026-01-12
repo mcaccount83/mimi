@@ -15,7 +15,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -32,7 +31,7 @@ class PaymentReportController extends Controller implements HasMiddleware
     protected PositionConditionsService $positionConditionsService;
 
     public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseMailDataController $baseMailDataController,
-        PositionConditionsService $positionConditionsService  )
+        PositionConditionsService $positionConditionsService)
     {
 
         $this->userController = $userController;

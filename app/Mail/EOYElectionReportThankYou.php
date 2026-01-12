@@ -22,7 +22,7 @@ class EOYElectionReportThankYou extends BaseMailable
             replyTo: [
                 new Address('support@momsclub.org', 'MOMS Club'),
             ],
-            subject: "Election Report Submitted",
+            subject: 'Election Report Submitted',
         );
     }
 

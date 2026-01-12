@@ -11,7 +11,7 @@ class CoordinatorTree extends Model
 
     protected $table = 'coordinator_reporting_tree';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 
     public function coordinator(): BelongsTo
     {

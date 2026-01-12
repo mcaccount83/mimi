@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bugs extends Model
 {
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 }

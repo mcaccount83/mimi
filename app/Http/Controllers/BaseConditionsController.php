@@ -36,21 +36,21 @@ class BaseConditionsController extends Controller
      * Apply position-based conditions to the chapter query
      */
     public function applyPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
-{
-    if ($conditions['founderCondition']) {
-        // View Full International List - no filter
-    } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-        $baseQuery->where('conference_id', '=', $cdConfId);
-    } elseif ($conditions['regionalCoordinatorCondition']) {
-        $baseQuery->where('region_id', '=', $cdRegId);
-    } elseif ($conditions['inquiriesInternationalCondition'] || $conditions['ITCondition'] || $conditions['einCondition']) {
-        // View Full International List - no filter
-    } else {
-        $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
-    }
+    {
+        if ($conditions['founderCondition']) {
+            // View Full International List - no filter
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('conference_id', '=', $cdConfId);
+        } elseif ($conditions['regionalCoordinatorCondition']) {
+            $baseQuery->where('region_id', '=', $cdRegId);
+        } elseif ($conditions['inquiriesInternationalCondition'] || $conditions['ITCondition'] || $conditions['einCondition']) {
+            // View Full International List - no filter
+        } else {
+            $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
+        }
 
-    return $baseQuery;
-}
+        return $baseQuery;
+    }
 
     public function applyCordPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
     {
@@ -68,5 +68,4 @@ class BaseConditionsController extends Controller
 
         return $baseQuery;
     }
-
 }
