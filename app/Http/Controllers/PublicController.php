@@ -463,7 +463,7 @@ class PublicController extends Controller
         $resp = $recaptcha->verify($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $resp->isSuccess()) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
+            return redirect()->back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
         }
 
         $input = $request->all();
