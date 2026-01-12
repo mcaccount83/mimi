@@ -205,7 +205,7 @@ class UserReportController extends Controller implements HasMiddleware
             $this->chapterController->createNewBoardMember($chapter, $relation, $positionId, $request, $prefix, $chStatus, $updatedBy, $updatedId, $defaultBoardCategories);
 
             DB::commit();
-            if ($chapter->active_status == ChapterStatusEnum::ACTIVE){
+            if ($chapter->active_status == ChapterStatusEnum::ACTIVE) {
                 return redirect()->to('/userreports/nopresident')->with('success', 'Chapter created successfully');
             } else {
                 return redirect()->to('/userreports/nopresidentinactive')->with('success', 'Chapter created successfully');
@@ -213,7 +213,7 @@ class UserReportController extends Controller implements HasMiddleware
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
-            if ($chapter->active_status == '1'){
+            if ($chapter->active_status == '1') {
                 return redirect()->to('/userreports/nopresident')->with('fail', 'Something went wrong, Please try again...');
             } else {
                 return redirect()->to('/userreports/nopresidentinactive')->with('fail', 'Something went wrong, Please try again...');
@@ -396,9 +396,9 @@ class UserReportController extends Controller implements HasMiddleware
         $data = [
             'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'chDetails' => $chDetails,
             'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries, 'bdDetails' => $bdDetails,
-                'chPcId' => $chPcId, 'allStates' => $allStates, 'chConfId' => $chConfId, 'chPayments' => $chPayments,
-                'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
-                'startMonthName' => $startMonthName, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
+            'chPcId' => $chPcId, 'allStates' => $allStates, 'chConfId' => $chConfId, 'chPayments' => $chPayments,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
+            'startMonthName' => $startMonthName, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
         ];
 
         return view('userreports.edituserboard')->with($data);
@@ -423,16 +423,16 @@ class UserReportController extends Controller implements HasMiddleware
         // Initialize variables
         $bdDetails = null;
 
-        if ($userTypeId  == UserTypeEnum::BOARD) {
+        if ($userTypeId == UserTypeEnum::BOARD) {
             $bdDetails = Boards::where('user_id', $id)->first();
         }
-        if ($userTypeId  == UserTypeEnum::DISBANDED) {
+        if ($userTypeId == UserTypeEnum::DISBANDED) {
             $bdDetails = BoardsDisbanded::where('user_id', $id)->first();
         }
-        if ($userTypeId  == UserTypeEnum::PENDING) {
+        if ($userTypeId == UserTypeEnum::PENDING) {
             $bdDetails = BoardsPending::where('user_id', $id)->first();
         }
-        if ($userTypeId  == UserTypeEnum::OUTGOING) {
+        if ($userTypeId == UserTypeEnum::OUTGOING) {
             $bdDetails = BoardsOutgoing::where('user_id', $id)->first();
         }
 
@@ -460,7 +460,7 @@ class UserReportController extends Controller implements HasMiddleware
 
             $bdDetails->save();
 
-         DB::commit();
+            DB::commit();
 
             return to_route('userreports.edituserboard', ['id' => $id])->with('success', 'User Details have been updated');
         } catch (\Exception $e) {
@@ -512,10 +512,10 @@ class UserReportController extends Controller implements HasMiddleware
         $data = [
             'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'cdDetails' => $cdDetails,
             'cdActiveId' => $cdActiveId, 'allCountries' => $allCountries, 'bdDetails' => $bdDetails, 'allMonths' => $allMonths,
-                'ReportTo' => $ReportTo, 'allStates' => $allStates, 'cdConfId' => $cdConfId,
-                'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
-                'displayPosition' => $displayPosition, 'secondaryPosition' => $secondaryPosition, 'cdLeave' => $cdLeave,
-                'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
+            'ReportTo' => $ReportTo, 'allStates' => $allStates, 'cdConfId' => $cdConfId,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
+            'displayPosition' => $displayPosition, 'secondaryPosition' => $secondaryPosition, 'cdLeave' => $cdLeave,
+            'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
         ];
 
         return view('userreports.editusercoord')->with($data);
@@ -567,7 +567,7 @@ class UserReportController extends Controller implements HasMiddleware
 
             $cdDetails->save();
 
-         DB::commit();
+            DB::commit();
 
             return to_route('userreports.editusercoord', ['id' => $id])->with('success', 'User Details have been updated');
         } catch (\Exception $e) {
