@@ -15,7 +15,7 @@ class PaymentsReRegLate extends BaseMailable
         $this->mailData = $mailData;
     }
 
-      public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             from: new Address('support@momsclub.org', 'MOMS Club'),

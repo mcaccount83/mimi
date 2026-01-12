@@ -181,8 +181,8 @@ class GoogleController extends Controller implements HasMiddleware
             return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
             // LOG THE ACTUAL ERROR
-            Log::error('EIN upload error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
+            Log::error('EIN upload error: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([

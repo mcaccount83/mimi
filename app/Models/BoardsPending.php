@@ -10,7 +10,7 @@ class BoardsPending extends Model
 {
     protected $table = 'boards_pending';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 
     public function user(): BelongsTo
     {

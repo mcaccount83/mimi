@@ -6,8 +6,8 @@ use App\Enums\BoardPosition;
 use App\Enums\ChapterStatusEnum;
 use App\Enums\CoordinatorPosition;
 use App\Enums\OperatingStatusEnum;
-use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Mail\NewChapterThankYou;
 use App\Mail\NewCoordApplication;
 use App\Mail\NewCoordinatorThankYou;
@@ -360,7 +360,7 @@ class PublicController extends Controller
                     'last_name' => $input['ch_pre_lname'],
                     'email' => $input['ch_pre_email'],
                     'password' => Hash::make($input['password']),
-                    'type_id'=> UserTypeEnum::PENDING,
+                    'type_id' => UserTypeEnum::PENDING,
                     'is_active' => UserStatusEnum::ACTIVE,
                 ])->id;
 
@@ -462,7 +462,7 @@ class PublicController extends Controller
         $recaptcha = new ReCaptcha(config('services.recaptcha.secret_key'));
         $resp = $recaptcha->verify($request->input('g-recaptcha-response'), $request->ip());
 
-        if (!$resp->isSuccess()) {
+        if (! $resp->isSuccess()) {
             return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
         }
 
@@ -888,7 +888,7 @@ class PublicController extends Controller
                 'last_name' => $input['cd_lname'],
                 'email' => $new_cd_email,
                 'password' => Hash::make('TempPass4You'),
-                'type_id'=> UserTypeEnum::COORD,
+                'type_id' => UserTypeEnum::COORD,
                 'is_admin' => 0,
                 'is_active' => UserStatusEnum::ACTIVE,
             ])->id;

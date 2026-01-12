@@ -8,8 +8,8 @@ use App\Enums\ChapterCheckbox;
 use App\Enums\ChapterStatusEnum;
 use App\Enums\CoordinatorPosition;
 use App\Enums\OperatingStatusEnum;
-use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Mail\BorUpdateListNoitce;
 use App\Mail\BorUpdatePCNotice;
 use App\Mail\ChapDetailsUpdatePCNotice;
@@ -459,7 +459,7 @@ class ChapterController extends Controller implements HasMiddleware
             $userIds = $boardDetails->pluck('user_id')->toArray();
 
             User::whereIn('id', $userIds)->update([
-                'type_id'=> UserTypeEnum::DISBANDED,
+                'type_id' => UserTypeEnum::DISBANDED,
             ]);
 
             foreach ($boardDetails as $boardDetail) {
@@ -582,7 +582,7 @@ class ChapterController extends Controller implements HasMiddleware
             $userIds = $boardDetails->pluck('user_id')->toArray();
 
             User::whereIn('id', $userIds)->update([
-                'type_id'=> UserTypeEnum::BOARD,
+                'type_id' => UserTypeEnum::BOARD,
             ]);
 
             foreach ($boardDetails as $boardDetail) {
@@ -731,7 +731,7 @@ class ChapterController extends Controller implements HasMiddleware
         return view('chapters.addnew')->with($data);
     }
 
-     /**
+    /**
      *Save New Chapter as Pending
      */
     public function updateChapterNew(Request $request): RedirectResponse
@@ -749,29 +749,29 @@ class ChapterController extends Controller implements HasMiddleware
         $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
 
         DB::beginTransaction();
-            try {
-                $chapter = Chapters::create([
-                    'name' => $input['ch_name'],
-                    'sanitized_name' => $sanitizedName,
-                    'state_id' => $input['ch_state'],
-                    'country_id' => $input['ch_country'] ?? '198',
-                    'conference_id' => $conference,
-                    'region_id' => $input['ch_region'],
-                    'ein' => $input['ch_ein'],
-                    'status_id' => $input['ch_status'],
-                    'territory' => $input['ch_boundariesterry'],
-                    'inquiries_contact' => $input['ch_inqemailcontact'],
-                    'start_month_id' => $currentMonth,
-                    'start_year' => $currentYear,
-                    'next_renewal_year' => $currentYear + 1,
-                    'primary_coordinator_id' => $input['ch_primarycor'],
-                    'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
-                    'updated_by' => $updatedBy,
-                    'updated_id' => $updatedId,
-                    'active_status' => ChapterStatusEnum::PENDING,
-                ]);
+        try {
+            $chapter = Chapters::create([
+                'name' => $input['ch_name'],
+                'sanitized_name' => $sanitizedName,
+                'state_id' => $input['ch_state'],
+                'country_id' => $input['ch_country'] ?? '198',
+                'conference_id' => $conference,
+                'region_id' => $input['ch_region'],
+                'ein' => $input['ch_ein'],
+                'status_id' => $input['ch_status'],
+                'territory' => $input['ch_boundariesterry'],
+                'inquiries_contact' => $input['ch_inqemailcontact'],
+                'start_month_id' => $currentMonth,
+                'start_year' => $currentYear,
+                'next_renewal_year' => $currentYear + 1,
+                'primary_coordinator_id' => $input['ch_primarycor'],
+                'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
+                'updated_by' => $updatedBy,
+                'updated_id' => $updatedId,
+                'active_status' => ChapterStatusEnum::PENDING,
+            ]);
 
-                $chId = $chapter->id;
+            $chId = $chapter->id;
 
             // Founder Info
             if (isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email'])) {
@@ -780,7 +780,7 @@ class ChapterController extends Controller implements HasMiddleware
                     'last_name' => $input['ch_pre_lname'],
                     'email' => $input['ch_pre_email'],
                     'password' => Hash::make('TempPass4You'),
-                    'type_id'=> UserTypeEnum::PENDING,
+                    'type_id' => UserTypeEnum::PENDING,
                     'is_active' => UserStatusEnum::ACTIVE,
                 ])->id;
 
@@ -801,7 +801,6 @@ class ChapterController extends Controller implements HasMiddleware
                     'updated_id' => $updatedId,
                 ])->id;
             }
-
 
             DB::commit();
 
@@ -831,7 +830,7 @@ class ChapterController extends Controller implements HasMiddleware
         return view('chapters.addnewint')->with($data);
     }
 
-     /**
+    /**
      *Save New Chapter as Pending
      */
     public function updateChapterNewInt(Request $request): RedirectResponse
@@ -879,43 +878,42 @@ class ChapterController extends Controller implements HasMiddleware
             ->first();
         $pcId = $ccDetails ? $ccDetails->id : null;
 
-
         DB::beginTransaction();
-            try {
-                $chapter = Chapters::create([
-                    'name' => $input['ch_name'],
-                    'sanitized_name' => $sanitizedName,
-                    'state_id' => $input['ch_state'],
-                    'country_id' => $input['ch_country'] ?? '198',
-                    'conference_id' => $confId,
-                    'region_id' => $regId,
-                    'status_id' => $statusId,
-                    'territory' => $input['ch_boundariesterry'],
-                    'inquiries_contact' => $input['ch_inqemailcontact'],
-                    'start_month_id' => $currentMonth,
-                    'start_year' => $currentYear,
-                    'next_renewal_year' => $currentYear + 1,
-                    'primary_coordinator_id' => $pcId,
-                    'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
-                    'active_status' => $activeStatus,
-                    'updated_by' => $updatedBy,
-                    'updated_id' => $updatedId,
-                ]);
+        try {
+            $chapter = Chapters::create([
+                'name' => $input['ch_name'],
+                'sanitized_name' => $sanitizedName,
+                'state_id' => $input['ch_state'],
+                'country_id' => $input['ch_country'] ?? '198',
+                'conference_id' => $confId,
+                'region_id' => $regId,
+                'status_id' => $statusId,
+                'territory' => $input['ch_boundariesterry'],
+                'inquiries_contact' => $input['ch_inqemailcontact'],
+                'start_month_id' => $currentMonth,
+                'start_year' => $currentYear,
+                'next_renewal_year' => $currentYear + 1,
+                'primary_coordinator_id' => $pcId,
+                'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
+                'active_status' => $activeStatus,
+                'updated_by' => $updatedBy,
+                'updated_id' => $updatedId,
+            ]);
 
-                $chId = $chapter->id;
+            $chId = $chapter->id;
 
             // Founder Info
-           if (isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email'])) {
+            if (isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email'])) {
                 $userId = User::create([
                     'first_name' => $input['ch_pre_fname'],
                     'last_name' => $input['ch_pre_lname'],
                     'email' => $input['ch_pre_email'],
                     'password' => Hash::make('TempPass4You'),
-                    'type_id'=> UserTypeEnum::PENDING,
+                    'type_id' => UserTypeEnum::PENDING,
                     'is_active' => UserStatusEnum::ACTIVE,
                 ])->id;
 
-               BoardsPending::create([
+                BoardsPending::create([
                     'user_id' => $userId,
                     'first_name' => $input['ch_pre_fname'],
                     'last_name' => $input['ch_pre_lname'],
@@ -932,7 +930,6 @@ class ChapterController extends Controller implements HasMiddleware
                     'updated_id' => $userId,
                 ])->id;
             }
-
 
             DB::commit();
 
@@ -1227,7 +1224,7 @@ class ChapterController extends Controller implements HasMiddleware
             ]);
 
             // Primary Coordinator Update Notification//
-            if ($chDetailsUpd->name != $chDetails->name || $chDetailsUpd->email != $chDetails->email ||  $chDetailsUpd->territory != $chDetails->territory ||
+            if ($chDetailsUpd->name != $chDetails->name || $chDetailsUpd->email != $chDetails->email || $chDetailsUpd->territory != $chDetails->territory ||
                     $chDetailsUpd->inquiries_contact != $chDetails->inquiries_contact || $chDetailsUpd->status_id != $chDetails->status_id ||
                     $chDetailsUpd->notes != $chDetails->notes || $chDetailsUpd->website_url != $chDetails->website_url ||
                     $chDetailsUpd->website_status != $chDetails->website_status || $chDetailsUpd->egroup != $chDetails->egroup) {
@@ -1421,7 +1418,7 @@ class ChapterController extends Controller implements HasMiddleware
     private function updateUserToOutgoing($user)
     {
         User::where('id', $user->id)->update([
-            'type_id'=> UserTypeEnum::OUTGOING,
+            'type_id' => UserTypeEnum::OUTGOING,
             'is_active' => UserStatusEnum::INACTIVE,
         ]);
     }
@@ -1463,9 +1460,9 @@ class ChapterController extends Controller implements HasMiddleware
         $stateId = $requestData->input($prefix.'state');
         $countryId = $requestData->input($prefix.'country') ?? '198';
 
-        if ($chStatus == ChapterStatusEnum::ACTIVE || ChapterStatusEnum::PENDING){
+        if ($chStatus == ChapterStatusEnum::ACTIVE || ChapterStatusEnum::PENDING) {
             $isActive = UserStatusEnum::ACTIVE;
-        }elseif($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED ){
+        } elseif ($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED) {
             $isActive = UserStatusEnum::INACTIVE;
         }
 
@@ -1512,15 +1509,15 @@ class ChapterController extends Controller implements HasMiddleware
         $countryId = $requestData->input($prefix.'country') ?? '198';
         $chapterId = $chapter->id;
 
-        if ($chStatus == ChapterStatusEnum::ACTIVE || ChapterStatusEnum::PENDING){
+        if ($chStatus == ChapterStatusEnum::ACTIVE || ChapterStatusEnum::PENDING) {
             $isActive = UserStatusEnum::ACTIVE;
-        }elseif($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED){
+        } elseif ($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED) {
             $isActive = UserStatusEnum::INACTIVE;
         }
 
         // Check if user with this email already exists and is not on another active board
         $existingUser = User::where('email', $email)
-            ->where('type_id', '!=',  UserTypeEnum::BOARD)
+            ->where('type_id', '!=', UserTypeEnum::BOARD)
             ->first();
 
         if ($existingUser) {
@@ -1528,7 +1525,7 @@ class ChapterController extends Controller implements HasMiddleware
             $existingUser->update([
                 'first_name' => $firstName,
                 'last_name' => $lastName,
-                'type_id'=> UserTypeEnum::BOARD,
+                'type_id' => UserTypeEnum::BOARD,
                 'is_active' => $isActive,
             ]);
             $user = $existingUser;
@@ -1539,14 +1536,14 @@ class ChapterController extends Controller implements HasMiddleware
                 'last_name' => $lastName,
                 'email' => $email,
                 'password' => Hash::make('TempPass4You'),
-                'type_id'=> UserTypeEnum::BOARD,
+                'type_id' => UserTypeEnum::BOARD,
                 'is_active' => $isActive,
             ]);
         }
 
-        if ($chStatus == ChapterStatusEnum::ZAPPED){
+        if ($chStatus == ChapterStatusEnum::ZAPPED) {
             // Create new board member record
-             BoardsDisbanded::create([
+            BoardsDisbanded::create([
                 'chapter_id' => $chapterId,
                 'user_id' => $user->id,
                 'first_name' => $firstName,
@@ -1562,7 +1559,7 @@ class ChapterController extends Controller implements HasMiddleware
                 'updated_by' => $updatedBy,
                 'updated_id' => $updatedId,
             ]);
-        } elseif ($chStatus == ChapterStatusEnum::ACTIVE){
+        } elseif ($chStatus == ChapterStatusEnum::ACTIVE) {
             // Create new board member record
             $chapter->$relation()->create([
                 'user_id' => $user->id,
@@ -1580,16 +1577,16 @@ class ChapterController extends Controller implements HasMiddleware
                 'updated_id' => $updatedId,
             ]);
 
-             // Add forum subscriptions
+            // Add forum subscriptions
             foreach ($defaultBoardCategories as $categoryId) {
                 ForumCategorySubscription::updateOrCreate([
                     'user_id' => $user->id,
                     'category_id' => $categoryId,
                 ]);
             }
-        } elseif ($chStatus == ChapterStatusEnum::PENDING){
+        } elseif ($chStatus == ChapterStatusEnum::PENDING) {
             // Create new board member record
-             BoardsPending::create([
+            BoardsPending::create([
                 'chapter_id' => $chapterId,
                 'user_id' => $user->id,
                 'first_name' => $firstName,
@@ -2106,7 +2103,7 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             User::where('id', $president->user_id)->update([
-                'type_id'=> UserTypeEnum::BOARD,
+                'type_id' => UserTypeEnum::BOARD,
             ]);
             Boards::create([
                 'user_id' => $president->user_id,

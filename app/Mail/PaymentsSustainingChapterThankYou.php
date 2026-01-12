@@ -15,14 +15,14 @@ class PaymentsSustainingChapterThankYou extends BaseMailable
         $this->mailData = $mailData;
     }
 
-      public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             from: new Address('support@momsclub.org', 'MOMS Club'),
             replyTo: [
                 new Address('support@momsclub.org', 'MOMS Club'),
             ],
-            subject: "Thank You for Your Sustaining Chapter Donation",
+            subject: 'Thank You for Your Sustaining Chapter Donation',
         );
     }
 

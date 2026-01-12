@@ -9,7 +9,7 @@ class Conference extends Model
 {
     protected $table = 'conference';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 
     // In your Conference model
     public function regions(): HasMany

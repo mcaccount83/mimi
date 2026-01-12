@@ -3,9 +3,9 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Mailables\Address;
-use Illuminate\Support\Carbon;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Support\Carbon;
 
 class PaymentsReRegChapterThankYou extends BaseMailable
 {
@@ -25,14 +25,14 @@ class PaymentsReRegChapterThankYou extends BaseMailable
         }
     }
 
-      public function envelope(): Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             from: new Address('support@momsclub.org', 'MOMS Club'),
             replyTo: [
                 new Address('support@momsclub.org', 'MOMS Club'),
             ],
-            subject: "Thank You for Your Re-Registration Payment",
+            subject: 'Thank You for Your Re-Registration Payment',
         );
     }
 

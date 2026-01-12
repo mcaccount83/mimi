@@ -11,7 +11,7 @@ class CoordinatorRecognition extends Model
 
     protected $primaryKey = 'coordinator_id';
 
-    protected $guarded = [ ]; // ALL columns are mass-assignable
+    protected $guarded = []; // ALL columns are mass-assignable
 
     public function coordinator(): BelongsTo
     {

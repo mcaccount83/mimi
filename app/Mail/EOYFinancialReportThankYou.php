@@ -29,7 +29,7 @@ class EOYFinancialReportThankYou extends BaseMailable
             replyTo: [
                 new Address('support@momsclub.org', 'MOMS Club'),
             ],
-            subject: "Financial Report Submitted",
+            subject: 'Financial Report Submitted',
         );
     }
 

@@ -16,7 +16,7 @@ class ThreadPolicy extends ForumThreadPolicy
 
     public function view($user, Thread $thread): bool
     {
-         return true; // View access is controlled at the Category level
+        return true; // View access is controlled at the Category level
     }
 
     public function rename($user, Thread $thread): bool
@@ -50,12 +50,12 @@ class ThreadPolicy extends ForumThreadPolicy
     public function deletePosts($user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user);
-            // || $this->forumConditions->canManageThreads($user, $thread);
+        // || $this->forumConditions->canManageThreads($user, $thread);
     }
 
     public function restorePosts($user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user);
-            // || $this->forumConditions->canManageThreads($user, $thread);
+        // || $this->forumConditions->canManageThreads($user, $thread);
     }
 }

@@ -211,103 +211,103 @@ class ResourcesController extends Controller implements HasMiddleware
     }
 
     public function addResources(Request $request): JsonResponse
-{
-    try {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
+    {
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $updatedId = $user['userId'];
 
-        $validatedData = $request->validate([
-            'fileCategoryNew' => 'required',
-            'fileNameNew' => 'required|string|max:50',
-            'fileDescriptionNew' => 'required|string|max:500',
-            'fileTypeNew' => 'required|in:1,2,3',
-            'fileVersionNew' => 'nullable|string|max:25',
-            'LinkNew' => 'nullable|string|max:255',
-            'routeNew' => 'nullable|string|max:255',
-            'filePathNew' => 'nullable|string|max:255',
-        ]);
+            $validatedData = $request->validate([
+                'fileCategoryNew' => 'required',
+                'fileNameNew' => 'required|string|max:50',
+                'fileDescriptionNew' => 'required|string|max:500',
+                'fileTypeNew' => 'required|in:1,2,3',
+                'fileVersionNew' => 'nullable|string|max:25',
+                'LinkNew' => 'nullable|string|max:255',
+                'routeNew' => 'nullable|string|max:255',
+                'filePathNew' => 'nullable|string|max:255',
+            ]);
 
-        $file = new Resources;
-        $file->category = $validatedData['fileCategoryNew'];
-        $file->name = $validatedData['fileNameNew'];
-        $file->description = $validatedData['fileDescriptionNew'];
-        $file->file_type = $validatedData['fileTypeNew'];
+            $file = new Resources;
+            $file->category = $validatedData['fileCategoryNew'];
+            $file->name = $validatedData['fileNameNew'];
+            $file->description = $validatedData['fileDescriptionNew'];
+            $file->file_type = $validatedData['fileTypeNew'];
 
-        // Handle based on file type
-        if ($validatedData['fileTypeNew'] == 1) {
-            // File - uses version and file_path
-            $file->version = $validatedData['fileVersionNew'] ?? null;
-            $file->file_path = $validatedData['filePathNew'] ?? null;
-            $file->link = null;
-        } elseif ($validatedData['fileTypeNew'] == 2) {
-            // External Link - uses link field
-            $file->link = $validatedData['LinkNew'] ?? null;
-            $file->version = null;
-            $file->file_path = null;
-        } elseif ($validatedData['fileTypeNew'] == 3) {
-            // Route - uses link field for route name
-            $file->link = $validatedData['routeNew'] ?? null;
-            $file->version = null;
-            $file->file_path = null;
+            // Handle based on file type
+            if ($validatedData['fileTypeNew'] == 1) {
+                // File - uses version and file_path
+                $file->version = $validatedData['fileVersionNew'] ?? null;
+                $file->file_path = $validatedData['filePathNew'] ?? null;
+                $file->link = null;
+            } elseif ($validatedData['fileTypeNew'] == 2) {
+                // External Link - uses link field
+                $file->link = $validatedData['LinkNew'] ?? null;
+                $file->version = null;
+                $file->file_path = null;
+            } elseif ($validatedData['fileTypeNew'] == 3) {
+                // Route - uses link field for route name
+                $file->link = $validatedData['routeNew'] ?? null;
+                $file->version = null;
+                $file->file_path = null;
+            }
+
+            $file->updated_id = $updatedId;
+            $file->save();
+
+            return response()->json(['success' => true, 'id' => $file->id, 'file_type' => $file->file_type]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while adding the resource.'], 500);
         }
-
-        $file->updated_id = $updatedId;
-        $file->save();
-
-        return response()->json(['success' => true, 'id' => $file->id, 'file_type' => $file->file_type]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'error' => 'An error occurred while adding the resource.'], 500);
     }
-}
 
     public function updateResources(Request $request, $id): JsonResponse
-{
-    try {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
+    {
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $updatedId = $user['userId'];
 
-        $validatedData = $request->validate([
-            'fileDescription' => 'required|string|max:500',
-            'fileType' => 'required|in:1,2,3',
-            'fileVersion' => 'nullable|string|max:25',
-            'link' => 'nullable|string|max:255',
-            'route' => 'nullable|string|max:255',
-        ]);
+            $validatedData = $request->validate([
+                'fileDescription' => 'required|string|max:500',
+                'fileType' => 'required|in:1,2,3',
+                'fileVersion' => 'nullable|string|max:25',
+                'link' => 'nullable|string|max:255',
+                'route' => 'nullable|string|max:255',
+            ]);
 
-        $file = Resources::findOrFail($id);
-        $file->description = $validatedData['fileDescription'];
-        $file->file_type = $validatedData['fileType'];
+            $file = Resources::findOrFail($id);
+            $file->description = $validatedData['fileDescription'];
+            $file->file_type = $validatedData['fileType'];
 
-        // Handle based on file type
-        if ($validatedData['fileType'] == 1) {
-            // File - uses version and file_path
-            $file->version = $validatedData['fileVersion'] ?? null;
-            // Note: file_path stays the same unless new file uploaded
-            $file->link = null;
-        } elseif ($validatedData['fileType'] == 2) {
-            // External Link - uses link field
-            $file->link = $validatedData['link'] ?? null;
-            $file->version = null;
-            $file->file_path = null;
-        } elseif ($validatedData['fileType'] == 3) {
-            // Route - uses link field for route name
-            $file->link = $validatedData['route'] ?? null;
-            $file->version = null;
-            $file->file_path = null;
+            // Handle based on file type
+            if ($validatedData['fileType'] == 1) {
+                // File - uses version and file_path
+                $file->version = $validatedData['fileVersion'] ?? null;
+                // Note: file_path stays the same unless new file uploaded
+                $file->link = null;
+            } elseif ($validatedData['fileType'] == 2) {
+                // External Link - uses link field
+                $file->link = $validatedData['link'] ?? null;
+                $file->version = null;
+                $file->file_path = null;
+            } elseif ($validatedData['fileType'] == 3) {
+                // Route - uses link field for route name
+                $file->link = $validatedData['route'] ?? null;
+                $file->version = null;
+                $file->file_path = null;
+            }
+
+            $file->updated_id = $updatedId;
+            $file->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while updating the resource.'], 500);
         }
-
-        $file->updated_id = $updatedId;
-        $file->save();
-
-        return response()->json(['success' => true]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'error' => 'An error occurred while updating the resource.'], 500);
     }
-}
 
     /**
      * View Toolkit List

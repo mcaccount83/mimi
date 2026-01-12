@@ -63,7 +63,7 @@ class PositionConditionsService
         ];
     }
 
-     /**
+    /**
      * Check if user has a position (primary or secondary) // Helper function for getConditionsForUser
      */
     private function hasPosition(int $position, int $primaryPositionId, array $secondaryPositionIds): bool
@@ -111,7 +111,7 @@ class PositionConditionsService
         ];
     }
 
-     /**
+    /**
      * Get EOY Date options based on fiscal year // Loaded automatically for blades in ViewServiceProvider & Called manually when needed
      */
     public function getEOYOptions(): array
@@ -128,10 +128,10 @@ class PositionConditionsService
         $display_testing = ($admin->display_testing == 1);
         $display_live = ($admin->display_live == 1);
 
-        $yearColumnName = $thisYear . '_financial_pdf_path'; // name for Database Column for Financial Report
-        $boardReportName = $thisYear .'-'. $nextYear .' Board Report';  // Board Report Name
-        $financialReportName = $lastYear .'-'. $thisYear .' Financial Report';  // Financial Report Name
-        $irsFilingName = $lastYear .' 990N IRS Filing';  // IRS Filing Name
+        $yearColumnName = $thisYear.'_financial_pdf_path'; // name for Database Column for Financial Report
+        $boardReportName = $thisYear.'-'.$nextYear.' Board Report';  // Board Report Name
+        $financialReportName = $lastYear.'-'.$thisYear.' Financial Report';  // Financial Report Name
+        $irsFilingName = $lastYear.' 990N IRS Filing';  // IRS Filing Name
 
         $currentMonth = $this->getDateOptions()['currentMonth'];  // Current Month with leading zero
 
@@ -140,7 +140,7 @@ class PositionConditionsService
             'thisYear' => $thisYear,
             'nextYear' => $nextYear,
             'lastYear' => $lastYear,
-            'displayTESTING' => ($display_testing && !$display_live),
+            'displayTESTING' => ($display_testing && ! $display_live),
             'displayLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
             'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
             'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),

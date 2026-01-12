@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use App\Enums\AdminStatusEnum;
-use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,8 +21,8 @@ class EnsureUserIsActiveAndCoordinator
 
         // Check if the user is active AND (is a coordinator OR is an admin)
         if (! $user ||
-            $user->is_active !=  UserStatusEnum::ACTIVE ||
-            ! ( $user->type_id == UserTypeEnum::COORD || $user->is_admin == AdminStatusEnum::ADMIN )) {
+            $user->is_active != UserStatusEnum::ACTIVE ||
+            ! ($user->type_id == UserTypeEnum::COORD || $user->is_admin == AdminStatusEnum::ADMIN)) {
             Auth::logout();
             $request->session()->flush();
 

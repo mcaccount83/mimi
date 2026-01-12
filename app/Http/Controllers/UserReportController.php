@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserTypeEnum;
-use App\Enums\UserStatusEnum;
 use App\Enums\BoardPosition;
 use App\Enums\ChapterStatusEnum;
+use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Models\AdminRole;
 use App\Models\Boards;
+use App\Models\BoardsDisbanded;
 use App\Models\BoardsOutgoing;
 use App\Models\BoardsPending;
-use App\Models\BoardsDisbanded;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\User;
@@ -101,7 +101,7 @@ class UserReportController extends Controller implements HasMiddleware
             ->whereIn('email', $boardData)
             ->get();
 
-        $data = ['boardList' => $boardList,];
+        $data = ['boardList' => $boardList];
 
         return view('userreports.duplicateboardid')->with($data);
     }
@@ -147,7 +147,7 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      *Add New Board
      */
-     public function addBoardNew(Request $request, $id): View
+    public function addBoardNew(Request $request, $id): View
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -191,12 +191,11 @@ class UserReportController extends Controller implements HasMiddleware
         $vacant_field = null; // President is never vacant
         $chStatus = $chapter->active_status;
 
-        if($chapter->active_status == ChapterStatusEnum::ACTIVE){
+        if ($chapter->active_status == ChapterStatusEnum::ACTIVE) {
             $defaultCategories = $this->forumSubscriptionController->defaultCategories();
             $defaultBoardCategories = $defaultCategories['boardCategories'];
             // $status = '1';
-        }
-        else{
+        } else {
             $defaultBoardCategories = null;
             // $status = '0';
         }
@@ -205,24 +204,24 @@ class UserReportController extends Controller implements HasMiddleware
         try {
             $this->chapterController->createNewBoardMember($chapter, $relation, $positionId, $request, $prefix, $chStatus, $updatedBy, $updatedId, $defaultBoardCategories);
 
-        DB::commit();
-                if($chapter->active_status == ChapterStatusEnum::ACTIVE){
-                    return redirect()->to('/userreports/nopresident')->with('success', 'Chapter created successfully');
-                }else{
-                    return redirect()->to('/userreports/nopresidentinactive')->with('success', 'Chapter created successfully');
-                }
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
-                if($chapter->active_status == '1'){
-                    return redirect()->to('/userreports/nopresident')->with('fail', 'Something went wrong, Please try again...');
-                }else{
-                    return redirect()->to('/userreports/nopresidentinactive')->with('fail', 'Something went wrong, Please try again...');
-                }
-            } finally {
-                // This ensures DB connections are released even if exceptions occur
-                DB::disconnect();
+            DB::commit();
+            if ($chapter->active_status == ChapterStatusEnum::ACTIVE) {
+                return redirect()->to('/userreports/nopresident')->with('success', 'Chapter created successfully');
+            } else {
+                return redirect()->to('/userreports/nopresidentinactive')->with('success', 'Chapter created successfully');
             }
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+            if ($chapter->active_status == '1') {
+                return redirect()->to('/userreports/nopresident')->with('fail', 'Something went wrong, Please try again...');
+            } else {
+                return redirect()->to('/userreports/nopresidentinactive')->with('fail', 'Something went wrong, Please try again...');
+            }
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
     }
 
     /**
@@ -247,7 +246,7 @@ class UserReportController extends Controller implements HasMiddleware
     //     return view('userreports.noactivechapter')->with($data);
     // }
 
-        public function showUserNoActiveBoard(): View
+    public function showUserNoActiveBoard(): View
     {
         $bdNoChapterList = User::whereDoesntHave('board')
             ->where('type_id', UserTypeEnum::BOARD)
@@ -275,78 +274,78 @@ class UserReportController extends Controller implements HasMiddleware
 
         $data = [
             'countList' => $bdNoChapterList->count(),
-            'bdNoChapterList' => $bdNoChapterList
+            'bdNoChapterList' => $bdNoChapterList,
         ];
 
         return view('userreports.usernoactiveboard')->with($data);
     }
 
-        public function showUserNoActiveCoord(): View
-        {
-            $cdNoChapterList = User::whereDoesntHave('coordinator')
-                ->where('type_id', UserTypeEnum::COORD)
-                ->where('is_active', UserStatusEnum::ACTIVE)
-                ->get();
+    public function showUserNoActiveCoord(): View
+    {
+        $cdNoChapterList = User::whereDoesntHave('coordinator')
+            ->where('type_id', UserTypeEnum::COORD)
+            ->where('is_active', UserStatusEnum::ACTIVE)
+            ->get();
 
-            $data = [
-                'countList' => $cdNoChapterList->count(), // Collection method
-                'cdNoChapterList' => $cdNoChapterList
-            ];
+        $data = [
+            'countList' => $cdNoChapterList->count(), // Collection method
+            'cdNoChapterList' => $cdNoChapterList,
+        ];
 
-            return view('userreports.usernoactivecoord')->with($data);
-        }
+        return view('userreports.usernoactivecoord')->with($data);
+    }
 
-         /**
-         *Edit User Information
-        */
-        public function editUserInformation(Request $request, $id): View
-        {
-            $userDetails = User::find($id);
+    /**
+     *Edit User Information
+     */
+    public function editUserInformation(Request $request, $id): View
+    {
+        $userDetails = User::find($id);
 
-            $AllUserStatus = UserStatus::all();
-                $AllUserType = UserType::all();
-                $AllAdminRole = AdminRole::all();
+        $AllUserStatus = UserStatus::all();
+        $AllUserType = UserType::all();
+        $AllAdminRole = AdminRole::all();
 
-            $data = [
-                'id' => $id, 'userDetails' => $userDetails, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
-            ];
+        $data = [
+            'id' => $id, 'userDetails' => $userDetails, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
+        ];
 
-            return view('userreports.edituser')->with($data);
-        }
+        return view('userreports.edituser')->with($data);
+    }
 
-        /**
-         *Save User Information
-        */
-        public function updateUserInformation(Request $request, $id): RedirectResponse
-        {
-            $input = $request->all();
+    /**
+     *Save User Information
+     */
+    public function updateUserInformation(Request $request, $id): RedirectResponse
+    {
+        $input = $request->all();
 
-            $user = User::find($id);
+        $user = User::find($id);
 
-            DB::beginTransaction();
-            try {
-                $user->first_name = $request->input('fname');
-                $user->last_name = $request->input('lname');
-                $user->email = $request->input('email');
-                $user->type_id = $request->input('type');
-                $user->is_admin = $request->input('role');
-                $user->is_active = $request->input('status');
+        DB::beginTransaction();
+        try {
+            $user->first_name = $request->input('fname');
+            $user->last_name = $request->input('lname');
+            $user->email = $request->input('email');
+            $user->type_id = $request->input('type');
+            $user->is_admin = $request->input('role');
+            $user->is_active = $request->input('status');
 
-                $user->save();
+            $user->save();
 
             DB::commit();
 
-                return to_route('userreports.edituser', ['id' => $id])->with('success', 'User Details have been updated');
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+            return to_route('userreports.edituser', ['id' => $id])->with('success', 'User Details have been updated');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
-                return to_route('userreports.edituser', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
-            } finally {
-                // This ensures DB connections are released even if exceptions occur
-                DB::disconnect();
-            }
+            return to_route('userreports.edituser', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
+    }
 
     /**
      * board member with inactive user
@@ -365,25 +364,25 @@ class UserReportController extends Controller implements HasMiddleware
         return view('userreports.noactiveboard')->with($data);
     }
 
-     /**
+    /**
      *Edit User Information
      */
-public function editUserBoardInformation(Request $request, $id): View
-{
+    public function editUserBoardInformation(Request $request, $id): View
+    {
 
-    $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
-    $userDetails = $baseUserQuery['userDetails'];
-    $bdDetails = $baseUserQuery['bdDetails'];
-    $bdChapterId = $baseUserQuery['bdChapterId'];
-    $bdPosition = $baseUserQuery['bdPosition'];
+        $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
+        $userDetails = $baseUserQuery['userDetails'];
+        $bdDetails = $baseUserQuery['bdDetails'];
+        $bdChapterId = $baseUserQuery['bdChapterId'];
+        $bdPosition = $baseUserQuery['bdPosition'];
 
-    $AllUserStatus = $baseUserQuery['AllUserStatus'];
-    $AllUserType = $baseUserQuery['AllUserType'];
-    $AllAdminRole = $baseUserQuery['AllAdminRole'];
+        $AllUserStatus = $baseUserQuery['AllUserStatus'];
+        $AllUserType = $baseUserQuery['AllUserType'];
+        $AllAdminRole = $baseUserQuery['AllAdminRole'];
 
-    $baseChapterQuery = $this->baseChapterController->getChapterDetails($bdChapterId);
-    $chDetails = $baseChapterQuery['chDetails'];
-    $chConfId = $baseChapterQuery['chConfId'];
+        $baseChapterQuery = $this->baseChapterController->getChapterDetails($bdChapterId);
+        $chDetails = $baseChapterQuery['chDetails'];
+        $chConfId = $baseChapterQuery['chConfId'];
         $chActiveId = $baseChapterQuery['chActiveId'];
         $stateShortName = $baseChapterQuery['stateShortName'];
         $regionLongName = $baseChapterQuery['regionLongName'];
@@ -395,17 +394,16 @@ public function editUserBoardInformation(Request $request, $id): View
         $allStates = $baseChapterQuery['allStates'];
         $allCountries = $baseChapterQuery['allCountries'];
 
-
-    $data = [
-        'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'chDetails' => $chDetails,
-        'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries, 'bdDetails' => $bdDetails,
+        $data = [
+            'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'chDetails' => $chDetails,
+            'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries, 'bdDetails' => $bdDetails,
             'chPcId' => $chPcId, 'allStates' => $allStates, 'chConfId' => $chConfId, 'chPayments' => $chPayments,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
             'startMonthName' => $startMonthName, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
-    ];
+        ];
 
-    return view('userreports.edituserboard')->with($data);
-}
+        return view('userreports.edituserboard')->with($data);
+    }
 
     /**
      *Save User Information
@@ -426,16 +424,16 @@ public function editUserBoardInformation(Request $request, $id): View
         // Initialize variables
         $bdDetails = null;
 
-        if ($userTypeId  == UserTypeEnum::BOARD) {
+        if ($userTypeId == UserTypeEnum::BOARD) {
             $bdDetails = Boards::where('user_id', $id)->first();
         }
-        if ($userTypeId  == UserTypeEnum::DISBANDED) {
+        if ($userTypeId == UserTypeEnum::DISBANDED) {
             $bdDetails = BoardsDisbanded::where('user_id', $id)->first();
         }
-        if ($userTypeId  == UserTypeEnum::PENDING) {
+        if ($userTypeId == UserTypeEnum::PENDING) {
             $bdDetails = BoardsPending::where('user_id', $id)->first();
         }
-        if ($userTypeId  == UserTypeEnum::OUTGOING) {
+        if ($userTypeId == UserTypeEnum::OUTGOING) {
             $bdDetails = BoardsOutgoing::where('user_id', $id)->first();
         }
 
@@ -463,7 +461,7 @@ public function editUserBoardInformation(Request $request, $id): View
 
             $bdDetails->save();
 
-         DB::commit();
+            DB::commit();
 
             return to_route('userreports.edituserboard', ['id' => $id])->with('success', 'User Details have been updated');
         } catch (\Exception $e) {
@@ -477,24 +475,24 @@ public function editUserBoardInformation(Request $request, $id): View
         }
     }
 
-     /**
+    /**
      *Edit User Information
      */
-public function editUserCoordInformation(Request $request, $id): View
-{
+    public function editUserCoordInformation(Request $request, $id): View
+    {
 
-    $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
-    $userDetails = $baseUserQuery['userDetails'];
-    $bdDetails = $baseUserQuery['bdDetails'];
-    $bdChapterId = $baseUserQuery['bdChapterId'];
-    $bdPosition = $baseUserQuery['bdPosition'];
+        $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
+        $userDetails = $baseUserQuery['userDetails'];
+        $bdDetails = $baseUserQuery['bdDetails'];
+        $bdChapterId = $baseUserQuery['bdChapterId'];
+        $bdPosition = $baseUserQuery['bdPosition'];
 
-    $AllUserStatus = $baseUserQuery['AllUserStatus'];
-    $AllUserType = $baseUserQuery['AllUserType'];
-    $AllAdminRole = $baseUserQuery['AllAdminRole'];
+        $AllUserStatus = $baseUserQuery['AllUserStatus'];
+        $AllUserType = $baseUserQuery['AllUserType'];
+        $AllAdminRole = $baseUserQuery['AllAdminRole'];
 
-    $baseCoordQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
-    $cdDetails = $baseCoordQuery['cdDetails'];
+        $baseCoordQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
+        $cdDetails = $baseCoordQuery['cdDetails'];
         $cdId = $baseCoordQuery['cdId'];
         $cdActiveId = $baseCoordQuery['cdActiveId'];
         $regionLongName = $baseCoordQuery['regionLongName'];
@@ -513,17 +511,17 @@ public function editUserCoordInformation(Request $request, $id): View
         $allMonths = $baseCoordQuery['allMonths'];
         $allCountries = $baseCoordQuery['allCountries'];
 
-    $data = [
-        'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'cdDetails' => $cdDetails,
-        'cdActiveId' => $cdActiveId, 'allCountries' => $allCountries, 'bdDetails' => $bdDetails, 'allMonths' => $allMonths,
+        $data = [
+            'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'cdDetails' => $cdDetails,
+            'cdActiveId' => $cdActiveId, 'allCountries' => $allCountries, 'bdDetails' => $bdDetails, 'allMonths' => $allMonths,
             'ReportTo' => $ReportTo, 'allStates' => $allStates, 'cdConfId' => $cdConfId,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
             'displayPosition' => $displayPosition, 'secondaryPosition' => $secondaryPosition, 'cdLeave' => $cdLeave,
             'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
-    ];
+        ];
 
-    return view('userreports.editusercoord')->with($data);
-}
+        return view('userreports.editusercoord')->with($data);
+    }
 
     /**
      *Save User Information
@@ -571,8 +569,7 @@ public function editUserCoordInformation(Request $request, $id): View
 
             $cdDetails->save();
 
-
-         DB::commit();
+            DB::commit();
 
             return to_route('userreports.editusercoord', ['id' => $id])->with('success', 'User Details have been updated');
         } catch (\Exception $e) {
@@ -585,8 +582,6 @@ public function editUserCoordInformation(Request $request, $id): View
             DB::disconnect();
         }
     }
-
-
 
     /**
      * Outgoing Board Members

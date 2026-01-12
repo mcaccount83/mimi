@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserTypeEnum;
 use App\Enums\UserStatusEnum;
-use App\Services\PositionConditionsService;
+use App\Enums\UserTypeEnum;
 use App\Models\User;
-use Illuminate\Support\Carbon;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use Illuminate\support\Facades\Log;
 
 class ExportController extends Controller implements HasMiddleware
 {
@@ -2000,94 +1998,93 @@ class ExportController extends Controller implements HasMiddleware
         return redirect()->to('/home');
     }
 
+    /**
+     * Export Constant Contact List
+     */
+    /**
+     * Export Constant Contact List
+     */
+    public function indexConstantContact(Request $request)
+    {
+        // Increase memory limit and execution time for large exports
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
 
-/**
- * Export Constant Contact List
- */
-/**
- * Export Constant Contact List
- */
-public function indexConstantContact(Request $request)
-{
-    // Increase memory limit and execution time for large exports
-    ini_set('memory_limit', '512M');
-    set_time_limit(300);
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDateYmd = $dateOptions['currentDateYmd'];
 
-    $dateOptions = $this->positionConditionsService->getDateOptions();
-    $currentDateYmd = $dateOptions['currentDateYmd'];
+        $fileName = 'constant_contact_export_'.$currentDateYmd.'.csv';
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
 
-    $fileName = 'constant_contact_export_'.$currentDateYmd.'.csv';
-    $headers = [
-        'Content-type' => 'text/csv',
-        'Content-Disposition' => "attachment; filename=$fileName",
-        'Pragma' => 'no-cache',
-        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-        'Expires' => '0',
-    ];
+        // Load user information like all other exports do
+        $user = $this->userController->loadUserInformation($request);
 
-    // Load user information like all other exports do
-    $user = $this->userController->loadUserInformation($request);
+        // Get user IDs that match the criteria
+        $userIds = User::where('is_active', UserStatusEnum::ACTIVE)
+            ->where(function ($query) {
+                $query->where('type_id', UserTypeEnum::BOARD)
+                    ->orWhere('type_id', UserTypeEnum::COORD);
+            })
+            ->where(function ($query) {
+                $query->where('first_name', 'NOT LIKE', '%test%')
+                    ->where('last_name', 'NOT LIKE', '%test%')
+                    ->where('email', 'NOT LIKE', '%test%')
+                    ->where('email', 'NOT LIKE', '%noemail%');
+            })
+            ->pluck('id')
+            ->toArray();
 
-    // Get user IDs that match the criteria
-    $userIds = User::where('is_active', UserStatusEnum::ACTIVE)
-        ->where(function($query) {
-            $query->where('type_id', UserTypeEnum::BOARD)
-                  ->orWhere('type_id', UserTypeEnum::COORD);
-        })
-        ->where(function($query) {
-            $query->where('first_name', 'NOT LIKE', '%test%')
-                ->where('last_name', 'NOT LIKE', '%test%')
-                ->where('email', 'NOT LIKE', '%test%')
-                ->where('email', 'NOT LIKE', '%noemail%');
-        })
-        ->pluck('id')
-        ->toArray();
-
-    if (empty($userIds)) {
-        return redirect()->to('/home');
-    }
-
-    $callback = function () use ($userIds) {
-        $file = fopen('php://output', 'w');
-
-        // Write headers
-        $headers = ['First Name', 'Last Name', 'Email'];
-        fputcsv($file, $headers);
-
-        // Process users in chunks to manage memory
-        $chunkSize = 100;
-        $chunks = array_chunk($userIds, $chunkSize);
-
-        foreach ($chunks as $chunkIndex => $chunk) {
-            // Batch load users for this chunk
-            $users = User::select('first_name', 'last_name', 'email', )
-                ->whereIn('id', $chunk)
-                ->get();
-
-            foreach ($users as $user) {
-                fputcsv($file, [
-                    $user->first_name,
-                    $user->last_name,
-                    $user->email,
-                ]);
-            }
-
-            // Clear memory after each chunk
-            unset($users);
-
-            if (function_exists('gc_collect_cycles')) {
-                gc_collect_cycles();
-            }
-
-            if (ob_get_level()) {
-                ob_flush();
-            }
-            flush();
+        if (empty($userIds)) {
+            return redirect()->to('/home');
         }
 
-        fclose($file);
-    };
+        $callback = function () use ($userIds) {
+            $file = fopen('php://output', 'w');
 
-    return Response::stream($callback, 200, $headers);
-}
+            // Write headers
+            $headers = ['First Name', 'Last Name', 'Email'];
+            fputcsv($file, $headers);
+
+            // Process users in chunks to manage memory
+            $chunkSize = 100;
+            $chunks = array_chunk($userIds, $chunkSize);
+
+            foreach ($chunks as $chunkIndex => $chunk) {
+                // Batch load users for this chunk
+                $users = User::select('first_name', 'last_name', 'email')
+                    ->whereIn('id', $chunk)
+                    ->get();
+
+                foreach ($users as $user) {
+                    fputcsv($file, [
+                        $user->first_name,
+                        $user->last_name,
+                        $user->email,
+                    ]);
+                }
+
+                // Clear memory after each chunk
+                unset($users);
+
+                if (function_exists('gc_collect_cycles')) {
+                    gc_collect_cycles();
+                }
+
+                if (ob_get_level()) {
+                    ob_flush();
+                }
+                flush();
+            }
+
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
+    }
 }

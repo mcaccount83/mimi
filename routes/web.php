@@ -224,7 +224,7 @@ Route::middleware('auth')->group(function () {
 
 // New Chapter/Coordinator Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
-     Route::get('/application/new', [ChapterController::class, 'addChapterNew'])->name('chapters.addnew');
+    Route::get('/application/new', [ChapterController::class, 'addChapterNew'])->name('chapters.addnew');
     Route::post('/application/newupdate', [ChapterController::class, 'updateChapterNew'])->name('chapters.updatenew');
     Route::get('/application/newint', [ChapterController::class, 'addChapterNewInt'])->name('chapters.addnewint');
     Route::post('/application/newupdateint', [ChapterController::class, 'updateChapterNewInt'])->name('chapters.updatenewint');

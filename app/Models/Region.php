@@ -11,7 +11,7 @@ class Region extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = [ ]; // No fillable fields
+    protected $fillable = []; // No fillable fields
 
     public function conference(): BelongsTo
     {
