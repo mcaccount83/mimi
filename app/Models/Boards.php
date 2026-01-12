@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Boards extends Model
 {
-    protected $table = 'boards';
-
     protected $guarded = []; // ALL columns are mass-assignable
 
     public function user(): BelongsTo
