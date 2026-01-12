@@ -97,7 +97,7 @@ class PDFController extends Controller
         $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
 
         // Build dynamic column name for the year
-        $yearColumnName = $year . '_financial_pdf_path';
+        $yearColumnName = $year.'_financial_pdf_path';
 
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
         $chDetails = $baseQuery['chDetails'];
