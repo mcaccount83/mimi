@@ -1462,7 +1462,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         if ($chStatus == ChapterStatusEnum::ACTIVE || ChapterStatusEnum::PENDING) {
             $isActive = UserStatusEnum::ACTIVE;
-        }elseif($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED) {
+        } elseif ($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED) {
             $isActive = UserStatusEnum::INACTIVE;
         }
 
