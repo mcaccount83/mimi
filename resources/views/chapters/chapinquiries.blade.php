@@ -114,6 +114,7 @@ function test() {
 alert('test');
 return false;
 }
+
 function CopyEmail(elementId){
 
 		// Create a "hidden" input
@@ -139,67 +140,79 @@ function CopyEmail(elementId){
 		return false;
 
 	}
-function CopyNoChapter(){
 
-		  var copyTextarea = document.querySelector('.js-copytextarea');
-		  copyTextarea.select();
+function CopyNoChapter() {
+    var copyTextarea = document.querySelector('.js-copytextarea');
+    copyTextarea.select();
 
-		  try {
-			var successful = document.execCommand('copy');
-			var msg = successful ? 'successful' : 'unsuccessful';
-			console.log('Copying text command was ' + msg);
-		  } catch (err) {
-			console.log('Oops, unable to copy');
-		  }
+    try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+            Swal.fire({
+                title: 'Copied!',
+                icon: 'success',
+                timer: 1000,
+                showConfirmButton: false
+            });
+        }
+    } catch (err) {
+        Swal.fire({
+            title: 'Copy Failed',
+            text: 'Please copy manually',
+            icon: 'error',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }
 
-		  clearSelection();
+    clearSelection();
+    return false;
+}
 
-		return false;
-
-	}
 function clearSelection() {
-		var sel;
-		if ( (sel = document.selection) && sel.empty ) {
-			sel.empty();
-		} else {
-			if (window.getSelection) {
-				window.getSelection().removeAllRanges();
-			}
-			var activeEl = document.activeElement;
-			if (activeEl) {
-				var tagName = activeEl.nodeName.toLowerCase();
-				if ( tagName == "textarea" || (tagName == "input" && activeEl.type == "text") ) {
-					// Collapse the selection to the end
-					activeEl.selectionStart = activeEl.selectionEnd;
-				}
-			}
-		}
-	}
-	function CopyInquiryResp(elementId){
+    var sel;
+    if ( (sel = document.selection) && sel.empty ) {
+        sel.empty();
+    } else {
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        }
+        var activeEl = document.activeElement;
+        if (activeEl) {
+            var tagName = activeEl.nodeName.toLowerCase();
+            if ( tagName == "textarea" || (tagName == "input" && activeEl.type == "text") ) {
+                // Collapse the selection to the end
+                activeEl.selectionStart = activeEl.selectionEnd;
+            }
+        }
+    }
+}
 
-		// Create a "hidden" input
-		var aux = document.createElement("input");
+function CopyInquiryResp(elementId){
 
-		var elementName = "response" + elementId;
+    // Create a "hidden" input
+    var aux = document.createElement("input");
 
-		// Assign it the value of the specified element
-		aux.setAttribute("value", document.getElementById(elementName).innerHTML);
+    var elementName = "response" + elementId;
 
-		// Append it to the body
-		document.body.appendChild(aux);
+    // Assign it the value of the specified element
+    aux.setAttribute("value", document.getElementById(elementName).innerHTML);
 
-		// Highlight its content
-		aux.select();
+    // Append it to the body
+    document.body.appendChild(aux);
 
-		// Copy the highlighted text
-		document.execCommand("copy");
+    // Highlight its content
+    aux.select();
 
-		// Remove it from the body
-		document.body.removeChild(aux);
+    // Copy the highlighted text
+    document.execCommand("copy");
 
-		return false;
+    // Remove it from the body
+    document.body.removeChild(aux);
 
-	}
+    return false;
+
+}
 
 </script>
 @endsection

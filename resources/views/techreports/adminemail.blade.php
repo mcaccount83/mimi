@@ -115,8 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function updateEmail() {
-    console.log('Save button clicked');  // For debugging
-
     var listAdminEmail = document.getElementById('listAdminEmail').value;
     var paymentAdminEmail = document.getElementById('paymentAdminEmail').value;
     var einAdminEmail = document.getElementById('einAdminEmail').value;

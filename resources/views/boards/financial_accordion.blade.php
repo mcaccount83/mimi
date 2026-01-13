@@ -3161,8 +3161,6 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 /* Disable fields and buttons  */
 $(document).ready(function () {
     setTimeout(function () {
-        console.log('Running after delay');
-
         var submitted = @json($chEOYDocuments->financial_report_received);
         // var submittedfinal = @json($chEOYDocuments->final_report_received);
         var userTypeId = @json($userTypeId);

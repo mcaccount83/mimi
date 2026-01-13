@@ -148,8 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function updateDrive() {
-    console.log('Save button clicked');  // For debugging
-
     var einLetterDrive = document.getElementById('einLetterDrive').value;
     var eoyDrive = document.getElementById('eoyDrive').value;
     var eoyDriveYear = document.getElementById('eoyDriveYear').value;

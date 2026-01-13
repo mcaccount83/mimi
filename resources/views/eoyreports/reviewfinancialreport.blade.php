@@ -2542,7 +2542,6 @@ if (isset($chFinancialReport['party_expense_array'])) {
         var noteTextValue = noteText[NoteNumber] || NoteNumber;
 
         Note=document.getElementById("Step" + NoteNumber + "_Note").value;
-        console.log(Note);
         Log += "\n" + noteTextValue + " Section, <?php echo $date; ?>, <?php echo $loggedInName; ?>, " + Note;
 
         document.getElementById("Step" + NoteNumber + "_Log").value += Log;

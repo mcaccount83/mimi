@@ -11,7 +11,7 @@ $(document).ready(function() {
                         $("#display_corlist").html(result);
                     },
                     error: function (jqXHR, exception) {
-                        console.log("Error: ", jqXHR, exception);
+                        console.log("Error: ", jqXHR, exception);  // Keep log instead of console.error since it a page-load function
                     }
                 });
             }

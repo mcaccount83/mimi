@@ -494,7 +494,6 @@
                     pdfInfo.textContent = `${pdfDoc.numPages} page${pdfDoc.numPages != 1 ? 's' : ''}`;
                 }
             } catch (err) {
-                console.log('Could not get metadata:', err);
                 pdfTitle.textContent = 'Document';
                 pdfInfo.textContent = `${pdfDoc.numPages} page${pdfDoc.numPages != 1 ? 's' : ''}`;
             }

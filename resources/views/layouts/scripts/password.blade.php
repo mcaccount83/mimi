@@ -26,7 +26,16 @@
                     });
                 },
                 error: function(jqXHR, exception) {
-                    console.log(jqXHR.responseText); // Log error response
+                    console.error("Failed to reset password:", exception);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Unable to reset password. Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
                 }
             });
         });

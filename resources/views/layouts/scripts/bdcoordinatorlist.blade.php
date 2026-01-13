@@ -8,11 +8,11 @@ $(document).ready(function() {
                 url: '{{ url("/load-coordinator-list/") }}' + '/' + pcid,
                 type: "GET",
                 success: function (result) {
-                    console.log("AJAX result:", result);
                     $("#display_corlist").html(result);
                 },
                 error: function (jqXHR, exception) {
-                    console.log("AJAX error:", exception);
+                    console.error("Failed to load coordinator list:", exception);
+                    $("#display_corlist").html('<p class="text-danger">Unable to load coordinator list. Please refresh the page.</p>');
                 }
             });
         }
