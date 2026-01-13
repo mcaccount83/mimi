@@ -662,14 +662,14 @@ class BoardController extends Controller implements HasMiddleware
 
             if ($probation) {
                 $probation->update([
-                    $probation->q1_dues = $input['q1_dues'] ?? null,
-                    $probation->q1_benefit = $input['q1_benefit'] ?? null,
-                    $probation->q2_dues = $input['q2_dues'] ?? null,
-                    $probation->q2_benefit = $input['q2_benefit'] ?? null,
-                    $probation->q3_dues = $input['q3_dues'] ?? null,
-                    $probation->q3_benefit = $input['q3_benefit'] ?? null,
-                    $probation->q4_dues = $input['q4_dues'] ?? null,
-                    $probation->q4_benefit = $input['q4_benefit'] ?? null,
+                    'q1_dues' => $input['q1_dues'] ?? null,
+                    'q1_benefit' => $input['q1_benefit'] ?? null,
+                    'q2_dues' => $input['q2_dues'] ?? null,
+                    'q2_benefit' => $input['q2_benefit'] ?? null,
+                    'q3_dues' => $input['q3_dues'] ?? null,
+                    'q3_benefit' => $input['q3_benefit'] ?? null,
+                    'q4_dues' => $input['q4_dues'] ?? null,
+                    'q4_benefit' => $input['q4_benefit'] ?? null,
                 ]);
             }
 
