@@ -59,8 +59,11 @@ class PublicController extends Controller
 
     protected $emailTableController;
 
+    protected $googleController;
+
     public function __construct(UserController $userController, PositionConditionsService $positionConditionsService, BaseBoardController $baseBoardController,
-        BaseMailDataController $baseMailDataController, EmailTableController $emailTableController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
+        BaseMailDataController $baseMailDataController, EmailTableController $emailTableController, BaseChapterController $baseChapterController,
+        BaseCoordinatorController $baseCoordinatorController, GoogleController $googleController)
     {
         $this->userController = $userController;
         $this->positionConditionsService = $positionConditionsService;
@@ -69,6 +72,7 @@ class PublicController extends Controller
         $this->baseMailDataController = $baseMailDataController;
         $this->emailTableController = $emailTableController;
         $this->baseCoordinatorController = $baseCoordinatorController;
+        $this->googleController = $googleController;
     }
 
     private function token()
@@ -239,6 +243,11 @@ class PublicController extends Controller
      */
     public function updateNewChapter(Request $request): RedirectResponse
     {
+        // Verify reCAPTCHA Enterprise
+        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
+            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
+        }
+
         $input = $request->all();
         $description = 'New Chapter Application';
         $shortDescription = 'New Chapter';
@@ -458,12 +467,9 @@ class PublicController extends Controller
      */
     public function updateDonation(Request $request): RedirectResponse
     {
-        // Validate reCAPTCHA
-        $recaptcha = new ReCaptcha(config('services.recaptcha.secret_key'));
-        $resp = $recaptcha->verify($request->input('g-recaptcha-response'), $request->ip());
-
-        if (! $resp->isSuccess()) {
-            return redirect()->back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
+        // Verify reCAPTCHA Enterprise
+        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
+            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
         }
 
         $input = $request->all();
@@ -844,6 +850,11 @@ class PublicController extends Controller
      */
     public function updateNewCoordinator(Request $request): RedirectResponse
     {
+        // Verify reCAPTCHA Enterprise
+        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
+            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
+        }
+
         $input = $request->all();
 
         $stateId = $input['cd_state'];

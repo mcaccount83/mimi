@@ -29,6 +29,43 @@ class GoogleController extends Controller implements HasMiddleware
         ];
     }
 
+    public function verifyRecaptcha($token, $userIpAddress): bool
+    {
+        $projectId = config('services.recaptcha.project_id');
+        $siteKey = config('services.recaptcha.site_key');
+        $apiKey = config('services.recaptcha.secret_key');
+
+        try {
+            $response = Http::post("https://recaptchaenterprise.googleapis.com/v1/projects/{$projectId}/assessments?key={$apiKey}", [
+                'event' => [
+                    'token' => $token,
+                    'siteKey' => $siteKey,
+                    'userIpAddress' => $userIpAddress,
+                ]
+            ]);
+
+            $result = $response->json();
+
+            if (!isset($result['tokenProperties']['valid']) || !$result['tokenProperties']['valid']) {
+                Log::warning('reCAPTCHA token invalid', ['reason' => $result['tokenProperties']['invalidReason'] ?? 'unknown']);
+                return false;
+            }
+
+            $score = $result['riskAnalysis']['score'] ?? 0;
+
+            if ($score >= 0.5) {
+                return true;
+            }
+
+            Log::warning('reCAPTCHA score too low', ['score' => $score]);
+            return false;
+
+        } catch (\Exception $e) {
+            Log::error('reCAPTCHA verification failed: ' . $e->getMessage());
+            return false;
+        }
+    }
+
     private function token()
     {
         $client_id = config('services.google.client_id');

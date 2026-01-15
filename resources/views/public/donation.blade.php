@@ -7,6 +7,7 @@
                 <div class="col-md-12">
                     <form class="form-horizontal" method="POST" action='{{ route("public.updatedonation") }}'>
                         @csrf
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                         <div class="col-md-12">
                             <div class="card card-widget widget-user">
@@ -204,8 +205,6 @@
                                 <input type="text" name="zip" id="zip" class="form-control"  required >
                             </div>
                         </div>
-
-                        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
 
                     <div class="card-body text-center">
                             <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after application submission with success or error message.<br>

@@ -30,6 +30,8 @@
     <!-- daterange picker -->
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
 
+<script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script>
+
 <script>
     window.onload = function () {
         if (window.history && window.history.pushState) {

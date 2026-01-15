@@ -6,6 +6,7 @@
                 <div class="col-md-12">
                     <form class="form-horizontal" method="POST" action='{{ route("public.updatenewcoordinator") }}'>
                         @csrf
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                         <div class="col-md-12">
                             <div class="card card-widget widget-user">
@@ -125,27 +126,27 @@
                                 <div class="col-sm-8">
                                     <input type="text" name="start_date" id="start_date" class="form-control" maxlength="25" required>
                                     <small class="form-text text-muted">
-<span id="char-count-date">0</span>/25 characters
-        </small>
-                                </div>
-                            </div>
+                                    <span id="char-count-date">0</span>/25 characters
+                                            </small>
+                                        </div>
+                                    </div>
 
-                            <div class="form-group row">
-    <label class="col-sm-4 col-form-label">What jobs/offices have you held with the chapter? What programs/activities have you started or led?</label>
-    <div class="col-sm-8">
-        <textarea name="jobs_programs" class="form-control" rows="4" maxlength="520" required></textarea>
-        <small class="form-text text-muted">
-<span id="char-count-jobs">0</span>/520 characters
-        </small>
-    </div>
-</div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">What jobs/offices have you held with the chapter? What programs/activities have you started or led?</label>
+                                        <div class="col-sm-8">
+                                            <textarea name="jobs_programs" class="form-control" rows="4" maxlength="520" required></textarea>
+                                            <small class="form-text text-muted">
+                                    <span id="char-count-jobs">0</span>/520 characters
+                                            </small>
+                                        </div>
+                                    </div>
                              <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">How has the MOMS Club helped you?</label>
                                 <div class="col-sm-8">
                                     <textarea name="helped_me" class="form-control" rows="4" required></textarea>
                                     <small class="form-text text-muted">
-<span id="char-count-helped">0</span>/520 characters
-        </small>
+                                        <span id="char-count-helped">0</span>/520 characters
+                                                </small>
                                 </div>
                             </div>
 
@@ -154,8 +155,8 @@
                                 <div class="col-sm-8">
                                     <textarea name="problems" class="form-control" rows="4" required></textarea>
                                     <small class="form-text text-muted">
-<span id="char-count-problems">0</span>/520 characters
-        </small>
+                                    <span id="char-count-problems">0</span>/520 characters
+                                            </small>
                                 </div>
                             </div>
 
@@ -164,8 +165,8 @@
                                 <div class="col-sm-8">
                                     <textarea name="why_volunteer" class="form-control" rows="4" required></textarea>
                                     <small class="form-text text-muted">
-<span id="char-count-volunteer">0</span>/520 characters
-        </small>
+                                <span id="char-count-volunteer">0</span>/520 characters
+                                        </small>
                                 </div>
                             </div>
 
@@ -174,8 +175,8 @@
                                 <div class="col-sm-8">
                                     <textarea name="other_volunteer" class="form-control" rows="4" required></textarea>
                                     <small class="form-text text-muted">
-<span id="char-count-other">0</span>/520 characters
-        </small>
+                                        <span id="char-count-other">0</span>/520 characters
+                                                </small>
                                 </div>
                             </div>
 
@@ -184,8 +185,8 @@
                                 <div class="col-sm-8">
                                     <textarea name="special_skills" class="form-control" rows="4" required></textarea>
                                     <small class="form-text text-muted">
-<span id="char-count-skills">0</span>/520 characters
-        </small>
+                                        <span id="char-count-skills">0</span>/520 characters
+                                                </small>
                                 </div>
                             </div>
 
@@ -194,8 +195,8 @@
                                 <div class="col-sm-8">
                                     <textarea name="enjoy_volunteering" class="form-control" rows="4" required></textarea>
                                     <small class="form-text text-muted">
-<span id="char-count-enjoy">0</span>/520 characters
-        </small>
+                                    <span id="char-count-enjoy">0</span>/520 characters
+                                            </small>
                                 </div>
                             </div>
 
@@ -205,7 +206,6 @@
                                     <input type="text" name="referred_by" id="referred_by" class="form-control"  required>
                                 </div>
                             </div>
-
 
                         <div class="card-body text-center">
                             <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after application submission.</div>
@@ -226,11 +226,11 @@
 
 <div class="col-md-12" style="font-size: 0.8em"></div>
 
-
 </div>
 <!-- /.container- -->
 @endsection
 @section('customscript')
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Define all textareas and their corresponding counter IDs with their max lengths
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Additional email validation
-document.getElementById('email').addEventListener('blur', function() {
+document.getElementById('cd_email').addEventListener('blur', function() {
     let emailInput = this.value.trim();
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

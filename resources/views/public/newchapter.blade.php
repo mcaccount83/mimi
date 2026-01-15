@@ -6,6 +6,7 @@
                 <div class="col-md-12">
                     <form class="form-horizontal" method="POST" action='{{ route("public.updatenewchapter") }}'>
                         @csrf
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                         <div class="col-md-12">
                             <div class="card card-widget widget-user">
