@@ -289,27 +289,33 @@ document.getElementById('fee').addEventListener('input', calculateTotal);
 document.addEventListener('DOMContentLoaded', calculateTotal);
 
     // Additional email validation
-    document.getElementById('email').addEventListener('blur', function() {
+const emailField = document.getElementById('email');
+if (emailField) {
+    emailField.addEventListener('blur', function() {
         let emailInput = this.value.trim();
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailRegex.test(emailInput)) {
-            document.getElementById('emailHelp').innerHTML = 'Please enter a valid email address.';
+            this.setCustomValidity('Please enter a valid email address.');
         } else {
-            document.getElementById('emailHelp').innerHTML = '';
+            this.setCustomValidity('');
         }
     });
+}
 
-     document.getElementById('ship_email').addEventListener('blur', function() {
+const emailField = document.getElementById('ship_email');
+if (emailField) {
+    emailField.addEventListener('blur', function() {
         let emailInput = this.value.trim();
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailRegex.test(emailInput)) {
-            document.getElementById('emailHelp').innerHTML = 'Please enter a valid email address.';
+            this.setCustomValidity('Please enter a valid email address.');
         } else {
-            document.getElementById('emailHelp').innerHTML = '';
+            this.setCustomValidity('');
         }
     });
+}
 
 </script>
 @endsection

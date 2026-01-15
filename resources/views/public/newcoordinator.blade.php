@@ -301,16 +301,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Additional email validation
-document.getElementById('cd_email').addEventListener('blur', function() {
-    let emailInput = this.value.trim();
-    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const emailField = document.getElementById('cd_email');
+if (emailField) {
+    emailField.addEventListener('blur', function() {
+        let emailInput = this.value.trim();
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailRegex.test(emailInput)) {
-        document.getElementById('emailHelp').innerHTML = 'Please enter a valid email address.';
-    } else {
-        document.getElementById('emailHelp').innerHTML = '';
-    }
-});
+        if (!emailRegex.test(emailInput)) {
+            this.setCustomValidity('Please enter a valid email address.');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+}
 
 </script>
 @endsection

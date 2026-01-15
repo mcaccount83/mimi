@@ -310,17 +310,20 @@ $(document).ready(function () {
     // Call calculateTotal function initially to calculate total based on default values
     calculateTotal();
 
-    // Additional email validation
-    document.getElementById('email').addEventListener('blur', function() {
+// Additional email validation
+const emailField = document.getElementById('email');
+if (emailField) {
+    emailField.addEventListener('blur', function() {
         let emailInput = this.value.trim();
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailRegex.test(emailInput)) {
-            document.getElementById('emailHelp').innerHTML = 'Please enter a valid email address.';
+            this.setCustomValidity('Please enter a valid email address.');
         } else {
-            document.getElementById('emailHelp').innerHTML = '';
+            this.setCustomValidity('');
         }
     });
+}
 
 </script>
 @endsection
