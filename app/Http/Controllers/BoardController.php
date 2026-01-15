@@ -63,9 +63,11 @@ class BoardController extends Controller implements HasMiddleware
 
     protected $learndashService;
 
+    protected $googleController;
+
     public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController, PositionConditionsService $positionConditionsService,
-        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, FinancialReportController $financialReportController, EmailTableController $emailTableController,
-        BaseChapterController $baseChapterController, LearnDashService $learndashService)
+        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, FinancialReportController $financialReportController,
+        EmailTableController $emailTableController, GoogleController $googleController, BaseChapterController $baseChapterController, LearnDashService $learndashService)
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
@@ -77,6 +79,7 @@ class BoardController extends Controller implements HasMiddleware
         $this->emailTableController = $emailTableController;
         $this->financialReportController = $financialReportController;
         $this->learndashService = $learndashService;
+        $this->googleController = $googleController;
     }
 
     public static function middleware(): array

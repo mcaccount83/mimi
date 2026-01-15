@@ -28,6 +28,8 @@
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
 
+<script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script>
+
 <script>
     window.onload = function () {
         if (window.history && window.history.pushState) {
@@ -304,6 +306,7 @@
 @include('layouts.scripts.password')
 @include('layouts.scripts.pdfviewer')
 @include('layouts.scripts.uploads')
+@include('layouts.scripts.recaptcha')
 
 @include('layouts.scripts.website')
 

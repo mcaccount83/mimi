@@ -30,7 +30,7 @@ class NewCoordinatorThankYou extends BaseMailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.payments.newcoordthankyou',
+            markdown: 'emails.coordinator.newcoordthankyou',
         );
     }
 

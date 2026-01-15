@@ -37,13 +37,16 @@ class PaymentController extends Controller implements HasMiddleware
 
     protected $positionConditionsService;
 
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController, PositionConditionsService $positionConditionsService)
+    protected $googleController;
+
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController,
+    PositionConditionsService $positionConditionsService, GoogleController $googleController)
     {
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
         $this->baseMailDataController = $baseMailDataController;
         $this->positionConditionsService = $positionConditionsService;
-
+        $this->googleController = $googleController;
     }
 
     public static function middleware(): array
@@ -116,19 +119,14 @@ class PaymentController extends Controller implements HasMiddleware
      */
     public function reRegistrationPayment(Request $request): RedirectResponse
     {
+        // Verify reCAPTCHA Enterprise
+        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
+            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
+        }
+
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
         $chapterId = $user['chapterId'];
-
-        // if ($userTypeId == UserTypeEnum::BOARD) {
-        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-        // }
-        // if ($userTypeId == UserTypeEnum::DISBANDED) {
-        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
-        // }
-        // if ($userTypeId == UserTypeEnum::OUTGOING) {
-        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
-        // }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -201,17 +199,6 @@ class PaymentController extends Controller implements HasMiddleware
                 $payments->save();
             }
 
-            // if ($userTypeId == UserTypeEnum::BOARD) {
-            //     $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-            // }
-            // if ($userTypeId == UserTypeEnum::DISBANDED) {
-            //     $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
-            // }
-            // if ($userTypeId == UserTypeEnum::OUTGOING) {
-            //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
-            // }
-            // $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-
             $baseQueryUpd = $this->baseBoardController->getChapterDetails($chapterId);
             $chPayments = $baseQueryUpd['chPayments'];
 
@@ -253,19 +240,14 @@ class PaymentController extends Controller implements HasMiddleware
      */
     public function m2mPayment(Request $request): RedirectResponse
     {
+        // Verify reCAPTCHA Enterprise
+        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
+            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
+        }
+
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
         $chapterId = $user['chapterId'];
-
-        // if ($userTypeId == UserTypeEnum::BOARD) {
-        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-        // }
-        // if ($userTypeId == UserTypeEnum::DISBANDED) {
-        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
-        // }
-        // if ($userTypeId == UserTypeEnum::OUTGOING) {
-        //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
-        // }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -355,16 +337,6 @@ class PaymentController extends Controller implements HasMiddleware
                 $payments->save();
             }
 
-            // if ($userTypeId == UserTypeEnum::BOARD) {
-            //     $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-            // }
-            // if ($userTypeId == UserTypeEnum::DISBANDED) {
-            //     $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->boardDisbanded->chapter_id);
-            // }
-            // if ($userTypeId == UserTypeEnum::OUTGOING) {
-            //     $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->boardOutgoing->chapter_id);
-            // }
-
             $baseQueryUpd = $this->baseBoardController->getChapterDetails($chapterId);
             $chPayments = $baseQueryUpd['chPayments'];
 
@@ -414,6 +386,11 @@ class PaymentController extends Controller implements HasMiddleware
      */
     public function manualPayment(Request $request): RedirectResponse
     {
+        // Verify reCAPTCHA Enterprise
+        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
+            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
+        }
+
         $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
