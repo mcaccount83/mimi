@@ -45,7 +45,7 @@
     }
 
     function showCoordDirect() {
-        var base_url = '{{ url("/coordinator/coordlist") }}';
+        var base_url = window.location.origin + window.location.pathname;
         if ($("#showDirect").prop("checked") == true) {
             window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::DIRECT_REPORT }}=yes';
         } else {
@@ -54,7 +54,7 @@
     }
 
     function showCoordAllConf() {
-        var base_url = '{{ url("/coordinator/coordlist") }}';
+        var base_url = window.location.origin + window.location.pathname;
         if ($("#showAllConf").prop("checked") == true) {
             window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::CONFERENCE_REGION }}=yes';
         } else {
@@ -63,11 +63,12 @@
     }
 
     function showCoordAll() {
-        var base_url = '{{ url("/coordinator/coordlist") }}';
+        var base_url = window.location.origin + window.location.pathname;
         if ($("#showAll").prop("checked") == true) {
             window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::INTERNATIONAL }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
+
 </script>
