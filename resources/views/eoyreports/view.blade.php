@@ -298,19 +298,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $chapter_awards = null;
+                                    @php
+                                        $chapter_awards = null;
 
-                                    if (isset($chFinancialReport['chapter_awards']) && !empty($chFinancialReport['chapter_awards'])) {
-                                        $blobData = base64_decode($chFinancialReport['chapter_awards']);
-                                        $chapter_awards = unserialize($blobData);
+                                        if (isset($chFinancialReport['chapter_awards']) && !empty($chFinancialReport['chapter_awards'])) {
+                                            $blobData = base64_decode($chFinancialReport['chapter_awards']);
+                                            $chapter_awards = unserialize($blobData);
+                                        }
+                                    @endphp
 
-                                        if ($chapter_awards == false) {
-                                            echo "<tr><td colspan='3'>Error: Failed to unserialize data.</td></tr>";
-                                        } elseif (is_array($chapter_awards) && count($chapter_awards) > 0) {
-                                            foreach ($chapter_awards as $row) {
-                                                echo "<tr style='border-bottom: 1px solid #ddd;'>";
-
+                                    @if ($chapter_awards === false)
+                                        <tr><td colspan='3'>Error: Failed to unserialize data.</td></tr>
+                                    @elseif (is_array($chapter_awards) && count($chapter_awards) > 0)
+                                        @foreach ($chapter_awards as $row)
+                                            @php
                                                 // Get award type name instead of just ID
                                                 $awardType = "Unknown";
                                                 foreach($allAwards as $award) {
@@ -319,19 +320,16 @@
                                                         break;
                                                     }
                                                 }
-
-                                                echo "<td>" . htmlspecialchars($awardType) . "</td>";
-                                                echo "<td>" . htmlspecialchars($row['awards_desc']) . "</td>";
-                                                echo "<td>" . ($row['awards_approved'] == 1 ? 'Yes' : 'No') . "</td>";
-                                                echo "</tr>";
-                                            }
-                                        } else {
-                                            echo "<tr><td colspan='3'>No awards.</td></tr>";
-                                        }
-                                    } else {
-                                        echo "<tr><td colspan='3'>No awards.</td></tr>";
-                                    }
-                                    ?>
+                                            @endphp
+                                            <tr style='border-bottom: 1px solid #ddd;'>
+                                                <td>{{ $awardType }}</td>
+                                                <td>{{ $row['awards_desc'] }}</td>
+                                                <td>{{ $row['awards_approved'] == 1 ? 'Yes' : 'No' }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr><td colspan='3'>No awards.</td></tr>
+                                    @endif
                                 </tbody>
                             </table>
                     </div>

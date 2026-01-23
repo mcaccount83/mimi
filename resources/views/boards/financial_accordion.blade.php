@@ -2017,14 +2017,15 @@
 <section>
     @if (!is_null($chEOYDocuments['statement_1_path']))
         <div class="col-md-12">
-            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_1_path']; ?>" >&nbsp; View Bank Statement</a><br>
+            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['statement_1_path'] }}">&nbsp; View Bank Statement</a><br>
         </div>
     @endif
     @if (!is_null($chEOYDocuments['statement_2_path']))
         <div class="col-md-12">
-            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_2_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
+            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['statement_2_path'] }}">&nbsp; View Additional Bank Statement</a><br>
         </div>
     @endif
+
     <div class="col-md-12" id="StatementBlock">
         <strong style="color:red">Please Note</strong><br>
             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
@@ -2111,7 +2112,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
                     <input type="text" class="form-control" name="LastYearReportEnding" id="LastYearReportEnding"
-                        value="{{$chFinancialReport['pre_balance'] }}?>"
+                        value="{{$chFinancialReport['pre_balance'] }}"
                         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                 </div>
             </div>
@@ -2312,7 +2313,7 @@
 <section>
     @if (!is_null($chEOYDocuments['irs_path']))
         <div class="col-md-12">
-            <label>990N Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['irs_path']; ?>" >&nbsp; View 990N Confirmation</a><br>
+            <label>990N Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['irs_path'] }}">&nbsp; View 990N Confirmation</a><br>
         </div>
     @endif
 
@@ -2985,7 +2986,8 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         available at International's discretion, adn if a replacement is made because of an error in the entry information, the cost will be pain in advance by the local chapter.
                     </p>
                     <div class="checkbox">
-                        <input class="form-check-input" type="checkbox" id="AwardsAgree" name="AwardsAgree" <?php if (isset($chFinancialReport['award_agree']) && $chFinancialReport['award_agree'] == 1) echo "checked"; ?>  required>
+                        <input class="form-check-input" type="checkbox" id="AwardsAgree" name="AwardsAgree"
+                            @checked(isset($chFinancialReport['award_agree']) && $chFinancialReport['award_agree'] == 1) required>
                         <label class="form-check-label"><strong>I understand and agree to the above</strong></label>
                     </div>
                 </div>
@@ -3112,7 +3114,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 <!------End Step 13 ------>
 
 <!------Start Step 14 ------>
-<div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='14') echo "active";?>">
+<div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '14' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
         <a class="d-block" data-toggle="collapse" href="#collapseFourteen" style="width: 100%;">SUBMIT REPORT</a>

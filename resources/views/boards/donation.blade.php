@@ -52,8 +52,7 @@
 
                     <form method="POST" action="{{ route('process.donation') }}">
                         @csrf
-                        <?php
-                        ?>
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                         <div class="form-group row">
                             <div class="col-md-6">

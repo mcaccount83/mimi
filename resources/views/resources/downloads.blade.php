@@ -52,7 +52,7 @@
             </div>
         </div>
 
-            <?php if($founderCondition  || $ITCondition){?>
+            @if ($founderCondition  || $ITCondition)
             <div class="col-md-6">
                 <div class="card card-outline card-primary">
                     <div class="card-header">
@@ -85,9 +85,9 @@
                             <button class="btn btn-themeBlue margin" onclick="startExport('constantcontact', 'Constant Contact List')"><i class="fas fa-download"></i>&nbsp; Export Constant Contact List</button>
                         </div>
                 </div>
-    <?php } ?>
            </div>
            </div>
+        @endif
           <!-- /.box -->
 
            </div>

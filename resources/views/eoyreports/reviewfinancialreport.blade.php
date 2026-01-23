@@ -28,7 +28,7 @@
             <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("eoyreports.updatefinancialreport", $chDetails->id) }}' novalidate>
                 @csrf
                 <input type="hidden" name="submitted" id="submitted" value="{{ $chFinancialReport['financial_report_received'] }}" />
-                <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($chFinancialReport['farthest_step_visited_coord'] != null) echo $chFinancialReport['farthest_step_visited_coord']; else echo '14'; ?>" />
+                <input type="hidden" name="FurthestStep" id="FurthestStep" value="{{ $chFinancialReport['farthest_step_visited_coord'] != null ? $chFinancialReport['farthest_step_visited_coord'] : '14' }}" />
                 <input type="hidden" name="submit_type" id="submit_type" value="" />
 
           <!-- Profile Image -->
@@ -44,40 +44,40 @@
             @if ($chEOYDocuments['financial_report_received'])
             @if ($chEOYDocuments->$yearColumnName != null)
                 <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                    <b>Financial Report PDF:</b> <span class="float-right"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments->$yearColumnName; ?>">Download PDF</a></span>
+                    <b>Financial Report PDF:</b> <span class="float-right"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName }}">Download PDF</a></span>
                 </div>
             @endif
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Chapter Roster File:</b> <span class="float-right">
                 @if ($chEOYDocuments['roster_path'] != null)
-                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['roster_path']; ?>">Chapter Roster</a></span>
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['roster_path'] }}">Chapter Roster</a></span>
                 @else
-                No file attached</span>
+                    No file attached</span>
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Primary Bank Statement:</b> <span class="float-right">
                 @if ($chEOYDocuments['statement_1_path'] != null)
-                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_1_path']; ?>">Primary Statement</a></span>
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['statement_1_path'] }}">Primary Statement</a></span>
                 @else
-                No file attached</span>
+                    No file attached</span>
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Additional Bank Statement:</b> <span class="float-right">
-                    @if ($chEOYDocuments['statement_2_path'] != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_2_path']; ?>">Additional Statement</a></span>
-                    @else
+                @if ($chEOYDocuments['statement_2_path'] != null)
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['statement_2_path'] }}">Additional Statement</a></span>
+                @else
                     No file attached</span>
-                    @endif
+                @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>990N Filing:</b> <span class="float-right">
-                    @if ($chEOYDocuments['irs_path'] != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['irs_path']; ?>">990N Confirmation</a></span>
-                    @else
+                @if ($chEOYDocuments['irs_path'] != null)
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['irs_path'] }}">990N Confirmation</a></span>
+                @else
                     No file attached</span>
-                    @endif
+                @endif
             </div>
             @endif
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
@@ -97,60 +97,60 @@
                     : ($chFinancialReport ['check_m2m_donation'] == 0 ? 'NO' : ($chFinancialReport ['check_m2m_donation'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Party Percentage:</b> <span class="float-right">
-                        <?php
-                                $newMembers = $chFinancialReport['total_new_members'] * $chFinancialReport['dues_per_member'];
-                                $renewalMembers = $chFinancialReport['total_renewed_members'] * $chFinancialReport['dues_per_member'];
-                                $renewalMembersDiff = $chFinancialReport['total_renewed_members'] * $chFinancialReport['dues_per_member_renewal'];
-                                $newMembersNew = $chFinancialReport['total_new_members_changed_dues'] * $chFinancialReport['dues_per_member_new_changed'];
-                                $renewMembersNew = $chFinancialReport['total_renewed_members_changed_dues'] * $chFinancialReport['dues_per_member_new_changed'];
-                                $renewMembersNewDiff = $chFinancialReport['total_renewed_members_changed_dues'] * $chFinancialReport['dues_per_member_renewal_changed'];
-                                $partialMembers = $chFinancialReport['members_who_paid_partial_dues'] * $chFinancialReport['total_partial_fees_collected'];
-                                $associateMembers = $chFinancialReport['total_associate_members'] * $chFinancialReport['associate_member_fee'];
+                <b>Party Percentage:</b>
+                <span class="float-right">
+                    @php
+                        $newMembers = $chFinancialReport['total_new_members'] * $chFinancialReport['dues_per_member'];
+                        $renewalMembers = $chFinancialReport['total_renewed_members'] * $chFinancialReport['dues_per_member'];
+                        $renewalMembersDiff = $chFinancialReport['total_renewed_members'] * $chFinancialReport['dues_per_member_renewal'];
+                        $newMembersNew = $chFinancialReport['total_new_members_changed_dues'] * $chFinancialReport['dues_per_member_new_changed'];
+                        $renewMembersNew = $chFinancialReport['total_renewed_members_changed_dues'] * $chFinancialReport['dues_per_member_new_changed'];
+                        $renewMembersNewDiff = $chFinancialReport['total_renewed_members_changed_dues'] * $chFinancialReport['dues_per_member_renewal_changed'];
+                        $partialMembers = $chFinancialReport['members_who_paid_partial_dues'] * $chFinancialReport['total_partial_fees_collected'];
+                        $associateMembers = $chFinancialReport['total_associate_members'] * $chFinancialReport['associate_member_fee'];
 
-                                $totalMembers = $chFinancialReport['total_new_members'] +$chFinancialReport['total_renewed_members'] + $chFinancialReport['total_new_members_changed_dues'] + $chFinancialReport['total_renewed_members_changed_dues']
-                                        + $chFinancialReport['members_who_paid_partial_dues'] + $chFinancialReport['total_associate_members']+ $chFinancialReport['members_who_paid_no_dues'];
+                        $totalMembers = $chFinancialReport['total_new_members'] + $chFinancialReport['total_renewed_members'] + $chFinancialReport['total_new_members_changed_dues'] + $chFinancialReport['total_renewed_members_changed_dues']
+                                + $chFinancialReport['members_who_paid_partial_dues'] + $chFinancialReport['total_associate_members'] + $chFinancialReport['members_who_paid_no_dues'];
 
-                                if ($chFinancialReport['different_dues'] == 1 && $chFinancialReport['changed_dues'] == 1) {
-                                    $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
-                                } elseif ($chFinancialReport['different_dues'] == 1) {
-                                    $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
-                                } elseif ($chFinancialReport['changed_dues'] == 1) {
-                                    $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
-                                } else {
-                                    $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
+                        if ($chFinancialReport['different_dues'] == 1 && $chFinancialReport['changed_dues'] == 1) {
+                            $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
+                        } elseif ($chFinancialReport['different_dues'] == 1) {
+                            $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
+                        } elseif ($chFinancialReport['changed_dues'] == 1) {
+                            $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
+                        } else {
+                            $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
+                        }
+
+                        $party_expenses = null;
+                        $totalPartyIncome = 0;
+                        $totalPartyExpense = 0;
+                        $partyPercentage = 0; // initialize
+
+                        if (isset($chFinancialReport['party_expense_array'])) {
+                            $blobData = base64_decode($chFinancialReport['party_expense_array']);
+                            $party_expenses = unserialize($blobData);
+
+                            if ($party_expenses != false) {
+                                foreach ($party_expenses as $row) {
+                                    // Clean the numbers by removing commas and casting to float
+                                    $income = is_numeric(str_replace(',', '', $row['party_expense_income']))
+                                        ? floatval(str_replace(',', '', $row['party_expense_income'])) : 0;
+                                    $expense = is_numeric(str_replace(',', '', $row['party_expense_expenses']))
+                                        ? floatval(str_replace(',', '', $row['party_expense_expenses'])) : 0;
+
+                                    $totalPartyIncome += $income;
+                                    $totalPartyExpense += $expense;
                                 }
-                            ?>
-                     <?php
-$party_expenses = null;
-$totalPartyIncome = 0;
-$totalPartyExpense = 0;
-$partyPercentage = 0; // initialize
 
-if (isset($chFinancialReport['party_expense_array'])) {
-    $blobData = base64_decode($chFinancialReport['party_expense_array']);
-    $party_expenses = unserialize($blobData);
-
-    if ($party_expenses != false) {
-        foreach ($party_expenses as $row) {
-            // Clean the numbers by removing commas and casting to float
-            $income = is_numeric(str_replace(',', '', $row['party_expense_income']))
-                ? floatval(str_replace(',', '', $row['party_expense_income'])) : 0;
-            $expense = is_numeric(str_replace(',', '', $row['party_expense_expenses']))
-                ? floatval(str_replace(',', '', $row['party_expense_expenses'])) : 0;
-
-            $totalPartyIncome += $income;
-            $totalPartyExpense += $expense;
-        }
-
-        if (!empty($totalDues) && $totalDues != 0) {
-            $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
-        }
-    }
-}
-?>
-
+                                if (!empty($totalDues) && $totalDues != 0) {
+                                    $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
+                                }
+                            }
+                        }
+                    @endphp
                 </span>
+
     <span class="float-right">{{ number_format($partyPercentage * 100, 2) }}%</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
@@ -272,9 +272,8 @@ if (isset($chFinancialReport['party_expense_array'])) {
 
             </li>
             <li class="list-group-item">
-
-               <strong>Reviewer Notes Logged for this Report (not visible to chapter):</strong><br>
-                    <?php
+                <strong>Reviewer Notes Logged for this Report (not visible to chapter):</strong><br>
+                @php
                     $financial_report_notes = [];
                     for ($i = 1; $i <= 13; $i++) {
                         $key = 'step_' . $i . '_notes_log';
@@ -283,23 +282,21 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             $financial_report_notes = array_merge($financial_report_notes, $notes);
                         }
                     }
-
-                    echo empty($financial_report_notes) ? 'No notes logged for this report.' : implode('<br>', $financial_report_notes);
-                    ?>
+                @endphp
+                {!! empty($financial_report_notes) ? 'No notes logged for this report.' : implode('<br>', $financial_report_notes) !!}
             </li>
             <li class="list-group-item">
+            <div class="d-flex justify-content-between w-100">
+                <b>Report Completed By:</b> <span class="float-right">{{ !is_null($chFinancialReport) ? $chFinancialReport['completed_name'] : '' }}</span>
+            </div>
+            <div class="d-flex justify-content-between w-100">
+                <b>Contact Email:</b> <span class="float-right"><a href="mailto:{{ !is_null($chFinancialReport) ? $chFinancialReport['completed_email'] : '' }}">{{ !is_null($chFinancialReport) ? $chFinancialReport['completed_email'] : '' }}</a></span>
+            </div>
 
-        <div class="d-flex justify-content-between w-100">
-            <b>Report Completed By:</b> <span class="float-right"><?php if (!is_null($chFinancialReport)) {echo $chFinancialReport['completed_name'];}?>
-        </div>
-        <div class="d-flex justify-content-between w-100">
-            <b>Contact Email:</b> <span class="float-right"><a href="mailto:<?php if (!is_null($chFinancialReport)) {echo $chFinancialReport['completed_email'];}?>"><?php if (!is_null($chFinancialReport)) {echo $chFinancialReport['completed_email'];}?></a></p>
-        </div>
-
-        <div class="d-flex align-items-center justify-content-between w-100">
-            <?php if ($chEOYDocuments->financial_report_received == 1 && $chFinancialReport['reviewer_id'] == null): ?>
+            <div class="d-flex align-items-center justify-content-between w-100">
+                @if ($chEOYDocuments->financial_report_received == 1 && $chFinancialReport['reviewer_id'] == null)
                     <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.<br></span>
-                <?php endif; ?>
+                @endif
                 <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
                 <select class="form-control" name="AssignedReviewer" id="AssignedReviewer" style="width: 250px;"  required>
                     <option value="" style="display:none" disabled selected>Select a reviewer</option>
@@ -315,12 +312,12 @@ if (isset($chFinancialReport['party_expense_array'])) {
 
                 <div class="form-group" id="emailMessageGroup" style="display: none;">
                 <label for="AssignedReviewer"><strong>Additional Email Message for Reviewer:</strong></label>
-                <textarea class="form-control" style="width:100%" rows="8" name="reviewer_email_message" id="reviewer_email_message"><?php echo $chFinancialReport['reviewer_email_message']; ?></textarea>
+                <textarea class="form-control" style="width:100%" rows="8" name="reviewer_email_message" id="reviewer_email_message">{{ $chFinancialReport['reviewer_email_message'] }}</textarea>
             </div>
 
             <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                    <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
 
+        <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
         <div class="card-body text-center">
             <br>
             <button type="submit" id="btn-step-14" class="btn bg-gradient-primary mb-2"><i class="fas fa-save mr-2"></i>Save Report Review</button>
@@ -352,7 +349,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                 <button type="button" id="generate-pdf" class="btn bg-gradient-primary btn-sm" onclick="generateFinancialReport()"><i class="fas fa-rotate mr-2"></i>Regenerate Financial PDF</button>
             @elseif ($chEOYDocuments->$yearColumnName == null && $chEOYDocuments['financial_report_received'])
                 <br>
-                <button type="button" id="generate-pdf" class="btn bg-gradient-primary btn-sm" onclick="generateFinancialReport()"><i class="fas fa-rotate mr-2">Generate Financial PDF</button>
+                <button type="button" id="generate-pdf" class="btn bg-gradient-primary btn-sm" onclick="generateFinancialReport()"><i class="fas fa-rotate mr-2"></i>Generate Financial PDF</button>
             @endif
         </div>
         </li>
@@ -390,13 +387,14 @@ if (isset($chFinancialReport['party_expense_array'])) {
 
                 <div class="col-12"  id="accordion">
                     	<!------Start Step 1 ------>
-                    <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='1') echo "active";?>">
+                    <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'active' : '' }}">
                         <div class="card-header" id="accordion-header-members">
                             <h4 class="card-title w-100">
                                 <a class="d-block" data-toggle="collapse" href="#collapseOne" style="width: 100%;">CHAPTER DUES</a>
                             </h4>
                         </div>
-                        <div id="collapseOne" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='1') echo 'show'; ?>" data-parent="#accordion">
+                        <div id="collapseOne" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'show' : '' }}" data-parent="#accordion">
+
                             <div class="card-body">
 						<section>
                             Did your chapter change dues this year?&nbsp;&nbsp;&nbsp;
@@ -522,7 +520,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 @endif
                             </div>
 
-                            <?php
+                            @php
                                 $newMembers = $chFinancialReport['total_new_members'] * $chFinancialReport['dues_per_member'];
                                 $renewalMembers = $chFinancialReport['total_renewed_members'] * $chFinancialReport['dues_per_member'];
                                 $renewalMembersDiff = $chFinancialReport['total_renewed_members'] * $chFinancialReport['dues_per_member_renewal'];
@@ -532,8 +530,8 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 $partialMembers = $chFinancialReport['members_who_paid_partial_dues'] * $chFinancialReport['total_partial_fees_collected'];
                                 $associateMembers = $chFinancialReport['total_associate_members'] * $chFinancialReport['associate_member_fee'];
 
-                                $totalMembers = $chFinancialReport['total_new_members'] +$chFinancialReport['total_renewed_members'] + $chFinancialReport['total_new_members_changed_dues'] + $chFinancialReport['total_renewed_members_changed_dues']
-                                        + $chFinancialReport['members_who_paid_partial_dues'] + $chFinancialReport['total_associate_members']+ $chFinancialReport['members_who_paid_no_dues'];
+                                $totalMembers = $chFinancialReport['total_new_members'] + $chFinancialReport['total_renewed_members'] + $chFinancialReport['total_new_members_changed_dues'] + $chFinancialReport['total_renewed_members_changed_dues']
+                                        + $chFinancialReport['members_who_paid_partial_dues'] + $chFinancialReport['total_associate_members'] + $chFinancialReport['members_who_paid_no_dues'];
 
                                 if ($chFinancialReport['different_dues'] == 1 && $chFinancialReport['changed_dues'] == 1) {
                                     $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
@@ -544,7 +542,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 } else {
                                     $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
                                 }
-                            ?>
+                            @endphp
 
                         <br><strong>Total Members:&nbsp;&nbsp;&nbsp;{{ $totalMembers }}</strong></td><br>
                             <strong>Total Dues Collected:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalDues, 2) }}</strong></td><br>
@@ -572,7 +570,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
                                     </div>
                                 @endif
-                                <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $chEOYDocuments['roster_path']; ?>">
+                                <input type="hidden" name="RosterPath" id="RosterPath" value="{{ $chEOYDocuments['roster_path'] }}">
                                 <div class="clearfix"></div>
                                 <div class="col-12"><br></div>
                                 <div class="col-12">
@@ -605,7 +603,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         </div>
                                         <div class="form-group row">
                                             <label for="Step1_Note">Add New Note:</label>
-                                            <textarea class="form-control" style="width:100%" rows="3" name="Step1_Note" id="Step1_Note" oninput="EnableNoteLogButton(1)" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
+                                            <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(1)" name="Step1_Note" id="Step1_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                                 <button type="button" id="AddNote1" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(1)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                             </div>
@@ -616,7 +614,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 										<label for="Step1_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 									</div>
 									<div class="col-12">
-										<textarea class="form-control" rows="8" name="Step1_Log" id="Step1_Log" readonly style="width:100%"><?php echo $chFinancialReport['step_1_notes_log']; ?></textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step1_Log" id="Step1_Log" readonly>{{ $chFinancialReport['step_1_notes_log'] }}</textarea>
 									</div>
                                     <div class="col-12"><br></div>
 
@@ -633,13 +631,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
 				<!------End Step 1 ------>
 
 				<!------Start Step 2 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='2') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseTwo" style="width: 100%;">MONTHLY MEETING EXPENSES</a>
                         </h4>
                     </div>
-                    <div id="collapseTwo" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='2') echo 'show'; ?>" data-parent="#accordion" data-parent="#accordion">
+                    <div id="collapseTwo" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
 						<section>
                             Meeting Room Fees:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['manditory_meeting_fees_paid'], 2) }}</strong><br>
@@ -683,61 +681,63 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             <br>
                             Children's Room Miscellaneous:
                             <table width="75%" style="border-collapse: collapse;">
-    <thead>
-        <tr style="border-bottom: 1px solid #333;">
-            <td>Description</td>
-            <td>Supplies</td>
-            <td>Other Expenses</td>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-            $childrens_room = null;
-            $totalChildrenSupplies = 0;
-            $totalChildrenOther = 0;
-            if (isset($chFinancialReport['childrens_room_expenses']) && $chFinancialReport['childrens_room_expenses'] != null) {
-                $blobData = base64_decode($chFinancialReport['childrens_room_expenses']);
-                $childrens_room = unserialize($blobData);
-                if ($childrens_room == false) {
-                    echo "Error: Failed to unserialize data.";
-                } else {
-                    if (is_array($childrens_room) && count($childrens_room) > 0) {
-                        foreach ($childrens_room as $row) {
-                            // Sanitize inputs
-                            $supplies = is_numeric(str_replace(',', '', $row['childrens_room_supplies'])) ? floatval(str_replace(',', '', $row['childrens_room_supplies'])) : 0;
-                            $other = is_numeric(str_replace(',', '', $row['childrens_room_other'])) ? floatval(str_replace(',', '', $row['childrens_room_other'])) : 0;
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #333;">
+                                        <td>Description</td>
+                                        <td>Supplies</td>
+                                        <td>Other Expenses</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $childrens_room = null;
+                                        $totalChildrenSupplies = 0;
+                                        $totalChildrenOther = 0;
 
-                            echo "<tr>";
-                            echo "<td>" . htmlspecialchars($row['childrens_room_desc']) . "</td>";
-                            echo "<td>$" . number_format($supplies, 2) . "</td>";
-                            echo "<td>$" . number_format($other, 2) . "</td>";
-                            echo "</tr>";
+                                        if (isset($chFinancialReport['childrens_room_expenses']) && $chFinancialReport['childrens_room_expenses'] != null) {
+                                            $blobData = base64_decode($chFinancialReport['childrens_room_expenses']);
+                                            $childrens_room = unserialize($blobData);
+                                        }
+                                    @endphp
 
-                            // Totals
-                            $totalChildrenSupplies += $supplies;
-                            $totalChildrenOther += $other;
-                        }
-                        // Total row
-                        echo "<tr style='border-top: 1px solid #333;'>";
-                        echo "<td><strong>Total</strong></td>";
-                        echo "<td><strong>$" . number_format($totalChildrenSupplies, 2) . "</strong></td>";
-                        echo "<td><strong>$" . number_format($totalChildrenOther, 2) . "</strong></td>";
-                        echo "</tr>";
-                    } else {
-                        echo "<tr style='border-top: 1px solid #333;'>";
-                        echo "<td colspan='3'>No Children's Room Expenses Entered.</td>";
-                        echo "</tr>";
-                    }
-                }
-            } else {
-                echo "<tr style='border-top: 1px solid #333;'>";
-                echo "<td colspan='3'>No Children's Room Expenses Entered.</td>";
-                echo "</tr>";
-            }
-            $totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther;
-        ?>
-    </tbody>
-</table>
+                                    @if ($childrens_room === false)
+                                        <tr style='border-top: 1px solid #333;'>
+                                            <td colspan='3'>Error: Failed to unserialize data.</td>
+                                        </tr>
+                                    @elseif (is_array($childrens_room) && count($childrens_room) > 0)
+                                        @foreach ($childrens_room as $row)
+                                            @php
+                                                // Sanitize inputs
+                                                $supplies = is_numeric(str_replace(',', '', $row['childrens_room_supplies'])) ? floatval(str_replace(',', '', $row['childrens_room_supplies'])) : 0;
+                                                $other = is_numeric(str_replace(',', '', $row['childrens_room_other'])) ? floatval(str_replace(',', '', $row['childrens_room_other'])) : 0;
+
+                                                // Totals
+                                                $totalChildrenSupplies += $supplies;
+                                                $totalChildrenOther += $other;
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $row['childrens_room_desc'] }}</td>
+                                                <td>${{ number_format($supplies, 2) }}</td>
+                                                <td>${{ number_format($other, 2) }}</td>
+                                            </tr>
+                                        @endforeach
+                                        {{-- Total row --}}
+                                        <tr style='border-top: 1px solid #333;'>
+                                            <td><strong>Total</strong></td>
+                                            <td><strong>${{ number_format($totalChildrenSupplies, 2) }}</strong></td>
+                                            <td><strong>${{ number_format($totalChildrenOther, 2) }}</strong></td>
+                                        </tr>
+                                    @else
+                                        <tr style='border-top: 1px solid #333;'>
+                                            <td colspan='3'>No Children's Room Expenses Entered.</td>
+                                        </tr>
+                                    @endif
+
+                                    @php
+                                        $totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther;
+                                    @endphp
+                                </tbody>
+                            </table>
                             <br>
                             <strong>Total Children's Room Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport['paid_baby_sitters'] + $totalChildrensRoomExpenses, 2) }}</strong><br>
                             <hr style="border-bottom: 2px solid #007bff">
@@ -753,7 +753,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <div class="col-12">
                                                 <div class="form-group row">
                                                     <label for="Step2_Note">Add New Note:</label>
-                                                    <textarea class="form-control" style="width:100%" rows="3" name="Step2_Note" id="Step2_Note" oninput="EnableNoteLogButton(2)" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
+                                                    <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(2)" name="Step2_Note" id="Step2_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                                         <button type="button" id="AddNote2" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(2)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                                 </div>
@@ -765,7 +765,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 												<label for="Step2_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 											</div>
 											<div class="col-12">
-                                                <textarea class="form-control" rows="8" name="Step2_Log" id="Step2_Log" readonly style="width:100%"><?php echo $chFinancialReport['step_2_notes_log']; ?></textarea>
+                                                <textarea class="form-control" style="width:100%" rows="8" name="Step2_Log" id="Step2_Log" readonly>{{ $chFinancialReport['step_2_notes_log'] }}</textarea>
                                             </div>
                                             <div class="col-12"><br></div>
 
@@ -783,13 +783,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
 				<!------End Step 2 ------>
 
 				<!------Start Step 3 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='3') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseThree" style="width: 100%;">SERVICE PROJECTS</a>
                         </h4>
                     </div>
-                    <div id="collapseThree" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='3') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseThree" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
 					<section>
                         Did your chapter perform at least one service project to benefit mothers or children?&nbsp;&nbsp;&nbsp;
@@ -810,57 +810,63 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                $service_projects = null;
-                                $totalServiceIncome = 0;
-                                $totalServiceSupplies = 0;
-                                $totalServiceCharity = 0;
-                                $totalServiceM2M = 0;
+                                @php
+                                    $service_projects = null;
+                                    $totalServiceIncome = 0;
+                                    $totalServiceSupplies = 0;
+                                    $totalServiceCharity = 0;
+                                    $totalServiceM2M = 0;
 
-                                if (isset($chFinancialReport['service_project_array'])) {
-                                    $blobData = base64_decode($chFinancialReport['service_project_array']);
-                                    $service_projects = unserialize($blobData);
+                                    if (isset($chFinancialReport['service_project_array'])) {
+                                        $blobData = base64_decode($chFinancialReport['service_project_array']);
+                                        $service_projects = unserialize($blobData);
+                                    }
+                                @endphp
 
-                                    if ($service_projects == false) {
-                                        echo "Error: Failed to unserialize data.";
-                                    } else {
-                                        foreach ($service_projects as $row) {
+                                @if ($service_projects === false)
+                                    <tr style='border-top: 1px solid #333;'>
+                                        <td colspan='5'>Error: Failed to unserialize data.</td>
+                                    </tr>
+                                @elseif (is_array($service_projects) && count($service_projects) > 0)
+                                    @foreach ($service_projects as $row)
+                                        @php
                                             // Sanitize and remove commas before converting to float
                                             $income = is_numeric(str_replace(',', '', $row['service_project_income'])) ? floatval(str_replace(',', '', $row['service_project_income'])) : 0;
                                             $supplies = is_numeric(str_replace(',', '', $row['service_project_supplies'])) ? floatval(str_replace(',', '', $row['service_project_supplies'])) : 0;
                                             $charity = is_numeric(str_replace(',', '', $row['service_project_charity'])) ? floatval(str_replace(',', '', $row['service_project_charity'])) : 0;
                                             $m2m = is_numeric(str_replace(',', '', $row['service_project_m2m'])) ? floatval(str_replace(',', '', $row['service_project_m2m'])) : 0;
 
-                                            echo "<tr>";
-                                            echo "<td>" . htmlspecialchars($row['service_project_desc']) . "</td>";
-                                            echo "<td>$" . number_format($income, 2) . "</td>";
-                                            echo "<td>$" . number_format($supplies, 2) . "</td>";
-                                            echo "<td>$" . number_format($charity, 2) . "</td>";
-                                            echo "<td>$" . number_format($m2m, 2) . "</td>";
-                                            echo "</tr>";
-
                                             // Totals
                                             $totalServiceIncome += $income;
                                             $totalServiceSupplies += $supplies;
                                             $totalServiceCharity += $charity;
                                             $totalServiceM2M += $m2m;
-                                        }
-                                        // Total row
-                                        echo "<tr style='border-top: 1px solid #333;'>";
-                                        echo "<td><strong>Total</strong></td>";
-                                        echo "<td><strong>$" . number_format($totalServiceIncome, 2) . "</strong></td>";
-                                        echo "<td><strong>$" . number_format($totalServiceSupplies, 2) . "</strong></td>";
-                                        echo "<td><strong>$" . number_format($totalServiceCharity, 2) . "</strong></td>";
-                                        echo "<td><strong>$" . number_format($totalServiceM2M, 2) . "</strong></td>";
-                                        echo "</tr>";
-                                    }
-                                } else {
-                                    echo "<tr style='border-top: 1px solid #333;'>";
-                                    echo "<td colspan='5'>No Service Projects Entered.</td>";
-                                    echo "</tr>";
-                                }
-                                $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $totalServiceM2M;
-                                ?>
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $row['service_project_desc'] }}</td>
+                                            <td>${{ number_format($income, 2) }}</td>
+                                            <td>${{ number_format($supplies, 2) }}</td>
+                                            <td>${{ number_format($charity, 2) }}</td>
+                                            <td>${{ number_format($m2m, 2) }}</td>
+                                        </tr>
+                                    @endforeach
+                                    {{-- Total row --}}
+                                    <tr style='border-top: 1px solid #333;'>
+                                        <td><strong>Total</strong></td>
+                                        <td><strong>${{ number_format($totalServiceIncome, 2) }}</strong></td>
+                                        <td><strong>${{ number_format($totalServiceSupplies, 2) }}</strong></td>
+                                        <td><strong>${{ number_format($totalServiceCharity, 2) }}</strong></td>
+                                        <td><strong>${{ number_format($totalServiceM2M, 2) }}</strong></td>
+                                    </tr>
+                                @else
+                                    <tr style='border-top: 1px solid #333;'>
+                                        <td colspan='5'>No Service Projects Entered.</td>
+                                    </tr>
+                                @endif
+
+                                @php
+                                    $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $totalServiceM2M;
+                                @endphp
                             </tbody>
                         </table>
                         <br>
@@ -906,7 +912,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     <div class="col-12">
                                         <div class="form-group row">
 										<label for="Step3_Note">Add New Note:</label>
-									    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
+                                        <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                                         <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                             <button type="button" id="AddNote3" class="btn btn-sm btn-success disabled" onclick="AddNote(3)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								        </div>
@@ -917,7 +923,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 										<label for="Step3_Log"><strong>Reviewer Notes Logged for this Section (not visible to chapter):</strong></label>
 									</div>
 									<div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step3_Log" id="Step3_Log" readonly><?php echo $chFinancialReport['step_3_notes_log']; ?></textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step3_Log" id="Step3_Log" readonly>{{ $chFinancialReport['step_3_notes_log'] }}</textarea>
 									</div>
                                <div class="col-12"><br></div>
 
@@ -934,13 +940,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
 				<!------End Step 3 ------>
 
 				<!------Start Step 4 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='4') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseFour" style="width: 100%;">PARTIES & MEMBER BENEFITS</a>
                         </h4>
                     </div>
-                    <div id="collapseFour" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='4') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseFour" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
 				    <section>
                        <table width="75%" style="border-collapse: collapse;">
@@ -952,55 +958,60 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $party_expenses = null;
-                            $totalPartyIncome = 0;
-                            $totalPartyExpense = 0;
+                            @php
+                                $party_expenses = null;
+                                $totalPartyIncome = 0;
+                                $totalPartyExpense = 0;
 
-                            if (isset($chFinancialReport['party_expense_array'])) {
-                                $blobData = base64_decode($chFinancialReport['party_expense_array']);
-                                $party_expenses = unserialize($blobData);
+                                if (isset($chFinancialReport['party_expense_array'])) {
+                                    $blobData = base64_decode($chFinancialReport['party_expense_array']);
+                                    $party_expenses = unserialize($blobData);
+                                }
+                            @endphp
 
-                                if ($party_expenses == false) {
-                                    echo "Error: Failed to unserialize data.";
-                                } else {
-                                    foreach ($party_expenses as $row) {
+                            @if ($party_expenses === false)
+                                <tr style='border-top: 1px solid #333;'>
+                                    <td colspan='3'>Error: Failed to unserialize data.</td>
+                                </tr>
+                            @elseif (is_array($party_expenses) && count($party_expenses) > 0)
+                                @foreach ($party_expenses as $row)
+                                    @php
                                         // Sanitize inputs
                                         $income = is_numeric(str_replace(',', '', $row['party_expense_income'])) ? floatval(str_replace(',', '', $row['party_expense_income'])) : 0;
                                         $expense = is_numeric(str_replace(',', '', $row['party_expense_expenses'])) ? floatval(str_replace(',', '', $row['party_expense_expenses'])) : 0;
 
-                                        echo "<tr>";
-                                        echo "<td>" . htmlspecialchars($row['party_expense_desc']) . "</td>";
-                                        echo "<td>$" . number_format($income, 2) . "</td>";
-                                        echo "<td>$" . number_format($expense, 2) . "</td>";
-                                        echo "</tr>";
-
                                         // Totals
                                         $totalPartyIncome += $income;
                                         $totalPartyExpense += $expense;
-                                    }
-                                    // Total row
-                                    echo "<tr style='border-top: 1px solid #333;'>";
-                                    echo "<td><strong>Total</strong></td>";
-                                    echo "<td><strong>$" . number_format($totalPartyIncome, 2) . "</strong></td>";
-                                    echo "<td><strong>$" . number_format($totalPartyExpense, 2) . "</strong></td>";
-                                    echo "</tr>";
-
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $row['party_expense_desc'] }}</td>
+                                        <td>${{ number_format($income, 2) }}</td>
+                                        <td>${{ number_format($expense, 2) }}</td>
+                                    </tr>
+                                @endforeach
+                                {{-- Total row --}}
+                                <tr style='border-top: 1px solid #333;'>
+                                    <td><strong>Total</strong></td>
+                                    <td><strong>${{ number_format($totalPartyIncome, 2) }}</strong></td>
+                                    <td><strong>${{ number_format($totalPartyExpense, 2) }}</strong></td>
+                                </tr>
+                                @php
                                     // Calculate party percentage
                                     if ($totalDues == 0) {
                                         $partyPercentage = 0;
                                     } else {
                                         $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
                                     }
-                                }
-                            } else {
-                                echo "<tr style='border-top: 1px solid #333;'>";
-                                echo "<td colspan='3'>No Parties or Member Benefits Entered.</td>";
-                                echo "</tr>";
-
-                                $partyPercentage = 0;
-                            }
-                            ?>
+                                @endphp
+                            @else
+                                <tr style='border-top: 1px solid #333;'>
+                                    <td colspan='3'>No Parties or Member Benefits Entered.</td>
+                                </tr>
+                                @php
+                                    $partyPercentage = 0;
+                                @endphp
+                            @endif
                         </tbody>
                     </table>
                     <br>
@@ -1039,7 +1050,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 <div class="col-12">
                                     <div class="form-group row">
                                         <label for="Step4_Note">Add New Note:</label>
-									<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
+                                        <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                         <button type="button" id="AddNote4" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(4)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
@@ -1051,7 +1062,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 									<label for="Step4_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 								</div>
 								<div class="col-12">
-									<textarea class="form-control" style="width:100%" rows="8" name="Step4_Log" id="Step4_Log" readonly><?php echo $chFinancialReport['step_4_notes_log']; ?></textarea>
+                                    <textarea class="form-control" style="width:100%" rows="8" name="Step4_Log" id="Step4_Log" readonly>{{ $chFinancialReport['step_4_notes_log'] }}</textarea>
 								</div>
                                 <div class="col-12"><br></div>
 
@@ -1068,13 +1079,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
 				<!------End Step 4 ------>
 
 				<!------Start Step 5 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='5') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseFive" style="width: 100%;">OFFICE & OPERATING EXPENSES</a>
                         </h4>
                     </div>
-                    <div id="collapseFive" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='5') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseFive" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
                 <section>
                     Printing Costs:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['office_printing_costs'], 2) }}</strong><br>
@@ -1083,47 +1094,45 @@ if (isset($chFinancialReport['party_expense_array'])) {
                 <br>
                 Other Office/Operating Expenses:
                     <table width="50%" >
-                        <tbody>
-                            <?php
-                            $other_office_expenses = null;
-                            $totalOfficeExpense = 0;
+                       <tbody>
+                            @php
+                                $other_office_expenses = null;
+                                $totalOfficeExpense = 0;
 
-                            if (isset($chFinancialReport['office_other_expenses']) && $chFinancialReport['office_other_expenses'] != null) {
-                                $blobData = base64_decode($chFinancialReport['office_other_expenses']);
-                                $other_office_expenses = unserialize($blobData);
-
-                                if ($other_office_expenses == false) {
-                                    echo "Error: Failed to unserialize data.";
-                                } else {
-                                    if (is_array($other_office_expenses) && count($other_office_expenses) > 0) {
-                                        foreach ($other_office_expenses as $row) {
-                                            // Sanitize inputs
-                                            $expense = is_numeric(str_replace(',', '', $row['office_other_expense'])) ? floatval(str_replace(',', '', $row['office_other_expense'])) : 0;
-                                            echo "<tr>";
-                                            echo "<td>" . htmlspecialchars($row['office_other_desc']) . "</td>";
-                                            echo "<td>$" . number_format($expense, 2) . "</td>";
-                                            echo "</tr>";
-
-                                            // Totals
-                                            $totalOfficeExpense += $expense;
-                                        }
-                                        // Total row
-                                        echo "<tr style='border-top: 1px solid #333;'>";
-                                        echo "<td><strong>Total</strong></td>";
-                                        echo "<td><strong>$" . number_format($totalOfficeExpense, 2) . "</strong></td>";
-                                        echo "</tr>";
-                                    } else {
-                                        echo "<tr style='border-top: 1px solid #333;'>";
-                                        echo "<td colspan='2'>No Other Office/Operating Expenses Entered.</td>";
-                                        echo "</tr>";
-                                    }
+                                if (isset($chFinancialReport['office_other_expenses']) && $chFinancialReport['office_other_expenses'] != null) {
+                                    $blobData = base64_decode($chFinancialReport['office_other_expenses']);
+                                    $other_office_expenses = unserialize($blobData);
                                 }
-                            } else {
-                                echo "<tr style='border-top: 1px solid #333;'>";
-                                echo "<td colspan='2'>No Other Office/Operating Expenses Entered.</td>";
-                                echo "</tr>";
-                            }
-                            ?>
+                            @endphp
+
+                            @if ($other_office_expenses === false)
+                                <tr style='border-top: 1px solid #333;'>
+                                    <td colspan='2'>Error: Failed to unserialize data.</td>
+                                </tr>
+                            @elseif (is_array($other_office_expenses) && count($other_office_expenses) > 0)
+                                @foreach ($other_office_expenses as $row)
+                                    @php
+                                        // Sanitize inputs
+                                        $expense = is_numeric(str_replace(',', '', $row['office_other_expense'])) ? floatval(str_replace(',', '', $row['office_other_expense'])) : 0;
+
+                                        // Totals
+                                        $totalOfficeExpense += $expense;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $row['office_other_desc'] }}</td>
+                                        <td>${{ number_format($expense, 2) }}</td>
+                                    </tr>
+                                @endforeach
+                                {{-- Total row --}}
+                                <tr style='border-top: 1px solid #333;'>
+                                    <td><strong>Total</strong></td>
+                                    <td><strong>${{ number_format($totalOfficeExpense, 2) }}</strong></td>
+                                </tr>
+                            @else
+                                <tr style='border-top: 1px solid #333;'>
+                                    <td colspan='2'>No Other Office/Operating Expenses Entered.</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                     <br>
@@ -1142,7 +1151,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 <div class="col-12">
                                     <div class="form-group row">
 								<label for="Step5_Note">Add New Note:</label>
-								<textarea class="form-control" rows="3" style="width:100%" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
+                                        <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                                 <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
 								<button type="button" id="AddNote5" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(5)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 						    </div>
@@ -1154,7 +1163,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 								<label for="Step5_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step5_Log" id="Step5_Log" readonly><?php echo $chFinancialReport['step_5_notes_log']; ?></textarea>
+                                <textarea class="form-control" style="width:100%" rows="8" name="Step5_Log" id="Step5_Log" readonly>{{ $chFinancialReport['step_5_notes_log'] }}</textarea>
 							</div>
                             <div class="col-12"><br></div>
 
@@ -1171,13 +1180,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
 			<!------End Step 5 ------>
 
             <!------Start Step 6 ------>
-            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='6') echo "active";?>">
+            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseSix" style="width: 100%;">INTERNATIONAL EVENTS & RE-REGISTRATION</a>
                     </h4>
                 </div>
-                <div id="collapseSix" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='6') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseSix" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'show' : '' }}" data-parent="#accordion">
                     <div class="card-body">
                     <section>
                         <strong>Chapter Re-Registration:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport['annual_registration_fee'], 2) }}</strong><br>
@@ -1194,52 +1203,50 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     <td>Expenses</td>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                $international_event_array = null;
-                                $totalEventIncome = 0;
-                                $totalEventExpense = 0;
+                           <tbody>
+                                @php
+                                    $international_event_array = null;
+                                    $totalEventIncome = 0;
+                                    $totalEventExpense = 0;
 
-                                if (isset($chFinancialReport['international_event_array']) && $chFinancialReport['international_event_array'] != null) {
-                                    $blobData = base64_decode($chFinancialReport['international_event_array']);
-                                    $international_event_array = unserialize($blobData);
-
-                                    if ($international_event_array == false) {
-                                        echo "Error: Failed to unserialize data.";
-                                    } else {
-                                        if (is_array($international_event_array) && count($international_event_array) > 0) {
-                                            foreach ($international_event_array as $row) {
-                                                // Sanitize and validate inputs
-                                                $income = is_numeric(str_replace(',', '', $row['intl_event_income'])) ? floatval(str_replace(',', '', $row['intl_event_income'])) : 0;
-                                                $expense = is_numeric(str_replace(',', '', $row['intl_event_expenses'])) ? floatval(str_replace(',', '', $row['intl_event_expenses'])) : 0;
-                                                echo "<tr>";
-                                                echo "<td>" . htmlspecialchars($row['intl_event_desc']) . "</td>";
-                                                echo "<td>$" . number_format($income, 2) . "</td>";
-                                                echo "<td>$" . number_format($expense, 2) . "</td>";
-                                                echo "</tr>";
-
-                                                // Totals
-                                                $totalEventIncome += $income;
-                                                $totalEventExpense += $expense;
-                                            }
-                                            // Total row
-                                            echo "<tr style='border-top: 1px solid #333;'>";
-                                            echo "<td><strong>Total</strong></td>";
-                                            echo "<td><strong>$" . number_format($totalEventIncome, 2) . "</strong></td>";
-                                            echo "<td><strong>$" . number_format($totalEventExpense, 2) . "</strong></td>";
-                                            echo "</tr>";
-                                        } else {
-                                            echo "<tr style='border-top: 1px solid #333;'>";
-                                            echo "<td colspan='3'>No International Events Entered.</td>";
-                                            echo "</tr>";
-                                        }
+                                    if (isset($chFinancialReport['international_event_array']) && $chFinancialReport['international_event_array'] != null) {
+                                        $blobData = base64_decode($chFinancialReport['international_event_array']);
+                                        $international_event_array = unserialize($blobData);
                                     }
-                                } else {
-                                    echo "<tr style='border-top: 1px solid #333;'>";
-                                    echo "<td colspan='3'>No International Events Entered.</td>";
-                                    echo "</tr>";
-                                }
-                                ?>
+                                @endphp
+
+                                @if ($international_event_array === false)
+                                    <tr style='border-top: 1px solid #333;'>
+                                        <td colspan='3'>Error: Failed to unserialize data.</td>
+                                    </tr>
+                                @elseif (is_array($international_event_array) && count($international_event_array) > 0)
+                                    @foreach ($international_event_array as $row)
+                                        @php
+                                            // Sanitize and validate inputs
+                                            $income = is_numeric(str_replace(',', '', $row['intl_event_income'])) ? floatval(str_replace(',', '', $row['intl_event_income'])) : 0;
+                                            $expense = is_numeric(str_replace(',', '', $row['intl_event_expenses'])) ? floatval(str_replace(',', '', $row['intl_event_expenses'])) : 0;
+
+                                            // Totals
+                                            $totalEventIncome += $income;
+                                            $totalEventExpense += $expense;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $row['intl_event_desc'] }}</td>
+                                            <td>${{ number_format($income, 2) }}</td>
+                                            <td>${{ number_format($expense, 2) }}</td>
+                                        </tr>
+                                    @endforeach
+                                    {{-- Total row --}}
+                                    <tr style='border-top: 1px solid #333;'>
+                                        <td><strong>Total</strong></td>
+                                        <td><strong>${{ number_format($totalEventIncome, 2) }}</strong></td>
+                                        <td><strong>${{ number_format($totalEventExpense, 2) }}</strong></td>
+                                    </tr>
+                                @else
+                                    <tr style='border-top: 1px solid #333;'>
+                                        <td colspan='3'>No International Events Entered.</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                         <br>
@@ -1271,7 +1278,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     </div>
                                     <div class="form-group row">
                                     <label for="Step6_Note">Add New Note:</label>
-                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
+                                            <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                         <button type="button" id="AddNote6" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(6)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
@@ -1283,7 +1290,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 						<label for="Step6_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 					</div>
 					<div class="col-12">
-						<textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly><?php echo $chFinancialReport['step_6_notes_log']; ?></textarea>
+                        <textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly>{{ $chFinancialReport['step_6_notes_log'] }}</textarea>
 					</div>
                     <div class="col-12"><br></div>
 
@@ -1300,13 +1307,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
                 <!------End Step 6 ------>
 
 			<!------Start Step 7 ------>
-            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='7') echo "active";?>">
+            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHAPTER</a>
                     </h4>
                 </div>
-                <div id="collapseSeven" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='7') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseSeven" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'show' : '' }}" data-parent="#accordion">
                     <div class="card-body">
 				<section>
                     Monetary Donations:
@@ -1319,53 +1326,50 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 <td>Amount</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php
-                            $monetary_donations_to_chapter = null;
-                            $totalDonationAmount = 0;
+                       <tbody>
+                            @php
+                                $monetary_donations_to_chapter = null;
+                                $totalDonationAmount = 0;
 
-                            if (isset($chFinancialReport['monetary_donations_to_chapter']) && $chFinancialReport['monetary_donations_to_chapter'] != null) {
-                                $blobData = base64_decode($chFinancialReport['monetary_donations_to_chapter']);
-                                $monetary_donations_to_chapter = unserialize($blobData);
-
-                                if ($monetary_donations_to_chapter == false) {
-                                    echo "Error: Failed to unserialize data.";
-                                } else {
-                                    if (is_array($monetary_donations_to_chapter) && count($monetary_donations_to_chapter) > 0) {
-                                        foreach ($monetary_donations_to_chapter as $row) {
-                                            // Sanitize and validate inputs
-                                            $donationDate = $row['mon_donation_date'] ? date('m/d/Y', strtotime($row['mon_donation_date'])) : '';
-
-                                            $donationAmount = is_numeric(str_replace(',', '', $row['mon_donation_amount'])) ? floatval(str_replace(',', '', $row['mon_donation_amount'])) : 0;
-                                            echo "<tr>";
-                                            echo "<td>" . htmlspecialchars($row['mon_donation_desc']) . "</td>";
-                                            echo "<td>" . htmlspecialchars($row['mon_donation_info']) . "</td>";
-                                            echo "<td>" . htmlspecialchars($donationDate) . "</td>";
-                                            echo "<td>$" . number_format($donationAmount, 2) . "</td>";
-                                            echo "</tr>";
-
-                                            // Totals
-                                            $totalDonationAmount += $donationAmount;
-                                        }
-                                        // Total row
-                                        echo "<tr style='border-top: 1px solid #333;'>";
-                                        echo "<td><strong>Total</strong></td>";
-                                        echo "<td></td>";
-                                        echo "<td></td>";
-                                        echo "<td><strong>$" . number_format($totalDonationAmount, 2) . "</strong></td>";
-                                        echo "</tr>";
-                                    } else {
-                                        echo "<tr style='border-top: 1px solid #333;'>";
-                                        echo "<td colspan='4'>No Monetary Donations Entered.</td>";
-                                        echo "</tr>";
-                                    }
+                                if (isset($chFinancialReport['monetary_donations_to_chapter']) && $chFinancialReport['monetary_donations_to_chapter'] != null) {
+                                    $blobData = base64_decode($chFinancialReport['monetary_donations_to_chapter']);
+                                    $monetary_donations_to_chapter = unserialize($blobData);
                                 }
-                            } else {
-                                echo "<tr style='border-top: 1px solid #333;'>";
-                                echo "<td colspan='4'>No Monetary Donations Entered.</td>";
-                                echo "</tr>";
-                            }
-                            ?>
+                            @endphp
+
+                            @if ($monetary_donations_to_chapter === false)
+                                <tr style='border-top: 1px solid #333;'>
+                                    <td colspan='4'>Error: Failed to unserialize data.</td>
+                                </tr>
+                            @elseif (is_array($monetary_donations_to_chapter) && count($monetary_donations_to_chapter) > 0)
+                                @foreach ($monetary_donations_to_chapter as $row)
+                                    @php
+                                        // Sanitize and validate inputs
+                                        $donationDate = $row['mon_donation_date'] ? date('m/d/Y', strtotime($row['mon_donation_date'])) : '';
+                                        $donationAmount = is_numeric(str_replace(',', '', $row['mon_donation_amount'])) ? floatval(str_replace(',', '', $row['mon_donation_amount'])) : 0;
+
+                                        // Totals
+                                        $totalDonationAmount += $donationAmount;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $row['mon_donation_desc'] }}</td>
+                                        <td>{{ $row['mon_donation_info'] }}</td>
+                                        <td>{{ $donationDate }}</td>
+                                        <td>${{ number_format($donationAmount, 2) }}</td>
+                                    </tr>
+                                @endforeach
+                                {{-- Total row --}}
+                                <tr style='border-top: 1px solid #333;'>
+                                    <td><strong>Total</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>${{ number_format($totalDonationAmount, 2) }}</strong></td>
+                                </tr>
+                            @else
+                                <tr style='border-top: 1px solid #333;'>
+                                    <td colspan='4'>No Monetary Donations Entered.</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                     <br>
@@ -1380,39 +1384,34 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 <td>Date</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php
-                                $non_monetary_donations_to_chapter = null;
+                     <tbody>
+                        @php
+                            $non_monetary_donations_to_chapter = null;
 
-                                if (isset($chFinancialReport['non_monetary_donations_to_chapter']) && $chFinancialReport['non_monetary_donations_to_chapter'] != null) {
-                                    $blobData = base64_decode($chFinancialReport['non_monetary_donations_to_chapter']);
-                                    $non_monetary_donations_to_chapter = unserialize($blobData);
+                            if (isset($chFinancialReport['non_monetary_donations_to_chapter']) && $chFinancialReport['non_monetary_donations_to_chapter'] != null) {
+                                $blobData = base64_decode($chFinancialReport['non_monetary_donations_to_chapter']);
+                                $non_monetary_donations_to_chapter = unserialize($blobData);
+                            }
+                        @endphp
 
-                                    if ($non_monetary_donations_to_chapter == false) {
-                                        echo "Error: Failed to unserialize data.";
-                                    } else {
-                                        if (is_array($non_monetary_donations_to_chapter) && count($non_monetary_donations_to_chapter) > 0) {
-                                            foreach ($non_monetary_donations_to_chapter as $row) {
-                                                echo "<tr style='border-top: 1px solid #333;'>";
-                                                echo "<td>" . $row['nonmon_donation_desc'] . "</td>";
-                                                echo "<td>" . $row['nonmon_donation_info'] . "</td>";
-                                                echo "<td>" . ($row['nonmon_donation_date'] ? date('m/d/Y', strtotime($row['nonmon_donation_date'])) : '') . "</td>";
-                                                echo "</tr>";
-                                            }
-                                        } else {
-                                            echo "<tr style='border-top: 1px solid #333;'>";
-                                            echo "<td colspan='3'>No Non-Monetary Donations Entered.</td>";
-                                            echo "</tr>";
-                                        }
-                                    }
-                                } else {
-                                    echo "<tr style='border-top: 1px solid #333;'>";
-                                    echo "<td colspan='3'>No Non-Monetary Donations Entered.</td>";
-                                    echo "</tr>";
-                                }
-                            ?>
-
-                        </tbody>
+                        @if ($non_monetary_donations_to_chapter === false)
+                            <tr style='border-top: 1px solid #333;'>
+                                <td colspan='3'>Error: Failed to unserialize data.</td>
+                            </tr>
+                        @elseif (is_array($non_monetary_donations_to_chapter) && count($non_monetary_donations_to_chapter) > 0)
+                            @foreach ($non_monetary_donations_to_chapter as $row)
+                                <tr style='border-top: 1px solid #333;'>
+                                    <td>{{ $row['nonmon_donation_desc'] }}</td>
+                                    <td>{{ $row['nonmon_donation_info'] }}</td>
+                                    <td>{{ $row['nonmon_donation_date'] ? date('m/d/Y', strtotime($row['nonmon_donation_date'])) : '' }}</td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr style='border-top: 1px solid #333;'>
+                                <td colspan='3'>No Non-Monetary Donations Entered.</td>
+                            </tr>
+                        @endif
+                    </tbody>
                     </table>
                     <br>
                     <hr style="border-bottom: 2px solid #007bff">
@@ -1428,7 +1427,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     <div class="col-12">
                                         <div class="form-group row">
 										<label for="Step7_Note">Add New Note:</label>
-										<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
+                                            <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                                         <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
 										<button type="button" id="AddNote7" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								</div>
@@ -1436,13 +1435,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
                         </div>
                         </div>
 
-                                <div class="col-12">
-										<label for="Step7_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-									</div>
-									<div class="col-12">
-										<textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly><?php echo $chFinancialReport['step_7_notes_log']; ?></textarea>
-									</div>
-                                    <div class="col-12"><br></div>
+                    <div class="col-12">
+                            <label for="Step7_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                        </div>
+                        <div class="col-12">
+                            <textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly>{{ $chFinancialReport['step_7_notes_log'] }}</textarea>
+                        </div>
+                        <div class="col-12"><br></div>
 
 						<!-- end:report_review -->
                         <div class="col-12 text-center">
@@ -1457,13 +1456,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
 				<!------End Step 7 ------>
 
 				<!------Start Step 8 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='8') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseEight" style="width: 100%;">OTHER INCOME & EXPENSES</a>
                         </h4>
                     </div>
-                    <div id="collapseEight" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='8') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseEight" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
 					<section>
                         <table width="75%" style="border-collapse: collapse;">
@@ -1474,53 +1473,51 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     <td>Expenses</td>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                $other_income_and_expenses_array = null;
-                                $totalOtherIncome = 0;
-                                $totalOtherExpenses = 0;
+                                <tbody>
+                                    @php
+                                        $other_income_and_expenses_array = null;
+                                        $totalOtherIncome = 0;
+                                        $totalOtherExpenses = 0;
 
-                                if (isset($chFinancialReport['other_income_and_expenses_array'])) {
-                                    $blobData = base64_decode($chFinancialReport['other_income_and_expenses_array']);
-                                    $other_income_and_expenses_array = unserialize($blobData);
+                                        if (isset($chFinancialReport['other_income_and_expenses_array'])) {
+                                            $blobData = base64_decode($chFinancialReport['other_income_and_expenses_array']);
+                                            $other_income_and_expenses_array = unserialize($blobData);
+                                        }
+                                    @endphp
 
-                                    if ($other_income_and_expenses_array == false) {
-                                        echo "Error: Failed to unserialize data.";
-                                    } else {
-                                        if (is_array($other_income_and_expenses_array) && count($other_income_and_expenses_array) > 0) {
-                                            foreach ($other_income_and_expenses_array as $row) {
+                                    @if ($other_income_and_expenses_array === false)
+                                        <tr style='border-top: 1px solid #333;'>
+                                            <td colspan='3'>Error: Failed to unserialize data.</td>
+                                        </tr>
+                                    @elseif (is_array($other_income_and_expenses_array) && count($other_income_and_expenses_array) > 0)
+                                        @foreach ($other_income_and_expenses_array as $row)
+                                            @php
                                                 // Sanitize and validate inputs
                                                 $otherIncome = is_numeric(str_replace(',', '', $row['other_income'])) ? floatval(str_replace(',', '', $row['other_income'])) : 0;
                                                 $otherExpenses = is_numeric(str_replace(',', '', $row['other_expenses'])) ? floatval(str_replace(',', '', $row['other_expenses'])) : 0;
-                                                echo "<tr>";
-                                                echo "<td>" . htmlspecialchars($row['other_desc']) . "</td>";
-                                                echo "<td>$" . number_format($otherIncome, 2) . "</td>";
-                                                echo "<td>$" . number_format($otherExpenses, 2) . "</td>";
-                                                echo "</tr>";
 
                                                 // Accumulate totals
                                                 $totalOtherIncome += $otherIncome;
                                                 $totalOtherExpenses += $otherExpenses;
-                                            }
-                                            // Total row
-                                            echo "<tr style='border-top: 1px solid #333;'>";
-                                            echo "<td><strong>Total</strong></td>";
-                                            echo "<td><strong>$" . number_format($totalOtherIncome, 2) . "</strong></td>";
-                                            echo "<td><strong>$" . number_format($totalOtherExpenses, 2) . "</strong></td>";
-                                            echo "</tr>";
-                                        } else {
-                                            echo "<tr style='border-top: 1px solid #333;'>";
-                                            echo "<td colspan='3'>No Other Income or Expenses Entered.</td>";
-                                            echo "</tr>";
-                                        }
-                                    }
-                                } else {
-                                    echo "<tr style='border-top: 1px solid #333;'>";
-                                    echo "<td colspan='3'>No Other Income or Expenses Entered.</td>";
-                                    echo "</tr>";
-                                }
-                                ?>
-                            </tbody>
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $row['other_desc'] }}</td>
+                                                <td>${{ number_format($otherIncome, 2) }}</td>
+                                                <td>${{ number_format($otherExpenses, 2) }}</td>
+                                            </tr>
+                                        @endforeach
+                                        {{-- Total row --}}
+                                        <tr style='border-top: 1px solid #333;'>
+                                            <td><strong>Total</strong></td>
+                                            <td><strong>${{ number_format($totalOtherIncome, 2) }}</strong></td>
+                                            <td><strong>${{ number_format($totalOtherExpenses, 2) }}</strong></td>
+                                        </tr>
+                                    @else
+                                        <tr style='border-top: 1px solid #333;'>
+                                            <td colspan='3'>No Other Income or Expenses Entered.</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
                         </table>
                         <br>
                         <strong>Total Other Income:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalOtherIncome, 2) }}</strong><br>
@@ -1538,21 +1535,20 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                 <div class="col-12">
                                     <div class="form-group row">
 									<label for="Step8_Note">Add New Note:</label>
-									<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(8)"  name="Step8_Note" id="Step8_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
+                                        <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(8)" name="Step8_Note" id="Step8_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
 									<button type="button" id="AddNote8" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
                         </div>
                     </div>
                     </div>
-                            <div class="col-12">
-									<label for="Step8_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-								</div>
-								<div class="col-12">
-									<textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly><?php echo $chFinancialReport['step_8_notes_log']; ?></textarea>
-								</div>
-                                <div class="col-12"><br></div>
-
+                    <div class="col-12">
+                            <label for="Step8_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                        </div>
+                        <div class="col-12">
+                            <textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly>{{ $chFinancialReport['step_8_notes_log'] }}</textarea>
+                        </div>
+                    <div class="col-12"><br></div>
 					<!-- end:report_review -->
                     <div class="col-12 text-center">
 							  <button type="submit" id="btn-step-8" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
@@ -1566,22 +1562,22 @@ if (isset($chFinancialReport['party_expense_array'])) {
 				<!------End Step 8 ------>
 
                 <!------Start Step 9 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='9') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
                         </h4>
                     </div>
-                    <div id="collapseNine" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='9') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseNine" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
 				<section>
-                    <?php
+                    @php
                         $totalIncome = $totalDues + $totalServiceIncome + $totalPartyIncome + $totalDonationAmount + $totalEventIncome + $totalOtherIncome;
                         $totalExpenses = $chFinancialReport['manditory_meeting_fees_paid'] + $chFinancialReport['voluntary_donations_paid'] + $chFinancialReport['paid_baby_sitters'] + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
                                 + $totalPartyExpense + $chFinancialReport['office_printing_costs'] + $chFinancialReport['office_postage_costs'] +
                                 $chFinancialReport['office_membership_pins_cost'] + $totalOfficeExpense + $chFinancialReport['annual_registration_fee'] + $totalEventExpense + $totalOtherExpenses;
-                        $treasuryBalance = $chFinancialReport ['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses
-                    ?>
+                        $treasuryBalance = $chFinancialReport['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses;
+                    @endphp
                     <table width="50%" style="border-collapse: collapse;">
                         <tbody>
                             <tr><td><strong>INCOME</strong></td></tr>
@@ -1688,7 +1684,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                     <div class="col-12">
                         <div class="form-group row">
                             <label for="Step9_Note">Add New Note:</label>
-                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
+                            <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                             <button type="button" id="AddNote9" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                     </div>
@@ -1699,9 +1695,9 @@ if (isset($chFinancialReport['party_expense_array'])) {
 						<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 					</div>
 					<div class="col-12">
-						<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $chFinancialReport['step_9_notes_log']; ?></textarea>
+                        <textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly>{{ $chFinancialReport['step_9_notes_log'] }}</textarea>
 					</div>
-                                            <div class="col-12"><br></div>
+                <div class="col-12"><br></div>
 		    <!-- end:report_review -->
                     <div class="col-12 text-center">
                         <button type="submit" id="btn-step-9" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
@@ -1715,13 +1711,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
 			<!------End Step 9 ------>
 
                 <!------Start Step 10 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='10') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
                         </h4>
                     </div>
-                    <div id="collapseTen" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='10') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseTen" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
 					<section>
                         <div class="flex-container">
@@ -1764,63 +1760,61 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                     <td>Deposit Amt.</td>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                $bank_rec_array = null;
-                                $totalPayments = 0;
-                                $totalDeposits = 0;
+                          <tbody>
+                                @php
+                                    $bank_rec_array = null;
+                                    $totalPayments = 0;
+                                    $totalDeposits = 0;
 
-                                if (isset($chFinancialReport['bank_reconciliation_array']) && $chFinancialReport['bank_reconciliation_array'] != null) {
-                                    $blobData = base64_decode($chFinancialReport['bank_reconciliation_array']);
-                                    $bank_rec_array = unserialize($blobData);
-
-                                    if ($bank_rec_array == false) {
-                                        echo "Error: Failed to unserialize data.";
-                                    } else {
-                                        if (is_array($bank_rec_array) && count($bank_rec_array) > 0) {
-                                            foreach ($bank_rec_array as $row) {
-                                                // Sanitize and validate inputs
-                                                $paymentAmount = is_numeric(str_replace(',', '', $row['bank_rec_payment_amount'])) ? floatval(str_replace(',', '', $row['bank_rec_payment_amount'])) : 0;
-                                                $depositAmount = is_numeric(str_replace(',', '', $row['bank_rec_desposit_amount'])) ? floatval(str_replace(',', '', $row['bank_rec_desposit_amount'])) : 0;
-                                                $checkNo = htmlspecialchars($row['bank_rec_check_no']);
-                                                $desc = htmlspecialchars($row['bank_rec_desc']);
-                                                $date = $row['bank_rec_date'] ? date('m/d/Y', strtotime($row['bank_rec_date'])) : '';
-
-                                                echo "<tr>";
-                                                echo "<td>$date</td>";
-                                                echo "<td>$checkNo</td>";
-                                                echo "<td>$desc</td>";
-                                                echo "<td>$" . number_format($paymentAmount, 2) . "</td>";
-                                                echo "<td>$" . number_format($depositAmount, 2) . "</td>";
-                                                echo "</tr>";
-
-                                                // Accumulate totals
-                                                $totalPayments += $paymentAmount;
-                                                $totalDeposits += $depositAmount;
-                                            }
-
-                                            // Total row
-                                            echo "<tr style='border-top: 1px solid #333;'>";
-                                            echo "<td><strong>Total</strong></td>";
-                                            echo "<td><strong></strong></td>";
-                                            echo "<td><strong></strong></td>";
-                                            echo "<td><strong>$" . number_format($totalPayments, 2) . "</strong></td>";
-                                            echo "<td><strong>$" . number_format($totalDeposits, 2) . "</strong></td>";
-                                            echo "</tr>";
-                                        } else {
-                                            echo "<tr style='border-top: 1px solid #333;'>";
-                                            echo "<td colspan='5'>No Reconciliation Transactions Entered.</td>";
-                                            echo "</tr>";
-                                        }
+                                    if (isset($chFinancialReport['bank_reconciliation_array']) && $chFinancialReport['bank_reconciliation_array'] != null) {
+                                        $blobData = base64_decode($chFinancialReport['bank_reconciliation_array']);
+                                        $bank_rec_array = unserialize($blobData);
                                     }
-                                } else {
-                                    echo "<tr style='border-top: 1px solid #333;'>";
-                                    echo "<td colspan='5'>No Reconciliation Transactions Entered.</td>";
-                                    echo "</tr>";
-                                }
+                                @endphp
 
-                                $totalReconciliation = $totalDeposits - $totalPayments;
-                                ?>
+                                @if ($bank_rec_array === false)
+                                    <tr style='border-top: 1px solid #333;'>
+                                        <td colspan='5'>Error: Failed to unserialize data.</td>
+                                    </tr>
+                                @elseif (is_array($bank_rec_array) && count($bank_rec_array) > 0)
+                                    @foreach ($bank_rec_array as $row)
+                                        @php
+                                            // Sanitize and validate inputs
+                                            $paymentAmount = is_numeric(str_replace(',', '', $row['bank_rec_payment_amount'])) ? floatval(str_replace(',', '', $row['bank_rec_payment_amount'])) : 0;
+                                            $depositAmount = is_numeric(str_replace(',', '', $row['bank_rec_desposit_amount'])) ? floatval(str_replace(',', '', $row['bank_rec_desposit_amount'])) : 0;
+                                            $checkNo = $row['bank_rec_check_no'];
+                                            $desc = $row['bank_rec_desc'];
+                                            $date = $row['bank_rec_date'] ? date('m/d/Y', strtotime($row['bank_rec_date'])) : '';
+
+                                            // Accumulate totals
+                                            $totalPayments += $paymentAmount;
+                                            $totalDeposits += $depositAmount;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $date }}</td>
+                                            <td>{{ $checkNo }}</td>
+                                            <td>{{ $desc }}</td>
+                                            <td>${{ number_format($paymentAmount, 2) }}</td>
+                                            <td>${{ number_format($depositAmount, 2) }}</td>
+                                        </tr>
+                                    @endforeach
+                                    {{-- Total row --}}
+                                    <tr style='border-top: 1px solid #333;'>
+                                        <td><strong>Total</strong></td>
+                                        <td><strong></strong></td>
+                                        <td><strong></strong></td>
+                                        <td><strong>${{ number_format($totalPayments, 2) }}</strong></td>
+                                        <td><strong>${{ number_format($totalDeposits, 2) }}</strong></td>
+                                    </tr>
+                                @else
+                                    <tr style='border-top: 1px solid #333;'>
+                                        <td colspan='5'>No Reconciliation Transactions Entered.</td>
+                                    </tr>
+                                @endif
+
+                                @php
+                                    $totalReconciliation = $totalDeposits - $totalPayments;
+                                @endphp
                             </tbody>
                             </table>
                         <br>
@@ -1837,12 +1831,12 @@ if (isset($chFinancialReport['party_expense_array'])) {
 
                                     @if (!is_null($chEOYDocuments['statement_1_path']))
                                         <div class="col-12">
-                                            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_1_path']; ?>" >&nbsp; View Bank Statement</a><br>
+                                            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['statement_1_path'] }}">&nbsp; View Bank Statement</a><br>
                                         </div>
                                     @endif
                                     @if (!is_null($chEOYDocuments['statement_2_path']))
                                         <div class="col-12">
-                                            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chEOYDocuments['statement_2_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
+                                            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments['statement_2_path'] }}">&nbsp; View Additional Bank Statement</a><br>
                                         </div>
                                     @endif
                                     <div class="col-12" id="StatementBlock">
@@ -1854,7 +1848,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
                                         @endif
                                     </div>
-                                        <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $chEOYDocuments['statement_1_path']; ?>">
+                                        <input type="hidden" name="StatementFile" id="StatementPath" value="{{ $chEOYDocuments['statement_1_path'] }}">
                                     <div class="clearfix"></div>
                                     <div class="col-12"><br></div>
                                     <div class="col-12" id="Statement2Block">
@@ -1864,7 +1858,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
                                         @endif
                                     </div>
-                                    <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $chEOYDocuments['statement_2_path']; ?>">
+                                        <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chEOYDocuments['statement_2_path'] }}">
                                     <div class="clearfix"></div>
                                     <div class="col-12"><br></div>
 
@@ -1926,7 +1920,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                              <div class="input-group-prepend">
                                               <span class="input-group-text">$</span>
                                             </div>
-                                            <input type="text" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance" style="width: 120px;" value="<?php if(!empty($chFinancialReport)) echo $chFinancialReport['post_balance'] ?>">
+<input type="text" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance" style="width: 120px;" value="{{ !empty($chFinancialReport) ? $chFinancialReport['post_balance'] : '' }}">
                                         </div>
                                         </div>
                                     </div>
@@ -1936,8 +1930,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                     <div class="col-12">
                                 <div class="form-group row">
                                         <label for="Step10_Note">Add New Note:</label>
-                                        <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
-                                        <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
+<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>                                        <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                         <button type="button" id="AddNote10" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
                                 </div>
@@ -1948,7 +1941,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 								<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $chFinancialReport['step_10_notes_log']; ?></textarea>
+                                <textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly>{{ $chFinancialReport['step_10_notes_log'] }}</textarea>
 							</div>
                             <div class="col-12"><br></div>
 
@@ -1965,13 +1958,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
 			<!------End Step 10 ------>
 
             <!------Start Step 11 ------>
-            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='11') echo "active";?>">
+            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseEleven" style="width: 100%;">990N IRS FILING</a>
                     </h4>
                 </div>
-                <div id="collapseEleven" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='11') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseEleven" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'show' : '' }}" data-parent="#accordion">
                     <div class="card-body">
                 <section>
                     <div class="flex-container">
@@ -2006,7 +1999,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                                         <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
                                 </div>
                             @endif
-                            <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $chEOYDocuments['irs_path']; ?>">
+<input type="hidden" name="990NFiling" id="990NFiling" value="{{ $chEOYDocuments['irs_path'] }}">
                             <div class="clearfix"></div>
                             <div class="col-12"><br></div>
                             <div class="col-12">
@@ -2028,8 +2021,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                         <div class="col-12">
                             <div class="form-group row">
                                     <label for="Step11_Note">Add New Note:</label>
-                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
-                                    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
+<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>                                    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                     <button type="button" id="AddNote11" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
                             </div>
@@ -2040,7 +2032,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
                             <label for="Step11_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                         </div>
                         <div class="col-12">
-                            <textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly><?php echo $chFinancialReport['step_11_notes_log']; ?></textarea>
+                            <textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly>{{ $chFinancialReport['step_11_notes_log'] }}</textarea>
                         </div>
                         <div class="col-12"><br></div>
 
@@ -2057,13 +2049,13 @@ if (isset($chFinancialReport['party_expense_array'])) {
         <!------End Step 11 ------>
 
 			<!------Start Step 12 ------>
-            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='12') echo "active";?>">
+            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseTwelve" style="width: 100%;">CHAPTER QUESTIONS</a>
                     </h4>
                 </div>
-                <div id="collapseTwelve" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='12') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseTwelve" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'show' : '' }}" data-parent="#accordion">
                     <div class="card-body">
 				<section>
                     <table>
@@ -2243,8 +2235,7 @@ if (isset($chFinancialReport['party_expense_array'])) {
 
                                         <div class="form-group row">
                                             <label for="Step12_Note">Add New Note:</label>
-                                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
-                                            <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
+<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" {{ $chFinancialReport['review_complete'] != "" ? 'readonly' : '' }}></textarea>                                            <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                             <button type="button" id="AddNote12" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                         </div>
                                     </div>
@@ -2255,8 +2246,8 @@ if (isset($chFinancialReport['party_expense_array'])) {
 								<label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly><?php echo $chFinancialReport['step_12_notes_log']; ?></textarea>
-							</div>
+                                <textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly>{{ $chFinancialReport['step_12_notes_log'] }}</textarea>
+                            </div>
                             <div class="col-12"><br></div>
 
 				<!-- end:report_review -->
@@ -2522,8 +2513,6 @@ if (isset($chFinancialReport['party_expense_array'])) {
 
         now = d.toString();
 
-        <?php $date = date('m/d/Y'); ?>
-
         var noteText ={
             1: 'Dues',
             2: 'Meetings',
@@ -2542,12 +2531,12 @@ if (isset($chFinancialReport['party_expense_array'])) {
         var noteTextValue = noteText[NoteNumber] || NoteNumber;
 
         Note=document.getElementById("Step" + NoteNumber + "_Note").value;
-        Log += "\n" + noteTextValue + " Section, <?php echo $date; ?>, <?php echo $loggedInName; ?>, " + Note;
+        Log += "\n" + noteTextValue + " Section, {{ date('m/d/Y') }}, {{ $loggedInName }}, " + Note;
 
         document.getElementById("Step" + NoteNumber + "_Log").value += Log;
         document.getElementById("Step" + NoteNumber + "_Note").value = "";
         document.getElementById("AddNote" + NoteNumber).disabled = true;
-        document.getElementById("AddNote" + NoteNumber).classList.add('disabled'); // Also add the class
+        document.getElementById("AddNote" + NoteNumber).classList.add('disabled');
 
         for(i=1;i<12;i++){
             Note=document.getElementById("Step" + i + "_Log").value;

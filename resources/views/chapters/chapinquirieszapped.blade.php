@@ -37,7 +37,6 @@
                 </tr>
                 </thead>
                 <tbody>
-				<?php $row = 0;?>
                 @foreach($chapterList as $list)
                   <tr>
                     <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>

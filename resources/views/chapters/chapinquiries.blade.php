@@ -41,39 +41,32 @@
                 </tr>
                 </thead>
                 <tbody>
-				<?php $row = 0;?>
+				@php $row = 0; @endphp
                 @foreach($chapterList as $list)
                   <tr>
                     <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
-                        <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyEmail(<?php echo $row?>);" style="background-color: transparent; border: none;">
-                            <i class="far fa-copy fa-lg text-primary" ></i></button></td>
-
-                            <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp(<?php echo $row?>);" style="background-color: transparent; border: none;">
-                            <i class="far fa-copy fa-lg text-primary" ></i></button></td>
-                            <td>{{$list->status->inquiries_status}}</td>
-                            <td>
-                                @if($list->state_id < 52)
-                                    {{$list->state->state_short_name}}
-                                @else
-                                    {{$list->country->short_name}}
-                                @endif
-                            </td>
+                        <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyEmail({{ $row }});" style="background-color: transparent; border: none;">
+                            <i class="far fa-copy fa-lg text-primary" ></i></button>
+                        </td>
+                        <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp({{ $row }});" style="background-color: transparent; border: none;">
+                            <i class="far fa-copy fa-lg text-primary" ></i></button>
+                        </td>
+                        <td>{{$list->status->inquiries_status}}</td>
+                        <td>
+                            @if($list->state_id < 52)
+                                {{$list->state->state_short_name}}
+                            @else
+                                {{$list->country->short_name}}
+                            @endif
+                        </td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->territory }}</td>
                         <td>{{ $list->inquiries_note }}</td>
-
-						<?php
-						    echo " <td id=email" . $row . ">" . $list->inquiries_contact . "</td> \n";
-							{
-                                echo " <td id=response" . $row . " class=\"hidden-column\">" .
-                                    "Thanks for your interest in MOMS Club! You live in the boundaries of our MOMS Club of " . $list->name . ", " . $list->state->state_short_name . " chapter. I have forwarded your inquiry to them and you should hear within the next couple of days. If you don't hear, please let me know and I'll make sure they received your inquiry. If you would like to contact them directly yourself, you can reach them at " . $list->inquiries_contact . "."
-						. "</td> \n";
-						}
-						?>
-
+                        <td id="email{{ $row }}">{{ $list->inquiries_contact }}</td>
+                        <td id="response{{ $row }}" class="hidden-column">Thanks for your interest in MOMS Club! You live in the boundaries of our MOMS Club of {{ $list->name }}, {{ $list->state->state_short_name }} chapter. I have forwarded your inquiry to them and you should hear within the next couple of days. If you don't hear, please let me know and I'll make sure they received your inquiry. If you would like to contact them directly yourself, you can reach them at {{ $list->inquiries_contact }}.</td>
                     </tr>
-					<?php $row++;?>
-                  @endforeach
+					@php $row++; @endphp
+                    @endforeach
                   </tbody>
                 </table>
             </div>

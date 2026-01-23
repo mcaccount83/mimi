@@ -7,12 +7,12 @@
                     <form id="boardinfo" method="POST" action="{{ route('board.updateboardreport',$chDetails->id) }}">
                         @csrf
 
-                        <input type="hidden" name="presID" id="presID" value="<?php echo $PresDetails->id; ?>" />
-                        <input type="hidden" name="avpID" id="avpID" value="<?php echo $AVPDetails->id; ?>" />
-                        <input type="hidden" name="mvpID" id="mvpID" value="<?php echo $MVPDetails->id; ?>" />
-						<input type="hidden" name="trsID" id="trsID" value="<?php echo $TRSDetails->id; ?>" />
-						<input type="hidden" name="secID" id="secID" value="<?php echo $SECDetails->id; ?>" />
-                        <input type="hidden" id="ch_state" value="{{$stateShortName}}">
+                        <input type="hidden" name="presID" id="presID" value="{{ $PresDetails->id }}" />
+                        <input type="hidden" name="avpID" id="avpID" value="{{ $AVPDetails->id }}" />
+                        <input type="hidden" name="mvpID" id="mvpID" value="{{ $MVPDetails->id }}" />
+                        <input type="hidden" name="trsID" id="trsID" value="{{ $TRSDetails->id }}" />
+                        <input type="hidden" name="secID" id="secID" value="{{ $SECDetails->id }}" />
+                        <input type="hidden" id="ch_state" value="{{ $stateShortName }}">
                         <input type="hidden" name="ch_hid_webstatus" id="ch_hid_webstatus" value="{{ $chDetails->website_status }}">
                         <input type="hidden" id="ch_pre_email_chk" value="{{ $PresDetails->email }}">
                         <input type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails->email }}">

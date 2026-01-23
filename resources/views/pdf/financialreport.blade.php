@@ -115,30 +115,30 @@
                     <td>{{ '$'.number_format($pdfData['associate_member_fee'], 2) }}</td></tr>
             @endif
         </tbody>
-    </table>
-        <?php
-            $newMembers = $pdfData['total_new_members'] * $pdfData['dues_per_member'];
-            $renewalMembers = $pdfData['total_renewed_members'] * $pdfData['dues_per_member'];
-            $renewalMembersDiff = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal'];
-            $newMembersNew = $pdfData['total_new_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
-            $renewMembersNew = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
-            $renewMembersNewDiff = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_renewal_changed'];
-            $partialMembers = $pdfData['members_who_paid_partial_dues'] * $pdfData['total_partial_fees_collected'];
-            $associateMembers = $pdfData['total_associate_members'] * $pdfData['associate_member_fee'];
+   </table>
+    @php
+        $newMembers = $pdfData['total_new_members'] * $pdfData['dues_per_member'];
+        $renewalMembers = $pdfData['total_renewed_members'] * $pdfData['dues_per_member'];
+        $renewalMembersDiff = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal'];
+        $newMembersNew = $pdfData['total_new_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
+        $renewMembersNew = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
+        $renewMembersNewDiff = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_renewal_changed'];
+        $partialMembers = $pdfData['members_who_paid_partial_dues'] * $pdfData['total_partial_fees_collected'];
+        $associateMembers = $pdfData['total_associate_members'] * $pdfData['associate_member_fee'];
 
-            $totalMembers = $pdfData['total_new_members'] +$pdfData['total_renewed_members'] + $pdfData['total_new_members_changed_dues'] + $pdfData['total_renewed_members_changed_dues']
-                    + $pdfData['members_who_paid_partial_dues'] + $pdfData['total_associate_members']+ $pdfData['members_who_paid_no_dues'];
+        $totalMembers = $pdfData['total_new_members'] + $pdfData['total_renewed_members'] + $pdfData['total_new_members_changed_dues'] + $pdfData['total_renewed_members_changed_dues']
+                + $pdfData['members_who_paid_partial_dues'] + $pdfData['total_associate_members'] + $pdfData['members_who_paid_no_dues'];
 
-            if ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] == 1) {
-                $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
-            } elseif ($pdfData['different_dues'] == 1) {
-                $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
-            } elseif ($pdfData['changed_dues'] == 1) {
-                $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
-            } else {
-                $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
-            }
-        ?>
+        if ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] == 1) {
+            $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
+        } elseif ($pdfData['different_dues'] == 1) {
+            $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
+        } elseif ($pdfData['changed_dues'] == 1) {
+            $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
+        } else {
+            $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
+        }
+    @endphp
     <br>
     <table width="50%">
         <tbody>
@@ -210,53 +210,63 @@
                     <td></td></tr>
         </tbody>
     </table>
-    <table width="75%" style="border-collapse: collapse;">
-        <thead>
-            <tr style="border-bottom: 1px solid #333;">
-                <td>Description</td>
-                <td>Supplies</td>
-                <td>Other Expenses</td>
+<table width="75%" style="border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 1px solid #333;">
+            <td>Description</td>
+            <td>Supplies</td>
+            <td>Other Expenses</td>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $childrens_room = null;
+            $totalChildrenSupplies = 0;
+            $totalChildrenOther = 0;
+
+            if (isset($pdfData['childrens_room_expenses'])) {
+                $blobData = base64_decode($pdfData['childrens_room_expenses']);
+                $childrens_room = unserialize($blobData);
+            }
+        @endphp
+
+        @if ($childrens_room === false)
+            <tr>
+                <td colspan='3'>Error: Failed to unserialize data.</td>
             </tr>
-        </thead>
-        <tbody>
-           <?php
-$childrens_room = null;
-$totalChildrenSupplies = 0;
-$totalChildrenOther = 0;
+        @elseif (is_array($childrens_room) && count($childrens_room) > 0)
+            @foreach ($childrens_room as $row)
+                @php
+                    $supplies = floatval(str_replace(',', '', $row['childrens_room_supplies']));
+                    $other = floatval(str_replace(',', '', $row['childrens_room_other']));
 
-if (isset($pdfData['childrens_room_expenses'])) {
-    $blobData = base64_decode($pdfData['childrens_room_expenses']);
-    $childrens_room = unserialize($blobData);
+                    // Totals
+                    $totalChildrenSupplies += $supplies;
+                    $totalChildrenOther += $other;
+                @endphp
+                <tr>
+                    <td>{{ $row['childrens_room_desc'] }}</td>
+                    <td>{{ $row['childrens_room_supplies'] ? '$' . number_format($supplies, 2) : '$0.00' }}</td>
+                    <td>{{ $row['childrens_room_other'] ? '$' . number_format($other, 2) : '$0.00' }}</td>
+                </tr>
+            @endforeach
+            {{-- Total row --}}
+            <tr>
+                <td><strong>Total</strong></td>
+                <td><strong>${{ number_format($totalChildrenSupplies, 2) }}</strong></td>
+                <td><strong>${{ number_format($totalChildrenOther, 2) }}</strong></td>
+            </tr>
+        @else
+            <tr>
+                <td colspan='3'>No data available.</td>
+            </tr>
+        @endif
 
-    if ($childrens_room == false) {
-        echo "Error: Failed to unserialize data.";
-    } else {
-        foreach ($childrens_room as $row) {
-            echo "<tr>";
-            echo "<td>" . $row['childrens_room_desc'] . "</td>";
-            echo "<td>" . ($row['childrens_room_supplies'] ? "$" . number_format(floatval(str_replace(',', '', $row['childrens_room_supplies'])), 2) : "$0.00") . "</td>";
-            echo "<td>" . ($row['childrens_room_other'] ? "$" . number_format(floatval(str_replace(',', '', $row['childrens_room_other'])), 2) : "$0.00") . "</td>";
-            echo "</tr>";
-
-            // Remove commas before converting to float for total calculations
-            $totalChildrenSupplies += floatval(str_replace(',', '', $row['childrens_room_supplies']));
-            $totalChildrenOther += floatval(str_replace(',', '', $row['childrens_room_other']));
-        }
-
-        // Total row
-        echo "<tr>";
-        echo "<td><strong>Total</strong></td>";
-        echo "<td><strong>$" . number_format($totalChildrenSupplies, 2) . "</strong></td>";
-        echo "<td><strong>$" . number_format($totalChildrenOther, 2) . "</strong></td>";
-        echo "</tr>";
-    }
-} else {
-    echo "No data available.";
-}
-$totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther;
-?>
-        </tbody>
-    </table>
+        @php
+            $totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther;
+        @endphp
+    </tbody>
+</table>
     <br>
     <table width="50%">
         <tbody>
@@ -271,69 +281,75 @@ $totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther;
     <hr>
     </div>
     <table width="100%" style="border-collapse: collapse;">
-                            <thead>
-                                <tr style="border-bottom: 1px solid #333;">
-                                    <td>Project Description</td>
-                                    <td>Project Income</td>
-                                    <td>Supplies/Expenses</td>
-                                    <td>Charity Donation</td>
-                                    <td>M2M Donation</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                           <?php
-$service_projects = null;
-$totalServiceIncome = 0;
-$totalServiceSupplies = 0;
-$totalServiceCharity = 0;
-$totalServiceM2M = 0;
+    <thead>
+        <tr style="border-bottom: 1px solid #333;">
+            <td>Project Description</td>
+            <td>Project Income</td>
+            <td>Supplies/Expenses</td>
+            <td>Charity Donation</td>
+            <td>M2M Donation</td>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $service_projects = null;
+            $totalServiceIncome = 0;
+            $totalServiceSupplies = 0;
+            $totalServiceCharity = 0;
+            $totalServiceM2M = 0;
 
-if (isset($pdfData['service_project_array'])) {
-    $blobData = base64_decode($pdfData['service_project_array']);
-    $service_projects = unserialize($blobData);
+            if (isset($pdfData['service_project_array'])) {
+                $blobData = base64_decode($pdfData['service_project_array']);
+                $service_projects = unserialize($blobData);
+            }
+        @endphp
 
-    if ($service_projects == false) {
-        echo "Error: Failed to unserialize data.";
-    } else {
-        foreach ($service_projects as $row) {
-            // Sanitize and remove commas before converting to float
-            $income = floatval(str_replace(',', '', $row['service_project_income'] ?? '0'));
-            $supplies = floatval(str_replace(',', '', $row['service_project_supplies'] ?? '0'));
-            $charity = floatval(str_replace(',', '', $row['service_project_charity'] ?? '0'));
-            $m2m = floatval(str_replace(',', '', $row['service_project_m2m'] ?? '0'));
+        @if ($service_projects === false)
+            <tr style='border-top: 1px solid #333;'>
+                <td colspan='5'>Error: Failed to unserialize data.</td>
+            </tr>
+        @elseif (is_array($service_projects) && count($service_projects) > 0)
+            @foreach ($service_projects as $row)
+                @php
+                    // Sanitize and remove commas before converting to float
+                    $income = floatval(str_replace(',', '', $row['service_project_income'] ?? '0'));
+                    $supplies = floatval(str_replace(',', '', $row['service_project_supplies'] ?? '0'));
+                    $charity = floatval(str_replace(',', '', $row['service_project_charity'] ?? '0'));
+                    $m2m = floatval(str_replace(',', '', $row['service_project_m2m'] ?? '0'));
 
-            echo "<tr>";
-            echo "<td>" . htmlspecialchars($row['service_project_desc'] ?? '') . "</td>";
-            echo "<td>$" . number_format($income, 2) . "</td>";
-            echo "<td>$" . number_format($supplies, 2) . "</td>";
-            echo "<td>$" . number_format($charity, 2) . "</td>";
-            echo "<td>$" . number_format($m2m, 2) . "</td>";
-            echo "</tr>";
+                    // Add to totals
+                    $totalServiceIncome += $income;
+                    $totalServiceSupplies += $supplies;
+                    $totalServiceCharity += $charity;
+                    $totalServiceM2M += $m2m;
+                @endphp
+                <tr>
+                    <td>{{ $row['service_project_desc'] ?? '' }}</td>
+                    <td>${{ number_format($income, 2) }}</td>
+                    <td>${{ number_format($supplies, 2) }}</td>
+                    <td>${{ number_format($charity, 2) }}</td>
+                    <td>${{ number_format($m2m, 2) }}</td>
+                </tr>
+            @endforeach
+            {{-- Total row --}}
+            <tr style='border-top: 1px solid #333;'>
+                <td><strong>Total</strong></td>
+                <td><strong>${{ number_format($totalServiceIncome, 2) }}</strong></td>
+                <td><strong>${{ number_format($totalServiceSupplies, 2) }}</strong></td>
+                <td><strong>${{ number_format($totalServiceCharity, 2) }}</strong></td>
+                <td><strong>${{ number_format($totalServiceM2M, 2) }}</strong></td>
+            </tr>
+        @else
+            <tr style='border-top: 1px solid #333;'>
+                <td colspan='5'>No Service Projects Entered.</td>
+            </tr>
+        @endif
 
-            // Add to totals
-            $totalServiceIncome += $income;
-            $totalServiceSupplies += $supplies;
-            $totalServiceCharity += $charity;
-            $totalServiceM2M += $m2m;
-        }
-        // Total row
-        echo "<tr style='border-top: 1px solid #333;'>";
-        echo "<td><strong>Total</strong></td>";
-        echo "<td><strong>$" . number_format($totalServiceIncome, 2) . "</strong></td>";
-        echo "<td><strong>$" . number_format($totalServiceSupplies, 2) . "</strong></td>";
-        echo "<td><strong>$" . number_format($totalServiceCharity, 2) . "</strong></td>";
-        echo "<td><strong>$" . number_format($totalServiceM2M, 2) . "</strong></td>";
-        echo "</tr>";
-    }
-} else {
-    echo "<tr style='border-top: 1px solid #333;'>";
-    echo "<td colspan='5'>No Service Projects Entered.</td>";
-    echo "</tr>";
-}
-$totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $totalServiceM2M;
-?>
-                            </tbody>
-                        </table>
+        @php
+            $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $totalServiceM2M;
+        @endphp
+    </tbody>
+</table>
     <br>
     <table width="50%" >
         <tbody>
@@ -349,58 +365,67 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
     <b>PARTIES & MEMBER BENEFITS</b>
     <hr>
     </div>
-    <table width="75%" style="border-collapse: collapse;">
-        <thead>
-            <tr style="border-bottom: 1px solid #333;">
-                <td>Paty/Member Benefit Description</td>
-                <td>Benefit Income</td>
-                <td>Benefit Expenses</td>
+   <table width="75%" style="border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 1px solid #333;">
+            <td>Paty/Member Benefit Description</td>
+            <td>Benefit Income</td>
+            <td>Benefit Expenses</td>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $party_expenses = null;
+            $totalPartyIncome = 0;
+            $totalPartyExpense = 0;
+
+            if (isset($pdfData['party_expense_array'])) {
+                $blobData = base64_decode($pdfData['party_expense_array']);
+                $party_expenses = unserialize($blobData);
+            }
+        @endphp
+
+        @if ($party_expenses === false)
+            <tr>
+                <td colspan='3'>Error: Failed to unserialize data.</td>
             </tr>
-        </thead>
-        <tbody>
-          <?php
-$party_expenses = null;
-$totalPartyIncome = 0;
-$totalPartyExpense = 0;
+        @elseif (is_array($party_expenses) && count($party_expenses) > 0)
+            @foreach ($party_expenses as $row)
+                @php
+                    $income = floatval(str_replace(',', '', $row['party_expense_income']));
+                    $expense = floatval(str_replace(',', '', $row['party_expense_expenses']));
 
-if (isset($pdfData['party_expense_array'])) {
-    $blobData = base64_decode($pdfData['party_expense_array']);
-    $party_expenses = unserialize($blobData);
+                    // Totals
+                    $totalPartyIncome += $income;
+                    $totalPartyExpense += $expense;
+                @endphp
+                <tr>
+                    <td>{{ $row['party_expense_desc'] }}</td>
+                    <td>{{ $row['party_expense_income'] ? '$' . number_format($income, 2) : '$0.00' }}</td>
+                    <td>{{ $row['party_expense_expenses'] ? '$' . number_format($expense, 2) : '$0.00' }}</td>
+                </tr>
+            @endforeach
+            {{-- Total row --}}
+            <tr>
+                <td><strong>Total</strong></td>
+                <td><strong>${{ number_format($totalPartyIncome, 2) }}</strong></td>
+                <td><strong>${{ number_format($totalPartyExpense, 2) }}</strong></td>
+            </tr>
+        @else
+            <tr>
+                <td colspan='3'>No data available.</td>
+            </tr>
+        @endif
 
-    if ($party_expenses == false) {
-        echo "Error: Failed to unserialize data.";
-    } else {
-        foreach ($party_expenses as $row) {
-            echo "<tr>";
-            echo "<td>" . $row['party_expense_desc'] . "</td>";
-            echo "<td>" . ($row['party_expense_income'] ? "$" . number_format(floatval(str_replace(',', '', $row['party_expense_income'])), 2) : "$0.00") . "</td>";
-            echo "<td>" . ($row['party_expense_expenses'] ? "$" . number_format(floatval(str_replace(',', '', $row['party_expense_expenses'])), 2) : "$0.00") . "</td>";
-            echo "</tr>";
-
-            // Remove commas before converting to float for total calculations
-            $totalPartyIncome += floatval(str_replace(',', '', $row['party_expense_income']));
-            $totalPartyExpense += floatval(str_replace(',', '', $row['party_expense_expenses']));
-        }
-
-        // Total row
-        echo "<tr>";
-        echo "<td><strong>Total</strong></td>";
-        echo "<td><strong>$" . number_format($totalPartyIncome, 2) . "</strong></td>";
-        echo "<td><strong>$" . number_format($totalPartyExpense, 2) . "</strong></td>";
-        echo "</tr>";
-    }
-} else {
-    echo "No data available.";
-}
-
-if ($totalDues == 0) {
-    $partyPercentage = 0;
-} else {
-    $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
-}
-?>
-        </tbody>
-    </table>
+        @php
+            if ($totalDues == 0) {
+                $partyPercentage = 0;
+            } else {
+                $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
+            }
+        @endphp
+    </tbody>
+</table>
     <br>
     <table width="50%">
         <tbody>
@@ -426,50 +451,54 @@ if ($totalDues == 0) {
             </tr>
         </tbody>
     </table>
-    <table width="75%" >
-        <thead>
+  <table width="75%" >
+    <thead>
+        <tr>
+            <td>Other Office & Operating Expenses:</td>
+            <td>&nbsp;</td>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $other_office_expenses = null;
+            $totalOfficeExpense = 0;
+
+            if (isset($pdfData['office_other_expenses'])) {
+                $blobData = base64_decode($pdfData['office_other_expenses']);
+                $other_office_expenses = unserialize($blobData);
+            }
+        @endphp
+
+        @if ($other_office_expenses === false)
             <tr>
-                <td>Other Office & Operating Expenses:</td>
-                <td>&nbsp;</td>
+                <td colspan='2'>Error: Failed to unserialize data.</td>
             </tr>
-        </thead>
-        <tbody>
-            <?php
-$other_office_expenses = null;
-$totalOfficeExpense = 0;
+        @elseif (is_array($other_office_expenses) && count($other_office_expenses) > 0)
+            @foreach ($other_office_expenses as $row)
+                @php
+                    // Remove commas before converting to float
+                    $expense = floatval(str_replace(',', '', $row['office_other_expense'] ?? '0'));
 
-if (isset($pdfData['office_other_expenses'])) {
-    $blobData = base64_decode($pdfData['office_other_expenses']);
-    $other_office_expenses = unserialize($blobData);
-
-    if ($other_office_expenses == false) {
-        echo "Error: Failed to unserialize data.";
-    } else {
-        foreach ($other_office_expenses as $row) {
-            // Remove commas before converting to float
-            $expense = floatval(str_replace(',', '', $row['office_other_expense'] ?? '0'));
-
-            echo "<tr>";
-            echo "<td>" . htmlspecialchars($row['office_other_desc'] ?? '') . "</td>";
-            echo "<td>$" . number_format($expense, 2) . "</td>";
-            echo "</tr>";
-
-            // Add to total
-            $totalOfficeExpense += $expense;
-        }
-
-        // Total row
-        echo "<tr>";
-        echo "<td><strong>Total</strong></td>";
-        echo "<td><strong>$" . number_format($totalOfficeExpense, 2) . "</strong></td>";
-        echo "</tr>";
-    }
-} else {
-    echo "No data available.";
-}
-?>
-        </tbody>
-    </table>
+                    // Add to total
+                    $totalOfficeExpense += $expense;
+                @endphp
+                <tr>
+                    <td>{{ $row['office_other_desc'] ?? '' }}</td>
+                    <td>${{ number_format($expense, 2) }}</td>
+                </tr>
+            @endforeach
+            {{-- Total row --}}
+            <tr>
+                <td><strong>Total</strong></td>
+                <td><strong>${{ number_format($totalOfficeExpense, 2) }}</strong></td>
+            </tr>
+        @else
+            <tr>
+                <td colspan='2'>No data available.</td>
+            </tr>
+        @endif
+    </tbody>
+</table>
     <br>
     <table width="50%" >
         <tbody>
@@ -499,56 +528,60 @@ if (isset($pdfData['office_other_expenses'])) {
            </tbody>
         </table>
     <br>
-    <table width="75%" style="border-collapse: collapse;">
-        <thead>
-            <tr style="border-bottom: 1px solid #333;">
-                <td>Description</td>
-                <td>Income</td>
-                <td>Expenses</td>
+<table width="75%" style="border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 1px solid #333;">
+            <td>Description</td>
+            <td>Income</td>
+            <td>Expenses</td>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $international_event_array = null;
+            $totalEventIncome = 0;
+            $totalEventExpense = 0;
+
+            if (isset($pdfData['international_event_array'])) {
+                $blobData = base64_decode($pdfData['international_event_array']);
+                $international_event_array = unserialize($blobData);
+            }
+        @endphp
+
+        @if ($international_event_array === false)
+            <tr>
+                <td colspan='3'>Error: Failed to unserialize data.</td>
             </tr>
-        </thead>
-        <tbody>
-            <?php
-$international_event_array = null;
-$totalEventIncome = 0;
-$totalEventExpense = 0;
+        @elseif (is_array($international_event_array) && count($international_event_array) > 0)
+            @foreach ($international_event_array as $row)
+                @php
+                    // Remove commas before converting to float
+                    $income = floatval(str_replace(',', '', $row['intl_event_income'] ?? '0'));
+                    $expense = floatval(str_replace(',', '', $row['intl_event_expenses'] ?? '0'));
 
-if (isset($pdfData['international_event_array'])) {
-    $blobData = base64_decode($pdfData['international_event_array']);
-    $international_event_array = unserialize($blobData);
-
-    if ($international_event_array == false) {
-        echo "Error: Failed to unserialize data.";
-    } else {
-        foreach ($international_event_array as $row) {
-            // Remove commas before converting to float
-            $income = floatval(str_replace(',', '', $row['intl_event_income'] ?? '0'));
-            $expense = floatval(str_replace(',', '', $row['intl_event_expenses'] ?? '0'));
-
-            echo "<tr>";
-            echo "<td>" . htmlspecialchars($row['intl_event_desc'] ?? '') . "</td>";
-            echo "<td>$" . number_format($income, 2) . "</td>";
-            echo "<td>$" . number_format($expense, 2) . "</td>";
-            echo "</tr>";
-
-            // Add to totals
-            $totalEventIncome += $income;
-            $totalEventExpense += $expense;
-        }
-
-        // Total row
-        echo "<tr>";
-        echo "<td><strong>Total</strong></td>";
-        echo "<td><strong>$" . number_format($totalEventIncome, 2) . "</strong></td>";
-        echo "<td><strong>$" . number_format($totalEventExpense, 2) . "</strong></td>";
-        echo "</tr>";
-    }
-} else {
-    echo "No data available.";
-}
-?>
-        </tbody>
-    </table>
+                    // Add to totals
+                    $totalEventIncome += $income;
+                    $totalEventExpense += $expense;
+                @endphp
+                <tr>
+                    <td>{{ $row['intl_event_desc'] ?? '' }}</td>
+                    <td>${{ number_format($income, 2) }}</td>
+                    <td>${{ number_format($expense, 2) }}</td>
+                </tr>
+            @endforeach
+            {{-- Total row --}}
+            <tr>
+                <td><strong>Total</strong></td>
+                <td><strong>${{ number_format($totalEventIncome, 2) }}</strong></td>
+                <td><strong>${{ number_format($totalEventExpense, 2) }}</strong></td>
+            </tr>
+        @else
+            <tr>
+                <td colspan='3'>No data available.</td>
+            </tr>
+        @endif
+    </tbody>
+</table>
     <br>
     <table width="50%"  >
         <tbody>
@@ -564,53 +597,60 @@ if (isset($pdfData['international_event_array'])) {
     <b>DONATIONS TO YOUR CHAPTER</b>
     <hr>
     </div>
-    <table width="100%" style="border-collapse: collapse;">
-        <thead>
-            <tr style="border-bottom: 1px solid #333;">
-                <td>Purpose of Donation</td>
-                <td>Donor Name/Address</td>
-                <td>Date</td>
-                <td>Amount</td>
-            </tr>
-        </thead>
-        <tbody>
-           <?php
+<table width="100%" style="border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 1px solid #333;">
+            <td>Purpose of Donation</td>
+            <td>Donor Name/Address</td>
+            <td>Date</td>
+            <td>Amount</td>
+        </tr>
+    </thead>
+    <tbody>
+        @php
             $monetary_dontations_to_chapter = null;
             $totalDonationAmount = 0;
 
             if (isset($pdfData['monetary_donations_to_chapter'])) {
                 $blobData = base64_decode($pdfData['monetary_donations_to_chapter']);
                 $monetary_dontations_to_chapter = unserialize($blobData);
-
-                if ($monetary_dontations_to_chapter == false) {
-                    echo "Error: Failed to unserialize data.";
-                } else {
-                    foreach ($monetary_dontations_to_chapter as $row) {
-                        echo "<tr>";
-                        echo "<td>" . $row['mon_donation_desc'] . "</td>";
-                        echo "<td>" . $row['mon_donation_info'] . "</td>";
-                        echo "<td>" . ($row['mon_donation_date'] ? date('m/d/Y', strtotime($row['mon_donation_date'])) : '') . "</td>";
-                        echo "<td>" . ($row['mon_donation_amount'] ? "$" . number_format(floatval(str_replace(',', '', $row['mon_donation_amount'])), 2) : "$0.00") . "</td>";
-                        echo "</tr>";
-
-                        // Remove commas before converting to float for total calculation
-                        $totalDonationAmount += floatval(str_replace(',', '', $row['mon_donation_amount']));
-                    }
-
-                    // Total row
-                    echo "<tr>";
-                    echo "<td><strong>Total</strong></td>";
-                    echo "<td></td>";
-                    echo "<td></td>";
-                    echo "<td><strong>$" . number_format($totalDonationAmount, 2) . "</strong></td>";
-                    echo "</tr>";
-                }
-            } else {
-                echo "No data available.";
             }
-            ?>
-        </tbody>
-    </table>
+        @endphp
+
+        @if ($monetary_dontations_to_chapter === false)
+            <tr>
+                <td colspan='4'>Error: Failed to unserialize data.</td>
+            </tr>
+        @elseif (is_array($monetary_dontations_to_chapter) && count($monetary_dontations_to_chapter) > 0)
+            @foreach ($monetary_dontations_to_chapter as $row)
+                @php
+                    $donationDate = $row['mon_donation_date'] ? date('m/d/Y', strtotime($row['mon_donation_date'])) : '';
+                    $donationAmount = floatval(str_replace(',', '', $row['mon_donation_amount']));
+
+                    // Add to total
+                    $totalDonationAmount += $donationAmount;
+                @endphp
+                <tr>
+                    <td>{{ $row['mon_donation_desc'] }}</td>
+                    <td>{{ $row['mon_donation_info'] }}</td>
+                    <td>{{ $donationDate }}</td>
+                    <td>{{ $row['mon_donation_amount'] ? '$' . number_format($donationAmount, 2) : '$0.00' }}</td>
+                </tr>
+            @endforeach
+            {{-- Total row --}}
+            <tr>
+                <td><strong>Total</strong></td>
+                <td></td>
+                <td></td>
+                <td><strong>${{ number_format($totalDonationAmount, 2) }}</strong></td>
+            </tr>
+        @else
+            <tr>
+                <td colspan='4'>No data available.</td>
+            </tr>
+        @endif
+    </tbody>
+</table>
     <br>
     <table width="50%" >
         <tbody>
@@ -619,93 +659,105 @@ if (isset($pdfData['international_event_array'])) {
         </tbody>
     </table>
     <br>
-    <table width="75%" style="border-collapse: collapse;">
-        <thead>
+<table width="75%" style="border-collapse: collapse;">
+    <thead>
+        <tr>
+            <td><strong>Non-Monetary Donations</strong></td>
+        </tr>
+        <tr style="border-bottom: 1px solid #333;">
+            <td>Purpose of Donation</td>
+            <td>Donor Name/Address</td>
+            <td>Date</td>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $non_monetary_dontations_to_chapter = null;
+
+            if (isset($pdfData['non_monetary_donations_to_chapter'])) {
+                $blobData = base64_decode($pdfData['non_monetary_donations_to_chapter']);
+                $non_monetary_dontations_to_chapter = unserialize($blobData);
+            }
+        @endphp
+
+        @if ($non_monetary_dontations_to_chapter === false)
             <tr>
-                <td><strong>Non-Monetary Donations</strong></td> </tr>
-            <tr style="border-bottom: 1px solid #333;">
-                <td>Purpose of Donation</td>
-                <td>Donor Name/Address</td>
-                <td>Date</td>
+                <td colspan='3'>Error: Failed to unserialize data.</td>
             </tr>
-        </thead>
-        <tbody>
-            <?php
-                $non_monetary_dontations_to_chapter = null;
-
-                if (isset($pdfData['non_monetary_donations_to_chapter'])) {
-                    $blobData = base64_decode($pdfData['non_monetary_donations_to_chapter']);
-                    $non_monetary_dontations_to_chapter = unserialize($blobData);
-
-                    if ($non_monetary_dontations_to_chapter == false) {
-                        echo "Error: Failed to unserialize data.";
-                    } else {
-                        foreach ($non_monetary_dontations_to_chapter as $row) {
-                            echo "<tr>";
-                            echo "<td>" . $row['nonmon_donation_desc'] . "</td>";
-                            echo "<td>" . $row['nonmon_donation_info'] . "</td>";
-                            echo "<td>" . ($row['nonmon_donation_date'] ? date('m/d/Y', strtotime($row['nonmon_donation_date'])) : '') . "</td>";
-                            echo "</tr>";
-                        }
-                    }
-                } else {
-                    echo "No data available.";
-                }
-                ?>
-        </tbody>
-    </table>
+        @elseif (is_array($non_monetary_dontations_to_chapter) && count($non_monetary_dontations_to_chapter) > 0)
+            @foreach ($non_monetary_dontations_to_chapter as $row)
+                <tr>
+                    <td>{{ $row['nonmon_donation_desc'] }}</td>
+                    <td>{{ $row['nonmon_donation_info'] }}</td>
+                    <td>{{ $row['nonmon_donation_date'] ? date('m/d/Y', strtotime($row['nonmon_donation_date'])) : '' }}</td>
+                </tr>
+            @endforeach
+        @else
+            <tr>
+                <td colspan='3'>No data available.</td>
+            </tr>
+        @endif
+    </tbody>
+</table>
     <br>
     <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
     <b>OTHER INCOME & EXPENSES</b>
     <hr>
     </div>
-    <table width="75%" style="border-collapse: collapse;">
-        <thead>
-            <tr style="border-bottom: 1px solid #333;">
-                <td>Description</td>
-                <td>Income</td>
-                <td>Expenses</td>
+<table width="75%" style="border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 1px solid #333;">
+            <td>Description</td>
+            <td>Income</td>
+            <td>Expenses</td>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $other_income_and_expenses_array = null;
+            $totalOtherIncome = 0;
+            $totalOtherExpenses = 0;
+
+            if (isset($pdfData['other_income_and_expenses_array'])) {
+                $blobData = base64_decode($pdfData['other_income_and_expenses_array']);
+                $other_income_and_expenses_array = unserialize($blobData);
+            }
+        @endphp
+
+        @if ($other_income_and_expenses_array === false)
+            <tr>
+                <td colspan='3'>Error: Failed to unserialize data.</td>
             </tr>
-        </thead>
-        <tbody>
-           <?php
-$other_income_and_expenses_array = null;
-$totalOtherIncome = 0;
-$totalOtherExpenses = 0;
+        @elseif (is_array($other_income_and_expenses_array) && count($other_income_and_expenses_array) > 0)
+            @foreach ($other_income_and_expenses_array as $row)
+                @php
+                    $income = floatval(str_replace(',', '', $row['other_income']));
+                    $expenses = floatval(str_replace(',', '', $row['other_expenses']));
 
-if (isset($pdfData['other_income_and_expenses_array'])) {
-    $blobData = base64_decode($pdfData['other_income_and_expenses_array']);
-    $other_income_and_expenses_array = unserialize($blobData);
-
-    if ($other_income_and_expenses_array == false) {
-        echo "Error: Failed to unserialize data.";
-    } else {
-        foreach ($other_income_and_expenses_array as $row) {
-            echo "<tr>";
-            echo "<td>" . $row['other_desc'] . "</td>";
-            echo "<td>" . ($row['other_income'] ? "$" . number_format(floatval(str_replace(',', '', $row['other_income'])), 2) : "$0.00") . "</td>";
-            echo "<td>" . ($row['other_expenses'] ? "$" . number_format(floatval(str_replace(',', '', $row['other_expenses'])), 2) : "$0.00") . "</td>";
-            echo "</tr>";
-
-            // Remove commas before converting to float for total calculations
-            $totalOtherIncome += floatval(str_replace(',', '', $row['other_income']));
-            $totalOtherExpenses += floatval(str_replace(',', '', $row['other_expenses']));
-        }
-
-        // Total row
-        echo "<tr>";
-        echo "<td><strong>Total</strong></td>";
-        echo "<td><strong>$" . number_format($totalOtherIncome, 2) . "</strong></td>";
-        echo "<td><strong>$" . number_format($totalOtherExpenses, 2) . "</strong></td>";
-        echo "</tr>";
-    }
-} else {
-    echo "No data available.";
-}
-?>
-        </tbody>
-    </table>
+                    // Totals
+                    $totalOtherIncome += $income;
+                    $totalOtherExpenses += $expenses;
+                @endphp
+                <tr>
+                    <td>{{ $row['other_desc'] }}</td>
+                    <td>{{ $row['other_income'] ? '$' . number_format($income, 2) : '$0.00' }}</td>
+                    <td>{{ $row['other_expenses'] ? '$' . number_format($expenses, 2) : '$0.00' }}</td>
+                </tr>
+            @endforeach
+            {{-- Total row --}}
+            <tr>
+                <td><strong>Total</strong></td>
+                <td><strong>${{ number_format($totalOtherIncome, 2) }}</strong></td>
+                <td><strong>${{ number_format($totalOtherExpenses, 2) }}</strong></td>
+            </tr>
+        @else
+            <tr>
+                <td colspan='3'>No data available.</td>
+            </tr>
+        @endif
+    </tbody>
+</table>
     <br>
     <table width="50%" >
         <tbody>
@@ -721,13 +773,13 @@ if (isset($pdfData['other_income_and_expenses_array'])) {
     <b>FINANCIAL SUMMARY</b>
     <hr>
     </div>
-    <?php
+    @php
         $totalIncome = $totalDues + $totalServiceIncome + $totalPartyIncome + $totalDonationAmount + $totalEventIncome + $totalOtherIncome;
         $totalExpenses = $pdfData['manditory_meeting_fees_paid'] + $pdfData['voluntary_donations_paid'] + $pdfData['paid_baby_sitters'] + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
                 + $totalPartyExpense + $pdfData['office_printing_costs'] + $pdfData['office_postage_costs'] +
                     $pdfData['office_membership_pins_cost'] + $totalOfficeExpense + $pdfData['annual_registration_fee'] + $totalEventExpense + $totalOtherExpenses;
-        $treasuryBalance = $pdfData ['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses
-    ?>
+        $treasuryBalance = $pdfData['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses;
+    @endphp
     <table width="50%" style="border-collapse: collapse;">
         <tbody>
             <tr><td><strong>INCOME</strong></td></tr>
@@ -833,49 +885,60 @@ if (isset($pdfData['other_income_and_expenses_array'])) {
         </tbody>
     </table>
     <br>
-    <table width="100%" style="border-collapse: collapse;">
-        <thead>
-            <tr>Reconcilliation Transactons</tr>
-            <tr style="border-bottom: 1px solid #333;">
-                    <td>Date</td>
-                    <td>Check No.</td>
-                    <td>Transaction Desc.</td>
-                    <td>Payment Amount</td>
-                    <td>Deposit Amount</td>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
+  <table width="100%" style="border-collapse: collapse;">
+    <thead>
+        <tr>Reconcilliation Transactons</tr>
+        <tr style="border-bottom: 1px solid #333;">
+            <td>Date</td>
+            <td>Check No.</td>
+            <td>Transaction Desc.</td>
+            <td>Payment Amount</td>
+            <td>Deposit Amount</td>
+        </tr>
+    </thead>
+    <tbody>
+        @php
             $totalPayments = 0;
             $totalDeposits = 0;
 
-                if (isset($pdfData['bank_reconciliation_array'])) {
-                    $blobData = base64_decode($pdfData['bank_reconciliation_array']);
-                    $bank_rec_array = unserialize($blobData);
+            if (isset($pdfData['bank_reconciliation_array'])) {
+                $blobData = base64_decode($pdfData['bank_reconciliation_array']);
+                $bank_rec_array = unserialize($blobData);
+            }
+        @endphp
 
-                    if ($bank_rec_array == false) {
-                        echo "Error: Failed to unserialize data.";
-                    } else {
-                        foreach ($bank_rec_array as $row) {
-                            echo "<tr>";
-                                echo "<td>" . ($row['bank_rec_date'] ? date('m/d/Y', strtotime($row['bank_rec_date'])) : '') . "</td>";
-                                echo "<td>" . $row['bank_rec_check_no'] . "</td>";
-                                echo "<td>" . $row['bank_rec_desc'] . "</td>";
-                                echo "<td>" . ($row['bank_rec_payment_amount'] ? "$" . number_format(floatval(str_replace(',', '', $row['bank_rec_payment_amount'])), 2) : "$0.00") . "</td>";
-                                echo "<td>" . ($row['bank_rec_desposit_amount'] ? "$" . number_format(floatval(str_replace(',', '', $row['bank_rec_desposit_amount'])), 2) : "$0.00") . "</td>";
-                            echo "</tr>";
+        @if (isset($bank_rec_array) && $bank_rec_array === false)
+            <tr>
+                <td colspan='5'>Error: Failed to unserialize data.</td>
+            </tr>
+        @elseif (isset($bank_rec_array) && is_array($bank_rec_array) && count($bank_rec_array) > 0)
+            @foreach ($bank_rec_array as $row)
+                @php
+                    $paymentAmount = floatval(str_replace(',', '', $row['bank_rec_payment_amount']));
+                    $depositAmount = floatval(str_replace(',', '', $row['bank_rec_desposit_amount']));
 
-                            $totalPayments += floatval($row['bank_rec_payment_amount']);
-                            $totalDeposits += floatval($row['bank_rec_desposit_amount']);
-                        }
-                    }
-                } else {
-                    echo "No data available.";
-                }
-                $totalReconciliation = - $totalPayments + $totalDeposits;
-                ?>
-            </tbody>
-    </table>
+                    $totalPayments += $paymentAmount;
+                    $totalDeposits += $depositAmount;
+                @endphp
+                <tr>
+                    <td>{{ $row['bank_rec_date'] ? date('m/d/Y', strtotime($row['bank_rec_date'])) : '' }}</td>
+                    <td>{{ $row['bank_rec_check_no'] }}</td>
+                    <td>{{ $row['bank_rec_desc'] }}</td>
+                    <td>{{ $row['bank_rec_payment_amount'] ? '$' . number_format($paymentAmount, 2) : '$0.00' }}</td>
+                    <td>{{ $row['bank_rec_desposit_amount'] ? '$' . number_format($depositAmount, 2) : '$0.00' }}</td>
+                </tr>
+            @endforeach
+        @else
+            <tr>
+                <td colspan='5'>No data available.</td>
+            </tr>
+        @endif
+
+        @php
+            $totalReconciliation = -$totalPayments + $totalDeposits;
+        @endphp
+    </tbody>
+</table>
     <br>
     <table width="50%" >
         <tbody>
