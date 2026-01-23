@@ -52,8 +52,7 @@
 
                     <form method="POST" action="{{ route('process.manual') }}">
                         @csrf
-                        <?php
-                        ?>
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                           <h3 class="profile-username">Shipping Information</h3>
                     <!-- /.card-header -->

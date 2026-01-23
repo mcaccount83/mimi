@@ -169,4 +169,15 @@ class AdminReportController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
+
+    public function inquiriesNotify(Request $request): View
+    {
+
+
+        $data = [
+            ];
+
+        return view('adminreports.inquiriesnotify')->with($data);
+
+    }
 }

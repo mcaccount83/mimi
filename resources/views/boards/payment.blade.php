@@ -98,8 +98,8 @@
 
                                     <form method="POST" action="{{ route('process.payment') }}">
                                         @csrf
-                                        <?php
-                                        ?>
+                                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+
                                         <div class="form-group row">
                                             <div class="col-md-4">
                                                 <label>Number of Members</label> <span class="field-required">*</span>
