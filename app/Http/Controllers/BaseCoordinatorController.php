@@ -94,8 +94,15 @@ class BaseCoordinatorController extends Controller
      */
     private function applySorting($baseQuery)
     {
+        $isRetiredPage = request()->route()->getName() == 'coordinators.coordretired';
         $isBirthdayPage = request()->route()->getName() == 'coordreports.coordrptbirthdays';
         $isUtilizationPage = request()->route()->getName() == 'coordreports.coordrptvolutilization';
+
+        if ($isRetiredPage) {
+            $baseQuery->orderByDesc('zapped_date');
+
+            return ['query' => $baseQuery];
+        }
 
         if ($isBirthdayPage) {
             $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
