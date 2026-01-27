@@ -1,45 +1,56 @@
 <script>
     document.querySelectorAll('.reset-password-btn').forEach(button => {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
+    button.addEventListener('click', function (e) {
+        e.preventDefault();
 
-            const userId = this.getAttribute('data-user-id');
-            const newPassword = "TempPass4You";
+        const userId = this.getAttribute('data-user-id');
+        const newPassword = "TempPass4You";
 
-            $.ajax({
-                url: '{{ route('updatepassword') }}',
-                type: 'PUT',
-                data: {
-                    user_id: userId,
-                    new_password: newPassword,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(result) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: result.message.replace('<br>', '\n'),
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                },
-                error: function(jqXHR, exception) {
-                    console.error("Failed to reset password:", exception);
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Unable to reset password. Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-sm btn-success'
-                        }
-                    });
-                }
-            });
+        // Get fresh CSRF token from meta tag
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        console.log('CSRF Token:', csrfToken); // Check if token exists
+        console.log('User ID:', userId);
+
+        $.ajax({
+            url: '{{ route('updatepassword') }}',
+            type: 'PUT',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken  // Send in header instead
+            },
+            data: {
+                user_id: userId,
+                new_password: newPassword
+            },
+            success: function(result) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: result.message.replace('<br>', '\n'),
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success'
+                    }
+                });
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Status:", jqXHR.status);
+                console.error("Response:", jqXHR.responseText);
+                console.error("Error:", errorThrown);
+
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Unable to reset password. Error: ' + jqXHR.status,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success'
+                    }
+                });
+            }
         });
     });
+});
 
     function showChangePasswordAlert(user_id) {
         Swal.fire({
