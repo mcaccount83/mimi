@@ -25,26 +25,24 @@
 			    <tr>
                     <th>Conf</th>
                     <th>Region</th>
-                    <th>State</th>
+                    <th>States</th>
                     <th></th>
                     <th></th>
                   <th>Email</th>
                 </tr>
                 </thead>
                 <tbody>
+                    @foreach ($regList as $list)
                     <tr>
                         <td>
-                            {{-- {{ $list->conference->short_name }} --}}
+                            {{ $list->conference->conference_name }}
                         </td>
                         <td>
-                            {{-- {{ $list->conference->short_name }} --}}
+                            {{ $list->long_name }}
                         </td>
                         <td>
-                           {{-- @if($list->state_id < 52)
-                                {{$list->state->state_short_name}}
-                            @else
-                                {{$list->country->short_name}}
-                            @endif --}}
+
+                    {{ $confStates[$list->id] ?? 'N/A' }}
                         </td>
                         <td></td>
                         <td></td>
@@ -52,17 +50,21 @@
                             {{-- <a href="mailto:{{ $list->email }}"></a> --}}
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>
                 </table>
             </div>
-            <div class="card-body text-center">
 
-             </div>
+             <div class="card-body text-center">
+            </div>
+          </div>
+          <!-- /.card -->
         </div>
-          <!-- /.box -->
-        </div>
+        <!-- /.col -->
       </div>
+      <!-- /.row -->
     </div>
-    </section>
-    <!-- /.content -->
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
 @endsection

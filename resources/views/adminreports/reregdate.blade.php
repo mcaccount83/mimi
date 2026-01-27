@@ -82,10 +82,16 @@
                         </div>
                     </div>
                 @endif
-
+            <div class="card-body text-center">
             </div>
+          </div>
+          <!-- /.card -->
         </div>
+        <!-- /.col -->
       </div>
+      <!-- /.row -->
     </div>
-    </section>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
 @endsection

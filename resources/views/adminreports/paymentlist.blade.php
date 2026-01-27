@@ -23,7 +23,6 @@
     <!-- /.card-header -->
     <div class="card-body">
 
-
                     <!-- Filters -->
                     <form method="GET" action="{{ route('adminreports.paymentlist') }}" class="mb-6">
                         <div class="flex gap-4">
@@ -125,15 +124,18 @@
                         </div>
                     </div>
                 @endif
-
-</div>
-<!-- /.box -->
-</div>
-</div>
-</section>
-<!-- Main content -->
-
-<!-- /.content -->
+            <div class="card-body text-center">
+            </div>
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
 @endsection
 
 

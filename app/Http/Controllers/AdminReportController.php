@@ -6,6 +6,8 @@ use App\Enums\ChapterCheckbox;
 use App\Models\Chapters;
 use App\Models\PaymentLog;
 use App\Models\Payments;
+use App\Models\Region;
+use App\Models\State;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -173,11 +175,46 @@ class AdminReportController extends Controller implements HasMiddleware
     public function inquiriesNotify(Request $request): View
     {
 
+        $regList = Region::orderBy('id')
+            ->with(['conference' => function ($query) {
+                $query->orderBy('short_name');
+            }])
+            ->get();
+
+            // Initialize arrays to store states for each region
+            $confStates = [];
+            $regStates = [];
+
+            foreach ($regList as $region) {
+            $confId = $region->conference_id;
+            $regId = $region->id;
+
+            // Use === for comparison, not = for assignment
+            if ($confId === 0) {
+                $confStates[$regId] = 'None';
+            } elseif ($confId === 1) {
+                $confStates[$regId] = 'AK, HI, ID, MN, MT, ND, OR, SD, WA, WI, WY, **, AA, AE, AP';
+            } elseif ($confId === 2) {
+                $confStates[$regId] = 'AZ, CA, CO, NM, NV, OK, TX, UT';
+            } elseif ($confId === 3) {
+                $confStates[$regId] = 'AL, AR, DC, FL, GA, KY, LA, MD, MS, NC, SC, TN, VA, WV';
+            } elseif ($confId === 4) {
+                $confStates[$regId] = 'CT, DE, MA, ME, NH, NJ, NY, PA, RI, VT';
+            } elseif ($confId === 5) { // This was 4 again - probably meant to be 5
+                $confStates[$regId] = 'IA, IL, IN, KS, MI, MO, NE, OH';
+            }
+
+            if ($regId === 0) {
+                $regStates[$regId] = 'None';
+            }
+        }
 
         $data = [
-            ];
+            'regList' => $regList,
+            'confStates' => $confStates,
+            'regStates' => $regStates
+        ];
 
         return view('adminreports.inquiriesnotify')->with($data);
-
     }
 }

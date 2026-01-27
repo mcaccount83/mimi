@@ -142,15 +142,11 @@
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
             </div>
 
-            <!-- /.box-body -->
 
-          </div>
-
-          <!-- /.box -->
-        </div>
-      </div>
     </div>
-    </section>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
     </form>
     @endsection
 

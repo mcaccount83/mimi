@@ -318,7 +318,7 @@
                     @if($cdActiveId == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="retireCoordinator({{ $cdDetails->id }})"><i class="fas fa-ban mr-2"></i>Retire Coordinator</button>
                     @elseif($cdActiveId != 1)
-                        <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="unRetireCoordinator({{ $cdDetails->id }})"><i class="fas fa-undo mr-2"></i>UnRetire Coordinator</button>
+                        <button type="button" id="unretire" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="unRetireCoordinator({{ $cdDetails->id }})"><i class="fas fa-undo mr-2"></i>UnRetire Coordinator</button>
                     @endif
                 @endif
                 <br>

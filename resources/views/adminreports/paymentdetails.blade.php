@@ -89,14 +89,18 @@
             </div>
         </div>
 
-</div>
-</div>
-<!-- /.box -->
-</div>
-</div>
-</section>
-<!-- Main content -->
-
-<!-- /.content -->
+ <div class="card-body text-center">
+            </div>
+            </div>
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
 @endsection
 
