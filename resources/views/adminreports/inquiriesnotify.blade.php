@@ -168,21 +168,22 @@ $(document).ready(function() {
                     timer: 1500
                 });
             },
-            error: function(xhr) {
-                var errorMessage = 'Error updating email. Please try again.';
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage = xhr.responseJSON.message;
-                }
+           error: function(xhr) {
+    var errorMessage = 'Error updating email. Please try again.';
+    if (xhr.responseJSON && xhr.responseJSON.message) {
+        errorMessage = xhr.responseJSON.message;
+    }
 
-                // Show error message with SweetAlert
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'error',
-                    title: errorMessage,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            }
+    Swal.fire({
+        title: 'Error!',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+            confirmButton: 'btn-sm btn-success'
+        }
+    });
+}
         });
     });
 
