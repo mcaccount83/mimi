@@ -141,15 +141,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/adminreports/updatebugs/{id}', [ResourcesController::class, 'updateBugs'])->name('adminreports.updatebugs');
     Route::get('/adminreports/inquiriesnotify', [AdminReportController::class, 'inquiriesNotify'])->name('adminreports.inquiriesnotify');
     Route::post('/adminreports/updateinquiries/{id}', [AdminReportController::class, 'updateInquiriesEmail'])->name('adminreports.updateinquiries');
-
-    Route::post('/admin/regions/{id}/update-email', [AdminReportController::class, 'updateRegionEmail'])->name('admin.regions.update-email');
-
     Route::get('/adminreports/conferencelist', [AdminReportController::class, 'conferenceList'])->name('adminreports.conferencelist');
     Route::get('/adminreports/regionlist', [AdminReportController::class, 'regionList'])->name('adminreports.regionlist');
-    Route::post('/admin/regions/{id}/update-conference', [AdminReportController::class, 'updateRegionConference'])->name('admin.regions.update-conference');
-
+    Route::post('/adminreports/updateregion/{id}', [AdminReportController::class, 'updateRegion'])->name('adminreports.updateregion');
     Route::get('/adminreports/statelist', [AdminReportController::class, 'stateList'])->name('adminreports.statelist');
-    Route::post('/admin/states/{id}/update-assignment', [AdminReportController::class, 'updateStateAssignment'])->name('admin.states.update-assignment');
+    Route::post('/adminreports/updatestate/{id}', [AdminReportController::class, 'updateState'])->name('adminreports.updatestate');
 });
 
 // User Controller Routes...Coordinator Login Required

@@ -192,43 +192,39 @@ class AdminReportController extends Controller implements HasMiddleware
     }
 
     public function updateInquiriesEmail(Request $request, $id)
-{
-        Log::info('=== updateRegionEmail called ===');
-    Log::info('ID: ' . $id);
-    Log::info('Request data: ' . json_encode($request->all()));
+    {
+        try {
+            $request->validate([
+                'inquiries_email' => 'required|email'
+            ]);
 
-    try {
-        $request->validate([
-            'inquiries_email' => 'required|email'
-        ]);
+            $region = Region::findOrFail($id);
+            $region->inquiries_email = $request->inquiries_email;
+            $region->save();
 
-        $region = Region::findOrFail($id);
-        $region->inquiries_email = $request->inquiries_email;
-        $region->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Email updated successfully!',
+                'email' => $request->inquiries_email
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Email validation error: ' . json_encode($e->errors()));
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Email updated successfully!',
-            'email' => $request->inquiries_email
-        ]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        Log::error('Email validation error: ' . json_encode($e->errors()));
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid email format.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Email update error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Invalid email format.',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Exception $e) {
-        Log::error('Email update error: ' . $e->getMessage());
-        Log::error('Stack trace: ' . $e->getTraceAsString());
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Error: ' . $e->getMessage()  // Return actual error for debugging
-        ], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()  // Return actual error for debugging
+            ], 500);
+        }
     }
-}
 
      public function conferenceList(Request $request): View
     {
@@ -272,7 +268,7 @@ class AdminReportController extends Controller implements HasMiddleware
     return view('adminreports.regionlist')->with($data);
 }
 
-public function updateRegionConference(Request $request, $id)
+public function updateRegion(Request $request, $id)
 {
     $request->validate([
         'conference_id' => 'required|exists:conference,id'
@@ -326,7 +322,7 @@ public function updateRegionConference(Request $request, $id)
     return view('adminreports.statelist')->with($data);
 }
 
-public function updateStateAssignment(Request $request, $id)
+public function updateState(Request $request, $id)
 {
     $request->validate([
         'conference_id' => 'required|exists:conference,id',

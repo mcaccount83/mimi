@@ -170,12 +170,13 @@ $('.edit-folder-btn').on('click', function(e) {
             return;
         }
 
-        var url = '/techreports/addgoogledrive';
+        var url = '{{ route('techreports.addgoogledrive') }}';
         var successMessage = 'Google Drive folder added successfully!';
 
         if (isEditMode) {
             var driveId = $('#drive_id').val();
-            url = '/techreports/updategoogledrive/' + driveId ;
+            url = "{{ route('techreports.updategoogledrive', ['id' => 'PLACEHOLDER']) }}";
+            url = url.replace('PLACEHOLDER', driveId);
             successMessage = 'Google Drive folder updated successfully!';
         }
 

@@ -136,9 +136,13 @@ $(document).ready(function() {
             return;
         }
 
+        // Build URL using named route
+        var updateUrl = "{{ route('adminreports.updateregion', ['id' => 'PLACEHOLDER']) }}";
+        updateUrl = updateUrl.replace('PLACEHOLDER', regionId);
+
         // Send AJAX request
         $.ajax({
-            url: '/admin/regions/' + regionId + '/update-conference',
+            url: updateUrl,
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
