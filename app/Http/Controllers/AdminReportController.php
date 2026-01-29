@@ -193,6 +193,10 @@ class AdminReportController extends Controller implements HasMiddleware
 
     public function updateRegionEmail(Request $request, $id)
 {
+        Log::info('=== updateRegionEmail called ===');
+    Log::info('ID: ' . $id);
+    Log::info('Request data: ' . json_encode($request->all()));
+
     try {
         $request->validate([
             'inquiries_email' => 'required|email'
