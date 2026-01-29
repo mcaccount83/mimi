@@ -191,7 +191,7 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('adminreports.inquiriesnotify')->with($data);
     }
 
-    public function updateRegionEmail(Request $request, $id)
+    public function updateInquiriesEmail(Request $request, $id)
 {
         Log::info('=== updateRegionEmail called ===');
     Log::info('ID: ' . $id);
