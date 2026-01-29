@@ -892,7 +892,7 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * view Google Drive Shared Folder Ids
      */
-    public function showGoogleDrive(): View
+    public function googleDriveList(): View
     {
         $driveList = GoogleDrive::get();
 
@@ -902,31 +902,88 @@ class TechReportController extends Controller implements HasMiddleware
 
     }
 
-    public function updateGoogleDriveFolderId(Request $request, $id)
-{
-    $request->validate([
-        'folder_id' => 'required|string|max:255'
-    ]);
-
-    try {
-        $drive = GoogleDrive::findOrFail($id);
-        $drive->folder_id = $request->folder_id;
-        $drive->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Folder ID updated successfully!',
-            'folder_id' => $request->folder_id
+    public function addGoogleDrive(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'version' => 'nullable|string|max:50',
+            'folder_id' => 'required|string|max:255'
         ]);
-    } catch (\Exception $e) {
-        Log::error('Google Drive folder ID update error: ' . $e->getMessage());
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Error updating folder ID. Please try again.'
-        ], 500);
+        try {
+            $drive = new GoogleDrive();
+            $drive->name = $request->name;
+            $drive->description = $request->description;
+            $drive->version = $request->version;
+            $drive->folder_id = $request->folder_id;
+            $drive->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Google Drive folder added successfully!'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Google Drive folder creation error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error adding folder. Please try again.'
+            ], 500);
+        }
     }
-}
+
+    public function updateGoogleDrive(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'version' => 'nullable|string|max:50',
+            'folder_id' => 'required|string|max:255'
+        ]);
+
+        try {
+            $drive = GoogleDrive::findOrFail($id);
+            $drive->name = $request->name;
+            $drive->description = $request->description;
+            $drive->version = $request->version;
+            $drive->folder_id = $request->folder_id;
+            $drive->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Google Drive folder updated successfully!'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Google Drive folder update error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating folder. Please try again.'
+            ], 500);
+        }
+    }
+
+    public function deleteGoogleDrive(Request $request): JsonResponse
+    {
+        $driveId = $request->input('driveId');
+
+        try {
+            DB::beginTransaction();
+
+            // Delete the Google Drive record (update this to your actual table name)
+            DB::table('google_drive_new')->where('id', $driveId)->delete();
+
+            DB::commit();
+
+            return response()->json(['success' => 'Drive successfully deleted.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
+        }
+    }
 
     /**
      * view Email Addresses not assigned by positionId

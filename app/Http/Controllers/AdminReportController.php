@@ -208,11 +208,14 @@ class AdminReportController extends Controller implements HasMiddleware
                 'email' => $request->inquiries_email
             ]);
         } catch (\Exception $e) {
+            Log::error('Email update error: ' . $e->getMessage());
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error updating email. Please try again.'
             ], 500);
         }
+
     }
 
      public function conferenceList(Request $request): View
