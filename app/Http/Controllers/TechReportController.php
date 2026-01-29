@@ -988,49 +988,139 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * view Email Addresses not assigned by positionId
      */
-    public function showAdminEmail(): View
+    public function adminEmailList(): View
     {
-        $adminEmail = AdminEmail::get();
+        $emailList = AdminEmail::get();
 
-        $data = ['adminEmail' => $adminEmail];
+        $data = ['emailList' => $emailList];
 
         return view('techreports.adminemail')->with($data);
+
     }
 
-    /**
-     * Update Email Addresses not assigned by positionId
-     */
-    public function updateAdminEmail(Request $request): JsonResponse
-    {
-        DB::beginTransaction();
-        try {
-            $email = AdminEmail::firstOrFail();
-            $email->list_admin = $request->input('listAdminEmail');
-            $email->payments_admin = $request->input('paymentAdminEmail');
-            $email->ein_admin = $request->input('einAdminEmail');
-            $email->gsuite_admin = $request->input('gsuiteAdminEmail');
-            $email->mimi_admin = $request->input('mimiAdminEmail');
+  public function addAdminEmail(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'required|string|max:255',
+        'email' => 'required|string|max:255' // Fixed: emial -> email
+    ]);
 
-            $email->save();
+    try {
+        $admin = new AdminEmail();
+        $admin->name = $request->name;
+        $admin->description = $request->description;
+        $admin->email = $request->email;
+        $admin->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'System email added successfully!'
+        ]);
+    } catch (\Exception $e) {
+        Log::error('System email creation error: ' . $e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Error adding email. Please try again.' // Fixed message
+        ], 500);
+    }
+}
+
+   public function updateAdminEmail(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'required|string|max:255',
+        'email' => 'required|string|max:255' // Fixed: emial -> email
+    ]);
+
+    try {
+        $admin = AdminEmail::findOrFail($id);
+        $admin->name = $request->name;
+        $admin->description = $request->description;
+        $admin->email = $request->email;
+        $admin->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'System email updated successfully!'
+        ]);
+    } catch (\Exception $e) {
+        Log::error('System email update error: ' . $e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Error updating email. Please try again.' // Fixed message
+        ], 500);
+    }
+}
+
+    public function deleteAdminEmail(Request $request): JsonResponse
+    {
+        $emailId = $request->input('emailId');
+
+        try {
+            DB::beginTransaction();
+
+            // Delete the Admin Email record
+            DB::table('admin_email_new')->where('id', $emailId)->delete();
 
             DB::commit();
 
-            $message = 'Admin Emails updated successfully';
-
-            return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('techreports.adminemail')]);
-
+            return response()->json(['success' => 'System email successfully deleted.']);
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            DB::rollback();
+            Log::error($e);
 
-            $message = 'Something went wrong, Please try again.';
-
-            return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('techreports.adminemail')]);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
+            return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         }
     }
+
+
+    // public function showAdminEmail(): View
+    // {
+    //     $adminEmail = AdminEmail::get();
+
+    //     $data = ['adminEmail' => $adminEmail];
+
+    //     return view('techreports.adminemail')->with($data);
+    // }
+
+    // /**
+    //  * Update Email Addresses not assigned by positionId
+    //  */
+    // public function updateAdminEmail(Request $request): JsonResponse
+    // {
+    //     DB::beginTransaction();
+    //     try {
+    //         $email = AdminEmail::firstOrFail();
+    //         $email->list_admin = $request->input('listAdminEmail');
+    //         $email->payments_admin = $request->input('paymentAdminEmail');
+    //         $email->ein_admin = $request->input('einAdminEmail');
+    //         $email->gsuite_admin = $request->input('gsuiteAdminEmail');
+    //         $email->mimi_admin = $request->input('mimiAdminEmail');
+
+    //         $email->save();
+
+    //         DB::commit();
+
+    //         $message = 'Admin Emails updated successfully';
+
+    //         return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('techreports.adminemail')]);
+
+    //     } catch (\Exception $e) {
+    //         DB::rollback();  // Rollback Transaction
+    //         Log::error($e);  // Log the error
+
+    //         $message = 'Something went wrong, Please try again.';
+
+    //         return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('techreports.adminemail')]);
+    //     } finally {
+    //         // This ensures DB connections are released even if exceptions occur
+    //         DB::disconnect();
+    //     }
+    // }
 
     /**
      * Delete Chapter/Board from Database -- cannot be undone!
@@ -1131,87 +1221,5 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    /**
-     * view Conference & Region Lists
-     */
-    public function showConfRegList(): View
-    {
-        $confList = Conference::orderBy('id')
-            ->with(['regions' => function ($query) {
-                $query->orderBy('short_name');
-            }])
-            ->get();
 
-        $data = ['confList' => $confList];
-
-        return view('techreports.confreglist')->with($data);
-    }
-
-    public function editConfList(): View
-    {
-        $confList = Conference::orderBy('id')
-            ->get();
-
-        $data = ['confList' => $confList];
-
-        return view('techreports.editconflist')->with($data);
-    }
-
-    public function updateConfList(Request $request): JsonResponse
-    {
-        DB::beginTransaction();
-        try {
-            $validated = $request->validate([
-                'id' => 'required|exists:conference,id',
-                'conference_name' => 'required|string|max:255',
-                'short_name' => 'required|string|max:50',
-                'conference_description' => 'required|string|max:500',
-                'short_description' => 'required|string|max:10',
-            ]);
-
-            $conference = Conference::findOrFail($validated['id']);
-            $conference->update([
-                'conference_name' => $validated['conference_name'],
-                'short_name' => $validated['short_name'],
-                'conference_description' => $validated['conference_description'],
-                'short_description' => $validated['short_description'],
-            ]);
-
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
-        }
-    }
-
-    public function storeConf(Request $request): JsonResponse
-    {
-        try {
-
-            $validated = $request->validate([
-                'conference_name' => 'required|string|max:255',
-                'short_name' => 'required|string|max:50',
-                'conference_description' => 'required|string|max:500',
-                'short_description' => 'required|string|max:10',
-            ]);
-
-            $conference = Conference::create($validated);
-
-            return response()->json(['success' => true, 'id' => $conference->id]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
-        }
-    }
-
-    public function deleteConf($id): JsonResponse
-    {
-        DB::beginTransaction();
-        try {
-            $conference = Conference::findOrFail($id);
-            $conference->delete();
-
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
-        }
-    }
 }

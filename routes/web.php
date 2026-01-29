@@ -99,8 +99,13 @@ Route::get('/newcoordinatorsuccess', [PublicController::class, 'viewNewCoordinat
 Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
 // Tech Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
-    Route::get('/techreports/adminemail', [TechReportController::class, 'showAdminEmail'])->name('techreports.adminemail');
-    Route::post('/techreports/updateadminemail', [TechReportController::class, 'updateAdminEmail'])->name('techreports.updateadminemail');
+    // Route::get('/techreports/adminemail', [TechReportController::class, 'showAdminEmail'])->name('techreports.adminemail');
+    // Route::post('/techreports/updateadminemail', [TechReportController::class, 'updateAdminEmail'])->name('techreports.updateadminemail');
+
+    Route::get('/techreports/adminemail', [TechReportController::class, 'AdminEmailList'])->name('techreports.adminemail');
+    Route::post('/techreports/addadminemail', [TechReportController::class, 'addAdminEmail'])->name('techreports.addadminemail');
+    Route::post('/techreports/updateadminemail/{id}', [TechReportController::class, 'updateAdminEmail'])->name('techreports.updateadminemail');
+    Route::post('/techreports/deleteadminemail', [TechReportController::class, 'deleteAdminEmail'])->name('techreports.deleteadminemail');
 
     Route::get('/techreports/googledrive', [TechReportController::class, 'googleDriveList'])->name('techreports.googledrive');
     Route::post('/techreports/addgoogledrive', [TechReportController::class, 'addGoogleDrive'])->name('techreports.addgoogledrive');

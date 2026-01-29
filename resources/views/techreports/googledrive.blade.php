@@ -231,7 +231,7 @@ function showDeleteDriveModal(driveId, driveDescription) {
         `,
         showCancelButton: true,
         confirmButtonText: 'OK',
-        cancelButtonText: 'Close',
+        cancelButtonText: 'Cancel',
         customClass: {
             confirmButton: 'btn-sm btn-success',
             cancelButton: 'btn-sm btn-danger'
