@@ -192,31 +192,39 @@ class AdminReportController extends Controller implements HasMiddleware
     }
 
     public function updateRegionEmail(Request $request, $id)
-    {
+{
+    try {
         $request->validate([
             'inquiries_email' => 'required|email'
         ]);
 
-        try {
-            $region = Region::findOrFail($id);
-            $region->inquiries_email = $request->inquiries_email;
-            $region->save();
+        $region = Region::findOrFail($id);
+        $region->inquiries_email = $request->inquiries_email;
+        $region->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Email updated successfully!',
-                'email' => $request->inquiries_email
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Email update error: ' . $e->getMessage());
+        return response()->json([
+            'success' => true,
+            'message' => 'Email updated successfully!',
+            'email' => $request->inquiries_email
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        Log::error('Email validation error: ' . json_encode($e->errors()));
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Error updating email. Please try again.'
-            ], 500);
-        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid email format.',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        Log::error('Email update error: ' . $e->getMessage());
+        Log::error('Stack trace: ' . $e->getTraceAsString());
 
+        return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()  // Return actual error for debugging
+        ], 500);
     }
+}
 
      public function conferenceList(Request $request): View
     {
