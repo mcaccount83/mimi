@@ -11,4 +11,17 @@ class State extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = []; // No fillable fields
+
+
+public function region()
+{
+    return $this->belongsTo(Region::class, 'region_id', 'id');
+
+}
+
+public function conference()
+{
+    return $this->belongsTo(Conference::class, 'conference_id', 'id');
+}
+
 }

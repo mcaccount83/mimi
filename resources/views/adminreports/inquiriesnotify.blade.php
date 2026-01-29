@@ -20,40 +20,43 @@
                         </div>
                      <!-- /.card-header -->
         <div class="card-body">
-            <table id="chapterlist" class="table table-sm table-hover" >
-              <thead>
-			    <tr>
-                    <th>Conf</th>
-                    <th>Region</th>
-                    <th>States</th>
-                    <th></th>
-                    <th></th>
-                  <th>Email</th>
-                </tr>
+            <table id="chapterlist" class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Conf</th>
+                        <th>Region</th>
+                        <th>States</th>
+                        <th>Inquiries Email</th>
+                    </tr>
                 </thead>
                 <tbody>
                     @foreach ($regList as $list)
                     <tr>
                         <td>
-                            {{ $list->conference->conference_name }}
+                            {{ $list->conference->short_name }}
                         </td>
                         <td>
                             {{ $list->long_name }}
                         </td>
                         <td>
-
-                    {{ $confStates[$list->id] ?? 'N/A' }}
+                            @if ($list->id == 0)
+                                N/A
+                            @else
+                                {{ $list->states->pluck('state_short_name')->implode(', ') }}
+                            @endif
                         </td>
-                        <td></td>
-                        <td></td>
                         <td class="email-column">
-                            {{-- <a href="mailto:{{ $list->email }}"></a> --}}
+                            @if ($list->id == 0)
+                                N/A
+                            @else
+                            <a href="mailto:{{ $list->inquiries_email }}">{{ $list->inquiries_email }}</a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
-                </table>
-            </div>
+            </table>
+        </div>
 
              <div class="card-body text-center">
             </div>

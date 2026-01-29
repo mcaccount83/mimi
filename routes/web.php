@@ -75,7 +75,6 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('
 // UserControllert Routes...Public, No login required...Used for Board & Coordinator Layouts
 Route::get('/checkemail/{email}', [UserController::class, 'checkEmail'])->name('checkemail');
 Route::post('/checkpassword', [UserController::class, 'checkCurrentPassword'])->name('checkpassword');
-// Route::put('/updatepassword', [UserController::class, 'updatePassword'])->name('updatepassword');
 Route::post('/updatepassword', [UserController::class, 'updatePassword'])->name('updatepassword');
 Route::get('/load-email-details/{chId}', [UserController::class, 'loadEmailDetails'])->name('load.email.details');
 Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinatorList'])->name('load.coordinator.list');
@@ -274,7 +273,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/coordreports/appreciation', [CoordinatorReportController::class, 'showRptAppreciation'])->name('coordreports.coordrptappreciation');
     Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
     Route::get('/coordreports/reportingtree', [CoordinatorReportController::class, 'showRptReportingTree'])->name('coordreports.coordrptreportingtree');
-    // Route::get('/coordreports/intreportingtree', [CoordinatorReportController::class, 'showIntRptReportingTree'])->name('coordreports.intcoordrptreportingtree');
 });
 
 // Export Controller Routes...Coordinator Login Required
