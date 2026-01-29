@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ChapterCheckbox;
 use App\Models\Chapters;
+use App\Models\Conference;
 use App\Models\PaymentLog;
 use App\Models\Payments;
 use App\Models\Region;
@@ -173,6 +174,66 @@ class AdminReportController extends Controller implements HasMiddleware
     }
 
     public function inquiriesNotify(Request $request): View
+    {
+        $regList = Region::orderBy('id')
+            ->with([
+                'conference' => function ($query) {
+                    $query->orderBy('short_name');
+                },
+                'states' => function ($query) {
+                    $query->orderBy('state_short_name');
+                }
+            ])
+            ->get();
+
+        $data = ['regList' => $regList];
+
+        return view('adminreports.inquiriesnotify')->with($data);
+    }
+
+    public function updateRegionEmail(Request $request, $id)
+    {
+        $request->validate([
+            'inquiries_email' => 'required|email'
+        ]);
+
+        try {
+            $region = Region::findOrFail($id);
+            $region->inquiries_email = $request->inquiries_email;
+            $region->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Email updated successfully!',
+                'email' => $request->inquiries_email
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating email. Please try again.'
+            ], 500);
+        }
+    }
+
+     public function conferenceList(Request $request): View
+    {
+        $confList = Conference::orderBy('id')
+            ->with([
+                'regions' => function ($query) {
+                    $query->orderBy('short_name');
+                },
+                'states' => function ($query) {
+                    $query->orderBy('state_short_name');
+                }
+            ])
+            ->get();
+
+        $data = ['confList' => $confList];
+
+        return view('adminreports.conferencelist')->with($data);
+    }
+
+  public function regionList(Request $request): View
 {
     $regList = Region::orderBy('id')
         ->with([
@@ -180,58 +241,115 @@ class AdminReportController extends Controller implements HasMiddleware
                 $query->orderBy('short_name');
             },
             'states' => function ($query) {
-                $query->orderBy('state_short_name'); // or whatever your column is named
+                $query->orderBy('state_short_name');
             }
         ])
         ->get();
 
-    $data = ['regList' => $regList];
+    // Get all conferences for dropdown
+    $conferenceList = Conference::orderBy('short_name')->get();
 
-    return view('adminreports.inquiriesnotify')->with($data);
+    $data = [
+        'regList' => $regList,
+        'conferenceList' => $conferenceList
+    ];
+
+    return view('adminreports.regionlist')->with($data);
 }
 
-//     public function inquiriesNotify(Request $request): View
-// {
-//     $regList = Region::orderBy('id')
-//         ->with(['conference' => function ($query) {
-//             $query->orderBy('short_name');
-//         }])
-//         ->get();
+public function updateRegionConference(Request $request, $id)
+{
+    $request->validate([
+        'conference_id' => 'required|exists:conference,id'
+    ]);
 
-//     // Initialize arrays to store states for each region
-//     $confStates = [];
-//     $regStates = [];
+    try {
+        $region = Region::findOrFail($id);
+        $region->conference_id = $request->conference_id;
+        $region->save();
 
-//     foreach ($regList as $region) {
-//         $confId = $region->conference_id;
-//         $regId = $region->id;
+        $conference = Conference::find($request->conference_id);
 
-//         // Use == for comparison (loose comparison)
-//         if ($confId == 0) {
-//             $confStates[$regId] = 'None';
-//         } elseif ($confId == 1) {
-//             $confStates[$regId] = 'AK, HI, ID, MN, MT, ND, OR, SD, WA, WI, WY, **, AA, AE, AP';
-//         } elseif ($confId == 2) {
-//             $confStates[$regId] = 'AZ, CA, CO, NM, NV, OK, TX, UT';
-//         } elseif ($confId == 3) {
-//             $confStates[$regId] = 'AL, AR, DC, FL, GA, KY, LA, MD, MS, NC, SC, TN, VA, WV';
-//         } elseif ($confId == 4) {
-//             $confStates[$regId] = 'CT, DE, MA, ME, NH, NJ, NY, PA, RI, VT';
-//         } elseif ($confId == 5) {
-//             $confStates[$regId] = 'IA, IL, IN, KS, MI, MO, NE, OH';
-//         }
+        return response()->json([
+            'success' => true,
+            'message' => 'Region conference updated successfully!',
+            'conference_name' => $conference->short_name
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error updating region conference. Please try again.'
+        ], 500);
+    }
+}
 
-//         if ($regId == 0) {
-//             $regStates[$regId] = 'None';
-//         }
-//     }
+    public function stateList(Request $request): View
+{
+    $stateList = State::orderBy('state_short_name')
+        ->with([
+            'conference' => function ($query) {
+                $query->orderBy('short_name');
+            },
+            'region' => function ($query) {
+                $query->orderBy('long_name');
+            }
+        ])
+        ->get();
 
-//     $data = [
-//         'regList' => $regList,
-//         'confStates' => $confStates,
-//         'regStates' => $regStates
-//     ];
+    // Get all conferences and regions for dropdowns
+    $conferenceList = Conference::orderBy('short_name')->get();
+    $regionList = Region::orderBy('long_name')->get();
 
-//     return view('adminreports.inquiriesnotify')->with($data);
-// }
+    $data = [
+        'stateList' => $stateList,
+        'conferenceList' => $conferenceList,
+        'regionList' => $regionList
+    ];
+
+    return view('adminreports.statelist')->with($data);
+}
+
+public function updateStateAssignment(Request $request, $id)
+{
+    $request->validate([
+        'conference_id' => 'required|exists:conference,id',
+        'region_id' => 'required|exists:region,id'
+    ]);
+
+    try {
+        $state = State::findOrFail($id);
+
+        // Verify that the region belongs to the selected conference
+        $region = Region::where('id', $request->region_id)
+            ->where('conference_id', $request->conference_id)
+            ->first();
+
+        if (!$region) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Selected region does not belong to the selected conference.'
+            ], 400);
+        }
+
+        $state->conference_id = $request->conference_id;
+        $state->region_id = $request->region_id;
+        $state->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'State assignment updated successfully!',
+            'conference_name' => $region->conference->short_name,
+            'region_name' => $region->long_name
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()  // Return actual error for debugging
+        ], 500);
+    }
+}
+
+
+
+
 }
