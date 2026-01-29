@@ -228,34 +228,34 @@ class AdminReportController extends Controller implements HasMiddleware
 
      public function conferenceList(Request $request): View
     {
-        $confList = Conference::with('regions', 'states')
+        $confList = Conference::with([
+                'regions' => function ($query) {
+                    $query->orderBy('long_name');
+                },
+                'states' => function ($query) {
+                    $query->orderBy('state_short_name');
+                }
+            ])
             ->orderBy('short_name')
             ->get();
-
-
-        // orderBy('id')
-        //     ->with([
-        //         'regions' => function ($query) {
-        //             $query->orderBy('short_name');
-        //         },
-        //         'states' => function ($query) {
-        //             $query->orderBy('state_short_name');
-        //         }
-        //     ])
-        //     ->get();
 
         $data = ['confList' => $confList];
 
         return view('adminreports.conferencelist')->with($data);
     }
 
-  public function regionList(Request $request): View
+public function regionList(Request $request): View
 {
-    $regList = Region::with('conference', 'states')
+    $regList = Region::with([
+            'conference',
+            'states' => function ($query) {
+                $query->orderBy('state_short_name');
+            }
+        ])
         ->join('conference', 'region.conference_id', '=', 'conference.id')
         ->orderBy('conference.short_name')
         ->orderBy('region.long_name')
-        ->select('region.*') // Important: select only region columns to avoid conflicts
+        ->select('region.*')
         ->get();
 
     // Get all conferences for dropdown
