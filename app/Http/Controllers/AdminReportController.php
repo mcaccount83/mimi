@@ -175,16 +175,29 @@ class AdminReportController extends Controller implements HasMiddleware
 
     public function inquiriesNotify(Request $request): View
     {
-        $regList = Region::orderBy('id')
-            ->with([
-                'conference' => function ($query) {
-                    $query->orderBy('short_name');
-                },
-                'states' => function ($query) {
-                    $query->orderBy('state_short_name');
-                }
-            ])
-            ->get();
+        $regList = Region::with([
+            'conference',
+            'states' => function ($query) {
+                $query->orderBy('state_short_name');
+            }
+        ])
+        ->join('conference', 'region.conference_id', '=', 'conference.id')
+        ->orderBy('conference.short_name')
+        ->orderBy('region.long_name')
+        ->select('region.*')
+        ->get();
+
+
+        // $regList = Region::orderBy('id')
+        //     ->with([
+        //         'conference' => function ($query) {
+        //             $query->orderBy('short_name');
+        //         },
+        //         'states' => function ($query) {
+        //             $query->orderBy('state_short_name');
+        //         }
+        //     ])
+        //     ->get();
 
         $data = ['regList' => $regList];
 
