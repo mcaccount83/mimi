@@ -228,16 +228,21 @@ class AdminReportController extends Controller implements HasMiddleware
 
      public function conferenceList(Request $request): View
     {
-        $confList = Conference::orderBy('id')
-            ->with([
-                'regions' => function ($query) {
-                    $query->orderBy('short_name');
-                },
-                'states' => function ($query) {
-                    $query->orderBy('state_short_name');
-                }
-            ])
+        $confList = Conference::with('regions', 'states')
+            ->orderBy('short_name')
             ->get();
+
+
+        // orderBy('id')
+        //     ->with([
+        //         'regions' => function ($query) {
+        //             $query->orderBy('short_name');
+        //         },
+        //         'states' => function ($query) {
+        //             $query->orderBy('state_short_name');
+        //         }
+        //     ])
+        //     ->get();
 
         $data = ['confList' => $confList];
 
@@ -246,15 +251,11 @@ class AdminReportController extends Controller implements HasMiddleware
 
   public function regionList(Request $request): View
 {
-    $regList = Region::orderBy('id')
-        ->with([
-            'conference' => function ($query) {
-                $query->orderBy('short_name');
-            },
-            'states' => function ($query) {
-                $query->orderBy('state_short_name');
-            }
-        ])
+    $regList = Region::with('conference', 'states')
+        ->join('conference', 'region.conference_id', '=', 'conference.id')
+        ->orderBy('conference.short_name')
+        ->orderBy('region.long_name')
+        ->select('region.*') // Important: select only region columns to avoid conflicts
         ->get();
 
     // Get all conferences for dropdown
@@ -296,75 +297,64 @@ public function updateRegion(Request $request, $id)
     }
 }
 
-    public function stateList(Request $request): View
-{
-    $stateList = State::orderBy('state_short_name')
-        ->with([
-            'conference' => function ($query) {
-                $query->orderBy('short_name');
-            },
-            'region' => function ($query) {
-                $query->orderBy('long_name');
+        public function stateList(Request $request): View
+    {
+        $stateList = State::with('conference', 'region')
+            ->orderBy('state_short_name')
+            ->get();
+
+        // Get all conferences and regions for dropdowns
+        $conferenceList = Conference::orderBy('short_name')->get();
+        $regionList = Region::orderBy('long_name')->get();
+
+        $data = [
+            'stateList' => $stateList,
+            'conferenceList' => $conferenceList,
+            'regionList' => $regionList
+        ];
+
+        return view('adminreports.statelist')->with($data);
+    }
+
+    public function updateState(Request $request, $id)
+    {
+        $request->validate([
+            'conference_id' => 'required|exists:conference,id',
+            'region_id' => 'required|exists:region,id'
+        ]);
+
+        try {
+            $state = State::findOrFail($id);
+
+            // Verify that the region belongs to the selected conference
+            $region = Region::where('id', $request->region_id)
+                ->where('conference_id', $request->conference_id)
+                ->first();
+
+            if (!$region) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Selected region does not belong to the selected conference.'
+                ], 400);
             }
-        ])
-        ->get();
 
-    // Get all conferences and regions for dropdowns
-    $conferenceList = Conference::orderBy('short_name')->get();
-    $regionList = Region::orderBy('long_name')->get();
+            $state->conference_id = $request->conference_id;
+            $state->region_id = $request->region_id;
+            $state->save();
 
-    $data = [
-        'stateList' => $stateList,
-        'conferenceList' => $conferenceList,
-        'regionList' => $regionList
-    ];
+            return response()->json([
+                'success' => true,
+                'message' => 'State assignment updated successfully!',
+                'conference_name' => $region->conference->short_name,
+                'region_name' => $region->long_name
+            ]);
+        } catch (\Exception $e) {
+                Log::error('State assignment update error: ' . $e->getMessage());
 
-    return view('adminreports.statelist')->with($data);
-}
-
-public function updateState(Request $request, $id)
-{
-    $request->validate([
-        'conference_id' => 'required|exists:conference,id',
-        'region_id' => 'required|exists:region,id'
-    ]);
-
-    try {
-        $state = State::findOrFail($id);
-
-        // Verify that the region belongs to the selected conference
-        $region = Region::where('id', $request->region_id)
-            ->where('conference_id', $request->conference_id)
-            ->first();
-
-        if (!$region) {
             return response()->json([
                 'success' => false,
-                'message' => 'Selected region does not belong to the selected conference.'
-            ], 400);
+                'message' => 'Error: ' . $e->getMessage()  // Return actual error for debugging
+            ], 500);
         }
-
-        $state->conference_id = $request->conference_id;
-        $state->region_id = $request->region_id;
-        $state->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'State assignment updated successfully!',
-            'conference_name' => $region->conference->short_name,
-            'region_name' => $region->long_name
-        ]);
-    } catch (\Exception $e) {
-            Log::error('State assignment update error: ' . $e->getMessage());
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Error: ' . $e->getMessage()  // Return actual error for debugging
-        ], 500);
     }
-}
-
-
-
-
 }

@@ -8,6 +8,7 @@
         "info": true,
         "autoWidth": false,
         "responsive": true,
+        "order": [] // Use your Laravel query order
         });
 
         $('#coordinatorlist').DataTable({
@@ -18,6 +19,7 @@
         "info": true,
         "autoWidth": false,
         "responsive": true,
+        "order": [] // Use your Laravel query order
         });
     });
 

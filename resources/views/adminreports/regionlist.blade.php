@@ -49,7 +49,7 @@
                     </span>
                 </td>
                 <td>
-                    {{ $list->long_name }}
+                    {{ $list->long_name }} ({{ $list->short_name }})
                 </td>
                 <td>
                     @if ($list->id == 0)

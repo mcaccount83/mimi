@@ -35,7 +35,7 @@
                 data-conference-id="{{ $list->conference_id }}"
                 data-region-id="{{ $list->region_id }}">
                 <td>
-                    {{ $list->state_short_name }}
+                    {{ $list->state_long_name }} ({{ $list->state_short_name }})
                 </td>
                 <td class="conf-column">
                     <span class="conf-display">
@@ -55,7 +55,7 @@
                 </td>
                 <td class="region-column">
                     <span class="region-display">
-                        {{ $list->region->long_name }}
+                        {{ $list->region->long_name }} ({{ $list->region->short_name }})
                     </span>
                     <span class="region-edit" style="display: none;">
                         <select class="form-control form-control-sm region-select">
