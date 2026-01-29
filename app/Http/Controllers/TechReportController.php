@@ -511,9 +511,14 @@ class TechReportController extends Controller implements HasMiddleware
             ]);
 
             // Change Year for Google Drive Financial Report Attachmnets
-            DB::table('google_drive')->update([
-                'eoy_uploads_year' => $nextYear,
-            ]);
+            // DB::table('google_drive')->update([
+            //     'eoy_uploads_year' => $nextYear,
+            // ]);
+            DB::table('google_drive_new')
+                ->where('name', 'eoy_uploads')
+                ->update([
+                    'version' => $nextYear,
+                ]);
 
             // Update admin table: Set specified columns to 1
             DB::table('admin')
@@ -889,51 +894,39 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function showGoogleDrive(): View
     {
-        $googleDrive = GoogleDrive::get();
+        $driveList = GoogleDrive::get();
 
-        $data = ['googleDrive' => $googleDrive];
+        $data = ['driveList' => $driveList];
 
         return view('techreports.googledrive')->with($data);
+
     }
 
-    /**
-     * Update Google Drive Shared Folder Ids
-     */
-    public function updateGoogleDrive(Request $request): JsonResponse
-    {
-        DB::beginTransaction();
-        try {
-            $drive = GoogleDrive::firstOrFail();
-            $drive->ein_letter_uploads = $request->input('einLetterDrive');
-            $drive->eoy_uploads = $request->input('eoyDrive');
-            $drive->eoy_uploads_year = $request->input('eoyDriveYear');
-            $drive->resources_uploads = $request->input('resourcesDrive');
-            $drive->disband_letter = $request->input('disbandDrive');
-            $drive->final_financial_report = $request->input('finalReportDrive');
-            $drive->good_standing_letter = $request->input('goodStandingDrive');
-            $drive->probation_letter = $request->input('probationDrive');
-            $drive->irs_letter = $request->input('irsDrive');
+    public function updateGoogleDriveFolderId(Request $request, $id)
+{
+    $request->validate([
+        'folder_id' => 'required|string|max:255'
+    ]);
 
-            $drive->save();
+    try {
+        $drive = GoogleDrive::findOrFail($id);
+        $drive->folder_id = $request->folder_id;
+        $drive->save();
 
-            DB::commit();
+        return response()->json([
+            'success' => true,
+            'message' => 'Folder ID updated successfully!',
+            'folder_id' => $request->folder_id
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Google Drive folder ID update error: ' . $e->getMessage());
 
-            $message = 'Google Drive ID updated successfully';
-
-            return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('techreports.googledrive')]);
-
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
-            $message = 'Something went wrong, Please try again.';
-
-            return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('techreports.googledrive')]);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Error updating folder ID. Please try again.'
+        ], 500);
     }
+}
 
     /**
      * view Email Addresses not assigned by positionId

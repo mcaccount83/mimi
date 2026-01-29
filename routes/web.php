@@ -102,7 +102,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/techreports/adminemail', [TechReportController::class, 'showAdminEmail'])->name('techreports.adminemail');
     Route::post('/techreports/updateadminemail', [TechReportController::class, 'updateAdminEmail'])->name('techreports.updateadminemail');
     Route::get('/techreports/googledrive', [TechReportController::class, 'showGoogleDrive'])->name('techreports.googledrive');
-    Route::post('/techreports/updategoogledrive', [TechReportController::class, 'updateGoogleDrive'])->name('techreports.updategoogledrive');
+    Route::post('/admin/google-drive/{id}/update-folder', [TechReportController::class, 'updateGoogleDriveFolderId'])->name('admin.google-drive.update-folder');
+    // Route::post('/techreports/updategoogledrive', [TechReportController::class, 'updateGoogleDrive'])->name('techreports.updategoogledrive');
     Route::get('/techreports/chapterlist', [TechReportController::class, 'listActiveChapters'])->name('techreports.chapterlist');
     Route::get('/techreports/chapterlistzapped', [TechReportController::class, 'listZappedChapters'])->name('techreports.chapterlistzapped');
     Route::get('/techreports/chapterlistpending', [TechReportController::class, 'listPendingChapters'])->name('techreports.chapterlistpending');

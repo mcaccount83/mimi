@@ -91,10 +91,14 @@ class PDFController extends Controller
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
 
-        $googleDrive = GoogleDrive::first();
-        $eoyDrive = $googleDrive->eoy_uploads;
-        $year = $googleDrive->eoy_uploads_year;
-        $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
+        // $googleDrive = GoogleDrive::first();
+        // $eoyDrive = $googleDrive->eoy_uploads;
+        // $year = $googleDrive->eoy_uploads_year;
+        // $sharedDriveId = $eoyDrive;  // Shared Drive -> EOY Uploads
+
+        $eoyDrive = GoogleDrive::where('name', 'eoy_uploads')->first();
+        $sharedDriveId = $eoyDrive->folder_id;
+        $year = $eoyDrive->version;
 
         // Build dynamic column name for the year
         $yearColumnName = $year . '_financial_pdf_path';
@@ -154,9 +158,12 @@ class PDFController extends Controller
             }
         }
 
-        $googleDrive = GoogleDrive::first();
-        $finalFinancialDrive = $googleDrive->final_financial_report;
-        $sharedDriveId = $finalFinancialDrive;  // Shared Drive -> EOY Uploads
+        // $googleDrive = GoogleDrive::first();
+        // $finalFinancialDrive = $googleDrive->final_financial_report;
+        // $sharedDriveId = $finalFinancialDrive;  // Shared Drive -> EOY Uploads
+
+        $googleDrive = GoogleDrive::where('name', 'final_financial_report')->first();
+        $sharedDriveId = $googleDrive->folder_id;
 
         $result = $this->generateFinancialReport($chapterId, $PresDetails);
         $pdf = $result['pdf'];
@@ -312,9 +319,12 @@ class PDFController extends Controller
      */
     public function saveGoodStandingLetter($chapterId)
     {
-        $googleDrive = GoogleDrive::first();
-        $goodStandingDrive = $googleDrive->good_standing_letter;
-        $sharedDriveId = $goodStandingDrive;  // Shared Drive -> Good Standing Letter
+        // $googleDrive = GoogleDrive::first();
+        // $goodStandingDrive = $googleDrive->good_standing_letter;
+        // $sharedDriveId = $goodStandingDrive;  // Shared Drive -> Good Standing Letter
+
+        $googleDrive = GoogleDrive::where('name', 'good_standing_letter')->first();
+        $sharedDriveId = $googleDrive->folder_id;
 
         $result = $this->generateGoodStanding($chapterId, false);
         $pdf = $result['pdf'];
@@ -399,8 +409,10 @@ class PDFController extends Controller
         $emailListCoord = $baseQuery['emailListCoord'];
 
         $letterType = $type;
-        $disbandDrive = DB::table('google_drive')->value('disband_letter');
-        $sharedDriveId = $disbandDrive;
+        // $disbandDrive = DB::table('google_drive')->value('disband_letter');
+        // $sharedDriveId = $disbandDrive;
+        $disbandDrive = GoogleDrive::where('name', 'disband_letter')->first();
+        $sharedDriveId = $disbandDrive->folder_id;
 
         switch ($letterType) {
             case 'general':
@@ -562,8 +574,10 @@ class PDFController extends Controller
         $emailListChap = $baseQuery['emailListChap'];
         $emailListCoord = $baseQuery['emailListCoord'];
 
-        $probationDrive = GoogleDrive::value('probation_letter');
-        $sharedDriveId = $probationDrive;
+        // $probationDrive = GoogleDrive::value('probation_letter');
+        // $sharedDriveId = $probationDrive;
+        $probationDrive = GoogleDrive::where('name', 'probation_letter')->first();
+        $sharedDriveId = $probationDrive->folder_id;
 
         switch ($letterType) {
             case 'no_report':
@@ -730,8 +744,10 @@ class PDFController extends Controller
         $pcDetailsUpd = $baseQueryUpd['chDetails']->primaryCoordinator;
         $stateShortName = $baseQueryUpd['stateShortName'];
 
-        $irsDrive = DB::table('google_drive')->value('irs_letter');
-        $sharedDriveId = $irsDrive;
+        // $irsDrive = DB::table('google_drive')->value('irs_letter');
+        // $sharedDriveId = $irsDrive;
+        $irsDrive = GoogleDrive::where('name', 'irs_letter')->first();
+        $sharedDriveId = $irsDrive->folder_id;
 
         // $result = $this->generateNameChangeLetter($request, $chapterId, $chNamePrev, $chDetailsUpd, $pcDetailsUpd);
         $result = $this->generateCombinedNameChangeLetter($chapterId, $chNamePrev, false);

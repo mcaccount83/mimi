@@ -26,7 +26,6 @@
                 <th>Conf</th>
                 <th>Region</th>
                 <th>States</th>
-                <th>Regional Coordinator</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -58,9 +57,6 @@
                     @else
                         {{ $list->states->pluck('state_short_name')->implode(', ') }}
                     @endif
-                </td>
-                <td>
-                    {{-- Regional Coordinator info --}}
                 </td>
                 <td>
                     @if ($list->id != 0)

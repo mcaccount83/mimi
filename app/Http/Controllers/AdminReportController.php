@@ -276,6 +276,8 @@ public function updateRegionConference(Request $request, $id)
             'conference_name' => $conference->short_name
         ]);
     } catch (\Exception $e) {
+            Log::error('Region conference update error: ' . $e->getMessage());
+
         return response()->json([
             'success' => false,
             'message' => 'Error updating region conference. Please try again.'
@@ -342,6 +344,8 @@ public function updateStateAssignment(Request $request, $id)
             'region_name' => $region->long_name
         ]);
     } catch (\Exception $e) {
+            Log::error('State assignment update error: ' . $e->getMessage());
+
         return response()->json([
             'success' => false,
             'message' => 'Error: ' . $e->getMessage()  // Return actual error for debugging

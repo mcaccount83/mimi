@@ -27,7 +27,6 @@
                 <th>Conference</th>
                 <th>Regions</th>
                 <th>States</th>
-                <th>Conference Coordinator</th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +39,7 @@
                     {{ $list->short_name }}
                 </td>
                 <td>
-                    {{ $list->regions->pluck('short_name')->implode(', ') }}
+                    {{ $list->regions->pluck('long_name')->implode(', ') }}
                 </td>
                 <td>
                     @if ($list->id == 0)
@@ -48,9 +47,6 @@
                     @else
                         {{ $list->states->pluck('state_short_name')->implode(', ') }}
                     @endif
-                </td>
-                 <td>
-
                 </td>
             </tr>
             @endforeach
