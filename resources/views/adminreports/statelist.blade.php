@@ -98,8 +98,8 @@
 <script>
 $(document).ready(function() {
 
-    // Edit button click
-    $('.edit-state-btn').on('click', function() {
+    // Edit button click - EVENT DELEGATION
+    $(document).on('click', '.edit-state-btn', function() {
         var $row = $(this).closest('tr');
 
         // Show selects, hide displays
@@ -114,8 +114,8 @@ $(document).ready(function() {
         $row.find('.save-state-btn, .cancel-state-btn').show();
     });
 
-    // Conference dropdown change - filter regions
-    $('.conf-select').on('change', function() {
+    // Conference dropdown change - filter regions - EVENT DELEGATION
+    $(document).on('change', '.conf-select', function() {
         var $row = $(this).closest('tr');
         filterRegions($row);
     });
@@ -145,8 +145,8 @@ $(document).ready(function() {
         }
     }
 
-    // Cancel button click
-    $('.cancel-state-btn').on('click', function() {
+    // Cancel button click - EVENT DELEGATION
+    $(document).on('click', '.cancel-state-btn', function() {
         var $row = $(this).closest('tr');
 
         // Hide selects, show displays
@@ -165,78 +165,78 @@ $(document).ready(function() {
         $row.find('.region-select').val(originalRegionId);
     });
 
-    // Save button click
-$('.save-state-btn').on('click', function() {
-    var $row = $(this).closest('tr');
-    var stateId = $row.data('state-id');
-    var conferenceId = $row.find('.conf-select').val();
-    var regionId = $row.find('.region-select').val();
+    // Save button click - EVENT DELEGATION
+    $(document).on('click', '.save-state-btn', function() {
+        var $row = $(this).closest('tr');
+        var stateId = $row.data('state-id');
+        var conferenceId = $row.find('.conf-select').val();
+        var regionId = $row.find('.region-select').val();
 
-    // Validate selections
-    if (!conferenceId || !regionId) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Validation Error',
-            text: 'Please select both Conference and Region.',
-            confirmButtonText: 'OK'
-        });
-        return;
-    }
-
-    // Build URL using named route
-    var updateUrl = "{{ route('adminreports.updatestate', ['id' => 'PLACEHOLDER']) }}";
-    updateUrl = updateUrl.replace('PLACEHOLDER', stateId);
-
-    // Send AJAX request
-    $.ajax({
-        url: updateUrl,
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            conference_id: conferenceId,
-            region_id: regionId
-        },
-        success: function(response) {
-            // Update displays
-            $row.find('.conf-display').text(response.conference_name);
-            $row.find('.region-display').text(response.region_name);
-
-            // Update data attributes
-            $row.data('conference-id', conferenceId);
-            $row.data('region-id', regionId);
-
-            // Hide selects, show displays
-            $row.find('.conf-edit, .region-edit').hide();
-            $row.find('.conf-display, .region-display').show();
-
-            // Toggle buttons
-            $row.find('.save-state-btn, .cancel-state-btn').hide();
-            $row.find('.edit-state-btn').show();
-
-            // Show success message
+        // Validate selections
+        if (!conferenceId || !regionId) {
             Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: response.message,
-                showConfirmButton: false,
-                timer: 1500
-            });
-        },
-        error: function(xhr) {
-            var errorMessage = 'Error updating state assignment. Please try again.';
-            if (xhr.responseJSON && xhr.responseJSON.message) {
-                errorMessage = xhr.responseJSON.message;
-            }
-
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: errorMessage,
+                icon: 'warning',
+                title: 'Validation Error',
+                text: 'Please select both Conference and Region.',
                 confirmButtonText: 'OK'
             });
+            return;
         }
+
+        // Build URL using named route
+        var updateUrl = "{{ route('adminreports.updatestate', ['id' => 'PLACEHOLDER']) }}";
+        updateUrl = updateUrl.replace('PLACEHOLDER', stateId);
+
+        // Send AJAX request
+        $.ajax({
+            url: updateUrl,
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                conference_id: conferenceId,
+                region_id: regionId
+            },
+            success: function(response) {
+                // Update displays
+                $row.find('.conf-display').text(response.conference_name);
+                $row.find('.region-display').text(response.region_name);
+
+                // Update data attributes
+                $row.data('conference-id', conferenceId);
+                $row.data('region-id', regionId);
+
+                // Hide selects, show displays
+                $row.find('.conf-edit, .region-edit').hide();
+                $row.find('.conf-display, .region-display').show();
+
+                // Toggle buttons
+                $row.find('.save-state-btn, .cancel-state-btn').hide();
+                $row.find('.edit-state-btn').show();
+
+                // Show success message
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: response.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            },
+            error: function(xhr) {
+                var errorMessage = 'Error updating state assignment. Please try again.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage,
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
     });
-});
 });
 </script>
 @endpush

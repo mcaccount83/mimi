@@ -87,8 +87,8 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Edit button click
-    $('.edit-email-btn').on('click', function() {
+    // Edit button click - ALREADY HAS EVENT DELEGATION ✓
+    $(document).on('click', '.edit-email-btn', function() {
         var $row = $(this).closest('tr');
         var $emailColumn = $row.find('.email-column');
 
@@ -101,8 +101,8 @@ $(document).ready(function() {
         $row.find('.save-email-btn, .cancel-email-btn').show();
     });
 
-    // Cancel button click
-    $('.cancel-email-btn').on('click', function() {
+    // Cancel button click - EVENT DELEGATION
+    $(document).on('click', '.cancel-email-btn', function() {
         var $row = $(this).closest('tr');
         var $emailColumn = $row.find('.email-column');
 
@@ -120,37 +120,37 @@ $(document).ready(function() {
         $emailColumn.find('.email-input').val(originalEmail);
     });
 
-// Save button click
-$('.save-email-btn').on('click', function() {
-    var $row = $(this).closest('tr');
-    var $emailColumn = $row.find('.email-column');
-    var regionId = $row.data('region-id');
-    var newEmail = $emailColumn.find('.email-input').val();
+    // Save button click - EVENT DELEGATION
+    $(document).on('click', '.save-email-btn', function() {
+        var $row = $(this).closest('tr');
+        var $emailColumn = $row.find('.email-column');
+        var regionId = $row.data('region-id');
+        var newEmail = $emailColumn.find('.email-input').val();
 
-    console.log('Region ID:', regionId);
-    console.log('New Email:', newEmail);
+        console.log('Region ID:', regionId);
+        console.log('New Email:', newEmail);
 
-          // Validate email
-    if (!newEmail || !isValidEmail(newEmail)) {
-        Swal.fire({
-            position: 'top-end',
-            icon: 'warning',
-            title: 'Please enter a valid email address.',
-            showConfirmButton: false,
-            timer: 1500
-        });
-        return;
-    }
+        // Validate email
+        if (!newEmail || !isValidEmail(newEmail)) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Please enter a valid email address.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
 
-          // Send AJAX request - USE NAMED ROUTE LIKE YOUR WORKING EXAMPLE
-    $.ajax({
-        url: '{{ route('adminreports.updateinquiries', ['id' => '__ID__']) }}'.replace('__ID__', regionId),
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            inquiries_email: newEmail
-        },
-        success: function(response) {
+        // Send AJAX request - USE NAMED ROUTE LIKE YOUR WORKING EXAMPLE
+        $.ajax({
+            url: '{{ route('adminreports.updateinquiries', ['id' => '__ID__']) }}'.replace('__ID__', regionId),
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                inquiries_email: newEmail
+            },
+            success: function(response) {
                 // Update display
                 $emailColumn.find('.email-display a').text(response.email).attr('href', 'mailto:' + response.email);
 
@@ -171,22 +171,22 @@ $('.save-email-btn').on('click', function() {
                     timer: 1500
                 });
             },
-        error: function(xhr) {
-    var errorMessage = 'Error updating email. Please try again.';
-    if (xhr.responseJSON && xhr.responseJSON.message) {
-        errorMessage = xhr.responseJSON.message;
-    }
+            error: function(xhr) {
+                var errorMessage = 'Error updating email. Please try again.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
 
-    Swal.fire({
-        title: 'Error!',
-        text: errorMessage,
-        icon: 'error',
-        confirmButtonText: 'OK',
-        customClass: {
-            confirmButton: 'btn-sm btn-success'
-        }
-    });
-}
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success'
+                    }
+                });
+            }
         });
     });
 

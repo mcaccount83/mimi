@@ -88,8 +88,8 @@
 <script>
 $(document).ready(function() {
 
-    // Edit button click
-    $('.edit-region-btn').on('click', function() {
+    // Edit button click - EVENT DELEGATION
+    $(document).on('click', '.edit-region-btn', function() {
         var $row = $(this).closest('tr');
 
         // Show select, hide display
@@ -101,8 +101,8 @@ $(document).ready(function() {
         $row.find('.save-region-btn, .cancel-region-btn').show();
     });
 
-    // Cancel button click
-    $('.cancel-region-btn').on('click', function() {
+    // Cancel button click - EVENT DELEGATION (ADD THIS)
+    $(document).on('click', '.cancel-region-btn', function() {
         var $row = $(this).closest('tr');
 
         // Hide select, show display
@@ -119,8 +119,8 @@ $(document).ready(function() {
         $row.find('.conf-select').val(originalConfId);
     });
 
-    // Save button click
-    $('.save-region-btn').on('click', function() {
+    // Save button click - EVENT DELEGATION (ADD THIS)
+    $(document).on('click', '.save-region-btn', function() {
         var $row = $(this).closest('tr');
         var regionId = $row.data('region-id');
         var conferenceId = $row.find('.conf-select').val();
