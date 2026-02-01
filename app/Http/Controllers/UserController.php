@@ -177,69 +177,6 @@ class UserController extends Controller implements HasMiddleware
         return $userInfo;
     }
 
-    //         switch ($user->user_type) {
-    //             case 'coordinator':
-    //                 $secondaryPosition = [];
-    //                 $secondaryPositionShort = [];
-    //                 $secondaryPositionId = [];
-    //                 if ($user->coordinator->secondaryPosition && $user->coordinator->secondaryPosition->count() > 0) {
-    //                     $secondaryPosition = $user->coordinator->secondaryPosition->pluck('long_title')->toArray();
-    //                     $secondaryPositionShort = $user->coordinator->secondaryPosition->pluck('short_title')->toArray();
-    //                     $secondaryPositionId = $user->coordinator->secondaryPosition->pluck('id')->toArray();
-    //                 }
-
-    //                 $userInfo += [
-    //                     'user_coorId' => $user->coordinator->id,
-    //                     'user_confId' => $user->coordinator->conference_id,
-    //                     'user_regId' => $user->coordinator->region_id,
-    //                     'user_conference' => $user->coordinator->conference,
-    //                     'user_conf_name' => $user->coordinator->conference?->conference_name,
-    //                     'user_conf_desc' => $user->coordinator->conference?->conference_description,
-    //                     'user_region' => $user->coordinator->region,
-    //                     'user_positionId' => $user->coordinator->position_id, // Returns MIMI position_id
-    //                     'user_position' => $user->coordinator->displayPosition->long_title,  // Returns DISPLAY position title
-    //                     'user_secPositionId' => $secondaryPositionId, // Returns array of secondary ids
-    //                     'user_secPosition' => $secondaryPosition, // Returns array of secondary titles
-    //                     'user_layerId' => $user->coordinator->layer_id,
-    //                 ];
-    //                 break;
-
-    //             case 'pending':
-    //                 $userInfo += [
-    //                     'user_bdPendId' => $user->boardPending->id,
-    //                     'user_pendChapterId' => $user->boardPending->chapter_id,
-    //                 ];
-    //                 break;
-
-    //             case 'board':
-    //                 $userInfo += [
-    //                     'user_bdDetails' => $user->board,
-    //                     'user_bdId' => $user->board->id,
-    //                     'user_bdPositionId' => $user->board->board_position_id,
-    //                     'user_bdPosition' => $user->board->position?->postion,
-    //                     'user_chapterId' => $user->board->chapter_id,
-    //                 ];
-    //                 break;
-
-    //             case 'outgoing':
-    //                 $userInfo += [
-    //                     'user_bdOutId' => $user->boardOutgoing->id,
-    //                     'user_outChapterId' => $user->boardOutgoing->chapter_id,
-    //                 ];
-    //                 break;
-
-    //             case 'disbanded':
-    //                 $userInfo += [
-    //                     'user_bdDisId' => $user->boardDisbanded->id,
-    //                     'user_disChapterId' => $user->boardDisbanded->chapter_id,
-    //                 ];
-    //                 break;
-    //         }
-    //     }
-
-    //     return $userInfo;
-    // }
-
     /**
      * Get Reporting Tree -- for chapter display based on chapters reporting to logged in PC and coordinators under them
      */

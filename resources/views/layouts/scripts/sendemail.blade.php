@@ -1286,5 +1286,161 @@ function showDeleteUserModal(userId, firstName, lastName) {
     });
 }
 
+function showNoChapterInquiryEmailModal(inquiryId, firstName, lastName) {
+    Swal.fire({
+        title: 'No Chapter',
+        html: `
+            <p>This will automatically send a message to <strong>${firstName} ${lastName}</strong> letting them know there is no chapter in their area and providing more details about starting a chapter.</p>
+            <input type="hidden" id="inquiry_id" name="inquiry_id" value="${inquiryId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },  // <-- Added missing comma here
+        preConfirm: () => {
+            const inquiryId = Swal.getPopup().querySelector('#inquiry_id').value;
 
+            return {
+                inquiry_id: inquiryId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;  // <-- Added this line
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('inquiries.sendnochapter') }}',
+                        type: 'POST',
+                        data: {
+                            inquiryId: data.inquiry_id,  // <-- Fixed variable name
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showYesChapterInquiryEmailModal(inquiryId, firstName, lastName, chapterName, chapterId) {
+        Swal.fire({
+        title: 'No Chapter',
+        html: `
+            <p>This will automatically send a message to <strong>${firstName} ${lastName}</strong> letting them know they live in the boundaries for the <strong>${chapterName}</strong> chapter.</p>
+            <p>This will also automatically send a message to the <strong>${chapterName}</strong> chapter with <strong>${firstName}'s</strong> contact information.</p>
+            <input type="hidden" id="inquiry_id" name="inquiry_id" value="${inquiryId}">
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },  // <-- Added missing comma here
+        preConfirm: () => {
+            const inquiryId = Swal.getPopup().querySelector('#inquiry_id').value;
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+            return {
+                inquiry_id: inquiryId,
+                chapter_id: chapterId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;  // <-- Added this line
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('inquiries.sendyeschapter') }}',
+                        type: 'POST',
+                        data: {
+                            inquiryId: data.inquiry_id,
+                            chapterId: data.chapter_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
 </script>
+

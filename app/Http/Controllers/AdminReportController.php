@@ -187,18 +187,6 @@ class AdminReportController extends Controller implements HasMiddleware
         ->select('region.*')
         ->get();
 
-
-        // $regList = Region::orderBy('id')
-        //     ->with([
-        //         'conference' => function ($query) {
-        //             $query->orderBy('short_name');
-        //         },
-        //         'states' => function ($query) {
-        //             $query->orderBy('state_short_name');
-        //         }
-        //     ])
-        //     ->get();
-
         $data = ['regList' => $regList];
 
         return view('adminreports.inquiriesnotify')->with($data);
@@ -257,60 +245,60 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('adminreports.conferencelist')->with($data);
     }
 
-public function regionList(Request $request): View
-{
-    $regList = Region::with([
-            'conference',
-            'states' => function ($query) {
-                $query->orderBy('state_short_name');
-            }
-        ])
-        ->join('conference', 'region.conference_id', '=', 'conference.id')
-        ->orderBy('conference.short_name')
-        ->orderBy('region.long_name')
-        ->select('region.*')
-        ->get();
+    public function regionList(Request $request): View
+    {
+        $regList = Region::with([
+                'conference',
+                'states' => function ($query) {
+                    $query->orderBy('state_short_name');
+                }
+            ])
+            ->join('conference', 'region.conference_id', '=', 'conference.id')
+            ->orderBy('conference.short_name')
+            ->orderBy('region.long_name')
+            ->select('region.*')
+            ->get();
 
-    // Get all conferences for dropdown
-    $conferenceList = Conference::orderBy('short_name')->get();
+        // Get all conferences for dropdown
+        $conferenceList = Conference::orderBy('short_name')->get();
 
-    $data = [
-        'regList' => $regList,
-        'conferenceList' => $conferenceList
-    ];
+        $data = [
+            'regList' => $regList,
+            'conferenceList' => $conferenceList
+        ];
 
-    return view('adminreports.regionlist')->with($data);
-}
-
-public function updateRegion(Request $request, $id)
-{
-    $request->validate([
-        'conference_id' => 'required|exists:conference,id'
-    ]);
-
-    try {
-        $region = Region::findOrFail($id);
-        $region->conference_id = $request->conference_id;
-        $region->save();
-
-        $conference = Conference::find($request->conference_id);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Region conference updated successfully!',
-            'conference_name' => $conference->short_name
-        ]);
-    } catch (\Exception $e) {
-            Log::error('Region conference update error: ' . $e->getMessage());
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Error updating region conference. Please try again.'
-        ], 500);
+        return view('adminreports.regionlist')->with($data);
     }
-}
 
-        public function stateList(Request $request): View
+    public function updateRegion(Request $request, $id)
+    {
+        $request->validate([
+            'conference_id' => 'required|exists:conference,id'
+        ]);
+
+        try {
+            $region = Region::findOrFail($id);
+            $region->conference_id = $request->conference_id;
+            $region->save();
+
+            $conference = Conference::find($request->conference_id);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Region conference updated successfully!',
+                'conference_name' => $conference->short_name
+            ]);
+        } catch (\Exception $e) {
+                Log::error('Region conference update error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating region conference. Please try again.'
+            ], 500);
+        }
+    }
+
+    public function stateList(Request $request): View
     {
         $stateList = State::with('conference', 'region')
             ->orderBy('state_short_name')

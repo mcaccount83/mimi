@@ -17,6 +17,7 @@ use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\ForumSubscriptionController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InquiriesController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentReportController;
 use App\Http\Controllers\PDFController;
@@ -94,6 +95,9 @@ Route::post('/public-payment', [PublicController::class, 'processPublicPayment']
 Route::get('/newcoordinator', [PublicController::class, 'editNewCoordinator'])->name('public.newcoordinator');
 Route::post('/updatenewcoordinator', [PublicController::class, 'updateNewCoordinator'])->name('public.updatenewcoordinator');
 Route::get('/newcoordinatorsuccess', [PublicController::class, 'viewNewCoordinator'])->name('public.newcoordinatorsuccess');
+Route::get('/newinquiry', [PublicController::class, 'editNewInquiry'])->name('public.newinquiry');
+Route::post('/updatenewinquiry', [PublicController::class, 'updateNewInquiry'])->name('public.updatenewinquiry');
+Route::get('/newinquirysuccess', [PublicController::class, 'viewNewInquiry'])->name('public.newinquirysuccess');
 
 // Allow error log to be viewed without login
 Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
@@ -191,6 +195,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/resources/elearning', [ResourcesController::class, 'showELearning'])->name('resources.elearning');
 });
 
+// Inquiries Controller Routes...Coordinator Login Required
+Route::middleware('auth')->group(function () {
+    Route::get('/inquiries/inquiryapplication', [InquiriesController::class, 'showInquiryApplication'])->name('inquiries.inquiryapplication');
+    Route::get('/inquiries/inquiryapplicationedit/{id}', [InquiriesController::class, 'editInquiryApplication'])->name('inquiries.editinquiryapplication');
+    Route::post('/inquiries/inquiryapplicationupdate/{id}', [InquiriesController::class, 'updateInquiryApplication'])->name('inquiries.updateinquiryapplication');
+});
+
 // Chapter Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
     Route::get('/chapter/chapterlist', [ChapterController::class, 'showChapters'])->name('chapters.chaplist');
@@ -236,6 +247,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/eoy/boardreport/reminder', [EmailController::class, 'sendEOYBoardReportReminder'])->name('eoyreports.eoyboardreportreminder');
     Route::get('/eoy/financialreport/reminder', [EmailController::class, 'sendEOYFinancialReportReminder'])->name('eoyreports.eoyfinancialreportreminder');
     Route::get('/eoy/status/reminder', [EmailController::class, 'sendEOYStatusReminder'])->name('eoyreports.eoystatusreminder');
+    Route::post('/inquiries/sendnochapter', [EmailController::class, 'sendNoChapterInquiries'])->name('inquiries.sendnochapter');
+    Route::post('/inquiries/sendyeschapter', [EmailController::class, 'sendYesChapterInquiries'])->name('inquiries.sendyeschapter');
 });
 
 // New Chapter/Coordinator Controller Routes...Coordinator Login Required

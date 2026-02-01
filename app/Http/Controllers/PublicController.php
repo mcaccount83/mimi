@@ -11,6 +11,8 @@ use App\Enums\UserTypeEnum;
 use App\Mail\NewChapterThankYou;
 use App\Mail\NewCoordApplication;
 use App\Mail\NewCoordinatorThankYou;
+use App\Mail\NewInquiryApplication;
+use App\Mail\NewInquiryThankYou;
 use App\Mail\PaymentsM2MPublicThankYou;
 use App\Mail\PaymentsNewChapOnline;
 use App\Mail\PaymentsPublicDonationOnline;
@@ -18,11 +20,13 @@ use App\Mail\PaymentsSustainingPublicThankYou;
 use App\Models\BoardsPending;
 use App\Models\ChapterApplication;
 use App\Models\Chapters;
+use App\Models\InquiryApplication;
 use App\Models\CoordinatorApplication;
 use App\Models\Coordinators;
 use App\Models\Country;
 use App\Models\Month;
 use App\Models\PaymentLog;
+use App\Models\Region;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\State;
@@ -979,6 +983,110 @@ class PublicController extends Controller
             return redirect()->to('/newcoordinator')->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+     /**
+     * Show New Chapter Inquiry
+     */
+    public function editNewInquiry(Request $request): View
+    {
+        $allStates = State::all();  // Full List for Dropdown Menu
+        $allCountries = Country::all();  // Full List for Dropdown Menu
+
+        $data = ['allStates' => $allStates, 'allCountries' => $allCountries,
+        ];
+
+        return view('public.newinquiry')->with($data);
+    }
+
+    /**
+     * Show New Chapter Inquiry Success Message
+     */
+    public function viewNewInquiry(Request $request): View
+    {
+        $allStates = State::all();  // Full List for Dropdown Menu
+
+        $data = ['allStates' => $allStates,
+        ];
+
+        return view('public.newinquirysuccess')->with($data);
+    }
+
+    /**
+     * Update New Chapter Inquiry
+     */
+    public function updateNewInquiry(Request $request): RedirectResponse
+    {
+        // Verify reCAPTCHA Enterprise
+        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
+            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
+        }
+
+        $input = $request->all();
+        $stateId = $input['ch_state'];
+        $state = State::find($stateId);
+        $stateLongName = $state->state_long_name;
+        $confId = $state->conference_id;
+        $confName = $state->conference->short_name;
+        $regId = $state->region_id;
+        $regName = $state->region->long_name;
+
+        $inquiryStateId = $input['inquiryState'];
+        $inquiryState = State::find($inquiryStateId);
+        $inquiryStateShortName = $inquiryState->state_short_name;
+        $inquiryCountryId = $input['inquiryCountry'] ?? '198';
+        $inquiryCountry = Country::find($inquiryCountryId);
+        $inquiryCountryShortName = $inquiryCountry->short_name;
+
+        DB::beginTransaction();
+        try {
+                InquiryApplication::create([
+                    'state_id' => $input['ch_state'],
+                    'country_id' => $input['ch_country'] ?? '198',
+                    'conference_id' => $confId,
+                    'region_id' => $regId,
+                    'inquiry_first_name' => $input['inquiryFirstName'],
+                    'inquiry_last_name' => $input['inquiryLastName'],
+                    'inquiry_email' => $input['inquiryEmail'],
+                    'inquiry_phone' => $input['inquiryPhone'],
+                    'inquiry_address' => $input['inquiryAddress'],
+                    'inquiry_city' => $input['inquiryCity'],
+                    'inquiry_state' => $input['inquiryState'],
+                    'inquiry_zip' => $input['inquiryZip'],
+                    'inquiry_country' => $input['inquiryCountry'] ?? '198',
+                    'inquiry_county' => $input['inquiryCounty'],
+                    'inquiry_township' => $input['inquiryTownship'] ?? null,
+                    'inquiry_area' => $input['inquiryArea'] ?? null,
+                    'inquiry_school' => $input['inquirySchool'] ?? null,
+                    'inquiry_comments' => $input['inquiryComments'] ?? null,
+                ]);
+
+            $emailInquiriesCoord = Region::find($regId)->inquiries_email;
+            $inquiryEmail = $input['inquiryEmail'];
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getInquiryApplicationData($input, $stateLongName, $confId, $regName, $inquiryStateShortName,
+                    $inquiryCountryShortName, $emailInquiriesCoord),
+            );
+
+            Mail::to($emailInquiriesCoord)
+                ->queue(new NewInquiryApplication($mailData));
+            Mail::to($inquiryEmail)
+                ->queue(new NewInquiryThankYou($mailData));
+
+            DB::commit();
+
+            return redirect()->to('/newinquirysuccess')->with('success', 'Inquiry was successfully submitted!');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return redirect()->to('/newinquiry')->with('fail','There was an error processing your inquiry. Please try again.');
+
+        } finally {
             DB::disconnect();
         }
     }
