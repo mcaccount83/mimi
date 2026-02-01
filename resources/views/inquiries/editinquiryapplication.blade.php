@@ -87,20 +87,22 @@
                             Save all changes before sending emails!
                             <br>
                         Send email responses to Inquiring Member & Chapter<br>
-                            @if ($inqDetails->response != 1)
+                            @if (($inqDetails->response != 1) && ($inqDetails->chapter_id != null))
                                 <button type="button" class="btn bg-gradient-success btn-sm mr-2 mb-2"
-                                onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, {{ json_encode($inqDetails->inquiry_first_name) }}, {{ json_encode($inqDetails->inquiry_last_name) }}, {{ json_encode($chapterName) }}, {{ $chapterId }})">
+                                    onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, {{ json_encode($inqDetails->inquiry_first_name) }}, {{ json_encode($inqDetails->inquiry_last_name) }}, {{ json_encode($chapterName) }}, {{ $chapterId }})">
                                     <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
-                                <button type="button" class="btn bg-gradient-danger btn-sm mr-2 mb-2"
-                                    onclick="showNoChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}')">
-                                    <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE
-                                </button>
                             @else
                                 <button type="button" class="btn bg-gradient-success btn-sm mr-2 mb-2" disabled>
                                     <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
+                            @endif
+
+                            @if ($inqDetails->response != 1)
+                                <button type="button" class="btn bg-gradient-danger btn-sm mr-2 mb-2"
+                                    onclick="showNoChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}')">
+                                    <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button>
+                            @else
                                 <button type="button" class="btn bg-gradient-danger btn-sm mr-2 mb-2" disabled>
-                                    <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE
-                                </button>
+                                    <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button>
                             @endif
                         <br>
                             <button type="button" class="btn bg-gradient-primary btn-sm mr-2 mb-2" >

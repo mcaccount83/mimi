@@ -26,7 +26,7 @@ use App\Models\Coordinators;
 use App\Models\Country;
 use App\Models\Month;
 use App\Models\PaymentLog;
-use App\Models\Region;
+use App\Models\RegionInquiry;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\State;
@@ -1029,7 +1029,7 @@ class PublicController extends Controller
         $state = State::find($stateId);
         $stateLongName = $state->state_long_name;
         $confId = $state->conference_id;
-        $confName = $state->conference->short_name;
+        $conferenceDescription = $state->conference->conference_description;
         $regId = $state->region_id;
         $regName = $state->region->long_name;
 
@@ -1063,15 +1063,20 @@ class PublicController extends Controller
                     'inquiry_comments' => $input['inquiryComments'] ?? null,
                 ]);
 
-            $emailInquiriesCoord = Region::find($regId)->inquiries_email;
+
             $inquiryEmail = $input['inquiryEmail'];
+
+            $inqCoord = RegionInquiry::with('region')->find($regId);
+            $inqCoordName = $inqCoord->inquiries_name;
+            $inquiriesCoordEmail = $inqCoord->inquiries_email;
 
             $mailData = array_merge(
                 $this->baseMailDataController->getInquiryApplicationData($input, $stateLongName, $confId, $regName, $inquiryStateShortName,
-                    $inquiryCountryShortName, $emailInquiriesCoord),
+                    $inquiryCountryShortName),
+                $this->baseMailDataController->getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regName),
             );
 
-            Mail::to($emailInquiriesCoord)
+            Mail::to($inquiriesCoordEmail)
                 ->queue(new NewInquiryApplication($mailData));
             Mail::to($inquiryEmail)
                 ->queue(new NewInquiryThankYou($mailData));

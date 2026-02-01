@@ -13,9 +13,9 @@
                     <div class="card-header">
                     <div class="dropdown">
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Inquiry Applicaiton List
+                            Inquiries Received List
                         </h3>
-                        @include('layouts.dropdown_menus.menu_chapters')
+                        @include('layouts.dropdown_menus.menu_inquiries')
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -58,8 +58,8 @@
                                 <a href="mailto:{{ $list->inquiry_email }}">{{ $list->inquiry_email }}</a>
                             </td>
                             <td>
-                                @if($list->available == '1') YES
-                                @elseif($list->available == '0') NO
+                                @if($list->available == '1') YES - {{ $list->chapter?->name }}
+                                @elseif($list->available == '0') NO CHAPTER
                                 @else
                                 @endif
                             </td>

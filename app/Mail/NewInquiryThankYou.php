@@ -18,9 +18,9 @@ class NewInquiryThankYou extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->mailData['emailInquiriesCoord'], 'MOMS Club Inquiries'),
+            from: new Address($this->mailData['inquiriesCoordEmail'], 'MOMS Club Inquiries'),
             replyTo: [
-                new Address($this->mailData['emailInquiriesCoord'], 'MOMS Club Inquiries'),
+                new Address($this->mailData['inquiriesCoordEmail'], 'MOMS Club Inquiries'),
             ],
             subject: 'Thank You for Your New Chapter Inquiry!',
         );

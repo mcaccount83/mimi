@@ -278,6 +278,24 @@ window.onload = function () {
                             </li>
                         @endif
 
+                        <!-- New Menu Item -->
+                        @php
+                            if (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition || $ITCondition) {
+                                $inquiriesRoute = route('inquiries.inquiryapplication');
+                            }
+                            $activeInquiriesRoutes = [
+                                'inquiries/*',
+                            ];
+                        @endphp
+                        @if (isset($inquiriesRoute))
+                            <li class="nav-item">
+                                <a href="{{ $inquiriesRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeInquiriesRoutes) }}">
+                                    <i class="nav-icon fas fa-location-dot"></i>
+                                    <p>Inquiries</p>
+                                </a>
+                            </li>
+                        @endif
+
                           <!-- New Menu Item -->
                           @php
                             if ($coordinatorCondition && $conferenceCoordinatorCondition) {
