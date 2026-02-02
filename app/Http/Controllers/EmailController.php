@@ -814,12 +814,10 @@ class EmailController extends Controller implements HasMiddleware
     /**
      * Update Email Data and Send Inquiry No Chapter Email
      */
-    public function sendNoChapterInquiries(Request $request): JsonResponse
+    public function sendNoChapterInquiries(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
-        $userEmail = $user['userEmail'];
-        $userConfId = $user['confId'];
 
         $input = $request->all();
         $inquiryId = $input['inquiryId'];
@@ -847,60 +845,34 @@ class EmailController extends Controller implements HasMiddleware
                 ->cc($inquiriesCoordEmail)
                 ->queue(new InquiriesNoChapter($mailData));
 
-            // Commit the transaction
             DB::commit();
 
-            $message = 'Email successfully sent';
-
-            return response()->json([
-                'status' => 'success',
-                'message' => $message,
-                'redirect' => route('inquiries.inquiryapplication'),
-            ]);
+            return redirect()->route('inquiries.inquiryapplication')->with('success', 'Email successfully sent');
 
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            DB::rollback();
+            Log::error($e);
 
-            $message = 'Something went wrong, Please try again.';
-
-            return response()->json([
-                'status' => 'error',
-                'message' => $message,
-                'redirect' => route('inquiries.editinquiryapplication'),
-            ]);
+            return redirect()->route('inquiries.editinquiryapplication', ['id' => $inquiryId])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             DB::disconnect();
         }
     }
 
-    public function sendYesChapterInquiries(Request $request): JsonResponse
+    public function sendYesChapterInquiries(Request $request): RedirectResponse
 {
     $user = $this->userController->loadUserInformation($request);
     $userId = $user['userId'];
-    $userEmail = $user['userEmail'];
-    $userConfId = $user['confId'];
 
     $input = $request->all();
     $inquiryId = $input['inquiryId'];
     $chapterId = $input['chapterId'];
 
     $inqDetails = InquiryApplication::with('state', 'region', 'conference', 'country')->find($inquiryId);
-    $stateId = $inqDetails->state_id;
-    $regioniId = $inqDetails->region_id;
-    $stateShortName = $inqDetails->state->state_short_name;
-    $stateLongtName = $inqDetails->state->state_long_name;
-    $regionLongName = $inqDetails->region->long_name;
-    $conferenceDescription = $inqDetails->conference->conference_description;
-    $inquiryStateShortName = $inqDetails->state->state_short_name;
-    $inquiryCountryShortName = $inqDetails->country->short_name;
     $inquiryEmail = $inqDetails->inquiry_email;
 
-    $inqCoord = RegionInquiry::with('region')->find($regioniId);
-    $inqCoordName = $inqCoord->inquiries_name;
-    $inquiriesCoordEmail = $inqCoord->inquiries_email;
-
     $chDetails = Chapters::find($chapterId);
+    $stateShortName = $chDetails->state->state_short_name;
     $chInquiriesEmail = $chDetails->inquiries_contact;
 
     try {
@@ -916,47 +888,30 @@ class EmailController extends Controller implements HasMiddleware
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName)
         );
 
-        // Send BOTH emails
         Mail::to($inquiryEmail)
-            // ->cc($inquiriesCoordEmail)
             ->queue(new InquiriesYesChapter($mailData));
 
         Mail::to($chInquiriesEmail)
-            // ->cc($inquiriesCoordEmail)
             ->queue(new InquiriesYesToChapter($mailData));
 
         DB::commit();
 
-        $message = 'Emails successfully sent';
+            return redirect()->route('inquiries.inquiryapplication')->with('success', 'Email successfully sent');
 
-        return response()->json([
-            'status' => 'success',
-            'message' => $message,
-            'redirect' => route('inquiries.inquiryapplication'),
-        ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
 
-    } catch (\Exception $e) {
-        DB::rollback();
-        Log::error($e);
-
-        $message = 'Something went wrong, Please try again.';
-
-        return response()->json([
-            'status' => 'error',
-            'message' => $message,
-            'redirect' => route('inquiries.editinquiryapplication'),
-        ]);
-    } finally {
-        DB::disconnect();
-    }
+            return redirect()->route('inquiries.editinquiryapplication', ['id' => $inquiryId])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            DB::disconnect();
+        }
 }
 
 public function sendChapterInquiryEmailModal(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
-        $userEmail = $user['userEmail'];
-        $userConfId = $user['confId'];
 
         $input = $request->all();
         $emailSubject = $input['subject'];
@@ -965,21 +920,13 @@ public function sendChapterInquiryEmailModal(Request $request): JsonResponse
         $inquiryId = $input['inquiryId'];
 
         $inqDetails = InquiryApplication::with('state', 'region', 'conference', 'country')->find($inquiryId);
-        $stateId = $inqDetails->state_id;
         $regioniId = $inqDetails->region_id;
-        $stateShortName = $inqDetails->state->state_short_name;
-        $stateLongtName = $inqDetails->state->state_long_name;
-        $regionLongName = $inqDetails->region->long_name;
-        $conferenceDescription = $inqDetails->conference->conference_description;
-        $inquiryStateShortName = $inqDetails->state->state_short_name;
-        $inquiryCountryShortName = $inqDetails->country->short_name;
-        $inquiryEmail = $inqDetails->inquiry_email;
 
         $inqCoord = RegionInquiry::with('region')->find($regioniId);
-        $inqCoordName = $inqCoord->inquiries_name;
         $inquiriesCoordEmail = $inqCoord->inquiries_email;
 
         $chDetails = Chapters::find($chapterId);
+        $stateShortName = $chDetails->state->state_short_name;
         $chInquiriesEmail = $chDetails->inquiries_contact;
 
         try {
@@ -1030,8 +977,6 @@ public function sendChapterInquiryEmailModal(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
-        $userEmail = $user['userEmail'];
-        $userConfId = $user['confId'];
 
         $input = $request->all();
         $emailSubject = $input['subject'];
@@ -1039,18 +984,10 @@ public function sendChapterInquiryEmailModal(Request $request): JsonResponse
         $inquiryId = $input['inquiryId'];
 
         $inqDetails = InquiryApplication::with('state', 'region', 'conference', 'country')->find($inquiryId);
-        $stateId = $inqDetails->state_id;
         $regioniId = $inqDetails->region_id;
-        $stateShortName = $inqDetails->state->state_short_name;
-        $stateLongtName = $inqDetails->state->state_long_name;
-        $regionLongName = $inqDetails->region->long_name;
-        $conferenceDescription = $inqDetails->conference->conference_description;
-        $inquiryStateShortName = $inqDetails->state->state_short_name;
-        $inquiryCountryShortName = $inqDetails->country->short_name;
         $inquiryEmail = $inqDetails->inquiry_email;
 
         $inqCoord = RegionInquiry::with('region')->find($regioniId);
-        $inqCoordName = $inqCoord->inquiries_name;
         $inquiriesCoordEmail = $inqCoord->inquiries_email;
 
         try {
