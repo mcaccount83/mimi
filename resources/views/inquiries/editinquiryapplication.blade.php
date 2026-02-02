@@ -167,7 +167,7 @@
                                 <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_school}}</p>
                                 </div>
-                                <label class="col-sm-2 col-form-label">Comments:</label>
+                                <label class="col-sm-2 col-form-label">Comments (not sent to chapter):</label>
                                 <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_comments}}</p>
                                 </div>

@@ -61,12 +61,7 @@ A potential member is Inquiring about your chapter.<br>
             <td>{{ $mailData['inquirySchool'] }}</td>
             </tr>
         @endif
-         @if (isset($mailData['inquiryComments']) && !empty($mailData['inquiryComments']))
-            <tr>
-                <td>Comments&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquiryComments'] }}</td>
-            </tr>
-        @endif
+
     </tbody>
 </table>
 @endcomponent
