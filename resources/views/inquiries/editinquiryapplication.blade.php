@@ -162,6 +162,10 @@
                         <div class="col-md-12">
                             <!-- /.form group -->
                             <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Date:</label>
+                                <div class="col-sm-10">
+                                    <p class="form-control-plaintext">{{ $inqDetails->created_at->format('m-d-Y') }}</p>
+                                </div>
                                 <label class="col-sm-2 col-form-label">Name:</label>
                                 <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_first_name }} {{ $inqDetails->inquiry_last_name }}</p>
