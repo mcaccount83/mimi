@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RegionInquiry extends Model
 {
-    protected $table = 'region_inquiries';
+    protected $table = 'inquiries';
 
     protected $primaryKey = 'region_id';
 

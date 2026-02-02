@@ -101,6 +101,11 @@ class InquiriesController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
+        $positionId = $user['cdPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $inqDetails = InquiryApplication::with('chapter', 'state', 'region', 'conference', 'country')->find($id);
         $chapterId = $inqDetails->chapter_id;
@@ -127,7 +132,8 @@ class InquiriesController extends Controller implements HasMiddleware
         $data = ['id' => $id, 'conferenceDescription' => $conferenceDescription, 'stateShortName' => $stateShortName, 'chapterId' => $chapterId,
             'inqDetails' => $inqDetails, 'stateLongtName' => $stateLongtName, 'regionLongName' => $regionLongName, 'stateChapters' => $stateChapters,
             'inquiryStateShortName' => $inquiryStateShortName, 'inquiryCountryShortName' => $inquiryCountryShortName, 'chapterName' => $chapterName,
-            'inqCoordName' => $inqCoordName, 'chDetails' => $chDetails
+            'inqCoordName' => $inqCoordName, 'chDetails' => $chDetails,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('inquiries.editinquiryapplication')->with($data);

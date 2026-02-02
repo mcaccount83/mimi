@@ -84,7 +84,7 @@
                                 <br>
                                 @if (($inqDetails->response != 1) && ($inqDetails->chapter_id != null))
                                     <button type="button" class="btn bg-gradient-success btn-sm m-1"
-                                        onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, {{ json_encode($inqDetails->inquiry_first_name) }}, {{ json_encode($inqDetails->inquiry_last_name) }}, {{ json_encode($chapterName) }}, {{ $chapterId }})">
+                                        onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $chDetails->name }}', {{ $chapterId }})">
                                         <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
                                 @else
                                     <button type="button" class="btn bg-gradient-success btn-sm m-1" disabled>
@@ -101,12 +101,12 @@
                                 @endif
                                 <br>
                                 <button type="button" class="btn bg-gradient-primary btn-sm m-1"
-                                    onclick="showMemberInquiryEmailModal('{{ $inqDetails->id }}', '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', {{ json_encode($inqCoordName) }}, {{ json_encode($regionLongName) }}, {{ json_encode($conferenceDescription) }})">
+                                    onclick="showMemberInquiryEmailModal('{{ $inqDetails->id }}', '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
                                     <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO MEMBER</button>
                                 <br>
                                 @if ($inqDetails->chapter_id != null)
                                     <button type="button" class="btn bg-gradient-primary btn-sm m-1"
-                                        onclick="showChapterInquiryEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $inqDetails->id }}', {{ json_encode($inqCoordName) }}, {{ json_encode($regionLongName) }}, {{ json_encode($conferenceDescription) }})">
+                                        onclick="showChapterInquiryEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $inqDetails->id }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
                                         <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
                                 @else
                                     <button type="button" class="btn bg-gradient-primary btn-sm m-1" disabled>

@@ -1443,7 +1443,7 @@ function showYesChapterInquiryEmailModal(inquiryId, firstName, lastName, chapter
     });
 }
 
-function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, inqCoordName, regionLongName, conferenceDescription, predefinedSubject = '', predefinedMessage = '') {
+function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
         Swal.fire({
             title: 'Chapter Email Message',
             html: `
@@ -1461,10 +1461,9 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, inqCoor
                 <input type="hidden" id="inquiry_id" name="inquiry_id" value="${inquiryId}">
                 <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><b>MCL,</b><br>
-                    ${inqCoordName}<br>
-                    Inquiries Coordinator<br>
-                    ${regionLongName} Region<br>
-                    ${conferenceDescription} Conference<br>
+                    ${userName}<br>
+                    ${userPosition}<br>
+                    ${userConfName}, ${userConfDesc}<br>
                     International MOMS Club</p>
                 </div>
             `,
@@ -1591,7 +1590,7 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, inqCoor
         });
     }
 
-    function showMemberInquiryEmailModal(inquiryId, inquiryFirstName, inquiryLastName, inqCoordName, regionLongName, conferenceDescription, predefinedSubject = '', predefinedMessage = '') {
+    function showMemberInquiryEmailModal(inquiryId, inquiryFirstName, inquiryLastName, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
         Swal.fire({
             title: 'Chapter Email Message',
             html: `
@@ -1608,10 +1607,9 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, inqCoor
                 <input type="hidden" id="inquiry_id" name="inquiry_id" value="${inquiryId}">
                 <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><b>MCL,</b><br>
-                    ${inqCoordName}<br>
-                    Inquiries Coordinator<br>
-                    ${regionLongName} Region<br>
-                    ${conferenceDescription} Conference<br>
+                    ${userName}<br>
+                    ${userPosition}<br>
+                    ${userConfName}, ${userConfDesc}<br>
                     International MOMS Club</p>
                 </div>
             `,

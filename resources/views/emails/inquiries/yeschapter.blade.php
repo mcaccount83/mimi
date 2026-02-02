@@ -7,9 +7,8 @@ Thanks for your interest in MOMS Club!  You live in the boundaries of our <stron
 If you don’t hear, please let me know and I’ll make sure they received your inquiry.  If you would like to contact them directly yourself, you can reach them at <a href="{{ $mailData['chapterInquiriesContact'] }}">{{ $mailData['chapterInquiriesContact'] }}</a>.<br>
 <br>
 <strong>MCL,</strong><br>
-{{ $mailData['inqCoordName'] }}<br>
-Inquiries Coordinator<br>
-{{ $mailData['regionLongName'] }} Region<br>
-{{ $mailData['conferenceDescription'] }} Conference<br>
-International MOMS Club
+    {{ $mailData['userName'] }}<br>
+    {{ $mailData['userPosition'] }}<br>
+    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
+    International MOMS Club
 @endcomponent

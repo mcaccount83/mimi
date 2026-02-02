@@ -1027,22 +1027,12 @@ class PublicController extends Controller
         $input = $request->all();
         $stateId = $input['ch_state'];
         $state = State::find($stateId);
-        $stateLongName = $state->state_long_name;
         $confId = $state->conference_id;
-        $conferenceDescription = $state->conference->conference_description;
         $regId = $state->region_id;
-        $regName = $state->region->long_name;
-
-        $inquiryStateId = $input['inquiryState'];
-        $inquiryState = State::find($inquiryStateId);
-        $inquiryStateShortName = $inquiryState->state_short_name;
-        $inquiryCountryId = $input['inquiryCountry'] ?? '198';
-        $inquiryCountry = Country::find($inquiryCountryId);
-        $inquiryCountryShortName = $inquiryCountry->short_name;
 
         DB::beginTransaction();
         try {
-                InquiryApplication::create([
+                $inquiryId = InquiryApplication::create([
                     'state_id' => $input['ch_state'],
                     'country_id' => $input['ch_country'] ?? '198',
                     'conference_id' => $confId,
@@ -1061,19 +1051,17 @@ class PublicController extends Controller
                     'inquiry_area' => $input['inquiryArea'] ?? null,
                     'inquiry_school' => $input['inquirySchool'] ?? null,
                     'inquiry_comments' => $input['inquiryComments'] ?? null,
-                ]);
+                ])->id;
 
+            $inqDetails = InquiryApplication::with('chapter', 'state', 'region', 'conference', 'country')->find($inquiryId);
 
-            $inquiryEmail = $input['inquiryEmail'];
+            $inquiryEmail = $inqDetails->inquiry_email;
 
             $inqCoord = RegionInquiry::with('region')->find($regId);
-            $inqCoordName = $inqCoord->inquiries_name;
             $inquiriesCoordEmail = $inqCoord->inquiries_email;
 
             $mailData = array_merge(
-                $this->baseMailDataController->getInquiryApplicationData($input, $stateLongName, $confId, $regName, $inquiryStateShortName,
-                    $inquiryCountryShortName),
-                $this->baseMailDataController->getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regName),
+                $this->baseMailDataController->getInquiryData($inqDetails),
             );
 
             Mail::to($inquiriesCoordEmail)

@@ -7,16 +7,16 @@ use App\Mail\CoordEmail;
 use App\Mail\EOYElectionReportReminder;
 use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
-use App\Mail\ChapterInquiriesEmail;
-use App\Mail\MemberInquiriesEmail;
+use App\Mail\InquiriesChapterEmail;
+use App\Mail\InquiriesMemberEmail;
+use App\Mail\InquiriesNoChapter;
+use App\Mail\InquiriesYesChapter;
+use App\Mail\InquiriesYesToChapter;
 use App\Mail\NewChapEIN;
 use App\Mail\NewChapterSetup;
 use App\Mail\NewChapterWelcome;
-use App\Mail\NoChapterInquiries;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
-use App\Mail\YesChapterInquiries;
-use App\Mail\YesToChapterInquiries;
 use App\Models\Chapters;
 use App\Models\EmailFields;
 use App\Models\InquiryApplication;
@@ -825,18 +825,10 @@ class EmailController extends Controller implements HasMiddleware
         $inquiryId = $input['inquiryId'];
 
         $inqDetails = InquiryApplication::with('state', 'region', 'conference', 'country')->find($inquiryId);
-        $stateId = $inqDetails->state_id;
-        $regioniId = $inqDetails->region_id;
-        $stateShortName = $inqDetails->state->state_short_name;
-        $stateLongtName = $inqDetails->state->state_long_name;
-        $regionLongName = $inqDetails->region->long_name;
-        $conferenceDescription = $inqDetails->conference->conference_description;
-        $inquiryStateShortName = $inqDetails->state->state_short_name;
-        $inquiryCountryShortName = $inqDetails->country->short_name;
+        $regId = $inqDetails->region_id;
         $inquiryEmail = $inqDetails->inquiry_email;
 
-        $inqCoord = RegionInquiry::with('region')->find($regioniId);
-        $inqCoordName = $inqCoord->inquiries_name;
+        $inqCoord = RegionInquiry::with('region')->find($regId);
         $inquiriesCoordEmail = $inqCoord->inquiries_email;
 
         try {
@@ -847,13 +839,13 @@ class EmailController extends Controller implements HasMiddleware
             $inqDetails->save();
 
             $mailData = array_merge(
-                $this->baseMailDataController->getInquiryData($inqDetails, $stateLongtName, $conferenceDescription, $regionLongName, $inquiryStateShortName, $inquiryCountryShortName),
-                $this->baseMailDataController->getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regionLongName)
+                $this->baseMailDataController->getInquiryData($inqDetails),
+                $this->baseMailDataController->getUserData($user),
             );
 
             Mail::to($inquiryEmail)
                 ->cc($inquiriesCoordEmail)
-                ->queue(new NoChapterInquiries($mailData));
+                ->queue(new InquiriesNoChapter($mailData));
 
             // Commit the transaction
             DB::commit();
@@ -919,19 +911,19 @@ class EmailController extends Controller implements HasMiddleware
         $inqDetails->save();
 
         $mailData = array_merge(
-            $this->baseMailDataController->getInquiryData($inqDetails, $stateLongtName, $conferenceDescription, $regionLongName, $inquiryStateShortName, $inquiryCountryShortName),
-            $this->baseMailDataController->getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regionLongName),
+            $this->baseMailDataController->getInquiryData($inqDetails),
+            $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName)
         );
 
         // Send BOTH emails
         Mail::to($inquiryEmail)
             // ->cc($inquiriesCoordEmail)
-            ->queue(new YesChapterInquiries($mailData));
+            ->queue(new InquiriesYesChapter($mailData));
 
         Mail::to($chInquiriesEmail)
             // ->cc($inquiriesCoordEmail)
-            ->queue(new YesToChapterInquiries($mailData));
+            ->queue(new InquiriesYesToChapter($mailData));
 
         DB::commit();
 
@@ -994,15 +986,15 @@ public function sendChapterInquiryEmailModal(Request $request): JsonResponse
             DB::beginTransaction();
 
             $mailData = array_merge(
-                $this->baseMailDataController->getInquiryData($inqDetails, $stateLongtName, $conferenceDescription, $regionLongName, $inquiryStateShortName, $inquiryCountryShortName),
-                $this->baseMailDataController->getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regionLongName),
+                $this->baseMailDataController->getInquiryData($inqDetails),
+                $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getMessageData($input),
             );
 
             Mail::to($chInquiriesEmail)
                 ->cc($inquiriesCoordEmail)
-                ->queue(new ChapterInquiriesEmail($mailData));
+                ->queue(new InquiriesChapterEmail($mailData));
 
             // Commit the transaction
             DB::commit();
@@ -1065,14 +1057,14 @@ public function sendChapterInquiryEmailModal(Request $request): JsonResponse
             DB::beginTransaction();
 
             $mailData = array_merge(
-                $this->baseMailDataController->getInquiryData($inqDetails, $stateLongtName, $conferenceDescription, $regionLongName, $inquiryStateShortName, $inquiryCountryShortName),
-                $this->baseMailDataController->getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regionLongName),
+                $this->baseMailDataController->getInquiryData($inqDetails),
+                $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getMessageData($input),
             );
 
             Mail::to($inquiryEmail)
                 ->cc($inquiriesCoordEmail)
-                ->queue(new MemberInquiriesEmail($mailData));
+                ->queue(new InquiriesMemberEmail($mailData));
 
             // Commit the transaction
             DB::commit();

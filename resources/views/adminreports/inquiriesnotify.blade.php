@@ -26,8 +26,7 @@
                 <th>Conf</th>
                 <th>Region</th>
                 <th>States</th>
-                <th>Email</th>
-                <th>Coordinator</th>
+                <th>Inquiries Email</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -59,19 +58,9 @@
                         </span>
                     @endif
                 </td>
-                <td class="name-column">
-                    @if ($list->id == 0)
-                        N/A
-                    @else
-                        <span class="name-display">{{ $list->inquiries?->inquiries_name }}</span>
-                        <span class="name-edit" style="display: none;">
-                            <input type="text" class="form-control form-control-sm name-input" value="{{ $list->inquiries?->inquiries_name }}">
-                        </span>
-                    @endif
-                </td>
                 <td>
                     @if ($list->id != 0)
-                        <button class="btn bg-gradient-primary btn-sm edit-btn">Edit Email/Name</button>
+                        <button class="btn bg-gradient-primary btn-sm edit-btn">Edit Email</button>
                         <button class="btn bg-gradient-success btn-sm save-btn" style="display: none;">Save</button>
                         <button class="btn bg-gradient-danger btn-sm cancel-btn" style="display: none;">Cancel</button>
                     @endif
@@ -114,8 +103,6 @@ $(document).ready(function() {
         // Show inputs, hide displays
         $row.find('.email-display').hide();
         $row.find('.email-edit').show();
-        $row.find('.name-display').hide();
-        $row.find('.name-edit').show();
 
         // Toggle buttons
         $(this).hide();
@@ -129,8 +116,6 @@ $(document).ready(function() {
         // Hide inputs, show displays
         $row.find('.email-edit').hide();
         $row.find('.email-display').show();
-        $row.find('.name-edit').hide();
-        $row.find('.name-display').show();
 
         // Toggle buttons
         $(this).hide();
@@ -139,9 +124,7 @@ $(document).ready(function() {
 
         // Reset inputs to original values
         var originalEmail = $row.find('.email-display a').text();
-        var originalName = $row.find('.name-display').text();
         $row.find('.email-input').val(originalEmail);
-        $row.find('.name-input').val(originalName);
     });
 
     // Save button click
@@ -149,7 +132,6 @@ $(document).ready(function() {
         var $row = $(this).closest('tr');
         var regionId = $row.data('region-id');
         var newEmail = $row.find('.email-input').val();
-        var newName = $row.find('.name-input').val();
 
         // Validate email
         if (!newEmail || !isValidEmail(newEmail)) {
@@ -163,18 +145,6 @@ $(document).ready(function() {
             return;
         }
 
-        // Validate name
-        if (!newName || newName.trim() === '') {
-            Swal.fire({
-                position: 'top-end',
-                icon: 'warning',
-                title: 'Please enter a coordinator name.',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            return;
-        }
-
         // Send AJAX request
         $.ajax({
             url: '{{ route('adminreports.updateinquiries', ['id' => '__ID__']) }}'.replace('__ID__', regionId),
@@ -182,18 +152,14 @@ $(document).ready(function() {
             data: {
                 _token: '{{ csrf_token() }}',
                 inquiries_email: newEmail,
-                inquiries_name: newName
             },
             success: function(response) {
                 // Update displays
                 $row.find('.email-display a').text(response.email).attr('href', 'mailto:' + response.email);
-                $row.find('.name-display').text(response.name);
 
                 // Hide inputs, show displays
                 $row.find('.email-edit').hide();
                 $row.find('.email-display').show();
-                $row.find('.name-edit').hide();
-                $row.find('.name-display').show();
 
                 // Toggle buttons
                 $row.find('.save-btn, .cancel-btn').hide();

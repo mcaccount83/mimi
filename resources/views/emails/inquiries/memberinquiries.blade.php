@@ -13,9 +13,8 @@
 
 <br>
 <strong>MCL,</strong><br>
-{{ $mailData['inqCoordName'] }}<br>
-Inquiries Coordinator<br>
-{{ $mailData['regionLongName'] }} Region<br>
-{{ $mailData['conferenceDescription'] }} Conference<br>
-International MOMS Club
+    {{ $mailData['userName'] }}<br>
+    {{ $mailData['userPosition'] }}<br>
+    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
+    International MOMS Club
 @endcomponent

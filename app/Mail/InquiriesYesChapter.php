@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class NoChapterInquiries extends BaseMailable
+class InquiriesYesChapter extends BaseMailable
 {
     public $mailData;
 
@@ -31,7 +31,7 @@ class NoChapterInquiries extends BaseMailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.inquiries.nochapter',
+            markdown: 'emails.inquiries.yeschapter',
         );
     }
 

@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class YesToChapterInquiries extends BaseMailable
+class InquiriesNoChapter extends BaseMailable
 {
     public $mailData;
 
@@ -24,14 +24,14 @@ class YesToChapterInquiries extends BaseMailable
             replyTo: [
                 new Address($this->mailData['inquiriesCoordEmail'], 'MOMS Club Inquiries'),
             ],
-            subject: "New Inquiry for Your Chapter",
+            subject: "MOMS Club Chapter Information",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.inquiries.yestochapter',
+            markdown: 'emails.inquiries.nochapter',
         );
     }
 

@@ -11,9 +11,8 @@ When you register a MOMS Club, you receive a MOMS Club manual.  This  manual hel
 Should you decide that starting one is not for you, please check back from time to time as we do have new chapters starting all the time!<br>
 <br>
 <strong>MCL,</strong><br>
-{{ $mailData['inqCoordName'] }}<br>
-Inquiries Coordinator<br>
-{{ $mailData['regionLongName'] }} Region<br>
-{{ $mailData['conferenceDescription'] }} Conference<br>
-International MOMS Club
+    {{ $mailData['userName'] }}<br>
+    {{ $mailData['userPosition'] }}<br>
+    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
+    International MOMS Club
 @endcomponent

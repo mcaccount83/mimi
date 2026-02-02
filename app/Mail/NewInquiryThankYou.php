@@ -22,7 +22,7 @@ class NewInquiryThankYou extends BaseMailable
             replyTo: [
                 new Address($this->mailData['inquiriesCoordEmail'], 'MOMS Club Inquiries'),
             ],
-            subject: 'Thank You for Your New Chapter Inquiry!',
+            subject: 'MOMS Club Chapter Inquiry Received!',
         );
     }
 

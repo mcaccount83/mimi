@@ -1,7 +1,8 @@
 @component('mail::message')
 
 @if($mailData['first_name'] != ' ')
-<p><b>{{ $mailData['first_name'] }}:</b></p>
+<b>{{ $mailData['first_name'] }}:</b>
+<br>
 @endif
 
 @php
@@ -46,9 +47,9 @@
 {!! nl2br(e($message)) !!}
 
 <br>
-<p><strong>MCL</strong>,<br>
+<strong>MCL</strong>,<br>
     {{ $mailData['userName'] }}<br>
     {{ $mailData['userPosition'] }}<br>
     {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
-    International MOMS Club</p>
+    International MOMS Club
 @endcomponent

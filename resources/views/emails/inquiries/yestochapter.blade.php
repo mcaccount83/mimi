@@ -5,7 +5,10 @@
 A potential member is Inquiring about your chapter.<br>
 <br>
 <strong>MCL,</strong><br>
-MIMI Database Administrator<br>
+    {{ $mailData['userName'] }}<br>
+    {{ $mailData['userPosition'] }}<br>
+    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
+    International MOMS Club<br>
 <br>
 <table>
     <tbody>

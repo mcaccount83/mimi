@@ -6,7 +6,7 @@ use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class ChapterInquiriesEmail extends BaseMailable
+class InquiriesChapterEmail extends BaseMailable
 {
     public $mailData;
 

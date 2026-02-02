@@ -17,7 +17,7 @@ class NewInquiryApplication extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "New Inquiry Received for {$this->mailData['state']}",
+            subject: "New Inquiry Received for {$this->mailData['stateLong']}",
         );
     }
 

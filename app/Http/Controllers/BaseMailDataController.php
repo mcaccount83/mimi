@@ -48,30 +48,31 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getInquiryApplicationData($input, $state, $conf, $region, $inquiryState, $inquiryCountry)
-    {
-        return [
-            'inquiryFirstName' => $input['inquiryFirstName'] ?? null,
-            'inquiryLastName' => $input['inquiryLastName'] ?? null,
-            'inquiryEmail' => $input['inquiryEmail'] ?? null,
-            'inquiryPhone' => $input['inquiryPhone'] ?? null,
-            'inquiryAddress' => $input['inquiryAddress'] ?? null,
-            'inquiryCity' => $input['inquiryCity'] ?? null,
-            'inquiryState' => $inquiryState,
-            'inquiryZip' => $input['inquiryZip'] ?? null,
-            'inquiryCountry' => $inquiryCountry,
-            'inquiryCounty' => $input['inquiryCounty'] ?? null,
-            'inquiryTownship' => $input['inquiryTownship'] ?? null,
-            'inquiryArea' => $input['inquiryArea'] ?? null,
-            'inquirySchool' => $input['inquirySchool'] ?? null,
-            'inquiryComments' => $input['inquiryComments'] ?? null,
-            'state' => $state,
-            'conf' => $conf,
-            'region' => $region,
-        ];
-    }
+    // public function getInquiryApplicationData($input, $state, $conf, $region, $inquiryState, $inquiryCountry, $inquiriesCoordEmail)
+    // {
+    //     return [
+    //         'inquiryFirstName' => $input['inquiryFirstName'] ?? null,
+    //         'inquiryLastName' => $input['inquiryLastName'] ?? null,
+    //         'inquiryEmail' => $input['inquiryEmail'] ?? null,
+    //         'inquiryPhone' => $input['inquiryPhone'] ?? null,
+    //         'inquiryAddress' => $input['inquiryAddress'] ?? null,
+    //         'inquiryCity' => $input['inquiryCity'] ?? null,
+    //         'inquiryState' => $inquiryState,
+    //         'inquiryZip' => $input['inquiryZip'] ?? null,
+    //         'inquiryCountry' => $inquiryCountry,
+    //         'inquiryCounty' => $input['inquiryCounty'] ?? null,
+    //         'inquiryTownship' => $input['inquiryTownship'] ?? null,
+    //         'inquiryArea' => $input['inquiryArea'] ?? null,
+    //         'inquirySchool' => $input['inquirySchool'] ?? null,
+    //         'inquiryComments' => $input['inquiryComments'] ?? null,
+    //         'state' => $state,
+    //         'conf' => $conf,
+    //         'region' => $region,
+    //         'inquiriesCoordEmail' => $inquiriesCoordEmail,
+    //     ];
+    // }
 
-    public function getInquiryData($inqDetails, $state, $conf, $region, $inquiryState, $inquiryCountry)
+    public function getInquiryData($inqDetails)
     {
         return [
             'inquiryFirstName' => $inqDetails->inquiry_first_name,
@@ -80,29 +81,31 @@ class BaseMailDataController extends Controller
             'inquiryPhone' => $inqDetails->inquiry_phone,
             'inquiryAddress' => $inqDetails->inquiry_address,
             'inquiryCity' => $inqDetails->inquiry_city,
-            'inquiryState' => $inquiryState,
+            'inquiryState' => $inqDetails->inquirystate->state_short_name,
             'inquiryZip' => $inqDetails->inquiry_zip,
-            'inquiryCountry' => $inquiryCountry,
+            'inquiryCountry' => $inqDetails->inquirycountry->short_name,
             'inquiryCounty' => $inqDetails->inquiry_county,
             'inquiryTownship' => $inqDetails->inquiry_township,
             'inquiryArea' => $inqDetails->inquiry_area,
             'inquirySchool' => $inqDetails->inquiry_school,
             'inquiryComments' => $inqDetails->inquiry_comments,
-            'state' => $state,
-            'conf' => $conf,
-            'region' => $region,
+            'stateLong' => $inqDetails->state->state_long_name,
+            'stateShort' => $inqDetails->state->state_short_name,
+            'confDesc' => $inqDetails->conference->conference_description,
+            'regionName' => $inqDetails->region->long_name,
+            'inquiriesCoordEmail' => $inqDetails->regioninquiry->inquiries_email,
         ];
     }
 
-    public function getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regionLongName)
-    {
-        return [
-            'inqCoordName' => $inqCoordName,
-            'inquiriesCoordEmail' => $inquiriesCoordEmail,
-            'conferenceDescription' => $conferenceDescription,
-            'regionLongName' => $regionLongName
-        ];
-    }
+    // public function getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regionLongName)
+    // {
+    //     return [
+    //         'inqCoordName' => $inqCoordName,
+    //         'inquiriesCoordEmail' => $inquiriesCoordEmail,
+    //         'conferenceDescription' => $conferenceDescription,
+    //         'regionLongName' => $regionLongName
+    //     ];
+    // }
 
 
     public function getChapterData($chDetails, $stateShortName)

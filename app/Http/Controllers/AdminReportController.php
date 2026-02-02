@@ -223,7 +223,6 @@ class AdminReportController extends Controller implements HasMiddleware
     try {
         $request->validate([
             'inquiries_email' => 'required|email',
-            'inquiries_name' => 'required|string|max:255'
         ]);
 
         $region = Region::findOrFail($id);
@@ -232,14 +231,12 @@ class AdminReportController extends Controller implements HasMiddleware
         $inquiries = RegionInquiry::firstOrNew(['region_id' => $region->id]);
 
         $inquiries->inquiries_email = $request->inquiries_email;
-        $inquiries->inquiries_name = $request->inquiries_name;
         $inquiries->save();
 
         return response()->json([
             'success' => true,
             'message' => 'Inquiries information updated successfully!',
             'email' => $request->inquiries_email,
-            'name' => $request->inquiries_name
         ]);
     } catch (\Illuminate\Validation\ValidationException $e) {
         Log::error('Inquiries validation error: ' . json_encode($e->errors()));
