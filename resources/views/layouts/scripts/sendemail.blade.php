@@ -1341,7 +1341,7 @@ function showNoChapterInquiryEmailModal(inquiryId, firstName, lastName) {
                                     confirmButton: 'btn-sm btn-success'
                                 }
                             }).then(() => {
-                                location.reload();
+                                window.location.href = '{{ route('inquiries.inquiryapplication') }}';
                             });
                         },
                         error: function(jqXHR, exception) {
@@ -1422,7 +1422,7 @@ function showYesChapterInquiryEmailModal(inquiryId, firstName, lastName, chapter
                                     confirmButton: 'btn-sm btn-success'
                                 }
                             }).then(() => {
-                                location.reload();
+                                window.location.href = '{{ route('inquiries.inquiryapplication') }}';
                             });
                         },
                         error: function(jqXHR, exception) {
