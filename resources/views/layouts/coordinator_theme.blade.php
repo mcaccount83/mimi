@@ -280,8 +280,10 @@ window.onload = function () {
 
                         <!-- New Menu Item -->
                         @php
-                            if (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition || $ITCondition) {
+                        if (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition) {
                                 $inquiriesRoute = route('inquiries.inquiryapplication');
+                            } elseif ($inquiriesInternationalCondition || $ITCondition) {
+                                $inquiriesRoute = route('inquiries.inquiryapplication', ['check5' => 'yes']);
                             }
                             $activeInquiriesRoutes = [
                                 'inquiries/*',

@@ -1,6 +1,7 @@
 @component('mail::message')
-# New Inquiry Notification
 
+<b>MOMS Club of {{ $mailData['chapterName'] }}:</b><br>
+<br>
 A potential member is Inquiring about your chapter.<br>
 <br>
 <strong>MCL,</strong><br>

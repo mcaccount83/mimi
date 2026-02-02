@@ -38,83 +38,84 @@
 
                   <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
-                    <div class="d-flex align-items-center justify-content-between w-100">
-                            <label class="col-form-label mb-0 mr-2">Chapter Available:</label>
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" name="available" id="available" class="custom-control-input"
-                                       @if($regionalCoordinatorCondition)
-                                            {{$inqDetails->available == 1 ? 'checked' : ''}}>
-                                            @else
-                                            {{$inqDetails->available == 1 ? 'checked' : ''}} disabled>
-                                             @endif
-                                <label class="custom-control-label" for="available"></label>
-                            </div>
-                        </div>
-
-                        <div class="form-group row mt-3" id="chapter-container" >
-                            <label class="col-form-label col-sm-6">Chapter:</label>
-                            <div class="col-sm-6">
-                                <select id="chapter" name="chapter" class="form-control float-right" required>
-                                    <option value="">Select Chapter</option>
-                                    @foreach($stateChapters as $chapter)
-                                        <option value="{{$chapter->id}}"
-                                            @if($inqDetails->chapter_id == $chapter->id) selected @endif>
-                                            {{$chapter->name}}, {{$chapter->state->state_short_name}}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="d-flex align-items-center justify-content-between w-100">
-                            <label class="col-form-label mb-0 mr-2">Response Sent:</label>
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" name="response" id="response" class="custom-control-input"
-                                       {{-- @if($regionalCoordinatorCondition)
-                                            {{$inqDetails->response == 1 ? 'checked' : ''}}>
-                                            @else --}}
-                                            {{$inqDetails->response == 1 ? 'checked' : ''}} disabled>
-                                             {{-- @endif --}}
-                                <label class="custom-control-label" for="response"></label>
+                                <label class="col-form-label">Chapter Available:</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="available" id="available" class="custom-control-input"
+                                        @if($regionalCoordinatorCondition)
+                                                {{$inqDetails->available == 1 ? 'checked' : ''}}>
+                                                @else
+                                                {{$inqDetails->available == 1 ? 'checked' : ''}} disabled>
+                                                @endif
+                                    <label class="custom-control-label" for="available"></label>
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                            <div class="form-group row mt-3" id="chapter-container" >
+                                <label class="col-form-label col-sm-6">Chapter:</label>
+                                <div class="col-sm-6">
+                                    <select id="chapter" name="chapter" class="form-control float-right" required>
+                                        <option value="">Select Chapter</option>
+                                        @foreach($stateChapters as $chapter)
+                                            <option value="{{$chapter->id}}"
+                                                @if($inqDetails->chapter_id == $chapter->id) selected @endif>
+                                                {{$chapter->name}}, {{$chapter->state->state_short_name}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between w-100">
+                                <label class="col-form-label">Response Sent:</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="response" id="response" class="custom-control-input"
+                                        {{$inqDetails->response == 1 ? 'checked' : ''}} disabled>
+                                    <label class="custom-control-label" for="response"></label>
+                                </div>
+                            </div>
+                        </li>
 
-                          <li class="list-group-item">
-                        <div class="card-body text-center">
-                            <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Updates</button>
-                            <br>
-                            Save all changes before sending emails!
-                            <br>
-                        Send email responses to Inquiring Member & Chapter<br>
-                            @if (($inqDetails->response != 1) && ($inqDetails->chapter_id != null))
-                                <button type="button" class="btn bg-gradient-success btn-sm mr-2 mb-2"
-                                    onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, {{ json_encode($inqDetails->inquiry_first_name) }}, {{ json_encode($inqDetails->inquiry_last_name) }}, {{ json_encode($chapterName) }}, {{ $chapterId }})">
-                                    <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
-                            @else
-                                <button type="button" class="btn bg-gradient-success btn-sm mr-2 mb-2" disabled>
-                                    <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
-                            @endif
+                        <li class="list-group-item">
+                            <div class="card-body text-center">
+                                <button type="submit" class="btn bg-gradient-primary m-1"><i class="fas fa-save mr-2"></i>Save Updates</button>
+                                <br>
+                                Save all changes before sending emails!
+                                <br>
+                                Send email responses to Inquiring Member & Chapter
+                                <br>
+                                @if (($inqDetails->response != 1) && ($inqDetails->chapter_id != null))
+                                    <button type="button" class="btn bg-gradient-success btn-sm m-1"
+                                        onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, {{ json_encode($inqDetails->inquiry_first_name) }}, {{ json_encode($inqDetails->inquiry_last_name) }}, {{ json_encode($chapterName) }}, {{ $chapterId }})">
+                                        <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
+                                @else
+                                    <button type="button" class="btn bg-gradient-success btn-sm m-1" disabled>
+                                        <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
+                                @endif
 
-                            @if ($inqDetails->response != 1)
-                                <button type="button" class="btn bg-gradient-danger btn-sm mr-2 mb-2"
-                                    onclick="showNoChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}')">
-                                    <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button>
-                            @else
-                                <button type="button" class="btn bg-gradient-danger btn-sm mr-2 mb-2" disabled>
-                                    <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button>
-                            @endif
-                        <br>
-                            <button type="button" class="btn bg-gradient-primary btn-sm mr-2 mb-2" >
-                                <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO MEMBER</button>
-                            <br>
-                            <button type="button" class="btn bg-gradient-primary btn-sm mr-2" >
-                                <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
-                        </div>
-                    </li>
-            </ul>
+                                @if ($inqDetails->response != 1)
+                                    <button type="button" class="btn bg-gradient-danger btn-sm m-1"
+                                        onclick="showNoChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}')">
+                                        <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button>
+                                @else
+                                    <button type="button" class="btn bg-gradient-danger btn-sm m-1" disabled>
+                                        <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button>
+                                @endif
+                                <br>
+                                <button type="button" class="btn bg-gradient-primary btn-sm m-1"
+                                    onclick="showMemberInquiryEmailModal('{{ $inqDetails->id }}', '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', {{ json_encode($inqCoordName) }}, {{ json_encode($regionLongName) }}, {{ json_encode($conferenceDescription) }})">
+                                    <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO MEMBER</button>
+                                <br>
+                                @if ($inqDetails->chapter_id != null)
+                                    <button type="button" class="btn bg-gradient-primary btn-sm m-1"
+                                        onclick="showChapterInquiryEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $inqDetails->id }}', {{ json_encode($inqCoordName) }}, {{ json_encode($regionLongName) }}, {{ json_encode($conferenceDescription) }})">
+                                        <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
+                                @else
+                                    <button type="button" class="btn bg-gradient-primary btn-sm m-1" disabled>
+                                        <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
+                                @endif
+                            </div>
+                        </li>
 
-
+                    </ul>
                 </div>
               <!-- /.card-body -->
             </div>
@@ -132,47 +133,45 @@
                         <div class="col-md-12">
                             <!-- /.form group -->
                             <div class="form-group row">
-                                <label class="col-sm-2 mb-1 col-form-label">Name:</label>
-                                <div class="col-sm-10 mb-1">
+                                <label class="col-sm-2 col-form-label">Name:</label>
+                                <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_first_name }} {{ $inqDetails->inquiry_last_name }}</p>
                                 </div>
-                                <label class="col-sm-2 mb-1 col-form-label">Email:</label>
-                                 <div class="col-sm-10 mb-1">
+                                <label class="col-sm-2 col-form-label">Email:</label>
+                                 <div class="col-sm-10">
                                     <p class="form-control-plaintext"><a href="mailto:{{ $inqDetails->inquiry_email }}">{{ $inqDetails->inquiry_email }}</a></p>
                                 </div>
-                                <label class="col-sm-2 mb-1 col-form-label">Phone:</label>
-                                <div class="col-sm-10 mb-1">
+                                <label class="col-sm-2 col-form-label">Phone:</label>
+                                <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_phone}}</p>
                                 </div>
-                                <label class="col-sm-2 mb-1 col-form-label">Address:</label>
-                                <div class="col-sm-10 mb-1">
+                                <label class="col-sm-2 col-form-label">Address:</label>
+                                <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_address}}<br>
                                         {{ $inqDetails->inquiry_city}},{{ $inquiryStateShortName}} {{ $inqDetails->inquiry_zip}}<br>
                                         {{ $inquiryCountryShortName}}</p>
                                 </div>
-                                <label class="col-sm-2 mb-1 col-form-label">County:</label>
-                                <div class="col-sm-10 mb-1">
+                                <label class="col-sm-2 col-form-label">County:</label>
+                                <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_county}}</p>
                                 </div>
-                                <label class="col-sm-2 mb-1 col-form-label">Township:</label>
-                                <div class="col-sm-10 mb-1">
+                                <label class="col-sm-2 col-form-label">Township:</label>
+                                <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_township}}</p>
                                 </div>
-                                <label class="col-sm-2 mb-1 col-form-label">Area/Neighborhood:</label>
-                                <div class="col-sm-10 mb-1">
+                                <label class="col-sm-2 col-form-label">Area:</label>
+                                <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_area}}</p>
                                 </div>
-                                <label class="col-sm-2 mb-1 col-form-label">School District:</label>
-                                <div class="col-sm-10 mb-1">
+                                <label class="col-sm-2 col-form-label">School District:</label>
+                                <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_school}}</p>
                                 </div>
-                                <label class="col-sm-2 mb-1 col-form-label">Additional Comments:</label>
-                                <div class="col-sm-10 mb-1">
+                                <label class="col-sm-2 col-form-label">Comments:</label>
+                                <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_comments}}</p>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -181,10 +180,9 @@
             <!-- /.card -->
                       </div>
           <!-- /.col -->
-
           <div class="col-md-12">
             <div class="card-body text-center">
-                <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Application List</button>
+                <button type="button" id="back-pending" class="btn bg-gradient-primary m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Application List</button>
             </div>
         </div>
         <!-- /.row -->
@@ -225,5 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+
 </script>
 @endsection

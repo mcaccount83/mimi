@@ -1442,5 +1442,298 @@ function showYesChapterInquiryEmailModal(inquiryId, firstName, lastName, chapter
         }
     });
 }
+
+function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, inqCoordName, regionLongName, conferenceDescription, predefinedSubject = '', predefinedMessage = '') {
+        Swal.fire({
+            title: 'Chapter Email Message',
+            html: `
+                <p>This will send your message to the inquiries email address for <b>${chapterName}</b>.<br>
+                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+                </div>
+                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+                <p><br><b>MOMS Club of ${chapterName}:</b></p>
+                </div>
+                <div style="width: 100%; margin-bottom: 10px;">
+                    <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
+                </div>
+                <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+                <input type="hidden" id="inquiry_id" name="inquiry_id" value="${inquiryId}">
+                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+                <p><b>MCL,</b><br>
+                    ${inqCoordName}<br>
+                    Inquiries Coordinator<br>
+                    ${regionLongName} Region<br>
+                    ${conferenceDescription} Conference<br>
+                    International MOMS Club</p>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Close',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger',
+                popup: 'swal-wide-popup'
+            },
+            didOpen: () => {
+                $('#email_message').summernote({
+                    height: 150,
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough']],
+                        ['para', ['ul', 'ol']],
+                        ['insert', ['link']]
+                    ],
+                    callbacks: {
+                        onChange: function(contents) {
+                            $(this).val(contents);
+                        }
+                    }
+                });
+
+                if (!document.getElementById('swal-wide-popup-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'swal-wide-popup-style';
+                    style.innerHTML = `
+                        .swal-wide-popup {
+                            width: 80% !important;
+                            max-width: 800px !important;
+                        }
+                        .note-editor {
+                            margin-bottom: 10px !important;
+                            width: 100% !important;
+                        }
+                        .note-editable {
+                            text-align: left !important;
+                        }
+                        .note-editing-area {
+                            width: 100% !important;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            },
+            preConfirm: () => {
+                const subject = Swal.getPopup().querySelector('#email_subject').value;
+                // Get the HTML content from Summernote
+                const message = $('#email_message').summernote('code');
+                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+                const inquiryId = Swal.getPopup().querySelector('#inquiry_id').value;
+                if (!subject) {
+                    Swal.showValidationMessage('Please enter subject.');
+                    return false;
+                }
+                if (!message) {
+                    Swal.showValidationMessage('Please enter message.');
+                    return false;
+                }
+                return {
+                    email_subject: subject,
+                    email_message: message,
+                    chapter_id: chapterId,
+                    inquiry_id: inquiryId,
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success',
+                        cancelButton: 'btn-sm btn-danger'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading();
+                        $.ajax({
+                            url: '{{ route('inquiries.sendchapter') }}',
+                            type: 'POST',
+                            data: {
+                                subject: data.email_subject,
+                                message: data.email_message,
+                                chapterId: data.chapter_id,
+                                inquiryId: data.inquiry_id,
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,  // Automatically close without "OK" button
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                }).then(() => {
+                                    location.reload(); // Reload the page to reflect changes
+                                });
+                            },
+                            error: function(jqXHR, exception) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong, Please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    function showMemberInquiryEmailModal(inquiryId, inquiryFirstName, inquiryLastName, inqCoordName, regionLongName, conferenceDescription, predefinedSubject = '', predefinedMessage = '') {
+        Swal.fire({
+            title: 'Chapter Email Message',
+            html: `
+                <p>This will send your message to <b>${inquiryFirstName} ${inquiryLastName}</b>.<br>
+                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+                </div>
+                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+                <p><br><b>${inquiryFirstName}:</b></p>
+                </div>
+                <div style="width: 100%; margin-bottom: 10px;">
+                    <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
+                </div>
+                <input type="hidden" id="inquiry_id" name="inquiry_id" value="${inquiryId}">
+                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+                <p><b>MCL,</b><br>
+                    ${inqCoordName}<br>
+                    Inquiries Coordinator<br>
+                    ${regionLongName} Region<br>
+                    ${conferenceDescription} Conference<br>
+                    International MOMS Club</p>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Close',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger',
+                popup: 'swal-wide-popup'
+            },
+            didOpen: () => {
+                $('#email_message').summernote({
+                    height: 150,
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough']],
+                        ['para', ['ul', 'ol']],
+                        ['insert', ['link']]
+                    ],
+                    callbacks: {
+                        onChange: function(contents) {
+                            $(this).val(contents);
+                        }
+                    }
+                });
+
+                if (!document.getElementById('swal-wide-popup-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'swal-wide-popup-style';
+                    style.innerHTML = `
+                        .swal-wide-popup {
+                            width: 80% !important;
+                            max-width: 800px !important;
+                        }
+                        .note-editor {
+                            margin-bottom: 10px !important;
+                            width: 100% !important;
+                        }
+                        .note-editable {
+                            text-align: left !important;
+                        }
+                        .note-editing-area {
+                            width: 100% !important;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            },
+            preConfirm: () => {
+                const subject = Swal.getPopup().querySelector('#email_subject').value;
+                // Get the HTML content from Summernote
+                const message = $('#email_message').summernote('code');
+                const inquiryId = Swal.getPopup().querySelector('#inquiry_id').value;
+                if (!subject) {
+                    Swal.showValidationMessage('Please enter subject.');
+                    return false;
+                }
+                if (!message) {
+                    Swal.showValidationMessage('Please enter message.');
+                    return false;
+                }
+                return {
+                    email_subject: subject,
+                    email_message: message,
+                    inquiry_id: inquiryId,
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success',
+                        cancelButton: 'btn-sm btn-danger'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading();
+                        $.ajax({
+                            url: '{{ route('inquiries.sendmember') }}',
+                            type: 'POST',
+                            data: {
+                                subject: data.email_subject,
+                                message: data.email_message,
+                                inquiryId: data.inquiry_id,
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,  // Automatically close without "OK" button
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                }).then(() => {
+                                    location.reload(); // Reload the page to reflect changes
+                                });
+                            },
+                            error: function(jqXHR, exception) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong, Please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
 </script>
 

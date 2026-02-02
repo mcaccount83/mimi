@@ -19,7 +19,7 @@
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Inquiries Active Chapter List
                         </h3>
-                        @include('layouts.dropdown_menus.menu_chapters')
+                        @include('layouts.dropdown_menus.menu_inquiries')
                     </div>
                 </div>
                 <!-- /.card-header -->

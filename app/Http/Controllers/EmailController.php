@@ -7,6 +7,8 @@ use App\Mail\CoordEmail;
 use App\Mail\EOYElectionReportReminder;
 use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
+use App\Mail\ChapterInquiriesEmail;
+use App\Mail\MemberInquiriesEmail;
 use App\Mail\NewChapEIN;
 use App\Mail\NewChapterSetup;
 use App\Mail\NewChapterWelcome;
@@ -956,6 +958,151 @@ class EmailController extends Controller implements HasMiddleware
         DB::disconnect();
     }
 }
+
+public function sendChapterInquiryEmailModal(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $userEmail = $user['userEmail'];
+        $userConfId = $user['confId'];
+
+        $input = $request->all();
+        $emailSubject = $input['subject'];
+        $emailMessage = $input['message'];
+        $chapterId = $input['chapterId'];
+        $inquiryId = $input['inquiryId'];
+
+        $inqDetails = InquiryApplication::with('state', 'region', 'conference', 'country')->find($inquiryId);
+        $stateId = $inqDetails->state_id;
+        $regioniId = $inqDetails->region_id;
+        $stateShortName = $inqDetails->state->state_short_name;
+        $stateLongtName = $inqDetails->state->state_long_name;
+        $regionLongName = $inqDetails->region->long_name;
+        $conferenceDescription = $inqDetails->conference->conference_description;
+        $inquiryStateShortName = $inqDetails->state->state_short_name;
+        $inquiryCountryShortName = $inqDetails->country->short_name;
+        $inquiryEmail = $inqDetails->inquiry_email;
+
+        $inqCoord = RegionInquiry::with('region')->find($regioniId);
+        $inqCoordName = $inqCoord->inquiries_name;
+        $inquiriesCoordEmail = $inqCoord->inquiries_email;
+
+        $chDetails = Chapters::find($chapterId);
+        $chInquiriesEmail = $chDetails->inquiries_contact;
+
+        try {
+            DB::beginTransaction();
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getInquiryData($inqDetails, $stateLongtName, $conferenceDescription, $regionLongName, $inquiryStateShortName, $inquiryCountryShortName),
+                $this->baseMailDataController->getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regionLongName),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getMessageData($input),
+            );
+
+            Mail::to($chInquiriesEmail)
+                ->cc($inquiriesCoordEmail)
+                ->queue(new ChapterInquiriesEmail($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successfully sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('inquiries.editinquiryapplication', ['id' => $inquiryId]),
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('inquiries.editinquiryapplication', ['id' => $inquiryId]),
+            ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+    public function sendMemberInquiryEmailModal(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $userEmail = $user['userEmail'];
+        $userConfId = $user['confId'];
+
+        $input = $request->all();
+        $emailSubject = $input['subject'];
+        $emailMessage = $input['message'];
+        $inquiryId = $input['inquiryId'];
+
+        $inqDetails = InquiryApplication::with('state', 'region', 'conference', 'country')->find($inquiryId);
+        $stateId = $inqDetails->state_id;
+        $regioniId = $inqDetails->region_id;
+        $stateShortName = $inqDetails->state->state_short_name;
+        $stateLongtName = $inqDetails->state->state_long_name;
+        $regionLongName = $inqDetails->region->long_name;
+        $conferenceDescription = $inqDetails->conference->conference_description;
+        $inquiryStateShortName = $inqDetails->state->state_short_name;
+        $inquiryCountryShortName = $inqDetails->country->short_name;
+        $inquiryEmail = $inqDetails->inquiry_email;
+
+        $inqCoord = RegionInquiry::with('region')->find($regioniId);
+        $inqCoordName = $inqCoord->inquiries_name;
+        $inquiriesCoordEmail = $inqCoord->inquiries_email;
+
+        try {
+            DB::beginTransaction();
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getInquiryData($inqDetails, $stateLongtName, $conferenceDescription, $regionLongName, $inquiryStateShortName, $inquiryCountryShortName),
+                $this->baseMailDataController->getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regionLongName),
+                $this->baseMailDataController->getMessageData($input),
+            );
+
+            Mail::to($inquiryEmail)
+                ->cc($inquiriesCoordEmail)
+                ->queue(new MemberInquiriesEmail($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successfully sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('inquiries.editinquiryapplication', ['id' => $inquiryId]),
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('inquiries.editinquiryapplication', ['id' => $inquiryId]),
+            ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
 
 
 }

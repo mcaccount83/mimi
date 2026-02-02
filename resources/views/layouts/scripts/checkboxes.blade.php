@@ -71,4 +71,32 @@
         }
     }
 
+    function showInqAll() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showAll").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
+    function showInqOut() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showInq").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INQUIRIES }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
+    function showInqOutAll() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showInqAll").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONALINQUIRIES }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
+
 </script>

@@ -72,7 +72,32 @@
                 </tbody>
             </table>
             </div>
+                @if (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition)
+                     <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showInq" id="showInq" class="custom-control-input"
+                                {{ $checkBox7Status ? 'checked' : '' }} onchange="showInqOut()" />
+                            <label class="custom-control-label" for="showInq">Show Only Outstanding Inquiries</label>
+                        </div>
+                    </div>
+                 @endif
 
+                @if ($inquiriesInternationalCondition || $ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showInqAll" id="showInqAll" class="custom-control-input"
+                                {{ $checkBox8Status ? 'checked' : '' }} onchange="showInqOutAll()" />
+                            <label class="custom-control-label" for="showInqAll">Show Only Outstanding International Inquiries</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input"
+                                {{ $checkBox5Status ? 'checked' : '' }} onchange="showInqAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Inquiries</label>
+                        </div>
+                    </div>
+                @endif
                 <div class="card-body text-center">
 
                     </div>

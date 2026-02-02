@@ -251,6 +251,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/eoy/status/reminder', [EmailController::class, 'sendEOYStatusReminder'])->name('eoyreports.eoystatusreminder');
     Route::post('/inquiries/sendnochapter', [EmailController::class, 'sendNoChapterInquiries'])->name('inquiries.sendnochapter');
     Route::post('/inquiries/sendyeschapter', [EmailController::class, 'sendYesChapterInquiries'])->name('inquiries.sendyeschapter');
+    Route::post('/inquiries/sendchapter', [EmailController::class, 'sendChapterInquiryEmailModal'])->name('inquiries.sendchapter');
+    Route::post('/inquiries/sendmember', [EmailController::class, 'sendMemberInquiryEmailModal'])->name('inquiries.sendmember');
 });
 
 // New Chapter/Coordinator Controller Routes...Coordinator Login Required

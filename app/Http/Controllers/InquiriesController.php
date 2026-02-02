@@ -6,7 +6,7 @@ use App\Enums\ChapterCheckbox;
 use App\Enums\OperatingStatusEnum;
 use App\Models\Chapters;
 use App\Models\InquiryApplication;
-use App\Models\Documents;
+use App\Models\RegionInquiry;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -51,17 +51,43 @@ class InquiriesController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
 
-        $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
-            ->where('conference_id', $confId)
-            ->orderByDesc('id')
-            ->get();
+        // Check if checkbox is checked
+        $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
+        $checkBox7Status = $request->has(\App\Enums\ChapterCheckbox::INQUIRIES);
+        $checkBox8Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONALINQUIRIES);
 
+        // Use the appropriate query based on checkbox status
+        if ($checkBox5Status) {
+            $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
+                ->orderByDesc('id')
+                ->get();
+        } elseif ($checkBox7Status) {
+            $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
+                ->where('conference_id', $confId)
+                ->where(function($query) {
+                    $query->where('response', '!=', 1)
+                        ->orWhereNull('response');
+                })
+                ->orderByDesc('id')
+                ->get();
+        } elseif ($checkBox8Status) {
+            $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
+                ->where(function($query) {
+                    $query->where('response', '!=', 1)
+                        ->orWhereNull('response');
+                })
+                ->orderByDesc('id')
+                ->get();
+        } else {
+            $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
+                ->where('conference_id', $confId)
+                ->orderByDesc('id')
+                ->get();
+        }
 
-        // $checkBox3Status = $inquiryList[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        // $checkBox5Status = $inquiryList[ChapterCheckbox::CHECK_INTERNATIONAL];
-
-        $data = ['inquiryList' => $inquiryList,
-            // 'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        $data = [
+            'inquiryList' => $inquiryList, 'checkBox5Status' => $checkBox5Status,
+            'checkBox7Status' => $checkBox7Status, 'checkBox8Status' => $checkBox8Status,
         ];
 
         return view('inquiries.inquiryapplication')->with($data);
@@ -79,6 +105,7 @@ class InquiriesController extends Controller implements HasMiddleware
         $inqDetails = InquiryApplication::with('chapter', 'state', 'region', 'conference', 'country')->find($id);
         $chapterId = $inqDetails->chapter_id;
         $stateId = $inqDetails->state_id;
+        $regioniId = $inqDetails->region_id;
         $stateShortName = $inqDetails->state->state_short_name;
         $stateLongtName = $inqDetails->state->state_long_name;
         $regionLongName = $inqDetails->region->long_name;
@@ -87,6 +114,11 @@ class InquiriesController extends Controller implements HasMiddleware
         $inquiryCountryShortName = $inqDetails->country->short_name;
         $chapterName = $inqDetails->chapter?->name;
 
+        $inqCoord = RegionInquiry::with('region')->find($regioniId);
+        $inqCoordName = $inqCoord->inquiries_name;
+
+        $chDetails = Chapters::find($chapterId);
+
         $stateChapters = Chapters::
             where('active_status', '1')
             ->where('state_id', $stateId)
@@ -94,7 +126,8 @@ class InquiriesController extends Controller implements HasMiddleware
 
         $data = ['id' => $id, 'conferenceDescription' => $conferenceDescription, 'stateShortName' => $stateShortName, 'chapterId' => $chapterId,
             'inqDetails' => $inqDetails, 'stateLongtName' => $stateLongtName, 'regionLongName' => $regionLongName, 'stateChapters' => $stateChapters,
-            'inquiryStateShortName' => $inquiryStateShortName, 'inquiryCountryShortName' => $inquiryCountryShortName, 'chapterName' => $chapterName
+            'inquiryStateShortName' => $inquiryStateShortName, 'inquiryCountryShortName' => $inquiryCountryShortName, 'chapterName' => $chapterName,
+            'inqCoordName' => $inqCoordName, 'chDetails' => $chDetails
         ];
 
         return view('inquiries.editinquiryapplication')->with($data);

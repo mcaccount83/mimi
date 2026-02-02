@@ -17,6 +17,10 @@ class ChapterCheckbox
 
     const INTERNATIONALREREG = 'check6';      // Show all international chapters with Re-Reg due
 
+    const INQUIRIES = 'check7';                 // Show all outstaning inquiries
+
+    const INTERNATIONALINQUIRIES = 'check8';    // Show all international outstaning inquiries
+
     // Checkbox Keys (for return array)
     const CHECK_PRIMARY = 'checkBoxStatus';
 
@@ -29,4 +33,8 @@ class ChapterCheckbox
     const CHECK_INTERNATIONAL = 'checkBox5Status';
 
     const CHECK_INTERNATIONALREREG = 'checkBox6Status';
+
+    const CHECK_INQUIRIES = 'checkBox7Status';
+
+    const CHECK_INTERNATIONALINQUIRIES = 'checkBox8Status';
 }
