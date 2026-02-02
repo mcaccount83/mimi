@@ -19,7 +19,13 @@ class Region extends Model
     }
 
     public function states()
-{
-    return $this->hasMany(State::class, 'region_id', 'id');
-}
+    {
+        return $this->hasMany(State::class, 'region_id', 'id');
+    }
+
+    public function inquiries()
+    {
+        return $this->hasOne(RegionInquiry::class, 'region_id', 'id');
+    }
+
 }

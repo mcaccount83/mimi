@@ -8,6 +8,7 @@ use App\Models\Conference;
 use App\Models\PaymentLog;
 use App\Models\Payments;
 use App\Models\Region;
+use App\Models\RegionInquiry;
 use App\Models\State;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -175,57 +176,89 @@ class AdminReportController extends Controller implements HasMiddleware
 
     public function inquiriesNotify(Request $request): View
     {
-        $regList = Region::with([
-            'conference',
-            'states' => function ($query) {
-                $query->orderBy('state_short_name');
-            }
-        ])
-        ->join('conference', 'region.conference_id', '=', 'conference.id')
-        ->orderBy('conference.short_name')
-        ->orderBy('region.long_name')
-        ->select('region.*')
-        ->get();
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
 
-        $data = ['regList' => $regList];
+        $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
+
+         // Use the appropriate query based on checkbox status
+        if ($checkBox5Status) {
+            $regList = Region::with([
+                'inquiries',
+                'conference',
+                'states' => function ($query) {
+                    $query->orderBy('state_short_name');
+                }
+            ])
+            ->join('conference', 'region.conference_id', '=', 'conference.id')
+            ->orderBy('conference.short_name')
+            ->orderBy('region.long_name')
+            ->select('region.*')
+            ->get();
+
+        } else {
+            $regList = Region::with([
+                'inquiries',
+                'conference',
+                'states' => function ($query) {
+                    $query->orderBy('state_short_name');
+                }
+            ])
+            ->join('conference', 'region.conference_id', '=', 'conference.id')
+            ->where('conference_id', $confId)
+            ->orderBy('conference.short_name')
+            ->orderBy('region.long_name')
+            ->select('region.*')
+            ->get();
+        }
+
+        $data = ['regList' => $regList, 'checkBox5Status' => $checkBox5Status];
 
         return view('adminreports.inquiriesnotify')->with($data);
     }
 
-    public function updateInquiriesEmail(Request $request, $id)
-    {
-        try {
-            $request->validate([
-                'inquiries_email' => 'required|email'
-            ]);
+   public function updateInquiriesEmail(Request $request, $id)
+{
+    try {
+        $request->validate([
+            'inquiries_email' => 'required|email',
+            'inquiries_name' => 'required|string|max:255'
+        ]);
 
-            $region = Region::findOrFail($id);
-            $region->inquiries_email = $request->inquiries_email;
-            $region->save();
+        $region = Region::findOrFail($id);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Email updated successfully!',
-                'email' => $request->inquiries_email
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Email validation error: ' . json_encode($e->errors()));
+        // Find or create the RegionInquiry record
+        $inquiries = RegionInquiry::firstOrNew(['region_id' => $region->id]);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid email format.',
-                'errors' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            Log::error('Email update error: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
+        $inquiries->inquiries_email = $request->inquiries_email;
+        $inquiries->inquiries_name = $request->inquiries_name;
+        $inquiries->save();
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Error: ' . $e->getMessage()  // Return actual error for debugging
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Inquiries information updated successfully!',
+            'email' => $request->inquiries_email,
+            'name' => $request->inquiries_name
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        Log::error('Inquiries validation error: ' . json_encode($e->errors()));
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation failed.',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        Log::error('Inquiries update error: ' . $e->getMessage());
+        Log::error('Stack trace: ' . $e->getTraceAsString());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ], 500);
     }
+}
 
      public function conferenceList(Request $request): View
     {

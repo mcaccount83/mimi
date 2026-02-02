@@ -15,7 +15,7 @@
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Inquiries Notifications
                                 </h3>
-                                @include('layouts.dropdown_menus.menu_reports_admin')
+                                @include('layouts.dropdown_menus.menu_inquiries')
                             </div>
                         </div>
                      <!-- /.card-header -->
@@ -26,7 +26,8 @@
                 <th>Conf</th>
                 <th>Region</th>
                 <th>States</th>
-                <th>Inquiries Email</th>
+                <th>Email</th>
+                <th>Coordinator</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -51,18 +52,28 @@
                         N/A
                     @else
                         <span class="email-display">
-                            <a href="mailto:{{ $list->inquiries_email }}">{{ $list->inquiries_email }}</a>
+                            <a href="mailto:{{ $list->inquiries?->inquiries_email }}">{{ $list->inquiries?->inquiries_email }}</a>
                         </span>
                         <span class="email-edit" style="display: none;">
-                            <input type="email" class="form-control form-control-sm email-input" value="{{ $list->inquiries_email }}">
+                            <input type="email" class="form-control form-control-sm email-input" value="{{ $list->inquiries?->inquiries_email }}">
+                        </span>
+                    @endif
+                </td>
+                <td class="name-column">
+                    @if ($list->id == 0)
+                        N/A
+                    @else
+                        <span class="name-display">{{ $list->inquiries?->inquiries_name }}</span>
+                        <span class="name-edit" style="display: none;">
+                            <input type="text" class="form-control form-control-sm name-input" value="{{ $list->inquiries?->inquiries_name }}">
                         </span>
                     @endif
                 </td>
                 <td>
                     @if ($list->id != 0)
-                        <button class="btn bg-gradient-primary btn-sm edit-email-btn">Edit Email</button>
-                        <button class="btn bg-gradient-success btn-sm save-email-btn" style="display: none;">Save</button>
-                        <button class="btn bg-gradient-danger btn-sm cancel-email-btn" style="display: none;">Cancel</button>
+                        <button class="btn bg-gradient-primary btn-sm edit-btn">Edit Email/Name</button>
+                        <button class="btn bg-gradient-success btn-sm save-btn" style="display: none;">Save</button>
+                        <button class="btn bg-gradient-danger btn-sm cancel-btn" style="display: none;">Cancel</button>
                     @endif
                 </td>
             </tr>
@@ -70,6 +81,15 @@
         </tbody>
     </table>
 </div>
+                @if ($inquiriesInternationalCondition || $ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input"
+                                {{ $checkBox5Status ? 'checked' : '' }} onchange="showInqAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Regions</label>
+                        </div>
+                    </div>
+                @endif
              <div class="card-body text-center">
             </div>
           </div>
@@ -87,48 +107,49 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Edit button click - ALREADY HAS EVENT DELEGATION ✓
-    $(document).on('click', '.edit-email-btn', function() {
+    // Edit button click
+    $(document).on('click', '.edit-btn', function() {
         var $row = $(this).closest('tr');
-        var $emailColumn = $row.find('.email-column');
 
-        // Show input, hide display
-        $emailColumn.find('.email-display').hide();
-        $emailColumn.find('.email-edit').show();
+        // Show inputs, hide displays
+        $row.find('.email-display').hide();
+        $row.find('.email-edit').show();
+        $row.find('.name-display').hide();
+        $row.find('.name-edit').show();
 
         // Toggle buttons
         $(this).hide();
-        $row.find('.save-email-btn, .cancel-email-btn').show();
+        $row.find('.save-btn, .cancel-btn').show();
     });
 
-    // Cancel button click - EVENT DELEGATION
-    $(document).on('click', '.cancel-email-btn', function() {
+    // Cancel button click
+    $(document).on('click', '.cancel-btn', function() {
         var $row = $(this).closest('tr');
-        var $emailColumn = $row.find('.email-column');
 
-        // Hide input, show display
-        $emailColumn.find('.email-edit').hide();
-        $emailColumn.find('.email-display').show();
+        // Hide inputs, show displays
+        $row.find('.email-edit').hide();
+        $row.find('.email-display').show();
+        $row.find('.name-edit').hide();
+        $row.find('.name-display').show();
 
         // Toggle buttons
         $(this).hide();
-        $row.find('.save-email-btn').hide();
-        $row.find('.edit-email-btn').show();
+        $row.find('.save-btn').hide();
+        $row.find('.edit-btn').show();
 
-        // Reset input to original value
-        var originalEmail = $emailColumn.find('.email-display a').text();
-        $emailColumn.find('.email-input').val(originalEmail);
+        // Reset inputs to original values
+        var originalEmail = $row.find('.email-display a').text();
+        var originalName = $row.find('.name-display').text();
+        $row.find('.email-input').val(originalEmail);
+        $row.find('.name-input').val(originalName);
     });
 
-    // Save button click - EVENT DELEGATION
-    $(document).on('click', '.save-email-btn', function() {
+    // Save button click
+    $(document).on('click', '.save-btn', function() {
         var $row = $(this).closest('tr');
-        var $emailColumn = $row.find('.email-column');
         var regionId = $row.data('region-id');
-        var newEmail = $emailColumn.find('.email-input').val();
-
-        console.log('Region ID:', regionId);
-        console.log('New Email:', newEmail);
+        var newEmail = $row.find('.email-input').val();
+        var newName = $row.find('.name-input').val();
 
         // Validate email
         if (!newEmail || !isValidEmail(newEmail)) {
@@ -142,27 +163,43 @@ $(document).ready(function() {
             return;
         }
 
-        // Send AJAX request - USE NAMED ROUTE LIKE YOUR WORKING EXAMPLE
+        // Validate name
+        if (!newName || newName.trim() === '') {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Please enter a coordinator name.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
+
+        // Send AJAX request
         $.ajax({
             url: '{{ route('adminreports.updateinquiries', ['id' => '__ID__']) }}'.replace('__ID__', regionId),
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
-                inquiries_email: newEmail
+                inquiries_email: newEmail,
+                inquiries_name: newName
             },
             success: function(response) {
-                // Update display
-                $emailColumn.find('.email-display a').text(response.email).attr('href', 'mailto:' + response.email);
+                // Update displays
+                $row.find('.email-display a').text(response.email).attr('href', 'mailto:' + response.email);
+                $row.find('.name-display').text(response.name);
 
-                // Hide input, show display
-                $emailColumn.find('.email-edit').hide();
-                $emailColumn.find('.email-display').show();
+                // Hide inputs, show displays
+                $row.find('.email-edit').hide();
+                $row.find('.email-display').show();
+                $row.find('.name-edit').hide();
+                $row.find('.name-display').show();
 
                 // Toggle buttons
-                $row.find('.save-email-btn, .cancel-email-btn').hide();
-                $row.find('.edit-email-btn').show();
+                $row.find('.save-btn, .cancel-btn').hide();
+                $row.find('.edit-btn').show();
 
-                // Show success message with SweetAlert
+                // Show success message
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',
@@ -172,7 +209,7 @@ $(document).ready(function() {
                 });
             },
             error: function(xhr) {
-                var errorMessage = 'Error updating email. Please try again.';
+                var errorMessage = 'Error updating information. Please try again.';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     errorMessage = xhr.responseJSON.message;
                 }

@@ -2,7 +2,6 @@
     @if ($coordinatorCondition && $conferenceCoordinatorCondition)
         <a class="dropdown-item" href="{{ route('adminreports.paymentlist') }}">Payment Log Report</a>
         <a class="dropdown-item" href="{{ route('adminreports.reregdate') }}">Re-Registration Report</a>
-        <a class="dropdown-item" href="{{ route('adminreports.inquiriesnotify') }}">inquiries Notifications</a>
         {{-- <a class="dropdown-item" href="{{ route('adminreports.bugs') }}">MIMI Bugs Report</a> --}}
     @elseif ($ITCondition)
         <a class="dropdown-item" href="{{ route('adminreports.paymentlist', ['check5' => 'yes']) }}">International Payments Report</a>

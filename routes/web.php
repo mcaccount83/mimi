@@ -148,7 +148,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/adminreports/bugs', [ResourcesController::class, 'showBugs'])->name('adminreports.bugs');
     Route::post('/adminreports/addbugs', [ResourcesController::class, 'addBugs'])->name('adminreports.addbugs');
     Route::post('/adminreports/updatebugs/{id}', [ResourcesController::class, 'updateBugs'])->name('adminreports.updatebugs');
-    Route::get('/adminreports/inquiriesnotify', [AdminReportController::class, 'inquiriesNotify'])->name('adminreports.inquiriesnotify');
+    Route::get('/inquiries/inquiriesnotify', [AdminReportController::class, 'inquiriesNotify'])->name('adminreports.inquiriesnotify');
     Route::post('/adminreports/updateinquiries/{id}', [AdminReportController::class, 'updateInquiriesEmail'])->name('adminreports.updateinquiries');
     Route::get('/adminreports/conferencelist', [AdminReportController::class, 'conferenceList'])->name('adminreports.conferencelist');
     Route::get('/adminreports/regionlist', [AdminReportController::class, 'regionList'])->name('adminreports.regionlist');
