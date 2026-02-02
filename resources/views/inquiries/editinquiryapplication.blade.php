@@ -72,21 +72,21 @@
                                     <label class="custom-control-label" for="response"></label>
                                 </div>
                             </div>
+                            <div class="card-body text-center">
+                                Save chpater information before sending emails
+                                <button type="submit" class="btn bg-gradient-primary m-1"><i class="fas fa-save mr-2"></i>Save Updates</button>
+                            </div>
+                    </form>
                         </li>
 
                         <li class="list-group-item">
                             <div class="card-body text-center">
-                                <button type="submit" class="btn bg-gradient-primary m-1"><i class="fas fa-save mr-2"></i>Save Updates</button>
-                                <br>
-                                Save all changes before sending emails!
-                                <br>
                                 Send email responses to Inquiring Member & Chapter
-                                <br>
                                 @if (($inqDetails->response != 1) && ($inqDetails->chapter_id != null))
                                     <button type="button" class="btn bg-gradient-success btn-sm m-1"
                                         onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $chDetails->name }}', {{ $chapterId }})">
                                         <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
-                                @else
+                                @elseif ($inqDetails->response != 1)
                                     <button type="button" class="btn bg-gradient-success btn-sm m-1" disabled>
                                         <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
                                 @endif
@@ -95,9 +95,9 @@
                                     <button type="button" class="btn bg-gradient-danger btn-sm m-1"
                                         onclick="showNoChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}')">
                                         <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button>
-                                @else
+                                {{-- @else
                                     <button type="button" class="btn bg-gradient-danger btn-sm m-1" disabled>
-                                        <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button>
+                                        <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button> --}}
                                 @endif
                                 <br>
                                 <button type="button" class="btn bg-gradient-primary btn-sm m-1"
@@ -111,6 +111,35 @@
                                 @else
                                     <button type="button" class="btn bg-gradient-primary btn-sm m-1" disabled>
                                         <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
+                                @endif
+
+                                 @if ($inqDetails->response != 1)
+                                    <br>
+                                    <br>
+                                    <span style="color: red;">NOTE: Sending a Yes or No response email will automatically mark as sent.
+                                    If you send a custom email and need to manually mark as sent, you can do that here.
+                                    </span>
+                                    <br>
+                                    <form id="mark-response-form" action="{{ route('inquiries.updateinquiryresponse', ['id' => $inqDetails->id]) }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                    <button type="button" class="btn bg-gradient-success btn-sm m-1"
+                                            onclick="document.getElementById('mark-response-form').submit()">
+                                        <i class="fas fa-check mr-2"></i>MARK RESPONSE AS SENT
+                                    </button>
+                                @elseif ($inqDetails->response == 1)
+                                     <br>
+                                    <br>
+                                    <span style="color: red;">NOTE: In order to resend the Yes or No response emails to the potenial member and chapter, you will need to clear the response.
+                                    </span>
+                                    <br>
+                                    <form id="mark-response-form" action="{{ route('inquiries.clearinquiryresponse', ['id' => $inqDetails->id]) }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                    <button type="button" class="btn bg-gradient-danger btn-sm m-1"
+                                            onclick="document.getElementById('mark-response-form').submit()">
+                                        <i class="fas fa-check mr-2"></i>CLEAR SENT RESPONSE
+                                    </button>
                                 @endif
                             </div>
                         </li>
@@ -187,7 +216,7 @@
         </div>
         <!-- /.row -->
       </div><!-- /.container-fluid -->
-    </form>
+
     </section>
     <!-- /.content -->
 @endsection

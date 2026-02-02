@@ -200,6 +200,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/inquiries/inquiryapplication', [InquiriesController::class, 'showInquiryApplication'])->name('inquiries.inquiryapplication');
     Route::get('/inquiries/inquiryapplicationedit/{id}', [InquiriesController::class, 'editInquiryApplication'])->name('inquiries.editinquiryapplication');
     Route::post('/inquiries/inquiryapplicationupdate/{id}', [InquiriesController::class, 'updateInquiryApplication'])->name('inquiries.updateinquiryapplication');
+    Route::post('/inquiries/updateinquiryresponse/{id}', [InquiriesController::class, 'updateInquiryResponse'])->name('inquiries.updateinquiryresponse');
+    Route::post('/inquiries/clearinquiryresponse/{id}', [InquiriesController::class, 'clearInquiryResponse'])->name('inquiries.clearinquiryresponse');
 });
 
 // Chapter Controller Routes...Coordinator Login Required

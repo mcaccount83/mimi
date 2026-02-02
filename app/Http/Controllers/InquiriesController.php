@@ -144,10 +144,6 @@ class InquiriesController extends Controller implements HasMiddleware
      */
     public function updateInquiryApplication(Request $request, $id): RedirectResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-        $updatedBy = $user['userName'];
-
         $inquiry = InquiryApplication::find($id);
 
         DB::beginTransaction();
@@ -160,12 +156,55 @@ class InquiriesController extends Controller implements HasMiddleware
 
             return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('success', 'Inquiry Information has been updated');
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            DB::rollback();
+            Log::error($e);
 
             return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
-            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+     public function updateInquiryResponse(Request $request, $id): RedirectResponse
+    {
+        $inquiry = InquiryApplication::find($id);
+
+        DB::beginTransaction();
+        try {
+            $inquiry->response = 1;
+            $inquiry->save();
+
+            DB::commit();
+
+            return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('success', 'Inquiry Response has been updated');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            DB::disconnect();
+        }
+    }
+
+    public function clearInquiryResponse(Request $request, $id): RedirectResponse
+    {
+        $inquiry = InquiryApplication::find($id);
+
+        DB::beginTransaction();
+        try {
+            $inquiry->response = 0;
+            $inquiry->save();
+
+            DB::commit();
+
+            return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('success', 'Inquiry Response has been cleared');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        } finally {
             DB::disconnect();
         }
     }
