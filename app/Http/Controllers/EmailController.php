@@ -826,9 +826,6 @@ class EmailController extends Controller implements HasMiddleware
         $regId = $inqDetails->region_id;
         $inquiryEmail = $inqDetails->inquiry_email;
 
-        $inqCoord = RegionInquiry::with('region')->find($regId);
-        $inquiriesCoordEmail = $inqCoord->inquiries_email;
-
         try {
             DB::beginTransaction();
 
@@ -842,7 +839,6 @@ class EmailController extends Controller implements HasMiddleware
             );
 
             Mail::to($inquiryEmail)
-                ->cc($inquiriesCoordEmail)
                 ->queue(new InquiriesNoChapter($mailData));
 
             DB::commit();
