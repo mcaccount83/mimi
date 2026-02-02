@@ -138,7 +138,7 @@
                                     </form>
                                     <button type="button" class="btn bg-gradient-danger btn-sm m-1"
                                             onclick="document.getElementById('mark-response-form').submit()">
-                                        <i class="fas fa-check mr-2"></i>CLEAR SENT RESPONSE
+                                        <i class="fas fa-ban mr-2"></i>CLEAR SENT RESPONSE
                                     </button>
                                 @endif
                             </div>
