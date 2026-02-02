@@ -847,13 +847,13 @@ class EmailController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->route('inquiries.inquiryapplication')->with('success', 'Email successfully sent');
+             return redirect()->to('/inquiries/inquiryapplication')->with('success', 'Email successfully sent');
 
         } catch (\Exception $e) {
             DB::rollback();
             Log::error($e);
 
-            return redirect()->route('inquiries.editinquiryapplication', ['id' => $inquiryId])->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             DB::disconnect();
         }
@@ -896,13 +896,13 @@ class EmailController extends Controller implements HasMiddleware
 
         DB::commit();
 
-            return redirect()->route('inquiries.inquiryapplication')->with('success', 'Email successfully sent');
+             return redirect()->to('/inquiries/inquiryapplication')->with('success', 'Email successfully sent');
 
         } catch (\Exception $e) {
             DB::rollback();
             Log::error($e);
 
-            return redirect()->route('inquiries.editinquiryapplication', ['id' => $inquiryId])->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             DB::disconnect();
         }
