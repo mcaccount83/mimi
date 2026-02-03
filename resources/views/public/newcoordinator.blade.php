@@ -208,7 +208,7 @@
                             </div>
 
                         <div class="card-body text-center">
-                            <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after application submission.</div>
+                            <div class="col-md-12" style="color: red;">Page will automatically re-direct after application submission.</div>
                             <br>
                                 <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-share mr-2"></i>Submit Application</button>
                         </div>

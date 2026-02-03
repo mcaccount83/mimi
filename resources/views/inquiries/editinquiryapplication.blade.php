@@ -215,7 +215,11 @@
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center">
-                <button type="button" id="back-pending" class="btn bg-gradient-primary m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Application List</button>
+                @if ($confId == $inqConfId)
+                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Application List</button>
+                @elseif ($confId != $inqConfId && ($inquiriesInternationalCondition || $ITCondition))
+                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Inquiries Application List</button>
+                @endif
             </div>
         </div>
         <!-- /.row -->

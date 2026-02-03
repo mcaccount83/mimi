@@ -111,6 +111,7 @@ class InquiriesController extends Controller implements HasMiddleware
         $chapterId = $inqDetails->chapter_id;
         $stateId = $inqDetails->state_id;
         $regioniId = $inqDetails->region_id;
+        $inqConfId = $inqDetails->conference_id;
         $stateShortName = $inqDetails->state->state_short_name;
         $stateLongtName = $inqDetails->state->state_long_name;
         $regionLongName = $inqDetails->region->long_name;
@@ -132,7 +133,7 @@ class InquiriesController extends Controller implements HasMiddleware
         $data = ['id' => $id, 'conferenceDescription' => $conferenceDescription, 'stateShortName' => $stateShortName, 'chapterId' => $chapterId,
             'inqDetails' => $inqDetails, 'stateLongtName' => $stateLongtName, 'regionLongName' => $regionLongName, 'stateChapters' => $stateChapters,
             'inquiryStateShortName' => $inquiryStateShortName, 'inquiryCountryShortName' => $inquiryCountryShortName, 'chapterName' => $chapterName,
-            'inqCoordName' => $inqCoordName, 'chDetails' => $chDetails,
+            'inqCoordName' => $inqCoordName, 'chDetails' => $chDetails, 'confId' => $confId, 'inqConfId' => $inqConfId,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
