@@ -162,10 +162,10 @@
                     <hr>
 
                     <div class="card-body text-center">
-                             <div class="col-md-12" ><center>
+                             <div class="col-md-12" >
                                    The information provided below is only used to try to find you the closest MOMS Club chapter in your area, never for advertising or promotional purposes.
-                                </center></div>
-                            <br>
+                                </div>
+                            <div class="col-md-12" style="color: red;">Page will automatically re-direct after inquiry submission.</div>
 
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Inquiry') }}</button>
                         </div>
