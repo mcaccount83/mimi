@@ -36,6 +36,7 @@
                     <th>Donation Date</th>
                     <th>Sustaining Chapter Donation</th>
                     <th>Donation Date</th>
+                    <th>History</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -65,6 +66,9 @@
 						<td><span class="date-mask">{{ $list->payments->m2m_date }}</span></td>
 						<td>${{ $list->payments->sustaining_donation }}</td>
 						<td><span class="date-mask">{{ $list->payments->sustaining_date }}</span></td>
+                        <th>
+                            <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="fas fa-file-invoice-dollar "></i></a>
+                        </th>
 			        </tr>
                   @endforeach
                   </tbody>

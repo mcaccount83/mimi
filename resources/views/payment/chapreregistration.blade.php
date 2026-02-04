@@ -31,7 +31,9 @@
                             <th>Re-Registration Notes</th>
                             <th>Due</th>
                             <th>Last Paid</th>
+                            <th>Payment</th>
                             <th>Members</th>
+                            <th>History</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,7 +82,11 @@
                                 {{ $due }}
                             </td>
                             <td><span class="date-mask">{{ $list->payments->rereg_date }}</span></td>
+                            <td>${{ $list->payments->rereg_payment }}</td>
                             <td>{{ $list->payments->rereg_members }}</td>
+                             <th>
+                                <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="fas fa-file-invoice-dollar "></i></a>
+                            </th>
                         </tr>
                         @endforeach
                     </tbody>
