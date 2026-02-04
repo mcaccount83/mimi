@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ChapterCheckbox;
 use App\Models\Chapters;
 use App\Models\Conference;
+use App\Models\GrantRequest;
 use App\Models\PaymentLog;
 use App\Models\Payments;
 use App\Models\Region;
@@ -389,4 +390,97 @@ class AdminReportController extends Controller implements HasMiddleware
             ], 500);
         }
     }
+
+    public function viewGrantList(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+
+        $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
+
+         // Use the appropriate query based on checkbox status
+        if ($checkBox5Status) {
+            $grantList = GrantRequest::with('chapters')
+                ->orderBy('created_at')
+                ->get();
+
+        } else {
+            $grantList = GrantRequest::with('chapters')
+                ->whereHas('chapters', function ($query) use ($confId) {
+                    $query->where('conference_id', $confId);
+                })
+                ->orderBy('created_at')
+                ->get();
+            }
+
+        $data = ['grantList' => $grantList, 'checkBox5Status' => $checkBox5Status];
+
+        return view('adminreports.grantlist')->with($data);
+    }
+
+    public function editGrantDetails(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+
+        $grantDetails = GrantRequest::with('chapters', 'state', 'country')
+            ->find($id);
+        $chapterId = $grantDetails->chapter_id;
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+
+        $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+            'conferenceDescription' => $conferenceDescription, 'confId' => $confId, 'chConfId' => $chConfId, 'grantDetails' => $grantDetails
+        ];
+
+        return view('adminreports.editgrantdetails')->with($data);
+    }
+
+    public function updateGrantDetails(Request $request, $id): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+        $updatedBy = $user['userName'];
+
+        $chapter = Chapters::find($id);
+        $payments = Payments::find($id);
+
+        DB::beginTransaction();
+        try {
+            $chapter->start_month_id = $request->input('ch_founddate');
+            $chapter->next_renewal_year = $request->input('ch_renewyear');
+            $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
+
+            $chapter->save();
+
+            $payments->rereg_date = $request->input('ch_duespaid');
+            $payments->rereg_payment = $request->input('ch_payment');
+            $payments->rereg_members = $request->input('ch_members');
+
+            $payments->save();
+
+            DB::commit();
+
+            return redirect()->to('/adminreports/grantlist')->with('error', 'Failed to update Re-Reg Date.');
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit();
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->to('/adminreports/grantlist')->with('success', 'Re-Reg Date updated successfully.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
 }

@@ -155,6 +155,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/adminreports/updateregion/{id}', [AdminReportController::class, 'updateRegion'])->name('adminreports.updateregion');
     Route::get('/adminreports/statelist', [AdminReportController::class, 'stateList'])->name('adminreports.statelist');
     Route::post('/adminreports/updatestate/{id}', [AdminReportController::class, 'updateState'])->name('adminreports.updatestate');
+
+    Route::get('/adminreports/grantlist', [AdminReportController::class, 'viewGrantList'])->name('adminreports.granttlist');
+    Route::get('/adminreports/grantdetailsedit/{id}', [AdminReportController::class, 'editGrantDetails'])->name('adminreports.editgrantdetails');
+    Route::post('/adminreports/grantdetailsupdate/{id}', [AdminReportController::class, 'UpdateGrantDetails'])->name('adminreports.updategrantdetails');
 });
 
 // User Controller Routes...Coordinator Login Required
