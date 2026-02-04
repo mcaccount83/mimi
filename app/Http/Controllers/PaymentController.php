@@ -11,6 +11,7 @@ use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
 use App\Models\Country;
+use App\Models\PaymentHistory;
 use App\Models\PaymentLog;
 use App\Models\Payments;
 use App\Models\State;
@@ -33,6 +34,8 @@ class PaymentController extends Controller implements HasMiddleware
 
     protected $baseBoardController;
 
+    protected $baseChapterController;
+
     protected $baseMailDataController;
 
     protected $positionConditionsService;
@@ -40,10 +43,11 @@ class PaymentController extends Controller implements HasMiddleware
     protected $googleController;
 
     public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController,
-    PositionConditionsService $positionConditionsService, GoogleController $googleController)
+    PositionConditionsService $positionConditionsService, GoogleController $googleController, BaseChapterController $baseChapterController)
     {
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
+        $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
         $this->positionConditionsService = $positionConditionsService;
         $this->googleController = $googleController;
@@ -185,6 +189,16 @@ class PaymentController extends Controller implements HasMiddleware
             $chapter->next_renewal_year = $chapter->next_renewal_year + 1;
             $chapter->save();
 
+           // Archive current re-registration payment to history (if exists)
+            if ($payments->rereg_date) {
+                    PaymentHistory::create([
+                    'chapter_id' => $chId,
+                    'payment_type' => 'rereg',
+                    'payment_amount' => $payments->rereg_payment,
+                    'payment_date' => $payments->rereg_date,
+                    'rereg_members' => $payments->rereg_members,
+                ]);
+            }
             $payments->rereg_members = $request->input('members');
             $payments->rereg_payment = $rereg;
             $payments->rereg_date = $paymentDate;
@@ -193,6 +207,15 @@ class PaymentController extends Controller implements HasMiddleware
             $payments->save();
 
             if ($donation && $sustaining > 0) {
+                   // Archive current sustaining donation to history (if exists)
+                if ($payments->sustaining_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $chId,
+                        'payment_type' => 'sustaining',
+                        'payment_amount' => $payments->sustaining_donation,
+                        'payment_date' => $payments->sustaining_date,
+                    ]);
+                }
                 $payments->sustaining_donation = $sustaining;
                 $payments->sustaining_date = $paymentDate;
                 $payments->donation_invoice = $invoice;
@@ -322,6 +345,15 @@ class PaymentController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             if ($hasM2M) {
+                // Archive current M2M donation to history (if exists)
+                if ($payments->m2m_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $chId,
+                        'payment_type' => 'm2m',
+                        'payment_amount' => $payments->m2m_donation,
+                        'payment_date' => $payments->m2m_date,
+                    ]);
+                }
                 $payments->m2m_donation = $m2m;
                 $payments->m2m_date = $paymentDate;
                 $payments->m2m_invoice = $invoice;
@@ -330,6 +362,16 @@ class PaymentController extends Controller implements HasMiddleware
             }
 
             if ($hasSustaining) {
+                // Archive current sustaining donation to history (if exists)
+                if ($payments->sustaining_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $chId,
+                        'payment_type' => 'sustaining',
+                        'payment_amount' => $payments->sustaining_donation,
+                        'payment_date' => $payments->sustaining_date,
+                    ]);
+                }
+
                 $payments->sustaining_donation = $sustaining;
                 $payments->sustaining_date = $paymentDate;
                 $payments->donation_invoice = $invoice;
@@ -450,6 +492,15 @@ class PaymentController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             if ($manualOrder && $manual > 0) {
+                 // Archive current manual order to history (if exists)
+                if ($payments->manual_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $chId,
+                        'payment_type' => 'manual',
+                        'payment_amount' => $payments->manual_order,
+                        'payment_date' => $payments->manual_date,
+                    ]);
+                }
                 $payments->manual_order = $manual;
                 $payments->manual_date = $paymentDate;
                 $payments->manual_invoice = $invoice;
@@ -747,4 +798,5 @@ class PaymentController extends Controller implements HasMiddleware
             'error' => $error_message,
         ];
     }
+
 }

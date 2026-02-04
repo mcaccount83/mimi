@@ -21,6 +21,7 @@ use App\Models\Chapters;
 use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
+use App\Models\GrantRequest;
 use App\Models\ProbationSubmission;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
@@ -1085,5 +1086,249 @@ class BoardController extends Controller implements HasMiddleware
 
         // return redirect($wpAutoLoginUrl);
         return redirect()->to($wpAutoLoginUrl);
+    }
+
+    public function viewGrantRequest(Request $request, $chId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userAdmin = $user['userAdmin'];
+
+        $grantList = GrantRequest::with('chapters', 'state', 'country')
+            ->where('chapter_id', $chId)
+            ->orderBy('creatd_at', 'desc')
+            ->get();
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $stateShortName = $baseQuery['stateShortName'];
+        $PresDetails = $baseQuery['PresDetails'];
+
+        if ($userTypeId == UserTypeEnum::COORD) {
+            $bdPositionId = '1';
+            $borDetails = $PresDetails;
+        } else {
+            $bdPositionId = $user['bdPositionId'];
+            $borDetails = $user['bdDetails'];
+        }
+
+        $data = ['grantList' => $grantList, 'stateShortName' => $stateShortName,
+            'PresDetails' => $PresDetails,
+            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails,
+        ];
+
+        return view('boards.grantrequestlist')->with($data);
+
+    }
+
+    public function viewGrantDetails(Request $request, $grantId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userAdmin = $user['userAdmin'];
+
+        $grantDetails = GrantRequest::find($grantId);
+        $chId = $grantDetails->chapter_id;
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateName = $chDetails->state->state_long_name;
+        $stateShortName = $baseQuery['stateShortName'];
+
+        $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
+
+        $PresDetails = $baseQuery['PresDetails'];
+
+        if ($userTypeId == UserTypeEnum::COORD) {
+            $bdPositionId = '1';
+            $borDetails = $PresDetails;
+        } else {
+            $bdPositionId = $user['bdPositionId'];
+            $borDetails = $user['bdDetails'];
+        }
+
+        $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails, 'grantDetails' => $grantDetails,
+            'PresDetails' => $PresDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
+            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'stateName' => $stateName, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails,
+        ];
+
+        return view('boards.grantdetails')->with($data);
+
+    }
+
+     public function showNewGrantRequest(Request $request, $chId): View
+    {
+
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userName = $loggedInName = $user['userName'];
+        $userEmail = $user['userEmail'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $stateShortName = $baseQuery['stateShortName'];
+
+        $stateName = $chDetails->state->state_long_name;
+
+
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chId);
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+
+        if ($userTypeId == UserTypeEnum::COORD) {
+            $bdPositionId = '1';
+            $borDetails = $PresDetails;
+        } else {
+            $bdPositionId = $user['bdPositionId'];
+            $borDetails = $user['bdDetails'];
+        }
+
+        $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails,
+            'PresDetails' => $PresDetails, 'stateName' => $stateName,
+            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails,
+        ];
+
+        return view('boards.grantrequest')->with($data);
+
+    }
+
+   public function updateNewGrantRequest(Request $request, $chId): RedirectResponse
+{
+    $user = $this->userController->loadUserInformation($request);
+    $userbdId = $user['bdId'];
+
+    // Validate required fields
+    $request->validate([
+        'understood' => 'accepted',
+        'member_agree' => 'accepted',
+        'member_accept' => 'accepted',
+        'member_fname' => 'required|string|max:255',
+        'member_lname' => 'required|string|max:255',
+    ], [
+        'understood.accepted' => 'You must acknowledge that you understand the fund limits.',
+        'member_agree.accepted' => 'You must confirm the mother has been asked.',
+        'member_accept.accepted' => 'You must confirm the mother has agreed to accept a grant.',
+        'member_fname.required' => 'Member first name is required.',
+        'member_lname.required' => 'Member last name is required.',
+    ]);
+
+    DB::beginTransaction();
+    try {
+        $grantRequest = GrantRequest::create([
+            'chapter_id' => $chId,
+            'submitted_bdId' => $userbdId,
+            'understood' => 1,
+            'member_agree' => 1,
+            'member_accept' => 1,
+            'first_name' => $request->input('member_fname'),
+            'last_name' => $request->input('member_lname'),
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('board.viewgrantdetails', ['id' => $grantRequest->id])
+            ->with('success', 'Grant request created successfully! Please complete the remaining information.');
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        Log::error('New Grant Request Error: ' . $e->getMessage());
+
+        return redirect()->back()
+            ->withErrors(['error' => 'Something went wrong: ' . $e->getMessage()])
+            ->withInput();
+    }
+}
+
+    public function updateGrantDetails(Request $request, $chId): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userbdId = $user['bdId'];
+
+        $input = $request->all();
+        $grantReceived = $input['submitted'] ?? null;
+
+        DB::beginTransaction();
+        try {
+           // Look for existing grant request in the past 12 months for same person
+        $twelveMonthsAgo = Carbon::now()->subMonths(12);
+
+        // Only search if we have member names (step 3+)
+        if (!empty($input['member_fname']) && !empty($input['member_lname'])) {
+            $grantRequest = GrantRequest::where('chapter_id', $chId)
+                ->where('first_name', $input['member_fname'])
+                ->where('last_name', $input['member_lname'])
+                ->where('created_at', '>=', $twelveMonthsAgo)
+                ->whereNull('submitted')
+                ->first();
+        } else {
+            // For step 1, just look for any incomplete grant for this chapter
+            $grantRequest = GrantRequest::where('chapter_id', $chId)
+                ->whereNull('submitted')
+                ->orderBy('updated_at', 'desc')
+                ->first();
+        }
+
+        if (!$grantRequest) {
+            // Create new grant request with just the chapter_id
+            $grantRequest = GrantRequest::create([
+                'chapter_id' => $chId,
+            ]);
+        }
+
+            // Update all fields (works for both new and existing records)
+            $grantRequest->update([
+                'farthest_step_visited' => max($grantRequest->farthest_step_visited ?? 0, $input['farthest_step'] ?? 1),
+                'understood' => $input['understood'] ?? $grantRequest->understood,
+                'member_agree' => $input['member_agree'] ?? $grantRequest->member_agree,
+                'member_accept' => $input['member_accept'] ?? $grantRequest->member_accept,
+                'first_name' => $input['member_fname'] ?? $grantRequest->first_name,
+                'last_name' => $input['member_lname'] ?? $grantRequest->last_name,
+                'email' => $input['member_email'] ?? $grantRequest->email,
+                'phone' => $input['member_phone'] ?? $grantRequest->phone,
+                'reachable' => $input['member_reachable'] ?? $grantRequest->reachable,
+                'alt_phone' => $input['member_alt_phone'] ?? $grantRequest->alt_phone,
+                'address' => $input['member_street'] ?? $grantRequest->address,
+                'city' => $input['member_city'] ?? $grantRequest->city,
+                'state_id' => $input['member_state'] ?? $grantRequest->state_id,
+                'country_id' => $input['member_country'] ?? $grantRequest->country_id ?? '198',
+                'zip' => $input['member_zip'] ?? $grantRequest->zip,
+                'member_length' => $input['member_length'] ?? $grantRequest->member_length,
+                'household_members' => $input['household_members'] ?? $grantRequest->household_members,
+                'situation_summary' => $input['situation_summary'] ?? $grantRequest->situation_summary,
+                'family_actions' => $input['family_actions'] ?? $grantRequest->family_actions,
+                'financial_situation' => $input['financial_situation'] ?? $grantRequest->financial_situation,
+                'pressing_needs' => $input['pressing_needs'] ?? $grantRequest->pressing_needs,
+                'other_needs' => $input['other_needs'] ?? $grantRequest->other_needs,
+                'amount_requested' => $input['amount_requested'] ?? $grantRequest->amount_requested,
+                'chapter_support' => $input['chapter_support'] ?? $grantRequest->chapter_support,
+                'additional_info' => $input['additional_info'] ?? $grantRequest->additional_info,
+                'previous_grant' => $input['previous_grant'] ?? $grantRequest->previous_grant,
+                'chapter_backing' => $input['chapter_backing'] ?? $grantRequest->chapter_backing,
+                'm2m_donation' => $input['m2m_donation'] ?? $grantRequest->m2m_donation,
+                'affirmation' => $input['affirmation'] ?? $grantRequest->affirmation,
+            ]);
+
+            $grantId = $grantRequest->id;
+
+            // If submitting the grant
+            if ($grantReceived == 1) {
+                $grantRequest->submitted_bdId = $userbdId;
+                $grantRequest->submitted = 1;
+                $grantRequest->updated_at = Carbon::now();
+                $grantRequest->save();
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Chapter has successfully updated');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
     }
 }

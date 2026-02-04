@@ -373,6 +373,15 @@ Route::middleware('auth')->group(function () {
     // Route::get('/board/m2mdonation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
     Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
     Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
+
+    Route::get('/board/grantrequestlist/{id}', [BoardController::class, 'viewGrantRequest'])->name('board.viewgrantrequestlist');
+
+    Route::get('/board/newgrantrequest/{id}', [BoardController::class, 'showNewGrantRequest'])->name('board.newgrantrequest');
+    Route::post('/board/newgrantrequestupdate/{id}', [BoardController::class, 'updateNewGrantRequest'])->name('board.updatenewgrantrequest');
+
+    Route::get('/board/grantdetails/{id}', [BoardController::class, 'viewGrantDetails'])->name('board.viewgrantdetails');
+    Route::post('/board/updategrantrequest/{id}', [BoardController::class, 'updateGrantRequest'])->name('board.updategrantrequest');
+
 });
 
 // Financial Report Controller Routes...Board Login Required
@@ -420,6 +429,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment/reregistration', [PaymentReportController::class, 'showChapterReRegistration'])->name('payment.chapreregistration');
     Route::get('/payment/donations', [PaymentReportController::class, 'showRptDonations'])->name('payment.chapdonations');
     Route::get('/payment/chapterpaymentedit/{id}', [PaymentReportController::class, 'editChapterPayment'])->name('payment.editpayment');
+    Route::get('/payment/chapterpaymenthistory/{id}', [PaymentReportController::class, 'viewPaymentHistory'])->name('payment.paymenthistory');
     Route::post('/payment/chapterpaymentupdate/{id}', [PaymentReportController::class, 'updateChapterPayment'])->name('payment.updatepayment');
     Route::get('/payment/reregistrationreminder', [PaymentReportController::class, 'createChapterReRegistrationReminder'])->name('payment.chapreregreminder');
     Route::get('/payment/reregistrationlatereminder', [PaymentReportController::class, 'createChapterReRegistrationLateReminder'])->name('payment.chaprereglatereminder');

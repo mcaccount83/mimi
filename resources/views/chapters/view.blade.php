@@ -113,7 +113,8 @@
                     <li class="nav-item"><a class="nav-link" href="#trs" data-toggle="tab">Treasurer</a></li>
                     <li class="nav-item"><a class="nav-link" href="#sec" data-toggle="tab">Secretary</a></li>
                 </ul>
-              </div><!-- /.card-header -->
+              </div>
+              <!-- /.card-header -->
               <div class="card-body">
                 <div class="tab-content">
                   <div class="active tab-pane" id="general">
@@ -855,7 +856,7 @@
             @endif
     </div>
                   <!-- /.tab-pane -->
-                </div>
+                 </div>
                 <!-- /.tab-content -->
               </div>
               <!-- /.card-body -->

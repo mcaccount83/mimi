@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ChapterStatusEnum;
 use App\Enums\ChapterCheckbox;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
@@ -10,11 +11,13 @@ use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
 use App\Models\Payments;
+use App\Models\PaymentHistory;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -364,18 +367,47 @@ class PaymentReportController extends Controller implements HasMiddleware
                 $chapter->next_renewal_year = $nextRenewalYear + 1;
                 $chapter->save();
 
+               // Archive current re-registration payment to history (if exists)
+            if ($payments->rereg_date) {
+                    PaymentHistory::create([
+                    'chapter_id' => $id,
+                    'payment_type' => 'rereg',
+                    'payment_amount' => $payments->rereg_payment,
+                    'payment_date' => $payments->rereg_date,
+                    'rereg_members' => $payments->rereg_members,
+                ]);
+            }
                 $payments->rereg_date = $rereg_date;
+                $payments->rereg_payment = $input['rereg'];
                 $payments->rereg_members = $input['members'];
                 $payments->save();
             }
 
             if ($m2m_date != null) {
+                // Archive current M2M donation to history (if exists)
+                if ($payments->m2m_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $id,
+                        'payment_type' => 'm2m',
+                        'payment_amount' => $payments->m2m_donation,
+                        'payment_date' => $payments->m2m_date,
+                    ]);
+                }
                 $payments->m2m_date = $m2m_date;
                 $payments->m2m_donation = $input['m2m'];
                 $payments->save();
             }
 
             if ($sustaining_date != null) {
+                // Archive current sustaining donation to history (if exists)
+                if ($payments->sustaining_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $id,
+                        'payment_type' => 'sustaining',
+                        'payment_amount' => $payments->sustaining_donation,
+                        'payment_date' => $payments->sustaining_date,
+                    ]);
+                }
                 $payments->sustaining_date = $sustaining_date;
                 $payments->sustaining_donation = $input['sustaining'];
                 $payments->save();
@@ -419,5 +451,63 @@ class PaymentReportController extends Controller implements HasMiddleware
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
+    }
+
+    public function viewPaymentHistory(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $chConfId = $baseQuery['chConfId'];
+        $chPcId = $baseQuery['chPcId'];
+        $chPayments = $baseQuery['chPayments'];
+
+        $startMonthName = $baseQuery['startMonthName'];
+        $chapterStatus = $baseQuery['chapterStatus'];
+
+        $chDisbanded = null;
+
+        if ($chActiveId == ChapterStatusEnum::ACTIVE) {
+            $baseBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        } elseif ($chActiveId == ChapterStatusEnum::ZAPPED) {
+            $baseBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
+            $chDisbanded = $baseBoardQuery['chDisbanded'];
+        }
+
+        // Get all rereg payment history for a chapter
+        $reregHistory = PaymentHistory::where('chapter_id', $id)
+        ->where('payment_type', 'rereg')
+        ->orderBy('payment_date', 'desc')
+        ->get();
+
+        $m2mHistory = PaymentHistory::where('chapter_id', $id)
+        ->where('payment_type', 'm2m')
+        ->orderBy('payment_date', 'desc')
+        ->get();
+
+        $sustainingHistory = PaymentHistory::where('chapter_id', $id)
+        ->where('payment_type', 'sustaining')
+        ->orderBy('payment_date', 'desc')
+        ->get();
+
+        $manualHistory = PaymentHistory::where('chapter_id', $id)
+        ->where('payment_type', 'manual')
+        ->orderBy('payment_date', 'desc')
+        ->get();
+
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chDetails' => $chDetails, 'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded,
+            'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
+            'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
+            'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory, 'manualHistory' => $manualHistory,
+        ];
+
+        return view('payment.paymenthistory')->with($data);
     }
 }

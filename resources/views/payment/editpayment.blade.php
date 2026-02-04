@@ -102,14 +102,25 @@
                             <!-- /.form group -->
                             <div class="form-group row">
                                 <div class="col-sm-12">
-                                    <h5>Re-Registration Payment</h5>
+                                    <h5>Re-Registration Payment
+                                    <small>(Adding a re-reg payment will automatically move next renewal year forward)</small>
+                                    </h5>
                                 </div>
                                 <label class="col-sm-2 col-form-label">Date Received:</label>
-                                <div class="col-sm-3">
+                                <div class="col-sm-2">
                                     <input type="date" name="PaymentDate" id="PaymentDate"class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask >
                                 </div>
-                                <label class="col-sm-2 ml-1 col-form-label">Members Paid For:</label>
-                                <div class="col-sm-3">
+                                <label class="col-sm-2 col-form-label">Payment Amount:</label>
+                                <div class="col-sm-2">
+                                    <div class="input-group row">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input type="text" name="rereg" id="rereg" class="form-control"/>
+                                    </div>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Members Paid For:</label>
+                                <div class="col-sm-2">
                                     <input type="number" name="members" id="members" onKeyPress="if(this.value.length==9) return false;" class="form-control"  />
                                 </div>
                             </div>
@@ -208,6 +219,8 @@
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Payment Information</button>
                 @endif
+                <button type="button" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="fas fa-file-invoice-dollar mr-2"></i>View Payment History</button>
+                <br>
                 @if ($confId == $chConfId)
                         <button type="button" id="back-rereg" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Registration Report</button>
                         <button type="button" id="back-donation" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations') }}'"><i class="fas fa-reply mr-2"></i>Back to Donations Report</button>

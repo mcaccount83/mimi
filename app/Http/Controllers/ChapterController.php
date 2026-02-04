@@ -39,6 +39,7 @@ use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
 use App\Models\ForumCategorySubscription;
 use App\Models\Payments;
+use App\Models\PaymentHistory;
 use App\Models\ProbationSubmission;
 use App\Models\Region;
 use App\Models\Resources;
@@ -349,7 +350,6 @@ class ChapterController extends Controller implements HasMiddleware
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded, 'chEOYDocuments' => $chEOYDocuments,
             'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
-
         ];
 
         return view('chapters.view')->with($data);
