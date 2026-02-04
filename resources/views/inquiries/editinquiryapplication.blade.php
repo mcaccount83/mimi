@@ -32,9 +32,9 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                  <h3 class="profile-username text-center"><b>{{ $stateLongtName}}</b></h3>
-                  <h3 class="profile-username text-center">{{ $regionLongName }} Region</h3>
-                  <h3 class="profile-username text-center">{{ $conferenceDescription }} Conference</h3>
+                  <h3 class="profile-username text-center"><b>{{ $inqDetails->state->state_long_name}}</b></h3>
+                  <h3 class="profile-username text-center">{{ $inqDetails->region->long_name }} Region</h3>
+                  <h3 class="profile-username text-center">{{ $inqDetails->conference->conference_description }} Conference</h3>
 
                   <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
@@ -181,8 +181,8 @@
                                 <label class="col-sm-2 col-form-label">Address:</label>
                                 <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->inquiry_address}}<br>
-                                        {{ $inqDetails->inquiry_city}}, {{ $inquiryStateShortName}} {{ $inqDetails->inquiry_zip}}<br>
-                                        {{ $inquiryCountryShortName}}</p>
+                                        {{ $inqDetails->inquiry_city}}, {{ $inqDetails->inquirystate->state_short_name}} {{ $inqDetails->inquiry_zip}}<br>
+                                        {{ $inqDetails->inquirycountry->short_name}}</p>
                                 </div>
                                 <label class="col-sm-2 col-form-label">County:</label>
                                 <div class="col-sm-10">

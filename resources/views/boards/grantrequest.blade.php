@@ -1,6 +1,16 @@
 
 @extends('layouts.board_theme')
 
+<style>
+.custom-switch .custom-control-label {
+    color: #000 !important;
+}
+/* Or use the theme's default text color */
+.custom-switch .custom-control-label {
+    color: inherit !important;
+}
+</style>
+
 @section('content')
     <div class="container">
         <div class="row">
@@ -50,31 +60,33 @@
                         <p>Only a chapter may apply for a grant for a member. The grant request should be filled out by a member of the Executive Board. That officer will be the liaison between the Mother-to-Mother Fund Committee and the mother-in-need. A mother-in-need may not apply for a grant on her own. The request has to come from the chapter, but the chapter may work with the mother to answer the questions here. If an officer is not available, due to a natural disaster or other problem, then another member may submit the request, but the Board will be contacted to confirm the information.</p>
                         <p>Be as specific as possible in answering the questions. Be sure to fill out all questions before submitting the form!</p>
                         <br>
-                       <div class="form-group">
-    <label>
-        <input type="checkbox" name="understood" class="mr-2" value="1" required>
-        I have read this section and understand the limits of the fund<span class="field-required">*</span>
-    </label>
-</div>
-
-<div class="form-group">
-    <label>
-        <input type="checkbox" name="member_agree" class="mr-2" value="1" required>
-        The mother has been asked if she wants you to submit this grant on her behalf<span class="field-required">*</span>
-    </label>
-</div>
-
-<div class="form-group">
-    <label>
-        <input type="checkbox" name="member_accept" class="mr-2" value="1" required>
-        The mother has agreed to accept a grant request if one is given<span class="field-required">*</span>
-    </label>
-</div>
-
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="understood" id="understood" class="custom-control-input" value="1" required>
+                                <label class="custom-control-label" for="understood">
+                                    I have read this section and understand the limits of the fund<span class="field-required">*</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="member_agree" id="member_agree" class="custom-control-input" value="1" required>
+                                <label class="custom-control-label" for="member_agree">
+                                    The mother has been asked if she wants you to submit this grant on her behalf<span class="field-required">*</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="member_accept" id="member_accept" class="custom-control-input" value="1" required>
+                                <label class="custom-control-label" for="member_accept">
+                                    The mother has agreed to accept a grant request if one is given<span class="field-required">*</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <BR>
-
+                <br>
                          <!-- /.card-header -->
                     <div class="row">
                         <div class="col-md-12">
@@ -120,13 +132,28 @@
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
                                     <label>Board Member Name<span class="field-required">*</span></label>
-                                    <input type="text" class="form-control" name="submitter_name" value="{{ $borDetails->first_name }} {{ $borDetails->last_name }}" disabled>
+                                    <input type="text" class="form-control" name="board_name" value="{{ $borDetails->first_name }} {{ $borDetails->last_name }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
                                     <label>Board Member Position<span class="field-required">*</span></label>
-                                    <input type="text" class="form-control" name="submitter_position" value="{{ $borDetails->position->position }}" disabled>
+                                    <input type="text" class="form-control" name="board_position" value="{{ $borDetails->position->position }}" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 form-row form-group">
+                            <div class="col-md-6 float-left">
+                                <div class="form-group">
+                                    <label>Board Member Phone<span class="field-required">*</span></label>
+                                    <input type="text" class="form-control" name="board_name" value="{{ $borDetails->phone }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6 float-left">
+                                <div class="form-group">
+                                    <label>Board Member Email<span class="field-required">*</span></label>
+                                    <input type="text" class="form-control" name="board_position" value="{{ $borDetails->email }}" disabled>
                                 </div>
                             </div>
                         </div>

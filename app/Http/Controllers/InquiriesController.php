@@ -112,12 +112,6 @@ class InquiriesController extends Controller implements HasMiddleware
         $stateId = $inqDetails->state_id;
         $regioniId = $inqDetails->region_id;
         $inqConfId = $inqDetails->conference_id;
-        $stateShortName = $inqDetails->state->state_short_name;
-        $stateLongtName = $inqDetails->state->state_long_name;
-        $regionLongName = $inqDetails->region->long_name;
-        $conferenceDescription = $inqDetails->conference->conference_description;
-        $inquiryStateShortName = $inqDetails->state->state_short_name;
-        $inquiryCountryShortName = $inqDetails->country->short_name;
         $chapterName = $inqDetails->chapter?->name;
 
         $inqCoord = RegionInquiry::with('region')->find($regioniId);
@@ -130,9 +124,9 @@ class InquiriesController extends Controller implements HasMiddleware
             ->where('state_id', $stateId)
             ->get();
 
-        $data = ['id' => $id, 'conferenceDescription' => $conferenceDescription, 'stateShortName' => $stateShortName, 'chapterId' => $chapterId,
-            'inqDetails' => $inqDetails, 'stateLongtName' => $stateLongtName, 'regionLongName' => $regionLongName, 'stateChapters' => $stateChapters,
-            'inquiryStateShortName' => $inquiryStateShortName, 'inquiryCountryShortName' => $inquiryCountryShortName, 'chapterName' => $chapterName,
+        $data = ['id' => $id,  'chapterId' => $chapterId,
+            'inqDetails' => $inqDetails, 'stateChapters' => $stateChapters,
+         'chapterName' => $chapterName,
             'inqCoordName' => $inqCoordName, 'chDetails' => $chDetails, 'confId' => $confId, 'inqConfId' => $inqConfId,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];

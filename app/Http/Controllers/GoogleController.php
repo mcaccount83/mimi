@@ -7,6 +7,7 @@ use App\Models\Documents;
 use App\Models\DocumentsEOY;
 use App\Models\FolderRecord;
 use App\Models\GoogleDrive;
+use App\Models\GrantRequest;
 use App\Models\Resources;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -387,6 +388,59 @@ public function storeToolkit(Request $request, $id): JsonResponse
         return response()->json([
             'status' => 'error',
             'message' => 'An error occurred while uploading the file.',
+        ], 500);
+    }
+}
+
+public function storePhotos(Request $request, $id): JsonResponse
+{
+    try {
+        $request->validate([
+            'file' => 'required|file',
+        ]);
+
+        $grant = GrantRequest::with('chapters', 'state')->find($id);
+        $state = $grant->chapters->state->state_short_name;
+        $chapterName = $grant->chapters->name;
+        $memberName = $grant->first_name.' '.$grant->last_name;
+        $name = $state.'_'.$chapterName.'_'.$memberName.'_GrantPhotos';
+
+        $googleDrive = GoogleDrive::where('name', 'grant_uploads')->first();
+        $sharedDriveId = $googleDrive->folder_id;
+
+        $file = $request->file('file');
+        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+        $mimetype = $file->getMimeType();
+        $filecontent = file_get_contents($file->getPathname());
+
+        if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+            $existingDocRecord = GrantRequest::find($id);
+            if ($existingDocRecord) {
+                $existingDocRecord->photos_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for grant id {$id} not found");
+                $newDocData = ['id' => $id];
+                $newDocData['file_path'] = $file_id;
+                GrantRequest::create($newDocData);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'photos uploaded successfully.',
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to upload file.',
+        ], 500);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred while uploading the photos.',
         ], 500);
     }
 }

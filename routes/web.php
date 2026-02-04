@@ -374,7 +374,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
     Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
 
-    Route::get('/board/grantrequestlist/{id}', [BoardController::class, 'viewGrantRequest'])->name('board.viewgrantrequestlist');
+    Route::get('/board/grantrequestlist/{id}', [BoardController::class, 'viewGrantRequestList'])->name('board.viewgrantrequestlist');
 
     Route::get('/board/newgrantrequest/{id}', [BoardController::class, 'showNewGrantRequest'])->name('board.newgrantrequest');
     Route::post('/board/newgrantrequestupdate/{id}', [BoardController::class, 'updateNewGrantRequest'])->name('board.updatenewgrantrequest');
@@ -417,6 +417,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/files/storeAward/{id}', [GoogleController::class, 'storeAward']);
     Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
     Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
+    Route::post('/files/storePhotos/{id}', [GoogleController::class, 'storePhotos']);
 });
 
 // Payment Controller Routes...Used for Board & Coordinator Layouts
