@@ -154,6 +154,7 @@ class AdminReportController extends Controller implements HasMiddleware
             $chapter->save();
 
             $payments->rereg_date = $request->input('ch_duespaid');
+            $payments->rereg_payment = $request->input('ch_payment');
             $payments->rereg_members = $request->input('ch_members');
 
             $payments->save();

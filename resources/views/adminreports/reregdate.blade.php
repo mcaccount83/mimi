@@ -31,6 +31,7 @@
                     <th>Name</th>
                     <th class="nosort" id="due_sort">Renewal Date</th>
                     <th>Last Paid</th>
+                            <th>Payment</th>
                     <th>Members</th>
                 </tr>
                 </thead>
@@ -67,6 +68,11 @@
                                 {{ $due }}
                         </td>
 						<td><span class="date-mask">{{ $list->payments->rereg_date }}</span></td>
+                        <td>
+                            @if( $list->payments->rereg_payment != null )
+                            ${{ $list->payments->rereg_payment }}
+                            @endif
+                        </td>
                         <td>{{ $list->payments->rereg_members }}</td>
                     </tr>
                   @endforeach

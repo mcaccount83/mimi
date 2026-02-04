@@ -36,6 +36,14 @@
                             @endif
                     </div>
                     <div class="d-flex align-items-center justify-content-between w-100 mb-1">
+                        <b>Payment Amount:</b> <span class="float-right">
+                            @if ($chPayments->rereg_payment)
+                                {{ $chPayments->rereg_payment }}</span>
+                            @else
+                                N/A</span>
+                            @endif
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                         <b>Number of Members:</b> <span class="float-right">
                             @if ($chPayments->rereg_members)
                                 {{ $chPayments->rereg_members }}</span>
@@ -112,6 +120,19 @@
                 </div>
                 <!-- /.form group -->
                 <div class="form-group row">
+                    <label class="col-sm-4 mb-1 col-form-label">Payment Amount:</label>
+                    <div class="col-sm-3 mb-1">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" name="ch_payment" class="form-control" value="{{ $chPayments->rereg_payment }}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /.form group -->
+                <div class="form-group row">
                     <label class="col-sm-4 mb-1 col-form-label">Number of Members:</label>
                     <div class="col-sm-3 mb-1">
                         <input type="text" name="ch_members" class="form-control" value="{{ $chPayments->rereg_members }}">
@@ -133,13 +154,14 @@
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn bg-gradient-primary mb-3"><i class="fas fa-save" ></i>&nbsp; Save</button>
+                    <br>
                 @endif
                  @if ($confId == $chConfId)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('adminreports.reregdate') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Reg Report</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('adminreports.reregdate') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Reg Admin Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('adminreports.reregdate', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Reg Report</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('adminreports.reregdate', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Reg Admin Report</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Payment History</button>
             </div>
 
 

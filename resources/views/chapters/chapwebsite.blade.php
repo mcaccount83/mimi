@@ -37,7 +37,7 @@
                 <tbody>
                 @foreach($websiteList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/chapter/websiteedit/{$list->id}") }}"><i class="fas fa-eye "></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/online/websiteedit/{$list->id}") }}"><i class="fas fa-eye "></i></a></td>
                     <td class="text-center align-middle">
                         <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Website Review')"><i class="far fa-envelope text-primary"></i></a>
                    </td>
