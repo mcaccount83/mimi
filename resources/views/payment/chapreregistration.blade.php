@@ -82,7 +82,11 @@
                                 {{ $due }}
                             </td>
                             <td><span class="date-mask">{{ $list->payments->rereg_date }}</span></td>
-                            <td>${{ $list->payments->rereg_payment }}</td>
+                            <td>
+                                @if( $list->payments->rereg_payment != null )
+                                ${{ $list->payments->rereg_payment }}
+                                @endif
+                            </td>
                             <td>{{ $list->payments->rereg_members }}</td>
                              <th>
                                 <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="fas fa-file-invoice-dollar "></i></a>

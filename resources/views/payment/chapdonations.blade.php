@@ -62,9 +62,17 @@
                                 @endif
                             </td>
                                 <td>{{ $list->name }}</td>
-						<td>${{ $list->payments->m2m_donation }}</td>
+						<td>
+                            @if( $list->payments->m2m_donation != null )
+                                ${{ $list->payments->m2m_donation }}
+                            @endif
+                        </td>
 						<td><span class="date-mask">{{ $list->payments->m2m_date }}</span></td>
-						<td>${{ $list->payments->sustaining_donation }}</td>
+						<td>
+                            @if( $list->payments->sustaining_donation != null )
+                                ${{ $list->payments->sustaining_donation }}
+                            @endif
+                        </td>
 						<td><span class="date-mask">{{ $list->payments->sustaining_date }}</span></td>
                         <th>
                             <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="fas fa-file-invoice-dollar "></i></a>
