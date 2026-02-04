@@ -48,30 +48,6 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    // public function getInquiryApplicationData($input, $state, $conf, $region, $inquiryState, $inquiryCountry, $inquiriesCoordEmail)
-    // {
-    //     return [
-    //         'inquiryFirstName' => $input['inquiryFirstName'] ?? null,
-    //         'inquiryLastName' => $input['inquiryLastName'] ?? null,
-    //         'inquiryEmail' => $input['inquiryEmail'] ?? null,
-    //         'inquiryPhone' => $input['inquiryPhone'] ?? null,
-    //         'inquiryAddress' => $input['inquiryAddress'] ?? null,
-    //         'inquiryCity' => $input['inquiryCity'] ?? null,
-    //         'inquiryState' => $inquiryState,
-    //         'inquiryZip' => $input['inquiryZip'] ?? null,
-    //         'inquiryCountry' => $inquiryCountry,
-    //         'inquiryCounty' => $input['inquiryCounty'] ?? null,
-    //         'inquiryTownship' => $input['inquiryTownship'] ?? null,
-    //         'inquiryArea' => $input['inquiryArea'] ?? null,
-    //         'inquirySchool' => $input['inquirySchool'] ?? null,
-    //         'inquiryComments' => $input['inquiryComments'] ?? null,
-    //         'state' => $state,
-    //         'conf' => $conf,
-    //         'region' => $region,
-    //         'inquiriesCoordEmail' => $inquiriesCoordEmail,
-    //     ];
-    // }
-
     public function getInquiryData($inqDetails)
     {
         return [
@@ -96,17 +72,6 @@ class BaseMailDataController extends Controller
             'inquiriesCoordEmail' => $inqDetails->regioninquiry->inquiries_email,
         ];
     }
-
-    // public function getInquiryCoordData($inqCoordName, $inquiriesCoordEmail, $conferenceDescription, $regionLongName)
-    // {
-    //     return [
-    //         'inqCoordName' => $inqCoordName,
-    //         'inquiriesCoordEmail' => $inquiriesCoordEmail,
-    //         'conferenceDescription' => $conferenceDescription,
-    //         'regionLongName' => $regionLongName
-    //     ];
-    // }
-
 
     public function getChapterData($chDetails, $stateShortName)
     {
@@ -527,6 +492,45 @@ class BaseMailDataController extends Controller
             'special_skills' => $input['special_skills'],
             'enjoy_volunteering' => $input['enjoy_volunteering'],
             'referred_by' => $input['referred_by'] ?? null,
+        ];
+    }
+
+    public function getNewGrantData($grantDetails)
+    {
+        return [
+            'chapterName' => $grantDetails->chapters->name,
+            'chapterState' => $grantDetails->chapters->state->state_short_name,
+            'board_name' => $grantDetails->board_name,
+            'board_position' => $grantDetails->board_position,
+            'board_phone' => $grantDetails->board_phone,
+            'board_email' => $grantDetails->board_email,
+            'understood' => $grantDetails->understood,
+            'first_name' => $grantDetails->first_name,
+            'last_name' => $grantDetails->last_name,
+            'email' => $grantDetails->email,
+            'phone' => $grantDetails->phone,
+            'reachable' => $grantDetails->reachable,
+            'alt_phone' => $grantDetails->alt_phone ?? null,
+            'address' => $grantDetails->address,
+            'city' => $grantDetails->city,
+            'state' => $grantDetails->state->state_short_name,
+            'country' => $grantDetails->country->short_name,
+            'zip' => $grantDetails->zip,
+            'member_length' => $grantDetails->member_length,
+            'household_members' => $grantDetails->household_members,
+            'situation_summary' => $grantDetails->situation_summary,
+            'family_actions' => $grantDetails->family_actions,
+            'financial_situation' => $grantDetails->financial_situation,
+            'pressing_needs' => $grantDetails->pressing_needs,
+            'other_needs' => $grantDetails->other_needs,
+            'amount_requested' => $grantDetails->amount_requested,
+            'chapter_support' => $grantDetails->chapter_support,
+            'additional_info' => $grantDetails->additional_info ?? null,
+            'previous_grant' => $grantDetails->previous_grant,
+            'chapter_backing' => $grantDetails->chapter_backing,
+            'm2m_donation' => $grantDetails->m2m_donation,
+            'affirmation' => $grantDetails->affirmation,
+            'created_at' => $grantDetails->created_at,
         ];
     }
 }

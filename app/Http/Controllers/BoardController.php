@@ -11,6 +11,8 @@ use App\Mail\EOYElectionReportSubmitted;
 use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
+use App\Mail\GrantRequestThankYou;
+use App\Mail\GrantRequestNotice;
 use App\Mail\NewWebsiteReviewNotice;
 use App\Mail\ProbationRptSubmittedCCNotice;
 use App\Mail\ProbationRptThankYou;
@@ -1146,7 +1148,7 @@ class BoardController extends Controller implements HasMiddleware
         $input = $request->all();
         $grantReceived = $input['submitted'] ?? null;
 
-        $grantRequest = GrantRequest::findOrFail($grantId);
+        $grantRequest = GrantRequest::find($grantId);
 
         DB::beginTransaction();
         try {
@@ -1186,6 +1188,35 @@ class BoardController extends Controller implements HasMiddleware
             }
 
             $grantRequest->save();
+
+            $grantDetails = GrantRequest::find($grantId);
+            $submitEmail = $grantDetails->board_email;
+            $chapterId = $grantDetails->chapter_id;
+
+            $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
+            $emailListCoord = $baseQuery['emailListCoord'];  // Full Coordinaor List
+            $emailCC = $baseQuery['emailCC'];  // CC Email
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getNewGrantData($grantDetails),
+            );
+
+            $mailTable = $this->emailTableController->createNewGrantTable($mailData);
+
+            $mailData = array_merge($mailData, [
+                'mailTable' => $mailTable,
+            ]);
+
+              if ($grantRequest == 1) {
+                $pdfPath = $this->pdfController->saveGrantRequest($request, $grantId);   // Generate and Send the PDF
+                Mail::to($emailCC)
+                    // ->cc($emailCC)
+                    ->queue(new GrantRequestThankYou($mailData, $pdfPath));
+
+                Mail::to($submitEmail)
+                    // ->cc($emailCC)
+                    ->queue(new GrantRequestNotice($mailData, $pdfPath));
+            }
 
             DB::commit();
 

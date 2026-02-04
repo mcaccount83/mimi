@@ -101,7 +101,6 @@ class InquiriesController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
-        $positionId = $user['cdPositionId'];
         $userName = $user['userName'];
         $userPosition = $user['cdPosition'];
         $userConfName = $user['confName'];
@@ -124,9 +123,7 @@ class InquiriesController extends Controller implements HasMiddleware
             ->where('state_id', $stateId)
             ->get();
 
-        $data = ['id' => $id,  'chapterId' => $chapterId,
-            'inqDetails' => $inqDetails, 'stateChapters' => $stateChapters,
-         'chapterName' => $chapterName,
+        $data = ['id' => $id,  'chapterId' => $chapterId, 'inqDetails' => $inqDetails, 'stateChapters' => $stateChapters, 'chapterName' => $chapterName,
             'inqCoordName' => $inqCoordName, 'chDetails' => $chDetails, 'confId' => $confId, 'inqConfId' => $inqConfId,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
