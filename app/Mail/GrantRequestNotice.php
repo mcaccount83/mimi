@@ -28,7 +28,7 @@ class GrantRequestNotice extends BaseMailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.chapter.grantrequestnotice.blade',
+            markdown: 'emails.chapter.grantrequestnotice',
         );
     }
 

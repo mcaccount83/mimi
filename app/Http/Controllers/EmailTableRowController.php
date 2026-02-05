@@ -593,93 +593,73 @@ class EmailTableRowController extends Controller
             <td colspan="2" style="'.$headerStyle.'">Grant Information</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td colspan="2" style="'.$cellLeftStyle.'">I have read this section and understand the limits of the fund: '.($mailData['understood'] == '1' ? 'YES' : 'NO').'</td>
+            <td colspan="2" style="'.$cellLeftStyle.'"><strong>I have read this section and understand the limits of the fund:</strong><br>'.($mailData['understood'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
          $tableHtml .= '<tr>
-            <td colspan="2" style="'.$cellLeftStyle.'">I have read this section and understand the limits of the fund: '.($mailData['member_agree'] == '1' ? 'YES' : 'NO').'</td>
+            <td colspan="2" style="'.$cellLeftStyle.'"><strong>The mother has been asked if she wants you to submit this grant on her behalf.</strong><br>'.($mailData['member_agree'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
          $tableHtml .= '<tr>
-            <td colspan="2" style="'.$cellLeftStyle.'">I have read this section and understand the limits of the fund: '.($mailData['member_accept'] == '1' ? 'YES' : 'NO').'</td>
+            <td colspan="2" style="'.$cellLeftStyle.'"><strong>The mother has agreed to accept a grant request if one is given.</strong><br>'.($mailData['member_accept'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">MEMBER IN NEED</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">Member Name</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['first_name'].' '.$mailData['last_name'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>Member Name</strong><br>'.$mailData['first_name'].' '.$mailData['last_name'].'</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">Address</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['address'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>Address</strong><br>'.$mailData['address'].'<br>'.$mailData['city'].', '.$mailData['state'].' '.$mailData['zip'].'<br>'.$mailData['country'].'</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'"></td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['city'].', '.$mailData['state'].' '.$mailData['zip'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>How long has the mother been a member?</strong><br>'.$mailData['member_length'].'</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'"></td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['country'].'</td>
-        </tr>';
-        $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">How long has the mother been a member?</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['member_length'].'</td>
-        </tr>';
-        $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">Who is living in the home?</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['household_members'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>Who is living in the home?</strong><br>'.$mailData['household_members'].'</td>
         </tr>';
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">EXPLANAION OF SITUATION</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">Please provide a summary of the situation./td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['situation_summary'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>Please provide a summary of the situation.</strong><br>'.$mailData['situation_summary'].'</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">What has the family done to improve or handle the situation?</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['family_actions'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>What has the family done to improve or handle the situation?</strong><br>'.$mailData['family_actions'].'</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">What is the financial situation of the family?</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['financial_situation'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>What is the financial situation of the family?</strong><br>'.$mailData['financial_situation'].'</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">What are the familys most pressing needs right now?</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['pressing_needs'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>What are the familys most pressing needs right now?</strong><br>'.$mailData['pressing_needs'].'</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">Is there anything else the family needs?</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['other_needs'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>Is there anything else the family needs?</strong><br>'.$mailData['other_needs'].'</td>
         </tr>';
          $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">GRANT REQUEST DETAILS</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">What amount is being requested? What will it be used for?/td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['amount_requested'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>What amount is being requested? What will it be used for?</strong><br>'.$mailData['amount_requested'].'</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">How has the chapter supported the member up to this point?</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['chapter_support'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>How has the chapter supported the member up to this point?</strong><br>'.$mailData['chapter_support'].'</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td style="'.$cellLeftStyle.'">Is there anything else we should know?</td>
-            <td style="'.$cellLeftStyle.'">'.$mailData['additional_info'].'</td>
+            <td style="'.$cellLeftStyle.'"><strong>Is there anything else we should know?</strong><br>'.$mailData['additional_info'].'</td>
         </tr>';
          $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">CHAPTER BACKING AND AFFIRMATION</td>
         </tr>';
          $tableHtml .= '<tr>
-            <td colspan="2" style="'.$cellLeftStyle.'">Has the chapter ever asked for a grant for this mother or family in the past? '.($mailData['previous_grant'] == '1' ? 'YES' : 'NO').'</td>
+            <td colspan="2" style="'.$cellLeftStyle.'"><strong>Has the chapter ever asked for a grant for this mother or family in the past?</strong><br>'.($mailData['previous_grant'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
          $tableHtml .= '<tr>
-            <td colspan="2" style="'.$cellLeftStyle.'">Does the chapter stand behind this request? '.($mailData['chapter_backing'] == '1' ? 'YES' : 'NO').'</td>
+            <td colspan="2" style="'.$cellLeftStyle.'"><strong>Does the chapter stand behind this request?</strong><br>'.($mailData['chapter_backing'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
          $tableHtml .= '<tr>
-            <td colspan="2" style="'.$cellLeftStyle.'">Has the chapter donated to the Mother-to-Mother Fund? '.($mailData['m2m_donation'] == '1' ? 'YES' : 'NO').'</td>
+            <td colspan="2" style="'.$cellLeftStyle.'"><strong>Has the chapter donated to the Mother-to-Mother Fund?</strong><br>'.($mailData['m2m_donation'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
         $tableHtml .= '<tr>
-            <td colspan="2" style="'.$cellLeftStyle.'">I affirm that the information in this submission is true: '.($mailData['affirmation'] == '1' ? 'YES' : 'NO').'</td>
+            <td colspan="2" style="'.$cellLeftStyle.'"><strong>I affirm that the information in this submission is true:</strong><br>'.($mailData['affirmation'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
 
         return $tableHtml;

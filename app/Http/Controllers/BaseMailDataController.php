@@ -498,13 +498,13 @@ class BaseMailDataController extends Controller
     public function getNewGrantData($grantDetails)
     {
         return [
-            'chapterName' => $grantDetails->chapters->name,
-            'chapterState' => $grantDetails->chapters->state->state_short_name,
+            'understood' => $grantDetails->understood,
+            'member_agree' => $grantDetails->member_agree,
+            'member_accept' => $grantDetails->member_accept,
             'board_name' => $grantDetails->board_name,
             'board_position' => $grantDetails->board_position,
             'board_phone' => $grantDetails->board_phone,
             'board_email' => $grantDetails->board_email,
-            'understood' => $grantDetails->understood,
             'first_name' => $grantDetails->first_name,
             'last_name' => $grantDetails->last_name,
             'email' => $grantDetails->email,
@@ -530,7 +530,19 @@ class BaseMailDataController extends Controller
             'chapter_backing' => $grantDetails->chapter_backing,
             'm2m_donation' => $grantDetails->m2m_donation,
             'affirmation' => $grantDetails->affirmation,
-            'created_at' => $grantDetails->created_at,
+            'submitted_at' => $grantDetails->submitted_at,
+        ];
+    }
+
+     public function getGrantReviewData($grantDetails)
+    {
+        return [
+            'reviewer_name' => $grantDetails->review_notes,
+            'review_notes' => $grantDetails->review_notes,
+            'review_complete' => $grantDetails->review_complete,
+            'completed_at' => $grantDetails->completed_at,
+            'grant_approved' => $grantDetails->grant_approved,
+            'amount_awarded' => $grantDetails->amount_awarded,
         ];
     }
 }

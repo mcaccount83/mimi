@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -223,9 +224,6 @@ class AdminReportController extends Controller implements HasMiddleware
    public function updateInquiriesEmail(Request $request, $id)
 {
     try {
-        $request->validate([
-            'inquiries_email' => 'required|email',
-        ]);
 
         $region = Region::findOrFail($id);
 
@@ -304,10 +302,6 @@ class AdminReportController extends Controller implements HasMiddleware
 
     public function updateRegion(Request $request, $id)
     {
-        $request->validate([
-            'conference_id' => 'required|exists:conference,id'
-        ]);
-
         try {
             $region = Region::findOrFail($id);
             $region->conference_id = $request->conference_id;
@@ -351,11 +345,6 @@ class AdminReportController extends Controller implements HasMiddleware
 
     public function updateState(Request $request, $id)
     {
-        $request->validate([
-            'conference_id' => 'required|exists:conference,id',
-            'region_id' => 'required|exists:region,id'
-        ]);
-
         try {
             $state = State::findOrFail($id);
 
@@ -402,7 +391,7 @@ class AdminReportController extends Controller implements HasMiddleware
          // Use the appropriate query based on checkbox status
         if ($checkBox5Status) {
             $grantList = GrantRequest::with('chapters')
-                ->orderBy('created_at')
+                ->orderBy('submitted_at')
                 ->get();
 
         } else {
@@ -410,7 +399,7 @@ class AdminReportController extends Controller implements HasMiddleware
                 ->whereHas('chapters', function ($query) use ($confId) {
                     $query->where('conference_id', $confId);
                 })
-                ->orderBy('created_at')
+                ->orderBy('submitted_at')
                 ->get();
             }
 
@@ -419,14 +408,14 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('adminreports.grantlist')->with($data);
     }
 
-    public function editGrantDetails(Request $request, $id): View
+    public function editGrantDetails(Request $request, $grantId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
 
         $grantDetails = GrantRequest::with('chapters', 'state', 'country')
-            ->find($id);
+            ->find($grantId);
         $chapterId = $grantDetails->chapter_id;
 
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
@@ -436,51 +425,99 @@ class AdminReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
 
-        $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
-            'conferenceDescription' => $conferenceDescription, 'confId' => $confId, 'chConfId' => $chConfId, 'grantDetails' => $grantDetails
+        $grList = $this->userController->loadGrantReviewerList($chConfId) ?? null;
+
+        $data = ['id' => $grantId, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+            'conferenceDescription' => $conferenceDescription, 'confId' => $confId, 'chConfId' => $chConfId, 'grantDetails' => $grantDetails,
+            'grList' => $grList
         ];
 
         return view('adminreports.editgrantdetails')->with($data);
     }
 
-    public function updateGrantDetails(Request $request, $id): RedirectResponse
+    public function updateGrantDetails(Request $request, $grantId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-        $updatedBy = $user['userName'];
+        $coorId = $user['cdId'];
 
-        $chapter = Chapters::find($id);
-        $payments = Payments::find($id);
+        $input = $request->all();
+        $submitType = $input['submit_type'];
+        $reviewer_id = isset($input['reviewer_id']) && ! empty($input['reviewer_id']) ? $input['reviewer_id'] : $coorId;
+
+        $grantRequest = GrantRequest::find($grantId);
 
         DB::beginTransaction();
         try {
-            $chapter->start_month_id = $request->input('ch_founddate');
-            $chapter->next_renewal_year = $request->input('ch_renewyear');
-            $chapter->updated_by = $updatedBy;
-            $chapter->updated_id = $updatedId;
+            $grantRequest->reviewer_id = $reviewer_id ?? $coorId;
+            $grantRequest->review_notes = $input['review_notes'] ?? null;
+            $grantRequest->amount_awarded = $input['amount_awarded'] ?? null;
+            $grantRequest->grant_approved = $input['grant_approved'] ?? null;
 
-            $chapter->save();
+            // If submitting the grant
+            if ($submitType == 'review_complete') {
+                $grantRequest->review_complete = 1;
+                $grantRequest->completed_at = Carbon::now();
+            }
 
-            $payments->rereg_date = $request->input('ch_duespaid');
-            $payments->rereg_payment = $request->input('ch_payment');
-            $payments->rereg_members = $request->input('ch_members');
-
-            $payments->save();
+            $grantRequest->save();
 
             DB::commit();
 
-            return redirect()->to('/adminreports/grantlist')->with('error', 'Failed to update Re-Reg Date.');
+            if ($submitType == 'review_complete') {
+                return redirect()->back()->with('success', 'Grant has been successfully Marked as Review Complete');
+            } else {
+                return redirect()->back()->with('success', 'Grant has been successfully Updated');
+            }
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/adminreports/grantlist')->with('success', 'Re-Reg Date updated successfully.');
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
     }
 
+    public function updateUnsubmitGrantRequest(Request $request, $grantId): RedirectResponse
+    {
+        $grantRequest = GrantRequest::find($grantId);
+
+        DB::beginTransaction();
+        try {
+            $grantRequest->submitted = null;
+            $grantRequest->submitted_at = null;
+            $grantRequest->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Grant Request has been successfully Unsubmitted.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        }
+    }
+
+    public function updateClearGrantReview(Request $request, $grantId): RedirectResponse
+    {
+        $grantRequest = GrantRequest::find($grantId);
+
+        DB::beginTransaction();
+        try {
+            $grantRequest->review_complete = null;
+            $grantRequest->completed_at = null;
+            $grantRequest->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Review Complete has been successfully Cleared.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        }
+    }
 }

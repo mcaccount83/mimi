@@ -36,7 +36,7 @@
                     @foreach($grantList as $grant)
                     <div class="card mb-2">
                         <div class="card-body">
-                            Date: {{ date('m/d/Y', strtotime($grant->created_at)) }}<br>
+                            Date: {{ date('m/d/Y', strtotime($grant->submitted_at)) }}<br>
                             Member in Need: {{ $grant->first_name }} {{ $grant->last_name }}<br>
                             Grant Submitted:
                                 @if ($grant->submitted == '1')

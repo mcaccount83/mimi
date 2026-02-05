@@ -14,7 +14,7 @@
                     <div class="card-header">
                         <div class="dropdown">
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Re-Registration Dates
+                                Grant Request List
                             </h3>
                             @include('layouts.dropdown_menus.menu_reports_admin')
                         </div>
@@ -32,8 +32,8 @@
                     <th>Member In Need</th>
                     <th>Grant Submitted</th>
                     <th>Grant Status</th>
-                    <th>Member Notified</th>
-                    <th>Chapter Notified</th>
+                    <th>Amount Awarded
+                    <th>Board Contact</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -65,23 +65,24 @@
                              @else
                               @endif
                         </td>
-                         <td>
-                            @if($list->mbr_notified == '1') Yes @else No @endif
-                        </td>
                         <td>
-                            @if($list->ch_notified == '1') Yes @else No @endif
+                             @if( $list->amount_awarded != null )
+                                ${{ $list->amount_awarded }}
+                            @endif
                         </td>
+                        <td><a href="mailto:{{ $list->board_email }}">{{ $list->board_email }}</a></td>
                     </tr>
                   @endforeach
                   </tbody>
                 </table>
             </div>
 
-              @if ($ITCondition)
+                @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input"
+                                {{ $checkBox5Status ? 'checked' : '' }} onchange="showInqAll()" />
+                            <label class="custom-control-label" for="showAll">Show All International Requests</label>
                         </div>
                     </div>
                 @endif

@@ -43,20 +43,19 @@
                     action='{{ route("board.updategrantrequest", ["id" => $grantDetails->id]) }}'>
                     @csrf
 
-                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
                     <input type="hidden" name="FurthestStep" id="FurthestStep" value="1">
-                    <input type="hidden" name="submitted" id="submitted" value="0">
+                    <input type="hidden" name="submitted" id="submitted" value="{{ $grantDetails['submitted'] ?? '' }}" />
 
             <div class="row">
     <div class="col-12" id="accordion">
         <!------Start Step 1: Consent ------>
-        <div class="card card-primary active">
+        <div class="card card-primary {{ $grantDetails->farthest_step_visited == '1' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-consent">
                 <h4 class="card-title w-100">
                     <a class="d-block" data-toggle="collapse" href="#collapseConsent" style="width: 100%;">BEFORE YOU BEGIN</a>
                 </h4>
             </div>
-            <div id="collapseConsent" class="collapse show" data-parent="#accordion">
+            <div id="collapseConsent" class="collapse {{ $grantDetails->farthest_step_visited == '1' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
                         <p><strong>Please read this section before filling out the questions!</strong></p>
@@ -100,13 +99,13 @@
         <!------End Step 1 ------>
 
         <!------Start Step 2: Submitter Information ------>
-        <div class="card card-primary">
+        <div class="card card-primary {{ $grantDetails->farthest_step_visited == '2' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-submitter">
                 <h4 class="card-title w-100">
                     <a class="d-block" data-toggle="collapse" href="#collapseSubmitter" style="width: 100%;">CHAPTER/BOARD SUBMITTING REQUEST</a>
                 </h4>
             </div>
-            <div id="collapseSubmitter" class="collapse" data-parent="#accordion">
+            <div id="collapseSubmitter" class="collapse {{ $grantDetails->farthest_step_visited == '2' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
                         <div class="col-12 form-row form-group">
@@ -160,13 +159,13 @@
         <!------End Step 2 ------>
 
         <!------Start Step 3: Member Information ------>
-        <div class="card card-primary">
+        <div class="card card-primary {{ $grantDetails->farthest_step_visited == '3' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-member">
                 <h4 class="card-title w-100">
                     <a class="d-block" data-toggle="collapse" href="#collapseMember" style="width: 100%;">MEMBER IN NEED</a>
                 </h4>
             </div>
-            <div id="collapseMember" class="collapse" data-parent="#accordion">
+            <div id="collapseMember" class="collapse {{ $grantDetails->farthest_step_visited == '3' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
                         <div class="col-12 form-row form-group">
@@ -275,7 +274,7 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <button type="button" id="btn-step-3" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp; Save & Continue</button>
+                            <button type="button" id="btn-step-3" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save</button>
                         </div>
                     </section>
                 </div>
@@ -284,13 +283,13 @@
         <!------End Step 3 ------>
 
         <!------Start Step 4: Situation Details ------>
-        <div class="card card-primary">
+        <div class="card card-primary {{ $grantDetails->farthest_step_visited == '4' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-situation">
                 <h4 class="card-title w-100">
                     <a class="d-block" data-toggle="collapse" href="#collapseSituation" style="width: 100%;">EXPLANATION OF SITUATION</a>
                 </h4>
             </div>
-            <div id="collapseSituation" class="collapse" data-parent="#accordion">
+            <div id="collapseSituation" class="collapse {{ $grantDetails->farthest_step_visited == '4' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
                        <div class="col-12 form-row form-group">
@@ -341,7 +340,7 @@
                     </div>
 
                         <div class="card-body text-center">
-                            <button type="button" id="btn-step-4" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp; Save & Continue</button>
+                            <button type="button" id="btn-step-4" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save</button>
                         </div>
                     </section>
                 </div>
@@ -350,13 +349,13 @@
         <!------End Step 4 ------>
 
         <!------Start Step 5: Grant Request ------>
-        <div class="card card-primary">
+        <div class="card card-primary {{ $grantDetails->farthest_step_visited == '5' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-request">
                 <h4 class="card-title w-100">
                     <a class="d-block" data-toggle="collapse" href="#collapseRequest" style="width: 100%;">GRANT REQUEST DETAILS</a>
                 </h4>
             </div>
-            <div id="collapseRequest" class="collapse" data-parent="#accordion">
+            <div id="collapseRequest" class="collapse {{ $grantDetails->farthest_step_visited == '5' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
                         <div class="col-12 form-row form-group">
@@ -406,7 +405,7 @@
                             <input type="hidden" name="PhotosPath" id="PhotosPath" value="{{ $grantDetails->photos_path }}">
 
                         <div class="card-body text-center">
-                            <button type="button" id="btn-step-5" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp; Save & Continue</button>
+                            <button type="button" id="btn-step-5" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save</button>
                         </div>
                     </section>
                 </div>
@@ -415,13 +414,13 @@
         <!------End Step 5 ------>
 
         <!------Start Step 6: Final Affirmation ------>
-        <div class="card card-primary">
+        <div class="card card-primary {{ $grantDetails->farthest_step_visited == '6' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-affirmation">
                 <h4 class="card-title w-100">
                     <a class="d-block" data-toggle="collapse" href="#collapseAffirmation" style="width: 100%;">CHAPTER BACKING & AFFIRMATION</a>
                 </h4>
             </div>
-            <div id="collapseAffirmation" class="collapse" data-parent="#accordion">
+            <div id="collapseAffirmation" class="collapse {{ $grantDetails->farthest_step_visited == '6' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
                        <div class="col-12 form-row form-group">
@@ -465,14 +464,15 @@
                             </div>
                         </div>
                     </div>
-                         <div class="form-group">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" name="affirmation" id="affirmation" class="custom-control-input" value="1" required>
-                                <label class="custom-control-label" for="affirmation">
-                                    I affirm that the information in this submission is true<span class="field-required">*</span>
-                                </label>
-                            </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="affirmation" id="affirmation" class="custom-control-input" value="1"
+                                {{ $grantDetails->affirmation == 1 ? 'checked' : '' }} required>
+                            <label class="custom-control-label" for="affirmation">
+                                I affirm that the information in this submission is true<span class="field-required">*</span>
+                            </label>
                         </div>
+                    </div>
 
                         <div class="card-body text-center">
                             <button type="submit" id="btn-submit" class="btn btn-success"><i class="fas fa-share-square"></i>&nbsp; Submit Grant Request</button>
@@ -503,16 +503,23 @@
 @endsection
 @section('customscript')
 <script>
-  /* Disable fields and buttons  */
-    $(document).ready(function () {
-            var userTypeId = @json($userTypeId);
-            var userAdmin = @json($userAdmin);
+    /* Disable fields and buttons  */
+$(document).ready(function () {
+    setTimeout(function () {
+        var submitted = @json($grantDetails->submitted);
+        var userTypeId = @json($userTypeId);
+        var userAdmin = @json($userAdmin);
 
-       if (userTypeId == 1 && userAdmin != 1) {
+        if (userTypeId == 1 && userAdmin != 1) {
             $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
+        } else if (submitted == 1) {
+            $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
+        } else {
+            $('button, input, select, textarea').prop('disabled', false);
         }
 
-        });
+    }, 1000); // 1-second delay
+});
 
 </script>
 
@@ -569,12 +576,14 @@ document.addEventListener('DOMContentLoaded', function() {
  /* Save & Submit Verification */
 $(document).ready(function() {
     function submitFormWithStep(step) {
+        $("#submitted").val('0');  // Add this - ensure it's saving, not submitting
         $("#FurthestStep").val(step);
         // Trigger the form's submit event properly (not .submit() method)
         var form = document.getElementById('grant_request');
         var event = new Event('submit', { cancelable: true, bubbles: true });
         form.dispatchEvent(event);
     }
+
     $("#btn-step-3").click(function() {
         if (!EnsureMemberInformation()) return false;
         submitFormWithStep(3);
@@ -587,13 +596,11 @@ $(document).ready(function() {
         if (!EnsureGrantRequest()) return false;
         submitFormWithStep(5);
     });
-    $("#btn-step-6").click(function() {
-        if (!EnsureAffirmation()) return false;
-        submitFormWithStep(6);
-    });
 });
 
-$("#btn-submit").click(async function() {
+$("#btn-submit").click(function(e) {
+    e.preventDefault();  // Add this to prevent double submission
+
     // Validation checks
     if (!EnsureMemberInformation()) return false;
     if (!EnsureSituationExplanation()) return false;
@@ -602,7 +609,7 @@ $("#btn-submit").click(async function() {
 
     // Use SweetAlert2 for the final confirmation
     Swal.fire({
-        title: 'Final Confirmation',
+        title: 'Grant Submission',
         text: "This will finalize and submit your grant request. You will no longer be able to edit this form. Do you wish to continue?",
         icon: 'warning',
         showCancelButton: true,
@@ -631,11 +638,7 @@ $("#btn-submit").click(async function() {
 
             // Trigger the form's submit event properly (not .submit() method)
             var form = document.getElementById('grant_request');
-            var event = new Event('submit', { cancelable: true, bubbles: true });
-            form.dispatchEvent(event);
-        } else {
-            // User cancelled
-            $(this).prop('disabled', false);
+            form.submit();  // Use direct submit here since we already validated
         }
     });
 });

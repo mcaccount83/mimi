@@ -42,11 +42,7 @@
                                 <label class="col-form-label">Chapter Available:</label>
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="available" id="available" class="custom-control-input"
-                                        @if($regionalCoordinatorCondition)
-                                                {{$inqDetails->available == 1 ? 'checked' : ''}}>
-                                                @else
-                                                {{$inqDetails->available == 1 ? 'checked' : ''}} disabled>
-                                                @endif
+                                        {{$inqDetails->available == 1 ? 'checked' : ''}}>
                                     <label class="custom-control-label" for="available"></label>
                                 </div>
                             </div>
@@ -229,7 +225,6 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-    @include('layouts.scripts.disablefields')
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

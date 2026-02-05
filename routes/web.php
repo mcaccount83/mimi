@@ -156,9 +156,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/adminreports/statelist', [AdminReportController::class, 'stateList'])->name('adminreports.statelist');
     Route::post('/adminreports/updatestate/{id}', [AdminReportController::class, 'updateState'])->name('adminreports.updatestate');
 
-    Route::get('/adminreports/grantlist', [AdminReportController::class, 'viewGrantList'])->name('adminreports.granttlist');
+    Route::get('/adminreports/grantlist', [AdminReportController::class, 'viewGrantList'])->name('adminreports.grantlist');
     Route::get('/adminreports/grantdetailsedit/{id}', [AdminReportController::class, 'editGrantDetails'])->name('adminreports.editgrantdetails');
     Route::post('/adminreports/grantdetailsupdate/{id}', [AdminReportController::class, 'UpdateGrantDetails'])->name('adminreports.updategrantdetails');
+    Route::get('/adminreports/unsubmitgrant/{id}', [AdminReportController::class, 'updateUnsubmitGrantRequest']);
+    Route::get('/adminreports/cleargrantreview/{id}', [AdminReportController::class, 'updateClearGrantReview']);
 });
 
 // User Controller Routes...Coordinator Login Required
@@ -409,6 +411,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/board/combinedirsupdates/pdf', [PDFController::class, 'generateCombinedIRSUpdates'])->name('pdf.combinedirsupdates');
     Route::get('/board/combinednamechangeletter/pdf/{id}', [PDFController::class, 'generateCombinedNameChangeLetter'])->name('pdf.combinednamechangeletter');
     Route::get('/board/combinedirsfilingcorrections/pdf', [PDFController::class, 'generateCombinedIRSFilingCorrections'])->name('pdf.combinedirsfilingcorrections');
+    Route::get('/board/grantrequest/pdf/{id}', [PDFController::class, 'generateFGrantRequest'])->name('pdf.grantrequest');
+    Route::post('/grant-request-pdf', [PDFController::class, 'saveGrantRequest'])->name('pdf.generategrantrequest');
 });
 
 // Google Controller -- Uploading Files Routes...Used for Board & Coordinator Layouts

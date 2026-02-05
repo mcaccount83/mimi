@@ -13,6 +13,7 @@ use App\Mail\ProbationChapWarningPartyLetter;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
 use App\Models\GoogleDrive;
+use App\Models\GrantRequest;
 use App\Services\PositionConditionsService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
@@ -1637,4 +1638,76 @@ class PDFController extends Controller
 
         return null; // Return null if upload fails
     }
+
+    /**
+     * Save & Send Grant Request
+     */
+    public function saveGrantRequest(Request $request, $grantId = null)
+    {
+        // Prefer route parameters if provided, else fallback to request
+        $chapterId = $chapterId ?? $request->chapterId;
+
+        $googleDrive = GoogleDrive::where('name', 'grant_uploads')->first();
+        $sharedDriveId = $googleDrive->folder_id;
+
+        $result = $this->generateGrantRequest($grantId);
+        $pdf = $result['pdf'];
+        $name = $result['filename'];
+
+        $pdfPath = storage_path('app/pdf_reports/'.$name);
+        $pdf->save($pdfPath);
+        $filename = basename($pdfPath);
+        $mimetype = 'application/pdf';
+        $filecontent = file_get_contents($pdfPath);
+
+        if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+            $existingDocRecord = GrantRequest::find($grantId);
+            if ($existingDocRecord) {
+                $existingDocRecord->grant_pdf_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for grant id {$grantId} not found");
+                $newDocData = ['id' => $grantId];
+                $newDocData['file_path'] = $file_id;
+                GrantRequest::create($newDocData);
+            }
+
+            return $pdfPath;  // Return the full local stored path
+        }
+    }
+
+    /**
+     * Generate Grant Request
+     */
+    public function generateGrantRequest($grantId)
+    {
+        $grantDetails = GrantRequest::with('chapters', 'state', 'country')
+            ->find($grantId);
+        $chId = $grantDetails->chapter_id;
+        $memberName = $grantDetails->first_name.' '.$grantDetails->last_name;
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateName = $chDetails->state->state_long_name;
+        $stateShortName = $baseQuery['stateShortName'];
+
+        $pdfData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getNewGrantData($grantDetails),
+        );
+
+        $pdf = Pdf::loadView('pdf.grantrequest', compact('pdfData'));
+
+        $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_'.$memberName.'_GrantRequest.pdf';
+
+        // if ($streamResponse) {
+        //     return $pdf->stream($filename, ['Attachment' => 0]);
+        // }
+
+        return [
+            'pdf' => $pdf,
+            'filename' => $filename,
+        ];
+    }
+
 }

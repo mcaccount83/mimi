@@ -1102,7 +1102,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $grantList = GrantRequest::with('chapters', 'state', 'country')
             ->where('chapter_id', $chId)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('submitted_at', 'desc')
             ->get();
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
@@ -1154,28 +1154,28 @@ class BoardController extends Controller implements HasMiddleware
         try {
             // Update fields - preserve existing values if new input is null/empty
             $grantRequest->farthest_step_visited = max($grantRequest->farthest_step_visited ?? 0, $input['FurthestStep'] ?? 0);
-            $grantRequest->email = $input['member_email'] ?? $grantRequest->email;
-            $grantRequest->phone = $input['member_phone'] ?? $grantRequest->phone;
-            $grantRequest->reachable = $input['member_reachable'] ?? $grantRequest->reachable;
-            $grantRequest->alt_phone = $input['member_alt_phone'] ?? $grantRequest->alt_phone;
-            $grantRequest->address = $input['member_street'] ?? $grantRequest->address;
-            $grantRequest->city = $input['member_city'] ?? $grantRequest->city;
-            $grantRequest->state_id = $input['member_state'] ?? $grantRequest->state_id;
+            $grantRequest->email = $input['member_email'] ?? null;
+            $grantRequest->phone = $input['member_phone'] ?? null;
+            $grantRequest->reachable = $input['member_reachable'] ?? null;
+            $grantRequest->alt_phone = $input['member_alt_phone'] ?? null;
+            $grantRequest->address = $input['member_street'] ?? null;
+            $grantRequest->city = $input['member_city'] ?? null;
+            $grantRequest->state_id = $input['member_state'] ?? null;
             $grantRequest->country_id = $input['member_country'] ?? $grantRequest->country_id ?? '198';
-            $grantRequest->zip = $input['member_zip'] ?? $grantRequest->zip;
-            $grantRequest->member_length = $input['member_length'] ?? $grantRequest->member_length;
-            $grantRequest->household_members = $input['household_members'] ?? $grantRequest->household_members;
-            $grantRequest->situation_summary = $input['situation_summary'] ?? $grantRequest->situation_summary;
-            $grantRequest->family_actions = $input['family_actions'] ?? $grantRequest->family_actions;
-            $grantRequest->financial_situation = $input['financial_situation'] ?? $grantRequest->financial_situation;
-            $grantRequest->pressing_needs = $input['pressing_needs'] ?? $grantRequest->pressing_needs;
-            $grantRequest->other_needs = $input['other_needs'] ?? $grantRequest->other_needs;
-            $grantRequest->amount_requested = $input['amount_requested'] ?? $grantRequest->amount_requested;
-            $grantRequest->chapter_support = $input['chapter_support'] ?? $grantRequest->chapter_support;
-            $grantRequest->additional_info = $input['additional_info'] ?? $grantRequest->additional_info;
-            $grantRequest->previous_grant = $input['previous_grant'] ?? $grantRequest->previous_grant;
-            $grantRequest->chapter_backing = $input['chapter_backing'] ?? $grantRequest->chapter_backing;
-            $grantRequest->m2m_donation = $input['m2m_donation'] ?? $grantRequest->m2m_donation;
+            $grantRequest->zip = $input['member_zip'] ?? null;
+            $grantRequest->member_length = $input['member_length'] ?? null;
+            $grantRequest->household_members = $input['household_members'] ?? null;
+            $grantRequest->situation_summary = $input['situation_summary'] ?? null;
+            $grantRequest->family_actions = $input['family_actions'] ?? null;
+            $grantRequest->financial_situation = $input['financial_situation'] ?? null;
+            $grantRequest->pressing_needs = $input['pressing_needs'] ?? null;
+            $grantRequest->other_needs = $input['other_needs'] ?? null;
+            $grantRequest->amount_requested = $input['amount_requested'] ?? null;
+            $grantRequest->chapter_support = $input['chapter_support'] ?? null;
+            $grantRequest->additional_info = $input['additional_info'] ?? null;
+            $grantRequest->previous_grant = $input['previous_grant'] ?? null;
+            $grantRequest->chapter_backing = $input['chapter_backing'] ?? null;
+            $grantRequest->m2m_donation = $input['m2m_donation'] ?? null;
 
             // Checkboxes - if present in request, set to 1, otherwise keep existing value
             if (isset($input['affirmation'])) {
@@ -1185,6 +1185,7 @@ class BoardController extends Controller implements HasMiddleware
             // If submitting the grant
             if ($grantReceived == 1) {
                 $grantRequest->submitted = 1;
+                $grantRequest->submitted_at = Carbon::now();
             }
 
             $grantRequest->save();
@@ -1194,10 +1195,12 @@ class BoardController extends Controller implements HasMiddleware
             $chapterId = $grantDetails->chapter_id;
 
             $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
-            $emailListCoord = $baseQuery['emailListCoord'];  // Full Coordinaor List
+            $chDetails = $baseQuery['chDetails'];
+            $stateShortName = $baseQuery['stateShortName'];
             $emailCC = $baseQuery['emailCC'];  // CC Email
 
             $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getNewGrantData($grantDetails),
             );
 
@@ -1207,13 +1210,13 @@ class BoardController extends Controller implements HasMiddleware
                 'mailTable' => $mailTable,
             ]);
 
-              if ($grantRequest == 1) {
+              if ($grantReceived == 1) {
                 $pdfPath = $this->pdfController->saveGrantRequest($request, $grantId);   // Generate and Send the PDF
-                Mail::to($emailCC)
+                Mail::to($submitEmail)
                     // ->cc($emailCC)
                     ->queue(new GrantRequestThankYou($mailData, $pdfPath));
 
-                Mail::to($submitEmail)
+                Mail::to($emailCC)
                     // ->cc($emailCC)
                     ->queue(new GrantRequestNotice($mailData, $pdfPath));
             }

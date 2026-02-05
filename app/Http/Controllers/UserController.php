@@ -758,4 +758,54 @@ class UserController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
+
+     /**
+     * Load Grant Reviewer Dropdown List
+     */
+    // Remove the reportReviewer relationship entirely and just query coordinators directly
+    public function loadGrantReviewerList($chConfId)
+    {
+        $grList = Coordinators::with(['displayPosition', 'secondaryPosition'])
+            ->where('active_status', 1)
+            ->where(function ($query) use ($chConfId) {
+                // Non-CC positions (any conference)
+                $query->whereIn('position_id', [
+                    CoordinatorPosition::M2M,
+                    CoordinatorPosition::M2M2,
+                    CoordinatorPosition::FOUNDER,
+                ])
+                // OR CC only for this conference
+                ->orWhere(function ($q) use ($chConfId) {
+                    $q->where('position_id', CoordinatorPosition::CC)
+                    ->where('conference_id', $chConfId);
+                });
+            })
+            ->get();
+
+        $glDetails = $grList->map(function ($coordinator) {
+            $mainTitle = $coordinator->displayPosition->short_title ?? '';
+            $secondaryTitles = '';
+
+            if (! empty($coordinator->secondaryPosition) && $coordinator->secondaryPosition->count() > 0) {
+                $secondaryTitles = $coordinator->secondaryPosition->pluck('short_title')->implode('/');
+            }
+
+            $combinedTitle = $mainTitle;
+            if (! empty($secondaryTitles)) {
+                $combinedTitle .= '/'.$secondaryTitles;
+            }
+
+            $cpos = "({$combinedTitle})";
+
+            return [
+                'cid' => $coordinator->id,
+                'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
+                'dpos' => $mainTitle,
+                'cpos' => $cpos,
+                'regid' => $coordinator->region_id,
+            ];
+        });
+
+        return $glDetails->unique('cid');
+    }
 }
