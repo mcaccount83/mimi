@@ -544,7 +544,7 @@
                         <h5>Resources</h5>
                             <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.viewresources', ['id' => $chDetails->id]) }}'">Chapter Resources</button><br>
                             <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.viewelearning', ['id' => $chDetails->id]) }}'">eLearning Library</button><br>
-                            <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.viewgrantrequestlist', ['id' => $chDetails->id]) }}'">Chapter Grants List</button><br>
+                            {{-- <button id="Resources" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location='{{ route('board.viewgrantrequestlist', ['id' => $chDetails->id]) }}'">Chapter Grants List</button><br> --}}
                             {{-- <button id="eLearning" type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn bg-primary mb-1 btn-sm">eLearning Library</button><br> --}}
 
                         </li>
