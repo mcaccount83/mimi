@@ -79,7 +79,7 @@
                             <input type="checkbox" name="member_agree" id="member_agree" class="custom-control-input" value="1"
                                 {{ $grantDetails->member_agree == 1 ? 'checked' : '' }} disabled>
                             <label class="custom-control-label" for="member_agree">
-                                The mother has been asked if she wants you to submit this grant on her behalf<span class="field-required">*</span>
+                                Some people do not want a grant request to be submitted for them. The mother has been asked if she wants you to submit this grant on her behalf<span class="field-required">*</span>
                             </label>
                         </div>
                     </div>
