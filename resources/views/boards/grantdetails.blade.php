@@ -112,13 +112,13 @@
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
                                     <label>Chapter Name<span class="field-required">*</span></label>
-                                    <input type="text" class="form-control" name="chapter_name" value="{{ $grantDetails->chapters->name }}" disabled>
+                                    <input type="text" class="form-control" name="chapter_name" id="chapter" value="{{ $grantDetails->chapters->name }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
                                     <label>Chapter State<span class="field-required">*</span></label>
-                                    <input type="text" class="form-control" name="chapter_name" value="{{$grantDetails->chapters->state->state_long_name}}" disabled>
+                                    <input type="text" class="form-control" name="chapter_name" id="chapter" value="{{$grantDetails->chapters->state->state_long_name}}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -127,13 +127,13 @@
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
                                     <label>Board Member Name<span class="field-required">*</span></label>
-                                    <input type="text" class="form-control" name="submitter_name" value="{{ $grantDetails->board_name }}" disabled>
+                                    <input type="text" class="form-control" name="submitter_name" id="submitter" value="{{ $grantDetails->board_name }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
                                     <label>Board Member Position<span class="field-required">*</span></label>
-                                    <input type="text" class="form-control" name="submitter_position" value="{{ $grantDetails->board_position }}" disabled>
+                                    <input type="text" class="form-control" name="submitter_position" id="submitter" value="{{ $grantDetails->board_position }}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -142,13 +142,13 @@
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
                                     <label>Board Member Phone<span class="field-required">*</span></label>
-                                    <input type="text" class="form-control" name="submitter_name" value="{{ $grantDetails->board_phone }}" disabled>
+                                    <input type="text" class="form-control" name="submitter_name" id="submitter" value="{{ $grantDetails->board_phone }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
                                     <label>Board Member Email<span class="field-required">*</span></label>
-                                    <input type="text" class="form-control" name="submitter_position" value="{{ $grantDetails->board_email }}" disabled>
+                                    <input type="text" class="form-control" name="submitter_position" id="submitter" value="{{ $grantDetails->board_email }}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -258,7 +258,8 @@
                         <div class="col-12 form-row form-group">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>How long has the mother been a member?<span class="field-required">*</span></label>
+                                    <label>How long has the mother-in-need been a member of your chapter? You may answer with a join date or the number of years/months she has been in your chapter.
+                                        Is she a member now or has she "retired" or moved from your chapter?<span class="field-required">*</span></label>
                                     <textarea class="form-control" rows="2" name="member_length" required>{{ $grantDetails->member_length }}</textarea>
                                 </div>
                             </div>
@@ -267,11 +268,34 @@
                         <div class="col-12 form-row form-group">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Who is living in the home?<span class="field-required">*</span></label>
+                                    <label>Who is living in the home? Is there a spouse? How many family members and what are the ages of the children?<span class="field-required">*</span></label>
                                     <textarea class="form-control" rows="2" name="household_members" required>{{ $grantDetails->household_members }}</textarea>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-12 form-row form-group">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>If the member's home is uninhabitable, where is she living now? Please provide mailing address if different from above.<span class="field-required">*</span></label>
+                                    <textarea class="form-control" rows="2" name="household_members" required>{{ $grantDetails->alt_address }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="col-12 form-row form-group">
+                        <label>Has the chapter ever asked for a grant for this mother or family in the past?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-right: 20px;">
+                                <input class="form-check-input" type="radio" id="PreviousGrantYes" name="previous_grant" value="1" {{ $grantDetails->previous_grant == 1 ? 'checked' : '' }} required>
+                                <label class="form-check-label" for="PreviousGrantYes">Yes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="PreviousGrantNo" name="previous_grant" value="0" {{ !is_null($grantDetails->previous_grant) && $grantDetails->previous_grant == 0 ? 'checked' : '' }}>
+                                <label class="form-check-label" for="PreviousGrantNo">No</label>
+                            </div>
+                        </div>
+                    </div>
 
                         <div class="card-body text-center">
                             <button type="button" id="btn-step-3" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save</button>
@@ -292,11 +316,18 @@
             <div id="collapseSituation" class="collapse {{ $grantDetails->farthest_step_visited == '4' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
+                        <p><strong>Please be as specific as possible.</strong></p>
+                        <p>Did their house catch on fire? If so, how did the fire start and what was lost? If someone has a life-threatening illness, be specific.
+                            Don’t just say they are sick, but tell us what their illness is and how it is impacting the family and their finances.</p>
+                        <p>if the need is for childcare while the mother is undergoing treatment, tell us how much that childcare will cost, how many weeks it will be needed,
+                                    why they cannot afford it and why your chapter cannot help with that. If they cannot afford their medication, what medication do they need and how much would it cost them?
+                                    If they need help traveling to treatment, where is the treatment, how many times will they need to go and how much will each trip cost?</p>
+                        <p>The more specific information we have, the faster the Committee can make its decision.</p>
+                        <br>
                        <div class="col-12 form-row form-group">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Please provide a summary of the situation<span class="field-required">*</span></label>
-                                <p><small><i>Be specific: if their house caught on fire, how did the fire start and what was lost.  If someone has a life-threatening illness, be specific.  Etc.</i></small></p>
+                                <label>Please provide a summary of the situation. What happened, how did it happen and what is the result of it?<span class="field-required">*</span></label>
                                 <textarea class="form-control" rows="4" name="situation_summary" required>{{ $grantDetails->situation_summary }}</textarea>
                             </div>
                         </div>
@@ -314,7 +345,8 @@
                     <div class="col-12 form-row form-group">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>What is the financial situation of the family?<span class="field-required">*</span></label>
+                                <label>What is the financial situation of the family? Do they have insurance that will help with this? How much will it cover?
+                                    Do they have savings? If so, how much? Are they getting help from their family or any other grants or loans?<span class="field-required">*</span></label>
                                 <textarea class="form-control" rows="4" name="financial_situation" required>{{ $grantDetails->financial_situation }}</textarea>
                             </div>
                         </div>
@@ -323,8 +355,7 @@
                     <div class="col-12 form-row form-group">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>What are the family's most pressing needs right now?<span class="field-required">*</span></label>
-                                <p><small><i>Be specific: if the need is for childcare, tell us how much that childcare will cost, how many weeks it will be needed, etc.</i></small></p>
+                                <label>What are the family’s most pressing needs right now? What are they having to do without because of this situation?<span class="field-required">*</span></label>
                                 <textarea class="form-control" rows="4" name="pressing_needs" required>{{ $grantDetails->pressing_needs }}</textarea>
                             </div>
                         </div>
@@ -333,7 +364,7 @@
                     <div class="col-12 form-row form-group">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Is there anything else the family needs?<span class="field-required">*</span></label>
+                                <label>Is there anything else that the family needs and is having to do without because of the situation?<span class="field-required">*</span></label>
                                 <textarea class="form-control" rows="4" name="other_needs" required>{{ $grantDetails->other_needs }}</textarea>
                             </div>
                         </div>
@@ -370,7 +401,8 @@
                         <div class="col-12 form-row form-group">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>How has the chapter supported the member up to this point?<span class="field-required">*</span></label>
+                                    <label>A chapter should always be the first ones to help a member-in-need. How has the chapter supported the member up to this point?
+                                        Has the chapter done any fundraisers or made any donations to the family? What are the chapter’s future plans to help this family?<span class="field-required">*</span></label>
                                     <textarea class="form-control" rows="4" name="chapter_support" required>{{ $grantDetails->chapter_support }}</textarea>
                                 </div>
                             </div>
@@ -379,7 +411,7 @@
                         <div class="col-12 form-row form-group">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Is there anything else we should know?</label>
+                                    <label>Is there anything else we should know about this family or their situation?</label>
                                     <textarea class="form-control" rows="4" name="additional_info">{{ $grantDetails->additional_info }}</textarea>
                                 </div>
                             </div>
@@ -395,7 +427,7 @@
                                 </div>
                         @else
                             <div class="col-md-12" id="PhotosBlock">
-                                    <label class="mr-2">Upload Photos of Damage (if applicable)</label><br>
+                                    <label class="mr-2">If there was damage to the member’s home or property, please upload any pictures here.</label><br>
                                     <strong style="color:red">Please Note</strong>
                                         This will refresh the screen - be sure to save all other work before clicking button to Upload Photos.<br>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="fas fa-upload mr-2"></i>Upload Photos</button>
@@ -423,22 +455,9 @@
             <div id="collapseAffirmation" class="collapse {{ $grantDetails->farthest_step_visited == '6' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
-                       <div class="col-12 form-row form-group">
-                        <label>Has the chapter ever asked for a grant for this mother or family in the past?<span class="field-required">*</span></label>
-                        <div class="col-md-12 row">
-                            <div class="form-check" style="margin-right: 20px;">
-                                <input class="form-check-input" type="radio" id="PreviousGrantYes" name="previous_grant" value="1" {{ $grantDetails->previous_grant == 1 ? 'checked' : '' }} required>
-                                <label class="form-check-label" for="PreviousGrantYes">Yes</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" id="PreviousGrantNo" name="previous_grant" value="0" {{ !is_null($grantDetails->previous_grant) && $grantDetails->previous_grant == 0 ? 'checked' : '' }}>
-                                <label class="form-check-label" for="PreviousGrantNo">No</label>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="col-12 form-row form-group">
-                        <label>Does the chapter stand behind this request?<span class="field-required">*</span></label>
+                        <label>Does the chapter stand behind this request for a grant? Has the Executive Board discussed the situation and decided to submit this request?
+                            And does the Executive Board assure the Mother-to-Mother Fund Committee that the information in this request is true?<span class="field-required">*</span></label>
                         <div class="col-md-12 row">
                             <div class="form-check" style="margin-right: 20px;">
                                 <input class="form-check-input" type="radio" id="BackingYes" name="chapter_backing" value="1" {{ $grantDetails->chapter_backing == 1 ? 'checked' : '' }} required>
@@ -452,7 +471,7 @@
                     </div>
 
                     <div class="col-12 form-row form-group">
-                        <label>Has the chapter donated to the Mother-to-Mother Fund?<span class="field-required">*</span></label>
+                        <label>Has the chapter donated to the Mother-to-Mother Fund in the past?<span class="field-required">*</span></label>
                         <div class="col-md-12 row">
                             <div class="form-check" style="margin-right: 20px;">
                                 <input class="form-check-input" type="radio" id="DonationYes" name="m2m_donation" value="1" {{ $grantDetails->m2m_donation == 1 ? 'checked' : '' }} required>
@@ -469,7 +488,7 @@
                             <input type="checkbox" name="affirmation" id="affirmation" class="custom-control-input" value="1"
                                 {{ $grantDetails->affirmation == 1 ? 'checked' : '' }} required>
                             <label class="custom-control-label" for="affirmation">
-                                I affirm that the information in this submission is true<span class="field-required">*</span>
+                                I affirm that the information in this submission is true and the mother-in-need agrees with the submission and the information herein.<span class="field-required">*</span>
                             </label>
                         </div>
                     </div>
@@ -515,12 +534,14 @@ $(document).ready(function () {
         } else if (submitted == 1) {
             $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
         } else {
+            // Enable all fields except btn-back
             $('button, input, select, textarea').prop('disabled', false);
+            // Then specifically disable the fields that should always be disabled
+            $('#understood, #member_agree, #member_accept, #chapter, #submitter').prop('disabled', true);
         }
 
     }, 1000); // 1-second delay
 });
-
 </script>
 
 <script>
