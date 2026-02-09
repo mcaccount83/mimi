@@ -378,6 +378,14 @@ class BaseMailDataController extends Controller
         ];
     }
 
+    public function getDateData($dateOptions)
+    {
+        return [
+            'currentDateWords' => $dateOptions->currentDateWords,
+            'nextMonthDateWords' => $dateOptions->nextMonthDateWords,
+        ];
+    }
+
     public function getReRegData($startMonthId)
     {
         $startDate = Carbon::createFromDate(null, $startMonthId, 1);

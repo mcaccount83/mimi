@@ -500,7 +500,6 @@ class ChapterController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails),
-                $this->baseMailDataController->getReRegData($startMonthId),
             );
 
             // ListAdmin Notification//

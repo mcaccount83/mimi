@@ -370,14 +370,15 @@ class PDFController extends Controller
         $PresDetails = $baseActiveBoardQuery['PresDetails'];
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
-        $currentDateWords = $dateOptions['currentDateWords'];
+        // $currentDateWords = $dateOptions['currentDateWords'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
             $this->baseMailDataController->getCCData($emailCCData),
+            $this->baseMailDataController->getDateData($dateOptions),
             [
-                'currentDateWords' => $currentDateWords,
+                // 'currentDateWords' => $currentDateWords,
             ]
         );
 
@@ -526,16 +527,18 @@ class PDFController extends Controller
         $user = $this->userController->loadUserInformation($request);
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
-        $currentDateWords = $dateOptions['currentDateWords'];
-        $nextMonthDateWords = $dateOptions['nextMonthDateWords'];
+        // $currentDateWords = $dateOptions['currentDateWords'];
+        // $nextMonthDateWords = $dateOptions['nextMonthDateWords'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
+            $this->baseMailDataController->getDateData($dateOptions),
             [
-                'currentDateWords' => $currentDateWords,
-                'nextMonthDateWords' => $nextMonthDateWords,
+                // 'currentDateWords' => $currentDateWords,
+                // 'nextMonthDateWords' => $nextMonthDateWords,
+                'startMonth' => $startMonthName,
             ]
         );
 
@@ -699,16 +702,17 @@ class PDFController extends Controller
         $user = $this->userController->loadUserInformation($request);
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
-        $currentDateWords = $dateOptions['currentDateWords'];
-        $nextMonthDateWords = $dateOptions['nextMonthDateWords'];
+        // $currentDateWords = $dateOptions['currentDateWords'];
+        // $nextMonthDateWords = $dateOptions['nextMonthDateWords'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getUserData($user),
             $this->baseMailDataController->getPresData($PresDetails),
+            $this->baseMailDataController->getDateData($dateOptions),
             [
-                'currentDateWords' => $currentDateWords,
-                'nextMonthDateWords' => $nextMonthDateWords,
+                // 'currentDateWords' => $currentDateWords,
+                // 'nextMonthDateWords' => $nextMonthDateWords,
                 'startMonth' => $startMonthName,
             ]
         );
@@ -868,17 +872,18 @@ class PDFController extends Controller
         $emailEINCoorData = $this->userController->loadEINCoord();
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
-        $currentDateWords = $dateOptions['currentDateWords'];
-        $twoMonthsDateWords = $dateOptions['twoMonthsDateWords'];
+        // $currentDateWords = $dateOptions['currentDateWords'];
+        // $twoMonthsDateWords = $dateOptions['twoMonthsDateWords'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
             $this->baseMailDataController->getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd),
             $this->baseMailDataController->getPresData($PresDetails),
             $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+            $this->baseMailDataController->getDateData($dateOptions),
             [
-                'currentDateWords' => $currentDateWords,
-                'twoMonthsDateWords' => $twoMonthsDateWords,
+                // 'currentDateWords' => $currentDateWords,
+                // 'twoMonthsDateWords' => $twoMonthsDateWords,
                 'chNamePrev' => $chNamePrev,
             ]
         );
@@ -909,14 +914,15 @@ class PDFController extends Controller
         $emailEINCoorData = $this->userController->loadEINCoord();
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
-        $currentDateWords = $dateOptions['currentDateWords'];
+        // $currentDateWords = $dateOptions['currentDateWords'];
 
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getCCData($emailCCData),
             $this->baseMailDataController->getPresData($PresDetails),
+            $this->baseMailDataController->getDateData($dateOptions),
             [
-                'currentDateWords' => $currentDateWords,
+                // 'currentDateWords' => $currentDateWords,
             ]
         );
 
@@ -1145,7 +1151,7 @@ class PDFController extends Controller
         $currentDate = $dateOptions['currentDate'];
         $startFormatted = $inputDate->format('F Y');
         $todayFormatted = $currentDate->format('F Y');
-        $currentDateWords = $dateOptions['currentDateWords'];
+        // $currentDateWords = $dateOptions['currentDateWords'];
 
         // Get the add and zap lists
         $chapterAddList = $this->generateIRSAddList2($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
@@ -1158,8 +1164,9 @@ class PDFController extends Controller
 
         $pdfData = array_merge(
             $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+            $this->baseMailDataController->getDateData($dateOptions),
             [
-                'currentDateWords' => $currentDateWords,
+                // 'currentDateWords' => $currentDateWords,
                 'startDate' => $startDateWwords,
                 'startFormatted' => $startFormatted,
                 'todayFormatted' => $todayFormatted,
@@ -1385,7 +1392,7 @@ class PDFController extends Controller
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDate = $dateOptions['currentDate'];
-        $currentDateWords = $dateOptions['currentDateWords'];
+        // $currentDateWords = $dateOptions['currentDateWords'];
 
         // Get the add and zap lists
         $wrongDateList = $this->generateIRSWrongDateList($coorId, $confId, $regId, $positionId, $secPositionId);
@@ -1399,8 +1406,9 @@ class PDFController extends Controller
 
         $pdfData = array_merge(
             $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+            $this->baseMailDataController->getDateData($dateOptions),
             [
-                'currentDateWords' => $currentDateWords,
+                // 'currentDateWords' => $currentDateWords,
                 'totalPages' => $totalPages,
                 'followPages' => $followPages,
                 'wrongDateList' => $wrongDateList,
@@ -1533,14 +1541,15 @@ class PDFController extends Controller
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDate = $dateOptions['currentDate'];
-        $currentDateWords = $dateOptions['currentDateWords'];
+        // $currentDateWords = $dateOptions['currentDateWords'];
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
         $pdfData = array_merge(
             $this->baseMailDataController->getEINCoorData($emailEINCoorData),
+            $this->baseMailDataController->getDateData($dateOptions),
             [
-                'currentDateWords' => $currentDateWords,
+                // 'currentDateWords' => $currentDateWords,
                 'totalPages' => $totalPages,
                 'followPages' => $followPages,
                 'title' => $title,
