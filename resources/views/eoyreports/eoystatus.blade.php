@@ -54,7 +54,7 @@
                         <tr>
                             <td class="text-center align-middle">
                                 @if($coordinatorCondition)
-                                    <a href="{{ url("/eoy/editstatus/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ url("/eoyreports/editstatus/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                                 @endif
                             </td>
                             <td class="text-center align-middle">

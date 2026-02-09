@@ -14,9 +14,9 @@
                     <div class="card-header">
                         <div class="dropdown">
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Re-Registration Dates
+                                Re-Registration Report
                             </h3>
-                            @include('layouts.dropdown_menus.menu_reports_admin')
+                            @include('layouts.dropdown_menus.menu_reports_payment')
                         </div>
                     </div>
                  <!-- /.card-header -->
@@ -38,7 +38,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                   <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/adminreports/reregdate/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/paymentreports/reregedit/{$list->id}") }}"><i class="fas fa-edit"></i></a></td>
                         <td>
                             @if ($list->region?->short_name != "None" )
                                 {{ $list->conference->short_name }} / {{ $list->region?->short_name }}

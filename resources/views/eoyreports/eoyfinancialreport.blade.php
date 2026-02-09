@@ -53,7 +53,7 @@
                     @endphp
                     <tr>
                         <td class="text-center align-middle">
-                            <a href="{{ url("/eoy/reviewfinancialreport/{$list->id}") }}"><i class="fas fa-edit"></i></a>
+                            <a href="{{ url("/eoyreports/reviewfinancialreport/{$list->id}") }}"><i class="fas fa-edit"></i></a>
                         </td>
                         <td class="text-center align-middle">
                             @if($list->documentsEOY->financial_report_received == '1' && $list->documentsEOY->$yearColumnName != null)

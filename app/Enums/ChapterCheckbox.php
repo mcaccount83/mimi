@@ -21,6 +21,10 @@ class ChapterCheckbox
 
     const INTERNATIONALINQUIRIES = 'check8';    // Show all international outstaning inquiries
 
+    const M2MDONATIONS = 'check9';              // Show m2m donations only
+
+    const INTERNATIONALM2MDONATIONS = 'check10';    // Show all international m2m donations
+
     // Checkbox Keys (for return array)
     const CHECK_PRIMARY = 'checkBoxStatus';
 
@@ -37,4 +41,8 @@ class ChapterCheckbox
     const CHECK_INQUIRIES = 'checkBox7Status';
 
     const CHECK_INTERNATIONALINQUIRIES = 'checkBox8Status';
+
+    const CHECK_M2MDONATIONS = 'checkBox9Status';
+
+    const CHECK_INTERNATIONALM2MDONATIONS = 'checkBox10Status';
 }

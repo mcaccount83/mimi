@@ -14,9 +14,9 @@
                     <div class="card-header">
                         <div class="dropdown">
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Grant Request List
+                                Grant Request Report
                             </h3>
-                            @include('layouts.dropdown_menus.menu_reports_admin')
+                            @include('layouts.dropdown_menus.menu_reports_payment')
                         </div>
                     </div>
                  <!-- /.card-header -->
@@ -32,14 +32,14 @@
                     <th>Member In Need</th>
                     <th>Grant Submitted</th>
                     <th>Grant Status</th>
-                    <th>Amount Awarded
+                    <th>Amount Awarded</th>
                     <th>Board Contact</th>
                 </tr>
                 </thead>
                 <tbody>
                     @foreach($grantList as $list)
                   <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/adminreports/grantdetailsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/paymentreports/grantdetailsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>
                             @if ($list->chapters->region?->short_name != "None" )
                                 {{ $list->chapters->conference->short_name }} / {{ $list->chapters->region?->short_name }}
@@ -61,9 +61,8 @@
                         </td>
                          <td>
                             @if($list->grant_approved == '1') Approved
-                            @elseif($list->grant_approved == '1') Declined
-                             @else
-                              @endif
+                            @elseif($list->grant_approved == '0') Declined
+                             @else No Decision Made @endif
                         </td>
                         <td>
                              @if( $list->amount_awarded != null )

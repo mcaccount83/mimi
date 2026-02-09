@@ -2311,7 +2311,7 @@
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "{{ url('/eoy/unsubmit/' . $chDetails->id) }}";
+                window.location.href = "{{ url('/eoyreports/unsubmit/' . $chDetails->id) }}";
             }
         });
     });
@@ -2333,7 +2333,7 @@
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "{{ url('/eoy/clearreview/' . $chDetails->id) }}";
+                window.location.href = "{{ url('/eoyreports/clearreview/' . $chDetails->id) }}";
             }
         });
     });

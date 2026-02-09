@@ -963,7 +963,7 @@
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "{{ url('/eoy/unsubmitfinal/' . $chDetails->id) }}";
+                window.location.href = "{{ url('/eoyreports/unsubmitfinal/' . $chDetails->id) }}";
             }
         });
     });

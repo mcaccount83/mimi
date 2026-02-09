@@ -16,14 +16,14 @@
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Payment Log Details
                             </h3>
-                            @include('layouts.dropdown_menus.menu_reports_admin')
+                            @include('layouts.dropdown_menus.menu_reports_payment')
                         </div>
                     </div>
             <!-- /.card-header -->
     <!-- /.card-header -->
     <div class="card-body">
             <div class="mb-4">
-                    <a href="{{ route('adminreports.paymentlist') }}" class="text-blue-600 hover:underline">
+                    <a href="{{ route('paymentreports.paymentlog') }}" class="text-blue-600 hover:underline">
                             &larr; Back to Payment Logs
                 </a>
             </div>

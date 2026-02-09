@@ -7,6 +7,7 @@ use App\Models\Chapters;
 use App\Models\Conference;
 use App\Models\GrantRequest;
 use App\Models\PaymentLog;
+use App\Models\PaymentHistory;
 use App\Models\Payments;
 use App\Models\Region;
 use App\Models\RegionInquiry;
@@ -43,219 +44,256 @@ class AdminReportController extends Controller implements HasMiddleware
         ];
     }
 
-    /**
-     * View Payment Log List
-     */
-    public function paymentList(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $confId = $user['confId'];
+//     /**
+//      * View Payment Log List
+//      */
+//     public function paymentList(Request $request): View
+//     {
+//         $user = $this->userController->loadUserInformation($request);
+//         $confId = $user['confId'];
 
-        $query = PaymentLog::with('board');
+//         $query = PaymentLog::with('board');
 
-        // Check if international checkbox is selected
-        $showInternational = $request->has(ChapterCheckbox::INTERNATIONAL) &&
-                            $request->get(ChapterCheckbox::INTERNATIONAL) == 'yes';
+//         // Check if international checkbox is selected
+//         $showInternational = $request->has(ChapterCheckbox::INTERNATIONAL) &&
+//                             $request->get(ChapterCheckbox::INTERNATIONAL) == 'yes';
 
-        // Filter by conference unless international is selected
-        if (! $showInternational) {
-            $query->where('conf', $confId);
-        }
+//         // Filter by conference unless international is selected
+//         if (! $showInternational) {
+//             $query->where('conf', $confId);
+//         }
 
-        // Add additional filters if needed
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
+//         // Add additional filters if needed
+//         if ($request->has('status')) {
+//             $query->where('status', $request->status);
+//         }
 
-        if ($request->has('date')) {
-            $query->whereDate('created_at', $request->date);
-        }
+//         if ($request->has('date')) {
+//             $query->whereDate('created_at', $request->date);
+//         }
 
-        $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
+//         $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
 
-        // Set checkbox status based on URL parameter
-        $checkBox5Status = $showInternational ? 'checked' : '';
+//         // Set checkbox status based on URL parameter
+//         $checkBox5Status = $showInternational ? 'checked' : '';
 
-        $data = [
-            'paymentLogs' => $paymentLogs,
-            'checkBox5Status' => $checkBox5Status,
-        ];
+//         $data = [
+//             'paymentLogs' => $paymentLogs,
+//             'checkBox5Status' => $checkBox5Status,
+//         ];
 
-        return view('adminreports.paymentlist')->with($data);
-    }
+//         return view('adminreports.paymentlist')->with($data);
+//     }
 
-    /**
-     * View Payment Log Transaction Details
-     */
-    public function paymentDetails($id): View
-    {
-        $log = PaymentLog::findOrFail($id);
+//     /**
+//      * View Payment Log Transaction Details
+//      */
+//     public function paymentDetails($id): View
+//     {
+//         $log = PaymentLog::findOrFail($id);
 
-        $data = ['log' => $log];
+//         $data = ['log' => $log];
 
-        return view('adminreports.paymentdetails')->with($data);
-    }
+//         return view('adminreports.paymentdetails')->with($data);
+//     }
 
-    /**
-     * View List of ReReg Payments if Dates Need to be Udpated
-     */
-    public function showReRegDate(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['cdId'];
-        $confId = $user['confId'];
-        $regId = $user['regId'];
-        $positionId = $user['cdPositionId'];
-        $secPositionId = $user['cdSecPositionId'];
+//   public function donationList(Request $request): View
+// {
+//     $user = $this->userController->loadUserInformation($request);
+//     $confId = $user['confId'];
 
-        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+//     $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
+//     $checkBox9Status = $request->has(\App\Enums\ChapterCheckbox::M2MDONATIONS);
+//     $checkBox10Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONALM2MDONATIONS);
 
-        $data = ['chapterList' => $chapterList, 'checkBox5Status' => $checkBox5Status];
+//     // Base query
+//     $query = PaymentHistory::with('chapter')
+//         ->join('chapters', 'payment_history.chapter_id', '=', 'chapters.id')
+//         ->where('chapters.active_status', '1');
 
-        return view('adminreports.reregdate')->with($data);
-    }
+//     // Add payment type filter based on checkboxes
+//     if ($checkBox9Status) {
+//         // Show only M2M donations
+//         $query->where('payment_history.payment_type', 'm2m');
+//     } elseif ($checkBox10Status) {
+//         // Show international M2M donations
+//         $query->where('payment_history.payment_type', 'm2m');
+//     } else {
+//         // Show both M2M and sustaining (default)
+//         $query->where(function($q) {
+//             $q->where('payment_history.payment_type', 'm2m')
+//               ->orWhere('payment_history.payment_type', 'sustaining');
+//         });
+//     }
 
-    public function editReRegDate(Request $request, $id): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['cdId'];
-        $confId = $user['confId'];
+//     // Add conference filter
+//     if (!$checkBox5Status && !$checkBox10Status) {
+//         // Not showing international - filter by conference
+//         $query->where('chapters.conference_id', $confId);
+//     }
+//     // If checkBox5Status OR checkBox10Status is true, show all conferences (international)
 
-        $baseQuery = $this->baseChapterController->getChapterDetails($id);
-        $chDetails = $baseQuery['chDetails'];
-        $chConfId = $baseQuery['chConfId'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $chPayments = $baseQuery['chPayments'];
-        $allMonths = $baseQuery['allMonths'];
+//     $donationsList = $query->orderBy('payment_history.payment_date', 'desc')->get();
 
-        $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chPayments' => $chPayments, 'allMonths' => $allMonths,
-            'confId' => $confId, 'chConfId' => $chConfId,
-        ];
+//     $data = [
+//         'donationsList' => $donationsList,
+//         'checkBox5Status' => $checkBox5Status ? 'checked' : '',
+//         'checkBox9Status' => $checkBox9Status ? 'checked' : '',
+//         'checkBox10Status' => $checkBox10Status ? 'checked' : '',
+//     ];
 
-        return view('adminreports.editreregdate')->with($data);
-    }
+//     return view('adminreports.donationlist')->with($data);
+// }
 
-    public function updateReRegDate(Request $request, $id): RedirectResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-        $updatedBy = $user['userName'];
+//     /**
+//      * View List of ReReg Payments if Dates Need to be Udpated
+//      */
+//     public function showReRegDate(Request $request): View
+//     {
+//         $user = $this->userController->loadUserInformation($request);
+//         $coorId = $user['cdId'];
+//         $confId = $user['confId'];
+//         $regId = $user['regId'];
+//         $positionId = $user['cdPositionId'];
+//         $secPositionId = $user['cdSecPositionId'];
 
-        $chapter = Chapters::find($id);
-        $payments = Payments::find($id);
+//         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+//         $chapterList = $baseQuery['query']->get();
+//         $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
 
-        DB::beginTransaction();
-        try {
-            $chapter->start_month_id = $request->input('ch_founddate');
-            $chapter->next_renewal_year = $request->input('ch_renewyear');
-            $chapter->updated_by = $updatedBy;
-            $chapter->updated_id = $updatedId;
+//         $data = ['chapterList' => $chapterList, 'checkBox5Status' => $checkBox5Status];
 
-            $chapter->save();
+//         return view('adminreports.reregdate')->with($data);
+//     }
 
-            $payments->rereg_date = $request->input('ch_duespaid');
-            $payments->rereg_payment = $request->input('ch_payment');
-            $payments->rereg_members = $request->input('ch_members');
+//     public function editReRegDate(Request $request, $id): View
+//     {
+//         $user = $this->userController->loadUserInformation($request);
+//         $coorId = $user['cdId'];
+//         $confId = $user['confId'];
 
-            $payments->save();
+//         $baseQuery = $this->baseChapterController->getChapterDetails($id);
+//         $chDetails = $baseQuery['chDetails'];
+//         $chConfId = $baseQuery['chConfId'];
+//         $stateShortName = $baseQuery['stateShortName'];
+//         $chPayments = $baseQuery['chPayments'];
+//         $allMonths = $baseQuery['allMonths'];
 
-            DB::commit();
+//         $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chPayments' => $chPayments, 'allMonths' => $allMonths,
+//             'confId' => $confId, 'chConfId' => $chConfId,
+//         ];
 
-            return redirect()->to('/adminreports/reregdate')->with('error', 'Failed to update Re-Reg Date.');
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+//         return view('adminreports.editreregdate')->with($data);
+//     }
 
-            return redirect()->to('/adminreports/reregdate')->with('success', 'Re-Reg Date updated successfully.');
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
+//     public function updateReRegDate(Request $request, $id): RedirectResponse
+//     {
+//         $user = $this->userController->loadUserInformation($request);
+//         $updatedId = $user['userId'];
+//         $updatedBy = $user['userName'];
 
-    public function inquiriesNotify(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['cdId'];
-        $confId = $user['confId'];
+//         $chapter = Chapters::find($id);
+//         $payments = Payments::find($id);
 
-        $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
+//         DB::beginTransaction();
+//         try {
+//             $chapter->start_month_id = $request->input('ch_founddate');
+//             $chapter->next_renewal_year = $request->input('ch_renewyear');
+//             $chapter->updated_by = $updatedBy;
+//             $chapter->updated_id = $updatedId;
 
-         // Use the appropriate query based on checkbox status
-        if ($checkBox5Status) {
-            $regList = Region::with([
-                'inquiries',
-                'conference',
-                'states' => function ($query) {
-                    $query->orderBy('state_short_name');
-                }
-            ])
-            ->join('conference', 'region.conference_id', '=', 'conference.id')
-            ->orderBy('conference.short_name')
-            ->orderBy('region.long_name')
-            ->select('region.*')
-            ->get();
+//             $chapter->save();
 
-        } else {
-            $regList = Region::with([
-                'inquiries',
-                'conference',
-                'states' => function ($query) {
-                    $query->orderBy('state_short_name');
-                }
-            ])
-            ->join('conference', 'region.conference_id', '=', 'conference.id')
-            ->where('conference_id', $confId)
-            ->orderBy('conference.short_name')
-            ->orderBy('region.long_name')
-            ->select('region.*')
-            ->get();
-        }
+//             $payments->rereg_date = $request->input('ch_duespaid');
+//             $payments->rereg_payment = $request->input('ch_payment');
+//             $payments->rereg_members = $request->input('ch_members');
 
-        $data = ['regList' => $regList, 'checkBox5Status' => $checkBox5Status];
+//             $payments->save();
 
-        return view('adminreports.inquiriesnotify')->with($data);
-    }
+//             DB::commit();
 
-   public function updateInquiriesEmail(Request $request, $id)
-{
-    try {
+//             return redirect()->to('/paymentreports/reregedit')->with('error', 'Failed to update Re-Reg Info.');
+//         } catch (\Exception $e) {
+//             echo $e->getMessage();
+//             exit();
+//             DB::rollback();  // Rollback Transaction
+//             Log::error($e);  // Log the error
 
-        $region = Region::findOrFail($id);
+//             return redirect()->to('/paymentreports/reregedit')->with('success', 'Re-Reg Info updated successfully.');
+//         } finally {
+//             // This ensures DB connections are released even if exceptions occur
+//             DB::disconnect();
+//         }
+//     }
 
-        // Find or create the RegionInquiry record
-        $inquiries = RegionInquiry::firstOrNew(['region_id' => $region->id]);
+//     public function inquiriesNotify(Request $request): View
+//     {
+//         $user = $this->userController->loadUserInformation($request);
+//         $confId = $user['confId'];
 
-        $inquiries->inquiries_email = $request->inquiries_email;
-        $inquiries->save();
+//         $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Inquiries information updated successfully!',
-            'email' => $request->inquiries_email,
-        ]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        Log::error('Inquiries validation error: ' . json_encode($e->errors()));
+//         // Base query
+//         $query = Region::with([
+//             'inquiries',
+//             'conference',
+//             'states' => function ($query) {
+//                 $query->orderBy('state_short_name');
+//             }
+//         ])
+//         ->join('conference', 'region.conference_id', '=', 'conference.id');
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Validation failed.',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Exception $e) {
-        Log::error('Inquiries update error: ' . $e->getMessage());
-        Log::error('Stack trace: ' . $e->getTraceAsString());
+//         // Add conference filter if not showing international
+//         if (!$checkBox5Status) {
+//             $query->where('region.conference_id', $confId);
+//         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Error: ' . $e->getMessage()
-        ], 500);
-    }
-}
+//         $regList = $query
+//             ->orderBy('conference.short_name')
+//             ->orderBy('region.long_name')
+//             ->select('region.*')
+//             ->get();
+
+//         $data = ['regList' => $regList, 'checkBox5Status' => $checkBox5Status];
+
+//         return view('inquiries.inquiriesnotify')->with($data);
+//     }
+
+//    public function updateInquiriesEmail(Request $request, $id)
+// {
+//     try {
+
+//         $region = Region::findOrFail($id);
+
+//         // Find or create the RegionInquiry record
+//         $inquiries = RegionInquiry::firstOrNew(['region_id' => $region->id]);
+
+//         $inquiries->inquiries_email = $request->inquiries_email;
+//         $inquiries->save();
+
+//         return response()->json([
+//             'success' => true,
+//             'message' => 'Inquiries information updated successfully!',
+//             'email' => $request->inquiries_email,
+//         ]);
+//     } catch (\Illuminate\Validation\ValidationException $e) {
+//         Log::error('Inquiries validation error: ' . json_encode($e->errors()));
+
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'Validation failed.',
+//             'errors' => $e->errors()
+//         ], 422);
+//     } catch (\Exception $e) {
+//         Log::error('Inquiries update error: ' . $e->getMessage());
+//         Log::error('Stack trace: ' . $e->getTraceAsString());
+
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'Error: ' . $e->getMessage()
+//         ], 500);
+//     }
+// }
 
      public function conferenceList(Request $request): View
     {
@@ -380,144 +418,144 @@ class AdminReportController extends Controller implements HasMiddleware
         }
     }
 
-    public function viewGrantList(Request $request): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['cdId'];
-        $confId = $user['confId'];
+    // public function viewGrantList(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['cdId'];
+    //     $confId = $user['confId'];
 
-        $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
+    //     $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
 
-         // Use the appropriate query based on checkbox status
-        if ($checkBox5Status) {
-            $grantList = GrantRequest::with('chapters')
-                ->orderBy('submitted_at')
-                ->get();
+    //      // Use the appropriate query based on checkbox status
+    //     if ($checkBox5Status) {
+    //         $grantList = GrantRequest::with('chapters')
+    //             ->orderBy('submitted_at')
+    //             ->get();
 
-        } else {
-            $grantList = GrantRequest::with('chapters')
-                ->whereHas('chapters', function ($query) use ($confId) {
-                    $query->where('conference_id', $confId);
-                })
-                ->orderBy('submitted_at')
-                ->get();
-            }
+    //     } else {
+    //         $grantList = GrantRequest::with('chapters')
+    //             ->whereHas('chapters', function ($query) use ($confId) {
+    //                 $query->where('conference_id', $confId);
+    //             })
+    //             ->orderBy('submitted_at')
+    //             ->get();
+    //         }
 
-        $data = ['grantList' => $grantList, 'checkBox5Status' => $checkBox5Status];
+    //     $data = ['grantList' => $grantList, 'checkBox5Status' => $checkBox5Status];
 
-        return view('adminreports.grantlist')->with($data);
-    }
+    //     return view('adminreports.grantlist')->with($data);
+    // }
 
-    public function editGrantDetails(Request $request, $grantId): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['cdId'];
-        $confId = $user['confId'];
+    // public function editGrantDetails(Request $request, $grantId): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['cdId'];
+    //     $confId = $user['confId'];
 
-        $grantDetails = GrantRequest::with('chapters', 'state', 'country')
-            ->find($grantId);
-        $chapterId = $grantDetails->chapter_id;
+    //     $grantDetails = GrantRequest::with('chapters', 'state', 'country')
+    //         ->find($grantId);
+    //     $chapterId = $grantDetails->chapter_id;
 
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
-        $chDetails = $baseQuery['chDetails'];
-        $chConfId = $baseQuery['chConfId'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $regionLongName = $baseQuery['regionLongName'];
-        $conferenceDescription = $baseQuery['conferenceDescription'];
+    //     $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+    //     $chDetails = $baseQuery['chDetails'];
+    //     $chConfId = $baseQuery['chConfId'];
+    //     $stateShortName = $baseQuery['stateShortName'];
+    //     $regionLongName = $baseQuery['regionLongName'];
+    //     $conferenceDescription = $baseQuery['conferenceDescription'];
 
-        $grList = $this->userController->loadGrantReviewerList($chConfId) ?? null;
+    //     $grList = $this->userController->loadGrantReviewerList($chConfId) ?? null;
 
-        $data = ['id' => $grantId, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
-            'conferenceDescription' => $conferenceDescription, 'confId' => $confId, 'chConfId' => $chConfId, 'grantDetails' => $grantDetails,
-            'grList' => $grList
-        ];
+    //     $data = ['id' => $grantId, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+    //         'conferenceDescription' => $conferenceDescription, 'confId' => $confId, 'chConfId' => $chConfId, 'grantDetails' => $grantDetails,
+    //         'grList' => $grList
+    //     ];
 
-        return view('adminreports.editgrantdetails')->with($data);
-    }
+    //     return view('adminreports.editgrantdetails')->with($data);
+    // }
 
-    public function updateGrantDetails(Request $request, $grantId): RedirectResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['cdId'];
+    // public function updateGrantDetails(Request $request, $grantId): RedirectResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['cdId'];
 
-        $input = $request->all();
-        $submitType = $input['submit_type'];
-        $reviewer_id = isset($input['reviewer_id']) && ! empty($input['reviewer_id']) ? $input['reviewer_id'] : $coorId;
+    //     $input = $request->all();
+    //     $submitType = $input['submit_type'];
+    //     $reviewer_id = isset($input['reviewer_id']) && ! empty($input['reviewer_id']) ? $input['reviewer_id'] : $coorId;
 
-        $grantRequest = GrantRequest::find($grantId);
+    //     $grantRequest = GrantRequest::find($grantId);
 
-        DB::beginTransaction();
-        try {
-            $grantRequest->reviewer_id = $reviewer_id ?? $coorId;
-            $grantRequest->review_notes = $input['review_notes'] ?? null;
-            $grantRequest->amount_awarded = $input['amount_awarded'] ?? null;
-            $grantRequest->grant_approved = $input['grant_approved'] ?? null;
+    //     DB::beginTransaction();
+    //     try {
+    //         $grantRequest->reviewer_id = $reviewer_id ?? $coorId;
+    //         $grantRequest->review_notes = $input['review_notes'] ?? null;
+    //         $grantRequest->amount_awarded = $input['amount_awarded'] ?? null;
+    //         $grantRequest->grant_approved = $input['grant_approved'] ?? null;
 
-            // If submitting the grant
-            if ($submitType == 'review_complete') {
-                $grantRequest->review_complete = 1;
-                $grantRequest->completed_at = Carbon::now();
-            }
+    //         // If submitting the grant
+    //         if ($submitType == 'review_complete') {
+    //             $grantRequest->review_complete = 1;
+    //             $grantRequest->completed_at = Carbon::now();
+    //         }
 
-            $grantRequest->save();
+    //         $grantRequest->save();
 
-            DB::commit();
+    //         DB::commit();
 
-            if ($submitType == 'review_complete') {
-                return redirect()->back()->with('success', 'Grant has been successfully Marked as Review Complete');
-            } else {
-                return redirect()->back()->with('success', 'Grant has been successfully Updated');
-            }
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+    //         if ($submitType == 'review_complete') {
+    //             return redirect()->back()->with('success', 'Grant has been successfully Marked as Review Complete');
+    //         } else {
+    //             return redirect()->back()->with('success', 'Grant has been successfully Updated');
+    //         }
+    //     } catch (\Exception $e) {
+    //         DB::rollback();  // Rollback Transaction
+    //         Log::error($e);  // Log the error
 
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
+    //         return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+    //     } finally {
+    //         // This ensures DB connections are released even if exceptions occur
+    //         DB::disconnect();
+    //     }
+    // }
 
-    public function updateUnsubmitGrantRequest(Request $request, $grantId): RedirectResponse
-    {
-        $grantRequest = GrantRequest::find($grantId);
+    // public function updateUnsubmitGrantRequest(Request $request, $grantId): RedirectResponse
+    // {
+    //     $grantRequest = GrantRequest::find($grantId);
 
-        DB::beginTransaction();
-        try {
-            $grantRequest->submitted = null;
-            $grantRequest->submitted_at = null;
-            $grantRequest->save();
+    //     DB::beginTransaction();
+    //     try {
+    //         $grantRequest->submitted = null;
+    //         $grantRequest->submitted_at = null;
+    //         $grantRequest->save();
 
-            DB::commit();
+    //         DB::commit();
 
-            return redirect()->back()->with('success', 'Grant Request has been successfully Unsubmitted.');
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+    //         return redirect()->back()->with('success', 'Grant Request has been successfully Unsubmitted.');
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         Log::error($e);
 
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-        }
-    }
+    //         return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+    //     }
+    // }
 
-    public function updateClearGrantReview(Request $request, $grantId): RedirectResponse
-    {
-        $grantRequest = GrantRequest::find($grantId);
+    // public function updateClearGrantReview(Request $request, $grantId): RedirectResponse
+    // {
+    //     $grantRequest = GrantRequest::find($grantId);
 
-        DB::beginTransaction();
-        try {
-            $grantRequest->review_complete = null;
-            $grantRequest->completed_at = null;
-            $grantRequest->save();
+    //     DB::beginTransaction();
+    //     try {
+    //         $grantRequest->review_complete = null;
+    //         $grantRequest->completed_at = null;
+    //         $grantRequest->save();
 
-            DB::commit();
+    //         DB::commit();
 
-            return redirect()->back()->with('success', 'Review Complete has been successfully Cleared.');
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e);
+    //         return redirect()->back()->with('success', 'Review Complete has been successfully Cleared.');
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         Log::error($e);
 
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-        }
-    }
+    //         return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+    //     }
+    // }
 }

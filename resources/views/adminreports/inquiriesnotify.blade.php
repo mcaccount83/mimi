@@ -147,7 +147,7 @@ $(document).ready(function() {
 
         // Send AJAX request
         $.ajax({
-            url: '{{ route('adminreports.updateinquiries', ['id' => '__ID__']) }}'.replace('__ID__', regionId),
+            url: '{{ route('inquiries.updateinquiries', ['id' => '__ID__']) }}'.replace('__ID__', regionId),
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',

@@ -637,7 +637,7 @@ class EmailController extends Controller implements HasMiddleware
         try {
             DB::commit();
 
-            return redirect()->to('/eoy/boardreport')->with('success', 'Board Election Reminders have been successfully sent.');
+            return redirect()->to('/eoyreports/boardreport')->with('success', 'Board Election Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -716,7 +716,7 @@ class EmailController extends Controller implements HasMiddleware
         try {
             DB::commit();
 
-            return redirect()->to('/eoy/financialreport')->with('success', 'Financial Report Reminders have been successfully sent.');
+            return redirect()->to('/eoyreports/financialreport')->with('success', 'Financial Report Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
@@ -799,7 +799,7 @@ class EmailController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->to('/eoy/status')->with('success', 'EOY Late Notices have been successfully sent.');
+            return redirect()->to('/eoyreports/status')->with('success', 'EOY Late Notices have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error

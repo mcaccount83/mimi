@@ -48,7 +48,7 @@
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle">
                             @if ($assistConferenceCoordinatorCondition)
-                               <a href="{{ url("/eoy/editboardreport/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                               <a href="{{ url("/eoyreports/editboardreport/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                            @endif
                         </td>
                             <td class="text-center align-middle">

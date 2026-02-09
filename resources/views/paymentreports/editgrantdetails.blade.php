@@ -20,7 +20,7 @@
 </style>
 @section('content')
     <!-- Main content -->
-    <form class="form-horizontal" method="POST" action='{{ route("adminreports.updategrantdetails", $grantDetails->id) }}'>
+    <form class="form-horizontal" method="POST" action='{{ route("paymentreports.updategrantdetails", $grantDetails->id) }}'>
     @csrf
 
     <input type="hidden" name="submitted" id="submitted" value="{{ $grantDetails['submitted'] }}" />
@@ -141,7 +141,11 @@
                 @else
                     <button class="btn bg-gradient-primary mb-2 disabled" type="button" id="financial-pdf" disabled><i class="fas fa-file-pdf mr-2"></i>No PDF Report Available</button><br>
                 @endif
-                    <button type="button" id="btn-back" class="btn btn-primary mb-2" onclick="window.location.href='{{ route('adminreports.grantlist') }}'"><i class="fas fa-reply mr-2" ></i>Back to Grant List</button>
+                    <button type="button" id="btn-back" class="btn btn-primary mb-2" onclick="window.location.href='{{ route('payment.paymenthistory', $grantDetails->chapter_id) }}'"><i class="fas fa-hand-holding-dollar mr-2" ></i>Chapter Donation History</button>
+
+                                                {{-- <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="fas fa-file-invoice-dollar "></i></a> --}}
+
+                    <button type="button" id="btn-back" class="btn btn-primary mb-2" onclick="window.location.href='{{ route('paymentreports.grantlist') }}'"><i class="fas fa-reply mr-2" ></i>Back to Grant List</button>
                 </li>
 
             </ul>
@@ -408,7 +412,7 @@
                 buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ url('/adminreports/cleargrantreview/' . $grantDetails->id) }}";
+                    window.location.href = "{{ url('/paymentreports/cleargrantreview/' . $grantDetails->id) }}";
                 }
             });
         });
@@ -432,7 +436,7 @@
                 buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ url('/adminreports/unsubmitgrant/' . $grantDetails->id) }}";
+                    window.location.href = "{{ url('/paymentreports/unsubmitgrant/' . $grantDetails->id) }}";
                 }
             });
         });

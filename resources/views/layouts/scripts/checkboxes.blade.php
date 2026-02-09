@@ -44,6 +44,24 @@
         }
     }
 
+    function showM2M() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showM2M").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::M2MDONATIONS }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
+    function showM2MAll() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showM2MAll").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONALM2MDONATIONS }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
     function showCoordDirect() {
         var base_url = window.location.origin + window.location.pathname;
         if ($("#showDirect").prop("checked") == true) {

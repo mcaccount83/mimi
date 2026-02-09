@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\PaymentsDonationOnline;
+use App\Enums\ChapterStatusEnum;
+use App\Enums\ChapterCheckbox;
 use App\Mail\PaymentsM2MChapterThankYou;
-use App\Mail\PaymentsManualOnline;
-use App\Mail\PaymentsManualOrderReceipt;
 use App\Mail\PaymentsReRegChapterThankYou;
-use App\Mail\PaymentsReRegOnline;
+use App\Mail\PaymentsReRegLate;
+use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
-use App\Models\Country;
-use App\Models\PaymentHistory;
-use App\Models\PaymentLog;
+use App\Models\GrantRequest;
 use App\Models\Payments;
-use App\Models\State;
+use App\Models\PaymentHistory;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,233 +23,159 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
-use net\authorize\api\contract\v1 as AnetAPI;
-use net\authorize\api\controller as AnetController;
 
 class PaymentController extends Controller implements HasMiddleware
 {
     protected $userController;
 
-    protected $baseBoardController;
-
     protected $baseChapterController;
 
     protected $baseMailDataController;
 
-    protected $positionConditionsService;
+    protected PositionConditionsService $positionConditionsService;
 
-    protected $googleController;
-
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController,
-    PositionConditionsService $positionConditionsService, GoogleController $googleController, BaseChapterController $baseChapterController)
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseMailDataController $baseMailDataController,
+        PositionConditionsService $positionConditionsService)
     {
+
         $this->userController = $userController;
-        $this->baseBoardController = $baseBoardController;
         $this->baseChapterController = $baseChapterController;
         $this->baseMailDataController = $baseMailDataController;
         $this->positionConditionsService = $positionConditionsService;
-        $this->googleController = $googleController;
     }
 
     public static function middleware(): array
     {
         return [
             new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
         ];
     }
 
     /**
-     * Show Re-Registrstion Payment Form All Board Members
+     * ReRegistration List
      */
-    public function editReregistrationPaymentForm(Request $request, $chId): View
+    public function showChapterReRegistration(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userTypeId = $user['userTypeId'];
-        $userAdmin = $user['userAdmin'];
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
-        $chDetails = $baseQuery['chDetails'];
-        $chActiveId = $baseQuery['chActiveId'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $startMonthName = $baseQuery['startMonthName'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentMonth = $dateOptions['currentMonth'];
-        $start_month = $chDetails->start_month_id;
-        $next_renewal_year = $chDetails->next_renewal_year;
-        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
-        $rangeEndDate = $due_date->copy()->subMonth()->endOfMonth();
+        $currentYear = $dateOptions['currentYear'];
+
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox6Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONALREREG];
+
+        if ($checkBox3Status || $checkBox5Status) {
+            $reChapterList = $baseQuery['query']
+                ->get();
+        } else {
+            $reChapterList = $baseQuery['query']
+                ->where(function ($query) use ($currentYear, $currentMonth) {
+                    $query->where('next_renewal_year', '<', $currentYear)
+                        ->orWhere(function ($query) use ($currentYear, $currentMonth) {
+                            $query->where('next_renewal_year', '=', $currentYear)
+                                ->where('start_month_id', '<=', $currentMonth);
+                        });
+                })
+                ->get();
+        }
+
+        $countList = count($reChapterList);
+        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox6Status' => $checkBox6Status,
+        ];
+
+        return view('payment.chapreregistration')->with($data);
+    }
+
+    /**
+     * ReRegistration Reminders Auto Send
+     */
+    public function createChapterReRegistrationReminder(Request $request): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['confId'];
+
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDate = $dateOptions['currentDate'];
+        $currentYear = $dateOptions['currentYear'];
+        $currentMonth = $dateOptions['currentMonth'];
+        $currentMonthWords = $dateOptions['currentMonthWords'];
+        $rangeEndDate = $currentDate->copy()->subMonth()->endOfMonth();
         $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
 
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
-            'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId, 'chActiveId' => $chActiveId,
-        ];
-
-        return view('boards.payment')->with($data);
-    }
-
-    /**
-     * Show M2M Donation Form All Board Members
-     */
-    public function editDonationForm(Request $request, $chId): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $userTypeId = $user['userTypeId'];
-        $userAdmin = $user['userAdmin'];
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
-        $chDetails = $baseQuery['chDetails'];
-        $chActiveId = $baseQuery['chActiveId'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $allStates = $baseQuery['allStates'];
-        $allCountries = $baseQuery['allCountries'];
-        $PresDetails = $baseQuery['PresDetails'];
-
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
-            'PresDetails' => $PresDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
-        ];
-
-        return view('boards.donation')->with($data);
-    }
-
-    /**
-     * Re-Registration & Sustaining Donation Payment
-     */
-    public function reRegistrationPayment(Request $request): RedirectResponse
-    {
-        // Verify reCAPTCHA Enterprise
-        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
-        }
-
-        $user = $this->userController->loadUserInformation($request);
-        $userTypeId = $user['userTypeId'];
-        $chapterId = $user['chapterId'];
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
-        $chDetails = $baseQuery['chDetails'];
-        $chId = $chDetails->id;
-        $confId = $chDetails->conference_id;
-        $stateShortName = $baseQuery['stateShortName'];
-        $PresDetails = $baseQuery['PresDetails'];
-
-        $input = $request->all();
-        $description = 'Re-Registration Payment';
-        $shortDescription = 'Re-Registration';
-        $transactionType = 'authCaptureTransaction';
-        $name = $chDetails->name.', '.$stateShortName;
-
-        $shippingFirst = $PresDetails->first_name;
-        $shippingLast = $PresDetails->last_name;
-        $shippingCompany = $name;
-        $shippingAddress = $PresDetails->street_address;
-        $shippingCity = $PresDetails->city;
-        $shipStateId = $PresDetails->state_id;
-        $state = State::find($shipStateId);
-        $shippingState = $state->state_short_name;
-        $shipCountryId = $PresDetails->country_id;
-        $country = Country::find($shipCountryId);
-        $shippingCountry = $country->short_name;
-        $shippingZip = $PresDetails->zip;
-
-        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-            $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
-
-        if (! $paymentResponse['success']) {
-            return redirect()->back()->with('fail', $paymentResponse['error']);
-        }
-
-        $paymentType = $paymentResponse['paymentType'];
-
-        $emailListChap = $baseQuery['emailListChap'];
-        $emailCC = $baseQuery['emailCC'];
-        $pcEmail = $baseQuery['pcEmail'];
-
-        $adminEmail = $this->positionConditionsService->getAdminEmail();
-        $paymentsAdmin = $adminEmail['payments_admin'];
-
-        $payment = $request->input('rereg');
-        $rereg = (float) preg_replace('/[^\d.]/', '', $request->input('rereg'));
-        $paymentDate = Carbon::today();
-        $invoice = $paymentResponse['data']['invoiceNumber'];
-        $donation = $request->input('sustaining');
-        $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
-
-        $chapter = Chapters::find($chId);
-        $payments = Payments::find($chId);
-
-        DB::beginTransaction();
         try {
-            $chapter->next_renewal_year = $chapter->next_renewal_year + 1;
-            $chapter->save();
+            $chapters = Chapters::with(['state', 'conference', 'region'])
+                ->where('conference_id', $confId)
+                ->where('start_month_id', $currentMonth)
+                ->where('next_renewal_year', $currentYear)
+                ->where('active_status', 1)
+                ->get();
 
-           // Archive current re-registration payment to history (if exists)
-            if ($payments->rereg_date) {
-                    PaymentHistory::create([
-                    'chapter_id' => $chId,
-                    'payment_type' => 'rereg',
-                    'payment_amount' => $payments->rereg_payment,
-                    'payment_date' => $payments->rereg_date,
-                    'rereg_members' => $payments->rereg_members,
-                ]);
+            if ($chapters->isEmpty()) {
+                return redirect()->back()->with('info', 'There are no Chapters with Registrations Due.');
             }
-            $payments->rereg_members = $request->input('members');
-            $payments->rereg_payment = $rereg;
-            $payments->rereg_date = $paymentDate;
-            $payments->rereg_invoice = $invoice;
-            $chapter->rereg_waivelate = null;
-            $payments->save();
 
-            if ($donation && $sustaining > 0) {
-                   // Archive current sustaining donation to history (if exists)
-                if ($payments->sustaining_date) {
-                    PaymentHistory::create([
-                        'chapter_id' => $chId,
-                        'payment_type' => 'sustaining',
-                        'payment_amount' => $payments->sustaining_donation,
-                        'payment_date' => $payments->sustaining_date,
-                    ]);
+            $chapterIds = [];
+            $chapterEmails = [];
+            $coordinatorEmails = [];
+            $mailData = [];
+
+            foreach ($chapters as $chapter) {
+                $chapterIds[] = $chapter->id;
+
+                $chapterName = $chapter->name;
+                $stateShortName = $chapter->state->state_short_name;
+
+                if ($chapterName) {
+                    $emailData = $this->userController->loadEmailDetails($chapter->id);
+                    $emailListChap = $emailData['emailListChap'];
+                    $emailListCoord = $emailData['emailListCoord'];
+
+                    $chapterEmails[$chapterName] = $emailListChap;
+                    $coordinatorEmails[$chapterName] = $emailListCoord;
                 }
-                $payments->sustaining_donation = $sustaining;
-                $payments->sustaining_date = $paymentDate;
-                $payments->donation_invoice = $invoice;
-                $payments->save();
+
+                $mailData[$chapterName] = [
+                    'chapterName' => $chapterName,
+                    'chapterState' => $stateShortName,
+                    'startRange' => $rangeStartDateFormatted,
+                    'endRange' => $rangeEndDateFormatted,
+                    'startMonth' => $currentMonthWords,
+                ];
             }
 
-            $baseQueryUpd = $this->baseBoardController->getChapterDetails($chapterId);
-            $chPayments = $baseQueryUpd['chPayments'];
+            foreach ($mailData as $chapterName => $data) {
+                $to_email = $chapterEmails[$chapterName] ?? [];
+                $cc_email = $coordinatorEmails[$chapterName] ?? [];
 
-            $mailData = array_merge(
-                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getPresData($PresDetails),
-                $this->baseMailDataController->getPaymentData($chPayments, $input, $paymentType),
-            );
-
-            Mail::to($emailListChap)
-                ->cc($pcEmail)
-                ->queue(new PaymentsReRegChapterThankYou($mailData));
-
-            if ($donation && $sustaining > 0) {
-                Mail::to($emailListChap)
-                    ->cc($pcEmail)
-                    ->queue(new PaymentsSustainingChapterThankYou($mailData));
+                if (! empty($to_email)) {
+                    Mail::to($to_email)
+                        ->cc($cc_email)
+                        ->queue(new PaymentsReRegReminder($data));
+                }
             }
-
-            Mail::to([$emailCC, $paymentsAdmin])
-                ->queue(new PaymentsReRegOnline($mailData));
 
             DB::commit();
 
-            return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
+            return redirect()->to('/payment/reregistration')->with('success', 'Re-Registration Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->back()->with('fail', $paymentResponse['error']);
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -259,544 +183,353 @@ class PaymentController extends Controller implements HasMiddleware
     }
 
     /**
-     * M2M Fund & Sustaining Donation Payment
+     * ReRegistration Late Notices Auto Send
      */
-    public function m2mPayment(Request $request): RedirectResponse
+    public function createChapterReRegistrationLateReminder(Request $request): RedirectResponse
     {
-        // Verify reCAPTCHA Enterprise
-        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
-        }
-
         $user = $this->userController->loadUserInformation($request);
-        $userTypeId = $user['userTypeId'];
-        $chapterId = $user['chapterId'];
+        $confId = $user['confId'];
 
-        $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDate = $dateOptions['currentDate'];
+        $currentYear = $dateOptions['currentYear'];
+        $currentMonth = $dateOptions['currentMonth'];
+        $lastMonth = $dateOptions['lastMonth'];
+        if ($currentMonth == '01' && $lastMonth == '12') {
+            $currentYear = $currentYear - 1;
+        }
+        $currentMonthWords = $dateOptions['currentMonthWords'];
+        $lastMonthWords = $dateOptions['lastMonthWords'];
+        $rangeEndDate = $currentDate->copy()->subMonths(2)->endOfMonth();
+        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
+
+        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
+        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
+
+        try {
+            $chapters = Chapters::with(['state', 'conference', 'region'])
+                ->where('chapters.conference_id', $confId)
+                ->where('chapters.start_month_id', $lastMonth)
+                ->where('chapters.next_renewal_year', $currentYear)
+                ->where('chapters.active_status', 1)
+                ->get();
+
+            if ($chapters->isEmpty()) {
+                return redirect()->back()->with('info', 'There are no Chapters with Late Registrations Due.');
+            }
+
+            $chapterIds = [];
+            $chapterEmails = [];
+            $coordinatorEmails = [];
+            $mailData = [];
+
+            foreach ($chapters as $chapter) {
+                $chapterIds[] = $chapter->id;
+
+                $chapterName = $chapter->name;
+                $stateShortName = $chapter->state->state_short_name;
+
+                if ($chapterName) {
+                    $emailData = $this->userController->loadEmailDetails($chapter->id);
+                    $emailListChap = $emailData['emailListChap'];
+                    $emailListCoord = $emailData['emailListCoord'];
+
+                    $chapterEmails[$chapterName] = $emailListChap;
+                    $coordinatorEmails[$chapterName] = $emailListCoord;
+                }
+
+                $mailData[$chapterName] = [
+                    'chapterName' => $chapterName,
+                    'chapterState' => $stateShortName,
+                    'startRange' => $rangeStartDateFormatted,
+                    'endRange' => $rangeEndDateFormatted,
+                    'startMonth' => $lastMonthWords,
+                    'dueMonth' => $currentMonthWords,
+                ];
+            }
+
+            foreach ($mailData as $chapterName => $data) {
+                $to_email = $chapterEmails[$chapterName] ?? [];
+                $cc_email = $coordinatorEmails[$chapterName] ?? [];
+
+                if (! empty($to_email)) {
+                    Mail::to($to_email)
+                        ->cc($cc_email)
+                        ->queue(new PaymentsReRegLate($data));
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->to('/payment/reregistration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+    /**
+     * View Doantions List
+     */
+    public function showRptDonations(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
+        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
+        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
+            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        ];
+
+        return view('payment.chapdonations')->with($data);
+    }
+
+    /**
+     *Edit Chapter Information
+     */
+    public function editChapterPayment(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chId = $chDetails->id;
-        $confId = $chDetails->conference_id;
+        $chConfId = $baseQuery['chConfId'];
         $stateShortName = $baseQuery['stateShortName'];
-        $PresDetails = $baseQuery['PresDetails'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $startMonthName = $baseQuery['startMonthName'];
+        $chapterStatus = $chDetails->status->chapter_status;
+        $chActiveId = $baseQuery['chActiveId'];
+        $chPayments = $baseQuery['chPayments'];
+
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'chPayments' => $chPayments,
+            'chDetails' => $chDetails, 'chapterStatus' => $chapterStatus, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+            'coorId' => $coorId, 'confId' => $confId, 'chConfId' => $chConfId,
+        ];
+
+        return view('payment.editpayment')->with($data);
+    }
+
+    /**
+     *Update Chapter Information
+     */
+    public function updateChapterPayment(Request $request, $id): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+        $updatedBy = $user['userName'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $nextRenewalYear = $baseQuery['chDetails']->next_renewal_year;
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailListCoord = $baseQuery['emailListCoord'];
+        $emailPC = $baseQuery['emailPC'];
+
+        $paymentType = 'Manual Input';
 
         $input = $request->all();
-        $description = 'Sustaining Chapter & M2M Fund Donations';
-        $shortDescription = 'Donation';
-        $transactionType = 'authCaptureTransaction';
-        $name = $chDetails->name.', '.$stateShortName;
+        $rereg_date = $input['PaymentDate'];
+        $m2m_date = $input['M2MPaymentDate'];
+        $sustaining_date = $input['SustainingPaymentDate'];
 
-        $shippingFirst = $PresDetails->first_name;
-        $shippingLast = $PresDetails->last_name;
-        $shippingCompany = $name;
-        $shippingAddress = $PresDetails->street_address;
-        $shippingCity = $PresDetails->city;
-        $shipStateId = $PresDetails->state_id;
-        $state = State::find($shipStateId);
-        $shippingState = $state->state_short_name;
-        $shipCountryId = $PresDetails->country_id;
-        $country = Country::find($shipCountryId);
-        $shippingCountry = $country->short_name;
-        $shippingZip = $PresDetails->zip;
-
-        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-            $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
-
-        if (! $paymentResponse['success']) {
-            return redirect()->back()->with('fail', $paymentResponse['error']);
-        }
-
-        $invoice = $paymentResponse['data']['invoiceNumber'];
-
-        $paymentType = $paymentResponse['paymentType'];
-
-        $emailListChap = $baseQuery['emailListChap'];
-        $emailCC = $baseQuery['emailCC'];
-        $pcEmail = $baseQuery['pcEmail'];
-        $adminEmail = $this->positionConditionsService->getAdminEmail();
-        $paymentsAdmin = $adminEmail['payments_admin'];
-
-        $m2mDonation = $request->input('m2m');
-        $m2m = (float) preg_replace('/[^\d.]/', '', $m2mDonation);
-        $sustainingDonation = $request->input('sustaining');
-        $sustaining = (float) preg_replace('/[^\d.]/', '', $sustainingDonation);
-        $paymentDate = Carbon::today();
-
-        $chapter = Chapters::find($chId);
-        $payments = Payments::find($chId);
-
-        // Determine donation type for email subject and content
-        $hasM2M = $m2mDonation && $m2m > 0;
-        $hasSustaining = $sustainingDonation && $sustaining > 0;
-
-        if ($hasM2M && $hasSustaining) {
-            $donationType = 'M2M Fund & Sustaining Chapter Donation';
-            $donationDescription = 'Donation to the Mother-to-Mother Fund AND Sustaining Chapter Donation';
-        } elseif ($hasM2M) {
-            $donationType = 'M2M Fund Donation';
-            $donationDescription = 'Donation to the Mother-to-Mother Fund';
-        } elseif ($hasSustaining) {
-            $donationType = 'Sustaining Chapter Donation';
-            $donationDescription = 'Sustaining Chapter Donation';
-        } else {
-            $donationType = 'Donation';
-            $donationDescription = 'Donation';
-        }
+        $chapter = Chapters::find($id);
+        $payments = Payments::find($id);
 
         DB::beginTransaction();
         try {
-            if ($hasM2M) {
+            $payments->rereg_notes = $input['ch_regnotes'];
+            $payments->rereg_waivelate = ! isset($input['ch_waive_late']) ? null : ($input['ch_waive_late'] == 'on' ? 1 : 0);
+            $payments->save();
+
+            $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
+            $chapter->save();
+
+            if ($rereg_date != null) {
+                $chapter->next_renewal_year = $nextRenewalYear + 1;
+                $chapter->save();
+
+               // Archive current re-registration payment to history (if exists)
+                if ($payments->rereg_date) {
+                        PaymentHistory::create([
+                        'chapter_id' => $id,
+                        'payment_type' => 'rereg',
+                        'payment_amount' => $payments->rereg_payment,
+                        'payment_date' => $payments->rereg_date,
+                        'rereg_members' => $payments->rereg_members,
+                    ]);
+                }
+
+                $payments->rereg_date = $rereg_date;
+                $payments->rereg_payment = $input['rereg'];
+                $payments->rereg_members = $input['members'];
+                $payments->save();
+            }
+
+            if ($m2m_date != null) {
                 // Archive current M2M donation to history (if exists)
-                if ($payments->m2m_date) {
-                    PaymentHistory::create([
-                        'chapter_id' => $chId,
-                        'payment_type' => 'm2m',
-                        'payment_amount' => $payments->m2m_donation,
-                        'payment_date' => $payments->m2m_date,
-                    ]);
-                }
-                $payments->m2m_donation = $m2m;
-                $payments->m2m_date = $paymentDate;
-                $payments->m2m_invoice = $invoice;
+                // if ($payments->m2m_date) {
+                //     PaymentHistory::create([
+                //         'chapter_id' => $id,
+                //         'payment_type' => 'm2m',
+                //         'payment_amount' => $payments->m2m_donation,
+                //         'payment_date' => $payments->m2m_date,
+                //     ]);
+                // }
 
+                PaymentHistory::create([
+                    'chapter_id' => $id,
+                    'payment_type' => 'm2m',
+                    'payment_amount' => $input['m2m'],
+                    'payment_date' => $m2m_date,
+                ]);
+
+                $payments->m2m_date = $m2m_date;
+                $payments->m2m_donation = $input['m2m'];
                 $payments->save();
             }
 
-            if ($hasSustaining) {
+            if ($sustaining_date != null) {
                 // Archive current sustaining donation to history (if exists)
-                if ($payments->sustaining_date) {
-                    PaymentHistory::create([
-                        'chapter_id' => $chId,
-                        'payment_type' => 'sustaining',
-                        'payment_amount' => $payments->sustaining_donation,
-                        'payment_date' => $payments->sustaining_date,
-                    ]);
-                }
+                // if ($payments->sustaining_date) {
+                //     PaymentHistory::create([
+                //         'chapter_id' => $id,
+                //         'payment_type' => 'sustaining',
+                //         'payment_amount' => $payments->sustaining_donation,
+                //         'payment_date' => $payments->sustaining_date,
+                //     ]);
+                // }
 
-                $payments->sustaining_donation = $sustaining;
-                $payments->sustaining_date = $paymentDate;
-                $payments->donation_invoice = $invoice;
+                PaymentHistory::create([
+                    'chapter_id' => $id,
+                    'payment_type' => 'sustaining',
+                    'payment_amount' => $$input['sustaining'],
+                    'payment_date' => $sustaining_date,
+                ]);
 
+                $payments->sustaining_date = $sustaining_date;
+                $payments->sustaining_donation = $input['sustaining'];
                 $payments->save();
             }
 
-            $baseQueryUpd = $this->baseBoardController->getChapterDetails($chapterId);
+            $baseQueryUpd = $this->baseChapterController->getChapterDetails($id);
             $chPayments = $baseQueryUpd['chPayments'];
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getPresData($PresDetails),
                 $this->baseMailDataController->getPaymentData($chPayments, $input, $paymentType),
-                [
-                    'donationType' => $donationType,
-                    'donationDescription' => $donationDescription,
-                    'hasM2M' => $hasM2M,
-                    'hasSustaining' => $hasSustaining,
-                ]
             );
 
-            if ($hasM2M) {
+            if ($request->input('ch_notify') == 'on' && $rereg_date != null) {
                 Mail::to($emailListChap)
-                    ->cc($pcEmail)
+                    ->cc($emailPC)
+                    ->queue(new PaymentsReRegChapterThankYou($mailData));
+            }
+
+            if ($request->input('ch_thanks') == 'on' && $m2m_date != null) {
+                Mail::to($emailListChap)
+                    ->cc($emailPC)
                     ->queue(new PaymentsM2MChapterThankYou($mailData));
             }
 
-            if ($hasSustaining) {
+            if ($request->input('ch_sustaining') == 'on' && $sustaining_date != null) {
                 Mail::to($emailListChap)
-                    ->cc($pcEmail)
+                    ->cc($emailPC)
                     ->queue(new PaymentsSustainingChapterThankYou($mailData));
             }
 
-            Mail::to([$emailCC, $paymentsAdmin])
-                ->queue(new PaymentsDonationOnline($mailData));
-
             DB::commit();
 
-            return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
+            return to_route('payment.editpayment', ['id' => $id])->with('success', 'Chapter Payments/Donations have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->back()->with('fail', $paymentResponse['error']);
+            return to_route('payment.editpayment', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
     }
 
-    /**
-     * M2M Fund & Sustaining Donation Payment
-     */
-    public function manualPayment(Request $request): RedirectResponse
+    public function viewPaymentHistory(Request $request, $id): View
     {
-        // Verify reCAPTCHA Enterprise
-        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
-        }
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
 
-        $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
-        $chId = $chDetails->id;
-        $confId = $chDetails->conference_id;
+        $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
-        $PresDetails = $baseQuery['PresDetails'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $chConfId = $baseQuery['chConfId'];
+        $chPcId = $baseQuery['chPcId'];
+        $chPayments = $baseQuery['chPayments'];
 
-        $input = $request->all();
-        $description = 'Replacement Manual Order';
-        $shortDescription = 'Manual Order';
-        $transactionType = 'authCaptureTransaction';
-        $name = $chDetails->name.', '.$stateShortName;
+        $startMonthName = $baseQuery['startMonthName'];
+        $chapterStatus = $baseQuery['chapterStatus'];
 
-        $shippingFirst = $input['ship_fname'];
-        $shippingLast = $input['ship_lname'];
-        $shippingCompany = $name;
-        $shippingAddress = $input['ship_street'];
-        $shippingCity = $input['ship_city'];
-        $shipStateId = $input['ship_state'];
-        $state = State::find($shipStateId);
-        $shippingState = $state->state_short_name;
-        $shippingZip = $input['ship_zip'];
+        $chDisbanded = null;
 
-        $shipStateId = intval($input['ship_state']);
-        if ($shipStateId < 52) {
-            $shippingCountry = 'USA';
-        } else {
-            $countryId = $input['ship_country'];
-            $country = Country::find($countryId);
-            $countryShortName = $country->short_name;
-            $shippingCountry = $countryShortName;
+        if ($chActiveId == ChapterStatusEnum::ACTIVE) {
+            $baseBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+        } elseif ($chActiveId == ChapterStatusEnum::ZAPPED) {
+            $baseBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
+            $chDisbanded = $baseBoardQuery['chDisbanded'];
         }
 
-        $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-            $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
+        // Get all rereg payment history for a chapter
+        $reregHistory = PaymentHistory::where('chapter_id', $id)
+        ->where('payment_type', 'rereg')
+        ->orderBy('payment_date', 'desc')
+        ->get();
 
-        if (! $paymentResponse['success']) {
-            return redirect()->to('/board/manual')->with('fail', $paymentResponse['error']);
-        }
+        $m2mHistory = PaymentHistory::where('chapter_id', $id)
+        ->where('payment_type', 'm2m')
+        ->orderBy('payment_date', 'desc')
+        ->get();
 
-        $paymentType = $paymentResponse['paymentType'];
+        $sustainingHistory = PaymentHistory::where('chapter_id', $id)
+        ->where('payment_type', 'sustaining')
+        ->orderBy('payment_date', 'desc')
+        ->get();
 
-        $emailListChap = $baseQuery['emailListChap'];
-        $emailCC = $baseQuery['emailCC'];
-        $pcEmail = $baseQuery['pcEmail'];
+        $manualHistory = PaymentHistory::where('chapter_id', $id)
+        ->where('payment_type', 'manual')
+        ->orderBy('payment_date', 'desc')
+        ->get();
 
-        $adminEmail = $this->positionConditionsService->getAdminEmail();
-        $paymentsAdmin = $adminEmail['payments_admin'];
+        $grantRequests = GrantRequest::where('chapter_id', $id)
+        ->orderBy('submitted_at', 'desc')
+        ->get();
 
-        $manualOrder = $request->input('manual');
-        $manual = (float) preg_replace('/[^\d.]/', '', $request->input('manual'));
-        $paymentDate = Carbon::today();
-        $invoice = $paymentResponse['data']['invoiceNumber'];
-
-        $payments = Payments::find($chId);
-
-        DB::beginTransaction();
-        try {
-            if ($manualOrder && $manual > 0) {
-                 // Archive current manual order to history (if exists)
-                if ($payments->manual_date) {
-                    PaymentHistory::create([
-                        'chapter_id' => $chId,
-                        'payment_type' => 'manual',
-                        'payment_amount' => $payments->manual_order,
-                        'payment_date' => $payments->manual_date,
-                    ]);
-                }
-                $payments->manual_order = $manual;
-                $payments->manual_date = $paymentDate;
-                $payments->manual_invoice = $invoice;
-                $payments->save();
-            }
-
-            $baseQueryUpd = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
-            $chPayments = $baseQueryUpd['chPayments'];
-
-            $mailData = array_merge(
-                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getPaymentData($chPayments, $input, $paymentType),
-                $this->baseMailDataController->getShippingData($input, $shippingCountry, $shippingState),
-            );
-
-            if ($manualOrder && $manual > 0) {
-                Mail::to($emailListChap)
-                    ->cc($pcEmail)
-                    ->queue(new PaymentsManualOrderReceipt($mailData));
-            }
-
-            Mail::to([$emailCC, $paymentsAdmin])
-                ->queue(new PaymentsManualOnline($mailData));
-
-            DB::commit();
-
-            return redirect()->to('/home')->with('success', 'Payment was successfully processed and order has been placed!');
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
-            return redirect()->back()->with('fail', $paymentResponse['error']);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
-
-    /**
-     * Process payments with Authorize.net
-     */
-    public function processPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
-    {
-        if (app()->environment('local')) {
-            $transactionTypeDetail = 'authOnlyTransaction';  // Auth Only for testing Purposes
-        } else {
-            $transactionTypeDetail = $transactionType;  // Live Traansactions based on type of transaction set from request
-        }
-
-        if ($transactionTypeDetail == 'authCaptureTransaction') {
-            $shortTransactionType = 'Processed';
-        }
-        if ($transactionTypeDetail == 'authOnlyTransaction') {
-            $shortTransactionType = 'AuthOnly';
-        }
-
-        $members = $request->input('members');
-        $late = $request->input('late');
-        $rereg = $request->input('rereg');
-        $donation = $request->input('sustaining');
-        $sustaining = (float) preg_replace('/[^\d.]/', '', $donation);
-        $m2mdonation = $request->input('m2m');
-        $m2m = (float) preg_replace('/[^\d.]/', '', $m2mdonation);
-        $manualorder = $request->input('manual');
-        $manual = (float) preg_replace('/[^\d.]/', '', $manualorder);
-        $fee = $request->input('fee');
-        $cardNumber = $request->input('card_number');
-        $expirationDate = $request->input('expiration_date');
-        $cvv = $request->input('cvv');
-        $first = $request->input('first_name');
-        $last = $request->input('last_name');
-        $address = $request->input('address');
-        $city = $request->input('city');
-        $state = $request->input('state');
-        $zip = $request->input('zip');
-        $email = $request->input('email');
-        $total = $request->input('total');
-        $amount = (float) preg_replace('/[^\d.]/', '', $total);
-        $today = Carbon::today()->format('m-d-Y');
-
-        /* Create a merchantAuthenticationType object with authentication details
-           retrieved from the constants file */
-        /** @var \net\authorize\api\contract\v1\MerchantAuthenticationType $merchantAuthentication */
-        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType;
-        $merchantAuthentication->setName(config('settings.authorizenet_api_login_id'));
-        $merchantAuthentication->setTransactionKey(config('settings.authorizenet_transaction_key'));
-
-        // Set the transaction's refId
-        $refId = 'ref'.time();
-
-        // Create the payment data for a credit card
-        $creditCard = new AnetAPI\CreditCardType;
-        $creditCard->setCardNumber($cardNumber);
-        $creditCard->setExpirationDate($expirationDate);
-        $creditCard->setCardCode($cvv);
-
-        // Add the payment data to a paymentType object
-        $paymentOne = new AnetAPI\PaymentType;
-        $paymentOne->setCreditCard($creditCard);
-
-        // Generate a random invoice number
-        $randomInvoiceNumber = mt_rand(100000, 999999);
-        // Create order information
-        $order = new AnetAPI\OrderType;
-        $order->setInvoiceNumber($randomInvoiceNumber);
-        $order->setDescription($description);
-
-        // Set the customer's Bill To address
-        $customerAddress = new AnetAPI\CustomerAddressType;
-        $customerAddress->setFirstName($first);
-        $customerAddress->setLastName($last);
-        // $customerAddress->setCompany($company);
-        $customerAddress->setCompany($name);
-        $customerAddress->setAddress($address);
-        $customerAddress->setCity($city);
-        $customerAddress->setState($state);
-        $customerAddress->setZip($zip);
-        $customerAddress->setCountry('USA');
-
-        // Create the customer shipping address
-        $customerShipping = new AnetAPI\CustomerAddressType;
-        $customerShipping->setFirstName($shippingFirst);
-        $customerShipping->setLastName($shippingLast);
-        $customerShipping->setCompany($shippingCompany);
-        $customerShipping->setAddress($shippingAddress);
-        $customerShipping->setCity($shippingCity);
-        $customerShipping->setState($shippingState);
-        $customerShipping->setZip($shippingZip);
-        $customerShipping->setCountry($shippingCountry);
-
-        // Set the customer's identifying information
-        $customerData = new AnetAPI\CustomerDataType;
-        $customerData->setType('individual');
-        // $customerData->setId($chapterId);
-        $customerData->setEmail($email);
-
-        // Add values for transaction settings
-        $duplicateWindowSetting = new AnetAPI\SettingType;
-        $duplicateWindowSetting->setSettingName('duplicateWindow');
-        $duplicateWindowSetting->setSettingValue('60');
-
-        // Add some merchant defined fields. These fields won't be stored with the transaction, but will be echoed back in the response.
-        $merchantDefinedField1 = new AnetAPI\UserFieldType;
-        $merchantDefinedField1->setName('MemberCount');
-        $merchantDefinedField1->setValue($members);
-
-        $merchantDefinedField2 = new AnetAPI\UserFieldType;
-        $merchantDefinedField2->setName('SustainingDonation');
-        $merchantDefinedField2->setValue($sustaining);
-
-        $merchantDefinedField3 = new AnetAPI\UserFieldType;
-        $merchantDefinedField3->setName('m2mDonation');
-        $merchantDefinedField3->setValue($m2m);
-
-        $merchantDefinedField4 = new AnetAPI\UserFieldType;
-        $merchantDefinedField4->setName('manualOrder');
-        $merchantDefinedField4->setValue($manual);
-
-        // Create payment log data
-        $logData = [
-            // 'customer_id' => $userId,
-            'amount' => $amount,
-            'transaction' => $shortTransactionType,
-            'description' => $shortDescription,
-            'chapter' => $name,
-            'conf' => $confId,
-            'status' => 'pending',
-            'request_data' => [
-                'transaction_type' => $shortTransactionType,
-                'invoice' => $randomInvoiceNumber,
-                'description' => $shortDescription,
-                'chapter_company' => $name,
-                'name' => $first.' '.$last,
-                'email' => $email,
-                'members' => $members,
-                'late' => $late,
-                'rereg' => $rereg,
-                'sustaining_donation' => $sustaining,
-                'm2m_donation' => $m2m,
-                'manual_order' => $manual,
-                'fee' => $fee,
-                'total' => $amount,
-            ],
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chDetails' => $chDetails, 'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded,
+            'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
+            'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments, 'grantRequests' => $grantRequests,
+            'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory, 'manualHistory' => $manualHistory,
         ];
 
-        // Create initial log entry before processing
-        $paymentLog = PaymentLog::create($logData);
-
-        // Create a TransactionRequestType object and add the previous objects to it
-        $transactionRequestType = new AnetAPI\TransactionRequestType;
-        $transactionRequestType->setTransactionType($transactionTypeDetail);
-        $transactionRequestType->setAmount($amount);
-        $transactionRequestType->setOrder($order);
-        $transactionRequestType->setPayment($paymentOne);
-        $transactionRequestType->setBillTo($customerAddress);
-        $transactionRequestType->setShipTo($customerShipping);
-        $transactionRequestType->setCustomer($customerData);
-        $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
-        $transactionRequestType->addToUserFields($merchantDefinedField1);
-        $transactionRequestType->addToUserFields($merchantDefinedField2);
-        $transactionRequestType->addToUserFields($merchantDefinedField3);
-        $transactionRequestType->addToUserFields($merchantDefinedField4);
-
-        // Assemble the complete transaction request
-        $request = new AnetAPI\CreateTransactionRequest;
-        $request->setMerchantAuthentication($merchantAuthentication);
-        $request->setRefId($refId);
-        $request->setTransactionRequest($transactionRequestType);
-
-        // Create the controller and get the response
-        $controller = new AnetController\CreateTransactionController($request);
-        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
-
-        // After processing, update the log with the response
-        if ($response != null) {
-            if ($response->getMessages()->getResultCode() == 'Ok') {
-                /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
-                $tresponse = $response->getTransactionResponse();
-                if ($tresponse != null && $tresponse->getMessages() != null) {
-                    // Update log with success response
-                    $paymentLog->update([
-                        'transaction_id' => $tresponse->getTransId(),
-                        'status' => 'success',
-                        'response_code' => $tresponse->getResponseCode(),
-                        'response_message' => $tresponse->getMessages()[0]->getDescription(),
-                        'response_data' => [
-                            'auth_code' => $tresponse->getAuthCode(),
-                            'avs_result_code' => $tresponse->getAvsResultCode(),
-                            'cvv_result_code' => $tresponse->getCvvResultCode(),
-                            'account_number' => $tresponse->getAccountNumber(),
-                            'transaction_hash' => $tresponse->getTransHashSha2(),
-                        ],
-                    ]);
-
-                    return [
-                        'paymentType' => $shortTransactionType,
-                        'success' => true,
-                        'data' => [
-                            'transactionId' => $tresponse->getTransId(),
-                            'invoiceNumber' => $randomInvoiceNumber,
-                        ],
-                    ];
-                }
-            }
-
-            // Handle errors
-            /** @var \net\authorize\api\contract\v1\CreateTransactionResponse $response */
-            $tresponse = $response->getTransactionResponse();
-            if ($tresponse != null && $tresponse->getErrors() != null) {
-                $error_message = 'Transaction Failed';
-                $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
-                $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
-
-                // Update log with error response
-                $paymentLog->update([
-                    'status' => 'failed',
-                    'response_code' => $tresponse->getErrors()[0]->getErrorCode(),
-                    'response_message' => $tresponse->getErrors()[0]->getErrorText(),
-                    'response_data' => [
-                        'error_details' => $error_message,
-                    ],
-                ]);
-            } else {
-                $error_message = 'Transaction Failed';
-                $error_message .= "\n Error Code: ".$response->getMessages()->getMessage()[0]->getCode();
-                $error_message .= "\n Error Message: ".$response->getMessages()->getMessage()[0]->getText();
-
-                // Update log with error response
-                $paymentLog->update([
-                    'status' => 'failed',
-                    'response_code' => $response->getMessages()->getMessage()[0]->getCode(),
-                    'response_message' => $response->getMessages()->getMessage()[0]->getText(),
-                    'response_data' => [
-                        'error_details' => $error_message,
-                    ],
-                ]);
-            }
-        } else {
-            $error_message = 'No response returned';
-
-            // Update log with no response
-            $paymentLog->update([
-                'status' => 'failed',
-                'response_message' => 'No response returned',
-                'response_data' => [
-                    'error_details' => 'No response was received from the payment gateway',
-                ],
-            ]);
-        }
-
-        return [
-            'paymentType' => $shortTransactionType,
-            'success' => false,
-            'error' => $error_message,
-        ];
+        return view('payment.paymenthistory')->with($data);
     }
-
 }

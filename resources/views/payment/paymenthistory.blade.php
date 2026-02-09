@@ -95,6 +95,7 @@
                         <li class="nav-item"><a class="nav-link active" href="#rereg" data-toggle="tab">Re-Reg Payments</a></li>
                         <li class="nav-item"><a class="nav-link" href="#m2m" data-toggle="tab">M2M Fund Donations</a></li>
                         <li class="nav-item"><a class="nav-link" href="#sustaining" data-toggle="tab">Sustaining Chapter Donations</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#grants" data-toggle="tab">Grant Requests</a></li>
                         <li class="nav-item"><a class="nav-link" href="#manual" data-toggle="tab">Manual Orders</a></li>
                     </ul>
                 </div>
@@ -119,7 +120,7 @@
                                                 Amount: ${{ number_format($chPayments->rereg_payment, 2) }}<br>
                                                 Members: {{ $chPayments->rereg_members }}<br>
                                                 @if($coordinatorCondition && $conferenceCoordinatorCondition)
-                                                    <button class="btn bg-gradient-primary btn-xs mt-1 mb-1" onclick="window.location.href='{{ route('adminreports.editreregdate', ['id' => $chDetails->id]) }}'">Edit Payment Information</button>
+                                                    <button class="btn bg-gradient-primary btn-xs mt-1 mb-1" onclick="window.location.href='{{ route('paymentreports.editrereg', ['id' => $chDetails->id]) }}'">Edit Payment Information</button>
                                                 @endif
                                             </div>
                                         </div>
@@ -155,14 +156,14 @@
                                     @if($chPayments->m2m_date || $m2mHistory->count() > 0)
 
                                         {{-- Current Donation --}}
-                                        @if($chPayments->m2m_date)
+                                        {{-- @if($chPayments->m2m_date)
                                         <div class="card mb-2">
                                             <div class="card-body">
                                                 Date: {{ date('m/d/Y', strtotime($chPayments->m2m_date)) }}<br>
                                                 Amount: ${{ number_format($chPayments->m2m_donation, 2) }}<br>
                                             </div>
                                         </div>
-                                        @endif
+                                        @endif --}}
 
                                         {{-- Historical Donations --}}
                                         @if($m2mHistory->count() > 0)
@@ -193,14 +194,14 @@
                                     @if($chPayments->sustaining_date || $sustainingHistory->count() > 0)
 
                                         {{-- Current Donation --}}
-                                        @if($chPayments->sustaining_date)
+                                        {{-- @if($chPayments->sustaining_date)
                                         <div class="card mb-2">
                                             <div class="card-body">
                                                 Date: {{ date('m/d/Y', strtotime($chPayments->sustaining_date)) }}<br>
                                                 Amount: ${{ number_format($chPayments->sustaining_donation, 2) }}<br>
                                             </div>
                                         </div>
-                                        @endif
+                                        @endif --}}
 
                                         {{-- Historical Donations --}}
                                         @if($sustainingHistory->count() > 0)
@@ -222,6 +223,30 @@
                             </div>
                         </div>
 
+                        {{-- Grant Requests Tab --}}
+                        <div class="tab-pane" id="grants">
+                            <h3 class="profile-username">Grant Requests Submitted</h3>
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    @foreach($grantRequests as $request)
+                                           @if($request->submitted_at)
+
+                                            <div class="card mb-2">
+                                                <div class="card-body">
+                                                    Date: {{ date('m/d/Y', strtotime($request->submitted_at)) }}<br>
+                                                    Member in Need: {{ $request->first_name }} {{ $request->last_name }}<br>
+                                                    Status:  @if($request->submitted == '1') Submitted @else Draft @endif<br>
+                                                    Decision: @if($request->grant_approved == '1') Approved
+                                                        @elseif($request->grant_approved == '0') Declined
+                                                        @else No Decision Made @endif
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
                         {{-- Manual Tab --}}
                         <div class="tab-pane" id="manual">
                             <h3 class="profile-username">Manual Orders</h3>
@@ -231,14 +256,14 @@
                                     @if($chPayments->manual_date || $manualHistory->count() > 0)
 
                                         {{-- Current Order --}}
-                                        @if($chPayments->manual_date)
+                                        {{-- @if($chPayments->manual_date)
                                         <div class="card mb-2">
                                             <div class="card-body">
                                                 Date: {{ date('m/d/Y', strtotime($chPayments->manual_date)) }}<br>
                                                 Amount: ${{ number_format($chPayments->manual_order, 2) }}<br>
                                             </div>
                                         </div>
-                                        @endif
+                                        @endif --}}
 
                                         {{-- Historical Orders --}}
                                         @if($manualHistory->count() > 0)

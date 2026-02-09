@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\BoardPaymentController;
 use App\Http\Controllers\BoardPendingController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ChapterReportController;
@@ -137,30 +138,13 @@ Route::middleware('auth')->group(function () {
 
 // Admin Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
-    Route::get('/adminreports/intpaymentlist', [AdminReportController::class, 'intPaymentList'])->name('adminreports.intpaymentlist');
-    Route::get('/adminreports/paymentlist', [AdminReportController::class, 'paymentList'])->name('adminreports.paymentlist');
-    Route::get('/adminreports/paymentdetails/{id}', [AdminReportController::class, 'paymentDetails'])->name('adminreports.paymentdetails');
-    Route::get('/adminreports/reregdate', [AdminReportController::class, 'showReRegDate'])->name('adminreports.reregdate');
-    Route::get('/adminreports/intreregdate', [AdminReportController::class, 'showIntReRegDate'])->name('adminreports.intreregdate');
-    Route::get('/adminreports/reregdate/{id}', [AdminReportController::class, 'EditReRegDate'])->name('adminreports.editreregdate');
-    Route::post('/adminreports/updatereregdate/{id}', [AdminReportController::class, 'UpdateReRegDate'])->name('adminreports.updatereregdate');
     Route::get('/adminreports/downloads', [ResourcesController::class, 'showDownloads'])->name('adminreports.downloads');
-    Route::get('/adminreports/bugs', [ResourcesController::class, 'showBugs'])->name('adminreports.bugs');
-    Route::post('/adminreports/addbugs', [ResourcesController::class, 'addBugs'])->name('adminreports.addbugs');
-    Route::post('/adminreports/updatebugs/{id}', [ResourcesController::class, 'updateBugs'])->name('adminreports.updatebugs');
-    Route::get('/inquiries/inquiriesnotify', [AdminReportController::class, 'inquiriesNotify'])->name('adminreports.inquiriesnotify');
-    Route::post('/adminreports/updateinquiries/{id}', [AdminReportController::class, 'updateInquiriesEmail'])->name('adminreports.updateinquiries');
+
     Route::get('/adminreports/conferencelist', [AdminReportController::class, 'conferenceList'])->name('adminreports.conferencelist');
     Route::get('/adminreports/regionlist', [AdminReportController::class, 'regionList'])->name('adminreports.regionlist');
     Route::post('/adminreports/updateregion/{id}', [AdminReportController::class, 'updateRegion'])->name('adminreports.updateregion');
     Route::get('/adminreports/statelist', [AdminReportController::class, 'stateList'])->name('adminreports.statelist');
     Route::post('/adminreports/updatestate/{id}', [AdminReportController::class, 'updateState'])->name('adminreports.updatestate');
-
-    Route::get('/adminreports/grantlist', [AdminReportController::class, 'viewGrantList'])->name('adminreports.grantlist');
-    Route::get('/adminreports/grantdetailsedit/{id}', [AdminReportController::class, 'editGrantDetails'])->name('adminreports.editgrantdetails');
-    Route::post('/adminreports/grantdetailsupdate/{id}', [AdminReportController::class, 'UpdateGrantDetails'])->name('adminreports.updategrantdetails');
-    Route::get('/adminreports/unsubmitgrant/{id}', [AdminReportController::class, 'updateUnsubmitGrantRequest']);
-    Route::get('/adminreports/cleargrantreview/{id}', [AdminReportController::class, 'updateClearGrantReview']);
 });
 
 // User Controller Routes...Coordinator Login Required
@@ -201,6 +185,33 @@ Route::middleware('auth')->group(function () {
     Route::get('/resources/elearning', [ResourcesController::class, 'showELearning'])->name('resources.elearning');
 });
 
+// Payment Controller Routes...Coordinator Login Required
+Route::middleware('auth')->group(function () {
+    Route::get('/payment/reregistration', [PaymentController::class, 'showChapterReRegistration'])->name('payment.chapreregistration');
+    Route::get('/payment/donations', [PaymentController::class, 'showRptDonations'])->name('payment.chapdonations');
+    Route::get('/payment/chapterpaymentedit/{id}', [PaymentController::class, 'editChapterPayment'])->name('payment.editpayment');
+    Route::get('/payment/chapterpaymenthistory/{id}', [PaymentController::class, 'viewPaymentHistory'])->name('payment.paymenthistory');
+    Route::post('/payment/chapterpaymentupdate/{id}', [PaymentController::class, 'updateChapterPayment'])->name('payment.updatepayment');
+    Route::get('/payment/reregistrationreminder', [PaymentController::class, 'createChapterReRegistrationReminder'])->name('payment.chapreregreminder');
+    Route::get('/payment/reregistrationlatereminder', [PaymentController::class, 'createChapterReRegistrationLateReminder'])->name('payment.chaprereglatereminder');
+});
+
+// Payment Report Controller Routes...Coordinator Login Required
+Route::middleware('auth')->group(function () {
+    Route::get('/paymentreports/paymentlog', [PaymentReportController::class, 'showPaymentLog'])->name('paymentreports.paymentlog');
+    Route::get('/paymentreports/paymentdetails/{id}', [PaymentReportController::class, 'showPaymentDetails'])->name('paymentreports.paymentdetails');
+    Route::get('/paymentreports/donationlog', [PaymentReportController::class, 'showDonationLog'])->name('paymentreports.donationlog');
+    Route::get('/paymentreports/rereg', [PaymentReportController::class, 'showReReg'])->name('paymentreports.rereg');
+    Route::get('/paymentreports/reregedit/{id}', [PaymentReportController::class, 'editReReg'])->name('paymentreports.editrereg');
+    Route::post('/paymentreports/regdateupdate/{id}', [PaymentReportController::class, 'updateReReg'])->name('paymentreports.updaterereg');
+    Route::get('/paymentreports/grantlist', [PaymentReportController::class, 'showGrantList'])->name('paymentreports.grantlist');
+    Route::get('/paymentreports/grantdetailsedit/{id}', [PaymentReportController::class, 'editGrantDetails'])->name('paymentreports.editgrantdetails');
+    Route::post('/paymentreports/grantdetailsupdate/{id}', [PaymentReportController::class, 'UpdateGrantDetails'])->name('paymentreports.updategrantdetails');
+    Route::get('/paymentreports/unsubmitgrant/{id}', [PaymentReportController::class, 'updateUnsubmitGrantRequest']);
+    Route::get('/paymentreports/cleargrantreview/{id}', [PaymentReportController::class, 'updateClearGrantReview']);
+});
+
+
 // Inquiries Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
     Route::get('/inquiries/inquiryapplication', [InquiriesController::class, 'showInquiryApplication'])->name('inquiries.inquiryapplication');
@@ -208,16 +219,25 @@ Route::middleware('auth')->group(function () {
     Route::post('/inquiries/inquiryapplicationupdate/{id}', [InquiriesController::class, 'updateInquiryApplication'])->name('inquiries.updateinquiryapplication');
     Route::post('/inquiries/updateinquiryresponse/{id}', [InquiriesController::class, 'updateInquiryResponse'])->name('inquiries.updateinquiryresponse');
     Route::post('/inquiries/clearinquiryresponse/{id}', [InquiriesController::class, 'clearInquiryResponse'])->name('inquiries.clearinquiryresponse');
+    Route::get('/inquiries/inquiriesnotify', [InquiriesController::class, 'inquiriesNotify'])->name('inquiries.inquiriesnotify');
+    Route::post('/inquiries/updateinquiries/{id}', [InquiriesController::class, 'updateInquiriesEmail'])->name('inquiries.updateinquiries');
+
+    Route::get('/inquiries/inquiries', [ChapterController::class, 'showChapterInquiries'])->name('chapters.chapinquiries');
+    Route::get('/inquiries/inquirieszapped', [ChapterController::class, 'showZappedChapterInquiries'])->name('chapters.chapinquirieszapped');
+});
+
+// Online Controller Routes...Coordinator Login Required
+Route::middleware('auth')->group(function () {
+    Route::get('/online/website', [ChapterController::class, 'showChapterWebsite'])->name('chapters.chapwebsite');
+    Route::get('/online/socialmedia', [ChapterController::class, 'showRptSocialMedia'])->name('chapters.chapsocialmedia');
+    Route::get('/online/websiteedit/{id}', [ChapterController::class, 'editChapterWebsite'])->name('chapters.editwebsite');
+    Route::post('/online/websiteupdate/{id}', [ChapterController::class, 'updateChapterWebsite'])->name('chapters.updatewebsite');
 });
 
 // Chapter Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
     Route::get('/chapter/chapterlist', [ChapterController::class, 'showChapters'])->name('chapters.chaplist');
     Route::get('/chapter/zapped', [ChapterController::class, 'showZappedChapter'])->name('chapters.chapzapped');
-
-    Route::get('/inquiries/inquiries', [ChapterController::class, 'showChapterInquiries'])->name('chapters.chapinquiries');
-    Route::get('/inquiries/inquirieszapped', [ChapterController::class, 'showZappedChapterInquiries'])->name('chapters.chapinquirieszapped');
-
     Route::get('/chapter/details/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
     Route::get('/chapters/checkein', [ChapterController::class, 'checkEIN'])->name('chapters.checkein');
     Route::post('/chapter/details/updateein', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
@@ -227,10 +247,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/chapter/detailsupdate/{id}', [ChapterController::class, 'updateChapterDetails'])->name('chapters.update');
     Route::get('/chapter/boardedit/{id}', [ChapterController::class, 'editChapterBoard'])->name('chapters.editboard');
     Route::post('/chapter/boardupdate/{id}', [ChapterController::class, 'updateChapterBoard'])->name('chapters.updateboard');
-    Route::get('/online/website', [ChapterController::class, 'showChapterWebsite'])->name('chapters.chapwebsite');
-    Route::get('/online/socialmedia', [ChapterController::class, 'showRptSocialMedia'])->name('chapters.chapsocialmedia');
-    Route::get('/online/websiteedit/{id}', [ChapterController::class, 'editChapterWebsite'])->name('chapters.editwebsite');
-    Route::post('/online/websiteupdate/{id}', [ChapterController::class, 'updateChapterWebsite'])->name('chapters.updatewebsite');
+    // Route::get('/online/website', [ChapterController::class, 'showChapterWebsite'])->name('chapters.chapwebsite');
+    // Route::get('/online/socialmedia', [ChapterController::class, 'showRptSocialMedia'])->name('chapters.chapsocialmedia');
+    // Route::get('/online/websiteedit/{id}', [ChapterController::class, 'editChapterWebsite'])->name('chapters.editwebsite');
+    // Route::post('/online/websiteupdate/{id}', [ChapterController::class, 'updateChapterWebsite'])->name('chapters.updatewebsite');
 });
 
 // ChapterReport Controller Routes...Coordinator Login Required
@@ -339,31 +359,31 @@ Route::middleware('auth')->group(function () {
 
 // EOYReports Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
-    Route::get('/eoy/status', [EOYReportController::class, 'showEOYStatus'])->name('eoyreports.eoystatus');
-    Route::get('/eoy/editstatus/{id}', [EOYReportController::class, 'editEOYDetails'])->name('eoyreports.view');
-    Route::post('/eoy/updatestatus/{id}', [EOYReportController::class, 'updateEOYDetails'])->name('eoyreports.update');
-    Route::get('/eoy/boardreport', [EOYReportController::class, 'showEOYBoardReport'])->name('eoyreports.eoyboardreport');
-    Route::get('/eoy/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.editboardreport');
-    Route::post('/eoy/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.activateboardreport');
-    Route::post('eoy/updateboardreport/{id}', [EOYReportController::class, 'updateEOYBoardReport'])->name('eoyreports.updateboardreport');
-    Route::get('/eoy/financialreport', [EOYReportController::class, 'showEOYFinancialReport'])->name('eoyreports.eoyfinancialreport');
-    Route::get('/eoy/reviewfinancialreport/{id}', [EOYReportController::class, 'reviewFinancialReport'])->name('eoyreports.reviewfinancialreport');
-    Route::post('/eoy/updatefinancialreport/{id}', [EOYReportController::class, 'updateEOYFinancialReport'])->name('eoyreports.updatefinancialreport');
-    Route::get('/eoy/unsubmit/{id}', [EOYReportController::class, 'updateUnsubmit']);
-    Route::get('/eoy/unsubmitfinal/{id}', [EOYReportController::class, 'updateUnsubmitFinal']);
-    Route::get('/eoy/clearreview/{id}', [EOYReportController::class, 'updateClearReview']);
-    Route::get('/eoy/attachments', [EOYReportController::class, 'showEOYAttachments'])->name('eoyreports.eoyattachments');
-    Route::get('/eoy/editattachments/{id}', [EOYReportController::class, 'editEOYAttachments'])->name('eoyreports.editattachments');
-    Route::post('/eoy/updateattachments/{id}', [EOYReportController::class, 'updateEOYAttachments'])->name('eoyreports.updateattachments');
-    Route::get('/eoy/boundaries', [EOYReportController::class, 'showEOYBoundaries'])->name('eoyreports.eoyboundaries');
-    Route::get('/eoy/editboundaries/{id}', [EOYReportController::class, 'editEOYBoundaries'])->name('eoyreports.editboundaries');
-    Route::post('/eoy/updateboundaries/{id}', [EOYReportController::class, 'updateEOYBoundaries'])->name('eoyreports.updateboundaries');
-    Route::get('/eoy/awards', [EOYReportController::class, 'showEOYAwards'])->name('eoyreports.eoyawards');
-    Route::get('/eoy/editawards/{id}', [EOYReportController::class, 'editEOYAwards'])->name('eoyreports.editawards');
-    Route::post('/eoy/updateawards/{id}', [EOYReportController::class, 'updateEOYAwards'])->name('eoyreports.updateawards');
-    Route::get('/eoy/irssubmission', [EOYReportController::class, 'showIRSSubmission'])->name('eoyreports.eoyirssubmission');
-    Route::get('/eoy/editirssubmission/{id}', [EOYReportController::class, 'editIRSSubmission'])->name('eoyreports.editirssubmission');
-    Route::post('/eoy/updateirssubmission/{id}', [EOYReportController::class, 'updateIRSSubmission'])->name('eoyreports.updateirssubmission');
+    Route::get('/eoyreports/status', [EOYReportController::class, 'showEOYStatus'])->name('eoyreports.eoystatus');
+    Route::get('/eoyreports/editstatus/{id}', [EOYReportController::class, 'editEOYDetails'])->name('eoyreports.view');
+    Route::post('/eoyreports/updatestatus/{id}', [EOYReportController::class, 'updateEOYDetails'])->name('eoyreports.update');
+    Route::get('/eoyreports/boardreport', [EOYReportController::class, 'showEOYBoardReport'])->name('eoyreports.eoyboardreport');
+    Route::get('/eoyreports/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.editboardreport');
+    Route::post('/eoyreports/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.activateboardreport');
+    Route::post('eoyreports/updateboardreport/{id}', [EOYReportController::class, 'updateEOYBoardReport'])->name('eoyreports.updateboardreport');
+    Route::get('/eoyreports/financialreport', [EOYReportController::class, 'showEOYFinancialReport'])->name('eoyreports.eoyfinancialreport');
+    Route::get('/eoyreports/reviewfinancialreport/{id}', [EOYReportController::class, 'reviewFinancialReport'])->name('eoyreports.reviewfinancialreport');
+    Route::post('/eoyreports/updatefinancialreport/{id}', [EOYReportController::class, 'updateEOYFinancialReport'])->name('eoyreports.updatefinancialreport');
+    Route::get('/eoyreports/unsubmit/{id}', [EOYReportController::class, 'updateUnsubmit']);
+    Route::get('/eoyreports/unsubmitfinal/{id}', [EOYReportController::class, 'updateUnsubmitFinal']);
+    Route::get('/eoyreports/clearreview/{id}', [EOYReportController::class, 'updateClearReview']);
+    Route::get('/eoyreports/attachments', [EOYReportController::class, 'showEOYAttachments'])->name('eoyreports.eoyattachments');
+    Route::get('/eoyreports/editattachments/{id}', [EOYReportController::class, 'editEOYAttachments'])->name('eoyreports.editattachments');
+    Route::post('/eoyreports/updateattachments/{id}', [EOYReportController::class, 'updateEOYAttachments'])->name('eoyreports.updateattachments');
+    Route::get('/eoyreports/boundaries', [EOYReportController::class, 'showEOYBoundaries'])->name('eoyreports.eoyboundaries');
+    Route::get('/eoyreports/editboundaries/{id}', [EOYReportController::class, 'editEOYBoundaries'])->name('eoyreports.editboundaries');
+    Route::post('/eoyreports/updateboundaries/{id}', [EOYReportController::class, 'updateEOYBoundaries'])->name('eoyreports.updateboundaries');
+    Route::get('/eoyreports/awards', [EOYReportController::class, 'showEOYAwards'])->name('eoyreports.eoyawards');
+    Route::get('/eoyreports/editawards/{id}', [EOYReportController::class, 'editEOYAwards'])->name('eoyreports.editawards');
+    Route::post('/eoyreports/updateawards/{id}', [EOYReportController::class, 'updateEOYAwards'])->name('eoyreports.updateawards');
+    Route::get('/eoyreports/irssubmission', [EOYReportController::class, 'showIRSSubmission'])->name('eoyreports.eoyirssubmission');
+    Route::get('/eoyreports/editirssubmission/{id}', [EOYReportController::class, 'editIRSSubmission'])->name('eoyreports.editirssubmission');
+    Route::post('/eoyreports/updateirssubmission/{id}', [EOYReportController::class, 'updateIRSSubmission'])->name('eoyreports.updateirssubmission');
 });
 
 // Board Controller Routes...Board Login Required
@@ -376,18 +396,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/board/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
     Route::get('/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
     Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
-    // Route::get('/board/m2mdonation/{id}', [BoardController::class, 'editM2MDonationForm'])->name('board.editm2mdonation');
     Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
     Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
+});
 
+// Board Payment Controller Routes...Board Login Required
+Route::middleware('auth')->group(function () {
+    Route::post('/process-payment', [BoardPaymentController::class, 'reRegistrationPayment'])->name('process.payment');
+    Route::post('/process-donation', [BoardPaymentController::class, 'm2mPayment'])->name('process.donation');
+    Route::post('/process-manual', [BoardPaymentController::class, 'manualPayment'])->name('process.manual');
+    Route::get('/board/reregpayment/{id}', [BoardPaymentController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
+    Route::get('/board/donation/{id}', [BoardPaymentController::class, 'editDonationForm'])->name('board.editdonate');
     Route::get('/board/grantrequestlist/{id}', [BoardController::class, 'viewGrantRequestList'])->name('board.viewgrantrequestlist');
-
     Route::get('/board/newgrantrequest/{id}', [BoardController::class, 'showNewGrantRequest'])->name('board.newgrantrequest');
     Route::post('/board/newgrantrequestupdate/{id}', [BoardController::class, 'updateNewGrantRequest'])->name('board.updatenewgrantrequest');
-
     Route::get('/board/grantdetails/{id}', [BoardController::class, 'viewGrantDetails'])->name('board.viewgrantdetails');
     Route::post('/board/updategrantrequest/{id}', [BoardController::class, 'updateGrantRequest'])->name('board.updategrantrequest');
-
 });
 
 // Financial Report Controller Routes...Board Login Required
@@ -426,22 +450,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
     Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
     Route::post('/files/storePhotos/{id}', [GoogleController::class, 'storePhotos']);
-});
-
-// Payment Controller Routes...Used for Board & Coordinator Layouts
-Route::middleware('auth')->group(function () {
-    Route::post('/process-payment', [PaymentController::class, 'reRegistrationPayment'])->name('process.payment');
-    Route::post('/process-donation', [PaymentController::class, 'm2mPayment'])->name('process.donation');
-    Route::post('/process-manual', [PaymentController::class, 'manualPayment'])->name('process.manual');
-    Route::get('/board/reregpayment/{id}', [PaymentController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
-    Route::get('/board/donation/{id}', [PaymentController::class, 'editDonationForm'])->name('board.editdonate');
-    Route::get('/payment/reregistration', [PaymentReportController::class, 'showChapterReRegistration'])->name('payment.chapreregistration');
-    Route::get('/payment/donations', [PaymentReportController::class, 'showRptDonations'])->name('payment.chapdonations');
-    Route::get('/payment/chapterpaymentedit/{id}', [PaymentReportController::class, 'editChapterPayment'])->name('payment.editpayment');
-    Route::get('/payment/chapterpaymenthistory/{id}', [PaymentReportController::class, 'viewPaymentHistory'])->name('payment.paymenthistory');
-    Route::post('/payment/chapterpaymentupdate/{id}', [PaymentReportController::class, 'updateChapterPayment'])->name('payment.updatepayment');
-    Route::get('/payment/reregistrationreminder', [PaymentReportController::class, 'createChapterReRegistrationReminder'])->name('payment.chapreregreminder');
-    Route::get('/payment/reregistrationlatereminder', [PaymentReportController::class, 'createChapterReRegistrationLateReminder'])->name('payment.chaprereglatereminder');
 });
 
 // Forum Subscription Controller Routes...Used for Board & Coordinator Layouts

@@ -83,7 +83,7 @@
                 <tr>
                     <td class="text-center">
                         @if ($assistConferenceCoordinatorCondition)
-                            <a href="{{ url("/eoy/editawards/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                            <a href="{{ url("/eoyreports/editawards/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                         @endif
                     </td>
                     <td>

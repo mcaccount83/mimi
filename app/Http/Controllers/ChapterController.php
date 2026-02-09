@@ -488,6 +488,7 @@ class ChapterController extends Controller implements HasMiddleware
             $chDetails = $baseQuery['chDetails'];
             $stateShortName = $baseQuery['stateShortName'];
             $chConfId = $baseQuery['chConfId'];
+            $startMonthId = $chDetails->start_month_id;
 
             $baseDisbandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterid);
             $PresDetails = $baseDisbandedBoardQuery['PresDetails'];
@@ -499,6 +500,7 @@ class ChapterController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails),
+                $this->baseMailDataController->getReRegData($startMonthId),
             );
 
             // ListAdmin Notification//

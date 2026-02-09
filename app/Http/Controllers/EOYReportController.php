@@ -347,16 +347,16 @@ class EOYReportController extends Controller implements HasMiddleware
             });
 
             if (count($activationStatuses) == 0) {
-                return redirect()->to('/eoy/boardreport')->with('info', 'No Incoming Board Members for Activation');
+                return redirect()->to('/eoyreports/boardreport')->with('info', 'No Incoming Board Members for Activation');
             } elseif (count($successfulActivations) == count($activationStatuses)) {
-                return redirect()->to('/eoy/boardreport')->with('success', 'All Board Info has been successfully activated');
+                return redirect()->to('/eoyreports/boardreport')->with('success', 'All Board Info has been successfully activated');
             } elseif (count($successfulActivations) > 0) {
                 $successCount = count($successfulActivations);
                 $totalCount = count($activationStatuses);
 
-                return redirect()->to('/eoy/boardreport')->with('warning', "Board activation completed: {$successCount}/{$totalCount} successful");
+                return redirect()->to('/eoyreports/boardreport')->with('warning', "Board activation completed: {$successCount}/{$totalCount} successful");
             } else {
-                return redirect()->to('/eoy/boardreport')->with('fail', 'Board activation failed for all chapters');
+                return redirect()->to('/eoyreports/boardreport')->with('fail', 'Board activation failed for all chapters');
             }
         }
 
@@ -1007,12 +1007,12 @@ class EOYReportController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->to('/eoy/attachments')->with('success', 'Report attachments successfully updated');
+            return redirect()->to('/eoyreports/attachments')->with('success', 'Report attachments successfully updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/eoy/attachments')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->to('/eoyreports/attachments')->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -1368,13 +1368,13 @@ class EOYReportController extends Controller implements HasMiddleware
             DB::commit();
 
             return to_route('eoyreports.editirssubmission', ['id' => $id])->with('success', 'Report attachments successfully updated');
-            // return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
+            // return redirect()->to('/eoyreports/irssubmission')->with('success', 'Report attachments successfully updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
             return to_route('eoyreports.editirssubmission', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
-            // return redirect()->to('/eoy/irssubmission')->with('success', 'Report attachments successfully updated');
+            // return redirect()->to('/eoyreports/irssubmission')->with('success', 'Report attachments successfully updated');
         }
     }
 }

@@ -15,9 +15,9 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css"> --}}
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
+    {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/brands.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/v5-font-face.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/v5-font-face.css" rel="stylesheet" /> --}}
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Theme style -->
@@ -373,7 +373,13 @@ window.onload = function () {
                         @if (isset($chapterReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $chapterReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-clipboard-list"></i>
+                                    <span class="fa-layers fa-fw nav-icon">
+  <i class="fa-solid fa-clipboard"></i>
+      <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.8em; font-weight: bold;">▬</span>
+  <i class="fa-solid fa-house" data-fa-transform="shrink-9 down-2" style=" color: rgba(0, 0, 0, 0.5);"></i>
+</span>
+                                    {{-- <i class="nav-icon fas fa-clipboard-list"></i> --}}
+
                                     <p>Chapter Reports</p>
                                 </a>
                             </li>
@@ -401,6 +407,32 @@ window.onload = function () {
                             </li>
                         @endif
 
+                        <!-- Payment/Donation Reports Menu Item -->
+                        @php
+                            if ($coordinatorCondition && $regionalCoordinatorCondition) {
+                                $paymentsRoute = route('paymentreports.paymentlog');
+                            } elseif ($ITCondition) {
+                                $paymentsRoute = route('paymentreports.paymentlog', ['check5' => 'yes']);
+                            } elseif ($m2mCondition) {
+                                $paymentsRoute = route('paymentreports.donations', ['check5' => 'yes']);
+                            }
+                            $activePaymentsRoutes = [
+                                'paymentreports/*'
+                            ];
+                        @endphp
+                        @if (isset($paymentsRoute))
+<li class="nav-item">
+    <a href="{{ $paymentsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activePaymentsRoutes) }}">
+        <span class="fa-layers fa-fw nav-icon">
+  <i class="fa-solid fa-clipboard"></i>
+      <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.8em; font-weight: bold;">▬</span>
+  <i class="fa-solid fa-dollar-sign" data-fa-transform="shrink-7 down-2" style=" color: rgba(0, 0, 0, 0.8);"></i>
+</span>
+        <p>Payment/Donation Reports</p>
+    </a>
+</li>
+                        @endif
+
                         <!-- End of Year Reports Menu Item-->
                             @php
                                 if (($coordinatorCondition && $displayLIVE) || ($eoyReportCondition && $displayLIVE) || ($eoyTestCondition && $displayTESTING)) {
@@ -411,7 +443,7 @@ window.onload = function () {
                                     $eoyReportsRoute = route('eoyreports.eoyirssubmission', ['check5' => 'yes']);
                                 }
                                 $activeEOYReportsRoutes = [
-                                    'eoy/*',
+                                    'eoyreports/*',
                                 ];
                             @endphp
                             @if (isset($eoyReportsRoute))
@@ -429,9 +461,7 @@ window.onload = function () {
                         <!-- Admin Reports Menu Item -->
                         @php
                             if ($coordinatorCondition && $conferenceCoordinatorCondition) {
-                                $adminReportsRoute = route('adminreports.paymentlist');
-                            } elseif ($ITCondition) {
-                                $adminReportsRoute = route('adminreports.paymentlist', ['check5' => 'yes']);
+                                $adminReportsRoute = route('adminreports.downloads');
                             }
                             $activeAdminReportsRoutes = [
                                 'adminreports/*'

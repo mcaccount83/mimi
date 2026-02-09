@@ -14,9 +14,9 @@
                     <div class="card-header">
                         <div class="dropdown">
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Payment List
+                                Payment Log
                             </h3>
-                            @include('layouts.dropdown_menus.menu_reports_admin')
+                            @include('layouts.dropdown_menus.menu_reports_payment')
                         </div>
                     </div>
             <!-- /.card-header -->
@@ -24,12 +24,12 @@
     <div class="card-body">
 
                     <!-- Filters -->
-                    <form method="GET" action="{{ route('adminreports.paymentlist') }}" class="mb-6">
+                    {{-- <form method="GET" action="{{ route('paymentreports.paymentlog') }}" class="mb-6">
                         <div class="flex gap-4">
                             <div>
                                 <label for="status" >Status</label>
                                 <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-                                    <option value="">All</option>
+                                    <option value="">Select</option>
                                     <option value="success" {{ request('status') == 'success' ? 'selected' : '' }}>Success</option>
                                     <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Failed</option>
                                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
@@ -43,7 +43,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </form> --}}
 
                     <!-- Logs Table -->
                     <table id="chapterlist" class="table table-sm table-hover" >
@@ -65,7 +65,7 @@
                             <tr>
                                 <td  class="text-center align-middle">
                                     @if ($ITCondition)
-                                    <a href="{{ route('adminreports.paymentdetails', $log->id) }}"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('paymentreports.paymentdetails', $log->id) }}"><i class="fas fa-eye"></i></a>
                                     @else
                                     @endif
                                 </td>
