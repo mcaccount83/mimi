@@ -237,7 +237,7 @@ class PaymentReportController extends Controller implements HasMiddleware
          // Use the appropriate query based on checkbox status
         if ($checkBox5Status) {
             $grantList = GrantRequest::with('chapters')
-                ->orderBy('submitted_at')
+                ->orderBy('submitted_at', 'desc')
                 ->get();
 
         } else {
@@ -245,7 +245,7 @@ class PaymentReportController extends Controller implements HasMiddleware
                 ->whereHas('chapters', function ($query) use ($confId) {
                     $query->where('conference_id', $confId);
                 })
-                ->orderBy('submitted_at')
+                ->orderBy('submitted_at', 'desc')
                 ->get();
             }
 

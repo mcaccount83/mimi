@@ -57,7 +57,7 @@
                         <td>{{ $list->chapters->name }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td>
-                            @if($list->submitted == '1') Submitted @else Draft @endif
+                            @if($list->submitted == '1') Submitted | <span class="date-mask">{{ $list->submitted_at}}</span> @else Draft @endif
                         </td>
                          <td>
                             @if($list->grant_approved == '1') Approved

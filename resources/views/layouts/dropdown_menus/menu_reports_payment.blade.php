@@ -4,15 +4,10 @@
         <a class="dropdown-item" href="{{ route('paymentreports.rereg') }}">Re-Registration Report</a>
         <a class="dropdown-item" href="{{ route('paymentreports.grantlist') }}">Grant Requests Report</a>
         {{-- <a class="dropdown-item" href="{{ route('paymentreports.donationlog') }}">Donation Log Report</a> --}}
+    @elseif ($m2mCondition || $ITCondition)
+        <a class="dropdown-item" href="{{ route('paymentreports.grantlist', ['check5' => 'yes']) }}">International Grant Requests Report</a>
     @elseif ($ITCondition)
         <a class="dropdown-item" href="{{ route('paymentreports.paymentlog', ['check5' => 'yes']) }}">International Payments Report</a>
         <a class="dropdown-item" href="{{ route('paymentreports.rereg', ['check5' => 'yes']) }}">International Re-Registration Report</a>
-    @endif
-    @if ($ITCondition)
-         <a class="dropdown-item" href="{{ route('paymentreports.grantlist') }}">Grant Requests Report</a>
-        {{-- <a class="dropdown-item" href="{{ route('paymentreports.donationlog') }}">Donation Log Report</a> --}}
-    @elseif ($m2mCondition || $ITCondition)
-        <a class="dropdown-item" href="{{ route('paymentreports.grantlist', ['check5' => 'yes']) }}">International Grant Requests Report</a>
-        {{-- <a class="dropdown-item" href="{{ route('paymentreports.donationlog', ['check5' => 'yes']) }}">International Donation Log Report</a> --}}
     @endif
 </div>
