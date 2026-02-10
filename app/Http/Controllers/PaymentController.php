@@ -387,21 +387,21 @@ class PaymentController extends Controller implements HasMiddleware
 
             if ($m2m_date != null) {
                 // Archive current M2M donation to history (if exists)
-                // if ($payments->m2m_date) {
-                //     PaymentHistory::create([
-                //         'chapter_id' => $id,
-                //         'payment_type' => 'm2m',
-                //         'payment_amount' => $payments->m2m_donation,
-                //         'payment_date' => $payments->m2m_date,
-                //     ]);
-                // }
+                if ($payments->m2m_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $id,
+                        'payment_type' => 'm2m',
+                        'payment_amount' => $payments->m2m_donation,
+                        'payment_date' => $payments->m2m_date,
+                    ]);
+                }
 
-                PaymentHistory::create([
-                    'chapter_id' => $id,
-                    'payment_type' => 'm2m',
-                    'payment_amount' => $input['m2m'],
-                    'payment_date' => $m2m_date,
-                ]);
+                // PaymentHistory::create([
+                //     'chapter_id' => $id,
+                //     'payment_type' => 'm2m',
+                //     'payment_amount' => $input['m2m'],
+                //     'payment_date' => $m2m_date,
+                // ]);
 
                 $payments->m2m_date = $m2m_date;
                 $payments->m2m_donation = $input['m2m'];
@@ -410,21 +410,21 @@ class PaymentController extends Controller implements HasMiddleware
 
             if ($sustaining_date != null) {
                 // Archive current sustaining donation to history (if exists)
-                // if ($payments->sustaining_date) {
-                //     PaymentHistory::create([
-                //         'chapter_id' => $id,
-                //         'payment_type' => 'sustaining',
-                //         'payment_amount' => $payments->sustaining_donation,
-                //         'payment_date' => $payments->sustaining_date,
-                //     ]);
-                // }
+                if ($payments->sustaining_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $id,
+                        'payment_type' => 'sustaining',
+                        'payment_amount' => $payments->sustaining_donation,
+                        'payment_date' => $payments->sustaining_date,
+                    ]);
+                }
 
-                PaymentHistory::create([
-                    'chapter_id' => $id,
-                    'payment_type' => 'sustaining',
-                    'payment_amount' => $$input['sustaining'],
-                    'payment_date' => $sustaining_date,
-                ]);
+                // PaymentHistory::create([
+                //     'chapter_id' => $id,
+                //     'payment_type' => 'sustaining',
+                //     'payment_amount' => $$input['sustaining'],
+                //     'payment_date' => $sustaining_date,
+                // ]);
 
                 $payments->sustaining_date = $sustaining_date;
                 $payments->sustaining_donation = $input['sustaining'];
@@ -515,11 +515,6 @@ class PaymentController extends Controller implements HasMiddleware
         ->orderBy('payment_date', 'desc')
         ->get();
 
-        $manualHistory = PaymentHistory::where('chapter_id', $id)
-        ->where('payment_type', 'manual')
-        ->orderBy('payment_date', 'desc')
-        ->get();
-
         $grantRequests = GrantRequest::where('chapter_id', $id)
         ->orderBy('submitted_at', 'desc')
         ->get();
@@ -527,7 +522,7 @@ class PaymentController extends Controller implements HasMiddleware
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chDetails' => $chDetails, 'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded,
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments, 'grantRequests' => $grantRequests,
-            'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory, 'manualHistory' => $manualHistory,
+            'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory,
         ];
 
         return view('payment.paymenthistory')->with($data);

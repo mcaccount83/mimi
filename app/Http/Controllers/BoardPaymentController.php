@@ -209,21 +209,21 @@ class BoardPaymentController extends Controller implements HasMiddleware
 
             if ($donation && $sustaining > 0) {
                    // Archive current sustaining donation to history (if exists)
-                // if ($payments->sustaining_date) {
-                //     PaymentHistory::create([
-                //         'chapter_id' => $chId,
-                //         'payment_type' => 'sustaining',
-                //         'payment_amount' => $payments->sustaining_donation,
-                //         'payment_date' => $payments->sustaining_date,
-                //     ]);
-                // }
+                if ($payments->sustaining_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $chId,
+                        'payment_type' => 'sustaining',
+                        'payment_amount' => $payments->sustaining_donation,
+                        'payment_date' => $payments->sustaining_date,
+                    ]);
+                }
 
-                PaymentHistory::create([
-                    'chapter_id' => $chId,
-                    'payment_type' => 'sustaining',
-                    'payment_amount' => $sustaining,
-                    'payment_date' => $paymentDate,
-                ]);
+                // PaymentHistory::create([
+                //     'chapter_id' => $chId,
+                //     'payment_type' => 'sustaining',
+                //     'payment_amount' => $sustaining,
+                //     'payment_date' => $paymentDate,
+                // ]);
 
                 $payments->sustaining_donation = $sustaining;
                 $payments->sustaining_date = $paymentDate;
@@ -355,21 +355,21 @@ class BoardPaymentController extends Controller implements HasMiddleware
         try {
             if ($hasM2M) {
                 // Archive current M2M donation to history (if exists)
-                // if ($payments->m2m_date) {
-                //     PaymentHistory::create([
-                //         'chapter_id' => $chId,
-                //         'payment_type' => 'm2m',
-                //         'payment_amount' => $payments->m2m_donation,
-                //         'payment_date' => $payments->m2m_date,
-                //     ]);
-                // }
+                if ($payments->m2m_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $chId,
+                        'payment_type' => 'm2m',
+                        'payment_amount' => $payments->m2m_donation,
+                        'payment_date' => $payments->m2m_date,
+                    ]);
+                }
 
-                PaymentHistory::create([
-                    'chapter_id' => $chId,
-                    'payment_type' => 'm2m',
-                    'payment_amount' => $m2m,
-                    'payment_date' => $paymentDate,
-                ]);
+                // PaymentHistory::create([
+                //     'chapter_id' => $chId,
+                //     'payment_type' => 'm2m',
+                //     'payment_amount' => $m2m,
+                //     'payment_date' => $paymentDate,
+                // ]);
 
                 $payments->m2m_donation = $m2m;
                 $payments->m2m_date = $paymentDate;
@@ -380,21 +380,21 @@ class BoardPaymentController extends Controller implements HasMiddleware
 
             if ($hasSustaining) {
                 // Archive current sustaining donation to history (if exists)
-                // if ($payments->sustaining_date) {
-                //     PaymentHistory::create([
-                //         'chapter_id' => $chId,
-                //         'payment_type' => 'sustaining',
-                //         'payment_amount' => $payments->sustaining_donation,
-                //         'payment_date' => $payments->sustaining_date,
-                //     ]);
-                // }
+                if ($payments->sustaining_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $chId,
+                        'payment_type' => 'sustaining',
+                        'payment_amount' => $payments->sustaining_donation,
+                        'payment_date' => $payments->sustaining_date,
+                    ]);
+                }
 
-                PaymentHistory::create([
-                    'chapter_id' => $chId,
-                    'payment_type' => 'sustaining',
-                    'payment_amount' => $sustaining,
-                    'payment_date' => $paymentDate,
-                ]);
+                // PaymentHistory::create([
+                //     'chapter_id' => $chId,
+                //     'payment_type' => 'sustaining',
+                //     'payment_amount' => $sustaining,
+                //     'payment_date' => $paymentDate,
+                // ]);
 
                 $payments->sustaining_donation = $sustaining;
                 $payments->sustaining_date = $paymentDate;
@@ -517,21 +517,21 @@ class BoardPaymentController extends Controller implements HasMiddleware
         try {
             if ($manualOrder && $manual > 0) {
                  // Archive current manual order to history (if exists)
-                // if ($payments->manual_date) {
-                //     PaymentHistory::create([
-                //         'chapter_id' => $chId,
-                //         'payment_type' => 'manual',
-                //         'payment_amount' => $payments->manual_order,
-                //         'payment_date' => $payments->manual_date,
-                //     ]);
-                // }
+                if ($payments->manual_date) {
+                    PaymentHistory::create([
+                        'chapter_id' => $chId,
+                        'payment_type' => 'manual',
+                        'payment_amount' => $payments->manual_order,
+                        'payment_date' => $payments->manual_date,
+                    ]);
+                }
 
-                PaymentHistory::create([
-                    'chapter_id' => $chId,
-                    'payment_type' => 'manual',
-                    'payment_amount' => $manual,
-                    'payment_date' => $paymentDate,
-                ]);
+                // PaymentHistory::create([
+                //     'chapter_id' => $chId,
+                //     'payment_type' => 'manual',
+                //     'payment_amount' => $manual,
+                //     'payment_date' => $paymentDate,
+                // ]);
 
                 $payments->manual_order = $manual;
                 $payments->manual_date = $paymentDate;

@@ -96,7 +96,6 @@
                         <li class="nav-item"><a class="nav-link" href="#m2m" data-toggle="tab">M2M Fund Donations</a></li>
                         <li class="nav-item"><a class="nav-link" href="#sustaining" data-toggle="tab">Sustaining Chapter Donations</a></li>
                         <li class="nav-item"><a class="nav-link" href="#grants" data-toggle="tab">Grant Requests</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#manual" data-toggle="tab">Manual Orders</a></li>
                     </ul>
                 </div>
                 <!-- /.card-header -->
@@ -156,14 +155,14 @@
                                     @if($chPayments->m2m_date || $m2mHistory->count() > 0)
 
                                         {{-- Current Donation --}}
-                                        {{-- @if($chPayments->m2m_date)
+                                        @if($chPayments->m2m_date)
                                         <div class="card mb-2">
                                             <div class="card-body">
                                                 Date: {{ date('m/d/Y', strtotime($chPayments->m2m_date)) }}<br>
                                                 Amount: ${{ number_format($chPayments->m2m_donation, 2) }}<br>
                                             </div>
                                         </div>
-                                        @endif --}}
+                                        @endif
 
                                         {{-- Historical Donations --}}
                                         @if($m2mHistory->count() > 0)
@@ -194,14 +193,14 @@
                                     @if($chPayments->sustaining_date || $sustainingHistory->count() > 0)
 
                                         {{-- Current Donation --}}
-                                        {{-- @if($chPayments->sustaining_date)
+                                        @if($chPayments->sustaining_date)
                                         <div class="card mb-2">
                                             <div class="card-body">
                                                 Date: {{ date('m/d/Y', strtotime($chPayments->sustaining_date)) }}<br>
                                                 Amount: ${{ number_format($chPayments->sustaining_donation, 2) }}<br>
                                             </div>
                                         </div>
-                                        @endif --}}
+                                        @endif
 
                                         {{-- Historical Donations --}}
                                         @if($sustainingHistory->count() > 0)
@@ -243,44 +242,6 @@
                                             </div>
                                         @endif
                                     @endforeach
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Manual Tab --}}
-                        <div class="tab-pane" id="manual">
-                            <h3 class="profile-username">Manual Orders</h3>
-                            <div class="row mb-4">
-                                <div class="col-12">
-                                    {{-- Check if there are ANY orders (current OR historical) --}}
-                                    @if($chPayments->manual_date || $manualHistory->count() > 0)
-
-                                        {{-- Current Order --}}
-                                        {{-- @if($chPayments->manual_date)
-                                        <div class="card mb-2">
-                                            <div class="card-body">
-                                                Date: {{ date('m/d/Y', strtotime($chPayments->manual_date)) }}<br>
-                                                Amount: ${{ number_format($chPayments->manual_order, 2) }}<br>
-                                            </div>
-                                        </div>
-                                        @endif --}}
-
-                                        {{-- Historical Orders --}}
-                                        @if($manualHistory->count() > 0)
-                                            @foreach($manualHistory as $payment)
-                                            <div class="card mb-2">
-                                                <div class="card-body">
-                                                    Date: {{ date('m/d/Y', strtotime($payment->payment_date)) }}<br>
-                                                    Amount: ${{ number_format($payment->payment_amount, 2) }}<br>
-                                                </div>
-                                            </div>
-                                            @endforeach
-                                        @endif
-
-                                    @else
-                                        {{-- Only show this if BOTH current and history are empty --}}
-                                        <p class="text-muted">No manual orders</p>
-                                    @endif
                                 </div>
                             </div>
                         </div>
