@@ -134,17 +134,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/techreports/eoy/updateeoylive', [TechReportController::class, 'updateEOYLive'])->name('techreports.updateeoylive');
     Route::post('/techreports/eoy/updateunsubscribelists', [TechReportController::class, 'updateUnsubscribeLists'])->name('techreports.updateunsubscribelists');
     Route::post('/techreports/eoy/updatesubscribelists', [TechReportController::class, 'updateSubscribeLists'])->name('techreports.updatesubscribelists');
+    Route::get('/techreports/conferencelist', [TechReportController::class, 'conferenceList'])->name('techreports.conferencelist');
+    Route::get('/techreports/regionlist', [TechReportController::class, 'regionList'])->name('techreports.regionlist');
+    Route::post('/techreports/updateregion/{id}', [TechReportController::class, 'updateRegion'])->name('techreports.updateregion');
+    Route::get('/techreports/statelist', [TechReportController::class, 'stateList'])->name('techreports.statelist');
+    Route::post('/techreports/updatestate/{id}', [TechReportController::class, 'updateState'])->name('techreports.updatestate');
 });
 
 // Admin Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
-    Route::get('/adminreports/downloads', [ResourcesController::class, 'showDownloads'])->name('adminreports.downloads');
 
-    Route::get('/adminreports/conferencelist', [AdminReportController::class, 'conferenceList'])->name('adminreports.conferencelist');
-    Route::get('/adminreports/regionlist', [AdminReportController::class, 'regionList'])->name('adminreports.regionlist');
-    Route::post('/adminreports/updateregion/{id}', [AdminReportController::class, 'updateRegion'])->name('adminreports.updateregion');
-    Route::get('/adminreports/statelist', [AdminReportController::class, 'stateList'])->name('adminreports.statelist');
-    Route::post('/adminreports/updatestate/{id}', [AdminReportController::class, 'updateState'])->name('adminreports.updatestate');
+
 });
 
 // User Controller Routes...Coordinator Login Required
@@ -183,6 +183,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/resources/addtoolkit', [ResourcesController::class, 'addToolkit'])->name('resources.addtoolkit');
     Route::post('/resources/updatetoolkit/{id}', [ResourcesController::class, 'updateToolkit'])->name('resources.updatetoolkit');
     Route::get('/resources/elearning', [ResourcesController::class, 'showELearning'])->name('resources.elearning');
+    Route::get('/resources/downloads', [ResourcesController::class, 'showDownloads'])->name('resources.downloads');
 });
 
 // Payment Controller Routes...Coordinator Login Required

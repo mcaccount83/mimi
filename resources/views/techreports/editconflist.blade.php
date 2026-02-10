@@ -220,7 +220,7 @@ function deleteRow(button) {
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
         $.ajax({
-            url: `/adminreports/deleteconf/${id}`,
+            url: `/techreports/deleteconf/${id}`,
             method: 'DELETE',
             success: function(response) {
                 if (response.success) {

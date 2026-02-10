@@ -184,7 +184,7 @@ $(document).ready(function() {
         }
 
         // Build URL using named route
-        var updateUrl = "{{ route('adminreports.updatestate', ['id' => 'PLACEHOLDER']) }}";
+        var updateUrl = "{{ route('techreports.updatestate', ['id' => 'PLACEHOLDER']) }}";
         updateUrl = updateUrl.replace('PLACEHOLDER', stateId);
 
         // Send AJAX request

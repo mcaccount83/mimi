@@ -8,4 +8,7 @@
         <a class="dropdown-item" href="{{ route('techreports.chapterlistzapped') }}">Zapped Board Pages (View As)</a>
         <a class="dropdown-item" href="{{ route('techreports.chapterlistpending') }}">Pending Board Pages (View As)</a>
         <a class="dropdown-item" href="{{ route('techreports.eoy') }}">End of Year Procedures</a>
+        <a class="dropdown-item" href="{{ route('techreports.conferencelist') }}">Conference List</a>
+        <a class="dropdown-item" href="{{ route('techreports.regionlist') }}">Region List</a>
+        <a class="dropdown-item" href="{{ route('techreports.statelist') }}">State List</a>
   </div>

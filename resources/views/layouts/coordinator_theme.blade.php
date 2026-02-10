@@ -401,7 +401,14 @@ window.onload = function () {
                         @if (isset($coordReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $coordReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeCoordReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-clipboard-user"></i>
+
+                                                                          <span class="fa-layers fa-fw nav-icon">
+  <i class="fa-solid fa-clipboard"></i>
+      <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.8em; font-weight: bold;">▬</span>
+  <i class="fa-solid fa-user-friends" data-fa-transform="shrink-9 down-2" style=" color: rgba(0, 0, 0, 0.5);"></i>
+</span>
+
+                                    {{-- <i class="nav-icon fas fa-clipboard-user"></i> --}}
                                     <p>Coordinator Reports</p>
                                 </a>
                             </li>
@@ -459,8 +466,8 @@ window.onload = function () {
                             @endif
 
                         <!-- Admin Reports Menu Item -->
-                        @php
-                            if ($coordinatorCondition && $conferenceCoordinatorCondition) {
+                        {{-- @php
+                            if ($ITCondition) {
                                 $adminReportsRoute = route('adminreports.downloads');
                             }
                             $activeAdminReportsRoutes = [
@@ -474,7 +481,7 @@ window.onload = function () {
                                     <p>Admin Reports</p>
                                 </a>
                             </li>
-                        @endif
+                        @endif --}}
 
                          <!-- User Reports Menu Item -->
                         @php
@@ -488,7 +495,10 @@ window.onload = function () {
                         @if (isset($userReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $userReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeUserReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-paste"></i>
+
+
+
+                                    <i class="nav-icon fas fa-clipboard-user"></i>
                                     <p>User Reports</p>
                                 </a>
                             </li>
@@ -506,7 +516,12 @@ window.onload = function () {
                         @if (isset($techReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $techReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeTechReportsRoutes) }}">
-                                    <i class="nav-icon fas fa-clipboard-question"></i>
+       <span class="fa-layers fa-fw nav-icon">
+  <i class="fa-solid fa-clipboard"></i>
+      <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.8em; font-weight: bold;">▬</span>
+  <i class="fa-solid fa-screwdriver-wrench" data-fa-transform="shrink-9 down-2" style=" color: rgba(0, 0, 0, 0.8);"></i>
+</span>
+                            {{-- <i class="nav-icon fas fa-clipboard-question"></i> --}}
                                     <p>IT Reports</p>
                                 </a>
                             </li>
