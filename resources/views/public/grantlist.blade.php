@@ -57,7 +57,8 @@
                         <tbody>
                             @foreach($grants as $list)
                                 <tr style="border-bottom: 1px solid #555;">
-                                    <td><span class="date-mask">{{ $list->submitted_at}}</span></td>
+                                    {{-- <td><span class="date-mask">{{ $list->submitted_at}}</span></td> --}}
+                                    <td>{{ \Carbon\Carbon::parse($list->submitted_at)->format('M Y') }}</td>
                                     <td>{{$list->chapterstate->state_short_name}}</td>
                                     <td>{{ $list->review_description}}</td>
                                     <td><span class="ml-5">${{ number_format($list->amount_awarded, 2) }}</span></td>
