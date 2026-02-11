@@ -1,5 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<style>
+    @page {
+        margin: 50px 50px 60px 50px;
+    }
+
+    .page-number {
+        position: fixed;
+        bottom: -25px;
+        text-align: center;
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .page-number:before {
+        content: "Page " counter(page);
+    }
+</style>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,29 +26,31 @@
 </head>
 <body>
 
-    <table width="100%" style="border: none; margin-bottom: 20px;">
+<div class="page-number"></div>
+
+<table width="100%" style="border: none; margin-bottom: 20px;">
     <tr>
         <td width="20%" style="vertical-align: top; padding: 10px;">
             <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc-noarch.png' }}" alt="MC" style="width: 120px;">
         </td>
         <td width="80%" style="text-align: center; vertical-align: middle;">
-                <h2 style="margin: 0;">International MOMS Club<sub style="font-size: 0.5em;">&reg;</sub><br>
-                Mother-to-Mother Fund<sub style="font-size: 0.5em;">&reg;</sub> Grants<br>
-                January 1994 - Present</h2>
+            <h2 style="margin: 0;">International MOMS Club<sub style="font-size: 0.5em;">&reg;</sub><br>
+            Mother-to-Mother Fund<sub style="font-size: 0.5em;">&reg;</sub> Grants<br>
+            January 1994 - Present</h2>
             <h2>Total Awarded:  ${{ number_format($totalLifetimeGrants, 2) }}</h2>
         </td>
     </tr>
 </table>
 
-<p>Below are the situations for which grants have been given since the beginning of the International MOMS Club’s Mother-To-Mother Fund in 1994, through the date of this publication.</p>
-<p>As you’ll see, each situation is unique and extremely devastating to the member and/or her family. Each grant request was considered individually and each situation was weighed for severity and the ability of a family to prepare for the situation.</p>
+<p>Below are the situations for which grants have been given since the beginning of the International MOMS Club's Mother-To-Mother Fund in 1994, through the date of this publication.</p>
+<p>As you'll see, each situation is unique and extremely devastating to the member and/or her family. Each grant request was considered individually and each situation was weighed for severity and the ability of a family to prepare for the situation.</p>
 <p>The Fund was originally created to help when natural disasters struck. In 1996, we were able to expand the Fund to also help with devastating personal financial disasters.</p>
-<p>We believe you’ll see from the situations below, that the Fund has fulfilled its goal of helping MOMS Club members suffering from unexpected and devastating natural and personal disasters.</p>
+<p>We believe you'll see from the situations below, that the Fund has fulfilled its goal of helping MOMS Club members suffering from unexpected and devastating natural and personal disasters.</p>
 <p>The amount of money we have been able to give in grants has grown over the years, both in the number of grants and the possible size of each. We hope that the Fund will continue to grow so we can make an even more significant positive impact in the lives of our members-in-need in the future.</p>
 
 <br>
 
-         <table width="100%" style="border-collapse: collapse;">
+<table width="100%" style="border-collapse: collapse;">
     <thead>
         <tr style="border-bottom: 2px solid #333; font-weight: bold;">
             <td width="15%">Date</td>
@@ -61,19 +82,15 @@
         @endforeach
     </tbody>
 </table>
-                <br>
- <div class="col-md-12" style="text-align: center;">
+
+<br>
+
+<div style="text-align: center;">
     <h2>Your donations to the Mother-To-Mother Fund<br>
         made these grants possible!</h2>
-                        <br>
-
-                 <center>
-        <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc-noarch.png' }}" alt="MC" style="width: 200px;">
-    </center>
-
     <br>
-
-
+    <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc-noarch.png' }}" alt="MC" style="width: 200px;">
+</div>
 
 </body>
 </html>
