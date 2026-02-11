@@ -101,6 +101,9 @@ Route::post('/updatenewinquiry', [PublicController::class, 'updateNewInquiry'])-
 Route::get('/newinquirysuccess', [PublicController::class, 'viewNewInquiry'])->name('public.newinquirysuccess');
 Route::get('/grantlist', [PublicController::class, 'viewGrantList'])->name('public.grantlist');
 
+Route::get('/grantlist-pdf', [PublicController::class, 'generateGratList'])->name('pdf.grantlist');
+Route::post('/grant-list-pdf', [PublicController::class, 'saveGratList'])->name('pdf.generategrantlist');
+
 
 // Allow error log to be viewed without login
 Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
@@ -440,9 +443,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/board/combinedirsfilingcorrections/pdf', [PDFController::class, 'generateCombinedIRSFilingCorrections'])->name('pdf.combinedirsfilingcorrections');
     Route::get('/board/grantrequest/pdf/{id}', [PDFController::class, 'generateFGrantRequest'])->name('pdf.grantrequest');
     Route::post('/grant-request-pdf', [PDFController::class, 'saveGrantRequest'])->name('pdf.generategrantrequest');
-    Route::get('/grantlist-pdf', [PDFController::class, 'generateGratList'])->name('pdf.grantlist');
-    Route::post('/grant-list-pdf', [PDFController::class, 'saveGratList'])->name('pdf.generategrantlist');
-
 });
 
 // Google Controller -- Uploading Files Routes...Used for Board & Coordinator Layouts

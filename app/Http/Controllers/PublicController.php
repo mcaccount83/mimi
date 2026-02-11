@@ -33,6 +33,7 @@ use App\Models\Resources;
 use App\Models\State;
 use App\Models\User;
 use App\Services\PositionConditionsService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -1116,5 +1117,79 @@ class PublicController extends Controller
     return view('public.grantlist')->with($data);
 }
 
+  public function saveGratList(Request $request)
+    {
+        // $googleDrive = GoogleDrive::where('name', 'grant_uploads')->first();
+        // $sharedDriveId = $googleDrive->folder_id;
+
+        $result = $this->generateGratList();
+        $pdf = $result['pdf'];
+        $name = $result['filename'];
+
+        $pdfPath = storage_path('app/pdf_reports/'.$name);
+        $pdf->save($pdfPath);
+        $filename = basename($pdfPath);
+        $mimetype = 'application/pdf';
+        $filecontent = file_get_contents($pdfPath);
+
+        // if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+        //     $existingDocRecord = GrantRequest::find($grantId);
+        //     if ($existingDocRecord) {
+        //         $existingDocRecord->grant_pdf_path = $file_id;
+        //         $existingDocRecord->save();
+        //     } else {
+        //         Log::error("Expected document record for grant id {$grantId} not found");
+        //         $newDocData = ['id' => $grantId];
+        //         $newDocData['file_path'] = $file_id;
+        //         GrantRequest::create($newDocData);
+        //     }
+
+        return $pdfPath;  // Return the full local stored path
+    }
+
+    public function generateGratList()
+    {
+        $grantList = GrantRequest::with('chapters', 'chapterstate')
+            ->where('grant_approved', '1')
+            ->orderBy('completed_at')
+            ->get();
+
+            // Calculate total lifetime grants
+        $totalLifetimeGrants = $grantList->sum('amount_awarded');
+
+        // Group grants by fiscal year
+        $grantsByFiscalYear = $grantList->groupBy(function($grant) {
+            $date = \Carbon\Carbon::parse($grant->completed_at);
+            // Fiscal year runs July 1 - June 30
+            // If month is July(6) or later, fiscal year starts this year
+            // If month is before July, fiscal year started last year
+            if ($date->month >= 7) {
+                return $date->year . '-' . ($date->year + 1);
+            } else {
+                return ($date->year - 1) . '-' . $date->year;
+            }
+        // })->sortKeysDesc(); // Sort fiscal years descending (newest first)
+        })->sortKeys(); // Sort fiscal years (oldest first)
+
+        $pdfData =[
+            'grantsByFiscalYear' => $grantsByFiscalYear, 'totalLifetimeGrants' => $totalLifetimeGrants,
+        ];
+
+        // $pdf = Pdf::loadView('pdf.grantlist', compact('pdfData'));
+        // $pdf = Pdf::loadView('pdf.grantlist', compact('grantsByFiscalYear', 'totalLifetimeGrants'));
+        $pdf = Pdf::loadView('pdf.grantlist', $pdfData);
+
+        $filename = 'GrantList.pdf';
+
+
+        // if ($streamResponse) {
+            return $pdf->stream($filename, ['Attachment' => 0]);
+        // }
+
+        // return [
+        //     'pdf' => $pdf,
+        //     'filename' => $filename,
+        // ];
+    }
 
 }
