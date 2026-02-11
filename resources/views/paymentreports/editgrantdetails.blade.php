@@ -88,7 +88,7 @@
 </div>
 
 <div class="form-group mt-2" >
-    <label for="Review_Log">Reviewer Notes Logged:</label>
+    <label for="Review_Log">Review Notes Logged:</label>
     <small>Not visible to chapters</small>
     <textarea class="form-control" style="width:100%" rows="8" name="Review_Log" id="Review_Log" readonly>{{ $grantDetails['review_notes'] }}</textarea>
 </div>
