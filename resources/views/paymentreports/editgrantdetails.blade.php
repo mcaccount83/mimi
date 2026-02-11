@@ -34,7 +34,11 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
+                    @if($chDetails != null)
                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    @else
+                    <h3 class="profile-username text-center">{{$stateShortName}}</h3>
+                    @endif
                 <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                 <br>
                 </p>
@@ -69,8 +73,15 @@
                 </div>
 
                 <div class="form-group mt-2" id="reviewNotes">
-                    <label for="AssignedReviewer">Review Notes:</label>
+                    <label for="AssignedReviewer">Reviewer Notes:</label>
+                    <small>Not visible to chapter</small>
                     <textarea class="form-control" style="width:100%" rows="6" name="review_notes" id="review_notes">{{ $grantDetails['review_notes'] }}</textarea>
+                </div>
+
+                <div class="form-group mt-2" id="reviewNotes">
+                    <label for="AssignedReviewer">Review Description:</label>
+                    <small>To be published with public list information</small>
+                    <textarea class="form-control" style="width:100%" rows="6" name="review_description" id="review_description">{{ $grantDetails['review_description'] }}</textarea>
                 </div>
 
                  <div class="d-flex align-items-center justify-content-between w-100">
@@ -109,6 +120,7 @@
 
                 <li class="list-group-item">
                 <div class="text-center">
+                    @if($chDetails != null)
                     @if ($chDetails->active_status == 1 )
                         <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                     @elseif ($chDetails->active_status == 2)
@@ -121,6 +133,7 @@
                         <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
                         Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
                         {{ $chDetails->disband_reason }}
+                    @endif
                     @endif
                 </div>
                 </li>
@@ -141,8 +154,9 @@
                 @else
                     <button class="btn bg-gradient-primary mb-2 disabled" type="button" id="financial-pdf" disabled><i class="fas fa-file-pdf mr-2"></i>No PDF Report Available</button><br>
                 @endif
+                @if($chDetails != null)
                     <button type="button" id="btn-back" class="btn btn-primary mb-2" onclick="window.location.href='{{ route('payment.paymenthistory', $grantDetails->chapter_id) }}'"><i class="fas fa-hand-holding-dollar mr-2" ></i>Chapter Donation History</button>
-
+                @endif
                                                 {{-- <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="fas fa-file-invoice-dollar "></i></a> --}}
 
                     <button type="button" id="btn-back" class="btn btn-primary mb-2" onclick="window.location.href='{{ route('paymentreports.grantlist') }}'"><i class="fas fa-reply mr-2" ></i>Back to Grant List</button>
@@ -194,15 +208,23 @@
                         <div class="row mt-2">
                             <div class="col-md-12">
                                 <strong>Name:</strong><br>
+                                @if ( $grantDetails->first_name )
                                 {{ $grantDetails->first_name}} {{ $grantDetails->last_name}}
+                                @else
+                                Not Answered
+                                @endif
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-12">
                                 <strong>Address:</strong><br>
+                                @if ( $grantDetails->address )
                                 {{ $grantDetails->address}}<br>
                                 @if( $grantDetails->city != null){{ $grantDetails->city}}, @endif{{ $grantDetails->state?->state_short_name}} {{ $grantDetails->zip}}<br>
                                 {{ $grantDetails->country?->short_name}}
+                                @else
+                                Not Answered
+                                @endif
                             </div>
                         </div>
                         <div class="row mt-2">

@@ -18,6 +18,11 @@ class GrantRequest extends Model
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in grant_requests BelongsTo 'id' in chapters
     }
 
+    public function chapterstate(): BelongsTo
+    {
+        return $this->belongsTo(State::class, 'chapter_state', 'id');  // 'state' in grant_requests BelongsTo 'id' in state
+    }
+
     public function state(): BelongsTo
     {
         return $this->belongsTo(State::class, 'state_id', 'id');  // 'state' in grant_requests BelongsTo 'id' in state

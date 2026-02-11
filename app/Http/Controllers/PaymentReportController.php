@@ -236,13 +236,13 @@ class PaymentReportController extends Controller implements HasMiddleware
 
          // Use the appropriate query based on checkbox status
         if ($checkBox5Status) {
-            $grantList = GrantRequest::with('chapters')
+            $grantList = GrantRequest::with('chapters', 'chapterstate')
                 ->orderBy('submitted_at', 'desc')
                 ->get();
 
         } else {
-            $grantList = GrantRequest::with('chapters')
-                ->whereHas('chapters', function ($query) use ($confId) {
+            $grantList = GrantRequest::with('chapters', 'chapterstate')
+                ->whereHas('chapterstate', function ($query) use ($confId) {
                     $query->where('conference_id', $confId);
                 })
                 ->orderBy('submitted_at', 'desc')
@@ -257,25 +257,39 @@ class PaymentReportController extends Controller implements HasMiddleware
     public function editGrantDetails(Request $request, $grantId): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['cdId'];
-        $confId = $user['confId'];
+    $coorId = $user['cdId'];
+    $confId = $user['confId'];
 
-        $grantDetails = GrantRequest::with('chapters', 'state', 'country')
-            ->find($grantId);
-        $chapterId = $grantDetails->chapter_id;
+    $grantDetails = GrantRequest::with('chapters', 'chapterstate', 'state', 'country')
+        ->find($grantId);
+    $chapterId = $grantDetails->chapter_id;
 
+    // Only get chapter details if chapter_id is not null
+    if ($chapterId) {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chConfId = $baseQuery['chConfId'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
+    } else {
+        // Set defaults when there's no chapter
+        $chDetails = null;
+        $chConfId = $grantDetails->chapterstate->conference_id;
+        $stateShortName = $grantDetails->chapterstate->state_long_name;
+        $regionLongName = $grantDetails->chapterstate->region->long_name;
+        $conferenceDescription = $grantDetails->chapterstate->conference->description;
+    }
 
-        $grList = $this->userController->loadGrantReviewerList($chConfId) ?? null;
+    // $stateName = $grantDetails->chapterstate->state_long_name;
+    // $regionName = $grantDetails->chapterstate->region->long_name;
+    // $conferenceName = $grantDetails->chapterstate->conference->description;
+
+    $grList = $chConfId ? $this->userController->loadGrantReviewerList($chConfId) : null;
 
         $data = ['id' => $grantId, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'confId' => $confId, 'chConfId' => $chConfId, 'grantDetails' => $grantDetails,
-            'grList' => $grList
+            'grList' => $grList,
         ];
 
         return view('paymentreports.editgrantdetails')->with($data);

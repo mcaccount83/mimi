@@ -99,6 +99,8 @@ Route::get('/newcoordinatorsuccess', [PublicController::class, 'viewNewCoordinat
 Route::get('/newinquiry', [PublicController::class, 'editNewInquiry'])->name('public.newinquiry');
 Route::post('/updatenewinquiry', [PublicController::class, 'updateNewInquiry'])->name('public.updatenewinquiry');
 Route::get('/newinquirysuccess', [PublicController::class, 'viewNewInquiry'])->name('public.newinquirysuccess');
+Route::get('/grantlist', [PublicController::class, 'viewGrantList'])->name('public.grantlist');
+
 
 // Allow error log to be viewed without login
 Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');

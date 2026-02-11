@@ -24,6 +24,7 @@ use App\Models\InquiryApplication;
 use App\Models\CoordinatorApplication;
 use App\Models\Coordinators;
 use App\Models\Country;
+use App\Models\GrantRequest;
 use App\Models\Month;
 use App\Models\PaymentLog;
 use App\Models\RegionInquiry;
@@ -1083,4 +1084,37 @@ class PublicController extends Controller
             DB::disconnect();
         }
     }
+
+     public function viewGrantList(Request $request): View
+{
+    $grantList = GrantRequest::with('chapters', 'chapterstate')
+        ->where('grant_approved', '1')
+        ->orderBy('completed_at')
+        ->get();
+
+        // Calculate total lifetime grants
+    $totalLifetimeGrants = $grantList->sum('amount_awarded');
+
+    // Group grants by fiscal year
+    $grantsByFiscalYear = $grantList->groupBy(function($grant) {
+        $date = \Carbon\Carbon::parse($grant->completed_at);
+        // Fiscal year runs July 1 - June 30
+        // If month is July(6) or later, fiscal year starts this year
+        // If month is before July, fiscal year started last year
+        if ($date->month >= 7) {
+            return $date->year . '-' . ($date->year + 1);
+        } else {
+            return ($date->year - 1) . '-' . $date->year;
+        }
+    })->sortKeysDesc(); // Sort fiscal years descending (newest first)
+    // })->sortKeys(); // Sort fiscal years (oldest first)
+
+    $data = [
+        'grantsByFiscalYear' => $grantsByFiscalYear, 'totalLifetimeGrants' => $totalLifetimeGrants,
+    ];
+
+    return view('public.grantlist')->with($data);
+}
+
+
 }
