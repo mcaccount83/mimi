@@ -16,7 +16,6 @@
                                     <div class="col-md-12"><br><br></div>
                                     <h2 class="text-center">Mother-to-Mother Fund<br>
                                                 Grants Given</h2>
-                                    </h2>
                                     <p class="description text-center">
                                     </p>
 
