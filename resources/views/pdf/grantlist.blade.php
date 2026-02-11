@@ -13,23 +13,13 @@
             <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc-noarch.png' }}" alt="MC" style="width: 120px;">
         </td>
         <td width="80%" style="text-align: center; vertical-align: middle;">
-            <h2 style="margin: 0;">International MOMS Club<br>
-                Mother-to-Mother Fund Grants<br>
-                January 1994 - Present<br>
-                ${{ number_format($totalLifetimeGrants, 2) }}</h2>
+                <h2 style="margin: 0;">International MOMS Club<sub style="font-size: 0.5em;">&reg;</sub><br>
+                Mother-to-Mother Fund<sub style="font-size: 0.5em;">&reg;</sub> Grants<br>
+                January 1994 - Present</h2>
+            <h2>Total Awarded:  ${{ number_format($totalLifetimeGrants, 2) }}</h2>
         </td>
     </tr>
 </table>
-    {{-- <center>
-        <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc-noarch.png' }}" alt="MC" style="width: 150px;">
-    </center>
-<br>
-
-                    <div class="col-md-12" style="text-align: center;">
-    <h2>Mother-to-Mother Fund Grants<br>
-        January 1994 - Present<br>
-        ${{ number_format($totalLifetimeGrants, 2) }}</h2>
-</div> --}}
 
 <p>Below are the situations for which grants have been given since the beginning of the International MOMS Club’s Mother-To-Mother Fund in 1994, through the date of this publication.</p>
 <p>As you’ll see, each situation is unique and extremely devastating to the member and/or her family. Each grant request was considered individually and each situation was weighed for severity and the ability of a family to prepare for the situation.</p>
