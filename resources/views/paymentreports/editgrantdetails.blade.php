@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="form-group row mt-3">
-                    <label class="col-md-8 col-form-label">Amount Rewarded:</label>
+                    <label class="col-md-8 col-form-label">Amount Awarded:</label>
                     <div class="col-sm-4">
                         <div class="input-group row">
                             <div class="input-group-prepend">
@@ -72,11 +72,26 @@
                     </div>
                 </div>
 
-                <div class="form-group mt-2" id="reviewNotes">
+                {{-- <div class="form-group mt-2" id="reviewNotes">
                     <label for="AssignedReviewer">Reviewer Notes:</label>
                     <small>Not visible to chapter</small>
                     <textarea class="form-control" style="width:100%" rows="6" name="review_notes" id="review_notes">{{ $grantDetails['review_notes'] }}</textarea>
-                </div>
+                </div> --}}
+
+                <div class="form-group mt-2" >
+    <label for="Review_Note">Add New Note:</label>
+<textarea class="form-control" style="width:100%" rows="3" name="Review_Note" id="Review_Note" {{ $grantDetails['review_complete'] != "" ? 'readonly' : '' }}></textarea>    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
+      <button type="button" id="AddNote" class="btn btn-sm bg-gradient-success disabled" disabled>
+    <i class="fa fa-plus fa-fw" aria-hidden="true"></i>&nbsp; Add Note to Log
+</button>
+    </div>
+</div>
+
+<div class="form-group mt-2" >
+    <label for="Review_Log">Reviewer Notes Logged:</label>
+    <small>Not visible to chapters</small>
+    <textarea class="form-control" style="width:100%" rows="8" name="Review_Log" id="Review_Log" readonly>{{ $grantDetails['review_notes'] }}</textarea>
+</div>
 
                 <div class="form-group mt-2" id="reviewNotes">
                     <label for="AssignedReviewer">Review Description:</label>
@@ -229,7 +244,7 @@
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-12">
-                                <label class="mb-0">How long has the mother been a member?</label>
+                                <label class="mb-0">How long has the mother-in-need been a member of your chapter? You may answer with a join date or the number of years/months she has been in your chapter. Is she a member now or has she "retired" or moved from your chapter?</label>
                             </div>
                             <div class="col-md-12">
                                 @if ($grantDetails->member_length != null)
@@ -239,10 +254,9 @@
                                 @endif
                             </div>
                         </div>
-
                         <div class="row mt-2">
                             <div class="col-md-12">
-                                <label class="mb-0">Who is living in the home?</label>
+                                <label class="mb-0">Who is living in the home? Is there a spouse? How many family members and what are the ages of the children?</label>
                             </div>
                             <div class="col-md-12">
                                 @if ($grantDetails->household_members != null)
@@ -252,6 +266,98 @@
                                 @endif
                             </div>
                         </div>
+                         <div class="row mt-2">
+                            <div class="col-md-12">
+                                <label class="mb-0">If the member's home is uninhabitable, where is she living now? Please provide mailing address if different from above.</label>
+                            </div>
+                            <div class="col-md-12">
+                                @if ($grantDetails->alt_address != null)
+                                {{ $grantDetails->alt_address}}
+                                @else
+                                Not Answered
+                                @endif
+                            </div>
+                        </div>
+                          <div class="mt-2">
+                            <strong>Has the chapter ever asked for a grant for this mother or family in the past?</strong><br>
+                            {{ is_null($grantDetails['previous_grant']) ? 'Not Answered' : ($grantDetails['previous_grant'] == 0 ? 'NO' : ($grantDetails['previous_grant'] == 1 ? 'YES' : 'Not Answered')) }}
+                        </div>
+
+                        </div>
+                    </div>
+
+                    <hr>
+
+                     <h3 class="profile-username">EXPLAINATION OF SITUATION</h3>
+                    <!-- /.card-header -->
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="row">
+                            <div class="col-md-12">
+                                <label class="mb-0">Please provide a summary of the situation. What happened, how did it happen and what is the result of it?</label>
+                            </div>
+                            <div class="col-md-12">
+                                @if ($grantDetails->situation_summary != null)
+                                {{ $grantDetails->situation_summary}}
+                                @else
+                                Not Answered
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <label class="mb-0">What has the family done to improve or handle the situation?</label>
+                            </div>
+                            <div class="col-md-12">
+                                @if ($grantDetails->family_actions != null)
+                                {{ $grantDetails->family_actions}}
+                                @else
+                                Not Answered
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <label class="mb-0">What is the financial situation of the family? Do they have insurance that will help with this? How much will it cover? Do they have savings? If so, how much? Are they getting help from their family or any other grants or loans?</label>
+                            </div>
+                            <div class="col-md-12">
+                                @if ($grantDetails->financial_situation != null)
+                                {{ $grantDetails->financial_situation}}
+                                @else
+                                Not Answered
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <label class="mb-0">What are the family’s most pressing needs right now? What are they having to do without because of this situation?</label>
+                            </div>
+                            <div class="col-md-12">
+                                @if ($grantDetails->pressing_needs != null)
+                                {{ $grantDetails->pressing_needs}}
+                                @else
+                                Not Answered
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <label class="mb-0">Is there anything else that the family needs and is having to do without because of the situation?</label>
+                            </div>
+                            <div class="col-md-12">
+                                @if ($grantDetails->other_needs != null)
+                                {{ $grantDetails->other_needs}}
+                                @else
+                                Not Answered
+                                @endif
+                            </div>
+                        </div>
+
 
                         </div>
                     </div>
@@ -265,11 +371,11 @@
 
                             <div class="row">
                             <div class="col-md-12">
-                                <label class="mb-0">How long has the mother been a member?</label>
+                                <label class="mb-0">What amount is being requested? What will it be used for?</label>
                             </div>
                             <div class="col-md-12">
-                                @if ($grantDetails->member_length != null)
-                                {{ $grantDetails->member_length}}
+                                @if ($grantDetails->amount_requested != null)
+                                {{ $grantDetails->amount_requested}}
                                 @else
                                 Not Answered
                                 @endif
@@ -278,11 +384,11 @@
 
                         <div class="row mt-2">
                             <div class="col-md-12">
-                                <label class="mb-0">Who is living in the home?</label>
+                                <label class="mb-0">A chapter should always be the first ones to help a member-in-need. How has the chapter supported the member up to this point? Has the chapter done any fundraisers or made any donations to the family? What are the chapter’s future plans to help this family??</label>
                             </div>
                             <div class="col-md-12">
-                                @if ($grantDetails->household_members != null)
-                                {{ $grantDetails->household_members}}
+                                @if ($grantDetails->chapter_support != null)
+                                {{ $grantDetails->chapter_support}}
                                 @else
                                 Not Answered
                                 @endif
@@ -291,43 +397,16 @@
 
                         <div class="row mt-2">
                             <div class="col-md-12">
-                                <label class="mb-0">Who is living in the home?</label>
+                                <label class="mb-0">Is there anything else we should know about this family or their situation?</label>
                             </div>
                             <div class="col-md-12">
-                                @if ($grantDetails->household_members != null)
-                                {{ $grantDetails->household_members}}
+                                @if ($grantDetails->additional_info != null)
+                                {{ $grantDetails->additional_info}}
                                 @else
                                 Not Answered
                                 @endif
                             </div>
                         </div>
-
-                        <div class="row mt-2">
-                            <div class="col-md-12">
-                                <label class="mb-0">Who is living in the home?</label>
-                            </div>
-                            <div class="col-md-12">
-                                @if ($grantDetails->household_members != null)
-                                {{ $grantDetails->household_members}}
-                                @else
-                                Not Answered
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="row mt-2">
-                            <div class="col-md-12">
-                                <label class="mb-0">Who is living in the home?</label>
-                            </div>
-                            <div class="col-md-12">
-                                @if ($grantDetails->household_members != null)
-                                {{ $grantDetails->household_members}}
-                                @else
-                                Not Answered
-                                @endif
-                            </div>
-                        </div>
-
 
                         </div>
                     </div>
@@ -338,56 +417,22 @@
                     <!-- /.card-header -->
                     <div class="row">
                         <div class="col-md-12">
-
-                          <div class="row">
-                            <div class="col-md-12">
-                                <label class="mb-0">How long has the mother been a member?</label>
-                            </div>
-                            <div class="col-md-12">
-                                @if ($grantDetails->member_length != null)
-                                {{ $grantDetails->member_length}}
-                                @else
-                                Not Answered
-                                @endif
-                            </div>
+                        <div>
+                            <strong>Does the chapter stand behind this request for a grant? Has the Executive Board discussed the situation and decided to submit this request? And does the Executive Board assure the Mother-to-Mother Fund Committee that the information in this request is true?</strong><br>
+                            {{ is_null($grantDetails['chapter_backing']) ? 'Not Answered' : ($grantDetails['chapter_backing'] == 0 ? 'NO' : ($grantDetails['chapter_backing'] == 1 ? 'YES' : 'Not Answered')) }}
                         </div>
-
-                        <div class="row mt-2">
-                            <div class="col-md-12">
-                                <label class="mb-0">Who is living in the home?</label>
-                            </div>
-                            <div class="col-md-12">
-                                @if ($grantDetails->household_members != null)
-                                {{ $grantDetails->household_members}}
-                                @else
-                                Not Answered
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="row mt-2">
-                            <div class="col-md-12">
-                                <label class="mb-0">Who is living in the home?</label>
-                            </div>
-                            <div class="col-md-12">
-                                @if ($grantDetails->household_members != null)
-                                {{ $grantDetails->household_members}}
-                                @else
-                                Not Answered
-                                @endif
-                            </div>
+                        <div class="mt-2">
+                            <strong>Has the chapter donated to the Mother-to-Mother Fund in the past?</strong><br>
+                            {{ is_null($grantDetails['m2m_donation']) ? 'Not Answered' : ($grantDetails['m2m_donation'] == 0 ? 'NO' : ($grantDetails['m2m_donation'] == 1 ? 'YES' : 'Not Answered')) }}
                         </div>
 
                         <div class="mt-2">
-                            <strong>I affirm that the information in this submission is true:</strong><br>
+                            <strong>I affirm that the information in this submission is true and the mother-in-need agrees with the submission and the information herein.</strong><br>
                             {{ is_null($grantDetails['affirmation']) ? 'Not Answered' : ($grantDetails['affirmation'] == 0 ? 'NO' : ($grantDetails['affirmation'] == 1 ? 'YES' : 'Not Answered')) }}
                         </div>
 
                         </div>
                     </div>
-
-                    <hr>
-
 
 
                 </div>
@@ -412,20 +457,62 @@
 @section('customscript')
     @include('layouts.scripts.disablefields')
 <script>
-   document.addEventListener('DOMContentLoaded', function() {
-    const reviewClearButton = document.getElementById('review-clear');
-    const unsubmitButton = document.getElementById('unsubmit');
+    function EnableNoteLogButton(){
+        var noteValue = document.getElementById("Review_Note").value.trim();
+        var button = document.getElementById("AddNote");
 
-    if (reviewClearButton) {
-        reviewClearButton.addEventListener('click', function() {
+        if(noteValue !== ""){
+            button.disabled = false;
+            button.classList.remove('disabled');
+        } else {
+            button.disabled = true;
+            button.classList.add('disabled');
+        }
+    }
+
+    function AddNote(){
+        // Validate note is not empty
+        var noteValue = document.getElementById("Review_Note").value.trim();
+        if(noteValue === ""){
+            return false;
+        }
+
+        var Log = "";
+
+        // Format: Date, User, Note
+        Log = "\n{{ date('m/d/Y') }}, {{ $loggedInName }}, " + noteValue;
+
+        // Append to log
+        document.getElementById("Review_Log").value += Log;
+
+        // Clear the note input
+        document.getElementById("Review_Note").value = "";
+
+        // Disable the button again
+        document.getElementById("AddNote").disabled = true;
+        document.getElementById("AddNote").classList.add('disabled');
+    }
+
+    $(document).ready(function() {
+        // Add event listener for textarea input
+        $("#Review_Note").on('input', function() {
+            EnableNoteLogButton();
+        });
+
+        // Add event listener for AddNote button
+        $("#AddNote").click(function() {
+            AddNote();
+        });
+
+        $("#review-complete").click(function() {
             Swal.fire({
                 title: 'Are you sure?',
-                text: "This will clear the 'review complete' flag and coordinators will be able to edit the report again. Do you wish to continue?",
+                text: "This will finalize this review and flag it as 'review complete'. Do you wish to continue?",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
+                confirmButtonColor: '#28a745',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, Clear Review',
+                confirmButtonText: 'Yes, Mark Complete',
                 cancelButtonText: 'Cancel',
                 customClass: {
                     confirmButton: 'btn-sm btn-success',
@@ -434,65 +521,67 @@
                 buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ url('/paymentreports/cleargrantreview/' . $grantDetails->id) }}";
+                    $("#submit_type").val('review_complete');
+                    $("form").submit();
                 }
             });
-        });
-    }
-
-    if (unsubmitButton) {
-        unsubmitButton.addEventListener('click', function() {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "Unsubmitting this request will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, Unsubmit',
-                cancelButtonText: 'Cancel',
-                customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
-                },
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "{{ url('/paymentreports/unsubmitgrant/' . $grantDetails->id) }}";
-                }
-            });
-        });
-    }
-});
-
-$(document).ready(function() {
-    $("#review-complete").click(function() {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This will finalize this review and flag it as 'review complete'. Do you wish to continue?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#28a745',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, Mark Complete',
-            cancelButtonText: 'Cancel',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            },
-            buttonsStyling: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $("#submit_type").val('review_complete');
-                $("form").submit();
-            }
         });
     });
-});
 
+    document.addEventListener('DOMContentLoaded', function() {
+        const reviewClearButton = document.getElementById('review-clear');
+        const unsubmitButton = document.getElementById('unsubmit');
+
+        if (reviewClearButton) {
+            reviewClearButton.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This will clear the 'review complete' flag and coordinators will be able to edit the report again. Do you wish to continue?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, Clear Review',
+                    cancelButtonText: 'Cancel',
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success',
+                        cancelButton: 'btn-sm btn-danger'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ url('/paymentreports/cleargrantreview/' . $grantDetails->id) }}";
+                    }
+                });
+            });
+        }
+
+        if (unsubmitButton) {
+            unsubmitButton.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Unsubmitting this request will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, Unsubmit',
+                    cancelButtonText: 'Cancel',
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success',
+                        cancelButton: 'btn-sm btn-danger'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ url('/paymentreports/unsubmitgrant/' . $grantDetails->id) }}";
+                    }
+                });
+            });
+        }
+    });
 </script>
 <script>
-
     /* Disable fields and buttons  */
   $(document).ready(function () {
     var completed = @json($grantDetails->review_complete);

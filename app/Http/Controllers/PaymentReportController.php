@@ -259,6 +259,7 @@ class PaymentReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
     $coorId = $user['cdId'];
     $confId = $user['confId'];
+            $loggedInName = $user['userName'];
 
     $grantDetails = GrantRequest::with('chapters', 'chapterstate', 'state', 'country')
         ->find($grantId);
@@ -289,7 +290,7 @@ class PaymentReportController extends Controller implements HasMiddleware
 
         $data = ['id' => $grantId, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'confId' => $confId, 'chConfId' => $chConfId, 'grantDetails' => $grantDetails,
-            'grList' => $grList,
+            'grList' => $grList, 'loggedInName' => $loggedInName,
         ];
 
         return view('paymentreports.editgrantdetails')->with($data);
@@ -309,7 +310,10 @@ class PaymentReportController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $grantRequest->reviewer_id = $reviewer_id ?? $coorId;
-            $grantRequest->review_notes = $input['review_notes'] ?? null;
+            // $grantRequest->review_notes = $input['review_notes'] ?? null;
+                    $grantRequest->review_notes = $input['Review_Log'] ?? null;  // Changed to Review_Log
+
+            $grantRequest->review_description = $input['review_description'] ?? null;
             $grantRequest->amount_awarded = $input['amount_awarded'] ?? null;
             $grantRequest->grant_approved = $input['grant_approved'] ?? null;
 
