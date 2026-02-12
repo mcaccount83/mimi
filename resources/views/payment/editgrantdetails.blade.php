@@ -20,7 +20,7 @@
 </style>
 @section('content')
     <!-- Main content -->
-    <form class="form-horizontal" method="POST" action='{{ route("paymentreports.updategrantdetails", $grantDetails->id) }}'>
+    <form class="form-horizontal" method="POST" action='{{ route("payment.updategrantdetails", $grantDetails->id) }}'>
     @csrf
 
     <input type="hidden" name="submitted" id="submitted" value="{{ $grantDetails['submitted'] }}" />
@@ -174,7 +174,7 @@
                 @endif
                                                 {{-- <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="fas fa-file-invoice-dollar "></i></a> --}}
 
-                    <button type="button" id="btn-back" class="btn btn-primary mb-2" onclick="window.location.href='{{ route('paymentreports.grantlist') }}'"><i class="fas fa-reply mr-2" ></i>Back to Grant List</button>
+                    <button type="button" id="btn-back" class="btn btn-primary mb-2" onclick="window.location.href='{{ route('payment.grantlist') }}'"><i class="fas fa-reply mr-2" ></i>Back to Grant List</button>
                 </li>
 
             </ul>
@@ -550,7 +550,7 @@
                     buttonsStyling: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = "{{ url('/paymentreports/cleargrantreview/' . $grantDetails->id) }}";
+                        window.location.href = "{{ url('/payment/cleargrantreview/' . $grantDetails->id) }}";
                     }
                 });
             });
@@ -574,7 +574,7 @@
                     buttonsStyling: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = "{{ url('/paymentreports/unsubmitgrant/' . $grantDetails->id) }}";
+                        window.location.href = "{{ url('/payment/unsubmitgrant/' . $grantDetails->id) }}";
                     }
                 });
             });

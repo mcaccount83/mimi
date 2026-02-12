@@ -38,7 +38,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                   <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/paymentreports/reregedit/{$list->id}") }}"><i class="fas fa-edit"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/adminreports/reregedit/{$list->id}") }}"><i class="fas fa-edit"></i></a></td>
                         <td>
                             @if ($list->region?->short_name != "None" )
                                 {{ $list->conference->short_name }} / {{ $list->region?->short_name }}

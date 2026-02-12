@@ -67,21 +67,6 @@ class TechReportController extends Controller implements HasMiddleware
     }
 
     /**
-     * View the EOY Report Title
-     */
-    public function getPageTitle(Request $request)
-    {
-        $titles = [
-            'admin_reports' => 'IT Reports',
-            'admin_details' => 'Chapter Details',
-            'resource_reports' => 'Resources',
-            'resource_details' => 'Resource Details',
-        ];
-
-        return $titles;
-    }
-
-    /**
      * Admin Choose Active Chapter for Viewing
      */
     public function listActiveChapters(Request $request): View

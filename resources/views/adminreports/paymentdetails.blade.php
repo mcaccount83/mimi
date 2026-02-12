@@ -23,7 +23,7 @@
     <!-- /.card-header -->
     <div class="card-body">
             <div class="mb-4">
-                    <a href="{{ route('paymentreports.paymentlog') }}" class="text-blue-600 hover:underline">
+                    <a href="{{ route('adminreports.paymentlog') }}" class="text-blue-600 hover:underline">
                             &larr; Back to Payment Logs
                 </a>
             </div>

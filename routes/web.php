@@ -20,7 +20,6 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InquiriesController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\PaymentReportController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\ResourcesController;
@@ -109,19 +108,14 @@ Route::post('/grant-list-pdf', [PublicController::class, 'saveGratList'])->name(
 Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
 // Tech Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
-    // Route::get('/techreports/adminemail', [TechReportController::class, 'showAdminEmail'])->name('techreports.adminemail');
-    // Route::post('/techreports/updateadminemail', [TechReportController::class, 'updateAdminEmail'])->name('techreports.updateadminemail');
-
     Route::get('/techreports/adminemail', [TechReportController::class, 'AdminEmailList'])->name('techreports.adminemail');
     Route::post('/techreports/addadminemail', [TechReportController::class, 'addAdminEmail'])->name('techreports.addadminemail');
     Route::post('/techreports/updateadminemail/{id}', [TechReportController::class, 'updateAdminEmail'])->name('techreports.updateadminemail');
     Route::post('/techreports/deleteadminemail', [TechReportController::class, 'deleteAdminEmail'])->name('techreports.deleteadminemail');
-
     Route::get('/techreports/googledrive', [TechReportController::class, 'googleDriveList'])->name('techreports.googledrive');
     Route::post('/techreports/addgoogledrive', [TechReportController::class, 'addGoogleDrive'])->name('techreports.addgoogledrive');
     Route::post('/techreports/updategoogledrive/{id}', [TechReportController::class, 'updateGoogleDrive'])->name('techreports.updategoogledrive');
     Route::post('/techreports/deletegoogledrive', [TechReportController::class, 'deleteGoogleDrive'])->name('techreports.deletegoogledrive');
-
     Route::get('/techreports/chapterlist', [TechReportController::class, 'listActiveChapters'])->name('techreports.chapterlist');
     Route::get('/techreports/chapterlistzapped', [TechReportController::class, 'listZappedChapters'])->name('techreports.chapterlistzapped');
     Route::get('/techreports/chapterlistpending', [TechReportController::class, 'listPendingChapters'])->name('techreports.chapterlistpending');
@@ -148,8 +142,15 @@ Route::middleware('auth')->group(function () {
 
 // Admin Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
-
-
+    Route::get('/adminreports/paymentlog', [AdminReportController::class, 'showPaymentLog'])->name('adminreports.paymentlog');
+    Route::get('/adminreports/paymentdetails/{id}', [AdminReportController::class, 'showPaymentDetails'])->name('adminreports.paymentdetails');
+    Route::get('/adminreports/donationlog', [AdminReportController::class, 'showDonationLog'])->name('adminreports.donationlog');
+    Route::get('/adminreports/rereg', [AdminReportController::class, 'showReReg'])->name('adminreports.rereg');
+    Route::get('/adminreports/reregedit/{id}', [AdminReportController::class, 'editReReg'])->name('adminreports.editrereg');
+    Route::post('/adminreports/regdateupdate/{id}', [AdminReportController::class, 'updateReReg'])->name('adminreports.updaterereg');
+    Route::get('/adminreports/inquiriesnotify', [AdminReportController::class, 'inquiriesNotify'])->name('adminreports.inquiriesnotify');
+    Route::post('/adminreports/updateinquiries/{id}', [AdminReportController::class, 'updateInquiriesEmail'])->name('adminreports.updateinquiries');
+    Route::get('/adminreports/downloads', [AdminReportController::class, 'showDownloads'])->name('adminreports.downloads');
 });
 
 // User Controller Routes...Coordinator Login Required
@@ -188,7 +189,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/resources/addtoolkit', [ResourcesController::class, 'addToolkit'])->name('resources.addtoolkit');
     Route::post('/resources/updatetoolkit/{id}', [ResourcesController::class, 'updateToolkit'])->name('resources.updatetoolkit');
     Route::get('/resources/elearning', [ResourcesController::class, 'showELearning'])->name('resources.elearning');
-    Route::get('/adminreports/downloads', [ResourcesController::class, 'showDownloads'])->name('resources.downloads');
 });
 
 // Payment Controller Routes...Coordinator Login Required
@@ -200,36 +200,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/payment/chapterpaymentupdate/{id}', [PaymentController::class, 'updateChapterPayment'])->name('payment.updatepayment');
     Route::get('/payment/reregistrationreminder', [PaymentController::class, 'createChapterReRegistrationReminder'])->name('payment.chapreregreminder');
     Route::get('/payment/reregistrationlatereminder', [PaymentController::class, 'createChapterReRegistrationLateReminder'])->name('payment.chaprereglatereminder');
+    Route::get('/payment/grantlist', [PaymentController::class, 'showGrantList'])->name('payment.grantlist');
+    Route::get('/payment/grantdetailsedit/{id}', [PaymentController::class, 'editGrantDetails'])->name('payment.editgrantdetails');
+    Route::post('/payment/grantdetailsupdate/{id}', [PaymentController::class, 'UpdateGrantDetails'])->name('payment.updategrantdetails');
+    Route::get('/payment/unsubmitgrant/{id}', [PaymentController::class, 'updateUnsubmitGrantRequest']);
+    Route::get('/payment/cleargrantreview/{id}', [PaymentController::class, 'updateClearGrantReview']);
 });
-
-// Payment Report Controller Routes...Coordinator Login Required
-Route::middleware('auth')->group(function () {
-    Route::get('/adminreports/paymentlog', [PaymentReportController::class, 'showPaymentLog'])->name('paymentreports.paymentlog');
-    Route::get('/adminreports/paymentdetails/{id}', [PaymentReportController::class, 'showPaymentDetails'])->name('paymentreports.paymentdetails');
-    Route::get('/adminreports/donationlog', [PaymentReportController::class, 'showDonationLog'])->name('paymentreports.donationlog');
-    Route::get('/adminreports/rereg', [PaymentReportController::class, 'showReReg'])->name('paymentreports.rereg');
-    Route::get('/adminreports/reregedit/{id}', [PaymentReportController::class, 'editReReg'])->name('paymentreports.editrereg');
-    Route::post('/adminreports/regdateupdate/{id}', [PaymentReportController::class, 'updateReReg'])->name('paymentreports.updaterereg');
-    Route::get('/adminreports/grantlist', [PaymentReportController::class, 'showGrantList'])->name('paymentreports.grantlist');
-    Route::get('/adminreports/grantdetailsedit/{id}', [PaymentReportController::class, 'editGrantDetails'])->name('paymentreports.editgrantdetails');
-    Route::post('/adminreports/grantdetailsupdate/{id}', [PaymentReportController::class, 'UpdateGrantDetails'])->name('paymentreports.updategrantdetails');
-    Route::get('/adminreports/unsubmitgrant/{id}', [PaymentReportController::class, 'updateUnsubmitGrantRequest']);
-    Route::get('/adminreports/cleargrantreview/{id}', [PaymentReportController::class, 'updateClearGrantReview']);
-});
-
 
 // Inquiries Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
+    Route::get('/inquiries/inquiries', [ChapterController::class, 'showChapterInquiries'])->name('chapters.chapinquiries');
+    Route::get('/inquiries/inquirieszapped', [ChapterController::class, 'showZappedChapterInquiries'])->name('chapters.chapinquirieszapped');
+
     Route::get('/inquiries/inquiryapplication', [InquiriesController::class, 'showInquiryApplication'])->name('inquiries.inquiryapplication');
     Route::get('/inquiries/inquiryapplicationedit/{id}', [InquiriesController::class, 'editInquiryApplication'])->name('inquiries.editinquiryapplication');
     Route::post('/inquiries/inquiryapplicationupdate/{id}', [InquiriesController::class, 'updateInquiryApplication'])->name('inquiries.updateinquiryapplication');
     Route::post('/inquiries/updateinquiryresponse/{id}', [InquiriesController::class, 'updateInquiryResponse'])->name('inquiries.updateinquiryresponse');
     Route::post('/inquiries/clearinquiryresponse/{id}', [InquiriesController::class, 'clearInquiryResponse'])->name('inquiries.clearinquiryresponse');
-    Route::get('/adminreports/inquiriesnotify', [InquiriesController::class, 'inquiriesNotify'])->name('inquiries.inquiriesnotify');
-    Route::post('/adminreports/updateinquiries/{id}', [InquiriesController::class, 'updateInquiriesEmail'])->name('inquiries.updateinquiries');
-
-    Route::get('/inquiries/inquiries', [ChapterController::class, 'showChapterInquiries'])->name('chapters.chapinquiries');
-    Route::get('/inquiries/inquirieszapped', [ChapterController::class, 'showZappedChapterInquiries'])->name('chapters.chapinquirieszapped');
 });
 
 // Online Controller Routes...Coordinator Login Required

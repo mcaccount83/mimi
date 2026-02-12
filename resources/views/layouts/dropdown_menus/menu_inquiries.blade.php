@@ -8,10 +8,5 @@
         <a class="dropdown-item" href="{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}">Inquiries Active Chapter List</a>
         <a class="dropdown-item" href="{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}">Inquiries Zapped Chapter List</a>
     @endif
-    {{-- @if ($coordinatorCondition && $conferenceCoordinatorCondition)
-            <a class="dropdown-item" href="{{ route('inquiries.inquiriesnotify') }}">inquiries Notifications</a>
-    @elseif ($ITCondition)
-        <a class="dropdown-item" href="{{ route('inquiries.inquiriesnotify', ['check5' => 'yes']) }}">inquiries Notifications</a>
-    @endif --}}
 </div>
 

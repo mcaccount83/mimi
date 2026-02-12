@@ -527,4 +527,164 @@ class PaymentController extends Controller implements HasMiddleware
 
         return view('payment.paymenthistory')->with($data);
     }
+
+      public function showGrantList(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+
+        $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
+
+         // Use the appropriate query based on checkbox status
+        if ($checkBox5Status) {
+            $grantList = GrantRequest::with('chapters', 'chapterstate')
+                ->orderBy('submitted_at', 'desc')
+                ->get();
+
+        } else {
+            $grantList = GrantRequest::with('chapters', 'chapterstate')
+                ->whereHas('chapterstate', function ($query) use ($confId) {
+                    $query->where('conference_id', $confId);
+                })
+                ->orderBy('submitted_at', 'desc')
+                ->get();
+            }
+
+        $data = ['grantList' => $grantList, 'checkBox5Status' => $checkBox5Status];
+
+        return view('payment.grantlist')->with($data);
+    }
+
+    public function editGrantDetails(Request $request, $grantId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+    $coorId = $user['cdId'];
+    $confId = $user['confId'];
+            $loggedInName = $user['userName'];
+
+    $grantDetails = GrantRequest::with('chapters', 'chapterstate', 'state', 'country')
+        ->find($grantId);
+    $chapterId = $grantDetails->chapter_id;
+
+    // Only get chapter details if chapter_id is not null
+    if ($chapterId) {
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+    } else {
+        // Set defaults when there's no chapter
+        $chDetails = null;
+        $chConfId = $grantDetails->chapterstate->conference_id;
+        $stateShortName = $grantDetails->chapterstate->state_long_name;
+        $regionLongName = $grantDetails->chapterstate->region->long_name;
+        $conferenceDescription = $grantDetails->chapterstate->conference->description;
+    }
+
+    // $stateName = $grantDetails->chapterstate->state_long_name;
+    // $regionName = $grantDetails->chapterstate->region->long_name;
+    // $conferenceName = $grantDetails->chapterstate->conference->description;
+
+    $grList = $chConfId ? $this->userController->loadGrantReviewerList($chConfId) : null;
+
+        $data = ['id' => $grantId, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+            'conferenceDescription' => $conferenceDescription, 'confId' => $confId, 'chConfId' => $chConfId, 'grantDetails' => $grantDetails,
+            'grList' => $grList, 'loggedInName' => $loggedInName,
+        ];
+
+        return view('payment.editgrantdetails')->with($data);
+    }
+
+    public function updateGrantDetails(Request $request, $grantId): RedirectResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+
+        $input = $request->all();
+        $submitType = $input['submit_type'];
+        $reviewer_id = isset($input['reviewer_id']) && ! empty($input['reviewer_id']) ? $input['reviewer_id'] : $coorId;
+
+        $grantRequest = GrantRequest::find($grantId);
+
+        DB::beginTransaction();
+        try {
+            $grantRequest->reviewer_id = $reviewer_id ?? $coorId;
+            // $grantRequest->review_notes = $input['review_notes'] ?? null;
+                    $grantRequest->review_notes = $input['Review_Log'] ?? null;  // Changed to Review_Log
+
+            $grantRequest->review_description = $input['review_description'] ?? null;
+            $grantRequest->amount_awarded = $input['amount_awarded'] ?? null;
+            $grantRequest->grant_approved = $input['grant_approved'] ?? null;
+
+            // If submitting the grant
+            if ($submitType == 'review_complete') {
+                $grantRequest->review_complete = 1;
+                $grantRequest->completed_at = Carbon::now();
+            }
+
+            $grantRequest->save();
+
+            DB::commit();
+
+            if ($submitType == 'review_complete') {
+                return redirect()->back()->with('success', 'Grant has been successfully Marked as Review Complete');
+            } else {
+                return redirect()->back()->with('success', 'Grant has been successfully Updated');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+    public function updateUnsubmitGrantRequest(Request $request, $grantId): RedirectResponse
+    {
+        $grantRequest = GrantRequest::find($grantId);
+
+        DB::beginTransaction();
+        try {
+            $grantRequest->submitted = null;
+            $grantRequest->submitted_at = null;
+            $grantRequest->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Grant Request has been successfully Unsubmitted.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        }
+    }
+
+    public function updateClearGrantReview(Request $request, $grantId): RedirectResponse
+    {
+        $grantRequest = GrantRequest::find($grantId);
+
+        DB::beginTransaction();
+        try {
+            $grantRequest->review_complete = null;
+            $grantRequest->completed_at = null;
+            $grantRequest->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Review Complete has been successfully Cleared.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        }
+    }
+
 }

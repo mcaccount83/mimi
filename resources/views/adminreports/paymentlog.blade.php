@@ -24,7 +24,7 @@
     <div class="card-body">
 
                     <!-- Filters -->
-                    {{-- <form method="GET" action="{{ route('paymentreports.paymentlog') }}" class="mb-6">
+                    {{-- <form method="GET" action="{{ route('adminreports.paymentlog') }}" class="mb-6">
                         <div class="flex gap-4">
                             <div>
                                 <label for="status" >Status</label>
@@ -65,7 +65,7 @@
                             <tr>
                                 <td  class="text-center align-middle">
                                     @if ($ITCondition)
-                                    <a href="{{ route('paymentreports.paymentdetails', $log->id) }}"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('adminreports.paymentdetails', $log->id) }}"><i class="fas fa-eye"></i></a>
                                     @else
                                     @endif
                                 </td>

@@ -9,7 +9,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-4">
-            <form method="POST" name="admin-rereg-date" action='{{ route("paymentreports.updaterereg",$chDetails->id) }}'>
+            <form method="POST" name="admin-rereg-date" action='{{ route("adminreports.updaterereg",$chDetails->id) }}'>
                 @csrf
 
           <!-- Profile Image -->
@@ -157,9 +157,9 @@
                     <br>
                 @endif
                  @if ($confId == $chConfId)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('paymentreports.rereg') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Reg Admin Report</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('adminreports.rereg') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Reg Admin Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('paymentreports.rereg', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Reg Admin Report</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('adminreports.rereg', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Reg Admin Report</button>
                 @endif
                 <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Payment History</button>
             </div>

@@ -175,20 +175,6 @@ class ResourcesController extends Controller implements HasMiddleware
     }
 
     /**
-     * View the Downloads List
-     */
-    public function showDownloads(Request $request): View
-    {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['resource_reports'];
-        $breadcrumb = 'Download Reports';
-
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb];
-
-        return view('resources.downloads')->with($data);
-    }
-
-    /**
      * View Resources List
      */
     public function showResources(Request $request): View
