@@ -518,6 +518,7 @@ class BaseMailDataController extends Controller
             'zip' => $grantDetails->zip,
             'member_length' => $grantDetails->member_length,
             'household_members' => $grantDetails->household_members,
+            'alt_address' => $grantDetails->alt_address,
             'situation_summary' => $grantDetails->situation_summary,
             'family_actions' => $grantDetails->family_actions,
             'financial_situation' => $grantDetails->financial_situation,

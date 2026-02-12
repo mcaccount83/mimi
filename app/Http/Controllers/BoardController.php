@@ -16,6 +16,7 @@ use App\Mail\GrantRequestNotice;
 use App\Mail\NewWebsiteReviewNotice;
 use App\Mail\ProbationRptSubmittedCCNotice;
 use App\Mail\ProbationRptThankYou;
+use App\Models\AdminEmail;
 use App\Models\Boards;
 use App\Models\BoardsIncoming;
 use App\Models\BoardsOutgoing;
@@ -1165,6 +1166,8 @@ class BoardController extends Controller implements HasMiddleware
             $grantRequest->zip = $input['member_zip'] ?? null;
             $grantRequest->member_length = $input['member_length'] ?? null;
             $grantRequest->household_members = $input['household_members'] ?? null;
+            $grantRequest->alt_address = $input['alt_address'] ?? null;
+            $grantRequest->previous_grant = $input['previous_grant'] ?? null;
             $grantRequest->situation_summary = $input['situation_summary'] ?? null;
             $grantRequest->family_actions = $input['family_actions'] ?? null;
             $grantRequest->financial_situation = $input['financial_situation'] ?? null;
@@ -1173,7 +1176,6 @@ class BoardController extends Controller implements HasMiddleware
             $grantRequest->amount_requested = $input['amount_requested'] ?? null;
             $grantRequest->chapter_support = $input['chapter_support'] ?? null;
             $grantRequest->additional_info = $input['additional_info'] ?? null;
-            $grantRequest->previous_grant = $input['previous_grant'] ?? null;
             $grantRequest->chapter_backing = $input['chapter_backing'] ?? null;
             $grantRequest->m2m_donation = $input['m2m_donation'] ?? null;
 
@@ -1199,6 +1201,9 @@ class BoardController extends Controller implements HasMiddleware
             $stateShortName = $baseQuery['stateShortName'];
             $emailCC = $baseQuery['emailCC'];  // CC Email
 
+            $adminEmail = $this->positionConditionsService->getAdminEmail();
+            $grantAdmin = $adminEmail['grant_admin'];
+
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getNewGrantData($grantDetails),
@@ -1217,7 +1222,7 @@ class BoardController extends Controller implements HasMiddleware
                     ->queue(new GrantRequestThankYou($mailData, $pdfPath));
 
                 Mail::to($emailCC)
-                    // ->cc($emailCC)
+                    ->cc($grantAdmin)
                     ->queue(new GrantRequestNotice($mailData, $pdfPath));
             }
 

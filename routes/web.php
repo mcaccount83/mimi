@@ -188,7 +188,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/resources/addtoolkit', [ResourcesController::class, 'addToolkit'])->name('resources.addtoolkit');
     Route::post('/resources/updatetoolkit/{id}', [ResourcesController::class, 'updateToolkit'])->name('resources.updatetoolkit');
     Route::get('/resources/elearning', [ResourcesController::class, 'showELearning'])->name('resources.elearning');
-    Route::get('/resources/downloads', [ResourcesController::class, 'showDownloads'])->name('resources.downloads');
+    Route::get('/adminreports/downloads', [ResourcesController::class, 'showDownloads'])->name('resources.downloads');
 });
 
 // Payment Controller Routes...Coordinator Login Required
@@ -204,17 +204,17 @@ Route::middleware('auth')->group(function () {
 
 // Payment Report Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
-    Route::get('/paymentreports/paymentlog', [PaymentReportController::class, 'showPaymentLog'])->name('paymentreports.paymentlog');
-    Route::get('/paymentreports/paymentdetails/{id}', [PaymentReportController::class, 'showPaymentDetails'])->name('paymentreports.paymentdetails');
-    Route::get('/paymentreports/donationlog', [PaymentReportController::class, 'showDonationLog'])->name('paymentreports.donationlog');
-    Route::get('/paymentreports/rereg', [PaymentReportController::class, 'showReReg'])->name('paymentreports.rereg');
-    Route::get('/paymentreports/reregedit/{id}', [PaymentReportController::class, 'editReReg'])->name('paymentreports.editrereg');
-    Route::post('/paymentreports/regdateupdate/{id}', [PaymentReportController::class, 'updateReReg'])->name('paymentreports.updaterereg');
-    Route::get('/paymentreports/grantlist', [PaymentReportController::class, 'showGrantList'])->name('paymentreports.grantlist');
-    Route::get('/paymentreports/grantdetailsedit/{id}', [PaymentReportController::class, 'editGrantDetails'])->name('paymentreports.editgrantdetails');
-    Route::post('/paymentreports/grantdetailsupdate/{id}', [PaymentReportController::class, 'UpdateGrantDetails'])->name('paymentreports.updategrantdetails');
-    Route::get('/paymentreports/unsubmitgrant/{id}', [PaymentReportController::class, 'updateUnsubmitGrantRequest']);
-    Route::get('/paymentreports/cleargrantreview/{id}', [PaymentReportController::class, 'updateClearGrantReview']);
+    Route::get('/adminreports/paymentlog', [PaymentReportController::class, 'showPaymentLog'])->name('paymentreports.paymentlog');
+    Route::get('/adminreports/paymentdetails/{id}', [PaymentReportController::class, 'showPaymentDetails'])->name('paymentreports.paymentdetails');
+    Route::get('/adminreports/donationlog', [PaymentReportController::class, 'showDonationLog'])->name('paymentreports.donationlog');
+    Route::get('/adminreports/rereg', [PaymentReportController::class, 'showReReg'])->name('paymentreports.rereg');
+    Route::get('/adminreports/reregedit/{id}', [PaymentReportController::class, 'editReReg'])->name('paymentreports.editrereg');
+    Route::post('/adminreports/regdateupdate/{id}', [PaymentReportController::class, 'updateReReg'])->name('paymentreports.updaterereg');
+    Route::get('/adminreports/grantlist', [PaymentReportController::class, 'showGrantList'])->name('paymentreports.grantlist');
+    Route::get('/adminreports/grantdetailsedit/{id}', [PaymentReportController::class, 'editGrantDetails'])->name('paymentreports.editgrantdetails');
+    Route::post('/adminreports/grantdetailsupdate/{id}', [PaymentReportController::class, 'UpdateGrantDetails'])->name('paymentreports.updategrantdetails');
+    Route::get('/adminreports/unsubmitgrant/{id}', [PaymentReportController::class, 'updateUnsubmitGrantRequest']);
+    Route::get('/adminreports/cleargrantreview/{id}', [PaymentReportController::class, 'updateClearGrantReview']);
 });
 
 
@@ -225,8 +225,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/inquiries/inquiryapplicationupdate/{id}', [InquiriesController::class, 'updateInquiryApplication'])->name('inquiries.updateinquiryapplication');
     Route::post('/inquiries/updateinquiryresponse/{id}', [InquiriesController::class, 'updateInquiryResponse'])->name('inquiries.updateinquiryresponse');
     Route::post('/inquiries/clearinquiryresponse/{id}', [InquiriesController::class, 'clearInquiryResponse'])->name('inquiries.clearinquiryresponse');
-    Route::get('/inquiries/inquiriesnotify', [InquiriesController::class, 'inquiriesNotify'])->name('inquiries.inquiriesnotify');
-    Route::post('/inquiries/updateinquiries/{id}', [InquiriesController::class, 'updateInquiriesEmail'])->name('inquiries.updateinquiries');
+    Route::get('/adminreports/inquiriesnotify', [InquiriesController::class, 'inquiriesNotify'])->name('inquiries.inquiriesnotify');
+    Route::post('/adminreports/updateinquiries/{id}', [InquiriesController::class, 'updateInquiriesEmail'])->name('inquiries.updateinquiries');
 
     Route::get('/inquiries/inquiries', [ChapterController::class, 'showChapterInquiries'])->name('chapters.chapinquiries');
     Route::get('/inquiries/inquirieszapped', [ChapterController::class, 'showZappedChapterInquiries'])->name('chapters.chapinquirieszapped');

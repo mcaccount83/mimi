@@ -3,8 +3,8 @@
     <a class="dropdown-item" href="{{ route('resources.resources') }}">Chapter Resources</a>
     <a class="dropdown-item" href="{{ route('resources.elearning') }}">eLearning Library</a>
     <a class="dropdown-item" href="{{ url(config('forum.frontend.router.prefix') . '/c/2-coordinatorlist') }}" target="_blank">CoordinatorList Forum</a>
-    @if ($coordinatorCondition && $conferenceCoordinatorCondition)
+    {{-- @if ($coordinatorCondition && $conferenceCoordinatorCondition)
             <a class="dropdown-item" href="{{ route('resources.downloads') }}">Export Reports</a>
-    @endif
+    @endif --}}
 
 </div>

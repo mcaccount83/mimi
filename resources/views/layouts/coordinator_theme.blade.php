@@ -415,7 +415,7 @@ window.onload = function () {
                         @endif
 
                         <!-- Payment/Donation Reports Menu Item -->
-                        @php
+                        {{-- @php
                             if ($coordinatorCondition && $regionalCoordinatorCondition) {
                                 $paymentsRoute = route('paymentreports.paymentlog');
                             } elseif ($ITCondition) {
@@ -438,7 +438,7 @@ window.onload = function () {
         <p>Payment/Donation Reports</p>
     </a>
 </li>
-                        @endif
+                        @endif --}}
 
                         <!-- End of Year Reports Menu Item-->
                             @php
@@ -466,9 +466,9 @@ window.onload = function () {
                             @endif
 
                         <!-- Admin Reports Menu Item -->
-                        {{-- @php
+                        @php
                             if ($ITCondition) {
-                                $adminReportsRoute = route('adminreports.downloads');
+                                $adminReportsRoute = route('paymentreports.paymentlog');
                             }
                             $activeAdminReportsRoutes = [
                                 'adminreports/*'
@@ -481,7 +481,7 @@ window.onload = function () {
                                     <p>Admin Reports</p>
                                 </a>
                             </li>
-                        @endif --}}
+                        @endif
 
                          <!-- User Reports Menu Item -->
                         @php

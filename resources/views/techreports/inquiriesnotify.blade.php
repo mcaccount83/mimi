@@ -15,7 +15,7 @@
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Inquiries Notifications
                                 </h3>
-                                @include('layouts.dropdown_menus.menu_inquiries')
+                                @include('layouts.dropdown_menus.menu_reports_admin')
                             </div>
                         </div>
                      <!-- /.card-header -->

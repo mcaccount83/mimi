@@ -16,7 +16,7 @@
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Donation Log Report
                             </h3>
-                            @include('layouts.dropdown_menus.menu_reports_payment')
+                            @include('layouts.dropdown_menus.menu_reports_admin')
                         </div>
                     </div>
             <!-- /.card-header -->

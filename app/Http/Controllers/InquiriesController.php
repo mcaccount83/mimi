@@ -232,7 +232,7 @@ class InquiriesController extends Controller implements HasMiddleware
 
         $data = ['regList' => $regList, 'checkBox5Status' => $checkBox5Status];
 
-        return view('inquiries.inquiriesnotify')->with($data);
+        return view('techreports.inquiriesnotify')->with($data);
     }
 
    public function updateInquiriesEmail(Request $request, $id)

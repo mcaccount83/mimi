@@ -166,6 +166,7 @@ class PositionConditionsService
             'ein_admin' => $emails['ein_admin'] ?? '',
             'gsuite_admin' => $emails['gsuite_admin'] ?? '',
             'mimi_admin' => $emails['mimi_admin'] ?? '',
+            'grant_admin' => $emails['grant_admin'] ?? '',
         ];
 }
 }

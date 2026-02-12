@@ -278,7 +278,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>If the member's home is uninhabitable, where is she living now? Please provide mailing address if different from above.<span class="field-required">*</span></label>
-                                    <textarea class="form-control" rows="2" name="household_members" required>{{ $grantDetails->alt_address }}</textarea>
+                                    <textarea class="form-control" rows="2" name="alt_address" required>{{ $grantDetails->alt_address }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -600,9 +600,8 @@ $(document).ready(function() {
         $("#submitted").val('0');  // Add this - ensure it's saving, not submitting
         $("#FurthestStep").val(step);
         // Trigger the form's submit event properly (not .submit() method)
-        var form = document.getElementById('grant_request');
-        var event = new Event('submit', { cancelable: true, bubbles: true });
-        form.dispatchEvent(event);
+           document.getElementById('grant_request').submit();
+
     }
 
     $("#btn-step-3").click(function() {
@@ -715,6 +714,9 @@ function EnsureMemberInformation() {
     if (!document.querySelector('textarea[name="household_members"]').value.trim()) {
         missingFields.push("Who is living in the home");
     }
+    if (!document.querySelector('input[name="previous_grant"]:checked')) {
+        missingFields.push("Has the chapter ever asked for a grant for this mother or family in the past?");
+    }
 
     if (missingFields.length > 0) {
         var missingFieldsText = missingFields.map(field => `<li>${field}</li>`).join('');
@@ -787,9 +789,6 @@ function EnsureGrantRequest() {
 function EnsureAffirmation() {
     var missingFields = [];
 
-    if (!document.querySelector('input[name="previous_grant"]:checked')) {
-        missingFields.push("Has the chapter ever asked for a grant for this mother or family in the past?");
-    }
     if (!document.querySelector('input[name="chapter_backing"]:checked')) {
         missingFields.push("Does the chapter stand behind this request?");
     }
