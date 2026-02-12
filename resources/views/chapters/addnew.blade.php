@@ -35,13 +35,13 @@
                     <label class="col-sm-4 col-form-label">State:</label>
                     <div class="col-sm-8">
                         <select id="ch_state" name="ch_state" class="form-control" required>
-                            <option value="">Select State</option>
-                            @foreach($allStates as $state)
-                                <option value="{{$state->id}}">
-                                    {{$state->state_long_name}}
-                                </option>
-                            @endforeach
-                        </select>
+    <option value="">Select State</option>
+    @foreach($allStates as $state)
+        <option value="{{$state->id}}" data-region-id="{{$state->region_id}}">
+            {{$state->state_long_name}}
+        </option>
+    @endforeach
+</select>
                     </div>
                 </div>
 
@@ -62,7 +62,7 @@
                 <div class="form-group row mt-1">
                     <label class="col-sm-4 col-form-label">Region:</label>
                     <div class="col-sm-8">
-                        <select id="ch_region" name="ch_region" class="form-control" required>
+                        <select id="ch_region" class="form-control" disabled required>
                             <option value="">Select Region</option>
                             @foreach($allRegions as $region)
                                 <option value="{{$region->id}}">
@@ -70,6 +70,8 @@
                                 </option>
                             @endforeach
                         </select>
+                        <!-- Hidden input to submit the value -->
+                        <input type="hidden" id="ch_region_hidden" name="ch_region" value="">
                     </div>
                 </div>
 
@@ -286,5 +288,31 @@ if (emailField) {
         }
     });
 }
+</script>
+
+<script>
+$(document).ready(function() {
+    $('#ch_state').change(function() {
+        var selectedOption = $(this).find(':selected');
+        var regionId = selectedOption.data('region-id');
+
+        if (regionId) {
+            // Set the region dropdown to the corresponding region
+            $('#ch_region').val(regionId);
+            // Update the hidden input that actually gets submitted
+            $('#ch_region_hidden').val(regionId);
+
+            // Trigger the coordinator filtering based on the new region
+            filterCoordinators();
+        } else {
+            // Clear if no state selected
+            $('#ch_region').val('');
+            $('#ch_region_hidden').val('');
+
+            // Reset coordinator filter
+            filterCoordinators();
+        }
+    });
+});
 </script>
 @endsection

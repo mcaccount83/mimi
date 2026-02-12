@@ -30,27 +30,14 @@
             <input type="hidden" name="ch_state" value="{{$stateShortName}}">
             <input type="hidden" name="ch_hid_primarycor" value="{{$chDetails->primary_coordinator_id}}">
             <input type="hidden" id="ch_pre_email_chk" value="{{ $chDetails->pendingPresident->email }}">
+            <input type="hidden" id="ch_region" name="ch_region" value="{{ $chDetails->region_id }}">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
                   <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                  <p class="text-center">{{ $conferenceDescription }} Conference
+                <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                   </p>
-                  <div class="form-group row mt-1">
-                    <label class="col-form-label col-sm-6">Region:</label>
-                    <div class="col-sm-6">
-                        <select id="ch_region" name="ch_region" class="form-control float-right text-right"required>
-                            <option value="">Select Region</option>
-                            @foreach($allRegions as $region)
-                                <option value="{{$region->id}}"
-                                    @if($chDetails->region_id == $region->id) selected @endif>
-                                    {{$region->long_name}}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
 
                   <ul class="list-group list-group-unbordered mb-3">
 
@@ -61,10 +48,10 @@
                               <option value="">Select Primary Coordinator</option>
                               @foreach($pcDetails as $coordinator)
                               <option value="{{ $coordinator['cid'] }}"
-                                  {{ isset($chDetails->primary_coordinator_id) && $chDetails->primary_coordinator_id == $coordinator['cid'] ? 'selected' : '' }}
-                                  data-region-id="{{ $coordinator['regid'] }}">
-                                  {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
-                                  </option>
+                                {{ isset($chDetails->primary_coordinator_id) && $chDetails->primary_coordinator_id == $coordinator['cid'] ? 'selected' : '' }}
+                                data-region-id="{{ $coordinator['regid'] }}">
+                                {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
+                            </option>
                               @endforeach
                           </select>
                           <hr>
@@ -131,7 +118,7 @@
 
                                 <label class="col-sm-2 col-form-label">State:</label>
                                 <div class="col-sm-3">
-                                    <select id="ch_state" name="ch_state" class="form-control" required>
+                                    <select id="ch_state" name="ch_state" class="form-control" disabled required>
                                         <option value="">Select State</option>
                                         @foreach($allStates as $state)
                                             <option value="{{$state->id}}"

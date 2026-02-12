@@ -281,6 +281,7 @@ class BaseChapterController extends Controller
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
 
+        $chStateId = $chDetails->state_id;
         if ($chDetails->state_id < 52) {
             $stateShortName = $chDetails->state->state_short_name;
         } else {
@@ -310,7 +311,8 @@ class BaseChapterController extends Controller
         $allProbation = Probation::all();  // Full List for Dropdown Menu
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
-        $allStates = State::all();  // Full List for Dropdown Menu
+        $allStates = State::where('id', $chStateId)
+            ->get();
         $allCountries = Country::all();  // Full List for Dropdown Menu
         $allMonths = Month::all();  // Full List for Dropdown Menu
         $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference

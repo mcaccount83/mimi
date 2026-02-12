@@ -44,6 +44,7 @@ class BaseBoardController extends Controller
         // Get board details from the appropriate table based on active status
         $boardDetails = $this->getBoardDetailsByStatus($chId, $chActiveId);
 
+        $chStateId = $chDetails->state_id;
         // State/Country logic
         if ($chDetails->state_id < 52) {
             $stateShortName = $chDetails->state->state_short_name;
@@ -60,7 +61,8 @@ class BaseBoardController extends Controller
         $allActive = ActiveStatus::all();
         $allProbation = Probation::all();
         $allWebLinks = Website::all();
-        $allStates = State::all();
+        $allStates = State::where('id', $chStateId)
+            ->get();
         $allCountries = Country::all();
         $allAwards = FinancialReportAwards::all();
 

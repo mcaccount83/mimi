@@ -261,28 +261,15 @@ class PublicController extends Controller
         $name = $input['ch_name'];
         $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
         $stateId = $input['ch_state'];
-        $state = State::find($stateId);
-        $stateShortName = $state->state_short_name;
+        $stateDetails = State::with('conference', 'region')->find($stateId);
+        $regId = $stateDetails->region_id;
+        $confId = $stateDetails->conference_id;
 
-        $regId = '0';
         $statusId = OperatingStatusEnum::OK;
         $activeStatus = ChapterStatusEnum::PENDING;
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentMonth = $dateOptions['currentMonth'];
         $currentYear = $dateOptions['currentYear'];
-
-        $confId = null;
-        if (in_array($stateShortName, ['AK', 'HI', 'ID', 'MN', 'MT', 'ND', 'OR', 'SD', 'WA', 'WI', 'WY', '**', 'AA', 'AE', 'AP'])) {
-            $confId = '1';
-        } elseif (in_array($stateShortName, ['AZ', 'CA', 'CO', 'NM', 'NV', 'OK', 'TX', 'UT'])) {
-            $confId = '2';
-        } elseif (in_array($stateShortName, ['AL', 'AR', 'DC', 'FL', 'GA', 'KY', 'LA', 'MD', 'MS', 'NC', 'SC', 'TN', 'VA', 'WV'])) {
-            $confId = '3';
-        } elseif (in_array($stateShortName, ['CT', 'DE', 'MA', 'ME', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT'])) {
-            $confId = '4';
-        } elseif (in_array($stateShortName, ['IA', 'IL', 'IN', 'KS', 'MI', 'MO', 'NE', 'OH'])) {
-            $confId = '5';
-        }
 
         $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $confId)
@@ -864,24 +851,11 @@ class PublicController extends Controller
         $input = $request->all();
 
         $stateId = $input['cd_state'];
-        $state = State::find($stateId);
-        $stateShortName = $state->state_short_name;
+        $stateDetails = State::with('conference', 'region')->find($stateId);
+        $confId = $stateDetails->conference_id;
 
         $regId = '0';
         $activeStatus = '2';
-
-        $confId = null;
-        if (in_array($stateShortName, ['AK', 'HI', 'ID', 'MN', 'MT', 'ND', 'OR', 'SD', 'WA', 'WI', 'WY', '**', 'AA', 'AE', 'AP'])) {
-            $confId = '1';
-        } elseif (in_array($stateShortName, ['AZ', 'CA', 'CO', 'NM', 'NV', 'OK', 'TX', 'UT'])) {
-            $confId = '2';
-        } elseif (in_array($stateShortName, ['AL', 'AR', 'DC', 'FL', 'GA', 'KY', 'LA', 'MD', 'MS', 'NC', 'SC', 'TN', 'VA', 'WV'])) {
-            $confId = '3';
-        } elseif (in_array($stateShortName, ['CT', 'DE', 'MA', 'ME', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT'])) {
-            $confId = '4';
-        } elseif (in_array($stateShortName, ['IA', 'IL', 'IN', 'KS', 'MI', 'MO', 'NE', 'OH'])) {
-            $confId = '5';
-        }
 
         $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $confId)

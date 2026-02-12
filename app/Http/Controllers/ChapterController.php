@@ -683,7 +683,9 @@ class ChapterController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['confId'];
 
-        $allStates = State::all();  // Full List for Dropdown Menu
+        $allStates = State::with('conference')  // Full List for Dropdown Menu based on Conference
+            ->where('conference_id', $confId)
+            ->get();
         $allCountries = Country::all();  // Full List for Dropdown Menu
         $allRegions = Region::with('conference')  // Full List for Dropdown Menu based on Conference
             ->where('conference_id', $confId)
@@ -740,7 +742,6 @@ class ChapterController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
         $updatedBy = $user['userName'];
-        $conference = $user['confId'];
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentMonth = $dateOptions['currentMonth'];
@@ -748,6 +749,10 @@ class ChapterController extends Controller implements HasMiddleware
 
         $input = $request->all();
         $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
+        $stateId = $input['ch_state'];
+        $stateDetails = State::with('conference', 'region')->find($stateId);
+        $regId = $stateDetails->region_id;
+        $confId = $stateDetails->conference_id;
 
         DB::beginTransaction();
         try {
@@ -756,8 +761,8 @@ class ChapterController extends Controller implements HasMiddleware
                 'sanitized_name' => $sanitizedName,
                 'state_id' => $input['ch_state'],
                 'country_id' => $input['ch_country'] ?? '198',
-                'conference_id' => $conference,
-                'region_id' => $input['ch_region'],
+                'conference_id' => $confId,
+                'region_id' => $regId,
                 'ein' => $input['ch_ein'],
                 'status_id' => $input['ch_status'],
                 'territory' => $input['ch_boundariesterry'],
@@ -848,28 +853,15 @@ class ChapterController extends Controller implements HasMiddleware
         $name = $input['ch_name'];
         $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
         $stateId = $input['ch_state'];
-        $state = State::find($stateId);
-        $stateShortName = $state->state_short_name;
+        $$stateDetails = State::with('conference', 'region')->find($stateId);
+        $regId = $stateDetails->region_id;
+        $confId = $stateDetails->conference_id;
 
-        $regId = '0';
         $statusId = OperatingStatusEnum::OK;
         $activeStatus = ChapterStatusEnum::PENDING;
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentMonth = $dateOptions['currentMonth'];
         $currentYear = $dateOptions['currentYear'];
-
-        $confId = null;
-        if (in_array($stateShortName, ['AK', 'HI', 'ID', 'MN', 'MT', 'ND', 'OR', 'SD', 'WA', 'WI', 'WY', '**', 'AA', 'AE', 'AP'])) {
-            $confId = '1';
-        } elseif (in_array($stateShortName, ['AZ', 'CA', 'CO', 'NM', 'NV', 'OK', 'TX', 'UT'])) {
-            $confId = '2';
-        } elseif (in_array($stateShortName, ['AL', 'AR', 'DC', 'FL', 'GA', 'KY', 'LA', 'MD', 'MS', 'NC', 'SC', 'TN', 'VA', 'WV'])) {
-            $confId = '3';
-        } elseif (in_array($stateShortName, ['CT', 'DE', 'MA', 'ME', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT'])) {
-            $confId = '4';
-        } elseif (in_array($stateShortName, ['IA', 'IL', 'IN', 'KS', 'MI', 'MO', 'NE', 'OH'])) {
-            $confId = '5';
-        }
 
         $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $confId)

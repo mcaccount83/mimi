@@ -259,7 +259,9 @@ class BaseCoordinatorController extends Controller
             ->where('conference_id', $cdConfId)
             ->orwhere('id', '0')
             ->get();
-        $allStates = State::all();  // Full List for Dropdown Menu
+        $allStates = State::with('conference')  // Full List for Dropdown Menu based on Conference
+            ->where('conference_id', $cdConfId)
+            ->get();
         $allCountries = Country::all();  // Full List for Dropdown Menu
         $allMonths = Month::all();  // Full List for Dropdown Menu
         $allRecognitionGifts = RecognitionGifts::all();  // Full List for Dropdown Menu
