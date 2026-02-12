@@ -30,9 +30,15 @@
                                         {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
                                     </a>
                                 @elseif ($resourceItem->file_type == 3)
-                                    {{-- Laravel Route - Just show title, no link for admin --}}
-                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                    <span style="font-size: smaller; color: #6c757d;">(Chapter Sepcific Route)</span>
+                                        @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
+                                            {{-- Laravel Route - Just show title, no link for coordinators --}}
+                                            {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                            <span style="font-size: smaller; color: #6c757d;">(Chapter Sepcific Route)</span>
+                                        @else
+                                            <a href="{{ route( $resourceItem->link, ['id' => $chDetails->id]) }}" target="_blank">
+                                                {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                            </a>
+                                        @endif
                                 @elseif ($resourceItem->file_type == 1)
                                     {{-- File Download --}}
                                     <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
@@ -81,9 +87,15 @@
                                                 {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
                                             </a>
                                         @elseif ($resourceItem->file_type == 3)
-                                            {{-- Laravel Route - Just show title, no link for admin --}}
-                                            {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                            <span style="font-size: smaller; color: #6c757d;">(Chapter Sepcific Route)</span>
+                                           @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
+                                                {{-- Laravel Route - Just show title, no link for coordinators --}}
+                                                {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                                <span style="font-size: smaller; color: #6c757d;">(Chapter Sepcific Route)</span>
+                                            @else
+                                                <a href="{{ route( $resourceItem->link, ['id' => $chDetails->id]) }}" target="_blank">
+                                                    {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                                </a>
+                                            @endif
                                         @elseif ($resourceItem->file_type == 1)
                                             {{-- File Download --}}
                                             <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">

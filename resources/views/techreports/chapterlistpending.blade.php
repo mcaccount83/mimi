@@ -24,6 +24,7 @@
                         <table id="chapterlist" class="table table-sm table-hover">
                             <thead>
                                 <tr>
+                                    <th>Conf/Reg</th>
                                     <th>State</th>
                                     <th>Chapter Name</th>
                                     <th>View Board Pages</th>
@@ -33,6 +34,13 @@
                             <tbody>
                                 @foreach($chapters as $chapter)
                                     <tr id="chapter-{{ $chapter->id }}">
+                                        <td>
+                                            @if ($chapter->region->short_name != "None")
+                                                {{ $chapter->conference->short_name }} / {{ $chapter->region->short_name }}
+                                            @else
+                                                {{ $chapter->conference->short_name }}
+                                            @endif
+                                        </td>
                                         <td>
                                             @if($chapter->state_id < 52)
                                                 {{$chapter->state->state_short_name}}

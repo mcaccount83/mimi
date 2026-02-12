@@ -110,7 +110,8 @@ class TechReportController extends Controller implements HasMiddleware
         $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapters = $baseQuery['query']->orderByDesc('chapters.zap_date')->get();
+
+        $chapters = $baseQuery['query']->get();
 
         // Clean up the simulated parameter
         unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
@@ -1063,51 +1064,6 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         }
     }
-
-
-    // public function showAdminEmail(): View
-    // {
-    //     $adminEmail = AdminEmail::get();
-
-    //     $data = ['adminEmail' => $adminEmail];
-
-    //     return view('techreports.adminemail')->with($data);
-    // }
-
-    // /**
-    //  * Update Email Addresses not assigned by positionId
-    //  */
-    // public function updateAdminEmail(Request $request): JsonResponse
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $email = AdminEmail::firstOrFail();
-    //         $email->list_admin = $request->input('listAdminEmail');
-    //         $email->payments_admin = $request->input('paymentAdminEmail');
-    //         $email->ein_admin = $request->input('einAdminEmail');
-    //         $email->gsuite_admin = $request->input('gsuiteAdminEmail');
-    //         $email->mimi_admin = $request->input('mimiAdminEmail');
-
-    //         $email->save();
-
-    //         DB::commit();
-
-    //         $message = 'Admin Emails updated successfully';
-
-    //         return response()->json(['status' => 'success', 'message' => $message, 'redirect' => route('techreports.adminemail')]);
-
-    //     } catch (\Exception $e) {
-    //         DB::rollback();  // Rollback Transaction
-    //         Log::error($e);  // Log the error
-
-    //         $message = 'Something went wrong, Please try again.';
-
-    //         return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('techreports.adminemail')]);
-    //     } finally {
-    //         // This ensures DB connections are released even if exceptions occur
-    //         DB::disconnect();
-    //     }
-    // }
 
     /**
      * Delete Chapter/Board from Database -- cannot be undone!

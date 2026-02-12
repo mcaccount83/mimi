@@ -143,6 +143,7 @@ class BaseChapterController extends Controller
         $isPendingPage = request()->route()->getName() == 'chapters.chappending';
         $isNotApprovedPage = request()->route()->getName() == 'chapters.chapnotapproved';
         $isZappedPage = request()->route()->getName() == 'chapters.chapzapped';
+        $isZappedViewPage = request()->route()->getName() == 'techreports.chapterlistzapped';
         $isReregPage = request()->route()->getName() == 'payment.chapreregistration';
 
         if ($isPendingPage || $isNotApprovedPage) {
@@ -151,7 +152,7 @@ class BaseChapterController extends Controller
             return ['query' => $baseQuery];
         }
 
-        if ($isZappedPage) {
+        if ($isZappedPage || $isZappedViewPage) {
             $baseQuery->orderByDesc('chapters.zap_date');
 
             return ['query' => $baseQuery];
