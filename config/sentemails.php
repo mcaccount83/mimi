@@ -5,7 +5,7 @@
  */
 return [
     // set the route path to load the sent emails ui defaults to /sentemails
-    'routepath' => 'techreports/sentemails',
+    'routepath' => 'adminreports/sentemails',
 
     // set the route middlewares to apply on the sent emails ui
     'middleware' => ['web', 'auth'],

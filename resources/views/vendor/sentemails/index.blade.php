@@ -18,7 +18,7 @@
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Sent Mail Log
                             </h3>
-                            @include('layouts.dropdown_menus.menu_reports_tech')
+                            @include('layouts.dropdown_menus.menu_reports_admin')
                         </div>
                     </div>
             <!-- /.card-header -->

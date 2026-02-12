@@ -28,6 +28,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserReportController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\MySentEmailsController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -103,6 +105,16 @@ Route::get('/grantlist', [PublicController::class, 'viewGrantList'])->name('publ
 Route::get('/grantlist-pdf', [PublicController::class, 'generateGratList'])->name('pdf.grantlist');
 Route::post('/grant-list-pdf', [PublicController::class, 'saveGratList'])->name('pdf.generategrantlist');
 
+
+// In your routes/web.php or wherever you have routes
+Route::get(config('sentemails.routepath'), [MySentEmailsController::class, 'index'])
+    ->middleware(config('sentemails.middleware'))
+    ->name('sentemails');
+
+// Keep the other package routes
+Route::get(config('sentemails.routepath').'/{id}', [\Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController::class, 'show'])
+    ->middleware(config('sentemails.middleware'))
+    ->name('sentemails.show');
 
 // Allow error log to be viewed without login
 Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');

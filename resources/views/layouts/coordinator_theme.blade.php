@@ -250,7 +250,7 @@ window.onload = function () {
                         @if (isset($paymentsRoute))
                             <li class="nav-item">
                                 <a href="{{ $paymentsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activePaymentsRoutes) }}">
-                                    <i class="nav-icon fas fa-dollar-sign"></i>
+                                    <i class="nav-icon fas fa-credit-card"></i>
                                     <p>Payments/Donations</p>
                                 </a>
                             </li>
@@ -444,7 +444,8 @@ window.onload = function () {
                         <!-- Admin Reports Menu Item -->
                         @php
                             if ($coordinatorCondition && $conferenceCoordinatorCondition) {
-                                $adminReportsRoute = route('adminreports.paymentlog');
+                                // $adminReportsRoute = route('adminreports.paymentlog');
+                                $adminReportsRoute = url(config('sentemails.routepath'));
                             }
                             $activeAdminReportsRoutes = [
                                 'adminreports/*'
