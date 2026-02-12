@@ -502,8 +502,8 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $financialReport->save();
 
                 $documentsEOY->final_report_received = 1;
-                $documentsEOY->report_received = Carbon::now();
-                $documentsEOY->report_extension = null;
+                // $documentsEOY->report_received = Carbon::now();
+                // $documentsEOY->report_extension = null;
                 $documentsEOY->save();
 
                 $disbandChecklist->file_financial = 1;

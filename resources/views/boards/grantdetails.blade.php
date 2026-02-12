@@ -594,14 +594,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 <script>
- /* Save & Submit Verification */
+/* Save & Submit Verification */
 $(document).ready(function() {
     function submitFormWithStep(step) {
         $("#submitted").val('0');  // Add this - ensure it's saving, not submitting
         $("#FurthestStep").val(step);
         // Trigger the form's submit event properly (not .submit() method)
-           document.getElementById('grant_request').submit();
-
+        document.getElementById('grant_request').submit();
     }
 
     $("#btn-step-3").click(function() {
