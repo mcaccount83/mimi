@@ -38,11 +38,13 @@
             <label>Did your chapter change your dues this year?<span class="field-required">*</span></label>
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-right: 20px;">
-                    <input class="form-check-input" type="radio" id="optChangeDuesYes" name="optChangeDues" value="1" {{ $chFinancialReport->changed_dues == 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    {{-- <input class="form-check-input" type="radio" id="optChangeDuesYes" name="optChangeDues" value="1" {{ $chFinancialReport->changed_dues == 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()"> --}}
+                    <input class="form-check-input" type="radio" id="optChangeDuesYes" name="optChangeDues" value="1" {{ !is_null($chFinancialReport->changed_dues) && $chFinancialReport->changed_dues == 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optChangeDuesYes">Yes</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" id="optChangeDuesNo" name="optChangeDues" value="0" {{ $chFinancialReport->changed_dues == 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    {{-- <input class="form-check-input" type="radio" id="optChangeDuesNo" name="optChangeDues" value="0" {{ $chFinancialReport->changed_dues == 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()"> --}}
+                    <input class="form-check-input" type="radio" id="optChangeDuesNo" name="optChangeDues" value="0" {{ !is_null($chFinancialReport->changed_dues) && $chFinancialReport->changed_dues == 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optChangeDuesNo">No</label>
                 </div>
             </div>
