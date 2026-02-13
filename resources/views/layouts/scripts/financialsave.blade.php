@@ -79,8 +79,9 @@
         if (!EnsureReconciliation()) return false;
         if (!EnsureIRSQuestions()) return false;
         if (!EnsureChapterQuestions()) return false;
+
         // Await EnsureBalance if it is an async function
-        if (!await EnsureBalance()) return false;
+        // if (!await EnsureBalance()) return false;
 
         // Use SweetAlert2 for the final confirmation
         Swal.fire({
