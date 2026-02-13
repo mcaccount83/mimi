@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CheckboxFilterEnum;
 use App\Enums\ChapterStatusEnum;
-use App\Enums\ChapterCheckbox;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
@@ -69,12 +69,12 @@ class PaymentController extends Controller implements HasMiddleware
         $currentYear = $dateOptions['currentYear'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
-        $checkBox6Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONALREREG];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkBox56Status = $baseQuery[CheckboxFilterEnum::INTERNATIONALREREG];
 
-        if ($checkBox3Status || $checkBox5Status) {
+        if ($checkBox3Status || $checkBox51Status) {
             $reChapterList = $baseQuery['query']
                 ->get();
         } else {
@@ -90,8 +90,8 @@ class PaymentController extends Controller implements HasMiddleware
         }
 
         $countList = count($reChapterList);
-        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox6Status' => $checkBox6Status,
+        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox56Status' => $checkBox56Status,
         ];
 
         return view('payment.chapreregistration')->with($data);
@@ -287,13 +287,13 @@ class PaymentController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('payment.chapdonations')->with($data);
@@ -534,10 +534,10 @@ class PaymentController extends Controller implements HasMiddleware
         $coorId = $user['cdId'];
         $confId = $user['confId'];
 
-        $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
+        $checkBox51Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONAL);
 
          // Use the appropriate query based on checkbox status
-        if ($checkBox5Status) {
+        if ($checkBox51Status) {
             $grantList = GrantRequest::with('chapters', 'chapterstate')
                 ->orderBy('submitted_at', 'desc')
                 ->get();
@@ -551,7 +551,7 @@ class PaymentController extends Controller implements HasMiddleware
                 ->get();
             }
 
-        $data = ['grantList' => $grantList, 'checkBox5Status' => $checkBox5Status];
+        $data = ['grantList' => $grantList, 'checkBox51Status' => $checkBox51Status];
 
         return view('payment.grantlist')->with($data);
     }

@@ -995,7 +995,7 @@ class PDFController extends Controller
     public function generateSubordinateFiling(Request $request, $streamResponse = true)
     {
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1021,7 +1021,7 @@ class PDFController extends Controller
         $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         $chapterList = collect();
 
@@ -1125,7 +1125,7 @@ class PDFController extends Controller
     public function generateIRSUpdates(Request $request, $streamResponse = true)
     {
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1153,7 +1153,7 @@ class PDFController extends Controller
         $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 
@@ -1370,7 +1370,7 @@ class PDFController extends Controller
     public function generateIRSFilingCorrections(Request $request, $streamResponse = true)
     {
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1394,7 +1394,7 @@ class PDFController extends Controller
         $filedWrongList = $this->generateIRSFiledWrongList($coorId, $confId, $regId, $positionId, $secPositionId);
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         $emailEINCoorData = $this->userController->loadEINCoord();
 

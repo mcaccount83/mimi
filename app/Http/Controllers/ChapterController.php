@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ActiveStatusEnum;
 use App\Enums\BoardPosition;
-use App\Enums\ChapterCheckbox;
+use App\Enums\CheckboxFilterEnum;
 use App\Enums\ChapterStatusEnum;
 use App\Enums\CoordinatorPosition;
 use App\Enums\OperatingStatusEnum;
@@ -121,13 +121,13 @@ class ChapterController extends Controller implements HasMiddleware
         $baseQuery = $this->baseChapterController->getBaseQuery(2, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         $chapterList = $baseQuery['query']->get();
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = $chapterList->count();
         $data = [
             'countList' => $countList,
             'chapterList' => $chapterList,
-            'checkBox5Status' => $checkBox5Status,
+            'checkBox51Status' => $checkBox51Status,
             'userName' => $userName,
             'userPosition' => $userPosition,
             'userConfName' => $userConfName,
@@ -153,13 +153,13 @@ class ChapterController extends Controller implements HasMiddleware
         $baseQuery = $this->baseChapterController->getBaseQuery(3, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         $chapterList = $baseQuery['query']->get();
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = $chapterList->count();
         $data = [
             'countList' => $countList,
             'chapterList' => $chapterList,
-            'checkBox5Status' => $checkBox5Status,
+            'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('chapters.chaplistdeclined')->with($data);
@@ -184,17 +184,17 @@ class ChapterController extends Controller implements HasMiddleware
         // Active chapters
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = $chapterList->count();
         $data = [
             'countList' => $countList,
             'chapterList' => $chapterList,
-            'checkBoxStatus' => $checkBoxStatus,
+            'checkBox1Status' => $checkBox1Status,
             'checkBox3Status' => $checkBox3Status,
-            'checkBox5Status' => $checkBox5Status,
+            'checkBox51Status' => $checkBox51Status,
             'userName' => $userName,
             'userPosition' => $userPosition,
             'userConfName' => $userConfName,
@@ -220,13 +220,13 @@ class ChapterController extends Controller implements HasMiddleware
         $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         $chapterList = $baseQuery['query']->get();
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = $chapterList->count();
         $data = [
             'countList' => $countList,
             'chapterList' => $chapterList,
-            'checkBox5Status' => $checkBox5Status,
+            'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('chapters.chapzapped')->with($data);
@@ -248,13 +248,13 @@ class ChapterController extends Controller implements HasMiddleware
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         $chapterList = $baseQuery['query']->get();
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = $chapterList->count();
         $data = [
             'countList' => $countList,
             'chapterList' => $chapterList,
-            'checkBox5Status' => $checkBox5Status,
+            'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('chapters.chapinquiries')->with($data);
@@ -276,13 +276,13 @@ class ChapterController extends Controller implements HasMiddleware
         $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
 
         $chapterList = $baseQuery['query']->get();
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = $chapterList->count();
         $data = [
             'countList' => $countList,
             'chapterList' => $chapterList,
-            'checkBox5Status' => $checkBox5Status,
+            'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('chapters.chapinquirieszapped')->with($data);
@@ -1595,13 +1595,13 @@ class ChapterController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $websiteList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['websiteList' => $websiteList, 'checkBoxStatus' => $checkBoxStatus,
+        $data = ['websiteList' => $websiteList, 'checkBox1Status' => $checkBox1Status,
             'checkBox3Status' => $checkBox3Status,
-            'checkBox5Status' => $checkBox5Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+            'checkBox51Status' => $checkBox51Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('chapters.chapwebsite')->with($data);
@@ -1621,13 +1621,13 @@ class ChapterController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
+        $data = ['chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
             'checkBox3Status' => $checkBox3Status,
-            'checkBox5Status' => $checkBox5Status,
+            'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('chapters.chapsocialmedia')->with($data);

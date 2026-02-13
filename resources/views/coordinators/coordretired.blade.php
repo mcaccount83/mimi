@@ -30,7 +30,7 @@
                   <th>Secondary Positions</th>
                   <th>Retire Date</th>
                   <th>Reason</th>
-                  @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                  @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <th>Delete</th>
                     @endif
                 </tr>
@@ -56,7 +56,7 @@
                         </td>
                         <td><span class="date-mask">{{ $list->zapped_date }}</span></td>
                         <td>{{ $list->reason_retired }}</td>
-                        @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                        @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="fa fa-ban"
                             onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
@@ -71,15 +71,15 @@
               @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showCoordAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Coordinators (Export Available)</label>
+                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="custom-control-label" for="showIntl">Show All International Coordinators (Export Available)</label>
                         </div>
                     </div>
                 @endif
 
               <div class="card-body text-center">
                 @if ($assistConferenceCoordinatorCondition)
-                    @if ($checkBox5Status)
+                    @if ($checkBox51Status)
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('intretiredcoordinator', 'International Retired Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export International Retired Coordinator List</button>
                     {{-- @else
                         <button class="btn bg-gradient-primary mb-3" onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Retired Coordinator List</button> --}}

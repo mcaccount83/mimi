@@ -90,18 +90,18 @@
             <!-- /.card-body -->
             <div class="col-sm-12">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showChPrimary()" />
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{ $checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
                     <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
                 </div>
             </div>
             @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showChAllConf()" />
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="custom-control-input" {{ $checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
                             @if ($assistConferenceCoordinatorCondition)
-                                    <label class="custom-control-label" for="showAllConf">Show All Chapters in Conference (Export Available)</label>
+                                    <label class="custom-control-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
                                 @else
-                            <label class="custom-control-label" for="showAllConf">Show All Chapters in Region (Export Available)</label>
+                            <label class="custom-control-label" for="showConfReg">Show All Chapters in Region (Export Available)</label>
                             @endif
                         </div>
                     </div>
@@ -109,8 +109,8 @@
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Chapters (Export & Fax Info Available)</label>
+                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="custom-control-label" for="showIntl">Show All International Chapters (Export & Fax Info Available)</label>
                         </div>
                     </div>
                 @endif
@@ -118,7 +118,7 @@
                     @if ($assistConferenceCoordinatorCondition)
                         @if ($checkBox3Status)
                             <button class="btn bg-gradient-primary mb-3" onclick="startExport('einstatus', 'EIN Status List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
-                        @elseif ($checkBox5Status)
+                        @elseif ($checkBox51Status)
                             <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download"></i>&nbsp; Export International EIN Status List</button>
                         {{-- @else
                             <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('einstatus', 'EIN Status List')" disabled><i class="fas fa-download mr-2" ></i>Export EIN Status List</button> --}}
@@ -126,7 +126,7 @@
                     @endif
                 <br>
                     @if ($einCondition || $ITCondition)
-                        @if ($checkBox5Status)
+                        @if ($checkBox51Status)
                             <button class="btn bg-gradient-primary mb-3" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf mr-2" ></i>EO Dept Fax Coversheet</button>
                             <button class="btn bg-gradient-primary mb-3" onclick="showIRSUpdatesModal()"><i class="fas fa-file-pdf mr-2" ></i>IRS Updates to EO Dept</button>
                             <button class="btn bg-gradient-primary  mb-3" onclick="showSubordinateFilingModal()"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button>

@@ -35,27 +35,39 @@ class MySentEmailsController extends SentEmailsController implements HasMiddlewa
 
     public function index(Request $request): View
     {
-        $user = $request->user();
-
-        // If user is admin, show all emails (existing behavior)
-        if ($user->is_admin == AdminStatusEnum::ADMIN) {
-            $emails = SentEmail::with('attachments')->orderby('id', 'desc')
-                ->applyFilters($request)
-                ->paginate(config('sentemails.perPage'));
-
-            return view('sentemails::index', compact('emails'));
-        }
-
-        // Load full user information including conference_id
-        $userInfo = $this->userController->loadUserInformation($request);
-        $confId = $userInfo['confId'];
-        $regId = $userInfo['regId'] ?? null;
-        $userEmail = $user->email;
+        // $user = $request->user();
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['confId'];
+        $userAdmin= $user['userAdmin'];
+        $confId = $user['confId'];
+        $regId = $user['regId'] ?? null;
+        $userEmail = $user['userEmail'];
 
         // Get position conditions
         $positionId = $userInfo['cdPositionId'] ?? 0;
         $secPositionId = $userInfo['cdSecPositionId'] ?? [];
         $coorId = $userInfo['cdId'] ?? null;
+
+        $checkBox81Status = $request->has(\App\Enums\CheckboxFilterEnum::ADMIN);
+
+        // Add view filter based on checkboxes
+        if ($checkBox81Status) {
+            $emails = SentEmail::with('attachments')->orderby('id', 'desc')
+                ->applyFilters($request)
+                ->paginate(config('sentemails.perPage'));
+
+            return view('sentemails::index', compact('emails', 'checkBox81Status'));
+
+        } else {
+
+        // If user is admin, show all emails (existing behavior)
+        // if ($user->is_admin == AdminStatusEnum::ADMIN) {
+        //     $emails = SentEmail::with('attachments')->orderby('id', 'desc')
+        //         ->applyFilters($request)
+        //         ->paginate(config('sentemails.perPage'));
+
+        //     return view('sentemails::index', compact('emails'));
+        // }
 
         // Get emails for position conditions
         $conditions = $this->positionConditionsService->getConditionsForUser($positionId, $secPositionId, $coorId);
@@ -171,6 +183,7 @@ class MySentEmailsController extends SentEmailsController implements HasMiddlewa
             ->orderBy('id', 'desc')
             ->applyFilters($request)
             ->paginate(config('sentemails.perPage'));
-                return view('sentemails::index', compact('emails'));
+                return view('sentemails::index', compact('emails', 'checkBox81Status'));
             }
+    }
 }

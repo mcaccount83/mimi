@@ -73,21 +73,21 @@
 				<!-- /.card-body -->
                 <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showChPrimary()" />
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{ $checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
                         <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
-                            <label class="custom-control-label" for="showAll">Show International Chapters</label>
+                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="custom-control-label" for="showIntl">Show International Chapters</label>
                         </div>
                     </div>
                 @endif
                 <div class="card-body text-center">
                     @if ($ITCondition)
-                        @if ($checkBox5Status)
+                        @if ($checkBox51Status)
                             <button type="button" class="btn bg-gradient-primary mb-3" onclick="showResetProbationSubmisionModel()" disabled><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>
                         @else
                             <button type="button" class="btn bg-gradient-primary mb-3 disabled" onclick="showResetProbationSubmisionModel()" disabled><i class="fas fa-undo mr-2"></i>Reset Quarterly Report Data</button>

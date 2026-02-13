@@ -540,7 +540,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
 
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -553,7 +553,7 @@ class ExportController extends Controller implements HasMiddleware
         $chapterIds = $baseQuery['query']->pluck('id')->toArray();
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         if (empty($chapterIds)) {
             return redirect()->to('/home');
@@ -639,7 +639,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
 
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -652,7 +652,7 @@ class ExportController extends Controller implements HasMiddleware
         $chapterIds = $baseQuery['query']->pluck('id')->toArray();
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         if (empty($chapterIds)) {
             return redirect()->to('/home');
@@ -825,7 +825,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
 
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -854,7 +854,7 @@ class ExportController extends Controller implements HasMiddleware
             ->toArray();
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         if (empty($reChapterIds)) {
             return redirect()->to('/home');
@@ -990,7 +990,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
 
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1003,7 +1003,7 @@ class ExportController extends Controller implements HasMiddleware
         $chapterIds = $baseQuery['query']->pluck('id')->toArray();
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         if (empty($chapterIds)) {
             return redirect()->to('/home');
@@ -1152,7 +1152,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
 
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1165,7 +1165,7 @@ class ExportController extends Controller implements HasMiddleware
         $chapterList = $baseQuery['query']->get();
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         if (count($chapterList) > 0) {
             $exportChapterList = [];
@@ -1558,7 +1558,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
 
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\CoordinatorCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1571,7 +1571,7 @@ class ExportController extends Controller implements HasMiddleware
         $coordIds = $baseQuery['query']->pluck('id')->toArray();
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\CoordinatorCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         if (empty($coordIds)) {
             return redirect()->to('/home');
@@ -1735,7 +1735,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
 
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\CoordinatorCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1750,7 +1750,7 @@ class ExportController extends Controller implements HasMiddleware
         $coordIds = $baseQuery['query']->pluck('id')->toArray();
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\CoordinatorCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         if (empty($coordIds)) {
             return redirect()->to('/home');

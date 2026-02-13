@@ -156,18 +156,18 @@
 
             <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showDirect" id="showDirect" class="custom-control-input" {{$checkBoxStatus}} onchange="showCoordDirect()" />
+                        <input type="checkbox" name="showDirect" id="showDirect" class="custom-control-input" {{$checkBox1Status ? 'checked' : '' }} onchange="showDirect()" />
                         <label class="custom-control-label" for="showDirect">Only show my Direct Reports</label>
                     </div>
                 </div>
                 @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAllConf" id="showAllConf" class="custom-control-input" {{$checkBox3Status}} onchange="showCoordAllConf()" />
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="custom-control-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
                             @if ($assistConferenceCoordinatorCondition)
-                                    <label class="custom-control-label" for="showAllConf">Show All Coordinators in Conference (Export Available)</label>
+                                    <label class="custom-control-label" for="showConfReg">Show All Coordinators in Conference (Export Available)</label>
                                 @else
-                            <label class="custom-control-label" for="showAllConf">Show All Coordinators in Region</label>
+                            <label class="custom-control-label" for="showConfReg">Show All Coordinators in Region</label>
                             @endif
                         </div>
                     </div>
@@ -175,8 +175,8 @@
                 @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showCoordAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Coordinators (Export Available)</label>
+                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="custom-control-label" for="showIntl">Show All International Coordinators (Export Available)</label>
                         </div>
                     </div>
                 @endif

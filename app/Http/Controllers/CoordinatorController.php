@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
-use App\Enums\CoordinatorCheckbox;
+use App\Enums\CheckboxFilterEnum;
 use App\Enums\CoordinatorPosition;
 use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
@@ -98,16 +98,16 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
-        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $emailListCord = $coordinatorList->pluck('email')->filter()->implode(';');
 
         $countList = count($coordinatorList);
-        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord,
+        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status, 'emailListCord' => $emailListCord,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'userCoordId' => $userCoordId,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('coordinators.coordlist')->with($data);
@@ -127,9 +127,9 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(2, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox5Status' => $checkBox5Status];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox51Status' => $checkBox51Status];
 
         return view('coordinators.coordlistpending')->with($data);
     }
@@ -148,9 +148,9 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(3, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox5Status' => $checkBox5Status];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox51Status' => $checkBox51Status];
 
         return view('coordinators.coordlistrejected')->with($data);
     }
@@ -169,9 +169,9 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox5Status' => $checkBox5Status];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox51Status' => $checkBox51Status];
 
         return view('coordinators.coordretired')->with($data);
     }
@@ -835,7 +835,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Reassign Chapter
      */
-    public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $check_changed = false)
+    public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $changed = false)
     {
         $user = User::find($request->user()->id);
         $updatedId = $user->id;
@@ -844,7 +844,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdIdUser = $cdDetailsUser->id;
         $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
-        if ($check_changed) {
+        if ($changed) {
             $checkPrimaryIdArr = Chapters::find($chapter_id);
             $current_primary = $checkPrimaryIdArr->primary_coordinator_id;
             if ($current_primary == $coordinator_id) {
@@ -921,7 +921,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Reassign Coordinator
      */
-    public function ReassignCoordinator(Request $request, $coordinator_id, $new_coordinator_id, $check_changed = false)
+    public function ReassignCoordinator(Request $request, $coordinator_id, $new_coordinator_id, $changed = false)
     {
         $user = User::find($request->user()->id);
         $updatedId = $user->id;
@@ -930,7 +930,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdIdUser = $cdDetailsUser->id;
         $updatedBy = $cdDetailsUser->first_name.' '.$cdDetailsUser->last_name;
 
-        if ($check_changed) {
+        if ($changed) {
             $checkReportIdArr = Coordinators::find($coordinator_id);
             $current_report = $checkReportIdArr->report_id;
             if ($current_report == $new_coordinator_id) {

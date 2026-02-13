@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CoordinatorCheckbox;
+use App\Enums\CheckboxFilterEnum;
 use App\Services\ReportingService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -50,9 +50,9 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
-        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         foreach ($coordinatorList as $list) {
             $cdCoorId = $list->id;
@@ -63,8 +63,8 @@ class CoordinatorReportController extends Controller implements HasMiddleware
             $list->total_report = $reportingData['total_report'];
         }
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('coordreports.coordrptvolutilization')->with($data);
@@ -84,12 +84,12 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
-        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('coordreports.coordrptappreciation')->with($data);
@@ -106,12 +106,12 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
-        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('coordreports.old_coordrptappreciation')->with($data);
@@ -131,12 +131,12 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
-        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('coordreports.coordrptbirthdays')->with($data);
@@ -148,8 +148,8 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     public function showRptReportingTree(Request $request): View
     {
         // Check if International's reporting tree checkbox is selected
-        $showFullTree = $request->has(CoordinatorCheckbox::REPORTING_TREE) &&
-                        $request->get(CoordinatorCheckbox::REPORTING_TREE) == 'yes';
+        $showFullTree = $request->has(CheckboxFilterEnum::REPORTING_TREE) &&
+                        $request->get(CheckboxFilterEnum::REPORTING_TREE) == 'yes';
 
         if ($showFullTree) {
             // Show International's full reporting tree based on Founder Data
@@ -173,9 +173,9 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
 
-        $checkBox6Status = $showFullTree ? 'checked' : '';
+        $checkBox86Status = $showFullTree ? 'checked' : '';
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox6Status' => $checkBox6Status];
+        $data = ['coordinatorList' => $coordinatorList, 'checkBox86Status' => $checkBox86Status];
 
         return view('coordreports.coordrptreportingtree')->with($data);
     }

@@ -75,9 +75,9 @@
                 @if (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition)
                      <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showInq" id="showInq" class="custom-control-input"
-                                {{ $checkBox7Status ? 'checked' : '' }} onchange="showInqOut()" />
-                            <label class="custom-control-label" for="showInq">Show Only Outstanding Inquiries</label>
+                            <input type="checkbox" name="showInquiries" id="showInquiries" class="custom-control-input"
+                                {{ $checkBox7Status ? 'checked' : '' }} onchange="showInquiries()" />
+                            <label class="custom-control-label" for="showInquiries">Show Only Outstanding Inquiries</label>
                         </div>
                     </div>
                  @endif
@@ -85,16 +85,16 @@
                 @if ($inquiriesInternationalCondition || $ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showInqAll" id="showInqAll" class="custom-control-input"
-                                {{ $checkBox8Status ? 'checked' : '' }} onchange="showInqOutAll()" />
-                            <label class="custom-control-label" for="showInqAll">Show Only Outstanding International Inquiries</label>
+                            <input type="checkbox" name="showIntlInquiries" id="showIntlInquiries" class="custom-control-input"
+                                {{ $checkBox57Status ? 'checked' : '' }} onchange="showIntlInquiries()" />
+                            <label class="custom-control-label" for="showIntlInquiries">Show Only Outstanding International Inquiries</label>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input"
-                                {{ $checkBox5Status ? 'checked' : '' }} onchange="showInqAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Inquiries</label>
+                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input"
+                                {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="custom-control-label" for="showIntl">Show All International Inquiries</label>
                         </div>
                     </div>
                 @endif

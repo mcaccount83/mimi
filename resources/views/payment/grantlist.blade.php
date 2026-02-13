@@ -80,9 +80,9 @@
                 @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input"
-                                {{ $checkBox5Status ? 'checked' : '' }} onchange="showInqAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Requests</label>
+                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input"
+                                {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="custom-control-label" for="showIntl">Show All International Requests</label>
                         </div>
                     </div>
                 @endif

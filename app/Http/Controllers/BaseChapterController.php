@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
-use App\Enums\ChapterCheckbox;
-use App\Enums\OperatingStatusEnum;
+use App\Enums\CheckboxFilterEnum;
 use App\Models\ActiveStatus;
 use App\Models\Chapters;
 use App\Models\Conference;
@@ -40,31 +39,30 @@ class BaseChapterController extends Controller
     private function applyCheckboxFilters($baseQuery, $coorId, $conditions = null, $confId = null, $regId = null)
     {
         $checkboxStatus = [
-            ChapterCheckbox::CHECK_PRIMARY => '',
-            ChapterCheckbox::CHECK_REVIEWER => '',
-            ChapterCheckbox::CHECK_CONFERENCE_REGION => '',
-            ChapterCheckbox::CHECK_PROBATION => '',
-            ChapterCheckbox::CHECK_INTERNATIONAL => '',
-            ChapterCheckbox::CHECK_INTERNATIONALREREG => '',
+            CheckboxFilterEnum::PC_DIRECT => '',
+            CheckboxFilterEnum::REVIEWER => '',
+            CheckboxFilterEnum::CONFERENCE_REGION => '',
+            CheckboxFilterEnum::INTERNATIONAL => '',
+            CheckboxFilterEnum::INTERNATIONALREREG => '',
         ];
 
-        // Checkbox
-        if (isset($_GET[ChapterCheckbox::PRIMARY_COORDINATOR]) && $_GET[ChapterCheckbox::PRIMARY_COORDINATOR] == 'yes') {
-            $checkboxStatus[ChapterCheckbox::CHECK_PRIMARY] = 'checked';
+        // Checkbox1
+        if (isset($_GET[CheckboxFilterEnum::PC_DIRECT]) && $_GET[CheckboxFilterEnum::PC_DIRECT] == 'yes') {
+            $checkboxStatus[CheckboxFilterEnum::PC_DIRECT] = 'checked';
             $baseQuery->where('primary_coordinator_id', '=', $coorId);
         }
 
         // Checkbox2
-        if (isset($_GET[ChapterCheckbox::REVIEWER]) && $_GET[ChapterCheckbox::REVIEWER] == 'yes') {
-            $checkboxStatus[ChapterCheckbox::CHECK_REVIEWER] = 'checked';
+        if (isset($_GET[CheckboxFilterEnum::REVIEWER]) && $_GET[CheckboxFilterEnum::REVIEWER] == 'yes') {
+            $checkboxStatus[CheckboxFilterEnum::REVIEWER] = 'checked';
             $baseQuery->whereHas('financialReport', function ($query) use ($coorId) {
                 $query->where('reviewer_id', '=', $coorId);
             });
         }
 
         // Checkbox3
-        if (isset($_GET[ChapterCheckbox::CONFERENCE_REGION]) && $_GET[ChapterCheckbox::CONFERENCE_REGION] == 'yes') {
-            $checkboxStatus[ChapterCheckbox::CHECK_CONFERENCE_REGION] = 'checked';
+        if (isset($_GET[CheckboxFilterEnum::CONFERENCE_REGION]) && $_GET[CheckboxFilterEnum::CONFERENCE_REGION] == 'yes') {
+            $checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] = 'checked';
             // Position conditions already applied in buildChapterQuery
             if ($conditions && ($conditions['inquiriesConferenceCondition'] || $conditions['coordinatorCondition'])) {
                 if ($regId && $regId > 0) {
@@ -75,16 +73,9 @@ class BaseChapterController extends Controller
             }
         }
 
-        // Checkbox4
-        if (isset($_GET[ChapterCheckbox::PROBATION]) && $_GET[ChapterCheckbox::PROBATION] == 'yes') {
-            $checkboxStatus[ChapterCheckbox::CHECK_PROBATION] = 'checked';
-            // Position conditions already applied in buildChapterQuery
-            $baseQuery->where('status_id', '!=', OperatingStatusEnum::OK);
-        }
-
-        // Checkbox5
-        if (isset($_GET[ChapterCheckbox::INTERNATIONAL]) && $_GET[ChapterCheckbox::INTERNATIONAL] == 'yes') {
-            $checkboxStatus[ChapterCheckbox::CHECK_INTERNATIONAL] = 'checked';
+        // Checkbox51
+        if (isset($_GET[CheckboxFilterEnum::INTERNATIONAL]) && $_GET[CheckboxFilterEnum::INTERNATIONAL] == 'yes') {
+            $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] = 'checked';
             // Position conditions were skipped in buildChapterQuery
             if ($conditions && (
                 ! $conditions['inquiriesInternationalCondition'] &&
@@ -95,9 +86,9 @@ class BaseChapterController extends Controller
             }
         }
 
-        // Checkbox6
-        if (isset($_GET[ChapterCheckbox::INTERNATIONALREREG]) && $_GET[ChapterCheckbox::INTERNATIONALREREG] == 'yes') {
-            $checkboxStatus[ChapterCheckbox::CHECK_INTERNATIONALREREG] = 'checked';
+        // Checkbox56
+        if (isset($_GET[CheckboxFilterEnum::INTERNATIONALREREG]) && $_GET[CheckboxFilterEnum::INTERNATIONALREREG] == 'yes') {
+            $checkboxStatus[CheckboxFilterEnum::INTERNATIONALREREG] = 'checked';
             // Position conditions were skipped in buildChapterQuery
             if ($conditions && (
                 ! $conditions['inquiriesInternationalCondition'] &&
@@ -203,9 +194,9 @@ class BaseChapterController extends Controller
             );
 
             // Only apply position conditions if NEITHER International nor InternationalReReg is selected
-            if ((! isset($_GET[ChapterCheckbox::INTERNATIONAL]) || $_GET[ChapterCheckbox::INTERNATIONAL] !== 'yes') &&
-                (! isset($_GET[ChapterCheckbox::INTERNATIONALREREG]) || $_GET[ChapterCheckbox::INTERNATIONALREREG] !== 'yes') &&
-                (! isset($_GET[ChapterCheckbox::CONFERENCE_REGION]) || $_GET[ChapterCheckbox::CONFERENCE_REGION] !== 'yes')) {
+            if ((! isset($_GET[CheckboxFilterEnum::INTERNATIONAL]) || $_GET[CheckboxFilterEnum::INTERNATIONAL] !== 'yes') &&
+                (! isset($_GET[CheckboxFilterEnum::INTERNATIONALREREG]) || $_GET[CheckboxFilterEnum::INTERNATIONALREREG] !== 'yes') &&
+                (! isset($_GET[CheckboxFilterEnum::CONFERENCE_REGION]) || $_GET[CheckboxFilterEnum::CONFERENCE_REGION] !== 'yes')) {
 
                 $baseQuery = $this->baseConditionsController->applyPositionConditions(
                     $baseQuery,
@@ -233,12 +224,11 @@ class BaseChapterController extends Controller
 
         return [
             'query' => $sortingResults['query'],
-            ChapterCheckbox::CHECK_PRIMARY => $checkboxStatus[ChapterCheckbox::CHECK_PRIMARY] ?? '',
-            ChapterCheckbox::CHECK_REVIEWER => $checkboxStatus[ChapterCheckbox::CHECK_REVIEWER] ?? '',
-            ChapterCheckbox::CHECK_CONFERENCE_REGION => $checkboxStatus[ChapterCheckbox::CHECK_CONFERENCE_REGION] ?? '',
-            ChapterCheckbox::CHECK_PROBATION => $checkboxStatus[ChapterCheckbox::CHECK_PROBATION] ?? '',
-            ChapterCheckbox::CHECK_INTERNATIONAL => $checkboxStatus[ChapterCheckbox::CHECK_INTERNATIONAL] ?? '',
-            ChapterCheckbox::CHECK_INTERNATIONALREREG => $checkboxStatus[ChapterCheckbox::CHECK_INTERNATIONALREREG] ?? '',
+            CheckboxFilterEnum::PC_DIRECT => $checkboxStatus[CheckboxFilterEnum::PC_DIRECT] ?? '',
+            CheckboxFilterEnum::REVIEWER => $checkboxStatus[CheckboxFilterEnum::REVIEWER] ?? '',
+            CheckboxFilterEnum::CONFERENCE_REGION => $checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] ?? '',
+            CheckboxFilterEnum::INTERNATIONAL => $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] ?? '',
+            CheckboxFilterEnum::INTERNATIONALREREG => $checkboxStatus[CheckboxFilterEnum::INTERNATIONALREREG] ?? '',
         ];
     }
 

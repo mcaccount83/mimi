@@ -400,7 +400,7 @@
                                         <label class="col-sm-12 col-form-label">Are your listed boundaries correct?<span class="field-required">*</span></label>
                                         <div class="col-sm-12 row ml-2 mb-2">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" id="BoundaryStatusYes" name="BoundaryStatus" value="0" {{ $chDetails->boundary_issues == 0 ? 'checked' : '' }} onChange="ShowBoundaryError()">
+                                                <input class="form-check-input" type="radio" id="BoundaryStatusYes" name="BoundaryStatus" value="0" {{ !is_null($chDetails->boundary_issues) && $chDetails->boundary_issues == 0 ? 'checked' : '' }} onChange="ShowBoundaryError()">
                                                 <label class="form-check-label" for="BoundaryStatusYes">Yes</label>
                                             </div>
                                             <div class="form-check">

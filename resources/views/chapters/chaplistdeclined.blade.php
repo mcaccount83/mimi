@@ -30,7 +30,7 @@
                     <th>Name</th>
                     <th>President</th>
                     <th>Reason Not Approved</th>
-                    @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                    @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <th>Delete</th>
                     @endif
                   </tr>
@@ -58,7 +58,7 @@
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->pendingPresident->first_name }} {{ $list->pendingPresident->last_name }}</td>
                             <td>{{ $list->disband_reason }}</td>
-                             @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                             @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="fa fa-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
@@ -74,8 +74,8 @@
             @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="custom-control-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif

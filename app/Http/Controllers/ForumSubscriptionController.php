@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ChapterCheckbox;
-use App\Enums\CoordinatorCheckbox;
+use App\Enums\CheckboxFilterEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Chapters;
 use App\Models\Coordinators;
@@ -101,13 +100,13 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = $chapterList->count();
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('forum.chaptersubscriptionlist')->with($data);
@@ -127,15 +126,15 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBoxStatus = $baseQuery[CoordinatorCheckbox::CHECK_DIRECT];
-        $checkBox3Status = $baseQuery[CoordinatorCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[CoordinatorCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $emailListCord = $coordinatorList->pluck('email')->filter()->implode(';');
 
         $countList = count($coordinatorList);
-        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'emailListCord' => $emailListCord,
+        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'emailListCord' => $emailListCord,
         ];
 
         return view('forum.coordinatorsubscriptionlist')->with($data);

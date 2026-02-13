@@ -1,120 +1,104 @@
 <script>
-    function showChPrimary() {
+    // Chapter/Coordinator List Checkboxes
+    function showPrimary() {
         var base_url = window.location.origin + window.location.pathname;
         if ($("#showPrimary").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::PRIMARY_COORDINATOR }}=yes';
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::PC_DIRECT }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
 
-    function showChAllConf() {
+    function showDirect() {
         var base_url = window.location.origin + window.location.pathname;
-        if ($("#showAllConf").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::CONFERENCE_REGION }}=yes';
+        if ($("#showDirect").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::PC_DIRECT }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
 
-    function showChAll() {
-        var base_url = window.location.origin + window.location.pathname;
-        if ($("#showAll").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
-        } else {
-            window.location.href = base_url;
-        }
-    }
-
-    function showChAllReReg() {
-        var base_url = window.location.origin + window.location.pathname;
-        if ($("#showAllReReg").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONALREREG }}=yes';
-        } else {
-            window.location.href = base_url;
-        }
-    }
-
-    function showChReviewer() {
+    function showReviewer() {
         var base_url = window.location.origin + window.location.pathname;
         if ($("#showReviewer").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::REVIEWER }}=yes';
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::REVIEWER }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
 
+    function showConfReg() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showConfReg").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::CONFERENCE_REGION }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
+    // Specialty Job List Checkboxes
     function showM2M() {
         var base_url = window.location.origin + window.location.pathname;
         if ($("#showM2M").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::M2MDONATIONS }}=yes';
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::M2MDONATIONS }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
 
-    function showM2MAll() {
+    function showInquiries() {
         var base_url = window.location.origin + window.location.pathname;
-        if ($("#showM2MAll").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONALM2MDONATIONS }}=yes';
+        if ($("#showInquiries").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::INQUIRIES }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
 
-    function showCoordDirect() {
+    // Internatioal List Checkboxes
+    function showIntl() {
         var base_url = window.location.origin + window.location.pathname;
-        if ($("#showDirect").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::DIRECT_REPORT }}=yes';
+        if ($("#showIntl").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::INTERNATIONAL }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
 
-    function showCoordAllConf() {
+    function showIntlReReg() {
         var base_url = window.location.origin + window.location.pathname;
-        if ($("#showAllConf").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::CONFERENCE_REGION }}=yes';
+        if ($("#showIntlReReg").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::INTERNATIONALREREG }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
 
-    function showCoordAll() {
+    function showIntlM2M() {
         var base_url = window.location.origin + window.location.pathname;
-        if ($("#showAll").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::INTERNATIONAL }}=yes';
+        if ($("#showIntlM2M").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::INTERNATIONALM2MDONATIONS }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
 
-    function showInqAll() {
+    function showIntlInquiries() {
         var base_url = window.location.origin + window.location.pathname;
-        if ($("#showAll").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONAL }}=yes';
+        if ($("#showIntlInquiries").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
 
-    function showInqOut() {
+    // Misc/Admin List Checkboxes
+    function showAdminAll() {
         var base_url = window.location.origin + window.location.pathname;
-        if ($("#showInq").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INQUIRIES }}=yes';
+        if ($("#showAdminAll").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::ADMIN }}=yes';
         } else {
             window.location.href = base_url;
         }
     }
-
-    function showInqOutAll() {
-        var base_url = window.location.origin + window.location.pathname;
-        if ($("#showInqAll").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\ChapterCheckbox::INTERNATIONALINQUIRIES }}=yes';
-        } else {
-            window.location.href = base_url;
-        }
-    }
-
-
 </script>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
-use App\Enums\ChapterCheckbox;
+use App\Enums\CheckboxFilterEnum;
 use App\Enums\ChapterStatusEnum;
 use App\Mail\EOYReviewrAssigned;
 use App\Models\BoardsIncoming;
@@ -129,14 +129,14 @@ class EOYReportController extends Controller implements HasMiddleware
             })
             ->get();
 
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'title' => $title, 'breadcrumb' => $breadcrumb,
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'title' => $title, 'breadcrumb' => $breadcrumb,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
@@ -304,10 +304,10 @@ class EOYReportController extends Controller implements HasMiddleware
             })
             ->get();
 
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $activationStatuses = [];
 
@@ -361,8 +361,8 @@ class EOYReportController extends Controller implements HasMiddleware
         }
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('eoyreports.eoyboardreport')->with($data);
@@ -559,13 +559,13 @@ class EOYReportController extends Controller implements HasMiddleware
             })
             ->get();
 
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('eoyreports.eoyfinancialreport')->with($data);
@@ -640,23 +640,23 @@ class EOYReportController extends Controller implements HasMiddleware
         $reviewer_email_message = $input['reviewer_email_message'];
 
         // Step 1 - Dues
-        $check_roster_attached = isset($input['checkRosterAttached']) ? $input['checkRosterAttached'] : null;
-        $check_renewal_seems_right = isset($input['checkRenewalSeemsRight']) ? $input['checkRenewalSeemsRight'] : null;
+        $roster_attached = isset($input['checkRosterAttached']) ? $input['checkRosterAttached'] : null;
+        $renewal_seems_right = isset($input['checkRenewalSeemsRight']) ? $input['checkRenewalSeemsRight'] : null;
 
         // Step 3 - Service
-        $check_minimum_service_project = isset($input['checkServiceProject']) ? $input['checkServiceProject'] : null;
-        $check_m2m_donation = isset($input['checkM2MDonation']) ? $input['checkM2MDonation'] : null;
+        $minimum_service_project = isset($input['checkServiceProject']) ? $input['checkServiceProject'] : null;
+        $m2m_donation = isset($input['checkM2MDonation']) ? $input['checkM2MDonation'] : null;
 
         // Step 4 - Parties
-        $check_party_percentage = isset($input['check_party_percentage']) ? $input['check_party_percentage'] : null;
+        $party_percentage = isset($input['party_percentage']) ? $input['party_percentage'] : null;
 
         // Step - Financials
-        $check_total_income_less = isset($input['checkTotalIncome']) ? $input['checkTotalIncome'] : null;
+        $total_income_less = isset($input['checkTotalIncome']) ? $input['checkTotalIncome'] : null;
 
         // Step 8 - Reconciliation
-        $check_beginning_balance = isset($input['check_beginning_balance']) ? $input['check_beginning_balance'] : null;
-        $check_bank_statement_included = isset($input['checkBankStatementIncluded']) ? $input['checkBankStatementIncluded'] : null;
-        $check_bank_statement_matches = isset($input['checkBankStatementMatches']) ? $input['checkBankStatementMatches'] : null;
+        $beginning_balance = isset($input['beginning_balance']) ? $input['beginning_balance'] : null;
+        $bank_statement_included = isset($input['checkBankStatementIncluded']) ? $input['checkBankStatementIncluded'] : null;
+        $bank_statement_matches = isset($input['checkBankStatementMatches']) ? $input['checkBankStatementMatches'] : null;
 
         $post_balance = isset($input['post_balance']) ? preg_replace('/[^\d.]/', '', $input['post_balance']) : null;
         // $post_balance = $input['post_balance'];
@@ -664,20 +664,20 @@ class EOYReportController extends Controller implements HasMiddleware
         // $post_balance = $post_balance == '' ? null : $post_balance;
 
         // Step 9 - Questions
-        $check_purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;
-        $check_purchased_mc_merch = isset($input['checkPurchasedMCMerch']) ? $input['checkPurchasedMCMerch'] : null;
-        $check_offered_merch = isset($input['checkOfferedMerch']) ? $input['checkOfferedMerch'] : null;
-        $check_bylaws_available = isset($input['checkBylawsMadeAvailable']) ? $input['checkBylawsMadeAvailable'] : null;
-        $check_sistered_another_chapter = isset($input['checkSisteredAnotherChapter']) ? $input['checkSisteredAnotherChapter'] : null;
-        $check_attended_training = isset($input['checkAttendedTraining']) ? $input['checkAttendedTraining'] : null;
-        $check_current_990N_included = isset($input['checkCurrent990NAttached']) ? $input['checkCurrent990NAttached'] : null;
+        $purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;
+        $purchased_mc_merch = isset($input['checkPurchasedMCMerch']) ? $input['checkPurchasedMCMerch'] : null;
+        $offered_merch = isset($input['checkOfferedMerch']) ? $input['checkOfferedMerch'] : null;
+        $bylaws_available = isset($input['checkBylawsMadeAvailable']) ? $input['checkBylawsMadeAvailable'] : null;
+        $sistered_another_chapter = isset($input['checkSisteredAnotherChapter']) ? $input['checkSisteredAnotherChapter'] : null;
+        $attended_training = isset($input['checkAttendedTraining']) ? $input['checkAttendedTraining'] : null;
+        $current_990N_included = isset($input['checkCurrent990NAttached']) ? $input['checkCurrent990NAttached'] : null;
 
         // Step 10 - Awards
-        $check_award_1_approved = isset($input['checkAward1Approved']) ? $input['checkAward1Approved'] : null;
-        $check_award_2_approved = isset($input['checkAward2Approved']) ? $input['checkAward2Approved'] : null;
-        $check_award_3_approved = isset($input['checkAward3Approved']) ? $input['checkAward3Approved'] : null;
-        $check_award_4_approved = isset($input['checkAward4Approved']) ? $input['checkAward4Approved'] : null;
-        $check_award_5_approved = isset($input['checkAward5Approved']) ? $input['checkAward5Approved'] : null;
+        $award_1_approved = isset($input['checkAward1Approved']) ? $input['checkAward1Approved'] : null;
+        $award_2_approved = isset($input['checkAward2Approved']) ? $input['checkAward2Approved'] : null;
+        $award_3_approved = isset($input['checkAward3Approved']) ? $input['checkAward3Approved'] : null;
+        $award_4_approved = isset($input['checkAward4Approved']) ? $input['checkAward4Approved'] : null;
+        $award_5_approved = isset($input['checkAward5Approved']) ? $input['checkAward5Approved'] : null;
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -714,23 +714,23 @@ class EOYReportController extends Controller implements HasMiddleware
             $financialReport->step_11_notes_log = $step_11_notes_log;
             $financialReport->step_12_notes_log = $step_12_notes_log;
             // $financialReport->step_13_notes_log = $step_13_notes_log;
-            $financialReport->check_roster_attached = $check_roster_attached;
-            $financialReport->check_renewal_seems_right = $check_renewal_seems_right;
-            $financialReport->check_minimum_service_project = $check_minimum_service_project;
-            $financialReport->check_m2m_donation = $check_m2m_donation;
-            $financialReport->check_party_percentage = $check_party_percentage;
-            $financialReport->check_attended_training = $check_attended_training;
-            $financialReport->check_bank_statement_matches = $check_bank_statement_matches;
-            $financialReport->check_bank_statement_included = $check_bank_statement_included;
-            $financialReport->check_beginning_balance = $check_beginning_balance;
+            $financialReport->roster_attached = $roster_attached;
+            $financialReport->renewal_seems_right = $renewal_seems_right;
+            $financialReport->minimum_service_project = $minimum_service_project;
+            $financialReport->m2m_donation = $m2m_donation;
+            $financialReport->party_percentage = $party_percentage;
+            $financialReport->attended_training = $attended_training;
+            $financialReport->bank_statement_matches = $bank_statement_matches;
+            $financialReport->bank_statement_included = $bank_statement_included;
+            $financialReport->beginning_balance = $beginning_balance;
             $financialReport->post_balance = $post_balance;
-            $financialReport->check_purchased_pins = $check_purchased_pins;
-            $financialReport->check_purchased_mc_merch = $check_purchased_mc_merch;
-            $financialReport->check_offered_merch = $check_offered_merch;
-            $financialReport->check_bylaws_available = $check_bylaws_available;
-            $financialReport->check_current_990N_included = $check_current_990N_included;
-            $financialReport->check_total_income_less = $check_total_income_less;
-            $financialReport->check_sistered_another_chapter = $check_sistered_another_chapter;
+            $financialReport->purchased_pins = $purchased_pins;
+            $financialReport->purchased_mc_merch = $purchased_mc_merch;
+            $financialReport->offered_merch = $offered_merch;
+            $financialReport->bylaws_available = $bylaws_available;
+            $financialReport->current_990N_included = $current_990N_included;
+            $financialReport->total_income_less = $total_income_less;
+            $financialReport->sistered_another_chapter = $sistered_another_chapter;
             $financialReport->farthest_step_visited_coord = $farthest_step_visited_coord;
             if ($submitType == 'review_complete') {
                 $financialReport->review_complete = Carbon::now();
@@ -940,14 +940,14 @@ class EOYReportController extends Controller implements HasMiddleware
             })
             ->get();
 
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox2Status' => $checkBox2Status];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyattachments')->with($data);
     }
@@ -1051,13 +1051,13 @@ class EOYReportController extends Controller implements HasMiddleware
             })
             ->get();
 
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox2Status' => $checkBox2Status];
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyboundaries')->with($data);
     }
@@ -1159,10 +1159,10 @@ class EOYReportController extends Controller implements HasMiddleware
             })
             ->get();
 
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $allAwards = FinancialReportAwards::all();
 
@@ -1177,8 +1177,8 @@ class EOYReportController extends Controller implements HasMiddleware
         }
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
-            'allAwards' => $allAwards, 'maxAwards' => $maxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
+            'allAwards' => $allAwards, 'maxAwards' => $maxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('eoyreports.eoyawards', $data);
@@ -1293,14 +1293,14 @@ class EOYReportController extends Controller implements HasMiddleware
             })
             ->get();
 
-        $checkBoxStatus = $baseQuery[ChapterCheckbox::CHECK_PRIMARY];
-        $checkBox2Status = $baseQuery[ChapterCheckbox::CHECK_REVIEWER];
-        $checkBox3Status = $baseQuery[ChapterCheckbox::CHECK_CONFERENCE_REGION];
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus,
-            'checkBox3Status' => $checkBox3Status, 'checkBox5Status' => $checkBox5Status, 'checkBox2Status' => $checkBox2Status,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status,
         ];
 
         return view('eoyreports.eoyirssubmission')->with($data);

@@ -32,7 +32,7 @@
                     <th>President</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                    @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <th>Delete</th>
                     @endif
                   </tr>
@@ -64,7 +64,7 @@
                                 <a href="mailto:{{ $list->pendingPresident->email }}">{{ $list->pendingPresident->email }}</a>
                             </td>
                             <td><span class="phone-mask">{{ $list->pendingPresident->phone }}</span></td>
-                            @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                            @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="fa fa-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
@@ -80,8 +80,8 @@
                  @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Chapters</label>
+                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="custom-control-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif
@@ -91,7 +91,7 @@
                 <div class="card-body text-center">
                 @if ($regionalCoordinatorCondition)
                 If your new chapter is not listed above, you can manually add them.<br>
-                    @if ($checkBox5Status)
+                    @if ($checkBox51Status)
                         <a class="btn bg-gradient-primary" href="{{ route('chapters.addnewint') }}"><i class="fas fa-plus mr-2" ></i>Manually Add New Chapter (Any Confernces)</a>
                     @else
                         <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Manually Add New Chapter</a>

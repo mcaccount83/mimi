@@ -107,11 +107,21 @@
                 </div>
             @endif
             {{ $emails->links('sentemails::pagination') }}
+
+             @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showAdminAll" id="showAdminAll" class="custom-control-input" {{ $checkBox81Status ? 'checked' : '' }} onchange="showAdminAll()" />
+                            <label class="custom-control-label" for="showAdminAll">Show All Emails</label>
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
+    </div>
         </div>
     <!-- /.box -->
-    </div>
 </div>
 </section>
 <!-- Main content -->

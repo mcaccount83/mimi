@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ChapterCheckbox;
+use App\Enums\CheckboxFilterEnum;
 use App\Models\Chapters;
 use App\Models\Conference;
 use App\Models\GrantRequest;
@@ -55,8 +55,8 @@ class AdminReportController extends Controller implements HasMiddleware
         $query = PaymentLog::with('board');
 
         // Check if international checkbox is selected
-        $showInternational = $request->has(ChapterCheckbox::INTERNATIONAL) &&
-                            $request->get(ChapterCheckbox::INTERNATIONAL) == 'yes';
+        $showInternational = $request->has(CheckboxFilterEnum::INTERNATIONAL) &&
+                            $request->get(CheckboxFilterEnum::INTERNATIONAL) == 'yes';
 
         // Filter by conference unless international is selected
         if (! $showInternational) {
@@ -75,11 +75,11 @@ class AdminReportController extends Controller implements HasMiddleware
         $paymentLogs = $query->orderByDesc('created_at')->paginate(100);
 
         // Set checkbox status based on URL parameter
-        $checkBox5Status = $showInternational ? 'checked' : '';
+        $checkBox51Status = $showInternational ? 'checked' : '';
 
         $data = [
             'paymentLogs' => $paymentLogs,
-            'checkBox5Status' => $checkBox5Status,
+            'checkBox51Status' => $checkBox51Status,
         ];
 
         return view('adminreports.paymentlog')->with($data);
@@ -102,9 +102,9 @@ class AdminReportController extends Controller implements HasMiddleware
     $user = $this->userController->loadUserInformation($request);
     $confId = $user['confId'];
 
-    $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
-    $checkBox9Status = $request->has(\App\Enums\ChapterCheckbox::M2MDONATIONS);
-    $checkBox10Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONALM2MDONATIONS);
+    $checkBox51Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONAL);
+    $checkBox8Status = $request->has(\App\Enums\CheckboxFilterEnum::M2MDONATIONS);
+    $checkBox58Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONALM2MDONATIONS);
 
     // Base query
     $query = PaymentHistory::with('chapter')
@@ -112,10 +112,10 @@ class AdminReportController extends Controller implements HasMiddleware
         ->where('chapters.active_status', '1');
 
     // Add payment type filter based on checkboxes
-    if ($checkBox9Status) {
+    if ($checkBox8Status) {
         // Show only M2M donations
         $query->where('payment_history.payment_type', 'm2m');
-    } elseif ($checkBox10Status) {
+    } elseif ($checkBox58Status) {
         // Show international M2M donations
         $query->where('payment_history.payment_type', 'm2m');
     } else {
@@ -127,19 +127,19 @@ class AdminReportController extends Controller implements HasMiddleware
     }
 
     // Add conference filter
-    if (!$checkBox5Status && !$checkBox10Status) {
+    if (!$checkBox51Status && !$checkBox58Status) {
         // Not showing international - filter by conference
         $query->where('chapters.conference_id', $confId);
     }
-    // If checkBox5Status OR checkBox10Status is true, show all conferences (international)
+    // If checkBox51Status OR checkBox10Status is true, show all conferences (international)
 
     $donationsList = $query->orderBy('payment_history.payment_date', 'desc')->get();
 
     $data = [
         'donationsList' => $donationsList,
-        'checkBox5Status' => $checkBox5Status ? 'checked' : '',
-        'checkBox9Status' => $checkBox9Status ? 'checked' : '',
-        'checkBox10Status' => $checkBox10Status ? 'checked' : '',
+        'checkBox51Status' => $checkBox51Status ? 'checked' : '',
+        'checkBox8Status' => $checkBox8Status ? 'checked' : '',
+        'checkBox58Status' => $checkBox58Status ? 'checked' : '',
     ];
 
     return view('adminreports.donationlog')->with($data);
@@ -159,9 +159,9 @@ class AdminReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBox5Status = $baseQuery[ChapterCheckbox::CHECK_INTERNATIONAL];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['chapterList' => $chapterList, 'checkBox5Status' => $checkBox5Status];
+        $data = ['chapterList' => $chapterList, 'checkBox51Status' => $checkBox51Status];
 
         return view('adminreports.rereg')->with($data);
     }
@@ -231,7 +231,7 @@ class AdminReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['confId'];
 
-        $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
+        $checkBox51Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONAL);
 
         // Base query
         $query = Region::with([
@@ -244,7 +244,7 @@ class AdminReportController extends Controller implements HasMiddleware
         ->join('conference', 'region.conference_id', '=', 'conference.id');
 
         // Add conference filter if not showing international
-        if (!$checkBox5Status) {
+        if (!$checkBox51Status) {
             $query->where('region.conference_id', $confId);
         }
 
@@ -254,7 +254,7 @@ class AdminReportController extends Controller implements HasMiddleware
             ->select('region.*')
             ->get();
 
-        $data = ['regList' => $regList, 'checkBox5Status' => $checkBox5Status];
+        $data = ['regList' => $regList, 'checkBox51Status' => $checkBox51Status];
 
         return view('adminreports.inquiriesnotify')->with($data);
     }

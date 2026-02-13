@@ -32,7 +32,7 @@
                     <th>Contact Email</th>
                     <th>Phone</th>
                     <th>Reports To</th>
-                    @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                    @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <th>Delete</th>
                     @endif
                 </tr>
@@ -54,7 +54,7 @@
                       <td><a href="mailto:{{ $list->sec_email }}">{{ $list->sec_email }}</a></td>
                     <td>{{ $list->phone }}</td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
-                     @if ($ITCondition && ($checkBox5Status ?? '') == 'checked')
+                     @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="fa fa-ban"
                             onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
@@ -69,8 +69,8 @@
                   @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showCoordAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Coordinators</label>
+                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="custom-control-label" for="showIntl">Show All International Coordinators</label>
                         </div>
                     </div>
                 @endif

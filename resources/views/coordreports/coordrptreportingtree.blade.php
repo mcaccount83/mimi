@@ -5,7 +5,7 @@
 
 @section('content')
 @php
-    $founderCondition = isset($checkBox6Status) && $checkBox6Status === 'checked' ? true : $founderCondition;
+    $founderCondition = isset($checkBox86Status) && $checkBox86Status === 'checked' ? true : $founderCondition;
 @endphp
 
     <!-- Main content -->
@@ -261,7 +261,7 @@
 @if ($ITCondition)
     <div class="col-sm-12">
         <div class="custom-control custom-switch">
-            <input type="checkbox" name="showFullTree" id="showFullTree" class="custom-control-input" {{$checkBox6Status}} onchange="showFullTree()" />
+            <input type="checkbox" name="showFullTree" id="showFullTree" class="custom-control-input" {{$checkBox86Status ? 'checked' : '' }} onchange="showFullTree()" />
             <label class="custom-control-label" for="showFullTree">Show Full International Reporting Tree</label>
         </div>
     </div>
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function showFullTree() {
     var base_url = '{{ route("coordreports.coordrptreportingtree") }}';
     if ($("#showFullTree").prop("checked") == true) {
-        window.location.href = base_url + '?{{ \App\Enums\CoordinatorCheckbox::REPORTING_TREE }}=yes';
+        window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::REPORTING_TREE }}=yes';
     } else {
         window.location.href = base_url;
     }

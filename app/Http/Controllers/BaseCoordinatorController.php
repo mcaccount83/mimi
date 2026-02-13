@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CoordinatorCheckbox;
+use App\Enums\CheckboxFilterEnum;
 use App\Models\AdminRole;
 use App\Models\Conference;
 use App\Models\CoordinatorPosition;
@@ -33,26 +33,26 @@ class BaseCoordinatorController extends Controller
     private function applyCheckboxFilters($baseQuery, $coorId, $conditions = null, $confId = null, $regId = null)
     {
         $checkboxStatus = [
-            CoordinatorCheckbox::CHECK_DIRECT => '',
-            CoordinatorCheckbox::CHECK_CONFERENCE_REGION => '',
-            CoordinatorCheckbox::CHECK_INTERNATIONAL => '',
+            CheckboxFilterEnum::PC_DIRECT => '',
+            CheckboxFilterEnum::CONFERENCE_REGION => '',
+            CheckboxFilterEnum::INTERNATIONAL => '',
         ];
 
-        // Checkbox
-        if (isset($_GET[CoordinatorCheckbox::DIRECT_REPORT]) && $_GET[CoordinatorCheckbox::DIRECT_REPORT] == 'yes') {
-            $checkboxStatus[CoordinatorCheckbox::CHECK_DIRECT] = 'checked';
+        // Checkbox1
+        if (isset($_GET[CheckboxFilterEnum::PC_DIRECT]) && $_GET[CheckboxFilterEnum::PC_DIRECT] == 'yes') {
+            $checkboxStatus[CheckboxFilterEnum::PC_DIRECT] = 'checked';
             $baseQuery->where('report_id', '=', $coorId);
         }
 
         // Checkbox3
-        if (isset($_GET[CoordinatorCheckbox::CONFERENCE_REGION]) && $_GET[CoordinatorCheckbox::CONFERENCE_REGION] == 'yes') {
-            $checkboxStatus[CoordinatorCheckbox::CHECK_CONFERENCE_REGION] = 'checked';
+        if (isset($_GET[CheckboxFilterEnum::CONFERENCE_REGION]) && $_GET[CheckboxFilterEnum::CONFERENCE_REGION] == 'yes') {
+            $checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] = 'checked';
             // Position conditions already applied in buildChapterQuery
         }
 
         // Checkbox5
-        if (isset($_GET[CoordinatorCheckbox::INTERNATIONAL]) && $_GET[CoordinatorCheckbox::INTERNATIONAL] == 'yes') {
-            $checkboxStatus[CoordinatorCheckbox::CHECK_INTERNATIONAL] = 'checked';
+        if (isset($_GET[CheckboxFilterEnum::INTERNATIONAL]) && $_GET[CheckboxFilterEnum::INTERNATIONAL] == 'yes') {
+            $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] = 'checked';
             // Position conditions were skipped in buildChapterQuery
             if ($conditions && (
                 ! $conditions['inquiriesInternationalCondition'] &&
@@ -151,7 +151,7 @@ class BaseCoordinatorController extends Controller
             );
 
             // Only apply position conditions if check5 is NOT selected
-            if (! isset($_GET[CoordinatorCheckbox::INTERNATIONAL]) || $_GET[CoordinatorCheckbox::INTERNATIONAL] !== 'yes') {
+            if (! isset($_GET[CheckboxFilterEnum::INTERNATIONAL]) || $_GET[CheckboxFilterEnum::INTERNATIONAL] !== 'yes') {
                 $baseQuery = $this->baseConditionsController->applyCordPositionConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
@@ -178,9 +178,9 @@ class BaseCoordinatorController extends Controller
 
         return [
             'query' => $sortingResults['query'],
-            CoordinatorCheckbox::CHECK_DIRECT => $checkboxStatus[CoordinatorCheckbox::CHECK_DIRECT] ?? '',
-            CoordinatorCheckbox::CHECK_CONFERENCE_REGION => $checkboxStatus[CoordinatorCheckbox::CHECK_CONFERENCE_REGION] ?? '',
-            CoordinatorCheckbox::CHECK_INTERNATIONAL => $checkboxStatus[CoordinatorCheckbox::CHECK_INTERNATIONAL] ?? '',
+            CheckboxFilterEnum::PC_DIRECT => $checkboxStatus[CheckboxFilterEnum::PC_DIRECT] ?? '',
+            CheckboxFilterEnum::CONFERENCE_REGION => $checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] ?? '',
+            CheckboxFilterEnum::INTERNATIONAL => $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] ?? '',
         ];
     }
 

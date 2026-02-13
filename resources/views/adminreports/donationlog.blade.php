@@ -70,7 +70,7 @@
 
                 <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showM2M" id="showM2M" class="custom-control-input" {{$checkBox9Status}} onchange="showM2M()" />
+                            <input type="checkbox" name="showM2M" id="showM2M" class="custom-control-input" {{ $checkBox8Status ? 'checked' : '' }} onchange="showM2M()" />
                             <label class="custom-control-label" for="showM2M">Show Only M2M Donations</label>
                         </div>
                     </div>
@@ -78,14 +78,14 @@
                 @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showM2MAll" id="showM2MAll" class="custom-control-input" {{$checkBox10Status}} onchange="showM2MAll()" />
-                            <label class="custom-control-label" for="showM2MAll">Show Only M2M International Donations</label>
+                            <input type="checkbox" name="showIntlM2M" id="showIntlM2M" class="custom-control-input" {{ $checkBox58Status ? 'checked' : '' }} onchange="showIntlM2M()" />
+                            <label class="custom-control-label" for="showIntlM2M">Show Only M2M International Donations</label>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox5Status}} onchange="showChAll()" />
-                            <label class="custom-control-label" for="showAll">Show All International Donations</label>
+                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="custom-control-label" for="showIntl">Show All International Donations</label>
                         </div>
                     </div>
                 @endif

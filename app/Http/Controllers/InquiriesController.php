@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ChapterCheckbox;
+use App\Enums\CheckboxFilterEnum;
 use App\Enums\OperatingStatusEnum;
 use App\Models\Chapters;
 use App\Models\InquiryApplication;
@@ -53,12 +53,12 @@ class InquiriesController extends Controller implements HasMiddleware
         $secPositionId = $user['cdSecPositionId'];
 
         // Check if checkbox is checked
-        $checkBox5Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONAL);
-        $checkBox7Status = $request->has(\App\Enums\ChapterCheckbox::INQUIRIES);
-        $checkBox8Status = $request->has(\App\Enums\ChapterCheckbox::INTERNATIONALINQUIRIES);
+        $checkBox51Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONAL);
+        $checkBox7Status = $request->has(\App\Enums\CheckboxFilterEnum::INQUIRIES);
+        $checkBox57Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES);
 
         // Use the appropriate query based on checkbox status
-        if ($checkBox5Status) {
+        if ($checkBox51Status) {
             $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
                 ->orderByDesc('id')
                 ->get();
@@ -71,7 +71,7 @@ class InquiriesController extends Controller implements HasMiddleware
                 })
                 ->orderByDesc('id')
                 ->get();
-        } elseif ($checkBox8Status) {
+        } elseif ($checkBox57Status) {
             $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
                 ->where(function($query) {
                     $query->where('response', '!=', 1)
@@ -87,8 +87,8 @@ class InquiriesController extends Controller implements HasMiddleware
         }
 
         $data = [
-            'inquiryList' => $inquiryList, 'checkBox5Status' => $checkBox5Status,
-            'checkBox7Status' => $checkBox7Status, 'checkBox8Status' => $checkBox8Status,
+            'inquiryList' => $inquiryList, 'checkBox51Status' => $checkBox51Status,
+            'checkBox7Status' => $checkBox7Status, 'checkBox57Status' => $checkBox57Status,
         ];
 
         return view('inquiries.inquiryapplication')->with($data);

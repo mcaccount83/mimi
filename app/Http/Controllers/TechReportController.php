@@ -72,7 +72,7 @@ class TechReportController extends Controller implements HasMiddleware
     public function listActiveChapters(Request $request): View
     {
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -86,7 +86,7 @@ class TechReportController extends Controller implements HasMiddleware
         $chapters = $baseQuery['query']->get();
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
@@ -100,7 +100,7 @@ class TechReportController extends Controller implements HasMiddleware
     public function listZappedChapters(Request $request): View
     {
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -114,7 +114,7 @@ class TechReportController extends Controller implements HasMiddleware
         $chapters = $baseQuery['query']->get();
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
@@ -128,7 +128,7 @@ class TechReportController extends Controller implements HasMiddleware
     public function listPendingChapters(Request $request): View
     {
         // Simulate the check5=yes parameter to get international chapters
-        $_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL] = 'yes';
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -141,7 +141,7 @@ class TechReportController extends Controller implements HasMiddleware
         $chapters = $baseQuery['query']->get();
 
         // Clean up the simulated parameter
-        unset($_GET[\App\Enums\ChapterCheckbox::INTERNATIONAL]);
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
 
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
