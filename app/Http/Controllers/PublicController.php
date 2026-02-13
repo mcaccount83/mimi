@@ -136,8 +136,7 @@ class PublicController extends Controller
     public function chapterResources(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
-        $userTypeId = $user['userTypeId'];
-        $userStatus = $user['userStatus'];
+        $userTypeId = $user['userTypeId'] ?? null;
 
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
