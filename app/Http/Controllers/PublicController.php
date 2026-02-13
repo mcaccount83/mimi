@@ -37,6 +37,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -135,8 +136,13 @@ class PublicController extends Controller
      */
     public function chapterResources(Request $request): View
     {
-        $user = $this->userController->loadUserInformation($request);
-        $userTypeId = $user['userTypeId'] ?? null;
+        $user = Auth::user();
+        $userTypeId = null;
+
+        if ($user) {
+            $userInfo = $this->userController->loadUserInformation($request);
+            $userTypeId = $userInfo['userTypeId'] ?? null;
+        }
 
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
