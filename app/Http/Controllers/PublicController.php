@@ -133,12 +133,16 @@ class PublicController extends Controller
     /**
      * Show the Chapter Resources Page
      */
-    public function chapterResources(): View
+    public function chapterResources(Request $request): View
     {
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userStatus = $user['userStatus'];
+
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories];
+        $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'userTypeId' => $userTypeId];
 
         return view('public.resources')->with($data);
 
