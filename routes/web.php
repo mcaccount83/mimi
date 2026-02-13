@@ -157,9 +157,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/adminreports/maillog', [AdminReportController::class, 'showMailLog'])->name('adminreports.maillog');
     Route::get('/adminreports/maildetails/{id}', [AdminReportController::class, 'showMailDetails'])->name('adminreports.maildetails');
     Route::get(config('sentemails.routepath').'/body/{id}', [\Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController::class, 'body'])
-    ->middleware(config('sentemails.middleware'))
-    ->name('sentemails.body');
-
+    ->middleware(config('sentemails.middleware'))->name('sentemails.body');
     Route::get('/adminreports/paymentlog', [AdminReportController::class, 'showPaymentLog'])->name('adminreports.paymentlog');
     Route::get('/adminreports/paymentdetails/{id}', [AdminReportController::class, 'showPaymentDetails'])->name('adminreports.paymentdetails');
     Route::get('/adminreports/donationlog', [AdminReportController::class, 'showDonationLog'])->name('adminreports.donationlog');

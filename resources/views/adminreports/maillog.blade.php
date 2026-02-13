@@ -121,8 +121,8 @@
 @section('customscript')
 <script>
 $(document).ready(function() {
-    // Handle click on view email links
-    $('.view-email').on('click', function(e) {
+    // Use event delegation to handle clicks on dynamically loaded elements
+    $(document).on('click', '.view-email', function(e) {
         e.preventDefault();
 
         var emailId = $(this).data('id');
