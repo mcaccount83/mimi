@@ -24,7 +24,7 @@
                     <div class="card-body">
                         <!-- Nav Tabs -->
                         <ul class="nav nav-pills mb-3">
-                            <li class="nav-item"><a class="nav-link active" href="#to" data-toggle="tab">INBOX</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="#to" data-toggle="tab">INBOX (TO)</a></li>
                             <li class="nav-item"><a class="nav-link" href="#cc" data-toggle="tab">CC/BCC</a></li>
                             <li class="nav-item"><a class="nav-link" href="#from" data-toggle="tab">FROM</a></li>
                         </ul>
