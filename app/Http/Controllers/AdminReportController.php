@@ -333,11 +333,204 @@ class AdminReportController extends Controller implements HasMiddleware
     }
 
 
-      public function showMailLog(Request $request): View
+    //   public function showMailLog(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $confId = $user['confId'];
+    //     $regId = $user['regId'] ?? null;
+    //     $userEmail = $user['userEmail'];
+
+    //     // Get position conditions
+    //     $positionId = $user['cdPositionId'] ?? 0;
+    //     $secPositionId = $user['cdSecPositionId'] ?? [];
+    //     $coorId = $user['cdId'] ?? null;
+
+    //     // Get emails for position conditions
+    //     $conditions = $this->positionConditionsService->getConditionsForUser($positionId, $secPositionId, $coorId);
+    //     $coordinatorCondition = $conditions['coordinatorCondition'];
+    //     $conferenceCoordinatorCondition = $conditions['conferenceCoordinatorCondition'];
+    //     $inquiriesCondition = $conditions['inquiriesCondition'];
+    //     $inquiriesInternationalCondition = $conditions['inquiriesInternationalCondition'];
+
+    //     $adminEmail = $this->positionConditionsService->getAdminEmail();
+    //     $listAdmin = $adminEmail['list_admin'];
+
+    //     $checkBox5Status = $request->has(\App\Enums\CheckboxFilterEnum::LIST);
+    //     $checkBox7Status = $request->has(\App\Enums\CheckboxFilterEnum::INQUIRIES);
+    //     $checkBox81Status = $request->has(\App\Enums\CheckboxFilterEnum::ADMIN);
+    //     $checkBox57Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES);
+
+    //     // Add view filter based on checkboxes
+    //     if ($checkBox81Status) {
+    //         // Show ALL emails
+    //         $toMaillog = SentEmail::with('attachments')
+    //             ->orderby('id', 'desc')
+    //             ->get();
+    //         $ccMaillog = [];
+    //         $fromMaillog = [];
+
+    //     } elseif ($checkBox5Status) {
+    //         // Show LIST admin emails only
+    //          $toMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($listAdmin,) {
+    //                 $query->Where('to', 'LIKE', '%' . $listAdmin . '%');
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+    //         $ccMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($listAdmin,) {
+    //                 $query->Where('cc', 'LIKE', '%' . $listAdmin . '%')
+    //                     ->orWhere('bcc', 'LIKE', '%' . $listAdmin . '%');
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+    //         $fromMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($listAdmin,) {
+    //                 $query->where('from', 'LIKE', '%' . $listAdmin . '%');
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+
+    //     } elseif ($checkBox7Status) {
+    //         $inquiriesEmails = [];
+    //             // International Inquiries Coordinator - get ALL inquiries emails
+    //             if ($inquiriesInternationalCondition){
+    //                 $regions = Region::with('inquiries')->get();
+
+    //                 foreach ($regions as $region) {
+    //                     if ($region->inquiries && $region->inquiries->inquiries_email) {
+    //                         $inquiriesEmails[] = $region->inquiries->inquiries_email;
+    //                     }
+    //                 }
+
+    //                 // Remove duplicates
+    //                 $inquiriesEmails = array_unique($inquiriesEmails);
+
+    //             } elseif (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition ) {
+    //                 if ($regId && $regId > 0) {
+    //                     // User has a specific region - get that region's inquiries email
+    //                     $region = Region::with('inquiries')->find($regId);
+    //                     if ($region && $region->inquiries && $region->inquiries->inquiries_email) {
+    //                         $inquiriesEmails[] = $region->inquiries->inquiries_email;
+    //                     }
+    //                 } else {
+    //                     // Conference coordinator - get all inquiries emails for their conference
+    //                     $regions = Region::with('inquiries')
+    //                         ->where('conference_id', $confId)
+    //                         ->get();
+
+    //                     foreach ($regions as $region) {
+    //                         if ($region->inquiries && $region->inquiries->inquiries_email) {
+    //                             $inquiriesEmails[] = $region->inquiries->inquiries_email;
+    //                         }
+    //                     }
+
+    //                     // Remove duplicates
+    //                     $inquiriesEmails = array_unique($inquiriesEmails);
+    //                 }
+    //             }
+    //         // Show INQUIRIES emails only
+    //         $toMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($inquiriesEmails) {
+    //                 foreach ($inquiriesEmails as $inquiriesEmail) {
+    //                     $query->orWhere('to', 'LIKE', '%' . $inquiriesEmail . '%');
+    //                 }
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+    //         $ccMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($inquiriesEmails) {
+    //                 foreach ($inquiriesEmails as $inquiriesEmail) {
+    //                     $query->orWhere('cc', 'LIKE', '%' . $inquiriesEmail . '%')
+    //                         ->orWhere('bcc', 'LIKE', '%' . $inquiriesEmail . '%');
+    //                 }
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+    //         $fromMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($inquiriesEmails) {
+    //                 foreach ($inquiriesEmails as $inquiriesEmail) {
+    //                     $query->orWhere('from', 'LIKE', '%' . $inquiriesEmail . '%');
+    //                 }
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+
+    //     } elseif ($checkBox57Status) {
+    //     $inquiriesEmails = [];
+    //         // International Inquiries Coordinator - get ALL inquiries emails
+    //             $regions = Region::with('inquiries')->get();
+
+    //             foreach ($regions as $region) {
+    //                 if ($region->inquiries && $region->inquiries->inquiries_email) {
+    //                     $inquiriesEmails[] = $region->inquiries->inquiries_email;
+    //                 }
+    //             }
+
+    //             // Remove duplicates
+    //             $inquiriesEmails = array_unique($inquiriesEmails);
+
+    //         // Show INQUIRIES emails only
+    //         $toMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($inquiriesEmails) {
+    //                 foreach ($inquiriesEmails as $inquiriesEmail) {
+    //                     $query->orWhere('to', 'LIKE', '%' . $inquiriesEmail . '%');
+    //                 }
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+    //         $ccMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($inquiriesEmails) {
+    //                 foreach ($inquiriesEmails as $inquiriesEmail) {
+    //                     $query->orWhere('cc', 'LIKE', '%' . $inquiriesEmail . '%')
+    //                         ->orWhere('bcc', 'LIKE', '%' . $inquiriesEmail . '%');
+    //                 }
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+    //         $fromMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($inquiriesEmails) {
+    //                 foreach ($inquiriesEmails as $inquiriesEmail) {
+    //                     $query->orWhere('from', 'LIKE', '%' . $inquiriesEmail . '%');
+    //                 }
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+
+    //     } else {
+    //         // Default - show user's personal emails plus position-based emails (your existing logic)
+    //         $toMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($userEmail,) {
+    //                 $query->Where('to', 'LIKE', '%' . $userEmail . '%');
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+    //         $ccMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($userEmail,) {
+    //                 $query->Where('cc', 'LIKE', '%' . $userEmail . '%')
+    //                     ->orWhere('bcc', 'LIKE', '%' . $userEmail . '%');
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+    //         $fromMaillog = SentEmail::with('attachments')
+    //             ->where(function($query) use ($userEmail,) {
+    //                 $query->where('from', 'LIKE', '%' . $userEmail . '%');
+    //             })
+    //             ->orderBy('id', 'desc')
+    //             ->get();
+    //     }
+
+    //     $data = ['checkBox81Status' => $checkBox81Status, 'checkBox5Status' => $checkBox5Status, 'checkBox7Status' => $checkBox7Status,
+    //         'checkBox57Status' => $checkBox57Status, 'toMaillog' => $toMaillog, 'fromMaillog' => $fromMaillog, 'ccMaillog' => $ccMaillog
+    //     ];
+
+    //     return view('adminreports.maillog')->with($data);
+    // }
+
+    public function showMailLog(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['confId'];
-        $userAdmin = $user['userAdmin'];
         $regId = $user['regId'] ?? null;
         $userEmail = $user['userEmail'];
 
@@ -346,189 +539,97 @@ class AdminReportController extends Controller implements HasMiddleware
         $secPositionId = $user['cdSecPositionId'] ?? [];
         $coorId = $user['cdId'] ?? null;
 
-        // Get emails for position conditions
         $conditions = $this->positionConditionsService->getConditionsForUser($positionId, $secPositionId, $coorId);
         $coordinatorCondition = $conditions['coordinatorCondition'];
         $conferenceCoordinatorCondition = $conditions['conferenceCoordinatorCondition'];
         $inquiriesCondition = $conditions['inquiriesCondition'];
         $inquiriesInternationalCondition = $conditions['inquiriesInternationalCondition'];
 
-        $ITCondition = $conditions['ITCondition'];
-
         $adminEmail = $this->positionConditionsService->getAdminEmail();
         $listAdmin = $adminEmail['list_admin'];
-        $paymentsAdmin = $adminEmail['payments_admin'];
-        $einAdmin = $adminEmail['ein_admin'];
-        $gsuiteAdmin = $adminEmail['gsuite_admin'];
-        $mimiAdmin = $adminEmail['mimi_admin'];
-        $grantAdmin = $adminEmail['grant_admin'];
 
         $checkBox5Status = $request->has(\App\Enums\CheckboxFilterEnum::LIST);
         $checkBox7Status = $request->has(\App\Enums\CheckboxFilterEnum::INQUIRIES);
         $checkBox81Status = $request->has(\App\Enums\CheckboxFilterEnum::ADMIN);
         $checkBox57Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES);
 
-        // Add view filter based on checkboxes
+        // Determine which emails to filter by
+        $filterEmails = [];
+
         if ($checkBox81Status) {
-            // Show ALL emails
-            $toMaillog = SentEmail::with('attachments')
-                ->orderby('id', 'desc')
-                ->get();
-            $ccMaillog = [];
-            $fromMaillog = [];
+            // Show ALL emails - no filter needed
+            $filterEmails = null;
 
         } elseif ($checkBox5Status) {
             // Show LIST admin emails only
-             $toMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($listAdmin,) {
-                    $query->Where('to', 'LIKE', '%' . $listAdmin . '%');
-                })
-                ->orderBy('id', 'desc')
-                ->get();
-            $ccMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($listAdmin,) {
-                    $query->Where('cc', 'LIKE', '%' . $listAdmin . '%')
-                        ->orWhere('bcc', 'LIKE', '%' . $listAdmin . '%');
-                })
-                ->orderBy('id', 'desc')
-                ->get();
-            $fromMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($listAdmin,) {
-                    $query->where('from', 'LIKE', '%' . $listAdmin . '%');
-                })
-                ->orderBy('id', 'desc')
-                ->get();
+            $filterEmails = [$listAdmin];
 
-        } elseif ($checkBox7Status) {
-            $inquiriesEmails = [];
-                // International Inquiries Coordinator - get ALL inquiries emails
-                if ($inquiriesInternationalCondition){
-                    $regions = Region::with('inquiries')->get();
-
-                    foreach ($regions as $region) {
-                        if ($region->inquiries && $region->inquiries->inquiries_email) {
-                            $inquiriesEmails[] = $region->inquiries->inquiries_email;
-                        }
-                    }
-
-                    // Remove duplicates
-                    $inquiriesEmails = array_unique($inquiriesEmails);
-
-                } elseif (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition ) {
-                    if ($regId && $regId > 0) {
-                        // User has a specific region - get that region's inquiries email
-                        $region = Region::with('inquiries')->find($regId);
-                        if ($region && $region->inquiries && $region->inquiries->inquiries_email) {
-                            $inquiriesEmails[] = $region->inquiries->inquiries_email;
-                        }
-                    } else {
-                        // Conference coordinator - get all inquiries emails for their conference
-                        $regions = Region::with('inquiries')
-                            ->where('conference_id', $confId)
-                            ->get();
-
-                        foreach ($regions as $region) {
-                            if ($region->inquiries && $region->inquiries->inquiries_email) {
-                                $inquiriesEmails[] = $region->inquiries->inquiries_email;
-                            }
-                        }
-
-                        // Remove duplicates
-                        $inquiriesEmails = array_unique($inquiriesEmails);
-                    }
-                }
-            // Show INQUIRIES emails only
-            $toMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($inquiriesEmails) {
-                    foreach ($inquiriesEmails as $inquiriesEmail) {
-                        $query->orWhere('to', 'LIKE', '%' . $inquiriesEmail . '%');
-                    }
-                })
-                ->orderBy('id', 'desc')
-                ->get();
-            $ccMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($inquiriesEmails) {
-                    foreach ($inquiriesEmails as $inquiriesEmail) {
-                        $query->orWhere('cc', 'LIKE', '%' . $inquiriesEmail . '%')
-                            ->orWhere('bcc', 'LIKE', '%' . $inquiriesEmail . '%');
-                    }
-                })
-                ->orderBy('id', 'desc')
-                ->get();
-            $fromMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($inquiriesEmails) {
-                    foreach ($inquiriesEmails as $inquiriesEmail) {
-                        $query->orWhere('from', 'LIKE', '%' . $inquiriesEmail . '%');
-                    }
-                })
-                ->orderBy('id', 'desc')
-                ->get();
-
-        } elseif ($checkBox57Status) {
-        $inquiriesEmails = [];
-            // International Inquiries Coordinator - get ALL inquiries emails
+        } elseif ($checkBox7Status || $checkBox57Status) {
+            // Get inquiries emails based on checkbox
+            if ($checkBox57Status || $inquiriesInternationalCondition) {
+                // All inquiries emails
                 $regions = Region::with('inquiries')->get();
-
-                foreach ($regions as $region) {
-                    if ($region->inquiries && $region->inquiries->inquiries_email) {
-                        $inquiriesEmails[] = $region->inquiries->inquiries_email;
-                    }
+            } elseif (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition) {
+                if ($regId && $regId > 0) {
+                    // Specific region
+                    $regions = Region::with('inquiries')->where('id', $regId)->get();
+                } else {
+                    // Conference regions
+                    $regions = Region::with('inquiries')->where('conference_id', $confId)->get();
                 }
+            }
 
-                // Remove duplicates
-                $inquiriesEmails = array_unique($inquiriesEmails);
-
-            // Show INQUIRIES emails only
-            $toMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($inquiriesEmails) {
-                    foreach ($inquiriesEmails as $inquiriesEmail) {
-                        $query->orWhere('to', 'LIKE', '%' . $inquiriesEmail . '%');
-                    }
-                })
-                ->orderBy('id', 'desc')
-                ->get();
-            $ccMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($inquiriesEmails) {
-                    foreach ($inquiriesEmails as $inquiriesEmail) {
-                        $query->orWhere('cc', 'LIKE', '%' . $inquiriesEmail . '%')
-                            ->orWhere('bcc', 'LIKE', '%' . $inquiriesEmail . '%');
-                    }
-                })
-                ->orderBy('id', 'desc')
-                ->get();
-            $fromMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($inquiriesEmails) {
-                    foreach ($inquiriesEmails as $inquiriesEmail) {
-                        $query->orWhere('from', 'LIKE', '%' . $inquiriesEmail . '%');
-                    }
-                })
-                ->orderBy('id', 'desc')
-                ->get();
+            foreach ($regions as $region) {
+                if ($region->inquiries && $region->inquiries->inquiries_email) {
+                    $filterEmails[] = $region->inquiries->inquiries_email;
+                }
+            }
+            $filterEmails = array_unique($filterEmails);
 
         } else {
-            // Default - show user's personal emails plus position-based emails (your existing logic)
+            // Default - user's personal email
+            $filterEmails = [$userEmail];
+        }
+
+        // Build queries based on filter
+        if ($filterEmails === null) {
+            // Show all emails
+            $toMaillog = SentEmail::with('attachments')->orderBy('id', 'desc')->get();
+            $ccMaillog = collect([]);
+            $fromMaillog = collect([]);
+        } else {
+            // Filter by email addresses
             $toMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($userEmail,) {
-                    $query->Where('to', 'LIKE', '%' . $userEmail . '%');
+                ->where(function($query) use ($filterEmails) {
+                    foreach ($filterEmails as $email) {
+                        $query->orWhere('to', 'LIKE', '%' . $email . '%');
+                    }
                 })
                 ->orderBy('id', 'desc')
                 ->get();
+
             $ccMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($userEmail,) {
-                    $query->Where('cc', 'LIKE', '%' . $userEmail . '%')
-                        ->orWhere('bcc', 'LIKE', '%' . $userEmail . '%');
+                ->where(function($query) use ($filterEmails) {
+                    foreach ($filterEmails as $email) {
+                        $query->orWhere('cc', 'LIKE', '%' . $email . '%')
+                            ->orWhere('bcc', 'LIKE', '%' . $email . '%');
+                    }
                 })
                 ->orderBy('id', 'desc')
                 ->get();
+
             $fromMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($userEmail,) {
-                    $query->where('from', 'LIKE', '%' . $userEmail . '%');
+                ->where(function($query) use ($filterEmails) {
+                    foreach ($filterEmails as $email) {
+                        $query->orWhere('from', 'LIKE', '%' . $email . '%');
+                    }
                 })
                 ->orderBy('id', 'desc')
                 ->get();
         }
 
-        $data = ['checkBox81Status' => $checkBox81Status, 'checkBox5Status' => $checkBox5Status, 'checkBox7Status' => $checkBox7Status,
+        $data = [
+            'checkBox81Status' => $checkBox81Status, 'checkBox5Status' => $checkBox5Status, 'checkBox7Status' => $checkBox7Status,
             'checkBox57Status' => $checkBox57Status, 'toMaillog' => $toMaillog, 'fromMaillog' => $fromMaillog, 'ccMaillog' => $ccMaillog
         ];
 
