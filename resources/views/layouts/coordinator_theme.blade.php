@@ -445,7 +445,7 @@ window.onload = function () {
                         @php
                             if ($coordinatorCondition && $conferenceCoordinatorCondition) {
                                 // $adminReportsRoute = route('adminreports.paymentlog');
-                                $adminReportsRoute = url(config('sentemails.routepath'));
+                                $adminReportsRoute = route('adminreports.maillog');
                             }
                             $activeAdminReportsRoutes = [
                                 'adminreports/*'
