@@ -6,9 +6,9 @@
 
 @section('content')
     <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid table-container">
-            <div class="row">
+   <section class="content">
+    <div class="container-fluid table-container">
+        <div class="row">
             <div class="col-12">
                 <div class="card card-outline card-primary">
                     <div class="card-header">
@@ -19,56 +19,164 @@
                             @include('layouts.dropdown_menus.menu_reports_admin')
                         </div>
                     </div>
-            <!-- /.card-header -->
-    <div class="card-body">
+                    <!-- /.card-header -->
 
-                    <!-- Logs Table -->
-                    <table id="chapterlist" class="table table-sm table-hover" >
-                        <thead>
-                          <tr>
-                            <th>View</th>
-                            <th>Date</th>
-                            <th>Subject</th>
-                            <th>To</th>
-                            <th>cc/bcc</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($maillog as $log)
-                            <tr>
-                                <td class="text-center align-middle">
-                                    <a href="#" class="view-email" data-id="{{ $log->id }}"
-                                       data-subject="{{ $log->subject }}"
-                                       data-date="{{ $log->date }}"
-                                       data-from="{{ $log->from }}"
-                                       data-to="{{ $log->to }}"
-                                       data-cc="{{ $log->cc ?? '' }}"
-                                       data-bcc="{{ $log->bcc ?? '' }}">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                </td>
-                                <td>{{ $log->date }}</td>
-                                <td>{{ $log->subject }}</td>
-                                <td>{{ $log->to }}</td>
-                                <td>
-                                    @if($log->cc)
-                                        cc: {{ $log->cc }}
-                                    @endif
-                                    @if ($log->cc && $log->bcc)
-                                        <br>
-                                    @endif
-                                    @if($log->bcc)
-                                        bcc: {{ $log->bcc }}
-                                    @endif
-                                </td>
+                    <div class="card-body">
+                        <!-- Nav Tabs -->
+                        <ul class="nav nav-pills mb-3">
+                            <li class="nav-item"><a class="nav-link active" href="#to" data-toggle="tab">INBOX</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#cc" data-toggle="tab">CC/BCC</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#from" data-toggle="tab">FROM</a></li>
+                        </ul>
 
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        <!-- Tab Content -->
+                        <div class="tab-content">
+                            <!-- TO Tab -->
+                            <div class="active tab-pane" id="to">
+                                <table id="toTable" class="table table-sm table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>View</th>
+                                            <th>Date</th>
+                                            <th>Subject</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>cc/bcc</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($toMaillog as $log)
+                                        <tr>
+                                            <td class="text-center align-middle">
+                                                <a href="#" class="view-email" data-id="{{ $log->id }}"
+                                                   data-subject="{{ $log->subject }}"
+                                                   data-date="{{ $log->date }}"
+                                                   data-from="{{ $log->from }}"
+                                                   data-to="{{ $log->to }}"
+                                                   data-cc="{{ $log->cc ?? '' }}"
+                                                   data-bcc="{{ $log->bcc ?? '' }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                            <td>{{ $log->date }}</td>
+                                            <td>{{ $log->subject }}</td>
+                                            <td>{{ $log->from }}</td>
+                                            <td>{!! str_replace(',', '<br>', $log->to) !!}</td>
+                                            <td>
+    @if($log->cc)
+        cc: {!! str_replace(',', '<br>', $log->cc) !!}
+    @endif
+    @if ($log->cc && $log->bcc)
+        <br>
+    @endif
+    @if($log->bcc)
+        bcc: {!! str_replace(',', '<br>', $log->bcc) !!}
+    @endif
+</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
 
-                  @if ($listAdminCondition || $ITCondition)
+                            <!-- CC Tab -->
+                            <div class="tab-pane" id="cc">
+                                <table id="ccTable" class="table table-sm table-hover">
+                                      <thead>
+                                        <tr>
+                                            <th>View</th>
+                                            <th>Date</th>
+                                            <th>Subject</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>cc/bcc</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($ccMaillog as $log)
+                                        <tr>
+                                            <td class="text-center align-middle">
+                                                <a href="#" class="view-email" data-id="{{ $log->id }}"
+                                                   data-subject="{{ $log->subject }}"
+                                                   data-date="{{ $log->date }}"
+                                                   data-from="{{ $log->from }}"
+                                                   data-to="{{ $log->to }}"
+                                                   data-cc="{{ $log->cc ?? '' }}"
+                                                   data-bcc="{{ $log->bcc ?? '' }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                            <td>{{ $log->date }}</td>
+                                            <td>{{ $log->subject }}</td>
+                                            <td>{{ $log->from }}</td>
+                                            <td>{!! str_replace(',', '<br>', $log->to) !!}</td>
+                                            <td>
+    @if($log->cc)
+        cc: {!! str_replace(',', '<br>', $log->cc) !!}
+    @endif
+    @if ($log->cc && $log->bcc)
+        <br>
+    @endif
+    @if($log->bcc)
+        bcc: {!! str_replace(',', '<br>', $log->bcc) !!}
+    @endif
+</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- FROM Tab -->
+                            <div class="tab-pane" id="from">
+                                <table id="fromTable" class="table table-sm table-hover">
+                                      <thead>
+                                        <tr>
+                                            <th>View</th>
+                                            <th>Date</th>
+                                            <th>Subject</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>cc/bcc</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($fromMaillog as $log)
+                                        <tr>
+                                            <td class="text-center align-middle">
+                                                <a href="#" class="view-email" data-id="{{ $log->id }}"
+                                                   data-subject="{{ $log->subject }}"
+                                                   data-date="{{ $log->date }}"
+                                                   data-from="{{ $log->from }}"
+                                                   data-to="{{ $log->to }}"
+                                                   data-cc="{{ $log->cc ?? '' }}"
+                                                   data-bcc="{{ $log->bcc ?? '' }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                            <td>{{ $log->date }}</td>
+                                            <td>{{ $log->subject }}</td>
+                                            <td>{{ $log->from }}</td>
+                                            <td>{!! str_replace(',', '<br>', $log->to) !!}</td>
+                                           <td>
+    @if($log->cc)
+        cc: {!! str_replace(',', '<br>', $log->cc) !!}
+    @endif
+    @if ($log->cc && $log->bcc)
+        <br>
+    @endif
+    @if($log->bcc)
+        bcc: {!! str_replace(',', '<br>', $log->bcc) !!}
+    @endif
+</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                           @if ($listAdminCondition || $ITCondition)
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showListAdmin" id="showListAdmin" class="custom-control-input" {{ $checkBox5Status ? 'checked' : '' }} onchange="showListAdmin()" />
@@ -98,17 +206,17 @@
                         </div>
                     </div>
                 @endif
-            <div class="card-body text-center">
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
             </div>
-          </div>
-          <!-- /.card -->
+            <!-- /.col -->
         </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
+        <!-- /.row -->
     </div>
     <!-- /.container-fluid -->
-  </section>
+</section>
   <!-- /.content -->
 
   <!-- Email Modal -->
@@ -150,12 +258,57 @@
 var emailBodyUrl = '{{ url(config('sentemails.routepath').'/body') }}';
 
 $(document).ready(function() {
-    // Show table body after a brief moment (after DataTables initializes)
-    setTimeout(function() {
-        $('#chapterlist tbody').show();
-    }, 50);
+    // Initialize the first visible table
+    if (!$.fn.DataTable.isDataTable('#toTable')) {
+        $('#toTable').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            "order": []
+        });
+    }
 
-    // Use event delegation to handle clicks on dynamically loaded elements
+    // Initialize tables when their tab is shown
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href");
+
+        if (target === '#cc' && !$.fn.DataTable.isDataTable('#ccTable')) {
+            $('#ccTable').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "order": []
+            });
+        }
+
+        if (target === '#from' && !$.fn.DataTable.isDataTable('#fromTable')) {
+            $('#fromTable').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "order": []
+            });
+        }
+
+        // Force column width recalculation and redraw
+        setTimeout(function() {
+            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().draw();
+        }, 10);
+    });
+
+    // Modal handler
     $(document).on('click', '.view-email', function(e) {
         e.preventDefault();
 
@@ -167,13 +320,11 @@ $(document).ready(function() {
         var cc = $(this).data('cc');
         var bcc = $(this).data('bcc');
 
-        // Populate header info
         $('#emailDate').text(date);
         $('#emailFrom').text(from);
         $('#emailTo').text(to);
         $('#emailSubject').text(subject);
 
-        // Show/hide cc and bcc if they exist
         if (cc) {
             $('#emailCc').text(cc);
             $('#emailCcWrapper').show();
@@ -188,13 +339,9 @@ $(document).ready(function() {
             $('#emailBccWrapper').hide();
         }
 
-        // Show loading state
         $('#emailBody').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
-
-        // Open modal
         $('#emailModal').modal('show');
 
-        // Fetch email body
         fetch(emailBodyUrl + '/' + emailId)
             .then(response => {
                 if (!response.ok) {

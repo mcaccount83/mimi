@@ -371,18 +371,30 @@ class AdminReportController extends Controller implements HasMiddleware
         // Add view filter based on checkboxes
         if ($checkBox81Status) {
             // Show ALL emails
-            $maillog = SentEmail::with('attachments')
+            $toMaillog = SentEmail::with('attachments')
                 ->orderby('id', 'desc')
                 ->get();
+            $ccMaillog = [];
+            $fromMaillog = [];
 
         } elseif ($checkBox5Status) {
             // Show LIST admin emails only
-            $maillog = SentEmail::with('attachments')
-                ->where(function($query) use ($listAdmin) {
-                    $query->where('from', 'LIKE', '%' . $listAdmin . '%')
-                        ->orWhere('to', 'LIKE', '%' . $listAdmin . '%')
-                        ->orWhere('cc', 'LIKE', '%' . $listAdmin . '%')
+             $toMaillog = SentEmail::with('attachments')
+                ->where(function($query) use ($listAdmin,) {
+                    $query->Where('to', 'LIKE', '%' . $listAdmin . '%');
+                })
+                ->orderBy('id', 'desc')
+                ->get();
+            $ccMaillog = SentEmail::with('attachments')
+                ->where(function($query) use ($listAdmin,) {
+                    $query->Where('cc', 'LIKE', '%' . $listAdmin . '%')
                         ->orWhere('bcc', 'LIKE', '%' . $listAdmin . '%');
+                })
+                ->orderBy('id', 'desc')
+                ->get();
+            $fromMaillog = SentEmail::with('attachments')
+                ->where(function($query) use ($listAdmin,) {
+                    $query->where('from', 'LIKE', '%' . $listAdmin . '%');
                 })
                 ->orderBy('id', 'desc')
                 ->get();
@@ -426,13 +438,27 @@ class AdminReportController extends Controller implements HasMiddleware
                     }
                 }
             // Show INQUIRIES emails only
-            $maillog = SentEmail::with('attachments')
+            $toMaillog = SentEmail::with('attachments')
                 ->where(function($query) use ($inquiriesEmails) {
                     foreach ($inquiriesEmails as $inquiriesEmail) {
-                        $query->orWhere('from', 'LIKE', '%' . $inquiriesEmail . '%')
-                            ->orWhere('to', 'LIKE', '%' . $inquiriesEmail . '%')
-                            ->orWhere('cc', 'LIKE', '%' . $inquiriesEmail . '%')
+                        $query->orWhere('to', 'LIKE', '%' . $inquiriesEmail . '%');
+                    }
+                })
+                ->orderBy('id', 'desc')
+                ->get();
+            $ccMaillog = SentEmail::with('attachments')
+                ->where(function($query) use ($inquiriesEmails) {
+                    foreach ($inquiriesEmails as $inquiriesEmail) {
+                        $query->orWhere('cc', 'LIKE', '%' . $inquiriesEmail . '%')
                             ->orWhere('bcc', 'LIKE', '%' . $inquiriesEmail . '%');
+                    }
+                })
+                ->orderBy('id', 'desc')
+                ->get();
+            $fromMaillog = SentEmail::with('attachments')
+                ->where(function($query) use ($inquiriesEmails) {
+                    foreach ($inquiriesEmails as $inquiriesEmail) {
+                        $query->orWhere('from', 'LIKE', '%' . $inquiriesEmail . '%');
                     }
                 })
                 ->orderBy('id', 'desc')
@@ -453,35 +479,57 @@ class AdminReportController extends Controller implements HasMiddleware
                 $inquiriesEmails = array_unique($inquiriesEmails);
 
             // Show INQUIRIES emails only
-            $maillog = SentEmail::with('attachments')
+            $toMaillog = SentEmail::with('attachments')
                 ->where(function($query) use ($inquiriesEmails) {
                     foreach ($inquiriesEmails as $inquiriesEmail) {
-                        $query->orWhere('from', 'LIKE', '%' . $inquiriesEmail . '%')
-                            ->orWhere('to', 'LIKE', '%' . $inquiriesEmail . '%')
-                            ->orWhere('cc', 'LIKE', '%' . $inquiriesEmail . '%')
+                        $query->orWhere('to', 'LIKE', '%' . $inquiriesEmail . '%');
+                    }
+                })
+                ->orderBy('id', 'desc')
+                ->get();
+            $ccMaillog = SentEmail::with('attachments')
+                ->where(function($query) use ($inquiriesEmails) {
+                    foreach ($inquiriesEmails as $inquiriesEmail) {
+                        $query->orWhere('cc', 'LIKE', '%' . $inquiriesEmail . '%')
                             ->orWhere('bcc', 'LIKE', '%' . $inquiriesEmail . '%');
                     }
                 })
                 ->orderBy('id', 'desc')
                 ->get();
-
+            $fromMaillog = SentEmail::with('attachments')
+                ->where(function($query) use ($inquiriesEmails) {
+                    foreach ($inquiriesEmails as $inquiriesEmail) {
+                        $query->orWhere('from', 'LIKE', '%' . $inquiriesEmail . '%');
+                    }
+                })
+                ->orderBy('id', 'desc')
+                ->get();
 
         } else {
             // Default - show user's personal emails plus position-based emails (your existing logic)
-            $maillog = SentEmail::with('attachments')
+            $toMaillog = SentEmail::with('attachments')
                 ->where(function($query) use ($userEmail,) {
-                    $query->where('from', 'LIKE', '%' . $userEmail . '%')
-                        ->orWhere('to', 'LIKE', '%' . $userEmail . '%')
-                        ->orWhere('cc', 'LIKE', '%' . $userEmail . '%')
+                    $query->Where('to', 'LIKE', '%' . $userEmail . '%');
+                })
+                ->orderBy('id', 'desc')
+                ->get();
+            $ccMaillog = SentEmail::with('attachments')
+                ->where(function($query) use ($userEmail,) {
+                    $query->Where('cc', 'LIKE', '%' . $userEmail . '%')
                         ->orWhere('bcc', 'LIKE', '%' . $userEmail . '%');
-
+                })
+                ->orderBy('id', 'desc')
+                ->get();
+            $fromMaillog = SentEmail::with('attachments')
+                ->where(function($query) use ($userEmail,) {
+                    $query->where('from', 'LIKE', '%' . $userEmail . '%');
                 })
                 ->orderBy('id', 'desc')
                 ->get();
         }
 
-        $data = ['maillog' => $maillog, 'checkBox81Status' => $checkBox81Status, 'checkBox5Status' => $checkBox5Status, 'checkBox7Status' => $checkBox7Status,
-            'checkBox57Status' => $checkBox57Status,
+        $data = ['checkBox81Status' => $checkBox81Status, 'checkBox5Status' => $checkBox5Status, 'checkBox7Status' => $checkBox7Status,
+            'checkBox57Status' => $checkBox57Status, 'toMaillog' => $toMaillog, 'fromMaillog' => $fromMaillog, 'ccMaillog' => $ccMaillog
         ];
 
         return view('adminreports.maillog')->with($data);
