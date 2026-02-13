@@ -30,7 +30,7 @@
                                         {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
                                     </a>
                                 @elseif ($resourceItem->file_type == 3)
-                                        @if ($userTypeId && $userTypeId == \App\Enums\UserTypeEnum::COORD)
+                                           @if (($userTypeId && $userTypeId == \App\Enums\UserTypeEnum::COORD) || $userTypeId == NULL)
                                             {{-- Laravel Route - Just show title, no link for coordinators --}}
                                             {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
                                             <span style="font-size: smaller; color: #6c757d;">(Chapter Sepcific Route)</span>
@@ -87,7 +87,7 @@
                                                 {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
                                             </a>
                                         @elseif ($resourceItem->file_type == 3)
-                                           @if ($userTypeId && $userTypeId == \App\Enums\UserTypeEnum::COORD)
+                                           @if (($userTypeId && $userTypeId == \App\Enums\UserTypeEnum::COORD) || $userTypeId == NULL)
                                                 {{-- Laravel Route - Just show title, no link for coordinators --}}
                                                 {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
                                                 <span style="font-size: smaller; color: #6c757d;">(Chapter Sepcific Route)</span>
