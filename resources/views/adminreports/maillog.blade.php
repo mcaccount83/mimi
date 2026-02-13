@@ -30,6 +30,7 @@
                             <th>Date</th>
                             <th>Subject</th>
                             <th>To</th>
+                            <th>cc/bcc</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -48,12 +49,16 @@
                                 </td>
                                 <td>{{ $log->date }}</td>
                                 <td>{{ $log->subject }}</td>
-                                <td>To: {{ $log->to }}
+                                <td>{{ $log->to }}</td>
+                                <td>
                                     @if($log->cc)
-                                        <br>cc: {{ $log->cc }}
+                                        cc: {{ $log->cc }}
+                                    @endif
+                                    @if ($log->cc && $log->bcc)
+                                        <br>
                                     @endif
                                     @if($log->bcc)
-                                        <br>bcc: {{ $log->bcc }}
+                                        bcc: {{ $log->bcc }}
                                     @endif
                                 </td>
 
@@ -145,6 +150,11 @@
 var emailBodyUrl = '{{ url(config('sentemails.routepath').'/body') }}';
 
 $(document).ready(function() {
+    // Show table body after a brief moment (after DataTables initializes)
+    setTimeout(function() {
+        $('#chapterlist tbody').show();
+    }, 50);
+
     // Use event delegation to handle clicks on dynamically loaded elements
     $(document).on('click', '.view-email', function(e) {
         e.preventDefault();
