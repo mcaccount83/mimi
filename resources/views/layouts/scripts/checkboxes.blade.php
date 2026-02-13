@@ -36,11 +36,20 @@
         }
     }
 
-    // Specialty Job List Checkboxes
-    function showM2M() {
+     // Specialty Job List Checkboxes
+     function showListAdmin() {
         var base_url = window.location.origin + window.location.pathname;
-        if ($("#showM2M").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::M2MDONATIONS }}=yes';
+        if ($("#showListAdmin").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::LIST }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
+    function showReReg() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showReReg").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::REREG }}=yes';
         } else {
             window.location.href = base_url;
         }
@@ -50,6 +59,24 @@
         var base_url = window.location.origin + window.location.pathname;
         if ($("#showInquiries").prop("checked") == true) {
             window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::INQUIRIES }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
+    function showM2M() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showM2M").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::M2M }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
+     function showEIN() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showEIN").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::EIN }}=yes';
         } else {
             window.location.href = base_url;
         }
@@ -77,7 +104,7 @@
     function showIntlM2M() {
         var base_url = window.location.origin + window.location.pathname;
         if ($("#showIntlM2M").prop("checked") == true) {
-            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::INTERNATIONALM2MDONATIONS }}=yes';
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::INTERNATIONALM2M }}=yes';
         } else {
             window.location.href = base_url;
         }

@@ -63,7 +63,29 @@
                     </table>
                 </div>
 
+                  @if ($listAdminCondition || $ITCondition)
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showListAdmin" id="showListAdmin" class="custom-control-input" {{ $checkBox5Status ? 'checked' : '' }} onchange="showListAdmin()" />
+                            <label class="custom-control-label" for="showListAdmin">Show ListAdmin Emails</label>
+                        </div>
+                    </div>
+                @endif
+                @if(($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition || $inquiriesInternationalCondition || $ITCondition)
+                <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showInquiries" id="showInquiries" class="custom-control-input" {{ $checkBox7Status ? 'checked' : '' }} onchange="showInquiries()" />
+                            <label class="custom-control-label" for="showInquiries">Show Inquiry Emails</label>
+                        </div>
+                    </div>
+                @endif
                 @if ($ITCondition)
+                     <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="showIntlInquiries" id="showIntlInquiries" class="custom-control-input" {{ $checkBox57Status ? 'checked' : '' }} onchange="showIntlInquiries()" />
+                            <label class="custom-control-label" for="showIntlInquiries">Show All Inquiry Emails</label>
+                        </div>
+                    </div>
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showAdminAll" id="showAdminAll" class="custom-control-input" {{ $checkBox81Status ? 'checked' : '' }} onchange="showAdminAll()" />
@@ -120,6 +142,8 @@
 
 @section('customscript')
 <script>
+var emailBodyUrl = '{{ url(config('sentemails.routepath').'/body') }}';
+
 $(document).ready(function() {
     // Use event delegation to handle clicks on dynamically loaded elements
     $(document).on('click', '.view-email', function(e) {
@@ -161,7 +185,7 @@ $(document).ready(function() {
         $('#emailModal').modal('show');
 
         // Fetch email body
-        fetch('{{ url(config('sentemails.routepath').'/body') }}/' + emailId)
+        fetch(emailBodyUrl + '/' + emailId)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
