@@ -104,9 +104,9 @@
     }
 
     function ChangeMemberCount(){
-        var ChangedMeetingFees = document.querySelector('input[name="optChangeDues"]:checked') && document.querySelector('input[name="optChangeDues"]:checked').value === "1";
-        var ChargedMembersDifferently = document.querySelector('input[name="optNewOldDifferent"]:checked') && document.querySelector('input[name="optNewOldDifferent"]:checked').value === "1";
-        var MembersReducedDues = document.querySelector('input[name="optNoFullDues"]:checked') && document.querySelector('input[name="optNoFullDues"]:checked').value === "1";
+        var ChangedMeetingFees = document.querySelector('input[name="optChangeDues"]:checked') && document.querySelector('input[name="optChangeDues"]:checked').value == "1";
+        var ChargedMembersDifferently = document.querySelector('input[name="optNewOldDifferent"]:checked') && document.querySelector('input[name="optNewOldDifferent"]:checked').value == "1";
+        var MembersReducedDues = document.querySelector('input[name="optNoFullDues"]:checked') && document.querySelector('input[name="optNoFullDues"]:checked').value == "1";
 
         var NewMembers = Number(document.getElementById("TotalNewMembers") ? document.getElementById("TotalNewMembers").value : 0);
         var RenewedMembers = Number(document.getElementById("TotalRenewedMembers") ? document.getElementById("TotalRenewedMembers").value : 0);
