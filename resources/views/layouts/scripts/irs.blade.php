@@ -392,4 +392,100 @@ function showFileUploadModal(chapter_id) {
     });
 }
 
+function updateName(chapterId) {
+    Swal.fire({
+        title: 'Update Chapter Name',
+        html: `
+            <p>Please enter the New Name for the chapter.</p>
+            <div style="display: flex; align-items: center; ">
+                <input type="text" id="name" name="name" class="swal2-input" placeholder="Enter New Name" required style="width: 100%;">
+            </div>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+            <br>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" id="irs_notify" class="custom-control-input">
+                <label class="custom-control-label" for="irs_notify">Notify IRS of Name Change</label>
+            </div>
+            <br>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const name = Swal.getPopup().querySelector('#name').value;
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            const irsNotify = Swal.getPopup().querySelector('#irs_notify').checked;
+
+            if (!name) {
+                Swal.showValidationMessage('Please enter the new Name.');
+                return false;
+            }
+
+            return {
+                name: name,
+                chapter_id: chapterId,
+                irs_notify: irsNotify,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('chapters.updatename') }}',
+                        type: 'POST',
+                        data: {
+                            name: data.name,
+                            notify: data.irs_notify ? '1' : '0',
+                            chapterid: data.chapter_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
 </script>

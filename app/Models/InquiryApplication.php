@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class InquiryApplication extends Model
 {
@@ -23,16 +24,6 @@ class InquiryApplication extends Model
         return $this->belongsTo(State::class, 'state_id', 'id');  // 'state' in chapters BelongsTo 'id' in state
     }
 
-    public function region(): BelongsTo
-    {
-        return $this->belongsTo(Region::class, 'region_id', 'id');  // 'region' in chapters BelongsTo 'id' in region
-    }
-
-    public function conference(): BelongsTo
-    {
-        return $this->belongsTo(Conference::class, 'conference_id', 'id');  // 'conference' in chapters BelongsTo 'id' in conference
-    }
-
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id', 'id');  // 'country_id' in chapters BelongsTo 'id' in country
@@ -48,9 +39,16 @@ class InquiryApplication extends Model
         return $this->belongsTo(Country::class, 'inquiry_country', 'id');  // 'country_id' in chapters BelongsTo 'id' in country
     }
 
-     public function regioninquiry(): BelongsTo
+    public function regioninquiry(): HasOneThrough
     {
-        return $this->belongsTo(RegionInquiry::class, 'region_id', 'region_id');  // 'state' in chapters BelongsTo 'id' in state
+        return $this->hasOneThrough(
+            RegionInquiry::class,     // Final model we want
+            State::class,             // Intermediate model
+            'id',                     // Foreign key on states table (what inquiry_applications.state_id points to)
+            'region_id',              // Foreign key on region_inquiry table (what points to states.region_id)
+            'state_id',               // Local key on inquiry_applications table
+            'region_id'               // Local key on states table (the region_id column)
+        );
     }
 
 }

@@ -17,5 +17,4 @@ class RegionInquiry extends Model
     {
         return $this->belongsTo(Region::class, 'region_id', 'id');  // 'region_id' in region_inquiries BelongsTo 'id' in region
     }
-
 }

@@ -40,9 +40,13 @@ class BaseConditionsController extends Controller
         if ($conditions['founderCondition']) {
             // View Full International List - no filter
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('conference_id', '=', $cdConfId);
+            $baseQuery->whereHas('state', function($query) use ($cdConfId) {
+                $query->where('conference_id', '=', $cdConfId);
+            });
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('region_id', '=', $cdRegId);
+            $baseQuery->whereHas('state', function($query) use ($cdRegId) {
+                $query->where('region_id', '=', $cdRegId);
+            });
         } elseif ($conditions['inquiriesInternationalCondition'] || $conditions['ITCondition'] || $conditions['einCondition']) {
             // View Full International List - no filter
         } else {

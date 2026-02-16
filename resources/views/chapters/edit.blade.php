@@ -132,7 +132,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Chapter Name:</label>
                                 <div class="col-sm-10">
-                                <input type="text" name="ch_name" id="ch_name" class="form-control" value="{{ $chDetails->name }}"  required onchange="PreviousNameReminder()">
+                                <input type="text" name="ch_name" id="ch_name" class="form-control" value="{{ $chDetails->name }}"  required disabled onchange="PreviousNameReminder()">
                                 </div>
                             </div>
                             <!-- /.form group -->
@@ -267,6 +267,9 @@
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Chapter Information</button>
+                    @if($conferenceCoordinatorCondition)
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateName('{{ $chDetails->id }}')"><i class="fas fa-edit mr-2"></i>Update Chapter Name</button>
+                    @endif
                 @endif
                 <button type="button" id="back-details" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>

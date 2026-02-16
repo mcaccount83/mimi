@@ -112,14 +112,14 @@ class BaseChapterController extends Controller
         // For pending (2) or not approved (3) status, we need to use relations from the BoardsPending table
         if ($activeStatus == 2 || $activeStatus == 3) {
             return $query->with([
-                'country', 'state', 'conference', 'region', 'webLink',
+                'country', 'state', 'webLink',
                 'pendingPresident', 'pendingAvp', 'pendingMvp', 'pendingTreasurer', 'pendingSecretary',
                 'payments', 'startMonth', 'primaryCoordinator',
             ]);
         } else {
             // For active (1) or zapped (0), use the regular Boards table
             return $query->with([
-                'country', 'state', 'conference', 'region', 'webLink',
+                'country', 'state', 'webLink',
                 'president', 'avp', 'mvp', 'treasurer', 'secretary',
                 'payments', 'startMonth', 'primaryCoordinator',
             ]);
@@ -149,30 +149,29 @@ class BaseChapterController extends Controller
             return ['query' => $baseQuery];
         }
 
-        if ($isReregPage && ! ((isset($_GET['check3']) && $_GET['check3'] == 'yes') || (isset($_GET['check5']) && $_GET['check5'] == 'yes'))) {
-            // $baseQuery->orderByDesc('next_renewal_year')
-            //     ->orderByDesc('start_month_id');
-            $baseQuery->orderByDesc('next_renewal_year')
+        if ($isReregPage && !((isset($_GET['check3']) && $_GET['check3'] == 'yes') || (isset($_GET['check5']) && $_GET['check5'] == 'yes'))) {
+            $baseQuery->select('chapters.*')
+                ->join('state', 'chapters.state_id', '=', 'state.id')
+                ->orderByDesc('next_renewal_year')
                 ->orderByDesc('start_month_id')
-                // Add the normal sorting AFTER the rereg grouping
                 ->orderBy(Conference::select('short_name')
-                    ->whereColumn('conference.id', 'chapters.conference_id'))
+                    ->whereColumn('conference.id', 'state.conference_id'))
                 ->orderBy(Region::select('short_name')
-                    ->whereColumn('region.id', 'chapters.region_id'))
-                ->orderBy(State::select('state_short_name')
-                    ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+                    ->whereColumn('region.id', 'state.region_id'))
+                ->orderBy('state.state_short_name', 'asc')
                 ->orderBy('chapters.name');
 
             return ['query' => $baseQuery];
         }
 
-        return ['query' => $baseQuery->orderBy(Conference::select('short_name')
-            ->whereColumn('conference.id', 'chapters.conference_id'))
+        return ['query' => $baseQuery->select('chapters.*')
+            ->join('state', 'chapters.state_id', '=', 'state.id')
+            ->orderBy(Conference::select('short_name')
+                ->whereColumn('conference.id', 'state.conference_id'))
             ->orderBy(Region::select('short_name')
-                ->whereColumn('region.id', 'chapters.region_id'))
-            ->orderBy(State::select('state_short_name')
-                ->whereColumn('state.id', 'chapters.state_id'), 'asc')
-            ->orderBy('chapters.name'),
+                ->whereColumn('region.id', 'state.region_id'))
+            ->orderBy('state.state_short_name', 'asc')
+            ->orderBy('chapters.name')
         ];
     }
 
@@ -267,7 +266,7 @@ class BaseChapterController extends Controller
      */
     public function getChapterDetails($chId)
     {
-        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport', 'startMonth', 'primaryCoordinator',
+        $chDetails = Chapters::with(['country', 'state', 'documents', 'financialReport', 'startMonth', 'primaryCoordinator',
             'payments', 'probation', 'financialReportFinal', 'documentsEOY'])->find($chId);
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
@@ -279,10 +278,10 @@ class BaseChapterController extends Controller
             $stateShortName = $chDetails->country->short_name;
         }
 
-        $regionLongName = $chDetails->region?->long_name;
-        $conferenceDescription = $chDetails->conference?->conference_description;
-        $chConfId = $chDetails->conference_id;
-        $chRegId = $chDetails->region_id;
+        $regionLongName = $chDetails->state->region->long_name;
+        $conferenceDescription = $chDetails->state->conference->conference_description;
+        $chConfId = $chDetails->state->conference_id;
+        $chRegId = $chDetails->state->region_id;
         $chPcId = $chDetails->primary_coordinator_id;
 
         $startMonthName = $chDetails->startMonth?->month_long_name;

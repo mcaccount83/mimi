@@ -822,8 +822,7 @@ class EmailController extends Controller implements HasMiddleware
         $input = $request->all();
         $inquiryId = $input['inquiryId'];
 
-        $inqDetails = InquiryApplication::with('state', 'region', 'conference', 'country')->find($inquiryId);
-        $regId = $inqDetails->region_id;
+        $inqDetails = InquiryApplication::with('state', 'country')->find($inquiryId);
         $inquiryEmail = $inqDetails->inquiry_email;
 
         try {
@@ -864,7 +863,7 @@ class EmailController extends Controller implements HasMiddleware
     $inquiryId = $input['inquiryId'];
     $chapterId = $input['chapterId'];
 
-    $inqDetails = InquiryApplication::with('state', 'region', 'conference', 'country')->find($inquiryId);
+    $inqDetails = InquiryApplication::with('state', 'country')->find($inquiryId);
     $inquiryEmail = $inqDetails->inquiry_email;
 
     $chDetails = Chapters::find($chapterId);

@@ -594,13 +594,13 @@ class AdminReportController extends Controller implements HasMiddleware
         // Build queries based on filter
         if ($filterEmails === null) {
             // Show all emails
-            $toMaillog = SentEmail::with('attachments')->orderBy('id', 'desc')->get();
+            $toMaillog = SentEmail::orderBy('id', 'desc')->get();
             $ccMaillog = collect([]);
             $fromMaillog = collect([]);
         } else {
             // Filter by email addresses
-            $toMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($filterEmails) {
+            $toMaillog = SentEmail::
+                where(function($query) use ($filterEmails) {
                     foreach ($filterEmails as $email) {
                         $query->orWhere('to', 'LIKE', '%' . $email . '%');
                     }
@@ -608,8 +608,8 @@ class AdminReportController extends Controller implements HasMiddleware
                 ->orderBy('id', 'desc')
                 ->get();
 
-            $ccMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($filterEmails) {
+            $ccMaillog = SentEmail::
+                where(function($query) use ($filterEmails) {
                     foreach ($filterEmails as $email) {
                         $query->orWhere('cc', 'LIKE', '%' . $email . '%')
                             ->orWhere('bcc', 'LIKE', '%' . $email . '%');
@@ -618,8 +618,8 @@ class AdminReportController extends Controller implements HasMiddleware
                 ->orderBy('id', 'desc')
                 ->get();
 
-            $fromMaillog = SentEmail::with('attachments')
-                ->where(function($query) use ($filterEmails) {
+            $fromMaillog = SentEmail::
+                where(function($query) use ($filterEmails) {
                     foreach ($filterEmails as $email) {
                         $query->orWhere('from', 'LIKE', '%' . $email . '%');
                     }

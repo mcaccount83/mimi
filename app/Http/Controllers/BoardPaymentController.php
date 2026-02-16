@@ -135,7 +135,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
-        $confId = $chDetails->conference_id;
+        $confId = $chDetails->state->conference_id;
         $stateShortName = $baseQuery['stateShortName'];
         $PresDetails = $baseQuery['PresDetails'];
 
@@ -284,7 +284,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
-        $confId = $chDetails->conference_id;
+        $confId = $chDetails->state->conference_id;
         $stateShortName = $baseQuery['stateShortName'];
         $PresDetails = $baseQuery['PresDetails'];
 
@@ -460,7 +460,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
-        $confId = $chDetails->conference_id;
+        $confId = $chDetails->state->conference_id;
         $stateShortName = $baseQuery['stateShortName'];
         $PresDetails = $baseQuery['PresDetails'];
 

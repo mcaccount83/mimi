@@ -36,20 +36,20 @@
                 @foreach($chapterList as $list)
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/online/websiteedit/{$list->id}") }}"><i class="fas fa-eye "></i></a></td>
-                    <td>
-                        @if ($list->region->short_name != "None")
-                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
-                        @else
-                            {{ $list->conference->short_name }}
-                        @endif
-                    </td>
-                    <td>
-                                @if($list->state_id < 52)
-                                    {{$list->state->state_short_name}}
-                                @else
-                                    {{$list->country->short_name}}
-                                @endif
-                            </td>
+                        <td>
+                            @if ($list->state->conference_id > 0)
+                                {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
+                            @else
+                                {{ $list->state->conference->short_name }}
+                            @endif
+                        </td>
+                        <td>
+                            @if($list->state_id < 52)
+                                {{$list->state->state_short_name}}
+                            @else
+                                {{$list->state->country?->short_name}}
+                            @endif
+                        </td>
                         <td>{{ $list->name }}</td>
 						<td>{{ $list->social1 }}</td>
 						<td>{{ $list->social2 }}</td>

@@ -47,17 +47,17 @@
                                 <a href="{{ url('/chapter/details/' . $chapter->id) }}"><i class="fas fa-eye"></i></a>
                             </td>
                             <td>
-                                @if ($chapter->region->short_name != "None")
-                                    {{ $chapter->conference->short_name }} / {{ $chapter->region->short_name }}
+                                @if ($chapter->state->conference_id > 0)
+                                    {{ $chapter->state->conference->short_name }} / {{ $chapter->state->region->short_name }}
                                 @else
-                                    {{ $chapter->conference->short_name }}
+                                    {{ $chapter->state->conference->short_name }}
                                 @endif
                             </td>
                             <td>
                                 @if($chapter->state_id < 52)
                                     {{$chapter->state->state_short_name}}
                                 @else
-                                    {{$chapter->country->short_name}}
+                                    {{$chapter->state->country?->short_name}}
                                 @endif
                             </td>
                             <td>{{ $chapter->name }}</td>

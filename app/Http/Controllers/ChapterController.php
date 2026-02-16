@@ -749,10 +749,10 @@ class ChapterController extends Controller implements HasMiddleware
 
         $input = $request->all();
         $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
-        $stateId = $input['ch_state'];
-        $stateDetails = State::with('conference', 'region')->find($stateId);
-        $regId = $stateDetails->region_id;
-        $confId = $stateDetails->conference_id;
+        // $stateId = $input['ch_state'];
+        // $stateDetails = State::with('conference', 'region')->find($stateId);
+        // $regId = $stateDetails->region_id;
+        // $confId = $stateDetails->conference_id;
 
         DB::beginTransaction();
         try {
@@ -761,8 +761,8 @@ class ChapterController extends Controller implements HasMiddleware
                 'sanitized_name' => $sanitizedName,
                 'state_id' => $input['ch_state'],
                 'country_id' => $input['ch_country'] ?? '198',
-                'conference_id' => $confId,
-                'region_id' => $regId,
+                // 'conference_id' => $confId,
+                // 'region_id' => $regId,
                 'ein' => $input['ch_ein'],
                 'status_id' => $input['ch_status'],
                 'territory' => $input['ch_boundariesterry'],
@@ -853,8 +853,8 @@ class ChapterController extends Controller implements HasMiddleware
         $name = $input['ch_name'];
         $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
         $stateId = $input['ch_state'];
-        $$stateDetails = State::with('conference', 'region')->find($stateId);
-        $regId = $stateDetails->region_id;
+        $stateDetails = State::with('conference', 'region')->find($stateId);
+        // $regId = $stateDetails->region_id;
         $confId = $stateDetails->conference_id;
 
         $statusId = OperatingStatusEnum::OK;
@@ -878,8 +878,8 @@ class ChapterController extends Controller implements HasMiddleware
                 'sanitized_name' => $sanitizedName,
                 'state_id' => $input['ch_state'],
                 'country_id' => $input['ch_country'] ?? '198',
-                'conference_id' => $confId,
-                'region_id' => $regId,
+                // 'conference_id' => $confId,
+                // 'region_id' => $regId,
                 'status_id' => $statusId,
                 'territory' => $input['ch_boundariesterry'],
                 'inquiries_contact' => $input['ch_inqemailcontact'],
@@ -983,6 +983,60 @@ class ChapterController extends Controller implements HasMiddleware
         return view('chapters.edit')->with($data);
     }
 
+     /**
+     * Update Chapter Name
+     */
+    public function updateName(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+        $updatedBy = $user['userName'];
+
+        $input = $request->all();
+        $chapterId = $input['chapterid'];
+        $irsNotify = $input['notify'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $chNamePrev = $chDetails->name;
+
+        // $chapterName = $input['name'];
+        $chapter = Chapters::find($chapterId);
+            DB::beginTransaction();
+        try {
+                $chapterName = $request->filled('name') ? $request->input('name') : $chNamePrev;
+                $chapter->name = $chapterName;
+                $chapter->sanitized_name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $chapterName);
+                $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
+                $chapter->updated_by = $updatedBy;
+                $chapter->updated_id = $updatedId;
+                $chapter->save();
+
+                if ($irsNotify == 1) {
+                    $pdfPath = $this->pdfController->saveNameChangeLetter($request, $chapterId, $chNamePrev);
+                }
+
+                DB::commit();
+
+                return response()->json([
+                    'status' => 'success', 'message' => 'Chapter Name successfully updated',
+                    'redirect' => route('chapters.edit', ['id' => $chapterId]),
+                ]);
+
+            } catch (\Exception $e) {
+                DB::rollback();  // Rollback Transaction
+                Log::error($e);  // Log the error
+
+            return response()->json([
+                'status' => 'error', 'message' => 'Something went wrong, Please try again.',
+                'redirect' => route('chapters.edit', ['id' => $chapterId]),
+            ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
     /**
      *Update Chapter Information
      */
@@ -1023,10 +1077,10 @@ class ChapterController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $chapterName = $request->filled('ch_name') ? $request->input('ch_name') : $request->input('ch_hid_name');
-            $chapter->name = $chapterName;
-            $chapter->sanitized_name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $chapterName);
-            $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
+            // $chapterName = $request->filled('ch_name') ? $request->input('ch_name') : $request->input('ch_hid_name');
+            // $chapter->name = $chapterName;
+            // $chapter->sanitized_name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $chapterName);
+            // $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
             $chapter->sistered_by = $request->filled('ch_sistered') ? $request->input('ch_sistered') : $request->input('ch_hid_sistered');
             $chapter->territory = $request->filled('ch_boundariesterry') ? $request->input('ch_boundariesterry') : $request->input('ch_hid_boundariesterry');
             $chapter->status_id = $status_id;
@@ -1106,10 +1160,10 @@ class ChapterController extends Controller implements HasMiddleware
             }
 
             // Name Change Notification//
-            if ($chDetailsUpd->name != $chDetails->name) {
-                $chNamePrev = $chDetails->name;
-                $pdfPath = $this->pdfController->saveNameChangeLetter($request, $chapterId, $chNamePrev);
-            }
+            // if ($chDetailsUpd->name != $chDetails->name) {
+            //     $chNamePrev = $chDetails->name;
+            //     $pdfPath = $this->pdfController->saveNameChangeLetter($request, $chapterId, $chNamePrev);
+            // }
 
             // PC Change Notification//
             if ($chDetailsUpd->primary_coordinator_id != $chDetails->primary_coordinator_id) {

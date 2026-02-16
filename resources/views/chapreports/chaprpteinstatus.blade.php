@@ -54,20 +54,20 @@
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif
                         </td>
-                        <td>
-                            @if ($list->region->short_name != "None")
-                                {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                       <td>
+                            @if ($list->state->conference_id > 0)
+                                {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
                             @else
-                                {{ $list->conference->short_name }}
+                                {{ $list->state->conference->short_name }}
                             @endif
                         </td>
                         <td>
-                                @if($list->state_id < 52)
-                                    {{$list->state->state_short_name}}
-                                @else
-                                    {{$list->country->short_name}}
-                                @endif
-                            </td>
+                            @if($list->state_id < 52)
+                                {{$list->state->state_short_name}}
+                            @else
+                                {{$list->state->country?->short_name}}
+                            @endif
+                        </td>
                         <td>{{ $list->name }}</td>
                         <td data-sort="{{ $list->start_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
                             {{ $list->startMonth->month_short_name }} {{ $list->start_year }}

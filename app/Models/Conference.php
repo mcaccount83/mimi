@@ -18,7 +18,7 @@ class Conference extends Model
     }
 
     public function states()
-{
-    return $this->hasMany(State::class, 'conference_id', 'id');
-}
+    {
+        return $this->hasMany(State::class, 'conference_id', 'id');
+    }
 }

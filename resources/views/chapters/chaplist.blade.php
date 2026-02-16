@@ -46,17 +46,17 @@
                                 <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
                            </td>
                             <td>
-                                @if ($list->region->short_name != "None")
-                                    {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                                @if ($list->state->conference_id > 0)
+                                    {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
                                 @else
-                                    {{ $list->conference->short_name }}
+                                    {{ $list->state->conference->short_name }}
                                 @endif
                             </td>
                             <td>
                                 @if($list->state_id < 52)
                                     {{$list->state->state_short_name}}
                                 @else
-                                    {{$list->country->short_name}}
+                                    {{$list->state->country?->short_name}}
                                 @endif
                             </td>
                             <td>{{ $list->name }}</td>

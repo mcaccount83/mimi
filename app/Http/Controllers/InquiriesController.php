@@ -59,12 +59,14 @@ class InquiriesController extends Controller implements HasMiddleware
 
         // Use the appropriate query based on checkbox status
         if ($checkBox51Status) {
-            $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
+            $inquiryList = InquiryApplication::with('state', 'country')
                 ->orderByDesc('id')
                 ->get();
         } elseif ($checkBox7Status) {
-            $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
-                ->where('conference_id', $confId)
+            $inquiryList = InquiryApplication::with('state', 'country')
+                ->select('inquiry_application.*')  // Add this to be explicit about which columns
+                ->join('state', 'inquiry_application.state_id', '=', 'state.id')  // Also be explicit in join
+                ->where('state.conference_id', $confId)
                 ->where(function($query) {
                     $query->where('response', '!=', 1)
                         ->orWhereNull('response');
@@ -72,7 +74,7 @@ class InquiriesController extends Controller implements HasMiddleware
                 ->orderByDesc('id')
                 ->get();
         } elseif ($checkBox57Status) {
-            $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
+            $inquiryList = InquiryApplication::with('state', 'country')
                 ->where(function($query) {
                     $query->where('response', '!=', 1)
                         ->orWhereNull('response');
@@ -80,9 +82,11 @@ class InquiriesController extends Controller implements HasMiddleware
                 ->orderByDesc('id')
                 ->get();
         } else {
-            $inquiryList = InquiryApplication::with('state', 'region', 'conference', 'country')
-                ->where('conference_id', $confId)
-                ->orderByDesc('id')
+            $inquiryList = InquiryApplication::with('state', 'country')
+                ->select('inquiry_application.*')  // Add this to be explicit about which columns
+                ->join('state', 'inquiry_application.state_id', '=', 'state.id')  // Also be explicit in join
+                ->where('state.conference_id', $confId)
+                ->orderByDesc('inquiry_application.id')  // Specify which id
                 ->get();
         }
 
@@ -107,11 +111,11 @@ class InquiriesController extends Controller implements HasMiddleware
         $userConfName = $user['confName'];
         $userConfDesc = $user['confDesc'];
 
-        $inqDetails = InquiryApplication::with('chapter', 'state', 'region', 'conference', 'country')->find($id);
+        $inqDetails = InquiryApplication::with('chapter', 'state', 'country', 'regioninquiry')->find($id);
         $chapterId = $inqDetails->chapter_id;
         $stateId = $inqDetails->state_id;
-        $regioniId = $inqDetails->region_id;
-        $inqConfId = $inqDetails->conference_id;
+        $regioniId = $inqDetails->state->region_id;
+        $inqConfId = $inqDetails->state->conference_id;
         $chapterName = $inqDetails->chapter?->name;
 
         $inqCoord = RegionInquiry::with('region')->find($regioniId);

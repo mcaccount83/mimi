@@ -33,7 +33,7 @@ class BaseBoardController extends Controller
     {
         // Load chapter with common relations
         $chDetails = Chapters::with([
-            'country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments',
+            'country', 'state', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments',
             'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus', 'documentsEOY',
         ])->find($id);
 
@@ -52,7 +52,7 @@ class BaseBoardController extends Controller
             $stateShortName = $chDetails->country->short_name;
         }
 
-        $chConfId = $chDetails->conference_id;
+        $chConfId = $chDetails->state->conference_id;
         $chPcId = $chDetails->primary_coordinator_id;
         $probationReason = $chDetails->probation?->probation_reason;
         $startMonthName = $chDetails->startMonth->month_long_name;

@@ -71,19 +71,19 @@
                             @endif
                         </td>
                         <td>
-                            @if ($list->region->short_name != "None")
-                                {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                            @if ($list->state->conference_id > 0)
+                                {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
                             @else
-                                {{ $list->conference->short_name }}
+                                {{ $list->state->conference->short_name }}
                             @endif
                         </td>
                         <td>
-                                @if($list->state_id < 52)
-                                    {{$list->state->state_short_name}}
-                                @else
-                                    {{$list->country->short_name}}
-                                @endif
-                            </td>
+                            @if($list->state_id < 52)
+                                {{$list->state->state_short_name}}
+                            @else
+                                {{$list->state->country?->short_name}}
+                            @endif
+                        </td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
                         <td>{{ $list->reportReviewer->first_name?? null }} {{ $list->reportReviewer->last_name?? null }}</td>

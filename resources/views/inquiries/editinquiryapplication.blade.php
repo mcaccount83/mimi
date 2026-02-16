@@ -33,8 +33,8 @@
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
                   <h3 class="profile-username text-center"><b>{{ $inqDetails->state->state_long_name}}</b></h3>
-                  <h3 class="profile-username text-center">{{ $inqDetails->region->long_name }} Region</h3>
-                  <h3 class="profile-username text-center">{{ $inqDetails->conference->conference_description }} Conference</h3>
+                  <h3 class="profile-username text-center">{{ $inqDetails->state->region->long_name }} Region</h3>
+                  <h3 class="profile-username text-center">{{ $inqDetails->state->conference->conference_description }} Conference</h3>
 
                   <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">

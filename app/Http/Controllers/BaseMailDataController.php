@@ -67,8 +67,8 @@ class BaseMailDataController extends Controller
             'inquiryComments' => $inqDetails->inquiry_comments,
             'stateLong' => $inqDetails->state->state_long_name,
             'stateShort' => $inqDetails->state->state_short_name,
-            'confDesc' => $inqDetails->conference->conference_description,
-            'regionName' => $inqDetails->region->long_name,
+            'confDesc' => $inqDetails->state->conference->conference_description,
+            'regionName' => $inqDetails->state->region->long_name,
             'inquiriesCoordEmail' => $inqDetails->regioninquiry->inquiries_email,
         ];
     }
@@ -82,7 +82,7 @@ class BaseMailDataController extends Controller
             'chapterState' => $stateShortName,
             // 'chapterState' => $chDetails->state->state_short_name,
             // 'chapterCountry' => $chDetails->country->short_name,
-            'chapterConf' => $chDetails->conference_id,
+            'chapterConf' => $chDetails->state->conference_id,
             'chapterEIN' => $chDetails->ein,
             'chapterBoundaries' => $chDetails->territory,
             'chapterStatus' => $chDetails->status->chapter_status,
@@ -441,7 +441,7 @@ class BaseMailDataController extends Controller
             'stateId' => (int) $chDetails->state_id,
             'chapterState' => $chDetails->state->state_short_name,
             'chapterCountry' => $chDetails->country->short_name,
-            'chapterConf' => $chDetails->conference_id,
+            'chapterConf' => $chDetails->state->conference_id,
             'chapterBoundaries' => $chDetails->territory,
             'chapterInquiriesContact' => $chDetails->inquiries_contact,
             'chapterStatus' => $chDetails->status->chapter_status,

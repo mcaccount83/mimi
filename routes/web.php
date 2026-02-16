@@ -250,6 +250,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chapter/details/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
     Route::get('/chapters/checkein', [ChapterController::class, 'checkEIN'])->name('chapters.checkein');
     Route::post('/chapter/details/updateein', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
+     Route::post('/chapter/details/updatename', [ChapterController::class, 'updateName'])->name('chapters.updatename');
     Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterDisband'])->name('chapters.updatechapdisband');
     Route::post('/chapter/unzap', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
     Route::get('/chapter/detailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');

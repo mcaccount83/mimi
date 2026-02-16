@@ -456,7 +456,7 @@ public function storeRoster(Request $request, $id): JsonResponse
         ]);
 
         $chapter = Chapters::with('documentsEOY', 'state')->find($id);
-        $conf = $chapter->conference_id;
+        $conf = $chapter->state->conference_id;
         $state = $chapter->state->state_short_name;
         $chapterName = $chapter->name;
         $name = $state.'_'.$chapterName.'_Roster';
@@ -513,7 +513,7 @@ public function store990N(Request $request, $id): JsonResponse
         ]);
 
         $chapter = Chapters::with('documentsEOY', 'state')->find($id);
-        $conf = $chapter->conference_id;
+        $conf = $chapter->state->conference_id;
         $state = $chapter->state->state_short_name;
         $chapterName = $chapter->name;
         $name = $state.'_'.$chapterName.'_990N';
@@ -570,7 +570,7 @@ public function storeStatement1(Request $request, $id): JsonResponse
         ]);
 
         $chapter = Chapters::with('documentsEOY', 'state')->find($id);
-        $conf = $chapter->conference_id;
+        $conf = $chapter->state->conference_id;
         $state = $chapter->state->state_short_name;
         $chapterName = $chapter->name;
         $name = $state.'_'.$chapterName.'_Statement';
@@ -627,7 +627,7 @@ public function storeStatement2(Request $request, $id): JsonResponse
         ]);
 
         $chapter = Chapters::with('documentsEOY', 'state')->find($id);
-        $conf = $chapter->conference_id;
+        $conf = $chapter->state->conference_id;
         $state = $chapter->state->state_short_name;
         $chapterName = $chapter->name;
         $name = $state.'_'.$chapterName.'_Statement_2';
@@ -681,7 +681,7 @@ public function storeAward(Request $request, $id): JsonResponse
         ]);
 
         $chapter = Chapters::with('documentsEOY', 'state')->find($id);
-        $conf = $chapter->conference_id;
+        $conf = $chapter->state->conference_id;
         $state = $chapter->state->state_short_name;
         $chapterName = $chapter->name;
         $name = $state.'_'.$chapterName.'_Award';
