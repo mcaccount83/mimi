@@ -23,13 +23,13 @@
                     <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">&nbsp; View Chapter Roster</a><br>
                     <strong style="color:red">Please Note</strong><br>
                         This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
-                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Roster File</button>
+                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Roster File</button>
             </div>
         @else
             <div class="col-md-12" id="RosterBlock">
                     <strong style="color:red">Please Note</strong><br>
                         This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
+                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Roster File</button>
             </div>
         @endif
             <input type="hidden" name="RosterPath" id="RosterPath" value="{{ $chEOYDocuments->roster_path }}">
@@ -506,8 +506,8 @@
                 </table>
             </div>
             <div class="col-md-12 float-start">
-                <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddChildrenExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-                <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteChildrenExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+                <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddChildrenExpenseRow()" ><i class="bi bi-plus me-2"></i>Add Row</button>
+                <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteChildrenExpenseRow()" ><i class="bi bi-dash me-2"></i>Remove Row</button>
             </div>
             <div class="col-md-12"><br></div>
             <div class="col-md-6 float-start">
@@ -734,8 +734,8 @@
         </table>
     </div>
     <div class="col-md-12 float-start">
-        <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddServiceProjectRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-        <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteServiceProjectRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+        <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddServiceProjectRow()" ><i class="bi bi-plus me-2"></i>Add Row</button>
+        <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteServiceProjectRow()" ><i class="bi bi-dash me-2"></i>Remove Row</button>
     </div>
     <div class="col-md-12"><br></div>
     <div class="col-md-6 float-start">
@@ -889,8 +889,8 @@
 </table>
 
     <div class="col-md-12">
-        <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddPartyExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-        <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeletePartyExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+        <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddPartyExpenseRow()" ><i class="bi bi-plus me-2"></i>Add Row</button>
+        <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeletePartyExpenseRow()" ><i class="bi bi-dash me-2"></i>Remove Row</button>
     </div>
     <div class="col-md-12"><br></div>
     <div class="col-md-6 float-start">
@@ -1057,8 +1057,8 @@
     </tfoot>
 </table>
 <div class="col-md-12 float-start">
-    <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddOfficeExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-    <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteOfficeExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+    <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddOfficeExpenseRow()" ><i class="bi bi-plus me-2"></i>Add Row</button>
+    <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteOfficeExpenseRow()" ><i class="bi bi-dash me-2"></i>Remove Row</button>
 </div>
 <div class="col-md-12"><br></div>
 <div class="col-md-6 float-start">
@@ -1243,8 +1243,8 @@
     </tfoot>
 </table>
 <div class="col-md-12 float-start">
-<button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddInternationalEventRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-<button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteInternationalEventRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+<button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddInternationalEventRow()" ><i class="bi bi-plus me-2"></i>Add Row</button>
+<button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteInternationalEventRow()" ><i class="bi bi-dash me-2"></i>Remove Row</button>
 </div>
 <hr>
 </div>
@@ -1382,8 +1382,8 @@
 </table>
 
 <div class="col-md-12">
-    <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddMonDonationRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-    <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteMonDonationRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+    <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddMonDonationRow()" ><i class="bi bi-plus me-2"></i>Add Row</button>
+    <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteMonDonationRow()" ><i class="bi bi-dash me-2"></i>Remove Row</button>
 </div>
 <div class="col-md-12"><br></div>
 <div class="col-md-6 float-start">
@@ -1450,10 +1450,10 @@
 
 <div class="col-md-12 float-start">
     <button type="button" class="btn btn-success bg-gradient btn-sm " onclick="AddNonMonDonationRow()">
-        <i class="fas fa-plus"></i>&nbsp; Add Row
+        <i class="bi bi-plus me-2"></i>Add Row
     </button>
     <button type="button" class="btn btn-danger bg-gradient btn-sm " onclick="DeleteNonMonDonationRow()">
-        <i class="fas fa-minus"></i>&nbsp; Remove Row
+        <i class="bi bi-dash me-2"></i>Remove Row
     </button>
 </div>
 
@@ -1574,10 +1574,10 @@
     </table>
     <div class="col-md-12 float-start">
         <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddOtherOfficeExpenseRow()">
-            <i class="fas fa-plus"></i>&nbsp; Add Row
+            <i class="bi bi-plus me-2"></i>Add Row
         </button>
         <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteOtherOfficeExpenseRow()">
-            <i class="fas fa-minus"></i>&nbsp; Remove Row
+            <i class="bi bi-dash me-2"></i>Remove Row
         </button>
     </div>
     <div class="col-md-12"><br></div>
@@ -2032,9 +2032,9 @@
         <strong style="color:red">Please Note</strong><br>
             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
         @if (!is_null($chEOYDocuments->statement_1_path))
-            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
+            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Bank Statement</button>
         @else
-        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
+        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Bank Statement</button>
         @endif
     </div>
         <input type="hidden" name="StatementFile" id="StatementPath" value="{{ $chEOYDocuments->statement_1_path }}">
@@ -2042,9 +2042,9 @@
     <div class="col-md-12"><br></div>
     <div class="col-md-12" id="Statement2Block">
         @if (!is_null($chEOYDocuments->statement_2_path))
-            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
+            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Additional Bank Statement</button>
         @else
-            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
+            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Additional Bank Statement</button>
         @endif
     </div>
     <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chEOYDocuments->statement_2_path }}">
@@ -2249,10 +2249,10 @@
 </table>
 <div class="col-md-12">
     <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddBankRecRow()">
-        <i class="fas fa-plus"></i>&nbsp; Add Row
+        <i class="bi bi-plus me-2"></i>Add Row
     </button>
     <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteBankRecRow()">
-        <i class="fas fa-minus"></i>&nbsp; Remove Row
+        <i class="bi bi-dash me-2"></i>Remove Row
     </button>
 </div>
 <div class="col-md-12"><br></div>
@@ -2323,9 +2323,9 @@
         <strong style="color:red">Please Note</strong><br>
             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
         @if (!is_null($chEOYDocuments->irs_path))
-            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
+            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace 990N Confirmation</button>
         @else
-            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
+            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload 990N Confirmation</button>
         @endif
     </div>
     <input type="hidden" name="IRSFiling" id="IRSFiling" value="{{ $chEOYDocuments->irs_path }}">
@@ -2861,10 +2861,10 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
             <!-- Add/Remove Row Buttons -->
             <div class="col-md-12 float-start">
                 <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddChapterAwardsRow()">
-                    <i class="fas fa-plus"></i>&nbsp; Add Row
+                    <i class="bi bi-plus me-2"></i>Add Row
                 </button>
                 <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteChapterAwardsRow()">
-                    <i class="fas fa-minus"></i>&nbsp; Remove Row
+                    <i class="bi bi-dash me-2"></i>Remove Row
                 </button>
             </div>
 
@@ -2961,13 +2961,13 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         <label>Award Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->award_path }}">&nbsp; View Award Files</a><br>
                         <strong style="color:red">Please Note</strong><br>
                             Save award entry information before replacing file(s). This will refresh the screen - be sure to save all work before clicking button to Replace Award Files.<br>
-                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Award Files</button>
+                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Award Files</button>
                 </div>
             @else
                 <div class="col-md-12" id="AwardBlock">
                         <strong style="color:red">Please Note</strong><br>
                             Save award entry information before uploading file(s). This will refresh the screen - be sure to save all work before clicking button to Upload Award Files.<br>
-                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Award Files</button>
+                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Award Files</button>
                 </div>
             @endif
                 <input type="hidden" name="AwardPath" id="AwardPath" value="{{ $chEOYDocuments->award_path }}">
@@ -3146,7 +3146,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <div class="card-body text-center mt-3">
             <button type="button" class="btn btn-primary bg-gradient mb-2" id="btn-step-14" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
             @if($displayEINInstructionsLIVE)
-            <button type="button" class="btn btn-success bg-gradient mb-2" id="final-submit" ><i class="fas fa-share-square" ></i>&nbsp; Submit Report</button>
+            <button type="button" class="btn btn-success bg-gradient mb-2" id="final-submit" ><i class="bi bi-chevron-double-right me-2"></i>Submit Report</button>
         </div>
     </section>
 </div><!-- end of accordion body -->

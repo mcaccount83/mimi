@@ -28,19 +28,19 @@
                     </span>
                 @endif
                 <div class="input-group-text">
-                <span class="fas fa-envelope"></span>
+                <span class="bi bi-envelope-fill"></span>
                 </div>
             </div>
           <div class="input-group mb-3">
               <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="Password">
                 <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
+                  <span class="bi bi-lock-fill"></span>
                 </div>
             </div>
             <div class="input-group mb-3">
               <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required placeholder="Confirm Password">
                 <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
+                  <span class="bi bi-lock-fill"></span>
                 </div>
             </div>
             <div class="row">

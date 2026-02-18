@@ -36,10 +36,10 @@
                                 <div class="col-12 form-row mb-3">
                                     <div class="col-md-12 float-start">
                                         @if ($chDocuments->disband_letter_path == null)
-                                            <button type="button" id="btn-download-pdf disabled" class="btn bg-primary"><i class="fas fa-file-pdf me-2" disabled></i>No Disband Letter on File</button>
+                                            <button type="button" id="btn-download-pdf disabled" class="btn bg-primary"><i class="bi bi-file-earmark-pdf-fill me-2" disabled></i>No Disband Letter on File</button>
                                         @else
                                             <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">
-                                                <i class="fas fa-file-pdf me-2"></i>View/Download Disband Letter</button>
+                                                <i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Disband Letter</button>
                                         @endif
                                     </div>
                                 </div>
@@ -159,11 +159,11 @@
                                             <h4>Financial Report has been submitted.</h4>
                                              @if ($chEOYDocuments->final_financial_pdf_path == null)
                                              <button type="button" class="btn bg-primary" disabled>
-                                                <i class="fas fa-file-pdf me-2"></i>Financial PDF Not Available
+                                                <i class="bi bi-file-earmark-pdf-fill me-2"></i>Financial PDF Not Available
                                             </button>
                                             @else
                                             <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">
-                                                <i class="fas fa-file-pdf me-2"></i>View/Download Financial Report
+                                                <i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Financial Report
                                             </button>
                                         @endif
                                         @endif

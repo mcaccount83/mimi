@@ -38,7 +38,7 @@
                 <tbody>
                 @foreach($coordinatorList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
                     <td>
                             @if ($list->region?->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region?->short_name }}
@@ -57,7 +57,7 @@
                         <td><span class="date-mask">{{ $list->zapped_date }}</span></td>
                         <td>{{ $list->reason_retired }}</td>
                         @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
-                        <td class="text-center align-middle"><i class="fa fa-ban"
+                        <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
                         </td>

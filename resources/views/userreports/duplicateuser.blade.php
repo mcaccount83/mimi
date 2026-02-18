@@ -37,9 +37,9 @@
                   <tr>
                     <td>
                         @if($list->type_id == \App\Enums\UserTypeEnum::COORD)
-                            <a href="{{ url("/userreports/editusercoord/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a>
+                            <a href="{{ url("/userreports/editusercoord/{$list->id}") }}"><i class="bi bi-eye"></i></a>
                         @else
-                            <a href="{{ url("/userreports/edituserboard/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a>
+                            <a href="{{ url("/userreports/edituserboard/{$list->id}") }}"><i class="bi bi-eye"></i></a>
                         @endif
                     </td>
                     <td>{{ $list->email }}</td>
@@ -53,7 +53,7 @@
                             @endif
                         </td>
 						<td>{{$list->userStatus->user_status}}</td>
-                         <td class="text-center align-middle"><i class="fa fa-ban"
+                         <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteUserModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
                         </td>

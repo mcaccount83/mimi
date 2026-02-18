@@ -39,7 +39,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
+                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
                     <td>
                         @if ($list->state->conference_id > 0)
                             {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}

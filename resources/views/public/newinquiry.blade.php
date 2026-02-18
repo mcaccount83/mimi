@@ -167,7 +167,7 @@
                                 </div>
                             <div class="col-md-12" style="color: red;">Page will automatically re-direct after inquiry submission.</div>
 
-                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Inquiry') }}</button>
+                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Inquiry') }}</button>
                         </div>
   </form>
     <!-- /.card-body -->

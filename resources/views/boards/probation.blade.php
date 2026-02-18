@@ -211,14 +211,14 @@
                 </div>
 
             <div class="card-body text-center mt-3">
-                <button id="Save" type="submit" class="btn btn-primary bg-gradient mb-2"><i class="fas fa-share" ></i>&nbsp; Submit</button>
+                <button id="Save" type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>Submit</button>
 
             @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
                 <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</button>
             @else
                 <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</a>
             @endif
-                <button id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
+                <button id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bi bi-unlock-fill me-2" ></i>Logout</button>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>

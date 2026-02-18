@@ -406,11 +406,6 @@ h6 { font-size: 0.75rem !important; }
                         @if (isset($chapterReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $chapterReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterReportsRoutes) }}">
-                                    {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.2em;">
-                                            <i class="fa-solid fa-clipboard position-absolute"></i>
-                                            <span style="ptop: 0.50em">▬</span>
-                                            <i class="fa-solid fa-house position-absolute" style="font-size: 0.6em; color: rgba(0, 0, 0, 0.6); top: 0.50em;"></i>
-                                        </span> --}}
                                     <i class="nav-icon bi bi-house-gear-fill"></i>
                                     <p>Chapter Reports</p>
                                 </a>
@@ -433,11 +428,6 @@ h6 { font-size: 0.75rem !important; }
                         @if (isset($coordReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $coordReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeCoordReportsRoutes) }}">
-                                     {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.2em;">
-                                            <i class="fa-solid fa-clipboard position-absolute"></i>
-                                            <span style="ptop: 0.50em">▬</span>
-                                            <i class="fa-solid fa-user-friends position-absolute" style="font-size: 0.5em; color: rgba(0, 0, 0, 0.6); top: 0.50em;"></i>
-                                        </span> --}}
                                         <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
                                             <i class="bi bi-people-fill position-absolute"></i>
                                             <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
@@ -463,11 +453,6 @@ h6 { font-size: 0.75rem !important; }
                             @if (isset($eoyReportsRoute))
                                 <li class="nav-item">
                                     <a href="{{ $eoyReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeEOYReportsRoutes) }}">
-                                         {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.2em;">
-                                            <i class="fa-solid fa-clipboard position-absolute"></i>
-                                            <span style="ptop: 0.50em">▬</span>
-                                            <i class="fa-solid fa-dollar-sign position-absolute" style="font-size: 0.6em; color: rgba(0, 0, 0, 0.8); top: 0.50em;"></i>
-                                        </span> --}}
                                         <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
                                             <i class=" bi bi-calculator-fill position-absolute"></i>
                                             <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
@@ -493,11 +478,6 @@ h6 { font-size: 0.75rem !important; }
                         @if (isset($adminReportsRoute))
                            <li class="nav-item">
                                 <a href="{{ $adminReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeAdminReportsRoutes) }}">
-                            {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.2em;">
-                                <i class="fa-solid fa-clipboard position-absolute"></i>
-                                <span style="ptop: 0.50em">▬</span>
-                                <i class="fa-solid fa-shield-halved position-absolute" style="font-size: 0.6em; color: rgba(0, 0, 0, 0.6); top: 0.50em;"></i>
-                            </span> --}}
                              <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
                                             <i class="bi bi-shield-shaded position-absolute"></i>
                                             <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
@@ -540,11 +520,6 @@ h6 { font-size: 0.75rem !important; }
                         @if (isset($techReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $techReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeTechReportsRoutes) }}">
-                                     {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.2em;">
-                                            <i class="fa-solid fa-clipboard position-absolute"></i>
-                                            <span style="ptop: 0.50em">▬</span>
-                                            <i class="fa-solid fa-screwdriver-wrench position-absolute" style="font-size: 0.5em; color: rgba(0, 0, 0, 0.6); top: 0.65em;"></i>
-                                        </span> --}}
                                         <i class="nav-icon bi bi-database-fill-gear"></i>
                                     <p>IT Reports</p>
                                 </a>
@@ -594,7 +569,7 @@ h6 { font-size: 0.75rem !important; }
                         <li class="nav-item">
                             <a href="{{ route('logout') }}" class="nav-link"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="nav-icon bi bi-arrow-counterclockwise"></i>
+                                <i class="nav-icon bi bi-unlock-fill"></i>
                                 <p>Logout</p>
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -623,7 +598,7 @@ h6 { font-size: 0.75rem !important; }
                             </span>
                         @endif
                             <div class="input-group-text">
-                                <span class="bi bi-envelope"></span>
+                                <span class="bi bi-envelope-fill"></span>
                             </div>
                     </div>
 
@@ -676,7 +651,7 @@ h6 { font-size: 0.75rem !important; }
               <div class="col-sm-6"><h2 class="mb-0">@yield('page_title')</h2></div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fa fa-dashboard me-2"></i>Dashboard</a></li>
+                  <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
                   <li class="breadcrumb-item active" aria-current="page">@yield('breadcrumb')</li>
                 </ol></li>
                 </ol>

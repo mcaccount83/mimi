@@ -32,7 +32,7 @@
                     </span>
                 @endif
                 <div class="input-group-text">
-                <span class="fas fa-envelope"></span>
+                <span class="bi bi-envelope-fill"></span>
                 </div>
             </div>
             <div class="row">

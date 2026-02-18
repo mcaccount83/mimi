@@ -153,7 +153,7 @@
                             <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
-                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Payment') }}</button>
+                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Payment') }}</button>
 
                             @if($chActiveId != '1')
                                 <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary bg-gradient mb-2" id="btn-back"><i class="bi bi-chevron-double-left me-2"></i>Back to Checklist</a>

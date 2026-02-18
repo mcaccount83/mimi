@@ -322,7 +322,7 @@
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
 
-                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Application') }}</button>
+                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Application') }}</button>
                         </div>
                     </form>
                 </div>
@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update submit button text and warning message
         const submitButton = document.querySelector('button[type="submit"]');
         if (submitButton) {
-            submitButton.innerHTML = '<i class="fas fa-share"></i>&nbsp;Submit Application';
+            submitButton.innerHTML = '<i class="bi bi-chevron-double-right me-2"></i>Submit Application';
         }
 
         // Update the submit section warning message for non-payment submissions
@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update submit button text and warning message
         const submitButton = document.querySelector('button[type="submit"]');
         if (submitButton) {
-            submitButton.innerHTML = '<i class="fas fa-share"></i>&nbsp;Submit Payment';
+            submitButton.innerHTML = '<i class="bi bi-chevron-double-right me-2"></i>Submit Payment';
         }
 
         // Update the submit section warning message for payment submissions

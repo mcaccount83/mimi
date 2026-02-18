@@ -73,18 +73,12 @@
                     </div>
                 </div>
 
-                {{-- <div class="row mb-3" id="reviewNotes">
-                    <label for="AssignedReviewer">Reviewer Notes:</label>
-                    <small>Not visible to chapter</small>
-                    <textarea class="form-control" style="width:100%" rows="6" name="review_notes" id="review_notes">{{ $grantDetails['review_notes'] }}</textarea>
-                </div> --}}
-
                 <div class="row mb-3" >
                     <label for="Review_Note">Add New Note:</label>
                 <textarea class="form-control" style="width:100%" rows="3" name="Review_Note" id="Review_Note" {{ $grantDetails['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                 <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
                     <button type="button" id="AddNote" class="btn btn-success bg-gradient btn-sm mb-2 disabled" disabled>
-                    <i class="fa fa-plus fa-fw" aria-hidden="true"></i>&nbsp; Add Note to Log
+                    <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                 </button>
                     </div>
                 </div>
@@ -160,16 +154,16 @@
                 <button type="submit" id="save" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Grant Review</button>
                 <br>
                 @if ($grantDetails->review_complete != null && $grantDetails->submitted != null)
-                    <button type="button" class="btn btn-success bg-gradient mb-2" id="review-clear"><i class="fas fa-minus-circle me-2"></i>Clear Review Complete</button>
+                    <button type="button" class="btn btn-success bg-gradient mb-2" id="review-clear"><i class="bi bi-dash-circle me-2"></i>Clear Review Complete</button>
                 @else
-                    <button type="button" class="btn btn-success bg-gradient mb-2" id="review-complete"><i class="fas fa-check me-2"></i>Mark as Review Complete</button>
+                    <button type="button" class="btn btn-success bg-gradient mb-2" id="review-complete"><i class="bi bi-check-lg me-2"></i>Mark as Review Complete</button>
                 @endif
-                    <button type="button" class="btn btn-danger bg-gradient mb-2" id="unsubmit"><i class="fas fa-undo me-2"></i>UnSubmit Request</button>
+                    <button type="button" class="btn btn-danger bg-gradient mb-2" id="unsubmit"><i class="bi bi-arrow-counterclockwise me-2"></i>UnSubmit Request</button>
                 <br><br>
                 @if ($grantDetails->grant_pdf_path != null)
-                    <button class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $grantDetails->grant_pdf_path }}')"><i class="fas fa-file-pdf me-2"></i>View/Download Grant Request PDF</button>
+                    <button class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $grantDetails->grant_pdf_path }}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Grant Request PDF</button>
                 @else
-                    <button class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="fas fa-file-pdf me-2"></i>No PDF Report Available</button><br>
+                    <button class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>No PDF Report Available</button><br>
                 @endif
                 @if($chDetails != null)
                     <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.paymenthistory', $grantDetails->chapter_id) }}'"><i class="fas fa-hand-holding-dollar me-2" ></i>Chapter Donation History</button>

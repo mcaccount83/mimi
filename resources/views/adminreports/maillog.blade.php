@@ -55,7 +55,7 @@
                                                    data-to="{{ $log->to }}"
                                                    data-cc="{{ $log->cc ?? '' }}"
                                                    data-bcc="{{ $log->bcc ?? '' }}">
-                                                    <i class="bi bi-eye-fill"></i>
+                                                    <i class="bi bi-eye"></i>
                                                 </a>
                                             </td>
                                             <td>{{ $log->date }}</td>
@@ -103,7 +103,7 @@
                                                    data-to="{{ $log->to }}"
                                                    data-cc="{{ $log->cc ?? '' }}"
                                                    data-bcc="{{ $log->bcc ?? '' }}">
-                                                    <i class="bi bi-eye-fill"></i>
+                                                    <i class="bi bi-eye"></i>
                                                 </a>
                                             </td>
                                             <td>{{ $log->date }}</td>
@@ -151,7 +151,7 @@
                                                    data-to="{{ $log->to }}"
                                                    data-cc="{{ $log->cc ?? '' }}"
                                                    data-bcc="{{ $log->bcc ?? '' }}">
-                                                    <i class="bi bi-eye-fill"></i>
+                                                    <i class="bi bi-eye"></i>
                                                 </a>
                                             </td>
                                             <td>{{ $log->date }}</td>

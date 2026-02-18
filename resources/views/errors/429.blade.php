@@ -44,7 +44,7 @@
         <h2 class="headline text-warning"> 429</h2>
 
         <div class="error-content">
-          <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops! Too many requests.</h3>
+          <h3><i class="bi bi-exclamation-triangle text-warning"></i> Oops! Too many requests.</h3>
 
           <p>
             We will work on fixing that right away.<br>

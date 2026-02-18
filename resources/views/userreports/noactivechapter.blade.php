@@ -36,9 +36,9 @@
                   <tr>
                     <td>
                         @if($list->type_id == \App\Enums\UserTypeEnum::COORD)
-                            <a href="{{ url("/userreports/editusercoord/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a>
+                            <a href="{{ url("/userreports/editusercoord/{$list->id}") }}"><i class="bi bi-eye"></i></a>
                         @else
-                            <a href="{{ url("/userreports/edituserboard/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a>
+                            <a href="{{ url("/userreports/edituserboard/{$list->id}") }}"><i class="bi bi-eye"></i></a>
                         @endif
                     </td>
                         <td>{{ $list->id }}</td>

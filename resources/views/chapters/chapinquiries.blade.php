@@ -44,12 +44,12 @@
 				@php $row = 0; @endphp
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye-fill"></i></td>
+                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye"></i></td>
                         <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyEmail({{ $row }});" style="background-color: transparent; border: none;">
-                            <i class="far fa-copy fa-lg text-primary" ></i></button>
+                            <i class="bi bi-copy"></i></button>
                         </td>
                         <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp({{ $row }});" style="background-color: transparent; border: none;">
-                            <i class="far fa-copy fa-lg text-primary" ></i></button>
+                            <i class="bi bi-copy"></i></button>
                         </td>
                         <td>{{$list->status->inquiries_status}}</td>
                         <td>

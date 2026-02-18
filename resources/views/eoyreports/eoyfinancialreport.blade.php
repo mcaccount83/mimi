@@ -57,7 +57,7 @@
                         </td>
                         <td class="text-center align-middle">
                             @if($list->documentsEOY->financial_report_received == '1' && $list->documentsEOY->$yearColumnName != null)
-                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $list->documentsEOY->$yearColumnName }}"><i class="far fa-file-pdf"></i></a>
+                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $list->documentsEOY->$yearColumnName }}"><i class="bi bi-file-earmark-pdf"></i></a>
                             @endif
                         </td>
                         <!-- Email link to be dynamically populated via AJAX -->
@@ -65,7 +65,7 @@
                             @if($list->documentsEOY->financial_report_received == null || $list->documentsEOY->financial_report_received == 0)
                                 <a href="#" class="email-link" data-chapter-name="{{ $list->name }}" data-chapter-id="{{ $list->id }}" data-user-name="{{ $userName }}"
                                     data-user-position="{{ $userPosition }}" data-user-conf-name="{{ $userConfName }}" data-user-conf-desc="{{ $userConfDesc }}"
-                                    data-predefined-subject="Financial Report Reminder" data-message-id="msg-{{ $list->id }}"> <i class="far fa-envelope text-primary"></i></a>
+                                    data-predefined-subject="Financial Report Reminder" data-message-id="msg-{{ $list->id }}"> <i class="bi bi-envelope text-primary"></i></a>
                                     <textarea id="msg-{{ $list->id }}" class="d-none">{{ $renderedHtml = View::make('emails.endofyear.financialreportreminder',
                                         ['mailData' => $mailData, 'minimal' => true, ])->render(); }}</textarea>
                             @endif
@@ -147,7 +147,7 @@
 
               <div class="card-body text-center mt-3">
                 @if ($regionalCoordinatorCondition)
-                    <a href="{{ route('eoyreports.eoyfinancialreportreminder') }}" onclick="return confirmSendFinancialRptReminder();"><button class="btn btn-primary bg-gradient mb-2"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Financial Report Reminders</button></a>
+                    <a href="{{ route('eoyreports.eoyfinancialreportreminder') }}" onclick="return confirmSendFinancialRptReminder();"><button class="btn btn-primary bg-gradient mb-2"><i class="bi bi-envelope-fill me-2"></i>Send Financial Report Reminders</button></a>
                 @endif
              </div>
             <!-- /.card-body for buttons -->

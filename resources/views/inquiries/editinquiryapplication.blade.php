@@ -81,32 +81,29 @@
                                 @if (($inqDetails->response != 1) && ($inqDetails->chapter_id != null))
                                     <button type="button" class="btn btn-success bg-gradient btn-sm m-1"
                                         onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $chDetails->name }}', {{ $chapterId }})">
-                                        <i class="fas fa-envelope me-2"></i>YES CHAPTER RESPONSE</button>
+                                        <i class="bi bi-envelope-fill me-2"></i>YES CHAPTER RESPONSE</button>
                                 @elseif ($inqDetails->response != 1)
                                     <button type="button" class="btn btn-success bg-gradient btn-sm m-1" disabled>
-                                        <i class="fas fa-envelope me-2"></i>YES CHAPTER RESPONSE</button>
+                                        <i class="bi bi-envelope-fill me-2"></i>YES CHAPTER RESPONSE</button>
                                 @endif
 
                                 @if ($inqDetails->response != 1)
                                     <button type="button" class="btn btn-danger bg-gradient btn-sm m-1"
                                         onclick="showNoChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}')">
-                                        <i class="fas fa-envelope me-2"></i>NO CHAPTER RESPONSE</button>
-                                {{-- @else
-                                    <button type="button" class="btn btn-danger bg-gradient btn-sm m-1" disabled>
-                                        <i class="fas fa-envelope me-2"></i>NO CHAPTER RESPONSE</button> --}}
+                                        <i class="bi bi-envelope-fill me-2"></i>NO CHAPTER RESPONSE</button>
                                 @endif
                                 <br>
                                 <button type="button" class="btn btn-primary bg-gradient btn-sm m-1"
                                     onclick="showMemberInquiryEmailModal('{{ $inqDetails->id }}', '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
-                                    <i class="fas fa-envelope me-2"></i>SEND CUSTOM EMAIL TO MEMBER</button>
+                                    <i class="bi bi-envelope-fill me-2"></i>SEND CUSTOM EMAIL TO MEMBER</button>
                                 <br>
                                 @if ($inqDetails->chapter_id != null)
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm m-1"
                                         onclick="showChapterInquiryEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $inqDetails->id }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
-                                        <i class="fas fa-envelope me-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
+                                        <i class="bi bi-envelope-fill me-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
                                 @else
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm m-1" disabled>
-                                        <i class="fas fa-envelope me-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
+                                        <i class="bi bi-envelope-fill me-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
                                 @endif
 
                                  @if ($inqDetails->response != 1)
@@ -121,7 +118,7 @@
                                     </form>
                                     <button type="button" class="btn btn-success bg-gradient btn-sm m-1"
                                             onclick="document.getElementById('mark-response-form').submit()">
-                                        <i class="fas fa-check me-2"></i>MARK RESPONSE AS SENT
+                                        <i class="bi bi-check-lg me-2"></i>MARK RESPONSE AS SENT
                                     </button>
                                 @elseif ($inqDetails->response == 1)
                                      <br>
@@ -134,7 +131,7 @@
                                     </form>
                                     <button type="button" class="btn btn-danger bg-gradient btn-sm m-1"
                                             onclick="document.getElementById('mark-response-form').submit()">
-                                        <i class="fas fa-ban me-2"></i>CLEAR SENT RESPONSE
+                                        <i class="bi bi-ban me-2"></i>CLEAR SENT RESPONSE
                                     </button>
                                 @endif
                             </div>

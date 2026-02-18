@@ -54,14 +54,14 @@
                         <tr>
                             <td class="text-center align-middle">
                                 @if($coordinatorCondition)
-                                    <a href="{{ url("/eoyreports/editstatus/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a>
+                                    <a href="{{ url("/eoyreports/editstatus/{$list->id}") }}"><i class="bi bi-eye"></i></a>
                                 @endif
                             </td>
                             <td class="text-center align-middle">
                                 @if ($list->documentsEOY->new_board_submitted == null || $list->documentsEOY->financial_report_received == null || $list->documentsEOY->new_board_submitted == 0 || $list->documentsEOY->financial_report_received == 0)
                                    <a href="#" class="email-link" data-chapter-name="{{ $list->name }}" data-chapter-id="{{ $list->id }}" data-user-name="{{ $userName }}"
                                     data-user-position="{{ $userPosition }}" data-user-conf-name="{{ $userConfName }}" data-user-conf-desc="{{ $userConfDesc }}"
-                                    data-predefined-subject="End of Year Reports Late Notice" data-message-id="msg-{{ $list->id }}"> <i class="far fa-envelope text-primary"></i></a>
+                                    data-predefined-subject="End of Year Reports Late Notice" data-message-id="msg-{{ $list->id }}"> <i class="bi bi-envelope text-primary"></i></a>
                                     <textarea id="msg-{{ $list->id }}" class="d-none">{{ $renderedHtml = View::make('emails.endofyear.latereportreminder',
                                         ['mailData' => $mailData, 'minimal' => true, ])->render(); }}</textarea>
                                 @endif
@@ -141,7 +141,7 @@
 
                 <div class="card-body text-center mt-3">
                 @if ($regionalCoordinatorCondition)
-                    <a href="{{ route('eoyreports.eoystatusreminder') }}" onclick="return confirmSendEOYRptReminder();"> <button class="btn btn-primary bg-gradient mb-2"><i class="fas fa-envelope"></i>&nbsp;&nbsp;&nbsp;Send EOY Late Notices </button> </a>
+                    <a href="{{ route('eoyreports.eoystatusreminder') }}" onclick="return confirmSendEOYRptReminder();"> <button class="btn btn-primary bg-gradient mb-2"><i class="bi bi-envelope-fill me-2"></i>Send EOY Late Notices </button> </a>
                 @endif
                 @if ($assistConferenceCoordinatorCondition)
                     @if ($checkBox3Status)

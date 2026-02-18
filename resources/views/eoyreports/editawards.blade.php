@@ -198,10 +198,10 @@
                     <!-- Add/Remove Row Buttons -->
                     <div class="col-md-12 float-start">
                         <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddChapterAwardsRow()">
-                            <i class="fas fa-plus"></i>&nbsp; Add Row
+                            <i class="bi bi-plus me-2"></i>Add Row
                         </button>
                         <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteChapterAwardsRow()">
-                            <i class="fas fa-minus"></i>&nbsp; Remove Row
+                            <i class="bi bi-dash me-2"></i>Remove Row
                         </button>
                     </div>
                     <input type="hidden" name="ChapterAwardsRowCount" id="ChapterAwardsRowCount" value="{{ $ChapterAwardsRowCount }}" />

@@ -452,26 +452,6 @@
                                 </div>
                             </div>
 
-                                {{-- <div class="row mb-3">
-                                    <label class="col-sm-12 col-form-label">Website:</label>
-                                    <div class="col-sm-12">
-                                        <input type="text" name="ch_website" id="ch_website" class="form-control"
-                                               value="{{$chDetails->website_url}}"
-                                               placeholder="Chapter Website">
-                                    </div>
-                            <div class="col-sm-8">
-                                <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;" required>
-                                    <option value="">Select Status</option>
-                                    @foreach($allWebLinks as $status)
-                                        <option value="{{$status->id}}"
-                                            @if($chDetails->website_status == $status->id) selected @endif>
-                                            {{$status->link_status}}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div> --}}
-
                         <!-- /.form group -->
                         <div class="row mb-3">
                             <label class="col-sm-12 col-form-label">Social Media:</label>
@@ -509,7 +489,7 @@
                             <form method="POST" action="#" onsubmit="return validateBeforeSubmit(true)">
                                 @csrf
                                 @if ($chDetails->documentsEOY->new_board_submitted != 1)
-                                    <button type="submit" class="btn btn-primary bg-gradient me-1"><i class="fas fa-mail-forward me-2"></i>Submit</button>
+                                    <button type="submit" class="btn btn-primary bg-gradient me-1"><i class="bi bi-chevron-double-right me-2"></i>Submit</button>
                                 @else
                                     <button type="submit" class="btn btn-primary bg-gradient me-1"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                                 @endif
@@ -517,12 +497,12 @@
 
                             @if ($chDetails->documentsEOY->new_board_submitted == '1' && $PresDetails->first_name != null)
                            <form id="activateSingleBoardForm" action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST">
-    @csrf
-    <input type="hidden" name="board" value="active">
-    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmActivateSingleBoard()">
-        <i class="fas fa-play me-2"></i>Activate Board
-    </button>
-</form>
+                                @csrf
+                                <input type="hidden" name="board" value="active">
+                                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmActivateSingleBoard()">
+                                    <i class="fas fa-play me-2"></i>Activate Board
+                                </button>
+                            </form>
                             @endif
                         </div>
                     @endif

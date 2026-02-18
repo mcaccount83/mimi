@@ -159,7 +159,7 @@
                         </div>
 
                           <div class="card-body text-center mt-3">
-                            <button type="submit" id="btn-submit" class="btn btn-primary bg-gradient mb-2"><i class="fas fa-share-square"></i>&nbsp; Continue to Grant Request</button>
+                            <button type="submit" id="btn-submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>Continue to Grant Request</button>
                         </div>
 
                 </div>

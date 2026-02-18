@@ -65,7 +65,7 @@
                             <tr>
                                 <td  class="text-center align-middle">
                                     @if ($ITCondition)
-                                    <a href="{{ route('adminreports.paymentdetails', $log->id) }}"><i class="bi bi-eye-fill"></i></a>
+                                    <a href="{{ route('adminreports.paymentdetails', $log->id) }}"><i class="bi bi-eye"></i></a>
                                     @else
                                     @endif
                                 </td>

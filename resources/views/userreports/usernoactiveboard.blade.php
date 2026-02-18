@@ -37,7 +37,7 @@
                 @foreach($bdNoChapterList as $list)
                   <tr>
                     <td>
-                            <a href="{{ url("/userreports/edituser/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a>
+                            <a href="{{ url("/userreports/edituser/{$list->id}") }}"><i class="bi bi-eye"></i></a>
                     </td>
                         <td>{{ $list->id }}</td>
                         {{-- <td>{{ $list->board->chapter_id }}</td> --}}

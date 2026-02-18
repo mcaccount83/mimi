@@ -50,10 +50,10 @@
                             </td>
                             <td class="text-center align-middle">
                                 @if ($due && !$overdue)
-                                    <a onclick="showChapterReRegEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="far fa-envelope text-primary"></i></a>
+                                    <a onclick="showChapterReRegEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
                                 @endif
                                 @if ($overdue == 1)
-                                    <a onclick="showChapterReRegLateEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="far fa-envelope text-primary"></i></a>
+                                    <a onclick="showChapterReRegLateEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
                                 @endif
                                 @if ($overdue > 1)
 
@@ -137,11 +137,8 @@
                 <div class="card-body text-center mt-3">
                     @if($conferenceCoordinatorCondition)
                         @if(!$checkBox1Status && !$checkBox3Status && !$checkBox51Status && !$checkBox56Status)
-                            {{-- <button class="btn btn-primary bg-gradient mb-2 disabled" disabled><i class="fas fa-envelope me-2" ></i>Send Current Month Reminders</button>
-                            <button class="btn btn-primary bg-gradient mb-2 disabled" disabled><i class="fas fa-envelope me-2" ></i>Send One Month Late Notices</button>
-                        @else --}}
-                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('payment.chapreregreminder') }}"><i class="fas fa-envelope me-2" ></i>Send Current Month Reminders</a>
-                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('payment.chaprereglatereminder') }}"><i class="fas fa-envelope me-2" ></i>Send One Month Late Notices</a>
+                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('payment.chapreregreminder') }}"><i class="bi bi-envelope-fill me-2"></i>Send Current Month Reminders</a>
+                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('payment.chaprereglatereminder') }}"><i class="bi bi-envelope-fill me-2"></i>Send One Month Late Notices</a>
                         @endif
                         @if ($checkBox3Status)
                             <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')"><i class="bi bi-download me-2"></i>Export Overdue Re-Reg List</button>

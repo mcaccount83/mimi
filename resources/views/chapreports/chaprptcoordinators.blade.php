@@ -44,7 +44,7 @@
                         @endphp
                         <tr>
                             <td class="text-center align-middle">
-                                <a href="{{ url('/chapter/details/' . $chapter->id) }}"><i class="bi bi-eye-fill"></i></a>
+                                <a href="{{ url('/chapter/details/' . $chapter->id) }}"><i class="bi bi-eye"></i></a>
                             </td>
                             <td>
                                 @if ($chapter->state->conference_id > 0)

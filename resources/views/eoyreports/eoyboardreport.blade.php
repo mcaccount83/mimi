@@ -48,14 +48,14 @@
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle">
                             @if ($assistConferenceCoordinatorCondition)
-                               <a href="{{ url("/eoyreports/editboardreport/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a>
+                               <a href="{{ url("/eoyreports/editboardreport/{$list->id}") }}"><i class="bi bi-eye"></i></a>
                            @endif
                         </td>
                             <td class="text-center align-middle">
                                 @if ($list->documentsEOY->new_board_submitted == null || $list->documentsEOY->new_board_submitted == 0)
                                     <a href="#" class="email-link" data-chapter-name="{{ $list->name }}" data-chapter-id="{{ $list->id }}" data-user-name="{{ $userName }}"
                                     data-user-position="{{ $userPosition }}" data-user-conf-name="{{ $userConfName }}" data-user-conf-desc="{{ $userConfDesc }}"
-                                    data-predefined-subject="Board Election Report Reminder" data-message-id="msg-{{ $list->id }}"> <i class="far fa-envelope text-primary"></i></a>
+                                    data-predefined-subject="Board Election Report Reminder" data-message-id="msg-{{ $list->id }}"> <i class="bi bi-envelope text-primary"></i></a>
                                     <textarea id="msg-{{ $list->id }}" class="d-none">{{ $renderedHtml = View::make('emails.endofyear.electionreportreminder',
                                         ['mailData' => $mailData, 'minimal' => true, ])->render(); }}</textarea>
                                 @endif
@@ -127,7 +127,7 @@
                 <div class="card-body text-center mt-3">
                 <div class="d-flex justify-content-center align-items-start flex-wrap">
 				@if ($regionalCoordinatorCondition)
-                    <a href="{{ route('eoyreports.eoyboardreportreminder') }}" onclick="return confirmSendBoardRptReminder();">><button class="btn btn-primary bg-gradient mb-2"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Board Election Reminders</button></a>
+                    <a href="{{ route('eoyreports.eoyboardreportreminder') }}" onclick="return confirmSendBoardRptReminder();">><button class="btn btn-primary bg-gradient mb-2"><i class="bi bi-envelope-fill me-2"></i>Send Board Election Reminders</button></a>
 				@endif
                 @if ($assistConferenceCoordinatorCondition)
                     <form id="activateAllBoardsForm" action="{{ route('eoyreports.eoyboardreport') }}" method="GET">

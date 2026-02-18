@@ -47,7 +47,7 @@
                         <p><strong>RESET IN DECEMBER.</strong><br>
                             Reset Data to disable all menus and buttons back to *ADMIN* ONLY and prep for New Year before dates auto change to new year on all Buttons/Links/Emails/Forms.</p>
                             <h5>This CANNOT be undone!</h5>
-                            <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="fas fa-undo" ></i>&nbsp;&nbsp;&nbsp;Reset for New Year</button>
+                            <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset for New Year</button>
                     </div>
                     <div class="col-md-12"><br></div>
                 </div>
@@ -61,7 +61,7 @@
                                 <h3 class="card-title">#1 - Reset Tables BEFORE testing</h3><br>
                                 <p style="color: #007bff; font-weight: bold;">Complete in Feb/March to prepare for data for testing.</p>
                                 <h5>This CANNOT be undone!</h5>
-                                <button type="button" id="update-eoy-database" class="btn btn-primary bg-gradient mb-2"><i class="fas fa-undo me-2"></i>Reset EOY Tables Data Tables</button>
+                                <button type="button" id="update-eoy-database" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset EOY Tables Data Tables</button>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -71,9 +71,9 @@
                                 @foreach($resetEOYTableItems as $item)
                                     <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                         @if($admin->reset_eoy_tables == 1)
-                                            <i class="fas fa-check me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-check2-square me-2 ms-2"></i>{{ $item }}
                                         @else
-                                            <i class="far fa-square me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-square me-2 ms-2"></i>{{ $item }}
                                         @endif
                                     </li>
                                 @endforeach
@@ -98,9 +98,9 @@
                                 @foreach($displayTestingItemsItems as $item)
                                     <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                         @if($admin->display_testing == 1)
-                                            <i class="fas fa-check me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-check2-square me-2 ms-2"></i>{{ $item }}
                                         @else
-                                            <i class="far fa-square me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-square me-2 ms-2"></i>{{ $item }}
                                         @endif
                                     </li>
                                 @endforeach
@@ -115,7 +115,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">#3 - Reset Tables AFTER testing is complete</h3><br>
                                 <p style="color: #007bff; font-weight: bold;">Complete in May, after testing, so all data tables are clean and ready to go.</p>
-                                <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-2"><i class="fas fa-undo me-2"></i>Reset Database AFTER Testing</button>
+                                <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -125,9 +125,9 @@
                                 @foreach($resetAFTERtestingItems as $item)
                                     <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                         @if($admin->reset_AFTER_testing == 1)
-                                            <i class="fas fa-check me-2 ms-2"></i>{{ $item }}reset_AFTER_testing
+                                            <i class="bi bi-check2-square me-2 ms-2"></i>{{ $item }}reset_AFTER_testing
                                         @else
-                                            <i class="far fa-square me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-square me-2 ms-2"></i>{{ $item }}
                                         @endif
                                     </li>
                                 @endforeach
@@ -143,7 +143,7 @@
                                 <h3 class="card-title">#4 - Copy User Data to New Tables</h3><br>
                                 <p style="color: #007bff; font-weight: bold;">Complete in May, before going live to save old board/coordinator/user information.</p>
                                 <h5>This CANNOT be undone!</h5>
-                                <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-2"><i class="fas fa-undo me-2"></i>Update User Data Tables</button>
+                                <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Update User Data Tables</button>
 
                             </div>
                             <!-- /.card-header -->
@@ -154,9 +154,9 @@
                                 @foreach($updateUserTablesItems as $item)
                                     <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                         @if($admin->update_user_tables == 1)
-                                            <i class="fas fa-check me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-check2-square me-2 ms-2"></i>{{ $item }}
                                         @else
-                                            <i class="far fa-square me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-square me-2 ms-2"></i>{{ $item }}
                                         @endif
                                     </li>
                                 @endforeach
@@ -181,9 +181,9 @@
                                 @foreach($unSubscribeListItems as $item)
                                     <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                         @if($admin->unsubscribe_list == 1)
-                                            <i class="fas fa-check me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-check2-square me-2 ms-2"></i>{{ $item }}
                                         @else
-                                            <i class="far fa-square me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-square me-2 ms-2"></i>{{ $item }}
                                         @endif
                                     </li>
                                 @endforeach
@@ -208,9 +208,9 @@
                                 @foreach($displayLiveItemsItems as $item)
                                     <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                         @if($admin->display_live == 1)
-                                            <i class="fas fa-check me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-check2-square me-2 ms-2"></i>{{ $item }}
                                         @else
-                                            <i class="far fa-square me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-square me-2 ms-2"></i>{{ $item }}
                                         @endif
                                     </li>
                                 @endforeach
@@ -235,9 +235,9 @@
                                 @foreach($subscribeListItems as $item)
                                     <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                         @if($admin->subscribe_list == 1)
-                                            <i class="fas fa-check me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-check2-square me-2 ms-2"></i>{{ $item }}
                                         @else
-                                            <i class="far fa-square me-2 ms-2"></i>{{ $item }}
+                                            <i class="bi bi-square me-2 ms-2"></i>{{ $item }}
                                         @endif
                                     </li>
                                 @endforeach

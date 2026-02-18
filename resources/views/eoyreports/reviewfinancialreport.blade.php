@@ -324,34 +324,34 @@
             <br>
             <button type="submit" id="btn-step-14" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
             <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Financial Report Review')">
-                <i class="fa fa-envelope me-2"></i>Email Board</button>
+                <i class="bi bi-envelope-fill me-2"></i>Email Board</button>
             <br>
             @if ($chEOYDocuments->financial_review_complete != "" && $chEOYDocuments->financial_report_received)
                 @if ($regionalCoordinatorCondition)
-                    <button type="button" class="btn btn-success bg-gradient mb-2" id="review-clear"><i class="fas fa-minus-circle me-2"></i>Clear Review Complete</button>
+                    <button type="button" class="btn btn-success bg-gradient mb-2" id="review-clear"><i class="bi bi-ban me-2"></i>Clear Review Complete</button>
                 @else
-                    <button type="button" class="btn btn-success bg-gradient mb-2 disabled" disabled><i class="fas fa-minus-circle me-2"></i>Clear Review Complete</button>
+                    <button type="button" class="btn btn-success bg-gradient mb-2 disabled" disabled><i class="bi bi-ban me-2"></i>Clear Review Complete</button>
                 @endif
             @else
-                <button type="button" class="btn btn-success bg-gradient mb-2" id="review-complete"><i class="fas fa-check me-2"></i>Mark as Review Complete</button>
+                <button type="button" class="btn btn-success bg-gradient mb-2" id="review-complete"><i class="bi bi-check-lg me-2"></i>Mark as Review Complete</button>
             @endif
-                <button type="button" class="btn btn-danger bg-gradient mb-2" id="unsubmit"><i class="fas fa-undo me-2"></i>UnSubmit Report</button>
+                <button type="button" class="btn btn-danger bg-gradient mb-2" id="unsubmit"><i class="bi bi-arrow-counterclockwise me-2"></i>UnSubmit Report</button>
             @if ($chEOYDocuments->financial_review_complete != 1)
                 <br>
                 <span style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
             @endif
             <br><br>
             @if ($chEOYDocuments->$yearColumnName != null)
-                <button class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')"><i class="fas fa-file-pdf me-2"></i>View/Download Financial Report PDF</button>
+                <button class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Financial Report PDF</button>
             @else
-                <button class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="fas fa-file-pdf me-2"></i>No PDF Report Available</button>
+                <button class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>No PDF Report Available</button>
             @endif
             @if ($chEOYDocuments->$yearColumnName != null && $chEOYDocuments->financial_report_received)
                 <br>
-                <button type="button" id="generate-pdf" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="generateFinancialReport()"><i class="fas fa-rotate me-2"></i>Regenerate Financial PDF</button>
+                <button type="button" id="generate-pdf" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="generateFinancialReport()"><i class="bi bi-arrow-repeat me-2"></i>Regenerate Financial PDF</button>
             @elseif ($chEOYDocuments->$yearColumnName == null && $chEOYDocuments->financial_report_received)
                 <br>
-                <button type="button" id="generate-pdf" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="generateFinancialReport()"><i class="fas fa-rotate me-2"></i>Generate Financial PDF</button>
+                <button type="button" id="generate-pdf" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="generateFinancialReport()"><i class="bi bi-arrow-repeat me-2"></i>Generate Financial PDF</button>
             @endif
         </div>
         </li>
@@ -562,13 +562,13 @@
                                         <div class="col-12" id="RosterBlock">
                                             <strong style="color:red">Please Note</strong><br>
                                                 This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Roster File</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Roster File</button>
                                     </div>
                                 @else
                                     <div class="col-12" id="RosterBlock">
                                             <strong style="color:red">Please Note</strong><br>
                                                 This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Roster File</button>
                                     </div>
                                 @endif
                                 <input type="hidden" name="RosterPath" id="RosterPath" value="{{ $chEOYDocuments->roster_path }}">
@@ -606,7 +606,7 @@
                                             <label for="Step1_Note">Add New Note:</label>
                                             <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(1)" name="Step1_Note" id="Step1_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                             <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                                <button type="button" id="AddNote1" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(1)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                                <button type="button" id="AddNote1" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(1)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
                                             </div>
                                         </div>
                                     </div>
@@ -756,7 +756,7 @@
                                                     <label for="Step2_Note">Add New Note:</label>
                                                     <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(2)" name="Step2_Note" id="Step2_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                                     <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                                        <button type="button" id="AddNote2" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(2)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                                        <button type="button" id="AddNote2" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(2)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
                                                 </div>
                                                 </div>
                                             </div>
@@ -915,7 +915,7 @@
 										<label for="Step3_Note">Add New Note:</label>
                                         <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                         <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                            <button type="button" id="AddNote3" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(3)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                            <button type="button" id="AddNote3" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(3)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
 								        </div>
                                         </div>
                                     </div>
@@ -1053,7 +1053,7 @@
                                         <label for="Step4_Note">Add New Note:</label>
                                         <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote4" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(4)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <button type="button" id="AddNote4" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(4)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
                                     </div>
                                 </div>
                             </div>
@@ -1154,7 +1154,7 @@
 								<label for="Step5_Note">Add New Note:</label>
                                         <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                 <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-								<button type="button" id="AddNote5" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(5)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+								<button type="button" id="AddNote5" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(5)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
 						    </div>
                         </div>
                     </div>
@@ -1281,7 +1281,7 @@
                                     <label for="Step6_Note">Add New Note:</label>
                                             <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote6" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(6)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <button type="button" id="AddNote6" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(6)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
                                 </div>
                             </div>
                         </div>
@@ -1430,7 +1430,7 @@
 										<label for="Step7_Note">Add New Note:</label>
                                             <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                         <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-										<button type="button" id="AddNote7" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+										<button type="button" id="AddNote7" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(7)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
 								</div>
                             </div>
                         </div>
@@ -1538,7 +1538,7 @@
 									<label for="Step8_Note">Add New Note:</label>
                                         <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(8)" name="Step8_Note" id="Step8_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-									<button type="button" id="AddNote8" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+									<button type="button" id="AddNote8" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(8)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
 							</div>
                         </div>
                     </div>
@@ -1687,7 +1687,7 @@
                             <label for="Step9_Note">Add New Note:</label>
                             <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                             <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                            <button type="button" id="AddNote9" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                            <button type="button" id="AddNote9" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(9)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
                     </div>
                 </div>
             </div>
@@ -1844,9 +1844,9 @@
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
                                         @if (!is_null($chEOYDocuments->statement_1_path))
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Bank Statement</button>
                                         @else
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Bank Statement</button>
                                         @endif
                                     </div>
                                         <input type="hidden" name="StatementFile" id="StatementPath" value="{{ $chEOYDocuments->statement_1_path }}">
@@ -1854,9 +1854,9 @@
                                     <div class="col-12"><br></div>
                                     <div class="col-12" id="Statement2Block">
                                         @if (!is_null($chEOYDocuments->statement_2_path))
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Additional Bank Statement</button>
                                         @else
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Additional Bank Statement</button>
                                         @endif
                                     </div>
                                         <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chEOYDocuments->statement_2_path }}">
@@ -1932,7 +1932,7 @@
                                 <div class="row mb-3">
                                         <label for="Step10_Note">Add New Note:</label>
                                             <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                        <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote10" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <button type="button" id="AddNote10" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(10)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
                                     </div>
                                 </div>
                             </div>
@@ -1991,13 +1991,13 @@
                                     <div class="col-12" id="990NBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace 990N File.<br>
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace 990N Confirmation</button>
                                 </div>
                             @else
                                 <div class="col-12" id="990NBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload 990N File.<br>
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload 990N Confirmation</button>
                                 </div>
                             @endif
 <input type="hidden" name="990NFiling" id="990NFiling" value="{{ $chEOYDocuments->irs_path }}">
@@ -2023,7 +2023,7 @@
                             <div class="row mb-3">
                                     <label for="Step11_Note">Add New Note:</label>
                                         <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                    <button type="button" id="AddNote11" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                    <button type="button" id="AddNote11" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(11)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
                                 </div>
                             </div>
                         </div>
@@ -2237,7 +2237,7 @@
                                         <div class="row mb-3">
                                             <label for="Step12_Note">Add New Note:</label>
                                                 <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                            <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                            <button type="button" id="AddNote12" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                            <button type="button" id="AddNote12" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(12)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
                                         </div>
                                     </div>
                                 </div>

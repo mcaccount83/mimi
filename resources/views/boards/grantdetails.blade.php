@@ -422,7 +422,7 @@
                                     <label class="me-2">Photos of Damage Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $grantDetails['photos_path'] }}">View Photos</a><br>
                                     <strong style="color:red">Please Note</strong>
                                         This will refresh the screen - be sure to save all other work before clicking button to Replace Photos.<br>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="fas fa-upload me-2"></i>Replace Photos</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Photos</button>
                                     <br>
                                 </div>
                         @else
@@ -430,7 +430,7 @@
                                     <label class="me-2">If there was damage to the member’s home or property, please upload any pictures here.</label><br>
                                     <strong style="color:red">Please Note</strong>
                                         This will refresh the screen - be sure to save all other work before clicking button to Upload Photos.<br>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="fas fa-upload me-2"></i>Upload Photos</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Photos</button>
                                     <br>
                                 </div>
                         @endif
@@ -494,7 +494,7 @@
                     </div>
 
                         <div class="card-body text-center mt-3">
-                            <button type="submit" id="btn-submit" class="btn btn-success bg-gradient mb-2"><i class="fas fa-share-square"></i>&nbsp; Submit Grant Request</button>
+                            <button type="submit" id="btn-submit" class="btn btn-success bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>Submit Grant Request</button>
                         </div>
                     </section>
                 </div>

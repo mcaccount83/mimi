@@ -183,8 +183,8 @@
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="updateEIN('{{ $chDetails->id }}')"><i class="fas fa-university me-2"></i>Update EIN Number</button>
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload me-2"></i>Update EIN Letter</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="updateEIN('{{ $chDetails->id }}')"><i class="bi bi-bank me-2"></i>Update EIN Number</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Update EIN Letter</button>
                     <br>
                     <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return PreSaveValidate();"><i class="bi bi-floppy-fill me-2"></i>Save IRS Information</button>
                 @endif

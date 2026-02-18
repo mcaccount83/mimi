@@ -198,7 +198,6 @@
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
-                {{-- <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showChapterSetupModalBlank()"><i class="fas fa-envelope me-2"></i>Send Chapter Startup Email</button> --}}
                 <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save New Chapter</button>
                 <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Pending Chapter List</button>
         </div>

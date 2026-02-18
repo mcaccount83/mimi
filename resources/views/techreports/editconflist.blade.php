@@ -19,7 +19,7 @@
                         </div>
                         <div class="card-tools">
                             <button class="btn btn-success bg-gradient btn-sm mb-2" onclick="addNewRow()">
-                                <i class="fas fa-plus"></i> Add Conference
+                                <i class="bi bi-plus me-2"></i> Add Conference
                             </button>
                         </div>
                     </div>
@@ -143,7 +143,7 @@ function editRow(button) {
             <i class="bi bi-floppy-fill me-2"></i>Save
         </button>
         <button class="btn btn-secondary bg-gradient btn-sm mb-2" onclick="cancelEdit(this.closest('tr'))">
-            <i class="fas fa-times"></i> Cancel
+            <i class="bi bi-x-lg me-2"></i>Cancel
         </button>
     `;
 }
@@ -275,7 +275,7 @@ function addNewRow() {
                 <i class="bi bi-floppy-fill me-2"></i>Save
             </button>
             <button class="btn btn-secondary bg-gradient btn-sm mb-2" onclick="cancelEdit(this.closest('tr'))">
-                <i class="fas fa-times"></i> Cancel
+                <i class="bi bi-x-lg me-2"></i>Cancel
             </button>
         </td>
     `;

@@ -135,7 +135,7 @@
             <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
                 <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Website Review')">
-                        <i class="fa fa-envelope me-2"></i>Email Board</button>
+                        <i class="bi bi-envelope-fill me-2"></i>Email Board</button>
                     <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Website Information</button>
                 <br>
                 @endif

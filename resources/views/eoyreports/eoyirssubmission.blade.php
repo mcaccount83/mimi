@@ -41,7 +41,7 @@
                     <tr>
                         <td class="text-center align-middle">
                             @if ($assistConferenceCoordinatorCondition)
-                               <a href="{{ url("/eoyreports/editirssubmission/{$list->id}") }}"><i class="bi bi-eye-fill"></i></i></a>
+                               <a href="{{ url("/eoyreports/editirssubmission/{$list->id}") }}"><i class="bi bi-eye"></i></i></a>
                            @endif
                         </td>
                         <td>
@@ -127,7 +127,7 @@
 
                 <div class="card-body text-center mt-3">
                         @if (($einCondition || $ITCondition) && ($checkBox51Status ?? '') == 'checked')
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="showIRSFilingCorrectionsModal()"><i class="fas fa-file-pdf me-2" ></i>990N Filing corrections to EO Dept</button>
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="showIRSFilingCorrectionsModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>990N Filing corrections to EO Dept</button>
                         @endif
           </div>
             <!-- /.card-body for buttons -->

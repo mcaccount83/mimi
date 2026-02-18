@@ -39,7 +39,7 @@
                     <tr >
                         <td class="text-center align-middle">
                             @if ($conferenceCoordinatorCondition)
-                                <a href="{{ url("/chapterreports/irsedit/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a>
+                                <a href="{{ url("/chapterreports/irsedit/{$list->id}") }}"><i class="bi bi-eye"></i></a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif
@@ -48,7 +48,7 @@
                             @if ($list->documents->ein_letter_path != null)
                                 <a href="{{ $list->documents->ein_letter_path }}"
                                     onclick="event.preventDefault(); openPdfViewer('{{ $list->documents->ein_letter_path }}');">
-                                    <i class="far fa-file-pdf"></i>
+                                    <i class="bi bi-file-earmark-pdf"></i>
                                     </a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
@@ -132,13 +132,9 @@
                 <br>
                     @if ($einCondition || $ITCondition)
                         @if ($checkBox51Status)
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf me-2" ></i>EO Dept Fax Coversheet</button>
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="showIRSUpdatesModal()"><i class="fas fa-file-pdf me-2" ></i>IRS Updates to EO Dept</button>
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="showSubordinateFilingModal()"><i class="fas fa-file-pdf me-2" ></i>Subordinate Filing PDF</button>
-                        {{-- @else
-                            <button class="btn btn-primary bg-gradient mb-2 disabled" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf me-2" disabled></i>EO Dept Fax Coversheet</button>
-                            <button class="btn btn-primary bg-gradient mb-2 disabled" onclick="showIRSUpdatesModal()"><i class="fas fa-file-pdf me-2" disabled></i>IRS Updates to EO Dept</button>
-                            <button class="btn btn-primary bg-gradient mb-2 disabled" onclick="showSubordinateFilingModal()"><i class="fas fa-file-pdf me-2" disabled></i>Subordinate Filing PDF</button>> --}}
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="showEODeptCoverSheetModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>EO Dept Fax Coversheet</button>
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="showIRSUpdatesModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>IRS Updates to EO Dept</button>
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="showSubordinateFilingModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Subordinate Filing PDF</button>
                         @endif
                     @endif
                     </div>

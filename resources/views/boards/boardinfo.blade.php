@@ -472,7 +472,7 @@
                         <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</a>
                     @endif
                     @if ($chDetails->documentsEOY->new_board_submitted != '1')
-                        <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateBeforeSubmit()" ><i class="fas fa-mail-forward me-2" ></i>Submit</button>
+                        <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateBeforeSubmit()" ><i class="bi bi-chevron-double-right me-2">Submit</button>
                     @endif
 				</form>
             </div>

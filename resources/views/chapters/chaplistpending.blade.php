@@ -40,9 +40,9 @@
                 <tbody>
                     @foreach($chapterList as $list)
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/application/chapterpendingedit/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/application/chapterpendingedit/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
                             <td class="text-center align-middle">
-                                <a onclick="showChapterSetupEmailModal({{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
+                                <a onclick="showChapterSetupEmailModal({{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
                            </td>
                             <td>
                                 @if ($list->state->conference_id > 0)
@@ -65,7 +65,7 @@
                             </td>
                             <td><span class="phone-mask">{{ $list->pendingPresident->phone }}</span></td>
                             @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
-                        <td class="text-center align-middle"><i class="fa fa-ban"
+                        <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
                         </td>
@@ -93,9 +93,9 @@
                 @if ($regionalCoordinatorCondition)
                 If your new chapter is not listed above, you can manually add them.<br>
                     @if ($checkBox51Status)
-                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.addnewint') }}"><i class="fas fa-plus me-2" ></i>Manually Add New Chapter (Any Confernces)</a>
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.addnewint') }}"><i class="bi bi-plus me-2"></i>Manually Add New Chapter (Any Confernces)</a>
                     @else
-                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus me-2" ></i>Manually Add New Chapter</a>
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.addnew') }}"><i class="bi bi-plus me-2"></i>Manually Add New Chapter</a>
                     @endif
                 @endif
                   </div>

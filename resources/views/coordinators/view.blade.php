@@ -307,19 +307,19 @@
                 @endif
                 @if($regionalCoordinatorCondition)
                 @if ($cdPositionid == \App\Enums\CoordinatorPosition::BS && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
-                        <button id="BigSister" type="button" class="btn btn-primary bg-gradient mb-2" onclick="showBigSisterEmailModal({{ $cdDetails->id }})"><i class="fas fa-envelope me-2"></i>Send Big Sister Welcome Email</button>
+                        <button id="BigSister" type="button" class="btn btn-primary bg-gradient mb-2" onclick="showBigSisterEmailModal({{ $cdDetails->id }})"><i class="bi bi-envelope-fill me-2"></i>Send Big Sister Welcome Email</button>
                     @endif
 
                     @if($cdLeave != 1)
-                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="onLeaveCoordinator({{ $cdDetails->id }})"><i class="fas fa-ban me-2"></i>Put Coordinator On Leave</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="onLeaveCoordinator({{ $cdDetails->id }})"><i class="bi bi-ban me-2"></i>Put Coordinator On Leave</button>
                     @elseif($cdLeave == 1)
-                        <button type="button" id="removeleave" class="btn btn-primary bg-gradient mb-2" onclick="removeLeaveCoordinator({{ $cdDetails->id }})"><i class="fas fa-undo me-2"></i>Remove Coordinator From Leave</button>
+                        <button type="button" id="removeleave" class="btn btn-primary bg-gradient mb-2" onclick="removeLeaveCoordinator({{ $cdDetails->id }})"><i class="bi bi-arrow-counterclockwise me-2"></i>Remove Coordinator From Leave</button>
                     @endif
 
                     @if($cdActiveId == 1)
-                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="retireCoordinator({{ $cdDetails->id }})"><i class="fas fa-ban me-2"></i>Retire Coordinator</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="retireCoordinator({{ $cdDetails->id }})"><i class="bi bi-ban me-2"></i>Retire Coordinator</button>
                     @elseif($cdActiveId != 1)
-                        <button type="button" id="unretire" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="unRetireCoordinator({{ $cdDetails->id }})"><i class="fas fa-undo me-2"></i>UnRetire Coordinator</button>
+                        <button type="button" id="unretire" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="unRetireCoordinator({{ $cdDetails->id }})"><i class="bi bi-arrow-counterclockwise me-2"></i>UnRetire Coordinator</button>
                     @endif
                 @endif
                 <br>

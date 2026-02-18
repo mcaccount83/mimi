@@ -40,7 +40,7 @@
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -55,7 +55,7 @@
                     <td>{{ $list->phone }}</td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
                      @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
-                        <td class="text-center align-middle"><i class="fa fa-ban"
+                        <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
                         </td>
@@ -82,7 +82,7 @@
                 <div class="card-body text-center mt-3">
                 @if($conferenceCoordinatorCondition)
                                 If your new coordinator is not listed above, you can manually add them.<br>
-                    <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus me-2" ></i>Manually Add New Coordinator</a>
+                    <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.editnew') }}"><i class="bi bi-plus me-2"></i>Manually Add New Coordinator</a>
                 @endif
              </div>
             <!-- /.card-body for buttons -->

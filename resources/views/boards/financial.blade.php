@@ -66,7 +66,7 @@
                 @endif
 
                 @if($chEOYDocuments->financial_report_received =='1')
-                    <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName  }}'"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</button>
+                    <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName  }}'"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Download PDF</button>
                 @endif
             </div>
 

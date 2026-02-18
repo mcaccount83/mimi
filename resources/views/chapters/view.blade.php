@@ -948,8 +948,8 @@
                     $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
                 @endphp
                     <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
-                        <i class="fa fa-envelope me-2"></i>Email Board</button>
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>>Update Chapter Information</button>
+                        <i class="bi bi-envelope-fill me-2"></i>Email Board</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>Update Chapter Information</button>
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>Update Board Information</button>
                     @endif
                 @if ( $ITCondition || $eoyTestCondition && $displayTESTING || $regionalCoordinatorCondition && $displayLIVE )
@@ -961,14 +961,14 @@
                 @if($coordinatorCondition && $conferenceCoordinatorCondition)
                     <br>
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="fas fa-dollar-sign me-2"></i>Enter Payment/Donation</button>
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="updateEIN('{{ $chDetails->id }}')"><i class="fas fa-university me-2"></i>Update EIN Number</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="updateEIN('{{ $chDetails->id }}')"><i class="bi bi-bank me-2"></i>Update EIN Number</button>
                 @endif
                 @if($coordinatorCondition && $regionalCoordinatorCondition)
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload me-2"></i>Update EIN Letter</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Update EIN Letter</button>
                     @if($chActiveId == 1)
-                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showDisbandChapterModal({{ $chDetails->id }})"><i class="fas fa-ban me-2"></i>Disband Chapter</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showDisbandChapterModal({{ $chDetails->id }})"><i class="bi bi-ban me-2"></i>Disband Chapter</button>
                     @elseif($chActiveId != 1)
-                        <button type="button" id="unzap" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="unZapChapter({{ $chDetails->id }})"><i class="fas fa-undo me-2"></i>UnZap Chapter</button>
+                        <button type="button" id="unzap" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="unZapChapter({{ $chDetails->id }})"><i class="bi bi-arrow-counterclockwise me-2"></i>UnZap Chapter</button>
                     @endif
                 @endif
                 <br>

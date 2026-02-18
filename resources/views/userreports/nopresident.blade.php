@@ -33,7 +33,7 @@
                 <tbody>
                 @foreach($ChapterPres as $list)
                   <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/userreports/addnewboard/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/userreports/addnewboard/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
                         <td>{{ $list->id }}</td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->conference_id }}</td>

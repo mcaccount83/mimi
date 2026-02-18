@@ -44,7 +44,7 @@
         </div>
         @if($canEditFiles)
             <div class="row">
-                &nbsp;&nbsp;<button type="button" class="btn btn-success bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#modal-task"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Add Resource</button>
+                &nbsp;&nbsp;<button type="button" class="btn btn-success bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#modal-task"><i class="bi bi-plus me-2"></i>Add Resource</button>
             </div>
             <div class="row">&nbsp;</div>
         @endif
@@ -174,7 +174,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
+                <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="bi bi-x-lg me-2"></i>Close</button>
                 <button type="button" class="btn btn-success bg-gradient mb-2" onclick="updateResourceFile({{ $resourceItem->id }})"><i class="bi bi-floppy-fill me-2"></i>Save changes</button>
             </div>
         </div>
@@ -246,7 +246,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
+                <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="bi bi-x-lg me-2"></i>Close</button>
                 <button type="button" class="btn btn-success bg-gradient mb-2" onclick="return addResourceFile()"><i class="bi bi-floppy-fill me-2"></i>Add Resource</button>
             </div>
         </div>

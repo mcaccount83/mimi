@@ -48,7 +48,7 @@
                 <td>
                     {{ $list->email }}
                 </td>
-                 <td class="text-center align-middle"><i class="fa fa-ban"
+                 <td class="text-center align-middle"><i class="bi bi-ban"
                         onclick="showDeleteEmailModal({{ $list->id }}, '{{ $list->description }}')"
                         style="cursor: pointer; color: #dc3545;"></i>
                     </td>
@@ -66,7 +66,7 @@
    <div class="card-body text-center mt-3">
         <div class="card-tools">
             <button type="button" class="btn btn-primary bg-gradient mb-2" id="addNewBtn">
-                <i class="fas fa-plus"></i> Add New System Email
+                <i class="bi bi-plus me-2"></i> Add New System Email
             </button>
         </div>
  </div>

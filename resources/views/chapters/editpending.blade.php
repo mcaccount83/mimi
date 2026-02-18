@@ -87,13 +87,13 @@
                         <div class="card-body text-center mt-3">
                                 <button type="button" class="btn btn-primary bg-gradient mb-2"
                                     onclick="showChapterSetupEmailModal({{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
-                                    <i class="fas fa-envelope me-2"></i>Send Startup Email</button>
+                                    <i class="bi bi-envelope-fill me-2"></i>Send Startup Email</button>
                             <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Updates</button>
                             <br>
                             Save all changes before approval!
                             <br>
-                             <button type="button" class="btn btn-success bg-gradient mb-2" onclick="chapApprove({{ $chDetails->id }}, '{{ $chDetails->region_id }}')"><i class="fas fa-check me-2"></i>Approve Chapter</button>
-                            <button type="button" class="btn btn-danger bg-gradient mb-2" onclick="chapDecline({{ $chDetails->id }})"><i class="fas fa-times me-2"></i>Decline Chaper</button>
+                             <button type="button" class="btn btn-success bg-gradient mb-2" onclick="chapApprove({{ $chDetails->id }}, '{{ $chDetails->region_id }}')"><i class="bi bi-check-lg me-2"></i>Approve Chapter</button>
+                            <button type="button" class="btn btn-danger bg-gradient mb-2" onclick="chapDecline({{ $chDetails->id }})"><i class="bi bi-x-lg me-2"></i>Decline Chaper</button>
                     </li>
                 @endif
  </ul>

@@ -41,9 +41,9 @@
                 <tbody>
                     @foreach($chapterList as $list)
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
                             <td class="text-center align-middle">
-                                <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
+                                <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
                            </td>
                             <td>
                                 @if ($list->state->conference_id > 0)
@@ -68,7 +68,7 @@
                             <td><span class="phone-mask">{{ $list->president->phone }}</span></td>
                             <td>{{ $list->primaryCoordinator?->first_name }} {{ $list->primaryCoordinator?->last_name }}</td>
                            @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
-                        <td class="text-center align-middle"><i class="fa fa-ban"
+                        <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
                         </td>
@@ -113,9 +113,9 @@
             <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition && $regionalCoordinatorCondition)
                      @if ($checkBox51Status)
-                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}"><i class="fas fa-share me-2" ></i>New International Chapters Pending</a>
+                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}"><i class="bi bi-chevron-double-right me-2"></i>New International Chapters Pending</a>
                         @else
-                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending') }}"><i class="fas fa-share me-2" ></i>New Chapters Pending</a>
+                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending') }}"><i class="bi bi-chevron-double-right me-2"></i>New Chapters Pending</a>
                         @endif
                         @if ($checkBox3Status)
                             <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('chapter', 'Chapter List')"><i class="bi bi-download me-2"></i>Export Chapter List</button>

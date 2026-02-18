@@ -37,9 +37,9 @@
                 <tbody>
                 @foreach($websiteList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/online/websiteedit/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/online/websiteedit/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
                     <td class="text-center align-middle">
-                        <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Website Review')"><i class="far fa-envelope text-primary"></i></a>
+                        <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Website Review')"><i class="bi bi-envelope text-primary"></i></a>
                    </td>
                     <td>
                         @if ($list->state->conference_id > 0)

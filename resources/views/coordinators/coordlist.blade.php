@@ -40,9 +40,9 @@
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
                     <td>
-                        <a onclick="showCoordEmailModal('{{ $list->first_name }}', '{{ $list->last_name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
+                        <a onclick="showCoordEmailModal('{{ $list->first_name }}', '{{ $list->last_name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
                     </td>
                     <td>
                         @if ($list->region->short_name != "None")
@@ -67,7 +67,7 @@
                       <td><a href="mailto:{{ $list->email }}">{{ $list->email }}</a></td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
                       @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
-                        <td class="text-center align-middle"><i class="fa fa-ban"
+                        <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
                         </td>
@@ -112,9 +112,9 @@
                 <div class="card-body text-center mt-3">
                 @if($conferenceCoordinatorCondition)
                     @if ($checkBox51Status)
-                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending', ['check5' => 'yes']) }}"><i class="fas fa-share me-2" ></i>New International Coordinators Pending</a>
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending', ['check5' => 'yes']) }}"><i class="bi bi-chevron-double-right me-2"></i>New International Coordinators Pending</a>
                     @else
-                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending') }}"><i class="fas fa-share me-2" ></i>New Coordinators Pending</a>
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending') }}"><i class="bi bi-chevron-double-right me-2"></i>New Coordinators Pending</a>
                     @endif
                 @endif
                 @if ($regionalCoordinatorCondition)
@@ -125,7 +125,7 @@
                     @endif
                 @endif
                 @if (!$checkBox51Status && !$checkBox3Status)
-                    <a class="btn btn-primary bg-gradient mb-2" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope me-2"></i>E-mail Coordinators</a>
+                    <a class="btn btn-primary bg-gradient mb-2" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope-fill me-2"></i>E-mail Coordinators</a>
                 @endif
             </div>
             <!-- /.card-body for buttons -->

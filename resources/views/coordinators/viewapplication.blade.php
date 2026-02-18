@@ -174,8 +174,8 @@
                             <br>
                             Save all changes before approval!
                             <br>
-                            <button type="button" class="btn btn-success bg-gradient mb-2" onclick="appApprove({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="fas fa-check me-2"></i>Approve Application</button>
-                            <button type="button" class="btn btn-danger bg-gradient mb-2" onclick="appReject({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="fas fa-times me-2"></i>Reject Application</button>
+                            <button type="button" class="btn btn-success bg-gradient mb-2" onclick="appApprove({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Approve Application</button>
+                            <button type="button" class="btn btn-danger bg-gradient mb-2" onclick="appReject({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="bi bi-x-lg me-2"></i>Reject Application</button>
                     </li>
                 @endif
 
