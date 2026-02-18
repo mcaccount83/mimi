@@ -35,7 +35,7 @@
                         <b>Display Position:</b> <span class="float-end">{{ $displayPosition->long_title }}</span>
                         <br>
                         <b>MIMI Position:</b><a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
-                            <i class="fas fa-circle-question text-primary"></i></a>
+                            <i class="bi bi-question-circle text-primary"></i></a>
                         <span class="float-end">{{ $mimiPosition?->long_title }}</span>
                         <br>
                         <div style="display: flex; justify-content: space-between;">

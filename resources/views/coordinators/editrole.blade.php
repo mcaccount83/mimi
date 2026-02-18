@@ -89,7 +89,7 @@
                         <div class="row align-items-center">
                             <div class="col-sm-6 mt-1">
                                 <label class="col-form-label">MIMI Position:<a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
-                                    <i class="fas fa-circle-question text-primary"></i></a></label>
+                                    <i class="bi bi-question-circle text-primary"></i></a></label>
                             </div>
                             <div class="col-sm-6">
                                 <select name="cord_pos" id="cord_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>

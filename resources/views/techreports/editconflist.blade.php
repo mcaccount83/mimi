@@ -51,7 +51,7 @@
                                                 <i class="bi bi-pencil-square me-2"></i>Edit
                                             </button>
                                             <button class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
-                                                <i class="fas fa-trash"></i> Delete
+                                                <i class="bi bi-ban"></i> Delete
                                             </button>
                                         </td>
                                     </tr>
@@ -193,7 +193,7 @@ function saveRow(button) {
                         <i class="bi bi-pencil-square me-2"></i>Edit
                     </button>
                     <button class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
-                        <i class="fas fa-trash"></i> Delete
+                        <i class="bi bi-ban"></i> Delete
                     </button>
                 `;
 
@@ -332,7 +332,7 @@ function saveNewRow(button) {
                         <i class="bi bi-pencil-square me-2"></i>Edit
                     </button>
                     <button class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
-                        <i class="fas fa-trash"></i> Delete
+                        <i class="bi bi-ban"></i> Delete
                     </button>
                 `;
 

@@ -99,7 +99,7 @@
 
                         <div class="d-flex mb-2">
                         <b class="me-2" style="min-width: 200px;">MIMI Position:<a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
-                                    <i class="fas fa-circle-question text-primary"></i></a></b>
+                                    <i class="bi bi-question-circle text-primary"></i></a></b>
                                 <select name="cord_pos" id="cord_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
                                     @foreach($allPositions as $pos)
                                         @if($pos->id >= 1 && $pos->id <= 7)
